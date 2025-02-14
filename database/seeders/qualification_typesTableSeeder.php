@@ -1,7 +1,7 @@
 <?php
 
 namespace Database\Seeders;
-
+use App\Models\qualification_type;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -10,8 +10,15 @@ class qualification_typesTableSeeder extends Seeder
     /**
      * Run the database seeds.
      */
-    public function run(): void
+    public function run()
     {
-        //
+        qualification_type::insert([
+            [
+                'qualification_id' => '',
+                'name' => '',
+                'created_at' => '',
+                'updated_at' => '',
+            ]
+        ])
     }
 }
