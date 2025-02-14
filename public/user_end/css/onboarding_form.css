@@ -1,0 +1,1170 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+    font-size: 13px;
+}
+
+
+
+.header-left .logo {
+    height: 60px;
+    /* Control the height */
+    max-width: 150px;
+    /* Ensure the width doesn't exceed this value */
+    object-fit: contain;
+    /* Maintain aspect ratio and fit within the height */
+}
+
+.header-left {
+    display: flex;
+    align-items: center;
+}
+
+
+
+
+.main-content {
+    display: flex;
+    min-height: 100vh;
+    /* Ensure it takes full viewport height */
+    align-items: stretch;
+    /* Ensures both sidebar and form take the full height */
+}
+
+
+.content {
+    flex-grow: 1;
+    padding: 20px;
+    overflow-y: auto;
+    /* Allows the content to scroll if it overflows */
+}
+
+
+.step-tabs {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 20px -31px;
+    width: 102%;
+    position: relative;
+    margin-top: 1%;
+}
+
+.step {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    position: relative;
+    flex-grow: 1;
+    /* Ensures equal spacing for steps */
+}
+
+.step:not(:last-child)::after {
+    content: '';
+    position: absolute;
+    top: 20px;
+    left: 50%;
+    right: -53%;
+    height: 4px;
+    background-color: #ddd;
+    z-index: 0;
+}
+
+.step.active:not(:last-child)::after {
+    background-color: #8A3366;
+    /* Line color for active sections */
+}
+
+.circle {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    font-weight: bold;
+    color: white;
+    background-color: #ddd;
+    z-index: 1;
+    position: relative;
+}
+
+.step.active .circle {
+    background-color: #8A3366;
+    /* Active circle color */
+}
+
+.label {
+    font-size: 14px;
+    color: #333;
+    margin-top: 10px;
+}
+
+
+/* Content area for the tabs */
+.tab-content {
+
+    display: none;
+    /* Hide by default */
+    padding: 0px;
+    /* border: 1px solid #ddd; */
+    border-radius: 12px;
+    /* Rounded corners for content area */
+    /* background: white; */
+    /* box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); /* Light shadow for a clean effect  */
+    margin-top: -1px;
+    animation: fadeIn 0.5s ease;
+    /* Smooth fade-in effect */
+}
+
+/* Active content display */
+.tab-content.active {
+    display: block;
+    /* Show active tab content */
+}
+
+
+/* Fade-in effect */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+/* Form Group Container */
+.form-group {
+    position: relative;
+    margin-bottom: 20px;
+}
+
+/* Floating Label Styling */
+.form-group label {
+    position: absolute;
+    top: 21px;
+    left: 12px;
+    transform: translateY(-50%);
+    background: white;
+    padding: 0 5px;
+    font-size: 14px;
+    color: #666;
+    transition: all 0.3s ease-in-out;
+    pointer-events: none;
+}
+
+/* Move label up when input is focused or has content */
+.form-group input:focus~label,
+.form-group input:not(:placeholder-shown)~label,
+.form-group select:focus~label,
+.form-group select:not([value=""]):valid~label {
+    top: 5px;
+    left: 10px;
+    font-size: 12px;
+    color: #333;
+}
+
+/* Input Styles */
+.form-control {
+    width: 100%;
+    padding: 14px 12px 6px;
+    border: 1px solid #020101;
+    border-radius: 8px;
+    font-size: 14px;
+    background-color: #f9f9f9;
+    transition: all 0.3s ease-in-out;
+}
+
+/* Adjust Select Element */
+.form-group select {
+    appearance: none;
+    background-color: white;
+}
+
+/* Focus Effects */
+.form-control:focus {
+    border-color: #3498db;
+    box-shadow: 0 4px 12px rgba(52, 152, 219, 0.2);
+    outline: none;
+}
+
+/* Placeholder visibility */
+.form-control::placeholder {
+    color: transparent;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    /* Increased space between form groups for better spacing */
+    margin-bottom: 20px;
+    padding: px;
+    /* Added padding */
+    border-radius: 16px;
+    background: rgb(255, 254, 254);
+    /* Glass effect */
+    backdrop-filter: blur(10px);
+    /* Blurring the background */
+    box-shadow: 0px 8px 24px rgba(0, 0, 0, 0.2);
+    /* 3D shadow effect */
+    border: 20px solid rgba(255, 255, 255, 0.2);
+    /* Light inner border */
+}
+
+/* label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+} */
+
+/* Flex container for responsiveness */
+
+
+/* Responsive adjustments */
+@media (max-width: 1024px) {
+
+    /* Medium screens */
+    .form-control {
+        max-width: 80%;
+        /* Allow inputs to occupy 80% of screen width */
+    }
+}
+
+@media (max-width: 768px) {
+
+    /* Small screens */
+    .form-control {
+        max-width: 90%;
+        /* Allow inputs to occupy 90% of screen width */
+        font-size: 13px;
+        /* Slightly smaller font size */
+    }
+}
+
+@media (max-width: 480px) {
+
+    /* Very small screens */
+    .form-control {
+        max-width: 100%;
+        /* Full width on small screens */
+        font-size: 12px;
+        /* Further reduce font size */
+    }
+}
+
+/* Ensure proper spacing on all devices */
+
+/* Container alignment */
+.button-container {
+    display: flex;
+    justify-content: center;
+    /* Center the buttons horizontally */
+    align-items: center;
+    gap: 20px;
+    /* Space between buttons */
+    margin-top: 30px;
+    /* Adjust spacing from other elements */
+}
+
+/* General button styles */
+.previous-btn,
+.next-btn {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    /* Makes the buttons circular */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 10px;
+    /* Icon size */
+    color: white;
+    /* Text color */
+    font-weight: bold;
+    background: linear-gradient(90deg, #8A3366 0%, #6A244D 100%);
+    /* Gradient background */
+    border: none;
+    cursor: pointer;
+    transition: transform 0.3s ease, background-color 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.2);
+    /* Subtle shadow */
+}
+
+/* Hover effect */
+.previous-btn:hover,
+.next-btn:hover {
+    background: linear-gradient(90deg, #9C3B72 0%, #732854 100%);
+    /* Lighter gradient on hover */
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
+    /* Enhanced shadow */
+    transform: translateY(-3px);
+    /* Slight lift effect */
+}
+
+/* Active effect (button press) */
+.previous-btn:active,
+.next-btn:active {
+    background: linear-gradient(90deg, #7A2D59 0%, #5E203E 100%);
+    /* Darker gradient on active click */
+    transform: translateY(0);
+    /* Reset lift */
+    box-shadow: inset 2px 2px 5px rgba(0, 0, 0, 0.4);
+    /* Inner shadow for pressed effect */
+}
+
+/* Icon (arrow) styles */
+.previous-btn span,
+.next-btn span {
+    font-size: 32px;
+    /* Increase the size of the arrow */
+    line-height: 1;
+    font-weight: bold;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* .form-group {
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+ */
+
+
+
+
+
+/* Add your styles here to match the Family Details section */
+
+
+/* Optional: CSS for Styling the Table and Buttons */
+/* Container for table */
+.table-container {
+    max-width: 100%;
+    margin: 20px;
+    overflow-x: auto;
+    /* Allow horizontal scrolling if needed */
+    padding: 10px;
+}
+
+/* Table styling */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+    background-color: #fefefe;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+/* Header row */
+table th {
+    background-color: #d99b8a;
+    /* Light peach color for headers */
+    color: #000;
+    /* Text color for contrast */
+    text-align: center;
+    font-weight: bold;
+    padding: 10px;
+    border: 1px solid #e0e0e0;
+}
+
+/* Data rows */
+table td {
+    border: 1px solid #e0e0e0;
+    text-align: center;
+    padding: 10px;
+    vertical-align: middle;
+}
+
+/* Input fields inside the table */
+table input,
+table select {
+    width: 90%;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 14px;
+    box-sizing: border-box;
+    margin: 0 auto;
+}
+
+/* Buttons for actions (Add/Edit/Delete) */
+/* General Button Base */
+.action-button {
+    position: absolute;
+    right: 10px;
+    top: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    border: none;
+    border-radius: 20px;
+    padding: 8px 15px;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Add Educational Button */
+.add-row-education {
+    background-color: #8A3366;
+}
+
+/* Add Family Button */
+.add-row-family {
+    background-color: #8A3366;
+}
+
+/* Add Employment Button */
+.add-row-employment {
+    background-color: #8A3366;
+}
+
+/* Hover Effects */
+.add-row-education:hover,
+.add-row-family:hover,
+.add-row-employment:hover {
+    transform: scale(1.05);
+    transition: background-color 0.3s ease;
+}
+
+/* Specific hover for each button */
+.add-row-education:hover {
+    background-color: #572953;
+}
+
+.add-row-family:hover {
+    background-color: #572953;
+}
+
+.add-row-employment:hover {
+    background-color: #572953;
+}
+
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    table {
+        font-size: 12px;
+    }
+
+    table input,
+    table select {
+        font-size: 12px;
+    }
+
+    button {
+        font-size: 12px;
+        padding: 4px 8px;
+    }
+}
+
+/* button {
+        padding: 10px 10px;
+        margin: 10px;
+        border-radius: 5px;
+    } */
+
+/* General styling for left and right columns with border */
+.bordered-box {
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+
+.employee-details-form .left-column,
+.employee-details-form .right-column {
+    flex: 1;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+
+
+input,
+select {
+    width: 100%;
+    padding: 8px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+}
+
+.input-container {
+    position: relative;
+    width: 100%;
+    /* Adjust as needed */
+    max-width: 400px;
+    /* Set a max width */
+}
+
+
+.upload-icon {
+    position: absolute;
+    right: 10px;
+    /* Position the icon */
+    top: 50%;
+    transform: translateY(-50%);
+    /* Center the icon vertically */
+    cursor: pointer;
+    /* Change cursor to pointer */
+    font-size: 16px;
+    /* Adjust icon size */
+}
+
+.upload-icon:hover {
+    color: #007bff;
+    /* Change color on hover (optional) */
+}
+
+/* Optional: Style error messages */
+
+
+
+
+/* Styling the document upload section */
+.upload-section {
+    background-color: #f9f9f9;
+    /* Light background for the upload section */
+    border: 1px solid #ccc;
+    /* Light border around the section */
+    border-radius: 8px;
+    /* Rounded corners */
+    padding: 15px;
+    /* Padding inside the section */
+    margin-bottom: 20px;
+    /* Space between sections */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    /* Subtle shadow for depth */
+    transition: box-shadow 0.3s ease;
+    /* Transition for hover effect */
+}
+
+.upload-section:hover {
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+    /* Enhanced shadow on hover */
+}
+
+/* Label styling */
+.upload-section label {
+    font-size: 16px;
+    /* Slightly larger font for labels */
+    font-weight: 600;
+    /* Bold font weight */
+    color: #333;
+    /* Darker text color for readability */
+    margin-bottom: 8px;
+    /* Space below labels */
+    display: block;
+    /* Ensures labels take the full width */
+}
+
+/* Styling for the file input */
+.upload-section input[type="file"] {
+    display: none;
+    /* Hide default file input */
+}
+
+/* Custom file input label */
+.custom-file-label {
+    display: inline-block;
+    /* Inline display for buttons */
+    padding: 10px 15px;
+    /* Padding for clickable area */
+    background-color: #007BFF;
+    /* Blue background for the button */
+    color: #fff;
+    /* White text color */
+    border-radius: 5px;
+    /* Rounded corners */
+    cursor: pointer;
+    /* Pointer cursor on hover */
+    transition: background-color 0.3s;
+    /* Smooth background transition */
+}
+
+.custom-file-label:hover {
+    background-color: #0056b3;
+    /* Darker blue on hover */
+}
+
+/* Helper text styling */
+.upload-section small {
+    font-size: 12px;
+    /* Smaller font size for helper text */
+    color: #777;
+    /* Lighter color for secondary information */
+    display: block;
+    /* Full width for clarity */
+    margin-top: 5px;
+    /* Space above helper text */
+    text-align: right;
+    /* Right align the helper text */
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .upload-section {
+        padding: 10px;
+        /* Adjust padding for smaller screens */
+    }
+
+    .custom-file-label {
+        font-size: 14px;
+        /* Adjust button font size */
+        padding: 8px 12px;
+        /* Adjust padding for smaller screens */
+    }
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    margin: px;
+    padding: px;
+}
+
+.services-container {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    /* 4 equal columns */
+    gap: 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+    /* Added padding for better spacing */
+}
+
+.service-card {
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    text-align: center;
+    transition: transform 0.3s;
+    display: flex;
+    /* Use flexbox to center content */
+    flex-direction: column;
+    /* Stack items vertically */
+    align-items: center;
+    /* Center horizontally */
+    justify-content: space-between;
+    /* Space between items */
+}
+
+.service-card:hover {
+    transform: scale(1.05);
+}
+
+.service-icon {
+    font-size: 40px;
+    /* Adjust size as needed */
+    color: #007bff;
+    /* Icon color */
+    margin-bottom: 10px;
+}
+
+.service-title {
+    font-weight: bold;
+    color: #333;
+    margin: 10px 0;
+}
+
+.service-description {
+    color: #777;
+    font-size: 14px;
+}
+
+@media (max-width: 768px) {
+    .services-container {
+        grid-template-columns: repeat(2, 1fr);
+        /* 2 columns on smaller screens */
+    }
+}
+
+@media (max-width: 480px) {
+    .services-container {
+        grid-template-columns: 1fr;
+        /* 1 column on very small screens */
+    }
+}
+
+
+h3,
+h4 {
+    color: #333;
+    margin-bottom: 30px;
+}
+
+
+.address-form {
+    display: flex;
+    /* Flexbox for main container og*/
+    flex-direction: column;
+    /* Stack sections vertically */
+}
+
+
+
+.form-group:last-child {
+    margin-right: 0;
+}
+
+
+
+.checkbox-container {
+    margin-bottom: 20px;
+}
+
+.checkbox-container input {
+    margin-right: 5px;
+}
+
+
+
+
+/* Tooltip styles */
+.form-group .tooltip {
+    display: inline-block;
+    margin-left: 5px;
+    font-size: 12px;
+    color: #999;
+    cursor: help;
+}
+
+.tooltip::after {
+    content: "?";
+    background-color: #ccc;
+    border-radius: 50%;
+    padding: 2px 5px;
+    margin-left: 5px;
+}
+
+/* Address Form Container */
+.address-form1 {
+    display: flex;
+    flex-wrap: wrap;
+    /* Allows wrapping on smaller screens */
+    justify-content: flex-start;
+    /* Aligns inputs to the left */
+    gap: 1vw;
+    /* Adjust spacing */
+    width: 100%;
+}
+
+/* General Form Row Styling */
+.form-row,
+.form-row1 {
+    display: flex;
+    justify-content: left;
+    /* Align to center for a balanced look */
+    flex-wrap: wrap;
+    /* Prevents overflow on smaller screens */
+    gap: 2vw;
+    /* Maintain balanced spacing */
+    margin-bottom: 15px;
+    width: 100%;
+    /* Ensures full width */
+}
+
+
+
+/* Specific Styling for 3rd Row */
+.form-row3 {
+    display: flex;
+    justify-content: center;
+    /* Centers inputs */
+    align-items: center;
+    /* Aligns to middle line */
+    flex-wrap: wrap;
+    gap: 3vw;
+    width: 100%;
+}
+
+/* Form Group Styling */
+/* Form Group Styling */
+.form-group {
+    flex: 1;
+    min-width: 30%;
+    /* Prevents shrinking */
+    max-width: 32%;
+    /* Keeps consistency */
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    /* align-items: flex-start; */
+    /* Aligns text and input boxes to the left */
+}
+
+/* Adjustments for Third Row */
+.form-row3 .form-group {
+    justify-content: center;
+    /* Aligns inputs to the middle */
+    text-align: center;
+}
+
+/* Remove right margin for last item */
+.form-group:last-child {
+    margin-right: 0;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 1200px) {
+    .form-group {
+        min-width: 45%;
+    }
+}
+
+@media (max-width: 1024px) {
+    .address-form1 {
+        flex-direction: row;
+        justify-content: flex-start;
+    }
+
+    .form-group {
+        min-width: 48%;
+    }
+}
+
+@media (max-width: 768px) {
+    .address-form1 {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .form-group {
+        min-width: 100%;
+    }
+}
+
+@media (max-width: 480px) {
+    .form-group {
+        font-size: 14px;
+        min-width: 100%;
+    }
+}
+
+/* Responsive Adjustments */
+@media (max-width: 1200px) {
+
+    .form-row,
+    .form-row1,
+    .form-row3 {
+        gap: 2vw;
+    }
+
+    .form-group {
+        min-width: 30%;
+    }
+}
+
+@media (max-width: 1024px) {
+
+    .form-row,
+    .form-row1,
+    .form-row3 {
+        flex-direction: row;
+        justify-content: space-around;
+        gap: 2vw;
+    }
+
+    .form-group {
+        min-width: 40%;
+    }
+}
+
+@media (max-width: 768px) {
+
+    .form-row,
+    .form-row1,
+    .form-row3 {
+        flex-direction: column;
+        gap: 3vw;
+        align-items: center;
+    }
+
+    .form-group {
+        min-width: 90%;
+        margin-right: 0;
+    }
+}
+
+@media (max-width: 480px) {
+
+    .form-row,
+    .form-row1,
+    .form-row3 {
+        flex-direction: column;
+        gap: 4vw;
+        align-items: center;
+    }
+
+    .form-group {
+        min-width: 100%;
+        font-size: 14px;
+    }
+}
+
+
+/* CSS for tabs */
+
+
+/* Container for the title and checkbox */
+.correspondence-header {
+    display: flex;
+    /* Align elements in a row */
+    align-items: center;
+    /* Vertically align content */
+    gap: 20px;
+    /* Spacing between the title and checkbox */
+    margin-bottom: 10px;
+    /* Space below the header */
+}
+
+.correspondence-header1 {
+    display: flex;
+    /* Align elements in a row */
+    align-items: center;
+    /* Vertically align content */
+    gap: 20px;
+    /* Spacing between the title and checkbox */
+    margin-bottom: 10px;
+    /* Space below the header */
+}
+
+/* Style for the checkbox */
+.styled-checkbox2 {
+    width: 16px;
+    height: 16px;
+    cursor: pointer;
+    accent-color: #007bff;
+    /* Blue checkbox color (modern browsers) */
+    margin-bottom: 26%;
+}
+
+.styled-checkbox {
+    width: 16px;
+    height: 16px;
+    cursor: pointer;
+    accent-color: #007bff;
+    /* Blue checkbox color (modern browsers) */
+    margin-bottom: 26%;
+}
+
+/* Style for the label */
+.checkbox-label {
+    font-size: 14px;
+    color: #333;
+    cursor: pointer;
+}
+
+.checkbox-label1 {
+    font-size: 14px;
+    color: #333;
+    cursor: pointer;
+    height: 45px;
+}
+
+
+/* For the select element */
+.course-type {
+    width: 150px;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 14px;
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+
+.table-container input[type="date"] {
+    width: 150px !important;
+    padding: 10px !important;
+    border: 1px solid #ddd !important;
+    border-radius: 4px !important;
+    font-size: 14px !important;
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1) !important;
+}
+
+/* Custom widths for each input */
+.degree-input {
+    width: 200px;
+}
+
+.university-input {
+    width: 250px;
+}
+
+.institution-input {
+    width: 250px;
+}
+
+.year-input {
+    width: 120px;
+}
+
+.percentage-input {
+    width: 120px;
+}
+
+.certification-name-input {
+    width: 200px;
+}
+
+.marks-input {
+    width: 150px;
+}
+
+.total-marks-input {
+    width: 150px;
+}
+
+.date-input {
+    width: 180px;
+}
+
+
+/* family details */
+
+.custom-name {
+    width: 270px;
+}
+
+.relation-type {
+    width: 150px;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 14px;
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.country-type {
+    width: 150px;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 14px;
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.gender-type {
+    width: 150px;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 14px;
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.dependent-type {
+    width: 90px;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 14px;
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+input[type="custom-tel"] {
+    width: 140px;
+}
+
+input[type="custom-age"] {
+    width: 50px;
+}
+
+/* pervious employeement */
+
+input[type="custom-employer"] {
+    width: 300px;
+}
+
+input[type="custom-country"] {
+    width: 150px;
+}
+
+input[type="custom-designation"] {
+    width: 270px;
+}
+
+.custom-city {
+    width: 150px;
+}
+
+.custom-salary {
+    width: 270px;
+}
+
+input[type="custom-experience"] {
+    width: 244px;
+}
+
+
+
+input[type="custom-role"] {
+    width: 200px;
+}
+
+input[type="custom-reason"] {
+    width: 200px;
+}
+
+input[type="custom-major"] {
+    width: 200px;
+}
+
+
+.country-type {
+    width: 150px;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 14px;
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+
+.error {
+    color: red;
+    font-size: 0.875em;
+    margin-top: 5px;
+    display: block;
+    /* Ensure the error message is displayed below the input */
+}

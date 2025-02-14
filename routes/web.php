@@ -64,6 +64,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('user/bank',[empDetailFormController::class,'loadbankuser'])->name('user.bank');
     Route::get('user/family',[empDetailFormController::class,'loadfamilyuser'])->name('user.family');
     Route::get('user/preemp',[empDetailFormController::class,'loadpreempuser'])->name('user.preemp');
+    Route::get('user/docupload',[empDetailFormController::class,'loaddocuploaduser'])->name('user.docupload');
 
     //Insert data
 

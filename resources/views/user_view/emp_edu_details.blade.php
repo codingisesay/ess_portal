@@ -1,4 +1,230 @@
-<!DOCTYPE html>
+@extends('user_view/employee_form_layout')  <!-- Extending the layout file -->
+@section('content')  <!-- Defining the content section -->
+
+
+<div class="tab-content active" id="tab3">
+  <form id="educationForm" action="submit_step.php" method="POST">
+      
+      <input type="hidden" name="form_step4" value="education_step">
+      <h3>Educational Details</h3>
+      <button type="button" class="add-row-education action-button" onclick="addEducationRow()">Add Educational Information</button>
+      <div class="table-container">
+          <table>
+              <thead>
+                  <tr>
+                      <th>Serial No.</th>
+                      <th>Course Type</th>
+                      <th>Degree</th>
+                      <th>University/Board</th>
+                      <th>Institution</th>
+                      <th>Passing Year</th>
+                      <th>Percentage/CGPA</th>
+                      <th>Certification Name</th>
+                      <th>Marks Obtained</th>
+                      <th>Total Marks</th>
+                      <th>Date of Certificate</th>
+                      <th>Edit</th>
+                      <th>Remove</th>
+                  </tr>
+              </thead>
+              <tbody id="educationTableBody">
+                  <!-- Rows will be added dynamically here -->
+              </tbody>
+          </table>
+      </div>
+      <!-- Button Section -->
+      <div class="button-container">
+          <button class="previous-btn">
+              <span>&#8249;</span>
+          </button>
+          <button type="submit" class="next-btn">
+              <span>&#8250;</span>
+          </button>
+      </div>
+  </form>
+</div>
+
+<!-- uppercase bug -->
+<script>
+  let educationCounter = 1; // Auto-incrementing counter for Educational Details
+
+  // Function to add a new row
+  function addEducationRow() {
+      const tableBody = document.getElementById('educationTableBody');
+      const newRow = document.createElement('tr');
+
+      newRow.innerHTML = `
+          <td></td> <!-- Serial number will be updated dynamically -->
+          <td>
+              <select name="course_type[]" class="relation-type" required onchange="toggleFields(this)">
+                  <option value="">Select</option>
+                  <option value="degree">Degree</option>
+                  <option value="certification">Certification</option>
+              </select>
+          </td>
+          <td>
+              <input type="custom-text" name="degree[]" class="degree-input" required placeholder="Enter Degree" maxlength="100" 
+                  oninput="this.value = this.value.replace(/[^a-zA-Z .,(){}[\\]]/g, '');">
+              <input type="hidden" name="serial_no[]" value="">
+          </td>
+          <td><input type="text" name="university[]" class="university-input" required placeholder="Enter University/Board" maxlength="100"
+              onkeydown="return blockNumbers(event);"></td>
+          <td><input type="text" name="institution[]" class="institution-input" required placeholder="Enter Institution" maxlength="100"
+              onkeydown="return blockNumbers(event);"></td>
+          <td>
+              <select name="passing_year[]" class="year-input" required>
+                  <option value="" disabled selected>Select Passing Year</option>
+                  <!-- Generate options dynamically -->
+                  <?php
+                  $startYear = 1900;
+                  $endYear = date("Y"); // Current year only
+                  for ($year = $startYear; $year <= $endYear; $year++) {
+                      echo "<option value=\"$year\">$year</option>";
+                  }
+                  ?>
+              </select>
+          </td>
+          <td><input type="text" name="percentage[]" class="percentage-input" required placeholder="Enter Percentage"
+              oninput="validatePercentageInput(this)"></td>
+          <td>
+              <input type="custom-text" name="certification_name[]" required class="certification-name-input" 
+                  placeholder="Enter Certification Name" maxlength="50"
+                  oninput="this.value = this.value.replace(/[^a-zA-Z .,(){}[\\]]/g, ''); toggleDateOfCertificate(this);">
+          </td>
+          <td><input type="custom-number" name="marks_obtained[]" class="marks-input" required placeholder="Enter Marks Obtained" 
+              maxlength="3"  oninput="this.value = this.value.replace(/[^0-9\\.]/g, '').slice(0, 3)"></td>
+          <td><input type="custom-number" name="total_marks[]" class="total-marks-input" required placeholder="Enter Total Marks" 
+              maxlength="3"  oninput="this.value = this.value.replace(/[^0-9\\.]/g, '').slice(0, 3)"></td>
+          <td>
+              <input type="date" name="date_of_certificate[]" class="date-input" 
+                  max="<?php echo date('Y-m-d'); ?>" 
+                  pattern="\\d{4}-\\d{2}-\\d{2}" 
+                  style="pointer-events: none; opacity: 0.6;">
+          </td>
+          <td><button type="button" onclick="editEducationRow(this)">✏️</button></td>
+          <td><button type="button" onclick="removeEducationRow(this)">❌</button></td>
+      `;
+      tableBody.appendChild(newRow); // Add the new row to the table
+      updateSerialNumbers(); // Update serial numbers for all rows
+  }
+
+  // Function to enable/disable fields based on Course Type selection
+  function toggleFields(selectElement) {
+      const row = selectElement.closest('tr');
+      const degreeFields = row.querySelectorAll('.degree-input, .university-input, .institution-input, .year-input, .percentage-input');
+      const certificationFields = row.querySelectorAll('.certification-name-input, .marks-input, .total-marks-input, .date-input');
+
+      if (selectElement.value === "degree") {
+          // Show Degree Fields
+          degreeFields.forEach(field => {
+              field.style.display = ""; // Unhide the fields
+              field.removeAttribute('readonly'); // Enable fields
+          });
+
+          // Hide Certification Fields
+          certificationFields.forEach(field => {
+              field.style.display = "none"; // Hide fields
+              field.setAttribute('readonly', true); // Disable fields
+          });
+      } else if (selectElement.value === "certification") {
+          // Show Certification Fields
+          certificationFields.forEach(field => {
+              field.style.display = ""; // Unhide the fields
+              field.removeAttribute('readonly'); // Enable fields
+          });
+
+          // Hide Degree Fields
+          degreeFields.forEach(field => {
+              field.style.display = "none"; // Hide fields
+              field.setAttribute('readonly', true); // Disable fields
+          });
+      } else {
+          // Hide all fields if no Course Type is selected
+          degreeFields.forEach(field => {
+              field.style.display = "none";
+              field.setAttribute('readonly', true);
+          });
+          certificationFields.forEach(field => {
+              field.style.display = "none";
+              field.setAttribute('readonly', true);
+          });
+      }
+  }
+
+  // Enable all fields before form submission
+  document.getElementById('educationForm').addEventListener('submit', function () {
+      const degreeInputs = document.querySelectorAll('.degree-input, .university-input, .institution-input, .year-input, .percentage-input');
+      const certificationInputs = document.querySelectorAll('.certification-name-input, .marks-input, .total-marks-input, .date-input');
+
+      // Ensure all fields are enabled before submission
+      degreeInputs.forEach(input => input.removeAttribute('readonly'));
+      certificationInputs.forEach(input => input.removeAttribute('readonly'));
+  });
+
+  // Function to remove a row
+  function removeEducationRow(button) {
+      const row = button.closest('tr');
+      row.remove(); // Remove the row
+      updateSerialNumbers(); // Update serial numbers after removal
+  }
+
+  // Function to update serial numbers of the remaining rows
+  function updateSerialNumbers() {
+      const rows = document.querySelectorAll('table tbody tr'); // Select all rows in the table body
+      let counter = 1; // Start with 1
+
+      rows.forEach(row => {
+          const serialCell = row.querySelector('td:first-child'); // Select the first column where serial number is displayed
+          const serialInput = row.querySelector('input[name="serial_no[]"]'); // Select the hidden serial number input
+
+          // Update the displayed serial number and the hidden input value
+          if (serialCell) serialCell.textContent = counter;
+          if (serialInput) serialInput.value = counter;
+
+          counter++; // Increment the counter for the next row
+      });
+  }
+
+  // Function to edit an education row
+  function editEducationRow(button) {
+      const row = button.closest('tr');
+      const inputs = row.querySelectorAll('input, select');
+
+      // Check if the row is in edit mode
+      if (button.innerText === "✏️") {
+          inputs.forEach(input => input.removeAttribute('readonly'));
+          button.innerText = "💾"; // Change button text to Save
+      } else {
+          inputs.forEach(input => input.setAttribute('readonly', true));
+          button.innerText = "✏️"; // Change button text back to Edit
+      }
+  }
+
+  // Event listener to apply validations
+  document.addEventListener("DOMContentLoaded", function () {
+      // Apply text-to-uppercase for custom-text fields
+      const customTextFields = document.querySelectorAll('.custom-text');
+      customTextFields.forEach(field => {
+          field.addEventListener('input', function () {
+              this.value = this.value.toUpperCase();  // Convert input text to uppercase
+          });
+      });
+
+      // Apply numeric validation for custom-number fields
+      const customNumberFields = document.querySelectorAll('.custom-number');
+      customNumberFields.forEach(field => {
+          field.addEventListener('input', function () {
+              this.value = this.value.replace(/[^0-9]/g, '');  // Allow only numeric values
+          });
+      });
+  });
+</script>
+<script src="onboarding_form.js"></script>
+
+@endsection
+
+
+{{-- <!DOCTYPE html>
 <html lang="en">
 <head>
 
@@ -160,4 +386,4 @@
     </script>
 
 </body>
-</html>
+</html> --}}

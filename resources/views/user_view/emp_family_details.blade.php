@@ -1,121 +1,147 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Family Member Form</title>
-    <style>
-        .form-container {
-            margin-top: 20px;
+@extends('user_view/employee_form_layout')  <!-- Extending the layout file -->
+@section('content')  <!-- Defining the content section -->
+
+<div class="tab-content active" id="tab5">
+    <form id="familyForm" action="submit_step.php" method="POST">
+        <!-- <input type="hidden" name="employeeNo" value="P111"> -->
+       
+        <input type="hidden" name="form_step7" value="family_step">
+        <h3>Family Details</h3>
+        <button type="button" class="add-row-family action-button" onclick="addFamilyRow()">Add Family
+            Information</button>
+
+        <div class="table-container-family">
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Serial No.</th>
+                            <th>Name</th>
+                            <th>Relation</th>
+                            <th>Birth Date</th>
+                            <th>Gender</th>
+                            <th>Age</th>
+                            <th>Dependent</th>
+                            <th>Phone Number</th>
+                            <th>Edit</th>
+                            <th>Remove</th>
+                        </tr>
+                    </thead>
+                    <tbody id="familyTableBody">
+                        <!-- Rows will be added dynamically here -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <!-- <div class="button-container">
+            <button class="previous-btn" type="button">Previous</button>
+            <button type="submit" class="next-btn">Next</button>
+        </div> -->
+        <div class="button-container">
+            <button class="previous-btn">
+                <span>&#8249;</span>
+            </button>
+            <button type="submit" class="next-btn">
+                <span>&#8250;</span>
+            </button>
+        </div>
+
+    </form>
+</div>
+<!-- uppercase bug -->
+<script>
+    let familyCounter = 1; // Auto-incrementing counter for Family Details
+    function addFamilyRow() {
+        const tableBody = document.getElementById('familyTableBody');
+        const newRow = document.createElement('tr');
+
+        newRow.innerHTML = `
+<td>${familyCounter}</td> <!-- Display serial number in the table -->
+<td>
+    <input type="hidden" name="serial_no[]" value="${familyCounter}">
+    <input type="text" name="name[]" class="custom-name" placeholder="Enter Name" required maxlength="50"
+       oninput="this.value = this.value.replace(/[^a-zA-Z ]/g, '').();"  onkeydown="return blockNumbers(event);">
+</td>
+<td>
+    <select name="relation[]" class="relation-type" required>
+        <option value="" disabled selected>Select Relation</option>
+        <option value="Spouse">Spouse</option>
+        <option value="Child">Child</option>
+        <option value="Parent">Parent</option>
+        <option value="Sibling">Sibling</option>
+        <option value="Other">Other</option>
+    </select>
+</td>
+<td>
+    <input type="date" name="birth_date[]" required onchange="calculateAge(this)" 
+        max="<?php echo date('Y-m-d'); ?>">
+</td>
+<td>
+    <select name="gender[]" class="gender-type" required>
+        <option value="" disabled selected>Select Gender</option>
+        <option value="Male">Male</option>
+        <option value="Female">Female</option>
+        <option value="Other">Other</option>
+    </select>
+</td>
+<td><input type="custom-age" name="age[]" placeholder="Age" required readonly></td>
+<td>
+    <select name="dependent[]" class="dependent-type" required>
+        <option value="" disabled selected>Select</option>
+        <option value="Yes">Yes</option>
+        <option value="No">No</option>
+    </select>
+</td>
+<td><input type="tel" name="phone_number[]" placeholder="Phone Number"  maxlength="10" pattern="\\d{10}" inputmode="numeric" 
+title="Please enter a 10-digit phone number" 
+oninput="this.value = this.value.replace(/[^0-9]/g, '')"></td>
+<td><button type="button" onclick="editFamilyRow(this)">✏️</button></td>
+<td><button type="button" onclick="removeFamilyRow(this)">❌</button></td>
+`;
+
+        tableBody.appendChild(newRow);
+
+        familyCounter++; // Increment the serial counter
+    }
+
+    // Function to remove rows
+    function removeFamilyRow(button) {
+        const row = button.closest('tr');
+        row.remove();
+        updateFamilySerialNumbers(); // Update serial numbers after row removal
+    }
+
+    // Update serial numbers after row deletion
+    function updateFamilySerialNumbers() {
+        const rows = document.querySelectorAll('#familyTableBody tr');
+        let counter = 1;
+        rows.forEach((row) => {
+            row.querySelector('td:first-child').innerText = counter; // Update visible serial number
+            row.querySelector('input[name="serial_no[]"]').value = counter; // Update hidden serial number
+            counter++;
+        });
+        familyCounter = counter; // Reset counter to the next number
+    }
+
+    function calculateAge(birthDateInput) {
+        const birthDate = new Date(birthDateInput.value);
+        const today = new Date();
+        let age = today.getFullYear() - birthDate.getFullYear();
+        const monthDifference = today.getMonth() - birthDate.getMonth();
+
+        if (monthDifference < 0 || (monthDifference === 0 && today.getDate() < birthDate.getDate())) {
+            age--;
         }
-        .form-entry {
-            margin-bottom: 20px;
-            padding: 15px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-        }
-        button {
-            margin: 10px;
-        }
-    </style>
-</head>
-<body>
 
-    <h1>Family Member Form</h1>
-    
-    <!-- Button to add new family member -->
-    <button id="addFamilyMemberBtn">Add Family Member</button>
-    
-    <!-- Container where family member entries will be added -->
-    <div id="familyMemberEntries" class="form-container"></div>
-    <a href="{{ route('user.bank') }}" class="btn btn-success">back</a>
-    <a href="{{ route('user.preemp') }}" class="btn btn-success">next</a>
+        const ageInput = birthDateInput.closest('tr').querySelector('input[name="age[]"]');
+        ageInput.value = age;
+    }
 
-    <script>
-        const addFamilyMemberBtn = document.getElementById("addFamilyMemberBtn");
-        const familyMemberEntries = document.getElementById("familyMemberEntries");
+    function editFamilyRow(button) {
+        const row = button.closest('tr');
+        // Add your edit logic here (toggle between edit/view mode)
+    }
+</script>
+  <script src="onboarding_form.js"></script>
 
-        // Function to add a new family member entry
-        function addFamilyMemberForm() {
-            const familyMemberEntry = document.createElement("div");
-            familyMemberEntry.classList.add("form-entry");
-            familyMemberEntry.innerHTML = `
-                <label>Name:</label>
-                <input type="text" placeholder="Enter Name" class="family-name" required><br>
-                
-                <label>Relation:</label>
-                <select class="family-relation" required>
-                    <option value="">Select Relation</option>
-                    <option value="Spouse">Spouse</option>
-                    <option value="Child">Child</option>
-                    <option value="Parent">Parent</option>
-                    <option value="Sibling">Sibling</option>
-                    <option value="Other">Other</option>
-                </select><br>
-
-                <label>Birth Date:</label>
-                <input type="date" class="family-birthdate" required><br>
-
-                <label>Gender:</label>
-                <select class="family-gender" required>
-                    <option value="">Select Gender</option>
-                    <option value="Male">Male</option>
-                    <option value="Female">Female</option>
-                    <option value="Other">Other</option>
-                </select><br>
-
-                <label>Age:</label>
-                <input type="text" class="family-age" disabled><br>
-
-                <label>Dependent:</label>
-                <select class="family-dependent" required>
-                    <option value="">Select Dependent</option>
-                    <option value="Yes">Yes</option>
-                    <option value="No">No</option>
-                </select><br>
-
-                <label>Phone Number:</label>
-                <input type="text" class="family-phone" maxlength="10"><br>
-            `;
-            familyMemberEntries.appendChild(familyMemberEntry);
-
-            // Add event listeners to recalculate age and validate inputs
-            const birthdateInput = familyMemberEntry.querySelector(".family-birthdate");
-            birthdateInput.addEventListener("change", function() {
-                const birthDate = new Date(birthdateInput.value);
-                const ageField = familyMemberEntry.querySelector(".family-age");
-                if (birthDate) {
-                    const age = new Date().getFullYear() - birthDate.getFullYear();
-                    ageField.value = age;
-                }
-            });
-
-            // Validate the Name field for alphabets only
-            const nameInput = familyMemberEntry.querySelector(".family-name");
-            nameInput.addEventListener("input", function() {
-                if (!/^[a-zA-Z\s]*$/.test(nameInput.value)) {
-                    alert("Name should only contain alphabets.");
-                    nameInput.setCustomValidity("Name should only contain alphabets.");
-                } else {
-                    nameInput.setCustomValidity("");
-                }
-            });
-
-            // Validate Phone Number field to accept only numbers and max 10 digits
-            const phoneInput = familyMemberEntry.querySelector(".family-phone");
-            phoneInput.addEventListener("input", function() {
-                if (!/^\d{0,10}$/.test(phoneInput.value)) {
-                    alert("Phone number should be only numbers and max 10 digits.");
-                    phoneInput.setCustomValidity("Phone number should be only numbers and max 10 digits.");
-                } else {
-                    phoneInput.setCustomValidity("");
-                }
-            });
-        }
-
-        // Event listener to add family member on button click
-        addFamilyMemberBtn.addEventListener("click", addFamilyMemberForm);
-    </script>
-
-</body>
-</html>
+@endsection

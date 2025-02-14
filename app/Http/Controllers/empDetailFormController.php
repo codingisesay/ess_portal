@@ -28,19 +28,19 @@ class empDetailFormController extends Controller
     // ->where('organisation_departments.organisation_id', '=', $id) // Adding a WHERE condition to filter by department name
     // ->get();
 
-              $results = DB::table('emp_details')
-    ->join('employee_types', 'emp_details.employee_type', '=', 'employee_types.id')
-    ->join('organisation_designations', 'emp_details.designation', '=', 'organisation_designations.id')
-    ->join('users', 'emp_details.reporting_manager', '=', 'users.id')
-    ->join('organisation_departments', 'emp_details.department', '=', 'organisation_departments.id')
-    ->select('emp_details.employee_type as employee_type','employee_types.name as employee_type_name','emp_details.employee_no as employee_no','emp_details.employee_name as employee_name',
-             'emp_details.Joining_date as Joining_date','emp_details.reporting_manager as reporting_manager_id','users.name as reporting_manager_name','emp_details.total_experience as total_experience',
-             'organisation_designations.name as role_name','emp_details.designation as designation_id','organisation_departments.name as department_name','emp_details.department as department_id','emp_details.gender as gender',
-             'emp_details.date_of_birth as date_of_birth','emp_details.blood_group as blood_group','emp_details.nationality as nationality',
-             'emp_details.religion as religion','emp_details.marital_status as marital_status','emp_details.anniversary_date as anniversary_date',
-             'emp_details.universal_account_number as universal_account_number','emp_details.provident_fund as provident_fund','emp_details.esic_no as esic_no',)
-    ->where('emp_details.user_id', '=', $loginUserInfo->id) // Adding a WHERE condition to filter by department name
-    ->get();
+    //           $results = DB::table('emp_details')
+    // ->join('employee_types', 'emp_details.employee_type', '=', 'employee_types.id')
+    // ->join('organisation_designations', 'emp_details.designation', '=', 'organisation_designations.id')
+    // ->join('users', 'emp_details.reporting_manager', '=', 'users.id')
+    // ->join('organisation_departments', 'emp_details.department', '=', 'organisation_departments.id')
+    // ->select('emp_details.employee_type as employee_type','employee_types.name as employee_type_name','emp_details.employee_no as employee_no','emp_details.employee_name as employee_name',
+    //          'emp_details.Joining_date as Joining_date','emp_details.reporting_manager as reporting_manager_id','users.name as reporting_manager_name','emp_details.total_experience as total_experience',
+    //          'organisation_designations.name as role_name','emp_details.designation as designation_id','organisation_departments.name as department_name','emp_details.department as department_id','emp_details.gender as gender',
+    //          'emp_details.date_of_birth as date_of_birth','emp_details.blood_group as blood_group','emp_details.nationality as nationality',
+    //          'emp_details.religion as religion','emp_details.marital_status as marital_status','emp_details.anniversary_date as anniversary_date',
+    //          'emp_details.universal_account_number as universal_account_number','emp_details.provident_fund as provident_fund','emp_details.esic_no as esic_no',)
+    // ->where('emp_details.user_id', '=', $loginUserInfo->id) // Adding a WHERE condition to filter by department name
+    // ->get();
 
     // dd($results);
 
@@ -51,7 +51,7 @@ class empDetailFormController extends Controller
         $emp_types = employee_type::get();
 
 
-        return view('user_view.emp_details',compact('emp_types','users','departments','designations','results'));
+        return view('user_view.emp_details',compact('emp_types','users','departments','designations'));
         // return view('user_view.emp_details');
     }
 
@@ -83,6 +83,10 @@ class empDetailFormController extends Controller
 
         return view('user_view.emp_pre_empl_det');
 
+    }
+
+    public function loaddocuploaduser(){
+        return view('user_view.emp_doc_upload');
     }
 
     public function insertDetail(Request $request){
