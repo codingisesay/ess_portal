@@ -8,7 +8,7 @@ use Illuminate\Database\Seeder;
 class qualification_typesTableSeeder extends Seeder
 {
     /**
-     * Run the database seeds.
+     * Run the database seeds.gi
      */
     public function run()
     {
@@ -19,6 +19,6 @@ class qualification_typesTableSeeder extends Seeder
                 'created_at' => '',
                 'updated_at' => '',
             ]
-        ])
+            ]);
     }
 }
