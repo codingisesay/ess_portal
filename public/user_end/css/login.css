@@ -1,0 +1,97 @@
+  /* Make the login and registration box responsive */
+  .login-box,
+  .registration-box {
+      max-width: 500px;
+      width: 100%;
+      margin: 0 auto;
+  }
+
+  /* Ensure the image in the left column is responsive */
+  img.img-fluid {
+      object-fit: cover;
+  }
+
+  /* Modify the colors of input fields, labels, and buttons */
+  .form-control {
+      border-radius: 0.375rem;
+      /* Rounded corners for inputs */
+      border: 1px solid #ccc;
+      /* Lighter border color */
+      padding: 0.75rem 1rem;
+      /* Ensures consistent padding for inputs */
+  }
+
+  /* Floating label effect */
+  .form-floating input:focus+label,
+  .form-floating input:not(:placeholder-shown)+label {
+      top: -20px;
+      font-size: 20px;
+      color: rgb(0, 0, 0);
+      /* Change the color when input is focused */
+  }
+
+  /* For custom color on the login and registration buttons */
+  .btn-primary {
+      background-color: #6b145e;
+      border-color: rgb(139, 177, 218);
+      padding: 0.75rem;
+      /* Consistent padding for the button */
+  }
+
+  .btn-primary:hover {
+      background-color: #6b145e;
+      border-color: #6b145e;
+  }
+
+  /* For adjusting the "Continue with Microsoft" button */
+  .btn-outline-secondary {
+      border-color: #6b145e;
+      color: #6b145e;
+      padding: 0.75rem;
+  }
+
+  .btn-outline-secondary:hover {
+      background-color: #6b145e;
+      color: white;
+  }
+
+  /* Ensure everything aligns properly on mobile */
+  @media (max-width: 768px) {
+
+      .login-box,
+      .registration-box {
+          padding: 2rem;
+      }
+
+      .container-fluid {
+          height: auto;
+          /* Adjust height to fit the content on small screens */
+      }
+
+      /* Make sure the login/register form buttons are full width */
+      .btn-primary,
+      .btn-outline-secondary {
+          width: 100%;
+      }
+  }
+
+  /* For input boxes with icons */
+  .form-floating .position-absolute {
+      right: 15px;
+      /* Ensures the icon stays at the right inside the input */
+  }
+
+  /* Consistent styles for the text and error messages */
+  .text-danger {
+      font-size: 12px;
+      margin-top: 5px;
+  }
+
+  /* Consistent styling for links */
+  a.text-decoration-none {
+      color: #6b145e;
+  }
+
+  a.text-decoration-none:hover {
+      text-decoration: underline;
+  }

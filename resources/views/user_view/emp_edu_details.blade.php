@@ -65,16 +65,23 @@
 
             <div class="form-group row">
       <div class="col-xs-4">
-        <label for="ex1">Type Degree:</label>
+        <label for="ex1">Choose Degree Type:</label>
         <select class="form-control" required>
-            <option>Choose Type</option>
-                    <option>Undergraduate</option>
-                    <option>Postgraduate</option>
+            <option>Choose Degree Type</option>
+                    <option>Bachelor's Degree</option>
+                    <option>Master's Degree</option>
+                    <option>Doctorate</option>
+                    <option>Diploma</option>
+                    <option>Others</option>
         </select>
       </div>
       <div class="col-xs-4">
-        <label for="ex2">Degree:</label>
-        <input class="form-control" id="ex2" type="text" maxlength="20" required>
+        <label for="ex2">Choose Degree Name:</label>
+        <select class="form-control" required>
+            <option>Choose Degree Name</option>
+                    <option>Undergraduate</option>
+                    <option>Postgraduate</option>
+        </select>
       </div>
       <div class="col-xs-4">
         <label for="ex3">University/Board:</label>
@@ -85,11 +92,7 @@
       <div class="form-group row">
       <div class="col-xs-4">
         <label for="ex1">Institution:</label>
-        <select class="form-control" required>
-            <option>Choose Type</option>
-                    <option>Undergraduate</option>
-                    <option>Postgraduate</option>
-        </select>
+        <input class="form-control" id="ex3" type="text" required>
       </div>
       <div class="col-xs-4">
         <label for="ex2">Passing Year:</label>
@@ -97,7 +100,7 @@
       </div>
       <div class="col-xs-4">
         <label for="ex3">Percentage/CGPA:</label>
-        <input type="number" max="4" step="0.1" placeholder="Enter Percentage/CGPA">
+        <input class="form-control" type="number" max="4" step="0.1" placeholder="Enter Percentage/CGPA">
       </div>
     </div> `;
             degreeFormEntries.appendChild(degreeEntry);
