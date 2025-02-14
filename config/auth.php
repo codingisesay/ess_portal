@@ -75,7 +75,7 @@ return [
             'model' => App\Models\organisation::class,
         ],
 
-        // 'users' => [
+       // // 'users' => [
         //     'driver' => 'database',
         //     'table' => 'users',
         // ],
