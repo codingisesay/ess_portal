@@ -1,4 +1,3 @@
-
 <html>
 <head>
     <meta charset="UTF-8">
@@ -38,102 +37,130 @@
         }
     </style>
     
-
-
     <!-- Progress Bar -->
     <div class="step-tabs">
-        <div class="step active" id="step1" data-file="employee_details.php">
+        <div class="step" id="step1" data-route="{{ route('user.dashboard') }}">
             <div class="circle">1</div>
             <div class="label">Employee Details</div>
         </div>
-        <div class="step" id="step2" data-file="contact_details.php">
+        <div class="step" id="step2" data-route="{{ route('user.contact') }}">
             <div class="circle">2</div>
             <div class="label">Contact Details</div>
         </div>
-        <div class="step" id="step3" data-file="educational_details.php">
+        <div class="step" id="step3" data-route="{{ route('user.edu') }}">
             <div class="circle">3</div>
             <div class="label">Education Details</div>
         </div>
-        <div class="step" id="step4" data-file="bank_details.php">
+        <div class="step" id="step4" data-route="{{ route('user.bank') }}">
             <div class="circle">4</div>
             <div class="label">Bank Details</div>
         </div>
-        <div class="step" id="step5" data-file="family_details.php">
+        <div class="step" id="step5" data-route="{{ route('user.family') }}">
             <div class="circle">5</div>
             <div class="label">Family Details</div>
         </div>
-        <div class="step" id="step6" data-file="previous_employment.php">
+        <div class="step" id="step6" data-route="{{ route('user.preemp') }}">
             <div class="circle">6</div>
             <div class="label">Previous Employment</div>
         </div>
-        <div class="step" id="step7" data-file="document_upload.php">
+        <div class="step" id="step7" data-route="{{ route('user.docupload') }}">
             <div class="circle">7</div>
             <div class="label">Document Upload</div>
         </div>
     </div>
 
     <!-- Content Area (Where Forms Will Be Loaded Dynamically) -->
-    {{-- <div id="content-area">
-        <p>Loading Employee Details...</p>
-    </div> --}}
+    @yield('content')
 
     <!-- !PAGE CONTENT! -->
 
-  @yield('content')
-
     <script>
-       $(document).ready(function () {
-    // Load the first step by default
-    loadStep("employee_details.php");
+        document.addEventListener('DOMContentLoaded', function() {
+            const steps = document.querySelectorAll('.step');
+            const stepCount = steps.length;
 
-    // Handle step click
-    $(".step").click(function () {
-        var file = $(this).data("file");
-        var index = $(this).index(); // Get the index of the clicked step
+            // Retrieve saved progress from localStorage
+            const savedProgress = localStorage.getItem('progress');
+            const progress = savedProgress ? JSON.parse(savedProgress) : [];
 
-        // Load the content of the clicked step
-        loadStep(file);
+            // Apply saved progress to the steps
+            steps.forEach((step, index) => {
+                if (progress.includes(index)) {
+                    step.classList.add('completed');
+                }
+                if (progress.length > 0 && progress[progress.length - 1] >= index) {
+                    step.classList.add('active');
+                }
+            });
 
-        // Highlight all previous and current steps as completed
-        $(".step").each(function (i) {
-            if (i <= index) {
-                $(this).addClass("completed"); // Mark as completed
-            } else {
-                $(this).removeClass("completed"); // Remove completed if it's ahead
-            }
+            // When a step is clicked
+            steps.forEach((step, index) => {
+                step.addEventListener('click', function() {
+                    // Get the route URL from the data-route attribute
+                    const route = step.getAttribute('data-route');
+                    
+                    // Remove 'active' class from all steps
+                    steps.forEach(s => s.classList.remove('active'));
+
+                    // Add 'active' class to the clicked step
+                    step.classList.add('active');
+
+                    // Mark the clicked step as completed
+                    step.classList.add('completed');
+
+                    // Mark previous steps as completed as well
+                    steps.forEach((s, i) => {
+                        if (i <= index) {
+                            s.classList.add('completed');
+                        } else {
+                            s.classList.remove('completed');
+                        }
+                    });
+
+                    // Save progress to localStorage (only the steps up to the clicked step)
+                    const updatedProgress = [];
+                    steps.forEach((s, i) => {
+                        if (s.classList.contains('completed')) {
+                            updatedProgress.push(i);
+                        }
+                    });
+                    localStorage.setItem('progress', JSON.stringify(updatedProgress));
+
+                    // Redirect to the route
+                    if (route) {
+                        window.location.href = route;
+                    } else {
+                        console.error('Route is missing for step: ' + step.id);
+                    }
+                });
+            });
         });
-
-        // Mark the current step as active
-        $(".step").removeClass("active");
-        $(this).addClass("active");
-    });
-
-    // Function to load step content dynamically
-    function loadStep(file) {
-        $("#content-area").html("<p>Loading...</p>");
-        $.ajax({
-            url: file,
-            method: "GET",
-            success: function (data) {
-                $("#content-area").html(data);
-            },
-            error: function () {
-                $("#content-area").html("<p>Error loading content.</p>");
-            }
-        });
-    }
-});
-
     </script>
+
     <style>
+        /* Style for active step */
+        .step.active .circle {
+            background-color: #007bff; /* Blue color for active step */
+        }
+
+        /* Style for completed step */
         .step.completed .circle {
-    background-color: #8A3366; /* Gray color for completed steps */
-}
+            background-color: #8A3366; /* Gray color for completed steps */
+        }
 
-.step.completed:not(:last-child)::after {
-    background-color: #8A3366; /* Gray line for completed steps */
-}
+        .step.completed:not(:last-child)::after {
+            background-color: #8A3366; /* Gray line for completed steps */
+        }
 
+        /* Optional: Style for active step's label */
+        .step.active .label {
+            font-weight: bold;
+        }
+
+        /* Add transitions for smooth color change */
+        .step .circle {
+            transition: background-color 0.3s ease;
+        }
     </style>
 </body>
 </html>

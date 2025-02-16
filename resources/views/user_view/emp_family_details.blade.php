@@ -142,6 +142,6 @@ oninput="this.value = this.value.replace(/[^0-9]/g, '')"></td>
         // Add your edit logic here (toggle between edit/view mode)
     }
 </script>
-  <script src="onboarding_form.js"></script>
+<script src="{{ asset('user_end/js/onboarding_form.js') }}"></script>
 
 @endsection

@@ -1,12 +1,44 @@
-<?php 
-$id = Auth::guard('web')->user()->id;
 
-?>
 @extends('user_view/employee_form_layout')  <!-- Extending the layout file -->
 @section('content')  <!-- Defining the content section -->
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<?php 
+error_reporting(0);
+$id = Auth::guard('web')->user()->id;
+// {{ old('employmentType', $emp_contact_datas[0]->per_building_no) }}
+// echo $emp_contact_datas[0]->per_building_no;
+// exit();
+// dd($emp_contact_datas);
 
+?>
+@if($errors->any())
+<ul>
+    @foreach($errors->all() as $error)
+        <li style="color: red;">{{ $error }}</li>
+    @endforeach
+</ul>
+@endif
+
+<div class="w3-container">
+    
+    @if(session('success'))
+    <div class="w3-panel w3-green">
+        {{ session('success') }} 
+    </div>
+    @endif
+
+    
+        @if(session('error'))
+       
+        <div class="w3-panel w3-red">
+            {{ session('error') }} 
+        </div>
+        @endif
+    
+  </div>
 <div class="tab-content active" id="tab2">
-  <form action="submit_step.php" method="POST" class="address-form">
+  <form action="{{ route('contact_insert') }}" method="POST" class="address-form">
+    @csrf
       <!-- <input type="hidden" name="employeeNo" value=""> -->
       <input type="hidden" name="form_step3" value="form_step3">
 
@@ -26,20 +58,20 @@ $id = Auth::guard('web')->user()->id;
                       <div class="form-group">
                          
                           <input type="text" id="permanent_building_no" class="form-control" maxlength="35"
-                              name="permanent_building_no" placeholder="">
+                              name="permanent_building_no" placeholder="" value="{{ old('permanent_building_no', $emp_contact_datas[0]->per_building_no) }}">
                               <label for="permanent_building_no">Building No./Flat No.</label>
                       </div>
                       <div class="form-group">
                           
                           <input type="text" id="permanent_premises_name" class="form-control" maxlength="35"
-                              name="permanent_premises_name" required placeholder="">
+                              name="permanent_premises_name" placeholder="" value="{{ old('permanent_premises_name', $emp_contact_datas[0]->per_name_of_premises) }}" required>
                               <label for="permanent_premises_name">Name of the Premises/Bldg<span
                                   style="color: red;">*</span></label>
                       </div>
                       <div class="form-group">
                         
                           <input type="text" id="permanent_landmark" class="form-control" maxlength="35"
-                              name="permanent_landmark" required placeholder="">
+                              name="permanent_landmark" required placeholder="" value="{{ old('permanent_landmark', $emp_contact_datas[0]->per_nearby_landmark) }}">
                               <label for="permanent_landmark">Nearby Landmark<span
                               style="color: red;">*</span></label>
                       </div>
@@ -48,7 +80,7 @@ $id = Auth::guard('web')->user()->id;
                       <div class="form-group">
                           
                           <input type="text" id="permanent_road_street" class="form-control" maxlength="35"
-                              name="permanent_road_street" required placeholder="">
+                              name="permanent_road_street" required placeholder="" value="{{ old('permanent_road_street', $emp_contact_datas[0]->per_road_street) }}">
                               <label for="permanent_road_street">Road/Street<span
                                   style="color: red;">*</span></label>
                       </div>
@@ -56,7 +88,7 @@ $id = Auth::guard('web')->user()->id;
                          
                           <input list="permanent_countries" id="permanent_country" name="permanent_country"
                               required class="form-control" placeholder="" value="India"
-                              oninput="checkCountryAndTogglePincode()">
+                              oninput="checkCountryAndTogglePincode()" value="{{ old('permanent_country', $emp_contact_datas[0]->per_country) }}">
                               <label for="permanent_country">Country<span style="color: red;"
                               id="country-required">*</span></label>
                           <datalist id="permanent_countries"></datalist>
@@ -64,10 +96,11 @@ $id = Auth::guard('web')->user()->id;
 
                       <div class="form-group">
                           
-                          <input type="text" id="permanent_pincode" name="permanent_pincode"
+                          <input type="text" id="pincode_permanent" name="permanent_pincode" onkeyup="fetchLocationDetails('permanent')"
                               class="form-control" placeholder="" minlength="5"
                               maxlength="6" pattern="\d{5,6}" oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 6); 
-       fetchCityAndState('permanent_pincode', 'permanent_city', 'permanent_state', 'permanent_district')">
+       fetchCityAndState('permanent_pincode', 'permanent_city', 'permanent_state', 'permanent_district')" required value="{{ old('permanent_pincode', $emp_contact_datas[0]->per_pincode) }}">
+       {{-- <input type="text" id="pincode_permanent" value="" placeholder="Enter PIN code" class="form-control pincode" name="pincode_permanent" onkeyup="fetchLocationDetails('permanent')" required /> --}}
        <label for="permanent_pincode">Pincode/Zipcode<span style="color: red;"
        id="pincode-required">*</span></label>
                       </div>
@@ -75,22 +108,22 @@ $id = Auth::guard('web')->user()->id;
                   <div class="form-row">
                       <div class="form-group">
                          
-                          <input type="text" id="permanent_district" name="permanent_district" required maxlength="35"
-                              class="form-control" placeholder="">
+                          <input type="text" id="district_permanent" name="permanent_district" required maxlength="35"
+                              class="form-control" placeholder="" value="{{ old('district_permanent', $emp_contact_datas[0]->per_district) }}">
                               <label for="permanent_district">District<span style="color: red;">*</span></label>
                       </div>
                       <div class="form-group">
                           
-                          <input type="text" id="permanent_city" name="permanent_city" required maxlength="35"
-                              class="form-control" placeholder="">
+                          <input type="text" id="city_permanent" name="permanent_city" required maxlength="35"
+                              class="form-control" placeholder="" value="{{ old('permanent_city', $emp_contact_datas[0]->per_city) }}">
                               <label for="permanent_city">City/Town/Village<span
                                   style="color: red;">*</span></label>
                       </div>
 
                       <div class="form-group">
                           
-                          <input type="text" id="permanent_state" name="permanent_state" required maxlength="35"
-                              class="form-control" placeholder="">
+                          <input type="text" id="state_permanent" name="permanent_state" required maxlength="35"
+                              class="form-control" placeholder="" value="{{ old('permanent_state', $emp_contact_datas[0]->per_state) }}">
                               <label for="permanent_state">State/Province<span
                                   style="color: red;">*</span></label>
                       </div>
@@ -106,8 +139,8 @@ $id = Auth::guard('web')->user()->id;
                   <div class="correspondence-header">
                       <h3 class="address-title">Correspondence Address</h3>
                       <div class="same-address-container">
-                          <input type="checkbox" id="same_as_permanent" class="styled-checkbox"
-                              onclick="copyPermanentAddress()">
+                          <input type="checkbox" id="copy_address_checkbox" class="styled-checkbox"
+                              onclick="copyPermanentToCorrespondence()">
                           <label for="same_as_permanent" class="checkbox-label">Same as above</label>
                       </div>
                   </div>
@@ -117,20 +150,20 @@ $id = Auth::guard('web')->user()->id;
                       <div class="form-group">
                          
                           <input type="text" id="correspondence_building_no" name="correspondence_building_no" maxlength="35" 
-                              class="form-control" placeholder="">
+                              class="form-control" placeholder="" value="{{ old('correspondence_building_no', $emp_contact_datas[0]->cor_building_no) }}">
                               <label for="correspondence_building_no">Building No./Flat No.</label>
                       </div>
                       <div class="form-group">
                           
                           <input type="text" id="correspondence_premises_name" class="form-control" maxlength="35" required
-                              name="correspondence_premises_name" placeholder="">
+                              name="correspondence_premises_name" placeholder="" value="{{ old('correspondence_premises_name', $emp_contact_datas[0]->cor_name_of_premises) }}">
                               <label for="correspondence_premises_name">Name of the Premises/Bldg<span
                           style="color: red;">*</span></label>
                       </div>
                       <div class="form-group">
                           
                           <input type="text" id="correspondence_landmark" name="correspondence_landmark" maxlength="35" required
-                              class="form-control" placeholder="">
+                              class="form-control" placeholder="" value="{{ old('correspondence_landmark', $emp_contact_datas[0]->cor_nearby_landmark) }}">
                               <label for="correspondence_landmark">Nearby Landmark<span
                           style="color: red;">*</span></label>
                       </div>
@@ -139,28 +172,48 @@ $id = Auth::guard('web')->user()->id;
                       <div class="form-group">
                          
                           <input type="text" id="correspondence_road_street" name="correspondence_road_street" maxlength="35" required
-                              class="form-control" placeholder="Enter Road/Street">
+                              class="form-control" placeholder="Enter Road/Street" value="{{ old('correspondence_road_street', $emp_contact_datas[0]->cor_road_street) }}">
                               <label for="correspondence_road_street">Road/Street<span
                               style="color: red;">*</span></label>
                       </div>
                      
                       <div class="form-group">
                          
-                          <input list="correspondence_countries" id="correspondence_country"
+                          <input list="correspondence_countries" id="correspondence_countries"
                               name="correspondence_country" class="form-control" placeholder="" required
                               value="India"
-                              oninput="togglePincodeAsterisk1()">
+                              oninput="togglePincodeAsterisk1()" value="{{ old('correspondence_country', $emp_contact_datas[0]->cor_country) }}">
                               <label for="correspondence_country">Country<span
                               style="color: red;">*</span></label>
                           <datalist id="correspondence_countries"></datalist>
                       </div>
                       <div class="form-group">
+{{-- 
+
+                        <div class="col-xs-4">
+                            <label for="ex3">Pincode</label>
+                            <input type="text" id="pincode_correspondence" value="" class="form-control pincode" name="pincode_correspondence" onkeyup="fetchLocationDetails('correspondence')" required />
+                          </div>
+                    </div>
+                          <div class="form-group row">
+                          <div class="col-xs-4">
+                            <label for="ex2">City</label>
+                            <input type="text" id="city_correspondence" value="" class="form-control" name="city_correspondence" readonly />
+                          </div>
+                          <div class="col-xs-4">
+                            <label for="ex3">State</label>
+                            <input type="text" id="state_correspondence" value="" class="form-control" name="state_correspondence" readonly />
+                          </div>
+                        <div class="col-xs-4">
+                        <label for="district">District</label>
+                        <input type="text" id="district_correspondence" value="" class="form-control" name="district_correspondence" readonly />
+                    </div> --}}
                           
-                          <input type="text" id="correspondence_pincode" name="correspondence_pincode"
+                          <input type="text" id="pincode_correspondence" name="correspondence_pincode" onkeyup="fetchLocationDetails('correspondence')"
                               class="form-control" placeholder="" minlength="5" required
                               maxlength="6" pattern="\d{5,6}"
                               oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 6); 
-       fetchCityAndState('correspondence_pincode', 'correspondence_city', 'correspondence_state', 'correspondence_district')">
+       fetchCityAndState('correspondence_pincode', 'correspondence_city', 'correspondence_state', 'correspondence_district')" value="{{ old('correspondence_pincode', $emp_contact_datas[0]->cor_pincode) }}">
        <label for="correspondence_pincode">Pincode/Zipcode <span id="pincode-asterisk" style="color: red; display: none;">*</span></label>
                       </div>
 
@@ -168,23 +221,23 @@ $id = Auth::guard('web')->user()->id;
                   <div class="form-row">
                       <div class="form-group">
                           
-                          <input type="text" id="correspondence_district" name="correspondence_district" maxlength="35" required
-                              class="form-control" placeholder="">
+                          <input type="text" id="district_correspondence" name="correspondence_district" maxlength="35" required
+                              class="form-control" placeholder="" value="{{ old('correspondence_district', $emp_contact_datas[0]->cor_district) }}">
                               <label for="correspondence_district">District<span
                           style="color: red;">*</span></label>
                       </div>
                       <div class="form-group">
                          
-                          <input type="text" id="correspondence_city" name="correspondence_city" maxlength="35" required
-                              class="form-control" placeholder="">
+                          <input type="text" id="city_correspondence" name="correspondence_city" maxlength="35" required
+                              class="form-control" placeholder="" value="{{ old('correspondence_city', $emp_contact_datas[0]->cor_city) }}">
                               <label for="correspondence_city">City/Town/Village<span
                               style="color: red;">*</span></label>
                       </div>
 
                       <div class="form-group">
                           
-                          <input type="text" id="correspondence_state" name="correspondence_state" maxlength="35" required
-                              class="form-control" placeholder="">
+                          <input type="text" id="state_correspondence" name="correspondence_state" maxlength="35" required
+                              class="form-control" placeholder="" value="{{ old('correspondence_state', $emp_contact_datas[0]->cor_state) }}">
                               <label for="correspondence_state">State/Province<span
                           style="color: red;">*</span></label>
                       </div>
@@ -231,7 +284,7 @@ $id = Auth::guard('web')->user()->id;
                   <input id="phoneNumber" name="phoneNumber" class="form-control"
                       placeholder="" type="tel" pattern="\d{10}"
                       title="Phone Number must be exactly 10 digits." required maxlength="10"
-                      oninput="validatePhoneNumbers()">
+                      oninput="validatePhoneNumbers()" value="{{ old('phoneNumber', $emp_contact_datas[0]->offical_phone_number) }}">
                       <label for="phoneNumber">Offical Phone Number<span style="color: red;">*</span></label>
                   <span class="error" id="phoneNumberError"></span>
               </div>
@@ -241,7 +294,7 @@ $id = Auth::guard('web')->user()->id;
                   <input id="alternate_phone_number" class="form-control" name="alternate_phone_number"
                       placeholder="" type="tel" pattern="\d{10}"
                       title="Alternate Phone Number must be exactly 10 digits." maxlength="10"
-                      oninput="validatePhoneNumbers()">
+                      oninput="validatePhoneNumbers()" value="{{ old('alternate_phone_number', $emp_contact_datas[0]->alternate_phone_number) }}">
                       <label for="alternate_phone_number">Alternate Phone Number</label>
                      
                   <span class="error" id="alternatePhoneNumberError"></span>
@@ -250,7 +303,7 @@ $id = Auth::guard('web')->user()->id;
                   
                   <input type="email" id="emailID" name="emailID" class="form-control"
                       placeholder=""
-                      pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}" required>
+                      pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}" required value="{{ old('emailID', $emp_contact_datas[0]->email_address) }}">
                       <label for="emailID">Email Address<span style="color: red;">*</span></label>
                   <span class="error" id="emailIDError"></span>
               </div>
@@ -258,7 +311,7 @@ $id = Auth::guard('web')->user()->id;
                   
                   <input type="email" id="email" name="email" class="form-control"
                       placeholder=""
-                      pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}" required>
+                      pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}" required value="{{ old('email', $emp_contact_datas[0]->offical_email_address) }}">
                       <label for="emailID">Offical Email Address<span style="color: red;">*</span></label>
                   <span class="error" id="emailIDError"></span>
               </div>
@@ -272,7 +325,7 @@ $id = Auth::guard('web')->user()->id;
                       
                       <input type="text" id="emergency_contact_name" class="form-control"
                           name="emergency_contact_name" placeholder="" required
-                          oninput="validateEmergencyContactName()">
+                          oninput="validateEmergencyContactName()" value="{{ old('emergency_contact_name', $emp_contact_datas[0]->emergency_contact_person) }}">
                           <label for="emergency_contact_name">Emergency Contact Person<span
                               style="color: red;">*</span></label>
                       <span class="error" id="emergencyContactNameError" style="color: red;"></span>
@@ -287,7 +340,7 @@ $id = Auth::guard('web')->user()->id;
                           name="emergency_contact_number" 
                           type="tel" pattern="\d{10}"
                           title="Emergency Contact Number must be exactly 10 digits." maxlength="10" required
-                          oninput="validatePhoneNumbers()">
+                          oninput="validatePhoneNumbers()"  value="{{ old('emergency_contact_number', $emp_contact_datas[0]->emergency_contact_number) }}">
                           <label for="emergency_contact_number">Emergency Contact Number<span
                   style="color: red;">*</span></label>
                           
@@ -316,7 +369,7 @@ $id = Auth::guard('web')->user()->id;
   </form>
 </div>
 
-<script src="onboarding_form.js"></script>
+<script src="{{ asset('user_end/js/onboarding_form.js') }}"></script>
 
 @endsection
 
@@ -624,26 +677,26 @@ function copyPermanentToCorrespondence() {
     
     if (isChecked) {
         // Copy the values from Permanent Address to Correspondence Address
-        document.getElementById('building_no_correspondence').value = document.getElementById('building_no_permanent').value;
-        document.getElementById('name_of_premises_correspondence').value = document.getElementById('name_of_premises_permanent').value;
-        document.getElementById('nearby_landmark_correspondence').value = document.getElementById('nearby_landmark_permanent').value;
-        document.getElementById('road_street_correspondence').value = document.getElementById('road_street_permanent').value;
-        document.getElementById('nationality_correspondence').value = document.getElementById('nationality_permanent').value;
-        document.getElementById('pincode_correspondence').value = document.getElementById('pincode_permanent').value;
-        document.getElementById('state_correspondence').value = document.getElementById('state_permanent').value;
-        document.getElementById('city_correspondence').value = document.getElementById('city_permanent').value;
+        document.getElementById('correspondence_building_no').value = document.getElementById('permanent_building_no').value;
+        document.getElementById('correspondence_premises_name').value = document.getElementById('permanent_premises_name').value;
+        document.getElementById('correspondence_landmark').value = document.getElementById('permanent_landmark').value;
+        document.getElementById('correspondence_road_street').value = document.getElementById('permanent_road_street').value;
+        document.getElementById('correspondence_countries').value = document.getElementById('permanent_country').value;
+        document.getElementById('pincode_correspondence').value = document.getElementById('permanent_pincode').value;
         document.getElementById('district_correspondence').value = document.getElementById('district_permanent').value;
+        document.getElementById('city_correspondence').value = document.getElementById('city_permanent').value;
+        document.getElementById('state_correspondence').value = document.getElementById('state_permanent').value;
     } else {
         // Clear the Correspondence Address fields if checkbox is unchecked
-        document.getElementById('building_no_correspondence').value = '';
-        document.getElementById('name_of_premises_correspondence').value = '';
-        document.getElementById('nearby_landmark_correspondence').value = '';
-        document.getElementById('road_street_correspondence').value = '';
-        document.getElementById('nationality_correspondence').value = '';
+        document.getElementById('correspondence_building_no').value = '';
+        document.getElementById('correspondence_premises_name').value = '';
+        document.getElementById('correspondence_landmark').value = '';
+        document.getElementById('correspondence_road_street').value = '';
+        document.getElementById('correspondence_countries').value = '';
         document.getElementById('pincode_correspondence').value = '';
-        document.getElementById('state_correspondence').value = '';
-        document.getElementById('city_correspondence').value = '';
         document.getElementById('district_correspondence').value = '';
+        document.getElementById('city_correspondence').value = '';
+        document.getElementById('state_correspondence').value = '';
     }
 }
    

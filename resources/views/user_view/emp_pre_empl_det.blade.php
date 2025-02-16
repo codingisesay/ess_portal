@@ -164,6 +164,6 @@
         }
     }
 </script>
-  <script src="onboarding_form.js"></script>
+<script src="{{ asset('user_end/js/onboarding_form.js') }}"></script>
 
 @endsection

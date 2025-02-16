@@ -70,6 +70,8 @@ Route::middleware(['auth'])->group(function () {
 
     Route::post('user/detail_insert',[empDetailFormController::class,'insertDetail'])->name('detail_insert');
     Route::post('user/contact_insert',[empDetailFormController::class,'insertcontact'])->name('contact_insert');
+    Route::post('user/education_insert',[empDetailFormController::class,'insertEducation'])->name('education_insert');
+    Route::post('user/bank_insert',[empDetailFormController::class,'insertBank'])->name('bank_insert');
 
 });
 

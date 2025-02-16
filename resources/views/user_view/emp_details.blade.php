@@ -1,10 +1,50 @@
 @extends('user_view/employee_form_layout')  <!-- Extending the layout file -->
 @section('content')  <!-- Defining the content section -->
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<?php 
+error_reporting(0);
+$id = Auth::guard('web')->user()->id;
+$name = Auth::guard('web')->user()->name;
+$employeeID = Auth::guard('web')->user()->employeeID;
+
+// dd($results);
+
+
+// dd($results);
+
+?>
+@if($errors->any())
+<ul>
+    @foreach($errors->all() as $error)
+        <li style="color: red;">{{ $error }}</li>
+    @endforeach
+</ul>
+@endif
+
+<div class="w3-container">
+    
+    @if(session('success'))
+    <div class="w3-panel w3-green">
+        {{ session('success') }} 
+    </div>
+    @endif
+
+    
+        @if(session('error'))
+       
+        <div class="w3-panel w3-red">
+            {{ session('error') }} 
+        </div>
+        @endif
+    
+  </div>
 
 
 <div class="tab-content active" id="tab1">
 
-    <form action="submit_step.php" method="POST">
+
+    <form action="{{ route('detail_insert') }}" method="POST">
+        @csrf
         <input type="hidden" name="form_step" value="form_step">
         <!-- Hidden input to identify the step -->
         <div class="column" style="flex: 1; border: 1px solid #ba184e; padding: 20px; border-radius: 8px;">
@@ -15,8 +55,10 @@
                     <div class="form-group">
                         
                         <select id="employmentType" class="form-control" name="employmentType" placeholder="" required>
-                            <option value="Permanent" selected>Permanent</option>
-                            <option value="Contract">Contract</option>
+                            <option value="{{ old('employmentType', $results[0]->employee_type_name) }}">{{ old('employmentType', $results[0]->employee_type_name) }}</option>
+                            @foreach($emp_types as $emp_type)
+                            <option value="{{$emp_type->id}}" selected>{{$emp_type->name}}</option>
+                            @endforeach
                         </select>
                         <label for="employmentType">Employment Type<span style="color: red;">*</span></label>
                         <!-- <span class="error" id="employmentTypeError"></span> -->
@@ -24,17 +66,18 @@
     
     
                     <div class="form-group">
-                        
+                       
                         <input type="text" id="employeeNo" class="form-control" name="employeeNo"
-                            value="" readonly placeholder="" required>
+                            value="{{$employeeID}}" readonly placeholder="" required>
                             <label for="employeeNo">Employee No</label>
                         <!-- <span class="error" id="employeeNoError"></span> -->
+                      
                     </div>
                     
     
                     <div class="form-group">
                         <input type="text" id="employeeName" class="form-control" name="employeeName"
-                            value="" readonly required placeholder="">
+                            value="{{$name}}" readonly required placeholder="">
                         <label for="employeeName">Employee Name</label>
                     </div>
     
@@ -66,7 +109,7 @@
                 <div class="form-row">
                     <div class="form-group">
                         
-                        <input type="date" id="joiningDate" class="form-control" name="joiningDate"placeholder=""  max="<?php echo date('Y-m-d'); ?>" required>
+                        <input type="date" id="joiningDate" class="form-control" name="joiningDate" placeholder="" value="{{old('joiningDate',$results[0]->Joining_date) }}" max="<?php echo date('Y-m-d'); ?>" required>
                         <label for="joiningDate">Joining Date<span style="color: red;">*</span></label>
                         <!-- <span class="error" id="joiningDateError"></span> -->
                     </div>
@@ -74,9 +117,13 @@
                    
                     <div class="form-group">
                        
-                        <select id="reportingManager" class="form-control" name="reportingManager" placeholder="" required>
-                            <option value="" disabled selected></option>
-                        
+                        <select id="reportingManager" class="form-control" name="reportingManager"  placeholder="" required>
+                            <option value="{{ old('reportingManager',$results[0]->reporting_manager_id) }}">{{old('reportingManager',$results[0]->reporting_manager_name) }}</option>
+                        @foreach($users as $user)
+
+                        <option value="{{$user->id}}">{{$user->name}}</option>
+
+                        @endforeach
                             ?>
                         </select>
                         <label for="reportingManager">Reporting Manager<span
@@ -89,8 +136,8 @@
                   
                     <div class="form-group">
                         
-                        <input type="text" id="totalExperience" class="form-control" name="totalExperience"
-                            placeholder="e.g., 6.2" value="0"
+                        <input type="number" id="totalExperience" class="form-control" name="totalExperience"
+                            placeholder="e.g., 6.2" value="{{ old('totalExperience',$results[0]->total_experience) }}"
                             title="Enter experience in the format Years.Months (e.g., 6.2), where months must be between 0 and 11."
                             required placeholder="">
                             <label for="totalExperience">
@@ -112,8 +159,10 @@
                     <div class="form-group">
                         
                         <select id="designation" class="form-control" name="designation" placeholder="" required>
-                            <option value=""></option>
-                        
+                            <option value="{{ old('designation',$results[0]->designation_id) }}">{{ old('designation',$results[0]->role_name) }}</option>
+                            @foreach($designations as $designation)
+                            <option value="{{$designation->id}}">{{$designation->name}}</option>
+                            @endforeach
                         </select>
                         <label for="designation">
                             Designation <span style="color: red;">*</span>
@@ -124,8 +173,10 @@
                                             <div class="form-group">
                     
                     <select id="department" class="form-control" name="department" placeholder="" required>
-                        <option value=""></option>
-                      
+                        <option value="{{ old('department',$results[0]->department_id) }}">{{ old('department',$results[0]->department_name ) }}</option>
+                        @foreach($departments as $department)
+                        <option value="{{$department->id}}">{{$department->name}}</option>
+                         @endforeach
                     </select>
                     <label for="department">
                         Department <span style="color: red;">*</span>
@@ -146,7 +197,7 @@
     
                        
                         <select id="gender" class="form-control" name="gender" placeholder="" required>
-                            <option value="" disabled selected>Gender</option>
+                            <option value="{{ old('gender',$results[0]->gender) }}">{{ old('gender',$results[0]->gender) }}</option>
                             <option value="Male">Male</option>
                             <option value="Female">Female</option>
                             <option value="Other">Other</option>
@@ -157,7 +208,7 @@
     
                     <div class="form-group">
                        
-                        <input type="date" id="dateOfBirth" class="form-control" name="dateOfBirth" placeholder=""  max="<?php echo date('Y-m-d'); ?>" required>
+                        <input type="date" id="dateOfBirth" class="form-control" value="{{ old('dateOfBirth',$results[0]->date_of_birth) }}" name="dateOfBirth" placeholder=""  max="<?php echo date('Y-m-d'); ?>" required>
                         <label for="dateOfBirth">Date of Birth <span style="color: red;">*</span></label>
                         <!-- <span class="error" id="dateOfBirthError"></span> -->
                     </div>
@@ -166,7 +217,7 @@
                     <div class="form-group">
                        
                         <select id="bloodGroup" class="form-control" name="bloodGroup" placeholder="" >
-                            <option value=""></option>
+                            <option value="{{ old('bloodGroup',$results[0]->blood_group) }}">{{ old('bloodGroup',$results[0]->blood_group) }}</option>
                             <option value="A+">A+</option>
                             <option value="A-">A-</option>
                             <option value="B+">B+</option>
@@ -187,8 +238,8 @@
                         
                         <span class="error" id="nationalityError"></span>
                         <select id="nationality" class="form-control" name="nationality" placeholder="" required>
-                            <option value="" disabled selected></option>
-                            <option value="Hindu">Hindu</option>
+                            <option value="{{ old('nationality',$results[0]->nationality) }}" >{{ old('nationality',$results[0]->nationality) }}</option>
+                           
                         </select>
                         <label for="nationality">Nationality <span style="color: red;">*</span></label>
                     </div>
@@ -196,16 +247,20 @@
     
                    
                     <div class="form-group">
-                       
+                       {{-- //'Hinduism','Islam','Christianity','Sikhism','Buddhism','Jainism','Zoroastrianism','Judaism','Baha i Faith','Other' --}}
                         <select id="religion" class="form-control" name="religion" placeholder="" required>
-                            <option value="" disable Select> Religion</option>
-                            <option value="Hindu">Hindu</option>
-                            <option value="Muslim">Muslim</option>
-                            <option value="Christian">Christian</option>
-                            <option value="Sikh">Sikh</option>
-                            <option value="Buddhist">Buddhist</option>
-                            <option value="Jain">Jain</option>
+                            <option value="{{ old('religion',$results[0]->religion) }}" disable Select> {{ old('religion', $results[0]->religion) }}</option>
+                            <option value="Hinduism">Hinduism</option>
+                            <option value="Islam">Islam</option>
+                            <option value="Christianity">Christianity</option>
+                            <option value="Sikhism">Sikhism</option>
+                            <option value="Buddhism">Buddhism</option>
+                            <option value="Jainism">Jainism</option>
+                            <option value="Zoroastrianism">Zoroastrianism</option>
+                            <option value="Baha i Faith">Baha i Faith</option>
+                            
                             <option value="Other">Other</option>
+                           
                         </select>
                         <label for="religion">Religion <span style="color: red;">*</span></label>
                         <!-- <span class="error" id="religionError"></span> -->
@@ -216,7 +271,7 @@
                         
                         <select id="maritalStatus" class="form-control" name="maritalStatus" required placeholder=""
                             onchange="toggleAnniversaryDate()">
-                            <option value="" disabled selected>Marital Status</option>
+                            <option value="{{ old('maritalStatus',$results[0]->marital_status) }}">{{ old('maritalStatus',$results[0]->marital_status) }}</option>
                             <option value="Single">Single</option>
                             <option value="Married">Married</option>
                             <option value="Divorced">Divorced</option>
@@ -231,7 +286,7 @@
     
                     <div class="form-group">
                         
-                        <input type="date" id="anniversaryDate" class="form-control" name="anniversaryDate" placeholder=""
+                        <input type="date" id="anniversaryDate" class="form-control" value="{{ old('anniversaryDate',$results[0]->anniversary_date) }}" name="anniversaryDate" placeholder=""
                             onchange="validateAnniversaryDate()" style="pointer-events: none; opacity: 0.6;">
                         <span class="error" id="anniversaryDateError" style="color: red;"></span>
                         <label for="anniversaryDate">Anniversary Date <span id="anniversaryRequiredMark"
@@ -248,7 +303,7 @@
                     <div class="form-group">
                         
                         <input type="text" id="uan" name="uan" class="form-control"
-                            placeholder="Enter Universal Account Number" minlength="12" maxlength="16"
+                            placeholder="Enter Universal Account Number" minlength="12" value='{{old('uan',$results[0]->universal_account_number)}}' maxlength="16"
                             pattern="\d{12,16}" oninput="validateUAN(this)" placeholder=""
                             onkeypress="return isNumberKey(event)">
                             <label for="uan">Universal Account Number</label>
@@ -259,7 +314,7 @@
     
                     <div class="form-group">
                         
-                        <input type="text" id="providentFund" class="form-control" name="providentFund"
+                        <input type="text" id="providentFund" class="form-control" name="providentFund" value="{{old('providentFund',$results[0]->provident_fund)}}"
                             placeholder="Enter Provident Fund" maxlength="18" pattern="[A-Za-z0-9]{1,18}" placeholder=""
                             oninput="this.value = this.value.toUpperCase()">
                         <span class="error" id="providentFundError"></span>
@@ -271,7 +326,7 @@
                     <div class="form-group">
                         
                         <input type="text" id="esicNo" class="form-control" name="esicNo"
-                            placeholder="Enter ESIC No">
+                            placeholder="Enter ESIC No" value="{{old('esicNo',$results[0]->esic_no)}}">
                         <span class="error" id="esicNoError"></span>
                         <label for="esicNo">ESIC No</label>
                     </div>
@@ -294,19 +349,14 @@
     
     </form>
     </div>
-    <script src="onboarding_form.js"></script>
+    <script src="{{ asset('user_end/js/onboarding_form.js') }}"></script>
 
 
 
 
 
 @endsection
-<?php 
-$id = Auth::guard('web')->user()->id;
 
-// dd($results);
-
-?>
 {{-- <head>
 <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -534,64 +584,64 @@ $id = Auth::guard('web')->user()->id;
 // });
 
 
-//     /**
+// //     /**
 //                                  * Function to fetch nationalities from an API with retry logic.
 //                                  */
-//                                 async function fetchNationalities(retries = 3) {
-//                                     const selectElement = document.getElementById('nationality');
+                                async function fetchNationalities(retries = 3) {
+                                    const selectElement = document.getElementById('nationality');
 
-//                                     const fetchWithRetries = async () => {
-//                                         try {
-//                                             const response = await fetch('https://restcountries.com/v3.1/all', {
-//                                                 headers: { "Content-Type": "application/json" },
-//                                             });
+                                    const fetchWithRetries = async () => {
+                                        try {
+                                            const response = await fetch('https://restcountries.com/v3.1/all', {
+                                                headers: { "Content-Type": "application/json" },
+                                            });
 
-//                                             if (!response.ok) {
-//                                                 throw new Error('Network response was not ok');
-//                                             }
+                                            if (!response.ok) {
+                                                throw new Error('Network response was not ok');
+                                            }
 
-//                                             const data = await response.json();
-//                                             populateDropdown(data);
-//                                         } catch (error) {
-//                                             console.error("Error fetching nationalities: ", error);
+                                            const data = await response.json();
+                                            populateDropdown(data);
+                                        } catch (error) {
+                                            console.error("Error fetching nationalities: ", error);
 
-//                                             if (retries > 0) {
-//                                                 console.log('Retrying fetch...');
-//                                                 setTimeout(() => fetchWithRetries(retries - 1), 1000);
-//                                             } else {
-//                                                 alert("Unable to load nationalities after multiple attempts.");
-//                                             }
-//                                         }
-//                                     };
+                                            if (retries > 0) {
+                                                console.log('Retrying fetch...');
+                                                setTimeout(() => fetchWithRetries(retries - 1), 1000);
+                                            } else {
+                                                alert("Unable to load nationalities after multiple attempts.");
+                                            }
+                                        }
+                                    };
 
-//                                     const populateDropdown = (countries) => {
-//                                         const sortedCountries = countries.sort((a, b) =>
-//                                             a.name?.common?.localeCompare(b.name?.common)
-//                                         );
+                                    const populateDropdown = (countries) => {
+                                        const sortedCountries = countries.sort((a, b) =>
+                                            a.name?.common?.localeCompare(b.name?.common)
+                                        );
 
-//                                         selectElement.innerHTML = ""; // Clear dropdown before appending data
-//                                         sortedCountries.forEach(country => {
-//                                             const option = document.createElement('option');
-//                                             option.value = country.name?.common?.toLowerCase() || '';
-//                                             option.textContent = country.name?.common || 'Unknown';
-//                                             selectElement.appendChild(option);
-//                                         });
+                                        selectElement.innerHTML = ""; // Clear dropdown before appending data
+                                        sortedCountries.forEach(country => {
+                                            const option = document.createElement('option');
+                                            option.value = country.name?.common?.toLowerCase() || '';
+                                            option.textContent = country.name?.common || 'Unknown';
+                                            selectElement.appendChild(option);
+                                        });
 
-//                                         // Set default nationality to India if available
-//                                         const indiaOption = Array.from(selectElement.options).find(option => option.value === "india");
-//                                         if (indiaOption) {
-//                                             indiaOption.selected = true;
-//                                         }
-//                                     };
+                                        // Set default nationality to India if available
+                                        const indiaOption = Array.from(selectElement.options).find(option => option.value === "india");
+                                        if (indiaOption) {
+                                            indiaOption.selected = true;
+                                        }
+                                    };
 
-//                                     // Call the fetch with retry
-//                                     fetchWithRetries();
-//                                 }
+                                    // Call the fetch with retry
+                                    fetchWithRetries();
+                                }
 
-//                                 // Wait for DOM to load and execute the function
-//                                 document.addEventListener("DOMContentLoaded", function () {
-//                                     fetchNationalities();
-//                                 });
+                                // Wait for DOM to load and execute the function
+                                document.addEventListener("DOMContentLoaded", function () {
+                                    fetchNationalities();
+                                });
 
 
 
