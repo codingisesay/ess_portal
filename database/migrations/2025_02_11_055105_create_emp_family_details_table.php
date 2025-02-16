@@ -13,13 +13,13 @@ return new class extends Migration
     {
         Schema::create('emp_family_details', function (Blueprint $table) {
             $table->id();
-            $table->string('name',50);
-            $table->enum('relation',['Spouce','Child','Parent','Sibiling','Other']);
-            $table->date('birth_date');
-            $table->enum('gender',['Male','Femail','Others']);
-            $table->string('age',10);
-            $table->enum('dependent',['Yes','No']);
-            $table->string('phone_number',15);
+            $table->string('name',50)->nullable();
+            $table->enum('relation',['Spouce','Child','Parent','Sibiling','Other'])->nullable();
+            $table->date('birth_date')->nullable();
+            $table->enum('gender',['Male','Femail','Others'])->nullable();
+            $table->string('age',10)->nullable();
+            $table->enum('dependent',['Yes','No'])->nullable();
+            $table->string('phone_number',15)->nullable();
             $table->bigInteger('user_id'); 
             $table->foreign('user_id')->references('id')->on('user')->onDelete('cascade');
             $table->timestamps();

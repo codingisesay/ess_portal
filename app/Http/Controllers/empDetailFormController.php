@@ -3,6 +3,9 @@
 namespace App\Http\Controllers;
 use App\Models\employee_type;
 use App\Models\User;
+use App\Models\bank;
+use App\Models\emp_educations;
+use App\Models\emp_bank_details;
 use App\Models\emp_details;
 use App\Models\emp_contact_details;
 use App\Models\organisation_department;
@@ -18,29 +21,20 @@ class empDetailFormController extends Controller
     public function index(){
 
         $loginUserInfo = Auth::user();
-        // echo $loginUserInfo->id;
-        // echo $loginUserInfo->organisation_id;
+        $loginUserInfo->id;
+        $loginUserInfo->organisation_id;
+    //     $loginUserInfo->employeeID;
+    //    $loginUserInfo->name;
+     
 
-          //     $results = DB::table('organisation_designations')
+    //           $results = DB::table('organisation_designations')
     // ->join('organisation_departments', 'organisation_designations.department_id', '=', 'organisation_departments.id')
     // ->join('branches', 'organisation_designations.branch_id', '=', 'branches.id')
     // ->select('organisation_departments.name as department_name', 'organisation_designations.name as designation_name','organisation_designations.id as designation_id','branches.id as branch_id','branches.name as branch_name')
     // ->where('organisation_departments.organisation_id', '=', $id) // Adding a WHERE condition to filter by department name
     // ->get();
 
-    //           $results = DB::table('emp_details')
-    // ->join('employee_types', 'emp_details.employee_type', '=', 'employee_types.id')
-    // ->join('organisation_designations', 'emp_details.designation', '=', 'organisation_designations.id')
-    // ->join('users', 'emp_details.reporting_manager', '=', 'users.id')
-    // ->join('organisation_departments', 'emp_details.department', '=', 'organisation_departments.id')
-    // ->select('emp_details.employee_type as employee_type','employee_types.name as employee_type_name','emp_details.employee_no as employee_no','emp_details.employee_name as employee_name',
-    //          'emp_details.Joining_date as Joining_date','emp_details.reporting_manager as reporting_manager_id','users.name as reporting_manager_name','emp_details.total_experience as total_experience',
-    //          'organisation_designations.name as role_name','emp_details.designation as designation_id','organisation_departments.name as department_name','emp_details.department as department_id','emp_details.gender as gender',
-    //          'emp_details.date_of_birth as date_of_birth','emp_details.blood_group as blood_group','emp_details.nationality as nationality',
-    //          'emp_details.religion as religion','emp_details.marital_status as marital_status','emp_details.anniversary_date as anniversary_date',
-    //          'emp_details.universal_account_number as universal_account_number','emp_details.provident_fund as provident_fund','emp_details.esic_no as esic_no',)
-    // ->where('emp_details.user_id', '=', $loginUserInfo->id) // Adding a WHERE condition to filter by department name
-    // ->get();
+ 
 
     // dd($results);
 
@@ -50,8 +44,22 @@ class empDetailFormController extends Controller
 
         $emp_types = employee_type::get();
 
+        $results = DB::table('emp_details')
+        ->join('employee_types', 'emp_details.employee_type', '=', 'employee_types.id')
+        ->join('organisation_designations', 'emp_details.designation', '=', 'organisation_designations.id')
+        ->join('users', 'emp_details.reporting_manager', '=', 'users.id')
+        ->join('organisation_departments', 'emp_details.department', '=', 'organisation_departments.id')
+        ->select('emp_details.employee_type as employee_type','employee_types.name as employee_type_name','emp_details.employee_no as employee_no','emp_details.employee_name as employee_name',
+                 'emp_details.Joining_date as Joining_date','emp_details.reporting_manager as reporting_manager_id','users.name as reporting_manager_name','emp_details.total_experience as total_experience',
+                 'organisation_designations.name as role_name','emp_details.designation as designation_id','organisation_departments.name as department_name','emp_details.department as department_id','emp_details.gender as gender',
+                 'emp_details.date_of_birth as date_of_birth','emp_details.blood_group as blood_group','emp_details.nationality as nationality',
+                 'emp_details.religion as religion','emp_details.marital_status as marital_status','emp_details.anniversary_date as anniversary_date',
+                 'emp_details.universal_account_number as universal_account_number','emp_details.provident_fund as provident_fund','emp_details.esic_no as esic_no',)
+        ->where('emp_details.user_id', '=', $loginUserInfo->id) // Adding a WHERE condition to filter by department name
+        ->get();
 
-        return view('user_view.emp_details',compact('emp_types','users','departments','designations'));
+
+        return view('user_view.emp_details',compact('emp_types','users','departments','designations','results'));
         // return view('user_view.emp_details');
     }
 
@@ -68,8 +76,30 @@ class empDetailFormController extends Controller
     }
 
     public function loadbankuser(){
+        $banks = bank::orderBy('id', 'asc')->get();
+        $loginUserInfo = Auth::user();
 
-        return view('user_view.emp_bank_details');
+        $emp_bank_datas = DB::table('emp_bank_details')
+        // First join for per_bank_name
+        ->join('banks as per_bank', 'emp_bank_details.per_bank_name', '=', 'per_bank.id')
+        // Second join for sal_bank_name
+        ->join('banks as sal_bank', 'emp_bank_details.sal_bank_name', '=', 'sal_bank.id')
+        // Select all columns from emp_bank_details and the bank names
+        ->select('emp_bank_details.*', 
+                  'emp_bank_details.per_bank_name as per_bank_id',
+                  'emp_bank_details.sal_bank_name as sal_bank_id',
+                 'per_bank.name as per_bank_name', 
+                 'sal_bank.name as sal_bank_name')
+        // Filtering by user_id
+        ->where('emp_bank_details.user_id', '=', $loginUserInfo->id)
+        ->get();
+
+      
+        // echo $loginUserInfo->id;
+        // $emp_bank_datas = emp_bank_details::where('user_id', $loginUserInfo->id)->get();
+
+       
+        return view('user_view.emp_bank_details',compact('banks','emp_bank_datas'));
 
     }
 
@@ -92,147 +122,471 @@ class empDetailFormController extends Controller
     public function insertDetail(Request $request){
 
         $validated = $request->validate([
-            'emp_type' => 'required',
-            'employee_no' => 'required',
-            'employee_name' => 'required',
-            'joining_date' => 'required',
-            'reporting_manager' => 'required',
-            'total_exp' => 'required',
+            'employmentType' => 'required',
+            'employeeNo' => 'required',
+            'employeeName' => 'required',
+            'joiningDate' => 'required',
+            'reportingManager' => 'required',
+            // 'totalExperience' => 'required',
             'designation' => 'required',
             'department' => 'required',
             'gender' => 'required',
-            'birth_date' => 'required',
-            'blood_group' => 'required',
+            'dateOfBirth' => 'required',
+            // 'bloodGroup' => 'required',
             'nationality' => 'required',
             'religion' => 'required',
-            'marital_status' => 'required',
-            'anniversary_date' => 'required',
-            'uan' => 'required',
-            'pf' => 'required',
-            'esic' => 'required',
+            'maritalStatus' => 'required',
+            // 'anniversaryDate' => 'required',
+            // 'uan' => 'required',
+            // 'providentFund' => 'required',
+            // 'esicNo' => 'required',
 
         ]);
     
 
         $data = $request->all();
         $loginUserInfo = Auth::user();
-        
+        $loginUserInfo->id;
 
-        // dd($data);
+        $users = User::where('organisation_id', $loginUserInfo->organisation_id)->get();
+        $empStatus = emp_details::where('user_id', $loginUserInfo->id)->get();
+        // dd($empStatus);
+        if($empStatus->isNotEmpty()){
 
+            $updatestatus = DB::table('emp_details')
+                ->where('user_id', $loginUserInfo->id) 
+                ->update([
+                    'employee_type' => $data['employmentType'],
+                    'employee_no' => $data['employeeNo'],
+                    'employee_name' => $data['employeeName'],
+                    'Joining_date' => $data['joiningDate'],
+                    'reporting_manager' => $data['reportingManager'],
+                    'total_experience' => $data['totalExperience'],
+                    'designation' => $data['designation'],
+                    'department' => $data['department'],
+                    'gender' => $data['gender'],
+                    'date_of_birth' => $data['dateOfBirth'],
+                    'blood_group' => $data['bloodGroup'],
+                    'nationality' => $data['nationality'],
+                    'religion' => $data['religion'],
+                    'marital_status' => $data['maritalStatus'],
+                    'anniversary_date' => $data['anniversaryDate'],
+                    'universal_account_number' => $data['uan'],
+                    'provident_fund' => $data['providentFund'],
+                    'esic_no' => $data['esicNo'],
+                ]);
 
-// Using Query Builder to insert data
+                if($updatestatus){
+                    session()->flash('success', 'Data has been updated successfully!');
+                    return redirect()->route('user.dashboard');
+
+                }else{
+
+                    session()->flash('error', 'No Item Modified!');
+                    return redirect()->route('user.dashboard');
+                }
+
+        }else{
+
+            // Using Query Builder to insert data
      $emp_detail_status =  DB::table('emp_details')->insert([
-    'employee_type' => $data['emp_type'],
-    'employee_no' => $data['employee_no'],
-    'employee_name' => $data['employee_name'],
-    'Joining_date' => $data['joining_date'],
-    'reporting_manager' => $data['reporting_manager'],
-    'total_experience' => $data['total_exp'],
-    'designation' => $data['designation'],
-    'department' => $data['department'],
-    'gender' => $data['gender'],
-    'date_of_birth' => $data['birth_date'],
-    'blood_group' => $data['blood_group'],
-    'nationality' => $data['nationality'],
-    'religion' => $data['religion'],
-    'marital_status' => $data['marital_status'],
-    'anniversary_date' => $data['anniversary_date'],
-    'universal_account_number' => $data['uan'],
-    'provident_fund' => $data['pf'],
-    'esic_no' => $data['esic'],
-    'user_id' => $loginUserInfo->id,
-    'created_at' => NOW(),
-    'updated_at' => NOW(),
-     ]);
+        'employee_type' => $data['employmentType'],
+        'employee_no' => $data['employeeNo'],
+        'employee_name' => $data['employeeName'],
+        'Joining_date' => $data['joiningDate'],
+        'reporting_manager' => $data['reportingManager'],
+        'total_experience' => $data['totalExperience'],
+        'designation' => $data['designation'],
+        'department' => $data['department'],
+        'gender' => $data['gender'],
+        'date_of_birth' => $data['dateOfBirth'],
+        'blood_group' => $data['bloodGroup'],
+        'nationality' => $data['nationality'],
+        'religion' => $data['religion'],
+        'marital_status' => $data['maritalStatus'],
+        'anniversary_date' => $data['anniversaryDate'],
+        'universal_account_number' => $data['uan'],
+        'provident_fund' => $data['providentFund'],
+        'esic_no' => $data['esicNo'],
+        'user_id' => $loginUserInfo->id,
+        'created_at' => NOW(),
+        'updated_at' => NOW(),
+         ]);
+    
+         if($emp_detail_status){
+            session()->flash('success', 'Data has been updated successfully!');
+            return redirect()->route('user.contact');
+    
+         }else{
 
-     if($emp_detail_status){
+            session()->flash('error', 'Data has Not been updated successfully!');
 
-        return redirect()->route('user.contact');
+            return redirect()->route('user.dashboard');
 
-     }
+         }
 
+        }
 
     }
 
     public function insertcontact(Request $request){
 
         $validated = $request->validate([
-            'building_no_permanent' => 'required',
-            'name_of_premises_permanent' => 'required',
-            'nearby_landmark_permanent' => 'required',
-            'road_street_permanent' => 'required',
-            'nationality_permanent' => 'required',
-            'pincode_permanent' => 'required',
-            'state_permanent' => 'required',
-            'city_permanent' => 'required',
-            'district_permanent' => 'required',
+            // 'permanent_building_no' => 'required',
+            'permanent_premises_name' => 'required',
+            'permanent_landmark' => 'required',
+            'permanent_road_street' => 'required',
+            'permanent_country' => 'required',
+            'permanent_pincode' => 'required',
+            'permanent_district' => 'required',
+            'permanent_city' => 'required',
+            'permanent_state' => 'required',
 
-            'building_no_correspondence' => 'required',
-            'name_of_premises_correspondence' => 'required',
-            'nearby_landmark_correspondence' => 'required',
-            'road_street_correspondence' => 'required',
-            'nationality_correspondence' => 'required',
-            'pincode_correspondence' => 'required',
-            'city_correspondence' => 'required',
-            'state_correspondence' => 'required',
-            'district_correspondence' => 'required',
+            // 'correspondence_building_no' => 'required',
+            'correspondence_premises_name' => 'required',
+            'correspondence_landmark' => 'required',
+            'correspondence_road_street' => 'required',
+            'correspondence_country' => 'required',
+            'correspondence_pincode' => 'required',
+            'correspondence_district' => 'required',
+            'correspondence_city' => 'required',
+            'correspondence_state' => 'required',
 
-            'Offical_Phone_Number' => 'required',
-            'Alternate_Phone_Number' => 'required',
-            'Email_Addres' => 'required',
-            'Offical_Email_Address' => 'required',
+            'phoneNumber' => 'required',
+            // 'alternate_phone_number' => 'required',
+            'emailID' => 'required',
+            'email' => 'required',
 
-            'Emergency_Contact_Person' => 'required',
-            'Emergency_Contact_Number' => 'required',
+            'emergency_contact_name' => 'required',
+            'emergency_contact_number' => 'required',
 
         ]);
 
         $data = $request->all();
         $loginUserInfo = Auth::user();
+        $empContactStatus = emp_contact_details::where('user_id', $loginUserInfo->id)->get();
 
-        // dd($data);
+        if($empContactStatus->isNotEmpty()){
+            // Using Query Builder to update data
 
-        // Using Query Builder to insert data
+            $updatecontactstatus = DB::table('emp_contact_details')
+            ->where('user_id', $loginUserInfo->id) 
+            ->update([
+                'per_building_no' => $data['permanent_building_no'],
+                'per_name_of_premises' => $data['permanent_premises_name'],
+                'per_nearby_landmark' => $data['permanent_landmark'],
+                'per_road_street' => $data['permanent_road_street'],
+                'per_country' => $data['permanent_country'],
+                'per_pincode' => $data['permanent_pincode'],
+                'per_district' => $data['permanent_district'],
+                'per_city' => $data['permanent_city'],
+                'per_state' => $data['permanent_state'],
+        
+                'cor_building_no' => $data['correspondence_building_no'],
+                'cor_name_of_premises' => $data['correspondence_premises_name'],
+                'cor_nearby_landmark' => $data['correspondence_landmark'],
+                'cor_road_street' => $data['correspondence_road_street'],
+                'cor_country' => $data['correspondence_country'],
+                'cor_pincode' => $data['correspondence_pincode'],
+                'cor_district' => $data['correspondence_district'],
+                'cor_city' => $data['correspondence_city'],
+                'cor_state' => $data['correspondence_state'],
+        
+                'offical_phone_number' => $data['phoneNumber'],
+                'alternate_phone_number' => $data['alternate_phone_number'],
+                'email_address' => $data['emailID'],
+                'offical_email_address' => $data['email'],
+        
+                'emergency_contact_person' => $data['emergency_contact_name'],
+                'emergency_contact_number' => $data['emergency_contact_number'],
+              
+            ]);
+
+            
+                 if($updatecontactstatus){
+        
+                    session()->flash('success', 'Data has been updated successfully!');
+                    return redirect()->route('user.contact');
+            
+                 }else{
+        
+                    session()->flash('error', 'Data has Not been updated successfully!');
+                    return redirect()->route('user.contact');
+        
+                 }
+
+        }else{
+
+         // Using Query Builder to insert data
      $emp_contact_status =  DB::table('emp_contact_details')->insert([
-        'per_building_no' => $data['building_no_permanent'],
-        'per_name_of_premises' => $data['name_of_premises_permanent'],
-        'per_nearby_landmark' => $data['nearby_landmark_permanent'],
-        'per_road_street' => $data['road_street_permanent'],
-        'per_country' => $data['nationality_permanent'],
-        'per_pincode' => $data['pincode_permanent'],
-        'per_district' => $data['district_permanent'],
-        'per_city' => $data['city_permanent'],
-        'per_state' => $data['state_permanent'],
+        'per_building_no' => $data['permanent_building_no'],
+        'per_name_of_premises' => $data['permanent_premises_name'],
+        'per_nearby_landmark' => $data['permanent_landmark'],
+        'per_road_street' => $data['permanent_road_street'],
+        'per_country' => $data['permanent_country'],
+        'per_pincode' => $data['permanent_pincode'],
+        'per_district' => $data['permanent_district'],
+        'per_city' => $data['permanent_city'],
+        'per_state' => $data['permanent_state'],
 
-        'cor_building_no' => $data['building_no_correspondence'],
-        'cor_name_of_premises' => $data['name_of_premises_correspondence'],
-        'cor_nearby_landmark' => $data['nearby_landmark_correspondence'],
-        'cor_road_street' => $data['road_street_correspondence'],
-        'cor_country' => $data['nationality_correspondence'],
-        'cor_pincode' => $data['pincode_correspondence'],
-        'cor_district' => $data['district_correspondence'],
-        'cor_city' => $data['city_correspondence'],
-        'cor_state' => $data['state_correspondence'],
+        'cor_building_no' => $data['correspondence_building_no'],
+        'cor_name_of_premises' => $data['correspondence_premises_name'],
+        'cor_nearby_landmark' => $data['correspondence_landmark'],
+        'cor_road_street' => $data['correspondence_road_street'],
+        'cor_country' => $data['correspondence_country'],
+        'cor_pincode' => $data['correspondence_pincode'],
+        'cor_district' => $data['correspondence_district'],
+        'cor_city' => $data['correspondence_city'],
+        'cor_state' => $data['correspondence_state'],
 
-        'offical_phone_number' => $data['Offical_Phone_Number'],
-        // 'alternate_phone_number' => $data['Alternate_Phone_Number'],
-        'email_address' => $data['Email_Addres'],
-        'offical_email_address' => $data['Offical_Email_Address'],
+        'offical_phone_number' => $data['phoneNumber'],
+        'alternate_phone_number' => $data['alternate_phone_number'],
+        'email_address' => $data['emailID'],
+        'offical_email_address' => $data['email'],
 
-        'emergency_contact_person' => $data['Emergency_Contact_Person'],
-        'emergency_contact_number' => $data['Emergency_Contact_Number'],
+        'emergency_contact_person' => $data['emergency_contact_name'],
+        'emergency_contact_number' => $data['emergency_contact_number'],
         'user_id' => $loginUserInfo->id,
         'created_at' => NOW(),
         'updated_at' => NOW(),
          ]);
     
          if($emp_contact_status){
+
+            session()->flash('success', 'Data has been updated successfully!');
+            return redirect()->route('user.contact');
     
-            return redirect()->route('user.edu');
-    
+         }else{
+
+            session()->flash('error', 'Data has Not been updated successfully!');
+            return redirect()->route('user.contact');
+
          }
+
+        }
+
+
+        // dd($data);
+
+
     
 
     }
+
+    public function insertEducation(Request $request){
+// Store Education Data
+    // Validate the input fields as arrays
+    $data = $request->validate([
+        'course_type' => 'required|array',
+        'degree' => 'required|array',
+        'university' => 'required|array',
+        'institution' => 'required|array',
+        'passing_year' => 'required',
+        'percentage' => 'required|array',
+        'certification_name' => 'nullable|array',
+        'marks_obtained' => 'nullable|array',
+        'total_marks' => 'nullable|array',
+        'date_of_certificate' => 'nullable|array',
+    ]);
+    
+    $loginUserInfo = Auth::user();
+    
+    
+    // Loop through the validated data and insert into the database
+    foreach ($data['degree'] as $index => $degree) {
+        // Ensure that all fields for this index exist, and if not, assign null or handle accordingly
+        DB::table('emp_educations')->insert([
+            'course_type' => isset($data['course_type'][$index]) ? $data['course_type'][$index] : null,
+            'degree' => $degree,
+            'university_board' => isset($data['university'][$index]) ? $data['university'][$index] : null,
+            'institution' => isset($data['institution'][$index]) ? $data['institution'][$index] : null,
+            'passing_year' => isset($data['passing_year'][$index]) ? $data['passing_year'][$index] : null,
+            'percentage_cgpa' => isset($data['percentage'][$index]) ? $data['percentage'][$index] : null,
+            'certification_name' => isset($data['certification_name'][$index]) ? $data['certification_name'][$index] : null,
+            'marks_obtained' => isset($data['marks_obtained'][$index]) ? $data['marks_obtained'][$index] : null,
+            'out_of_marks_total_marks' => isset($data['total_marks'][$index]) ? $data['total_marks'][$index] : null,
+            'date_of_certificate' => isset($data['date_of_certificate'][$index]) ? $data['date_of_certificate'][$index] : null,
+            'user_id' => $loginUserInfo->id,
+            'created_at' => NOW(),
+            'updated_at' => NOW(),
+        ]);
+    }
+    
+    return redirect()->route('user.edu')->with('success', 'Education added successfully.');
+
 }
+
+// Update Education Data (similar approach)
+public function update(Request $request, $id)
+{
+    $data = $request->validate([
+        'course_type' => 'required|array',
+        'degree' => 'required|array',
+        'degree.*' => 'string|max:100',
+        'university' => 'required|array',
+        'university.*' => 'string|max:100',
+        'institution' => 'required|array',
+        'institution.*' => 'string|max:100',
+        'passing_year' => 'required|array',
+        'passing_year.*' => 'integer',
+        'percentage' => 'required|array',
+        'percentage.*' => 'numeric',
+        'certification_name' => 'nullable|array',
+        'certification_name.*' => 'nullable|string|max:50',
+        'marks_obtained' => 'nullable|array',
+        'marks_obtained.*' => 'nullable|numeric',
+        'total_marks' => 'nullable|array',
+        'total_marks.*' => 'nullable|numeric',
+        'date_of_certificate' => 'nullable|array',
+        'date_of_certificate.*' => 'nullable|date',
+    ]);
+
+    // Loop through the validated data and update each record
+    foreach ($data['degree'] as $index => $degree) {
+        $education = Education::findOrFail($id); // Assuming you want to update specific records
+        $education->update([
+            'course_type' => $data['course_type'][$index],
+            'degree' => $degree,
+            'university' => $data['university'][$index],
+            'institution' => $data['institution'][$index],
+            'passing_year' => $data['passing_year'][$index],
+            'percentage' => $data['percentage'][$index],
+            'certification_name' => isset($data['certification_name'][$index]) ? $data['certification_name'][$index] : null,
+            'marks_obtained' => isset($data['marks_obtained'][$index]) ? $data['marks_obtained'][$index] : null,
+            'total_marks' => isset($data['total_marks'][$index]) ? $data['total_marks'][$index] : null,
+            'date_of_certificate' => isset($data['date_of_certificate'][$index]) ? $data['date_of_certificate'][$index] : null,
+        ]);
+    }
+
+    return redirect()->route('education.index')->with('success', 'Education updated successfully.');
+}
+
+public function insertBank(Request $request){
+
+    $data = $request->validate([
+        'bankName1' => 'required',
+        'branchName1' => 'required',
+        'accountNumber1' => 'required',
+        'ifscCode1' => 'required',
+        'bankName2' => 'required',
+        'branchName2' => 'required',
+        'accountNumber2' => 'required',
+        'ifscCode2' => 'required',
+        'passportNumber' => '',
+        'issuingCountry' => '',
+        'passportIssueDate' => '',
+        'passportExpiryDate' => '',
+        'usaVisa' => '',
+        'visaExpiryDate' => '',
+        'vehicleType' => '',
+        'vehicleModel' => '',
+        'vehicleOwner' => '',
+        'registrationNumber' => '',
+        'insuranceProvider' => '',
+        'insuranceExpiry' => '',
+    ]);
+
+    // dd($data);
+
+    $loginUserInfo = Auth::user();
+
+    $empBankStatus = emp_bank_details::where('user_id', $loginUserInfo->id)->get();
+
+    if($empBankStatus->isNotEmpty()){
+
+        $updatebankstatus = DB::table('emp_bank_details')
+        ->where('user_id', $loginUserInfo->id) 
+        ->update([
+
+            'per_bank_name' => $data['bankName1'],
+            'per_branch_name' => $data['branchName1'],
+            'per_account_number' => $data['accountNumber1'],
+            'per_ifsc_code' => $data['ifscCode1'],
+            'sal_bank_name' => $data['bankName2'],
+            'sal_branch_name' => $data['branchName2'],
+    
+            'sal_account_number' => $data['accountNumber2'],
+            'sal_ifsc_code' => $data['ifscCode2'],
+            'passport_number' => $data['passportNumber'],
+            'issuing_country' => $data['issuingCountry'],
+            'passport_issue_date' => $data['passportIssueDate'],
+            'passport_expiry_date' => $data['passportExpiryDate'],
+    
+            'active_visa' => $data['usaVisa'],
+            'visa_expiry_date' => $data['visaExpiryDate'],
+            'vehicle_type' => $data['vehicleType'],
+            'vehicle_model' => $data['vehicleModel'],
+            'vehicle_owner' => $data['vehicleOwner'],
+            'vehicle_number' => $data['registrationNumber'],
+    
+            'insurance_provider' => $data['insuranceProvider'],
+            'insurance_expiry_date' => $data['insuranceExpiry'],
+            
+          
+        ]);
+
+        if($updatebankstatus){
+            session()->flash('success', 'Data has been updated successfully!');
+            return redirect()->route('user.bank');
+    
+         }else{
+    
+            session()->flash('error', 'Data has Not been updated successfully!');
+            return redirect()->route('user.bank');
+    
+         }
+
+
+
+}else{
+
+    $emp_bank_status =  DB::table('emp_bank_details')->insert([
+
+        'per_bank_name' => $data['bankName1'],
+        'per_branch_name' => $data['branchName1'],
+        'per_account_number' => $data['accountNumber1'],
+        'per_ifsc_code' => $data['ifscCode1'],
+        'sal_bank_name' => $data['bankName2'],
+        'sal_branch_name' => $data['branchName2'],
+
+        'sal_account_number' => $data['accountNumber2'],
+        'sal_ifsc_code' => $data['ifscCode2'],
+        'passport_number' => $data['passportNumber'],
+        'issuing_country' => $data['issuingCountry'],
+        'passport_issue_date' => $data['passportIssueDate'],
+        'passport_expiry_date' => $data['passportExpiryDate'],
+
+        'active_visa' => $data['usaVisa'],
+        'visa_expiry_date' => $data['visaExpiryDate'],
+        'vehicle_type' => $data['vehicleType'],
+        'vehicle_model' => $data['vehicleModel'],
+        'vehicle_owner' => $data['vehicleOwner'],
+        'vehicle_number' => $data['registrationNumber'],
+
+        'insurance_provider' => $data['insuranceProvider'],
+        'insurance_expiry_date' => $data['insuranceExpiry'],
+        'user_id' => $loginUserInfo->id,
+        'created_at' => NOW(),
+        'updated_at' => NOW(),
+        
+
+    ]);
+
+    if($emp_bank_status){
+        session()->flash('success', 'Data has been Inserted successfully!');
+        return redirect()->route('user.bank');
+
+     }else{
+
+        session()->flash('error', 'Data has Not been Inserted successfully!');
+        return redirect()->route('user.bank');
+
+     }
+
+
+
+}
+}
+
+    }
+

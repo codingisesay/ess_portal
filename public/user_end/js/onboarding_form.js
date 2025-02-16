@@ -649,47 +649,47 @@ function copyBankDetails() {
 }
 
 
-function calculateExpiryDate() {
-    const issueDateField = document.getElementById("passportIssueDate");
-    const expiryDateField = document.getElementById("passportExpiryDate");
+// function calculateExpiryDate() {
+//     const issueDateField = document.getElementById("passportIssueDate");
+//     const expiryDateField = document.getElementById("passportExpiryDate");
 
-    const issueDateValue = issueDateField.value;
+//     const issueDateValue = issueDateField.value;
 
-    // Ensure an issue date is selected
-    if (!issueDateValue) {
-        expiryDateField.value = ""; // Clear expiry date if issue date is empty
-        return;
-    }
+//     // Ensure an issue date is selected
+//     if (!issueDateValue) {
+//         expiryDateField.value = ""; // Clear expiry date if issue date is empty
+//         return;
+//     }
 
-    const issueDate = new Date(issueDateValue);
+//     const issueDate = new Date(issueDateValue);
 
-    // Add 10 years to the issue date
-    const expiryDate = new Date(issueDate);
-    expiryDate.setFullYear(issueDate.getFullYear() + 10);
+//     // Add 10 years to the issue date
+//     const expiryDate = new Date(issueDate);
+//     expiryDate.setFullYear(issueDate.getFullYear() + 10);
 
-    // Format the expiry date as dd-mm-yyyy
-    const day = String(expiryDate.getDate()).padStart(2, '0');
-    const month = String(expiryDate.getMonth() + 1).padStart(2, '0'); // Months are 0-based
-    const year = expiryDate.getFullYear();
-    const formattedExpiryDate = `${day}-${month}-${year}`;
+//     // Format the expiry date as dd-mm-yyyy
+//     const day = String(expiryDate.getDate()).padStart(2, '0');
+//     const month = String(expiryDate.getMonth() + 1).padStart(2, '0'); // Months are 0-based
+//     const year = expiryDate.getFullYear();
+//     const formattedExpiryDate = `${day}-${month}-${year}`;
 
-    // Set the expiry date field value
-    expiryDateField.value = formattedExpiryDate;
-}
+//     // Set the expiry date field value
+//     expiryDateField.value = formattedExpiryDate;
+// }
 
-// Optional: Format the expiry date field value to dd-mm-yyyy when the user changes it manually
-document.getElementById("passportExpiryDate").addEventListener("input", function () {
-    const expiryDateField = this;
+// // Optional: Format the expiry date field value to dd-mm-yyyy when the user changes it manually
+// document.getElementById("passportExpiryDate").addEventListener("input", function () {
+//     const expiryDateField = this;
 
-    // Parse and reformat the value as dd-mm-yyyy
-    const parts = expiryDateField.value.split("-");
-    if (parts.length === 3) {
-        const day = parts[0].padStart(2, '0');
-        const month = parts[1].padStart(2, '0');
-        const year = parts[2];
-        expiryDateField.value = `${day}-${month}-${year}`;
-    }
-});
+//     // Parse and reformat the value as dd-mm-yyyy
+//     const parts = expiryDateField.value.split("-");
+//     if (parts.length === 3) {
+//         const day = parts[0].padStart(2, '0');
+//         const month = parts[1].padStart(2, '0');
+//         const year = parts[2];
+//         expiryDateField.value = `${day}-${month}-${year}`;
+//     }
+// });
 
 function validateYear(input) {
     const year = input.value.split('-')[0];

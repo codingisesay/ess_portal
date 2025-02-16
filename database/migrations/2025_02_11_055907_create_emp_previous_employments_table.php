@@ -13,16 +13,16 @@ return new class extends Migration
     {
         Schema::create('emp_previous_employments', function (Blueprint $table) {
             $table->id();
-            $table->string('employer_name',50);
-            $table->string('country',50);
-            $table->string('city',50);
-            $table->date('from_date');
-            $table->date('to_date');
-            $table->string('designation');
-            $table->string('last_drawn_annual_salary',50);
-            $table->string('relevant_experience',50);
-            $table->string('reason_for_leaving',100);
-            $table->string('major_responsibilities',100);
+            $table->string('employer_name',50)->nullable();
+            $table->string('country',50)->nullable();
+            $table->string('city',50)->nullable();
+            $table->date('from_date')->nullable();
+            $table->date('to_date')->nullable();
+            $table->string('designation')->nullable();
+            $table->string('last_drawn_annual_salary',50)->nullable();
+            $table->string('relevant_experience',50)->nullable();
+            $table->string('reason_for_leaving',100)->nullable();
+            $table->string('major_responsibilities',100)->nullable();
             $table->bigInteger('user_id'); 
             $table->foreign('user_id')->references('id')->on('user')->onDelete('cascade');
             
