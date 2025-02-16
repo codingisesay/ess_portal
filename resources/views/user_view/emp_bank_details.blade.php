@@ -2,6 +2,7 @@
 @section('content')  <!-- Defining the content section -->
 <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
 <?php 
+error_reporting(0);
 $id = Auth::guard('web')->user()->id;
 // dd($emp_bank_datas);
 
