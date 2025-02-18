@@ -72,6 +72,8 @@ Route::middleware(['auth'])->group(function () {
     Route::post('user/contact_insert',[empDetailFormController::class,'insertcontact'])->name('contact_insert');
     Route::post('user/education_insert',[empDetailFormController::class,'insertEducation'])->name('education_insert');
     Route::post('user/bank_insert',[empDetailFormController::class,'insertBank'])->name('bank_insert');
+    Route::post('user/family_insert',[empDetailFormController::class,'insertfamity'])->name('family_insert');
+    Route::post('user/preemp_insert',[empDetailFormController::class,'insertPreEmp'])->name('preEmp_insert');
 
 });
 

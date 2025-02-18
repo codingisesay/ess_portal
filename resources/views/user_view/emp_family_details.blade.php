@@ -1,10 +1,35 @@
 @extends('user_view/employee_form_layout')  <!-- Extending the layout file -->
 @section('content')  <!-- Defining the content section -->
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+@if($errors->any())
+<ul>
+    @foreach($errors->all() as $error)
+        <li style="color: red;">{{ $error }}</li>
+    @endforeach
+</ul>
+@endif
 
-<div class="tab-content active" id="tab5">
-    <form id="familyForm" action="submit_step.php" method="POST">
-        <!-- <input type="hidden" name="employeeNo" value="P111"> -->
+<div class="w3-container">
+    
+    @if(session('success'))
+    <div class="w3-panel w3-green">
+        {{ session('success') }} 
+    </div>
+    @endif
+
+    
+        @if(session('error'))
        
+        <div class="w3-panel w3-red">
+            {{ session('error') }} 
+        </div>
+        @endif
+    
+  </div>
+<div class="tab-content active" id="tab5">
+    <form id="familyForm" action="{{route('family_insert')}}" method="POST">
+        <!-- <input type="hidden" name="employeeNo" value="P111"> -->
+       @csrf
         <input type="hidden" name="form_step7" value="family_step">
         <h3>Family Details</h3>
         <button type="button" class="add-row-family action-button" onclick="addFamilyRow()">Add Family
@@ -29,6 +54,52 @@
                     </thead>
                     <tbody id="familyTableBody">
                         <!-- Rows will be added dynamically here -->
+                        @foreach($familyDetails as $index => $detail)
+                        <tr>
+                            <td>{{$index +1 }}</td> <!-- Display serial number in the table -->
+                            <td>
+                                <input type="hidden" name="serial_no[]" value="${familyCounter}">
+                                <input type="text" name="name[]" class="custom-name" placeholder="Enter Name" value="{{$detail->name}}" required maxlength="50"
+                                   oninput="this.value = this.value.replace(/[^a-zA-Z ]/g, '').();"  onkeydown="return blockNumbers(event);">
+                            </td>
+                            <td>
+                                <select name="relation[]" class="relation-type" required>
+                                    <option value="{{$detail->relation}}">{{$detail->relation}}</option>
+                                    <option value="Spouce">Spouse</option>
+                                    <option value="Child">Child</option>
+                                    <option value="Parent">Parent</option>
+                                    <option value="Sibiling">Sibling</option>
+                                    <option value="Other">Other</option>
+                                </select>
+                            </td>
+                            <td>
+                                <input type="date" name="birth_date[]" required value="{{$detail->birth_date}}" onchange="calculateAge(this)" 
+                                    max="<?php echo date('Y-m-d'); ?>">
+                            </td>
+                            <td>
+                                <select name="gender[]" class="gender-type" required>
+                                    <option value="{{$detail->gender}}">{{$detail->gender}}</option>
+                                    <option value="Male">Male</option>
+                                    <option value="Female">Female</option>
+                                    <option value="Other">Other</option>
+                                </select>
+                            </td>
+                            <td><input type="custom-age" name="age[]" value="{{$detail->age}}" placeholder="Age" required readonly></td>
+                            <td>
+                                <select name="dependent[]" class="dependent-type" required>
+                                    <option value="{{$detail->dependent}}" >{{$detail->dependent}}</option>
+                                    <option value="Yes">Yes</option>
+                                    <option value="No">No</option>
+                                </select>
+                            </td>
+                            <td><input type="tel" name="phone_number[]" placeholder="Phone Number" value="{{$detail->phone_number}}"  maxlength="10" pattern="\\d{10}" inputmode="numeric" 
+                            title="Please enter a 10-digit phone number" 
+                            oninput="this.value = this.value.replace(/[^0-9]/g, '')"></td>
+                            <td><button type="button" onclick="editFamilyRow(this)">✏️</button></td>
+                            <td><button type="button" onclick="removeFamilyRow(this)">❌</button></td>
+
+                        </tr>
+                        @endforeach
                     </tbody>
                 </table>
             </div>
@@ -50,7 +121,8 @@
 </div>
 <!-- uppercase bug -->
 <script>
-    let familyCounter = 1; // Auto-incrementing counter for Family Details
+     let familyCounter = @json(count($familyDetails)) + 1;
+    // let familyCounter = 1; // Auto-incrementing counter for Family Details
     function addFamilyRow() {
         const tableBody = document.getElementById('familyTableBody');
         const newRow = document.createElement('tr');
@@ -65,10 +137,10 @@
 <td>
     <select name="relation[]" class="relation-type" required>
         <option value="" disabled selected>Select Relation</option>
-        <option value="Spouse">Spouse</option>
+        <option value="Spouce">Spouse</option>
         <option value="Child">Child</option>
         <option value="Parent">Parent</option>
-        <option value="Sibling">Sibling</option>
+        <option value="Sibiling">Sibling</option>
         <option value="Other">Other</option>
     </select>
 </td>
@@ -103,6 +175,8 @@ oninput="this.value = this.value.replace(/[^0-9]/g, '')"></td>
 
         familyCounter++; // Increment the serial counter
     }
+
+    let educationCounter = @json(count($familyDetails)) + 1;
 
     // Function to remove rows
     function removeFamilyRow(button) {

@@ -1,9 +1,35 @@
 @extends('user_view/employee_form_layout')  <!-- Extending the layout file -->
 @section('content')  <!-- Defining the content section -->
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+@if($errors->any())
+<ul>
+    @foreach($errors->all() as $error)
+        <li style="color: red;">{{ $error }}</li>
+    @endforeach
+</ul>
+@endif
+
+<div class="w3-container">
+    
+    @if(session('success'))
+    <div class="w3-panel w3-green">
+        {{ session('success') }} 
+    </div>
+    @endif
+
+    
+        @if(session('error'))
+       
+        <div class="w3-panel w3-red">
+            {{ session('error') }} 
+        </div>
+        @endif
+    
+  </div>
 
 <div class="tab-content active" id="tab6">
-    <form id="employmentForm" action="submit_step.php" method="POST">
-        
+    <form id="employmentForm" action="{{route('preEmp_insert')}}" method="POST">
+        @csrf
         <input type="hidden" name="form_step8" value="employment_step">
         <h3>Previous Employment</h3>
         <button type="button" class="add-row-employment action-button" onclick="addEmploymentRow()">Add Previous
@@ -70,30 +96,11 @@
     <input type="custom-employer" name="employer_name[]" placeholder="Enter Employer Name" required  maxlength="250"  oninput="this.value.replace(/[^a-zA-Z .,(){}[\]]/g, '').();">
 </td>
 <td>
-<select name="country[]" class="country-type" id="country" required>
+<select name="country[]" class="country-type" id="country">
 <option value="">Select Country</option>
-<?php
-// Include database connection
-// include 'db_connection.php';
+<option value="India">India</option>
+<option value="China">China</option>
 
-// Fetch all countries in alphabetical order
-// $sql = "SELECT country_name FROM countries ORDER BY country_name ASC";
-// $result = mysqli_query($conn, $sql);
-
-// Check if the query was successful
-// if ($result) {
-//     // Loop through each country and add it as an option
-//     while ($row = mysqli_fetch_assoc($result)) {
-//         $countryName = htmlspecialchars($row['country_name']);
-//         // Check if the country is "India" and set it as the default
-//         $selected = ($countryName === "India") ? "selected" : "";
-//         echo "<option value='$countryName' $selected>$countryName</option>";
-//     }
-// } else {
-//     // Display an error if the query fails
-//     echo "<option value=''>Error fetching countries</option>";
-// }
-?>
 </select>
 </td>
 

@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 use App\Models\employee_type;
 use App\Models\User;
 use App\Models\bank;
-use App\Models\emp_educations;
+use App\Models\emp_previous_employments;
+use App\Models\emp_family_details;
+use App\Models\emp_education;
 use App\Models\emp_bank_details;
 use App\Models\emp_details;
 use App\Models\emp_contact_details;
@@ -72,7 +74,9 @@ class empDetailFormController extends Controller
     }
 
     public function loadeducationuser(){
-        return view('user_view.emp_edu_details');
+        $loginUserInfo = Auth::user();
+        $emp_eduction_details = emp_education::where('user_id', $loginUserInfo->id)->get();
+        return view('user_view.emp_edu_details',compact('emp_eduction_details'));
     }
 
     public function loadbankuser(){
@@ -104,14 +108,98 @@ class empDetailFormController extends Controller
     }
 
     public function loadfamilyuser(){
+        $loginUserInfo = Auth::user();
+       $familyDetails = emp_family_details::where('user_id', $loginUserInfo->id)->get();
+        return view('user_view.emp_family_details',compact('familyDetails'));
 
-        return view('user_view.emp_family_details');
+    }
+
+    public function insertfamity(Request $request){
+
+        $data = $request->validate([
+            'name' => 'required|array',
+            'relation' => 'required|array',
+            'birth_date' => 'required|array',
+            'gender' => 'required|array',
+            'age' => 'required',
+            'dependent' => 'required|array',
+            'phone_number' => 'nullable|array',
+        ]);
+        
+        $loginUserInfo = Auth::user();
+        
+        
+        // Loop through the validated data and insert into the database
+        foreach ($data['name'] as $index => $name) {
+            // Ensure that all fields for this index exist, and if not, assign null or handle accordingly
+            DB::table('emp_family_details')->insert([
+                'name' => isset($data['name'][$index]) ? $data['name'][$index] : null,
+                'relation' => isset($data['relation'][$index]) ? $data['relation'][$index] : null,
+                'birth_date' => isset($data['birth_date'][$index]) ? $data['birth_date'][$index] : null,
+                'gender' => isset($data['gender'][$index]) ? $data['gender'][$index] : null,
+                'age' => isset($data['age'][$index]) ? $data['age'][$index] : null,
+                'dependent' => isset($data['dependent'][$index]) ? $data['dependent'][$index] : null,
+                'phone_number' => isset($data['phone_number'][$index]) ? $data['phone_number'][$index] : null,
+                'user_id' => $loginUserInfo->id,
+                'created_at' => NOW(),
+                'updated_at' => NOW(),
+            ]);
+        }
+        
+        return redirect()->route('user.edu')->with('success', 'Education added successfully.');
 
     }
 
     public function loadpreempuser(){
 
         return view('user_view.emp_pre_empl_det');
+
+    }
+
+    public function insertPreEmp(Request $request){
+
+        $data = $request->validate([
+            'employer_name' => 'required|array',
+            'country' => 'required|array',
+            'city' => 'required|array',
+            'from_date' => 'required|array',
+            'to_date' => 'required',
+            'designation' => 'required|array',
+            'last_drawn_salary' => 'nullable|array',
+            'relevant_experience' => 'required',
+            'reason_for_leaving' => 'required|array',
+            'major_responsibilities' => 'nullable|array',
+            
+            
+            
+        ]);
+        
+        $loginUserInfo = Auth::user();
+        
+        
+        // Loop through the validated data and insert into the database
+        foreach ($data['employer_name'] as $index => $employer_name) {
+            // Ensure that all fields for this index exist, and if not, assign null or handle accordingly
+            DB::table('emp_previous_employments')->insert([
+                'employer_name' => isset($data['employer_name'][$index]) ? $data['employer_name'][$index] : null,
+                'country' => isset($data['country'][$index]) ? $data['country'][$index] : null,
+                'city' => isset($data['city'][$index]) ? $data['city'][$index] : null,
+                'from_date' => isset($data['from_date'][$index]) ? $data['from_date'][$index] : null,
+                'to_date' => isset($data['to_date'][$index]) ? $data['to_date'][$index] : null,
+                'designation' => isset($data['dependent'][$index]) ? $data['dependent'][$index] : null,
+                'last_drawn_annual_salary' => isset($data['last_drawn_salary'][$index]) ? $data['last_drawn_salary'][$index] : null,
+
+                'relevant_experience' => isset($data['relevant_experience'][$index]) ? $data['relevant_experience'][$index] : null,
+                'reason_for_leaving' => isset($data['reason_for_leaving'][$index]) ? $data['reason_for_leaving'][$index] : null,
+                'major_responsibilities' => isset($data['major_responsibilities'][$index]) ? $data['major_responsibilities'][$index] : null,
+
+                'user_id' => $loginUserInfo->id,
+                'created_at' => NOW(),
+                'updated_at' => NOW(),
+            ]);
+        }
+        
+        return redirect()->route('user.preemp')->with('success', 'Education added successfully.');
 
     }
 
