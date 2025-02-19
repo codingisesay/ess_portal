@@ -11,6 +11,7 @@ use App\Http\Controllers\permissionController;
 use App\Http\Controllers\empDetailFormController;
 use App\Http\Controllers\homePagecontroller;
 use App\Http\Controllers\headerController;
+use App\Http\Controllers\employmentDataController;
 
 
 /*
@@ -68,6 +69,8 @@ Route::middleware(['auth'])->group(function () {
     Route::get('user/docupload',[empDetailFormController::class,'loaddocuploaduser'])->name('user.docupload');
     Route::get('user/homepage',[homePagecontroller::class,'showHomepage'])->name('user.homepage');
     Route::get('user/header', [headerController::class, 'showHeader'])->name('header');
+    Route::get('user/employment-data', [employmentDataController::class, 'showemploymentData'])->name('user.employment.data');
+    
     //Insert data
 
     Route::post('user/detail_insert',[empDetailFormController::class,'insertDetail'])->name('detail_insert');
