@@ -16,77 +16,93 @@
                 <div class="profile-image">
                     <img src="{{ asset('path/to/profile/picture.jpg') }}" width="80" height="80" alt="Profile Picture">
                 </div>
-                <h2>{{ $userDetails->name ?? 'N/A' }}</h2>
+                <h2>{{ ucfirst($userDetails->name ?? 'N/A') }}</h2>
                 <div class="job-title">
-                    <p><strong>Designation</strong> <weak>{{ $userDetails->designation ?? 'N/A' }}</weak></p>
-                    <p><strong>Department</strong> <weak>{{ $userDetails->department ?? 'N/A' }}</weak></p>
-                    <p><strong>Office</strong> <weak>{{ $userDetails->office ?? 'N/A' }}</weak></p>
-                    <p><strong>Reporting Manager</strong> <weak>{{ $userDetails->reporting_manager ?? 'N/A' }}</weak></p>
+                    <p><strong>Designation</strong> <weak>{{ ucfirst($userDetails->designation_name ?? 'N/A') }}</weak></p>
+                    <p><strong>Department</strong> <weak>{{ ucfirst($userDetails->department_name ?? 'N/A') }}</weak></p>
+                    <p><strong>Office</strong> <weak>{{ ucfirst($userDetails->office ?? 'N/A') }}</weak></p>
+                    <p><strong>Reporting Manager</strong> <weak>{{ ucfirst($userDetails->reporting_manager_name ?? 'N/A') }}</weak></p>
                 </div>
                 <div class="contact-details">
                     <h3>Contact Details</h3>
-                    <p><strong>Phone Number</strong> <weak>{{ $userDetails->offical_phone_number ?? 'N/A' }}</weak></p>
-                    <p><strong>Alternate Number</strong> <weak>{{ $userDetails->alternate_phone_number ?? 'N/A' }}</weak></p>
-                    <p><strong>Email Address</strong> <weak><a href="mailto:{{ $userDetails->email ?? 'N/A' }}">{{ $userDetails->email ?? 'N/A' }}</a></weak></p>
-                    <p><strong>Address</strong> <weak>{{ $userDetails->address ?? 'N/A' }}</weak></p>
+                    <p><strong>Phone Number</strong> <weak>{{ ucfirst($userDetails->offical_phone_number ?? 'N/A') }}</weak></p>
+                    <p><strong>Alternate Number</strong> <weak>{{ ucfirst($userDetails->alternate_phone_number ?? 'N/A') }}</weak></p>
+                    <p><strong>Email Address</strong> <weak><a href="mailto:{{ $userDetails->email ?? 'N/A' }}">{{ ucfirst($userDetails->email ?? 'N/A') }}</a></weak></p>
+                    <h3>Address</h3>
+                    <p><strong>Permanent</strong> <weak>
+                        {{ ucfirst($userDetails->per_building_no ?? '') }},
+                        {{ ucfirst($userDetails->per_name_of_premises ?? '') }},
+                        {{ ucfirst($userDetails->per_nearby_landmark ?? '') }},
+                        {{ ucfirst($userDetails->per_road_street ?? '') }},
+                        {{ ucfirst($userDetails->per_city ?? '') }},
+                        {{ ucfirst($userDetails->per_district ?? '') }},
+                        {{ ucfirst($userDetails->per_state ?? '') }},
+                        {{ ucfirst($userDetails->per_country ?? '') }},
+                        {{ ucfirst($userDetails->per_pincode ?? '') }}
+                    </weak></p>
+                    <p><strong>Correspondance</strong> <weak>
+                        {{ ucfirst($userDetails->cor_building_no ?? '') }},
+                        {{ ucfirst($userDetails->cor_name_of_premises ?? '') }},
+                        {{ ucfirst($userDetails->cor_nearby_landmark ?? '') }},
+                        {{ ucfirst($userDetails->cor_road_street ?? '') }},
+                        {{ ucfirst($userDetails->cor_city ?? '') }},
+                        {{ ucfirst($userDetails->cor_district ?? '') }},
+                        {{ ucfirst($userDetails->cor_state ?? '') }},
+                        {{ ucfirst($userDetails->cor_country ?? '') }},
+                        {{ ucfirst($userDetails->cor_pincode ?? '') }}
+                    </weak></p>
                 </div>
             </div>
             <div class="emergency-contact">
                 <h2>Emergency Contact Details</h2>
-                <p><strong>Name</strong> <weak>{{ $userDetails->emergency_contact_person ?? 'N/A' }}</weak></p>
-                <p><strong>Contact Number</strong> <weak>{{ $userDetails->emergency_contact_number ?? 'N/A' }}</weak></p>              
+                <p><strong>Name</strong> <weak>{{ ucfirst($userDetails->emergency_contact_person ?? 'N/A') }}</weak></p>
+                <p><strong>Contact Number</strong> <weak>{{ ucfirst($userDetails->emergency_contact_number ?? 'N/A') }}</weak></p>              
             </div>
         </div>
 
         <div class="right-section">
             <div class="section">
                 <h2>Personal Information</h2>
-                <div class="left1"><p>Date of Birth</p> <b>{{ $userDetails->date_of_birth ?? 'N/A' }}</b></div>
-                <div class="left1"><p>Gender</p> <b>{{ $userDetails->gender ?? 'N/A' }}</b></div>
-                <div class="left1"><p>Nationality</p> <b>{{ $userDetails->nationality ?? 'N/A' }}</b></div>
-                <div class="left1"><p>Marital Status</p> <b>{{ $userDetails->marital_status ?? 'N/A' }}</b></div>
-                <div class="left1"><p>Blood Group</p> <b>{{ $userDetails->blood_group ?? 'N/A' }}</b></div>
-                <div class="left1"><p>Religion</p> <b>{{ $userDetails->religion ?? 'N/A' }}</b></div>
-                <div class="left1"><p>Annivarsary Date</p> <b>{{ $userDetails->anniversary_date  ?? 'N/A' }}</b></div>
+                <div class="left1"><p>Date of Birth</p> <b>{{ $userDetails->date_of_birth ? \Carbon\Carbon::parse($userDetails->date_of_birth)->format('d-m-Y') : 'N/A' }}</b></div>
+                <div class="left1"><p>Gender</p> <b>{{ ucfirst($userDetails->gender ?? 'N/A') }}</b></div>
+                <div class="left1"><p>Nationality</p> <b>{{ ucfirst($userDetails->nationality ?? 'N/A') }}</b></div>
+                <div class="left1"><p>Marital Status</p> <b>{{ ucfirst($userDetails->marital_status ?? 'N/A') }}</b></div>
+                <div class="left1"><p>Blood Group</p> <b>{{ ucfirst($userDetails->blood_group ?? 'N/A') }}</b></div>
+                <div class="left1"><p>Religion</p> <b>{{ ucfirst($userDetails->religion ?? 'N/A') }}</b></div>
+                <div class="left1"><p>Anniversary Date</p> <b>{{ $userDetails->anniversary_date ? \Carbon\Carbon::parse($userDetails->anniversary_date)->format('d-m-Y') : 'N/A' }}</b></div>
             </div>
 
             <div class="section">
                 <h2>Employee Details</h2>
-                <div class="left1"><p>Employment Status</p> <b>{{ $userDetails->employment_status ?? 'N/A' }}</b></div>
-                <div class="left1"><p>Employment Type</p> <b>{{ $userDetails->employee_type ?? 'N/A' }}</b></div>
-                <div class="left1"><p>Start Date</p> <b>{{ $userDetails->Joining_date ?? 'N/A' }}</b></div>
-                <div class="left1"><p>Total Experience</p> <b>{{ $userDetails->total_experience ?? 'N/A' }}</b></div>
+                <div class="left1"><p>Employment Status</p> <b>{{ ucfirst($userDetails->employment_status ?? 'N/A') }}</b></div>
+                <div class="left1"><p>Employment Type</p> <b>{{ ucfirst($userDetails->employee_type_name ?? 'N/A') }}</b></div>
+                <div class="left1"><p>Start Date</p> <b>{{ $userDetails->Joining_date ? \Carbon\Carbon::parse($userDetails->Joining_date)->format('d-m-Y') : 'N/A' }}</b></div>
+                <div class="left1"><p>Total Experience</p> <b>{{ ucfirst($userDetails->total_experience ?? 'N/A') }}</b></div>
             </div>
 
             <div class="section1">
                 <h2>Salary Bank Details</h2>
-                <div class="left1"><p>Bank Name</p> <b>{{ $userDetails->sal_bank_name ?? 'N/A' }}</b></div>
-                <div class="left1"><p>Branch Name</p> <b>{{ $userDetails->sal_branch_name ?? 'N/A' }}</b></div>
-                <div class="left1"><p>Account Number</p> <b>{{ $userDetails->sal_account_number ?? 'N/A' }}</b></div>
-                <div class="left1"><p>IFSC Code</p> <b>{{ $userDetails->sal_ifsc_code ?? 'N/A' }}</b></div>
-
-                <!-- <h2>Personal Bank Details</h2>
-                <div class="left1"><p>Bank Name</p> <b>{{ $userDetails->bank_name ?? 'N/A' }}</b></div>
-                <div class="left1"><p>Branch Name</p> <b>{{ $userDetails->branch_name ?? 'N/A' }}</b></div>
-                <div class="left1"><p>Account Number</p> <b>{{ $userDetails->account_number ?? 'N/A' }}</b></div>
-                <div class="left1"><p>IFSC Code</p> <b>{{ $userDetails->ifsc_code ?? 'N/A' }}</b></div> -->
+                <div class="left1"><p>Bank Name</p> <b>{{ ucfirst($userDetails->bank_name ?? 'N/A') }}</b></div>
+                <div class="left1"><p>Branch Name</p> <b>{{ ucfirst($userDetails->sal_branch_name ?? 'N/A') }}</b></div>
+                <div class="left1"><p>Account Number</p> <b>{{ ucfirst($userDetails->sal_account_number ?? 'N/A') }}</b></div>
+                <div class="left1"><p>IFSC Code</p> <b>{{ ucfirst($userDetails->sal_ifsc_code ?? 'N/A') }}</b></div>
             </div>
 
             <div class="section">
                 <h2>Passport & Visa</h2>
-                <div class="left1"><p>Passport Number</p> <b>{{ $userDetails->passport_number ?? 'N/A' }}</b></div>
-                <div class="left1"><p>Issuing Country</p> <b>{{ $userDetails->issuing_country ?? 'N/A' }}</b></div>
-                <div class="left1"><p>Issue Date</p> <b>{{ $userDetails->passport_issue_date ?? 'N/A' }}</b></div>
-                <div class="left1"><p>Expiry Date</p> <b>{{ $userDetails->passport_expiry_date ?? 'N/A' }}</b></div>
-                <div class="left1"><p>USA Visa</p> <b>{{ $userDetails->active_visa ?? 'N/A' }}</b></div>
-                <div class="left1"><p>Visa Expiry Date</p> <b>{{ $userDetails->visa_expiry_date ?? 'N/A' }}</b></div>
+                <div class="left1"><p>Passport Number</p> <b>{{ ucfirst($userDetails->passport_number ?? 'N/A') }}</b></div>
+                <div class="left1"><p>Issuing Country</p> <b>{{ ucfirst($userDetails->issuing_country ?? 'N/A') }}</b></div>
+                <div class="left1"><p>Issue Date</p> <b>{{ $userDetails->passport_issue_date ? \Carbon\Carbon::parse($userDetails->passport_issue_date)->format('d-m-Y') : 'N/A' }}</b></div>
+                <div class="left1"><p>Expiry Date</p> <b>{{ $userDetails->passport_expiry_date ? \Carbon\Carbon::parse($userDetails->passport_expiry_date)->format('d-m-Y') : 'N/A' }}</b></div>
+                <div class="left1"><p>USA Visa</p> <b>{{ ucfirst($userDetails->active_visa ?? 'N/A') }}</b></div>
+                <div class="left1"><p>Visa Expiry Date</p> <b>{{ $userDetails->visa_expiry_date ? \Carbon\Carbon::parse($userDetails->visa_expiry_date)->format('d-m-Y') : 'N/A' }}</b></div>
             </div>
 
             <div class="section1">
                 <h2>Welfare Benefits</h2>
-                <div class="left1"><p>UAN</p> <b>{{ $userDetails->universal_account_number ?? 'N/A' }}</b></div>
-                <div class="left1"><p>Provident Fund</p> <b>{{ $userDetails->provident_fund ?? 'N/A' }}</b></div>
-                <div class="left1"><p>ESIC NO</p> <b>{{ $userDetails->esic_no ?? 'N/A' }}</b></div>
+                <div class="left1"><p>UAN</p> <b>{{ ucfirst($userDetails->universal_account_number ?? 'N/A') }}</b></div>
+                <div class="left1"><p>Provident Fund</p> <b>{{ ucfirst($userDetails->provident_fund ?? 'N/A') }}</b></div>
+                <div class="left1"><p>ESIC NO</p> <b>{{ ucfirst($userDetails->esic_no ?? 'N/A') }}</b></div>
             </div>
 
             <div class="section educational-details-section">
@@ -94,18 +110,31 @@
                 @foreach($empEducation as $education)
                     <div style="display: flex;">
                         <p class="left2">
-                            <div style="width: 200px">{{ $education->degree ?? 'N/A' }}</div>
-                            <button class="view-btn" onclick="openModal({{ $loop->index }})">View</button>
+                            <div style="width: 200px">{{ ucfirst($education->course_type ?? '') }}</div>
+                            @if($education->course_type == 'degree')
+                                <button class="view-btn" onclick="openDegreeModal({{ $loop->index }})">View</button>
+                            @elseif($education->course_type == 'certification')
+                                <button class="view-btn" onclick="openCertificationModal({{ $loop->index }})">View</button>
+                            @endif
                         </p>
                     </div>
                 @endforeach
             </div>
 
-            <div id="myModal" class="modal">
+            <div id="degreeModal" class="modal">
                 <div class="modal-content">
-                    <span class="close">&times;</span>
-                    <div id="modal-content-details">
-                        <!-- Educational details will be displayed here -->
+                    <span class="close" onclick="closeModal('degreeModal')">&times;</span>
+                    <div id="degree-modal-content-details">
+                        <!-- Degree details will be displayed here -->
+                    </div>
+                </div>
+            </div>
+
+            <div id="certificationModal" class="modal">
+                <div class="modal-content">
+                    <span class="close" onclick="closeModal('certificationModal')">&times;</span>
+                    <div id="certification-modal-content-details">
+                        <!-- Certification details will be displayed here -->
                     </div>
                 </div>
             </div>
@@ -133,13 +162,13 @@
                         @foreach($empFamilyDetails as $index => $family)
                             <tr>
                                 <td class="tableh-one">{{ $index + 1 }}</td>
-                                <td class="tableh-two">{{ $family->name  ?? 'N/A' }}</td>
-                                <td class="tableh-three">{{ $family->relation ?? 'N/A' }}</td>
-                                <td class="tableh-four">{{ $family->birth_date ?? 'N/A' }}</td>
-                                <td class="tableh-five">{{ $family->gender ?? 'N/A' }}</td>
-                                <td class="tableh-six">{{ $family->age ?? 'N/A' }}</td>
-                                <td class="tableh-seven">{{ $family->dependent ?? 'N/A' }}</td>
-                                <td class="tableh-eight">{{ $family->phone_number ?? 'N/A' }}</td>
+                                <td class="tableh-two">{{ ucfirst($family->name  ?? 'N/A') }}</td>
+                                <td class="tableh-three">{{ ucfirst($family->relation ?? 'N/A') }}</td>
+                                <td class="tableh-four">{{ $family->birth_date ? \Carbon\Carbon::parse($family->birth_date)->format('d-m-Y') : 'N/A' }}</td>
+                                <td class="tableh-five">{{ ucfirst($family->gender ?? 'N/A') }}</td>
+                                <td class="tableh-six">{{ ucfirst($family->age ?? 'N/A') }}</td>
+                                <td class="tableh-seven">{{ ucfirst($family->dependent ?? 'N/A') }}</td>
+                                <td class="tableh-eight">{{ ucfirst($family->phone_number ?? 'N/A') }}</td>
                             </tr>
                         @endforeach
                     </tbody>
@@ -162,10 +191,7 @@
                             <th class="tablehp">Designation</th>
                             <th class="tablehp">Salary</th>
                             <th class="tablehp">Experience</th>
-                            <!-- <th class="tablehp">Designation While Joining</th> -->
                             <th class="tablehp">Reason for Leaving</th>
-                            <!-- <th class="tablehp">Role While Leaving</th> -->
-                            <!-- <th class="tablehp">Designation While Leaving</th> -->
                             <th class="tablehp">Major Responsibilities Held</th>
                         </tr>
                     </thead>
@@ -173,19 +199,16 @@
                         @foreach($empPreviousEmployments as $index => $employment)
                             <tr>
                                 <td>{{ $index + 1 }}</td>
-                                <td>{{ $employment->employer_name  ?? 'N/A' }}</td>
-                                <td>{{ $employment->country ?? 'N/A' }}</td>
-                                <td>{{ $employment->city ?? 'N/A' }}</td>
-                                <td>{{ $employment->from_date  ?? 'N/A' }}</td>
-                                <td>{{ $employment->to_date ?? 'N/A' }}</td>
-                                <td>{{ $employment->designation ?? 'N/A' }}</td>
-                                <td>{{ $employment->last_drawn_annual_salary ?? 'N/A' }}</td>
-                                <td>{{ $employment->relevant_experience ?? 'N/A' }}</td>
-                                <!-- <td>{{ $employment->designation_while_joining ?? 'N/A' }}</td> -->
-                                <td>{{ $employment->reason_for_leaving ?? 'N/A' }}</td>
-                                <!-- <td>{{ $employment->role_while_leaving ?? 'N/A' }}</td> -->
-                                <!-- <td>{{ $employment->designation_while_leaving ?? 'N/A' }}</td> -->
-                                <td>{{ $employment->major_responsibilities ?? 'N/A' }}</td>
+                                <td>{{ ucfirst($employment->employer_name  ?? 'N/A') }}</td>
+                                <td>{{ ucfirst($employment->country ?? 'N/A') }}</td>
+                                <td>{{ ucfirst($employment->city ?? 'N/A') }}</td>
+                                <td>{{ $employment->from_date ? \Carbon\Carbon::parse($employment->from_date)->format('d-m-Y') : 'N/A' }}</td>
+                                <td>{{ $employment->to_date ? \Carbon\Carbon::parse($employment->to_date)->format('d-m-Y') : 'N/A' }}</td>
+                                <td>{{ ucfirst($employment->designation ?? 'N/A') }}</td>
+                                <td>{{ ucfirst($employment->last_drawn_annual_salary ?? 'N/A') }}</td>
+                                <td>{{ ucfirst($employment->relevant_experience ?? 'N/A') }}</td>
+                                <td>{{ ucfirst($employment->reason_for_leaving ?? 'N/A') }}</td>
+                                <td>{{ ucfirst($employment->major_responsibilities ?? 'N/A') }}</td>
                             </tr>
                         @endforeach
                     </tbody>
@@ -196,8 +219,8 @@
 
     <script>
         // JavaScript to handle modal popup
-        function openModal(serialNo) {
-            var modalContent = document.getElementById("modal-content-details");
+        function openDegreeModal(serialNo) {
+            var modalContent = document.getElementById("degree-modal-content-details");
             modalContent.innerHTML = ''; // Clear previous content
 
             @foreach($empEducation as $index => $education)
@@ -205,50 +228,64 @@
                     modalContent.innerHTML += `
                         <div>
                             <p class="label">Degree:</p>
-                            <p class="value">{{ $education->degree ?? 'N/A' }}</p>
+                            <p class="value">{{ ucfirst($education->degree ?? 'N/A') }}</p>
                         </div>
                         <div>
                             <p class="label">University:</p>
-                            <p class="value">{{ $education->university ?? 'N/A' }}</p>
+                            <p class="value">{{ ucfirst($education->university ?? 'N/A') }}</p>
                         </div>
                         <div>
                             <p class="label">Institution:</p>
-                            <p class="value">{{ $education->institution ?? 'N/A' }}</p>
+                            <p class="value">{{ ucfirst($education->institution ?? 'N/A') }}</p>
                         </div>
                         <div>
                             <p class="label">Passing Year:</p>
-                            <p class="value">{{ $education->year_of_passing ?? 'N/A' }}</p>
+                            <p class="value">{{ $education->year_of_passing ? \Carbon\Carbon::parse($education->year_of_passing)->format('d-m-Y') : 'N/A' }}</p>
                         </div>
                         <div>
                             <p class="label">Course Type:</p>
-                            <p class="value">{{ $education->course_type ?? 'N/A' }}</p>
+                            <p class="value">{{ ucfirst($education->course_type ?? 'N/A') }}</p>
                         </div>
                         <div>
                             <p class="label">Percentage:</p>
-                            <p class="value">{{ $education->percentage ?? 'N/A' }}</p>
-                        </div>
-                        <div>
-                            <p class="label">Certification Name:</p>
-                            <p class="value">{{ $education->certification_name ?? 'N/A' }}</p>
-                        </div>
-                        <div>
-                            <p class="label">Marks Obtained:</p>
-                            <p class="value">{{ $education->marks_obtained ?? 'N/A' }}</p>
-                        </div>
-                        <div>
-                            <p class="label">Certificate Date:</p>
-                            <p class="value">{{ $education->certificate_date ?? 'N/A' }}</p>
+                            <p class="value">{{ ucfirst($education->percentage ?? 'N/A') }}</p>
                         </div>
                     `;
                 }
             @endforeach
 
-            document.getElementById("myModal").style.display = "block";
+            document.getElementById("degreeModal").style.display = "block";
+        }
+
+        function openCertificationModal(serialNo) {
+            var modalContent = document.getElementById("certification-modal-content-details");
+            modalContent.innerHTML = ''; // Clear previous content
+
+            @foreach($empEducation as $index => $education)
+                if (serialNo === {{ $index }}) {
+                    modalContent.innerHTML += `
+                        <div>
+                            <p class="label">Certification Name:</p>
+                            <p class="value">{{ ucfirst($education->certification_name ?? 'N/A') }}</p>
+                        </div>
+                        <div>
+                            <p class="label">Marks Obtained:</p>
+                            <p class="value">{{ ucfirst($education->marks_obtained ?? 'N/A') }}</p>
+                        </div>
+                        <div>
+                            <p class="label">Certificate Date:</p>
+                            <p class="value">{{ $education->certificate_date ? \Carbon\Carbon::parse($education->certificate_date)->format('d-m-Y') : 'N/A' }}</p>
+                        </div>
+                    `;
+                }
+            @endforeach
+
+            document.getElementById("certificationModal").style.display = "block";
         }
 
         // Close the modal when the user clicks on the close button
-        document.querySelector('.close').onclick = function() {
-            document.getElementById("myModal").style.display = "none";
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = "none";
         }
     </script>
 @endsection

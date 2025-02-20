@@ -23,14 +23,33 @@ class EmploymentDataController extends Controller
     {
         $loginUserInfo = Auth::user();
         $userId = $loginUserInfo->id;
+        $organisationId = $loginUserInfo->organisation_id;
+
+       
 
         // Fetch user details using joins
         $userDetails = DB::table('users')
             ->leftJoin('emp_details', 'users.id', '=', 'emp_details.user_id')
             ->leftJoin('emp_contact_details', 'users.id', '=', 'emp_contact_details.user_id')
             ->leftJoin('emp_bank_details', 'users.id', '=', 'emp_bank_details.user_id')
-            ->select('users.*', 'emp_details.*', 'emp_contact_details.*', 'emp_bank_details.*')
+            ->leftJoin('organisation_departments', 'emp_details.id', '=', 'organisation_departments.id')  // Join for department name
+            ->leftJoin('organisation_designations', 'emp_details.id', '=', 'organisation_designations.id')  // Join for designation name
+            ->leftJoin('employee_types', 'emp_details.id', '=', 'employee_types.id')  // Join for employee type name
+            ->leftJoin('users as managers', 'users.id', '=', 'managers.id')  // Join for reporting manager name
+            ->leftJoin('banks', 'emp_bank_details.id', '=', 'banks.id')  // Join for bank name
+            ->select(
+                'users.*',
+                'emp_details.*',
+                'emp_contact_details.*',
+                'emp_bank_details.*',
+                'organisation_departments.name as department_name',  // Select department name
+                'organisation_designations.name as designation_name',  // Select designation name
+                'employee_types.name as employee_type_name',  // Select employee type name
+                'managers.name as reporting_manager_name',  // Select reporting manager name
+                'banks.name as bank_name'  // Select bank name
+            )
             ->where('users.id', $userId)
+            ->where('users.organisation_id', $organisationId)
             ->first();
 
         // Fetch related data
