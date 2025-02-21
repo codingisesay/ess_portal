@@ -48,7 +48,7 @@
                             <th>Age</th>
                             <th>Dependent</th>
                             <th>Phone Number</th>
-                            <th>Edit</th>
+                            {{-- <th>Edit</th> --}}
                             <th>Remove</th>
                         </tr>
                     </thead>
@@ -92,11 +92,11 @@
                                     <option value="No">No</option>
                                 </select>
                             </td>
-                            <td><input type="tel" name="phone_number[]" placeholder="Phone Number" value="{{$detail->phone_number}}"  maxlength="10" pattern="\\d{10}" inputmode="numeric" 
+                            <td><input type="tel" name="phone_number[]" placeholder="Phone Number" value="{{$detail->phone_number}}"  maxlength="10" inputmode="numeric" 
                             title="Please enter a 10-digit phone number" 
                             oninput="this.value = this.value.replace(/[^0-9]/g, '')"></td>
-                            <td><button type="button" onclick="editFamilyRow(this)">✏️</button></td>
-                            <td><button type="button" onclick="removeFamilyRow(this)">❌</button></td>
+                            {{-- <td><button type="button" onclick="editFamilyRow(this)">✏️</button></td> --}}
+                            <td><button type="button" class="delete-button" data-id="{{ $detail->id }}">❌</button></td>
 
                         </tr>
                         @endforeach
@@ -109,9 +109,11 @@
             <button type="submit" class="next-btn">Next</button>
         </div> -->
         <div class="button-container">
-            <button class="previous-btn">
-                <span>&#8249;</span>
-            </button>
+            <a href="{{ route('user.bank') }}" style="text-decoration:none;">
+                <button type="button" class="previous-btn">
+                    <span>&#8249;</span>
+                </button>
+            </a>
             <button type="submit" class="next-btn">
                 <span>&#8250;</span>
             </button>
@@ -164,10 +166,9 @@
         <option value="No">No</option>
     </select>
 </td>
-<td><input type="tel" name="phone_number[]" placeholder="Phone Number"  maxlength="10" pattern="\\d{10}" inputmode="numeric" 
+<td><input type="tel" name="phone_number[]" placeholder="Phone Number"  maxlength="10"  inputmode="numeric" 
 title="Please enter a 10-digit phone number" 
 oninput="this.value = this.value.replace(/[^0-9]/g, '')"></td>
-<td><button type="button" onclick="editFamilyRow(this)">✏️</button></td>
 <td><button type="button" onclick="removeFamilyRow(this)">❌</button></td>
 `;
 
@@ -216,6 +217,40 @@ oninput="this.value = this.value.replace(/[^0-9]/g, '')"></td>
         // Add your edit logic here (toggle between edit/view mode)
     }
 </script>
-<script src="{{ asset('user_end/js/onboarding_form.js') }}"></script>
+{{-- <script src="{{ asset('user_end/js/onboarding_form.js') }}"></script> --}}
+<script>
+    $(document).on('click', '.delete-button', function () {
+        // Get the ID of the record to be deleted
+        var familyId = $(this).data('id');
+      
+    console.log(familyId);
+        // Confirm delete action
+        if (confirm('Are you sure you want to delete this item?')) {
+            // Send an AJAX DELETE request to the server
+            $.ajax({
+                url: '/user/del_family/' + familyId,  // Adjust the route URL if necessary
+                type: 'DELETE',
+                data: {
+                    _method: 'DELETE',
+                    _token: '{{ csrf_token() }}', 
+                    familyId:familyId,// CSRF token for security
+                },
+                success: function (response) {
+                    // On success, remove the row from the table
+                    $('button[data-id="' + familyId + '"]').closest('tr').remove();
+                    alert('Education record deleted successfully!');
+                },
+                error: function (response) {
+                    alert('Error deleting record. Please try again.');
+                    console.log(familyId);
+                }
+            });
+        }
+    });
+    document.getElementById('previous-btn-link').addEventListener('click', function(event) {
+        event.stopPropagation(); // Stop the form submission from being triggered
+    });
+
+    </script>
 
 @endsection

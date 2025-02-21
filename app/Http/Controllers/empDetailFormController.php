@@ -4,11 +4,12 @@ namespace App\Http\Controllers;
 use App\Models\employee_type;
 use App\Models\User;
 use App\Models\bank;
-use App\Models\emp_previous_employments;
+use App\Models\emp_previous_employment;
 use App\Models\emp_family_details;
 use App\Models\emp_education;
 use App\Models\emp_bank_details;
 use App\Models\emp_details;
+use App\Models\countrie;
 use App\Models\emp_contact_details;
 use App\Models\organisation_department;
 use App\Models\organisation_designation;
@@ -17,6 +18,7 @@ use App\Mail\UserRegistrationMail;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 
 class empDetailFormController extends Controller
 {
@@ -25,20 +27,6 @@ class empDetailFormController extends Controller
         $loginUserInfo = Auth::user();
         $loginUserInfo->id;
         $loginUserInfo->organisation_id;
-    //     $loginUserInfo->employeeID;
-    //    $loginUserInfo->name;
-     
-
-    //           $results = DB::table('organisation_designations')
-    // ->join('organisation_departments', 'organisation_designations.department_id', '=', 'organisation_departments.id')
-    // ->join('branches', 'organisation_designations.branch_id', '=', 'branches.id')
-    // ->select('organisation_departments.name as department_name', 'organisation_designations.name as designation_name','organisation_designations.id as designation_id','branches.id as branch_id','branches.name as branch_name')
-    // ->where('organisation_departments.organisation_id', '=', $id) // Adding a WHERE condition to filter by department name
-    // ->get();
-
- 
-
-    // dd($results);
 
         $users = User::where('organisation_id', $loginUserInfo->organisation_id)->get();
         $departments = organisation_department::where('organisation_id', $loginUserInfo->organisation_id)->get();
@@ -69,8 +57,9 @@ class empDetailFormController extends Controller
         $loginUserInfo = Auth::user();
         // echo $loginUserInfo->id;
         $emp_contact_datas = emp_contact_details::where('user_id', $loginUserInfo->id)->get();
+        $countrys = countrie::get();
         // dd($emp_contact_datas);
-        return view('user_view.emp_contact_details',compact('emp_contact_datas'));
+        return view('user_view.emp_contact_details',compact('emp_contact_datas','countrys'));
     }
 
     public function loadeducationuser(){
@@ -127,12 +116,15 @@ class empDetailFormController extends Controller
         ]);
         
         $loginUserInfo = Auth::user();
-        
-        
-        // Loop through the validated data and insert into the database
+
+        $emp_Family_details = emp_family_details::where('user_id', $loginUserInfo->id)->get();
+        if($emp_Family_details->isNotEmpty()){
+            $deleteStaus = emp_family_details::where('user_id', $loginUserInfo->id)->delete();
+
+                // Loop through the validated data and insert into the database
         foreach ($data['name'] as $index => $name) {
             // Ensure that all fields for this index exist, and if not, assign null or handle accordingly
-            DB::table('emp_family_details')->insert([
+            $updatestatus = DB::table('emp_family_details')->insert([
                 'name' => isset($data['name'][$index]) ? $data['name'][$index] : null,
                 'relation' => isset($data['relation'][$index]) ? $data['relation'][$index] : null,
                 'birth_date' => isset($data['birth_date'][$index]) ? $data['birth_date'][$index] : null,
@@ -145,14 +137,65 @@ class empDetailFormController extends Controller
                 'updated_at' => NOW(),
             ]);
         }
+
+        if($updatestatus){
         
-        return redirect()->route('user.edu')->with('success', 'Education added successfully.');
+            session()->flash('success', 'Your Family Details has been updated successfully!');
+            return redirect()->route('user.preemp');
+    
+         }else{
+
+            session()->flash('error', 'Your Family Details has Not been updated successfully!');
+            return redirect()->route('user.preemp');
+
+         }
+
+        }else{
+
+                // Loop through the validated data and insert into the database
+        foreach ($data['name'] as $index => $name) {
+            // Ensure that all fields for this index exist, and if not, assign null or handle accordingly
+           $insertStatus = DB::table('emp_family_details')->insert([
+                'name' => isset($data['name'][$index]) ? $data['name'][$index] : null,
+                'relation' => isset($data['relation'][$index]) ? $data['relation'][$index] : null,
+                'birth_date' => isset($data['birth_date'][$index]) ? $data['birth_date'][$index] : null,
+                'gender' => isset($data['gender'][$index]) ? $data['gender'][$index] : null,
+                'age' => isset($data['age'][$index]) ? $data['age'][$index] : null,
+                'dependent' => isset($data['dependent'][$index]) ? $data['dependent'][$index] : null,
+                'phone_number' => isset($data['phone_number'][$index]) ? $data['phone_number'][$index] : null,
+                'user_id' => $loginUserInfo->id,
+                'created_at' => NOW(),
+                'updated_at' => NOW(),
+            ]);
+        }
+        if($insertStatus){
+        
+            session()->flash('success', 'Your Family Details has been Inserted successfully!');
+            return redirect()->route('user.preemp');
+    
+         }else{
+
+            session()->flash('error', 'Your Family Details has Not been Inserted successfully!');
+            return redirect()->route('user.preemp');
+
+         }
+
+        }
+        
 
     }
 
     public function loadpreempuser(){
+       
+        $loginUserInfo = Auth::user();
 
-        return view('user_view.emp_pre_empl_det');
+        $countrys = countrie::get();
+
+        $emp_preEmp_details = emp_previous_employment::where('user_id', $loginUserInfo->id)->get();
+   
+// dd($emp_preEmp_details);
+
+        return view('user_view.emp_pre_empl_det',compact('emp_preEmp_details','countrys'));
 
     }
 
@@ -175,18 +218,26 @@ class empDetailFormController extends Controller
         ]);
         
         $loginUserInfo = Auth::user();
-        
-        
-        // Loop through the validated data and insert into the database
+
+        $emp_preEmp_details = emp_previous_employment::where('user_id', $loginUserInfo->id)->get();
+
+        // dd($emp_preEmp_details);
+
+        if($emp_preEmp_details->isNotEmpty()){
+
+            // $deleteStaus = emp_previous_employment::destroy();
+
+            $deleteStaus = emp_previous_employment::where('user_id', $loginUserInfo->id)->delete();
+                                     // Loop through the validated data and insert into the database
         foreach ($data['employer_name'] as $index => $employer_name) {
             // Ensure that all fields for this index exist, and if not, assign null or handle accordingly
-            DB::table('emp_previous_employments')->insert([
+          $updatestatus = DB::table('emp_previous_employments')->insert([
                 'employer_name' => isset($data['employer_name'][$index]) ? $data['employer_name'][$index] : null,
                 'country' => isset($data['country'][$index]) ? $data['country'][$index] : null,
                 'city' => isset($data['city'][$index]) ? $data['city'][$index] : null,
                 'from_date' => isset($data['from_date'][$index]) ? $data['from_date'][$index] : null,
                 'to_date' => isset($data['to_date'][$index]) ? $data['to_date'][$index] : null,
-                'designation' => isset($data['dependent'][$index]) ? $data['dependent'][$index] : null,
+                'designation' => isset($data['designation'][$index]) ? $data['designation'][$index] : null,
                 'last_drawn_annual_salary' => isset($data['last_drawn_salary'][$index]) ? $data['last_drawn_salary'][$index] : null,
 
                 'relevant_experience' => isset($data['relevant_experience'][$index]) ? $data['relevant_experience'][$index] : null,
@@ -198,8 +249,57 @@ class empDetailFormController extends Controller
                 'updated_at' => NOW(),
             ]);
         }
+
+        if($updatestatus){
         
-        return redirect()->route('user.preemp')->with('success', 'Education added successfully.');
+            session()->flash('success', 'Data has been updated successfully!');
+            return redirect()->route('user.docupload');
+    
+         }else{
+
+            session()->flash('error', 'Data has Not been updated successfully!');
+            return redirect()->route('user.docupload');
+
+         }
+
+        }else{
+
+                            // Loop through the validated data and insert into the database
+        foreach ($data['employer_name'] as $index => $employer_name) {
+            // Ensure that all fields for this index exist, and if not, assign null or handle accordingly
+          $InsertStaus =  DB::table('emp_previous_employments')->insert([
+                'employer_name' => isset($data['employer_name'][$index]) ? $data['employer_name'][$index] : null,
+                'country' => isset($data['country'][$index]) ? $data['country'][$index] : null,
+                'city' => isset($data['city'][$index]) ? $data['city'][$index] : null,
+                'from_date' => isset($data['from_date'][$index]) ? $data['from_date'][$index] : null,
+                'to_date' => isset($data['to_date'][$index]) ? $data['to_date'][$index] : null,
+                'designation' => isset($data['designation'][$index]) ? $data['designation'][$index] : null,
+                'last_drawn_annual_salary' => isset($data['last_drawn_salary'][$index]) ? $data['last_drawn_salary'][$index] : null,
+
+                'relevant_experience' => isset($data['relevant_experience'][$index]) ? $data['relevant_experience'][$index] : null,
+                'reason_for_leaving' => isset($data['reason_for_leaving'][$index]) ? $data['reason_for_leaving'][$index] : null,
+                'major_responsibilities' => isset($data['major_responsibilities'][$index]) ? $data['major_responsibilities'][$index] : null,
+
+                'user_id' => $loginUserInfo->id,
+                'created_at' => NOW(),
+                'updated_at' => NOW(),
+            ]);
+        }
+
+        }
+        
+        
+        if($InsertStaus){
+        
+            session()->flash('success', 'Data has been Inserted successfully!');
+            return redirect()->route('user.docupload');
+    
+         }else{
+
+            session()->flash('error', 'Data has Not been Inserted successfully!');
+            return redirect()->route('user.docupload');
+
+         }
 
     }
 
@@ -266,12 +366,12 @@ class empDetailFormController extends Controller
 
                 if($updatestatus){
                     session()->flash('success', 'Data has been updated successfully!');
-                    return redirect()->route('user.dashboard');
+                    return redirect()->route('user.contact');
 
                 }else{
 
                     session()->flash('error', 'No Item Modified!');
-                    return redirect()->route('user.dashboard');
+                    return redirect()->route('user.contact');
                 }
 
         }else{
@@ -394,12 +494,12 @@ class empDetailFormController extends Controller
                  if($updatecontactstatus){
         
                     session()->flash('success', 'Data has been updated successfully!');
-                    return redirect()->route('user.contact');
+                    return redirect()->route('user.edu');
             
                  }else{
         
                     session()->flash('error', 'Data has Not been updated successfully!');
-                    return redirect()->route('user.contact');
+                    return redirect()->route('user.edu');
         
                  }
 
@@ -442,22 +542,17 @@ class empDetailFormController extends Controller
          if($emp_contact_status){
 
             session()->flash('success', 'Data has been updated successfully!');
-            return redirect()->route('user.contact');
+            return redirect()->route('user.edu');
     
          }else{
 
             session()->flash('error', 'Data has Not been updated successfully!');
-            return redirect()->route('user.contact');
+            return redirect()->route('user.edu');
 
          }
 
         }
 
-
-        // dd($data);
-
-
-    
 
     }
 
@@ -478,12 +573,16 @@ class empDetailFormController extends Controller
     ]);
     
     $loginUserInfo = Auth::user();
-    
-    
-    // Loop through the validated data and insert into the database
+    $emp_edu_details = emp_education::where('user_id', $loginUserInfo->id)->get();
+
+    if($emp_edu_details->isNotEmpty()){
+
+        $deleteStaus = emp_education::where('user_id', $loginUserInfo->id)->delete();
+
+        // Loop through the validated data and insert into the database
     foreach ($data['degree'] as $index => $degree) {
         // Ensure that all fields for this index exist, and if not, assign null or handle accordingly
-        DB::table('emp_educations')->insert([
+       $updateStatus = DB::table('emp_educations')->insert([
             'course_type' => isset($data['course_type'][$index]) ? $data['course_type'][$index] : null,
             'degree' => $degree,
             'university_board' => isset($data['university'][$index]) ? $data['university'][$index] : null,
@@ -499,55 +598,80 @@ class empDetailFormController extends Controller
             'updated_at' => NOW(),
         ]);
     }
-    
-    return redirect()->route('user.edu')->with('success', 'Education added successfully.');
+
+    if($updateStatus){
+
+        session()->flash('success', 'Data has been Updated successfully!');
+        return redirect()->route('user.bank');
+
+}else{
+    session()->flash('error', 'Data has Not been Updated successfully!');
+        return redirect()->route('user.bank');
 
 }
+        
 
-// Update Education Data (similar approach)
-public function update(Request $request, $id)
-{
-    $data = $request->validate([
-        'course_type' => 'required|array',
-        'degree' => 'required|array',
-        'degree.*' => 'string|max:100',
-        'university' => 'required|array',
-        'university.*' => 'string|max:100',
-        'institution' => 'required|array',
-        'institution.*' => 'string|max:100',
-        'passing_year' => 'required|array',
-        'passing_year.*' => 'integer',
-        'percentage' => 'required|array',
-        'percentage.*' => 'numeric',
-        'certification_name' => 'nullable|array',
-        'certification_name.*' => 'nullable|string|max:50',
-        'marks_obtained' => 'nullable|array',
-        'marks_obtained.*' => 'nullable|numeric',
-        'total_marks' => 'nullable|array',
-        'total_marks.*' => 'nullable|numeric',
-        'date_of_certificate' => 'nullable|array',
-        'date_of_certificate.*' => 'nullable|date',
-    ]);
+    }else{
 
-    // Loop through the validated data and update each record
+                // Loop through the validated data and insert into the database
     foreach ($data['degree'] as $index => $degree) {
-        $education = Education::findOrFail($id); // Assuming you want to update specific records
-        $education->update([
-            'course_type' => $data['course_type'][$index],
+        // Ensure that all fields for this index exist, and if not, assign null or handle accordingly
+       $insertStatus = DB::table('emp_educations')->insert([
+            'course_type' => isset($data['course_type'][$index]) ? $data['course_type'][$index] : null,
             'degree' => $degree,
-            'university' => $data['university'][$index],
-            'institution' => $data['institution'][$index],
-            'passing_year' => $data['passing_year'][$index],
-            'percentage' => $data['percentage'][$index],
+            'university_board' => isset($data['university'][$index]) ? $data['university'][$index] : null,
+            'institution' => isset($data['institution'][$index]) ? $data['institution'][$index] : null,
+            'passing_year' => isset($data['passing_year'][$index]) ? $data['passing_year'][$index] : null,
+            'percentage_cgpa' => isset($data['percentage'][$index]) ? $data['percentage'][$index] : null,
             'certification_name' => isset($data['certification_name'][$index]) ? $data['certification_name'][$index] : null,
             'marks_obtained' => isset($data['marks_obtained'][$index]) ? $data['marks_obtained'][$index] : null,
-            'total_marks' => isset($data['total_marks'][$index]) ? $data['total_marks'][$index] : null,
+            'out_of_marks_total_marks' => isset($data['total_marks'][$index]) ? $data['total_marks'][$index] : null,
             'date_of_certificate' => isset($data['date_of_certificate'][$index]) ? $data['date_of_certificate'][$index] : null,
+            'user_id' => $loginUserInfo->id,
+            'created_at' => NOW(),
+            'updated_at' => NOW(),
         ]);
     }
 
-    return redirect()->route('education.index')->with('success', 'Education updated successfully.');
+    if($insertStatus){
+
+        session()->flash('success', 'Data has been Inserted successfully!');
+            return redirect()->route('user.bank');
+
+    }else{
+        session()->flash('error', 'Data has Not been Inserted successfully!');
+            return redirect()->route('user.bank');
+
+    }
+
+    }
+    
+       // return redirect()->route('user.edu')->with('success', 'Education added successfully.');
+
 }
+
+// Delete Educations
+public function DeleteEducation($id)
+{
+
+    emp_education::where('id', $id)->delete(); 
+}
+
+public function DeleteFamily($id){
+
+    // dd($id);
+
+    emp_family_details::where('id', $id)->delete(); 
+
+}
+
+public function DeletePreViousEmpy($id){
+
+    emp_previous_employment::where('id', $id)->delete(); 
+
+}
+
+
 
 public function insertBank(Request $request){
 
@@ -615,12 +739,12 @@ public function insertBank(Request $request){
 
         if($updatebankstatus){
             session()->flash('success', 'Data has been updated successfully!');
-            return redirect()->route('user.bank');
+            return redirect()->route('user.family');
     
          }else{
     
             session()->flash('error', 'Data has Not been updated successfully!');
-            return redirect()->route('user.bank');
+            return redirect()->route('user.family');
     
          }
 
@@ -662,12 +786,12 @@ public function insertBank(Request $request){
 
     if($emp_bank_status){
         session()->flash('success', 'Data has been Inserted successfully!');
-        return redirect()->route('user.bank');
+        return redirect()->route('user.family');
 
      }else{
 
         session()->flash('error', 'Data has Not been Inserted successfully!');
-        return redirect()->route('user.bank');
+        return redirect()->route('user.family');
 
      }
 
@@ -676,5 +800,34 @@ public function insertBank(Request $request){
 }
 }
 
-    }
+  // Handle file upload request
+  public function upload(Request $request)
+  {
+      // Validate the incoming request
+    //   $validated = $request->validate([
+    //       'file' => 'required|file|mimes:pdf,jpeg,jpg,png|max:10240', // 10MB max
+    //   ]);
+
+    // dd($file = $request->file('file'));
+
+      // Handle the uploaded file
+      if ($request->hasFile('file')) {
+          $file = $request->file('file');
+          
+          // Generate a unique filename
+          $filename = time() . '_' . $file->getClientOriginalName();
+          
+          // Store the file in the 'documents' directory in the storage
+          $path = $file->storeAs('documents', $filename, 'public');
+
+          // Return success response
+          return true;
+      }
+
+    //   // Return error response if file is not uploaded
+
+    
+      return false;
+  }   
+}
 

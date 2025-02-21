@@ -660,71 +660,75 @@ body {
     padding: px;
 }
 
+/* Updated CSS for service container and cards */
 .services-container {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    /* 4 equal columns */
+    display: flex;
+    flex-direction: column;
+    align-items: stretch; /* Ensure the cards take the full width */
     gap: 20px;
-    max-width: 1200px;
-    margin: 0 auto;
+    width: 100%; /* Ensure the container takes full width */
+    margin: 0;
     padding: 20px;
-    /* Added padding for better spacing */
 }
-
+ 
 .service-card {
+    width: 100%; /* Ensure the card takes full width of the container */
     background-color: #ffffff;
     border-radius: 8px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     padding: 20px;
-    text-align: center;
+    text-align: left; /* Align text to the left */
     transition: transform 0.3s;
     display: flex;
-    /* Use flexbox to center content */
     flex-direction: column;
-    /* Stack items vertically */
-    align-items: center;
-    /* Center horizontally */
+    align-items: flex-start; /* Align items to the left */
     justify-content: space-between;
-    /* Space between items */
 }
-
+ 
 .service-card:hover {
     transform: scale(1.05);
 }
-
+ 
 .service-icon {
-    font-size: 40px;
-    /* Adjust size as needed */
+    font-size: 40px; /* Adjust size as needed */
     color: #007bff;
-    /* Icon color */
     margin-bottom: 10px;
+    align-self: flex-start; /* Align icon to the left */
 }
-
+ 
 .service-title {
     font-weight: bold;
     color: #333;
     margin: 10px 0;
+    text-align: left; /* Align text to the left */
 }
-
+ 
 .service-description {
     color: #777;
     font-size: 14px;
+    text-align: left; /* Align text to the left */
 }
-
+ 
+/* Responsive adjustments */
 @media (max-width: 768px) {
     .services-container {
-        grid-template-columns: repeat(2, 1fr);
-        /* 2 columns on smaller screens */
+        padding: 10px;
+    }
+ 
+    .service-card {
+        padding: 15px;
     }
 }
-
+ 
 @media (max-width: 480px) {
     .services-container {
-        grid-template-columns: 1fr;
-        /* 1 column on very small screens */
+        padding: 5px;
+    }
+ 
+    .service-card {
+        padding: 10px;
     }
 }
-
 
 h3,
 h4 {

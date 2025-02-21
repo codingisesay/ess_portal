@@ -47,7 +47,7 @@
                         <th>Marks Obtained</th>
                         <th>Total Marks</th>
                         <th>Date of Certificate</th>
-                        <th>Edit</th>
+                        {{-- <th>Edit</th> --}}
                         <th>Remove</th>
                     </tr>
                 </thead>
@@ -82,8 +82,15 @@
                             <td><input type="text" name="marks_obtained[]" class="marks-input" required value="{{ $detail->marks_obtained }}" maxlength="3"></td>
                             <td><input type="text" name="total_marks[]" class="total-marks-input" required value="{{ $detail->out_of_marks_total_marks }}" maxlength="3"></td>
                             <td><input type="date" name="date_of_certificate[]" class="date-input" value="{{ $detail->date_of_certificate }}" max="{{ date('Y-m-d') }}"></td>
-                            <td><button type="button" onclick="editEducationRow(this)">✏️</button></td>
-                            <td><button type="button" onclick="removeEducationRow(this)">❌</button></td>
+                            {{-- <td><button type="button" onclick="editEducationRow(this)">✏️</button></td> --}}
+                            <td>
+                                <button type="button" class="delete-button" data-id="{{ $detail->id }}">❌</button>
+                                {{-- <form action="{{ route('edu.destroy', $detail->id) }}" method="POST" style="display:inline;">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" onclick="return confirm('Are you sure you want to delete this item?')">❌</button>
+                                </form> --}}
+                            </td>
                         </tr>
                     @endforeach
                 </tbody>
@@ -91,9 +98,11 @@
         </div>
         <!-- Button Section -->
         <div class="button-container">
-            <button class="previous-btn">
-                <span>&#8249;</span>
-            </button>
+            <a href="{{ route('user.contact') }}" style="text-decoration:none;">
+                <button type="button" class="previous-btn">
+                    <span>&#8249;</span>
+                </button>
+            </a>
             <button type="submit" class="next-btn">
                 <span>&#8250;</span>
             </button>
@@ -138,7 +147,6 @@
             <td><input type="text" name="marks_obtained[]" class="marks-input" required placeholder="Enter Marks Obtained" maxlength="3"></td>
             <td><input type="text" name="total_marks[]" class="total-marks-input" required placeholder="Enter Total Marks" maxlength="3"></td>
             <td><input type="date" name="date_of_certificate[]" class="date-input" max="<?php echo date('Y-m-d'); ?>"></td>
-            <td><button type="button" onclick="editEducationRow(this)">✏️</button></td>
             <td><button type="button" onclick="removeEducationRow(this)">❌</button></td>
         `;
         tableBody.appendChild(newRow);
@@ -307,5 +315,43 @@
     document.querySelectorAll('.relation-type').forEach(selectElement => {
         toggleFields(selectElement);  // Initialize state on page load
     });
+
 </script>
+
+{{-- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> --}}
+
+<script>
+$(document).on('click', '.delete-button', function () {
+    // Get the ID of the record to be deleted
+    var educationId = $(this).data('id');
+  
+
+    // Confirm delete action
+    if (confirm('Are you sure you want to delete this item?')) {
+        // Send an AJAX DELETE request to the server
+        $.ajax({
+            url: '/user/del_education/' + educationId,  // Adjust the route URL if necessary
+            type: 'DELETE',
+            data: {
+                _method: 'DELETE',
+                _token: '{{ csrf_token() }}', 
+                educationId:educationId,// CSRF token for security
+            },
+            success: function (response) {
+                // On success, remove the row from the table
+                $('button[data-id="' + educationId + '"]').closest('tr').remove();
+                alert('Education record deleted successfully!');
+            },
+            error: function (response) {
+                alert('Error deleting record. Please try again.');
+            }
+        });
+    }
+});
+document.getElementById('previous-btn-link').addEventListener('click', function(event) {
+        event.stopPropagation(); // Stop the form submission from being triggered
+    });
+
+</script>
+
 @endsection
