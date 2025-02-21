@@ -243,10 +243,7 @@
                                 <th>Passing Year</th>
                                 <td>{{ $education->year_of_passing ? \Carbon\Carbon::parse($education->year_of_passing)->format('d-m-Y') : 'N/A' }}</td>
                             </tr>
-                            <tr>
-                                <th>Course Type</th>
-                                <td>{{ ucfirst($education->course_type ?? 'N/A') }}</td>
-                            </tr>
+                           
                             <tr>
                                 <th>Percentage</th>
                                 <td>{{ ucfirst($education->percentage ?? 'N/A') }}</td>
