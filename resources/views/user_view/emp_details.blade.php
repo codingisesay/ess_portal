@@ -54,10 +54,10 @@ $employeeID = Auth::guard('web')->user()->employeeID;
                 <div class="form-row">
                     <div class="form-group">
                         
-                        <select id="employmentType" class="form-control" name="employmentType" placeholder="" required>
+                        <select id="employmentType" class="form-control dropdown" name="employmentType" placeholder="" required>
                             <option value="{{ old('employmentType', $results[0]->employee_type_name) }}">{{ old('employmentType', $results[0]->employee_type_name) }}</option>
                             @foreach($emp_types as $emp_type)
-                            <option value="{{$emp_type->id}}" selected>{{$emp_type->name}}</option>
+                            <option value="{{$emp_type->id}}">{{$emp_type->name}}</option>
                             @endforeach
                         </select>
                         <label for="employmentType">Employment Type<span style="color: red;">*</span></label>
@@ -117,7 +117,7 @@ $employeeID = Auth::guard('web')->user()->employeeID;
                    
                     <div class="form-group">
                        
-                        <select id="reportingManager" class="form-control" name="reportingManager"  placeholder="" required>
+                        <select id="reportingManager" class="form-control dropdown" name="reportingManager"  placeholder="" required>
                             <option value="{{ old('reportingManager',$results[0]->reporting_manager_id) }}">{{old('reportingManager',$results[0]->reporting_manager_name) }}</option>
                         @foreach($users as $user)
 
@@ -134,7 +134,7 @@ $employeeID = Auth::guard('web')->user()->employeeID;
     
     
                   
-                    <div class="form-group">
+                    {{-- <div class="form-group">
                         
                         <input type="number" id="totalExperience" class="form-control" name="totalExperience"
                             placeholder="e.g., 6.2" value="{{ old('totalExperience',$results[0]->total_experience) }}"
@@ -146,7 +146,31 @@ $employeeID = Auth::guard('web')->user()->employeeID;
                         </label>
                         <span class="error" id="totalExperienceError" style="color: red;"></span>
                     </div>
-    
+     --}}
+
+     <div class="form-group">
+        <input 
+            type="number" 
+            id="totalExperience" 
+            class="form-control" 
+            name="totalExperience" 
+            placeholder="e.g., 6.2" 
+            value="{{ old('totalExperience', $results[0]->total_experience) }}" 
+            title="Enter experience in the format Years.Months (e.g., 6.2), where months must be between 0 and 11."
+            required 
+            step="any" 
+          
+            maxlength="5"
+            pattern="^\d+(\.\d{1,2})?$" 
+            oninput="validateExperience()">
+        
+        <label for="totalExperience">
+            Total Experience (Format: Years.Months, e.g., 6.2 or 12.11) 
+            <span style="color: red;">*</span>
+        </label>
+        
+        <span class="error" id="totalExperienceError" style="color: red;"></span>
+    </div>
     
     
                   
@@ -158,7 +182,7 @@ $employeeID = Auth::guard('web')->user()->employeeID;
                 <div class="form-row1">
                     <div class="form-group">
                         
-                        <select id="designation" class="form-control" name="designation" placeholder="" required>
+                        <select id="designation" class="form-control dropdown" name="designation" placeholder="" required>
                             <option value="{{ old('designation',$results[0]->designation_id) }}">{{ old('designation',$results[0]->role_name) }}</option>
                             @foreach($designations as $designation)
                             <option value="{{$designation->id}}">{{$designation->name}}</option>
@@ -172,7 +196,7 @@ $employeeID = Auth::guard('web')->user()->employeeID;
                     </div>
                                             <div class="form-group">
                     
-                    <select id="department" class="form-control" name="department" placeholder="" required>
+                    <select id="department" class="form-control dropdown" name="department" placeholder="" required>
                         <option value="{{ old('department',$results[0]->department_id) }}">{{ old('department',$results[0]->department_name ) }}</option>
                         @foreach($departments as $department)
                         <option value="{{$department->id}}">{{$department->name}}</option>
@@ -196,7 +220,7 @@ $employeeID = Auth::guard('web')->user()->employeeID;
                     <div class="form-group">
     
                        
-                        <select id="gender" class="form-control" name="gender" placeholder="" required>
+                        <select id="gender" class="form-control dropdown" name="gender" placeholder="" required>
                             <option value="{{ old('gender',$results[0]->gender) }}">{{ old('gender',$results[0]->gender) }}</option>
                             <option value="Male">Male</option>
                             <option value="Female">Female</option>
@@ -216,7 +240,7 @@ $employeeID = Auth::guard('web')->user()->employeeID;
                   
                     <div class="form-group">
                        
-                        <select id="bloodGroup" class="form-control" name="bloodGroup" placeholder="" >
+                        <select id="bloodGroup" class="form-control dropdown" name="bloodGroup" >
                             <option value="{{ old('bloodGroup',$results[0]->blood_group) }}">{{ old('bloodGroup',$results[0]->blood_group) }}</option>
                             <option value="A+">A+</option>
                             <option value="A-">A-</option>
@@ -237,7 +261,7 @@ $employeeID = Auth::guard('web')->user()->employeeID;
                     <div class="form-group">
                         
                         <span class="error" id="nationalityError"></span>
-                        <select id="nationality" class="form-control" name="nationality" placeholder="" required>
+                        <select id="nationality" class="form-control dropdown" name="nationality" placeholder="" required>
                             <option value="{{ old('nationality',$results[0]->nationality) }}" >{{ old('nationality',$results[0]->nationality) }}</option>
                            
                         </select>
@@ -248,7 +272,7 @@ $employeeID = Auth::guard('web')->user()->employeeID;
                    
                     <div class="form-group">
                        {{-- //'Hinduism','Islam','Christianity','Sikhism','Buddhism','Jainism','Zoroastrianism','Judaism','Baha i Faith','Other' --}}
-                        <select id="religion" class="form-control" name="religion" placeholder="" required>
+                        <select id="religion" class="form-control dropdown" name="religion" placeholder="" required>
                             <option value="{{ old('religion',$results[0]->religion) }}" disable Select> {{ old('religion', $results[0]->religion) }}</option>
                             <option value="Hinduism">Hinduism</option>
                             <option value="Islam">Islam</option>
@@ -269,8 +293,7 @@ $employeeID = Auth::guard('web')->user()->employeeID;
     
                     <div class="form-group">
                         
-                        <select id="maritalStatus" class="form-control" name="maritalStatus" required placeholder=""
-                            onchange="toggleAnniversaryDate()">
+                        <select id="maritalStatus" class="form-control dropdown" name="maritalStatus" required placeholder="">
                             <option value="{{ old('maritalStatus',$results[0]->marital_status) }}">{{ old('maritalStatus',$results[0]->marital_status) }}</option>
                             <option value="Single">Single</option>
                             <option value="Married">Married</option>
@@ -287,7 +310,7 @@ $employeeID = Auth::guard('web')->user()->employeeID;
                     <div class="form-group">
                         
                         <input type="date" id="anniversaryDate" class="form-control" value="{{ old('anniversaryDate',$results[0]->anniversary_date) }}" name="anniversaryDate" placeholder=""
-                            onchange="validateAnniversaryDate()" style="pointer-events: none; opacity: 0.6;">
+                             disabled>
                         <span class="error" id="anniversaryDateError" style="color: red;"></span>
                         <label for="anniversaryDate">Anniversary Date <span id="anniversaryRequiredMark"
                                 style="color: red; display: none;">*</span></label>
@@ -349,12 +372,144 @@ $employeeID = Auth::guard('web')->user()->employeeID;
     
     </form>
     </div>
+<script>
+
+    const maritalStatusSelect = document.getElementById("maritalStatus");
+    const anniversaryDateInput = document.getElementById("anniversaryDate");
+    
+    // Add an event listener to the marital status select dropdown
+    maritalStatusSelect.addEventListener("change", function() {
+        // Enable Anniversary_Date input for "Married" or "Divorced" options
+        // console.log(maritalStatusSelect);
+        if (maritalStatusSelect.value === "Married" || maritalStatusSelect.value === "Divorced") {
+            anniversaryDateInput.disabled = false;  // Enable the date input
+        } else {
+            anniversaryDateInput.disabled = true;   // Disable the date input
+            anniversaryDateInput.value = "";        // Clear the value when disabled
+        }
+    });
+    
+    
+    // //     /**
+    //                                  * Function to fetch nationalities from an API with retry logi                                  */
+                                    async function fetchNationalities(retries = 3) {
+                                        const selectElement = document.getElementById('nationality');
+    
+                                        const fetchWithRetries = async () => {
+                                            try {
+                                                const response = await fetch('https://restcountries.com/v3.1/all', {
+                                                    headers: { "Content-Type": "application/json" },
+                                                });
+    
+                                                if (!response.ok) {
+                                                    throw new Error('Network response was not ok');
+                                                }
+    
+                                                const data = await response.json();
+                                                populateDropdown(data);
+                                            } catch (error) {
+                                                console.error("Error fetching nationalities: ", error);
+    
+                                                if (retries > 0) {
+                                                    console.log('Retrying fetch...');
+                                                    setTimeout(() => fetchWithRetries(retries - 1), 1000);
+                                                } else {
+                                                    alert("Unable to load nationalities after multiple attempts.");
+                                                }
+                                            }
+                                        };
+    
+                                        const populateDropdown = (countries) => {
+                                            const sortedCountries = countries.sort((a, b) =>
+                                                a.name?.common?.localeCompare(b.name?.common)
+                                            );
+    
+                                            selectElement.innerHTML = ""; // Clear dropdown before appending data
+                                            sortedCountries.forEach(country => {
+                                                const option = document.createElement('option');
+                                                option.value = country.name?.common?.toLowerCase() || '';
+                                                option.textContent = country.name?.common || 'Unknown';
+                                                selectElement.appendChild(option);
+                                            });
+    
+                                            // Set default nationality to India if available
+                                            const indiaOption = Array.from(selectElement.options).find(option => option.value === "india");
+                                            if (indiaOption) {
+                                                indiaOption.selected = true;
+                                            }
+                                        };
+    
+                                        // Call the fetch with retry
+                                        fetchWithRetries();
+                                    }
+    
+                                    // Wait for DOM to load and execute the function
+                                    document.addEventListener("DOMContentLoaded", function () {
+                                        fetchNationalities();
+                                    });
+    
+    
+    
+        window.onload = function() {
+        // Get all the select elements
+        const dropdowns = document.querySelectorAll('.dropdown');
+        
+        dropdowns.forEach(dropdown => {
+          const selectedValue = dropdown.value;
+    
+          // Loop through each dropdown's options and hide the selected one
+          for (let option of dropdown.options) {
+            if (option.value === selectedValue) {
+              option.style.display = 'none';  // Hide the selected option
+              break; // Only hide the selected option
+            }
+          }
+        });
+      };
+
+//Validation for total Experience
+      function validateExperience() {
+        var input = document.getElementById('totalExperience');
+        var errorSpan = document.getElementById('totalExperienceError');
+        var value = input.value.trim();
+        var regex = /^(\d+(\.\d{1,2})?)$/; // Regular expression to match the format "years.months"
+
+        // console.log(input);
+        // console.log(errorSpan);
+        // console.log(value);
+        // console.log(regex);
+
+        // console.log(value.length);
+       
+
+        if(value.length >= 6){
+            input.disabled = true; 
+        }
+
+        if (regex.test(value)) {
+            var parts = value.split('.');
+            var years = parseInt(parts[0]);
+            var months = parseInt(parts[1] || '0');
+
+            // Check if months exceed 11, and convert to next year if so
+            if (months >= 12) {
+                years += Math.floor(months / 12); // Add the number of years equivalent to the months
+                months = months % 12; // Keep only the remaining months (0-11)
+                input.value = years + '.' + months; // Update the input with the new value
+            }
+
+            // Check if months are between 0 and 11
+            if (months >= 0 && months <= 11) {
+                errorSpan.textContent = ''; // Clear error if valid
+            } else {
+                errorSpan.textContent = 'Months must be between 0 and 11.';
+            }
+        } else {
+            errorSpan.textContent = 'Please enter experience in the correct format (e.g., 6.2 or 12.11).';
+        }
+    }
+     </script>
     <script src="{{ asset('user_end/js/onboarding_form.js') }}"></script>
-
-
-
-
-
 @endsection
 
 {{-- <head>
@@ -569,12 +724,13 @@ $employeeID = Auth::guard('web')->user()->employeeID;
 
 
 // // Select the elements
-// const maritalStatusSelect = document.getElementById("marital_status");
-// const anniversaryDateInput = document.getElementById("anv");
+// const maritalStatusSelect = document.getElementById("maritalStatus");
+// const anniversaryDateInput = document.getElementById("anniversaryDate");
 
 // // Add an event listener to the marital status select dropdown
 // maritalStatusSelect.addEventListener("change", function() {
 //     // Enable Anniversary_Date input for "Married" or "Divorced" options
+//     console.log(maritalStatusSelect);
 //     if (maritalStatusSelect.value === "Married" || maritalStatusSelect.value === "Divorced") {
 //         anniversaryDateInput.disabled = false;  // Enable the date input
 //     } else {
@@ -584,64 +740,64 @@ $employeeID = Auth::guard('web')->user()->employeeID;
 // });
 
 
-// //     /**
-//                                  * Function to fetch nationalities from an API with retry logic.
-//                                  */
-                                async function fetchNationalities(retries = 3) {
-                                    const selectElement = document.getElementById('nationality');
+// // //     /**
+// //                                  * Function to fetch nationalities from an API with retry logic.
+// //                                  */
+//                                 async function fetchNationalities(retries = 3) {
+//                                     const selectElement = document.getElementById('nationality');
 
-                                    const fetchWithRetries = async () => {
-                                        try {
-                                            const response = await fetch('https://restcountries.com/v3.1/all', {
-                                                headers: { "Content-Type": "application/json" },
-                                            });
+//                                     const fetchWithRetries = async () => {
+//                                         try {
+//                                             const response = await fetch('https://restcountries.com/v3.1/all', {
+//                                                 headers: { "Content-Type": "application/json" },
+//                                             });
 
-                                            if (!response.ok) {
-                                                throw new Error('Network response was not ok');
-                                            }
+//                                             if (!response.ok) {
+//                                                 throw new Error('Network response was not ok');
+//                                             }
 
-                                            const data = await response.json();
-                                            populateDropdown(data);
-                                        } catch (error) {
-                                            console.error("Error fetching nationalities: ", error);
+//                                             const data = await response.json();
+//                                             populateDropdown(data);
+//                                         } catch (error) {
+//                                             console.error("Error fetching nationalities: ", error);
 
-                                            if (retries > 0) {
-                                                console.log('Retrying fetch...');
-                                                setTimeout(() => fetchWithRetries(retries - 1), 1000);
-                                            } else {
-                                                alert("Unable to load nationalities after multiple attempts.");
-                                            }
-                                        }
-                                    };
+//                                             if (retries > 0) {
+//                                                 console.log('Retrying fetch...');
+//                                                 setTimeout(() => fetchWithRetries(retries - 1), 1000);
+//                                             } else {
+//                                                 alert("Unable to load nationalities after multiple attempts.");
+//                                             }
+//                                         }
+//                                     };
 
-                                    const populateDropdown = (countries) => {
-                                        const sortedCountries = countries.sort((a, b) =>
-                                            a.name?.common?.localeCompare(b.name?.common)
-                                        );
+//                                     const populateDropdown = (countries) => {
+//                                         const sortedCountries = countries.sort((a, b) =>
+//                                             a.name?.common?.localeCompare(b.name?.common)
+//                                         );
 
-                                        selectElement.innerHTML = ""; // Clear dropdown before appending data
-                                        sortedCountries.forEach(country => {
-                                            const option = document.createElement('option');
-                                            option.value = country.name?.common?.toLowerCase() || '';
-                                            option.textContent = country.name?.common || 'Unknown';
-                                            selectElement.appendChild(option);
-                                        });
+//                                         selectElement.innerHTML = ""; // Clear dropdown before appending data
+//                                         sortedCountries.forEach(country => {
+//                                             const option = document.createElement('option');
+//                                             option.value = country.name?.common?.toLowerCase() || '';
+//                                             option.textContent = country.name?.common || 'Unknown';
+//                                             selectElement.appendChild(option);
+//                                         });
 
-                                        // Set default nationality to India if available
-                                        const indiaOption = Array.from(selectElement.options).find(option => option.value === "india");
-                                        if (indiaOption) {
-                                            indiaOption.selected = true;
-                                        }
-                                    };
+//                                         // Set default nationality to India if available
+//                                         const indiaOption = Array.from(selectElement.options).find(option => option.value === "india");
+//                                         if (indiaOption) {
+//                                             indiaOption.selected = true;
+//                                         }
+//                                     };
 
-                                    // Call the fetch with retry
-                                    fetchWithRetries();
-                                }
+//                                     // Call the fetch with retry
+//                                     fetchWithRetries();
+//                                 }
 
-                                // Wait for DOM to load and execute the function
-                                document.addEventListener("DOMContentLoaded", function () {
-                                    fetchNationalities();
-                                });
+//                                 // Wait for DOM to load and execute the function
+//                                 document.addEventListener("DOMContentLoaded", function () {
+//                                     fetchNationalities();
+//                                 });
 
 
 
@@ -666,5 +822,5 @@ $employeeID = Auth::guard('web')->user()->employeeID;
 
 
 
-//     </script>
+// //     </script>
 </body>

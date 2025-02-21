@@ -3,12 +3,13 @@
 @section('content')  <!-- Defining the content section -->
 <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
 <?php 
-error_reporting(0);
+// error_reporting(0);
 $id = Auth::guard('web')->user()->id;
 // {{ old('employmentType', $emp_contact_datas[0]->per_building_no) }}
 // echo $emp_contact_datas[0]->per_building_no;
 // exit();
-// dd($emp_contact_datas);
+// dd($emp_contact_datas); 
+// dd($countrys);
 
 ?>
 @if($errors->any())
@@ -84,7 +85,7 @@ $id = Auth::guard('web')->user()->id;
                               <label for="permanent_road_street">Road/Street<span
                                   style="color: red;">*</span></label>
                       </div>
-                      <div class="form-group">
+                      {{-- <div class="form-group">
                          
                           <input list="permanent_countries" id="permanent_country" name="permanent_country"
                               required class="form-control" placeholder="" value="India"
@@ -92,7 +93,20 @@ $id = Auth::guard('web')->user()->id;
                               <label for="permanent_country">Country<span style="color: red;"
                               id="country-required">*</span></label>
                           <datalist id="permanent_countries"></datalist>
-                      </div>
+                      </div> --}}
+
+                      
+                            <div class="form-group">
+                                
+                                <span class="error" id="nationalityError"></span>
+                                <select id="nationality_permanent" class="form-control dropdown" name="permanent_country" placeholder="" required>
+                                    <option value="{{$emp_contact_datas[0]->per_country}}">{{$emp_contact_datas[0]->per_country}}</option>
+                                    @foreach($countrys as $country)
+                                    <option value="{{$country->name }}">{{ $country->name }}</option>
+                                    @endforeach
+                                </select>
+                                <label for="nationality">Country <span style="color: red;">*</span></label>
+                            </div>
 
                       <div class="form-group">
                           
@@ -134,11 +148,12 @@ $id = Auth::guard('web')->user()->id;
 
 
               <!-- Correspondence Address -->
-
+              
               <div class="address-section">
                   <div class="correspondence-header">
                       <h3 class="address-title">Correspondence Address</h3>
                       <div class="same-address-container">
+                        <br><br>
                           <input type="checkbox" id="copy_address_checkbox" class="styled-checkbox"
                               onclick="copyPermanentToCorrespondence()">
                           <label for="same_as_permanent" class="checkbox-label">Same as above</label>
@@ -177,7 +192,7 @@ $id = Auth::guard('web')->user()->id;
                               style="color: red;">*</span></label>
                       </div>
                      
-                      <div class="form-group">
+                      {{-- <div class="form-group">
                          
                           <input list="correspondence_countries" id="correspondence_countries"
                               name="correspondence_country" class="form-control" placeholder="" required
@@ -186,7 +201,19 @@ $id = Auth::guard('web')->user()->id;
                               <label for="correspondence_country">Country<span
                               style="color: red;">*</span></label>
                           <datalist id="correspondence_countries"></datalist>
-                      </div>
+                      </div> --}}
+
+                      <div class="form-group">
+                                
+                        <span class="error" id="nationalityError"></span>
+                        <select id="nationality_correspondence" class="form-control dropdown" name="correspondence_country" placeholder="" required>
+                            <option value="{{$emp_contact_datas[0]->cor_country}}">{{$emp_contact_datas[0]->cor_country}}</option>
+                            @foreach($countrys as $country)
+                            <option value="{{$country->name }}">{{ $country->name }}</option>
+                            @endforeach
+                        </select>
+                        <label for="nationality">Country <span style="color: red;">*</span></label>
+                    </div>
                       <div class="form-group">
 {{-- 
 
@@ -358,9 +385,11 @@ $id = Auth::guard('web')->user()->id;
           <button type="submit" class="next-btn">Next</button>
       </div> -->
       <div class="button-container">
-          <button class="previous-btn">
-              <span>&#8249;</span>
-          </button>
+        <a href="{{ route('user.dashboard') }}" style="text-decoration:none;">
+            <button type="button" class="previous-btn">
+                <span>&#8249;</span>
+            </button>
+        </a>
           <button type="submit" class="next-btn">
               <span>&#8250;</span>
           </button>
@@ -368,6 +397,179 @@ $id = Auth::guard('web')->user()->id;
 
   </form>
 </div>
+
+<script>
+
+
+
+function getSelectedCountryValue() {
+    var selectElement = document.getElementById("nationality_permanent");
+    var selectedValue = selectElement.value;
+    console.log(selectedValue); // Logs the selected value
+}
+window.onload = function() {
+    // Your function to access the select value
+    getSelectedCountryValue();
+};
+
+// async function fetchNationalities(retries = 3) {
+//     const selectPermanent = document.getElementById('nationality_permanent');
+//     const selectCorrespondence = document.getElementById('nationality_correspondence');
+
+//     const fetchWithRetries = async () => {
+//         try {
+//             const response = await fetch('https://restcountries.com/v3.1/all', {
+//                 headers: { "Content-Type": "application/json" },
+//             });
+
+//             if (!response.ok) {
+//                 throw new Error('Network response was not ok');
+//             }
+
+//             const data = await response.json();
+//             populateDropdown(data);
+//         } catch (error) {
+//             console.error("Error fetching nationalities: ", error);
+
+//             if (retries > 0) {
+//                 console.log('Retrying fetch... Remaining retries: ', retries);
+//                 setTimeout(() => fetchWithRetries(retries - 1), 1000);
+//             } else {
+//                 alert("Unable to load nationalities after multiple attempts.");
+//             }
+//         }
+//     };
+
+//     const populateDropdown = (countries) => {
+//         // Sort countries by name in alphabetical order
+//         const sortedCountries = countries.sort((a, b) =>
+//             a.name?.common?.localeCompare(b.name?.common)
+//         );
+
+//         // Function to populate each select element
+//         const populateSelect = (selectElement) => {
+//             selectElement.innerHTML = ""; // Clear dropdown before appending data
+
+//             // Create a default option to be selected if needed
+//             const defaultOption = document.createElement('option');
+//             defaultOption.value = '';
+//             defaultOption.textContent = 'Select Country';
+//             selectElement.appendChild(defaultOption);
+
+//             sortedCountries.forEach(country => {
+//                 const option = document.createElement('option');
+//                 option.value = country.name?.common?.toLowerCase() || '';
+//                 option.textContent = country.name?.common || 'Unknown';
+//                 selectElement.appendChild(option);
+//             });
+
+//             // Optionally, set a default nationality (e.g., "India")
+//             const indiaOption = Array.from(selectElement.options).find(option => option.value === "india");
+//             if (indiaOption) {
+//                 indiaOption.selected = true;
+//             }
+//         };
+
+//         // Populate both select elements
+//         populateSelect(selectPermanent);
+//         populateSelect(selectCorrespondence);
+//     };
+
+//     // Call the fetch function with retries
+//     fetchWithRetries();
+// }
+
+// // Wait for DOM to load and execute the function
+// document.addEventListener("DOMContentLoaded", function () {
+//     fetchNationalities();
+// });
+
+    
+    
+    
+    //fetch by pin code
+    
+    // Function to fetch district, city, and state based on pincode for either Permanent or Correspondence address
+    async function fetchLocationDetails(addressType) {
+        const pincode = document.getElementById(`pincode_${addressType}`).value;
+        const stateField = document.getElementById(`state_${addressType}`);
+        const cityField = document.getElementById(`city_${addressType}`);
+        const districtField = document.getElementById(`district_${addressType}`);
+    
+        // Make sure pincode is at least 6 characters long
+        if (pincode.length < 6) {
+            return;
+        }
+    
+        // Clear the previous values
+        stateField.value = '';
+        cityField.value = '';
+        districtField.value = '';
+    
+        try {
+            // Call API to fetch data based on pincode
+            const response = await fetch(`https://api.postalpincode.in/pincode/${pincode}`);
+            
+            if (!response.ok) {
+                throw new Error('Unable to fetch location details.');
+            }
+    
+            const data = await response.json();
+            
+            if (data[0].Status === "Success") {
+                const place = data[0].PostOffice[0];
+    
+                // Populate the State input
+                stateField.value = place.State || 'Not Available';
+    
+                // Populate the City input (or Taluk)
+                cityField.value = place.Taluk || place.District || 'Not Available';
+    
+                // Populate the District input
+                districtField.value = place.District || 'Not Available';
+            } else {
+                alert('No data found for this pincode.');
+            }
+        } catch (error) {
+            console.error("Error fetching location details:", error);
+            alert('Error fetching location details.');
+        }
+    }
+    
+    // Function to copy Permanent Address to Correspondence Address
+    function copyPermanentToCorrespondence() {
+        // Check if the checkbox is checked
+        const isChecked = document.getElementById('copy_address_checkbox').checked;
+        
+        if (isChecked) {
+            // Copy the values from Permanent Address to Correspondence Address
+            document.getElementById('correspondence_building_no').value = document.getElementById('permanent_building_no').value;
+            document.getElementById('correspondence_premises_name').value = document.getElementById('permanent_premises_name').value;
+            document.getElementById('correspondence_landmark').value = document.getElementById('permanent_landmark').value;
+            document.getElementById('correspondence_road_street').value = document.getElementById('permanent_road_street').value;
+            document.getElementById('correspondence_countries').value = document.getElementById('permanent_country').value;
+            document.getElementById('pincode_correspondence').value = document.getElementById('permanent_pincode').value;
+            document.getElementById('district_correspondence').value = document.getElementById('district_permanent').value;
+            document.getElementById('city_correspondence').value = document.getElementById('city_permanent').value;
+            document.getElementById('state_correspondence').value = document.getElementById('state_permanent').value;
+        } else {
+            // Clear the Correspondence Address fields if checkbox is unchecked
+            document.getElementById('correspondence_building_no').value = '';
+            document.getElementById('correspondence_premises_name').value = '';
+            document.getElementById('correspondence_landmark').value = '';
+            document.getElementById('correspondence_road_street').value = '';
+            document.getElementById('correspondence_countries').value = '';
+            document.getElementById('pincode_correspondence').value = '';
+            document.getElementById('district_correspondence').value = '';
+            document.getElementById('city_correspondence').value = '';
+            document.getElementById('state_correspondence').value = '';
+        }
+    }
+    
+        document.getElementById('previous-btn-link').addEventListener('click', function(event) {
+            event.stopPropagation(); // Stop the form submission from being triggered
+        });
+        </script>
 
 <script src="{{ asset('user_end/js/onboarding_form.js') }}"></script>
 
@@ -554,7 +756,7 @@ $id = Auth::guard('web')->user()->id;
                 @endforeach
                 </ul>
                 @endif --}}
-<script>
+{{-- <script>
 
 //fetch country
 async function fetchNationalities(retries = 3) {
@@ -699,6 +901,11 @@ function copyPermanentToCorrespondence() {
         document.getElementById('state_correspondence').value = '';
     }
 }
+
+    document.getElementById('previous-btn-link').addEventListener('click', function(event) {
+        event.stopPropagation(); // Stop the form submission from being triggered
+    }); --}}
+
    
-    </script>
+    {{-- </script> --}}
 </body>

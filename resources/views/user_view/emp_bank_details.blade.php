@@ -93,6 +93,7 @@ $id = Auth::guard('web')->user()->id;
               <div class="correspondence-header1">
                   <h3>Salary Bank Details</h3>
                   <div class="same-address-container">
+                    <br><br>
                       <input type="checkbox" id="copyBankDetails1" class="styled-checkbox2"
                           onclick="copyBankDetails()">
                       <label for="copyBankDetails" class="checkbox-label1">Same as above</label>
@@ -304,9 +305,11 @@ $id = Auth::guard('web')->user()->id;
           <button type="submit" class="next-btn">Next</button>
       </div> -->
       <div class="button-container">
-          <button class="previous-btn">
-              <span>&#8249;</span>
-          </button>
+        <a href="{{ route('user.edu') }}" style="text-decoration:none;">
+            <button type="button" class="previous-btn">
+                <span>&#8249;</span>
+            </button>
+        </a>
           <button type="submit" class="next-btn">
               <span>&#8250;</span>
           </button>
@@ -544,7 +547,7 @@ $id = Auth::guard('web')->user()->id;
 
     
     
-                                function calculateExpiry() {
+    function calculateExpiry() {
     const issueDateInput = document.getElementById('passportIssueDate');
     const expiryDateInput = document.getElementById('passportExpiryDate');
     
@@ -571,6 +574,11 @@ $id = Auth::guard('web')->user()->id;
     // Set the calculated expiry date in the expiry date input
     expiryDateInput.value = formattedExpiryDate;
 }
+
+document.getElementById('previous-btn-link').addEventListener('click', function(event) {
+        event.stopPropagation(); // Stop the form submission from being triggered
+    });
+
 
    </script>
 </body>

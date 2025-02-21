@@ -1,78 +1,78 @@
 
-const anniversaryDateErrorSpan = document.getElementById('anniversaryDateError');
+// const anniversaryDateErrorSpan = document.getElementById('anniversaryDateError');
 
-maritalStatusSelect.addEventListener('change', function () {
-    const anniversaryDate = document.getElementById('anniversaryDate');
-    if (this.value === 'Married') {
-        anniversaryDate.style.pointerEvents = 'auto'; // Allow interaction
-        anniversaryDate.setAttribute('max', new Date().toISOString().split('T')[0]); // Set max to today
-        anniversaryDateErrorSpan.textContent = ''; // Clear any error
-    } else {
-        anniversaryDate.style.pointerEvents = 'none'; // Prevent interaction
-        anniversaryDate.value = '';       // Clear the value
-        anniversaryDateErrorSpan.textContent = '';       // Clear any error
-    }
-});
+// maritalStatusSelect.addEventListener('change', function () {
+//     const anniversaryDate = document.getElementById('anniversaryDate');
+//     if (this.value === 'Married') {
+//         anniversaryDate.style.pointerEvents = 'auto'; // Allow interaction
+//         anniversaryDate.setAttribute('max', new Date().toISOString().split('T')[0]); // Set max to today
+//         anniversaryDateErrorSpan.textContent = ''; // Clear any error
+//     } else {
+//         anniversaryDate.style.pointerEvents = 'none'; // Prevent interaction
+//         anniversaryDate.value = '';       // Clear the value
+//         anniversaryDateErrorSpan.textContent = '';       // Clear any error
+//     }
+// });
 
 
 /**
  * Function to fetch nationalities from an API with retry logic.
  */
-async function fetchNationalities(retries = 3) {
-    const selectElement = document.getElementById('nationality');
+// async function fetchNationalities(retries = 3) {
+//     const selectElement = document.getElementById('nationality');
 
-    const fetchWithRetries = async () => {
-        try {
-            const response = await fetch('https://restcountries.com/v3.1/all', {
-                headers: { "Content-Type": "application/json" },
-            });
+//     const fetchWithRetries = async () => {
+//         try {
+//             const response = await fetch('https://restcountries.com/v3.1/all', {
+//                 headers: { "Content-Type": "application/json" },
+//             });
 
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
+//             if (!response.ok) {
+//                 throw new Error('Network response was not ok');
+//             }
 
-            const data = await response.json();
-            populateDropdown(data);
-        } catch (error) {
-            console.error("Error fetching nationalities: ", error);
+//             const data = await response.json();
+//             populateDropdown(data);
+//         } catch (error) {
+//             console.error("Error fetching nationalities: ", error);
 
-            if (retries > 0) {
-                console.log('Retrying fetch...');
-                setTimeout(() => fetchWithRetries(retries - 1), 1000);
-            } else {
-                alert("Unable to load nationalities after multiple attempts.");
-            }
-        }
-    };
+//             if (retries > 0) {
+//                 console.log('Retrying fetch...');
+//                 setTimeout(() => fetchWithRetries(retries - 1), 1000);
+//             } else {
+//                 alert("Unable to load nationalities after multiple attempts.");
+//             }
+//         }
+//     };
 
-    const populateDropdown = (countries) => {
-        const sortedCountries = countries.sort((a, b) =>
-            a.name?.common?.localeCompare(b.name?.common)
-        );
+//     const populateDropdown = (countries) => {
+//         const sortedCountries = countries.sort((a, b) =>
+//             a.name?.common?.localeCompare(b.name?.common)
+//         );
 
-        selectElement.innerHTML = ""; // Clear dropdown before appending data
-        sortedCountries.forEach(country => {
-            const option = document.createElement('option');
-            option.value = country.name?.common?.toLowerCase() || '';
-            option.textContent = country.name?.common || 'Unknown';
-            selectElement.appendChild(option);
-        });
+//         selectElement.innerHTML = ""; // Clear dropdown before appending data
+//         sortedCountries.forEach(country => {
+//             const option = document.createElement('option');
+//             option.value = country.name?.common?.toLowerCase() || '';
+//             option.textContent = country.name?.common || 'Unknown';
+//             selectElement.appendChild(option);
+//         });
 
-        // Set default nationality to India if available
-        const indiaOption = Array.from(selectElement.options).find(option => option.value === "india");
-        if (indiaOption) {
-            indiaOption.selected = true;
-        }
-    };
+//         // Set default nationality to India if available
+//         const indiaOption = Array.from(selectElement.options).find(option => option.value === "india");
+//         if (indiaOption) {
+//             indiaOption.selected = true;
+//         }
+//     };
 
-    // Call the fetch with retry
-    fetchWithRetries();
-}
+//     // Call the fetch with retry
+//     fetchWithRetries();
+// }
 
-// Wait for DOM to load and execute the function
-document.addEventListener("DOMContentLoaded", function () {
-    fetchNationalities();
-});
+// // Wait for DOM to load and execute the function
+// document.addEventListener("DOMContentLoaded", function () {
+//     fetchNationalities();
+// });
 
 function toggleAnniversaryDate() {
     const maritalStatus = document.getElementById('maritalStatus').value;

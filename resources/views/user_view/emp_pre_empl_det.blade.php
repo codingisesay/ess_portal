@@ -1,6 +1,13 @@
 @extends('user_view/employee_form_layout')  <!-- Extending the layout file -->
 @section('content')  <!-- Defining the content section -->
 <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+
+<?php 
+
+// dd($countrys);
+
+?>
+
 @if($errors->any())
 <ul>
     @foreach($errors->all() as $error)
@@ -54,12 +61,53 @@
                         <th>Role While Leaving</th> -->
                         <th>Reason For Leaving</th>
                         <th>Major Responsibilities Held</th>
-                        <th>Edit</th>
                         <th>Remove</th>
                     </tr>
                 </thead>
                 <tbody id="employmentTableBody">
                     <!-- Rows will be added dynamically here -->
+                    @foreach($emp_preEmp_details as $index => $detail)
+                    <tr>
+                        <td class="serial-number">{{ $index + 1 }}</td>
+ 
+<td>
+    <input type="hidden" name="serial_no[]" value="${employmentCounter}">
+    <input type="custom-employer" name="employer_name[]" placeholder="Enter Employer Name" value="{{$detail->employer_name}}" required  maxlength="250"  oninput="this.value.replace(/[^a-zA-Z .,(){}[\]]/g, '').();">
+</td>
+<td>
+<select name="country[]" class="country-type" id="country">
+<option value="{{$detail->country}}">{{$detail->country}}</option>
+@foreach($countrys as $col)
+
+<option value="{{$col->name}}">{{$col->name}}</option>
+
+@endforeach
+</select>
+</td>
+<td><input type="text" name="city[]" class="custom-city" placeholder="Enter City" required  maxlength="25"  onkeydown="return blockNumbers(event);"
+ oninput="this.value = this.value.replace(/[^a-zA-Z\s]/g, '').();" value="{{$detail->city}}"></td>
+<td><input type="date" name="from_date[]" required max="<?php echo date('Y-m-d'); ?>" onblur="calculateExperience(this)" value="{{$detail->from_date}}"></td>
+<td><input type="date" name="to_date[]" required max="<?php echo date('Y-m-d'); ?>" onblur="calculateExperience(this)" value="{{$detail->to_date}}"></td>
+<td><input type="custom-designation" name="designation[]" placeholder="Enter Designation"  maxlength="50" required oninput="this.value = this.value.()" value="{{$detail->designation}}"></td>
+<td>
+<input type="text" name="last_drawn_salary[]" 
+   placeholder="Enter Last Drawn Annual Salary" 
+   required 
+   class="custom-salary"
+   oninput="limitSalaryInput(this); alignSalary(this)" 
+   onblur="formatSalary(this)" 
+   style="text-align: right;" value="{{$detail->last_drawn_annual_salary}}">
+</td>
+
+<td><input type="custom-experience" name="relevant_experience[]" placeholder="Enter Relevant Experience" required
+ readonly value="{{$detail->relevant_experience}}"></td>
+
+<td><input type="custom-reason" name="reason_for_leaving[]" placeholder="Enter Reason For Leaving"  maxlength="250" value="{{$detail->reason_for_leaving}}" required></td>
+<td><input type="custom-major" name="major_responsibilities[]" placeholder="Enter Major Responsibilities"  maxlength="2000" required value="{{$detail->major_responsibilities}}"></td>
+{{-- <td><button type="button" onclick="editEmploymentRow(this)">✏️</button></td> --}}
+<td><button class="delete-button" data-id="{{ $detail->id }}" type="button" >❌</button></td>
+                    </tr>
+                    @endforeach
                 </tbody>
             </table>
         </div>
@@ -68,9 +116,11 @@
             <button type="submit" class="next-btn">Next</button>
         </div> -->
         <div class="button-container">
-            <button class="previous-btn">
-                <span>&#8249;</span>
-            </button>
+            <a href="{{ route('user.family') }}" style="text-decoration:none;">
+                <button type="button" class="previous-btn">
+                    <span>&#8249;</span>
+                </button>
+            </a>
             <button type="submit" class="next-btn">
                 <span>&#8250;</span>
             </button>
@@ -98,9 +148,9 @@
 <td>
 <select name="country[]" class="country-type" id="country">
 <option value="">Select Country</option>
-<option value="India">India</option>
-<option value="China">China</option>
-
+@foreach($countrys as $col)
+<option value="{{$col->name}}">{{$col->name}}</option>
+@endforeach
 </select>
 </td>
 
@@ -126,7 +176,7 @@
 
 <td><input type="custom-reason" name="reason_for_leaving[]" placeholder="Enter Reason For Leaving"  maxlength="250" required></td>
 <td><input type="custom-major" name="major_responsibilities[]" placeholder="Enter Major Responsibilities"  maxlength="2000" required></td>
-<td><button type="button" onclick="editEmploymentRow(this)">✏️</button></td>
+
 <td><button type="button" onclick="removeEmploymentRow(this)">❌</button></td>
 `;
 
@@ -172,5 +222,39 @@
     }
 </script>
 <script src="{{ asset('user_end/js/onboarding_form.js') }}"></script>
+<script>
+    $(document).on('click', '.delete-button', function () {
+        // Get the ID of the record to be deleted
+        var preEmolyee = $(this).data('id');
+      
+    console.log(preEmolyee);
+        // Confirm delete action
+        if (confirm('Are you sure you want to delete this item?')) {
+            // Send an AJAX DELETE request to the server
+            $.ajax({
+                url: '/user/pre_emply/' + preEmolyee,  // Adjust the route URL if necessary
+                type: 'DELETE',
+                data: {
+                    _method: 'DELETE',
+                    _token: '{{ csrf_token() }}', 
+                    preEmolyee:preEmolyee,// CSRF token for security
+                },
+                success: function (response) {
+                    // On success, remove the row from the table
+                    $('button[data-id="' + preEmolyee + '"]').closest('tr').remove();
+                    alert('Education record deleted successfully!');
+                },
+                error: function (response) {
+                    alert('Error deleting record. Please try again.');
+                    console.log(preEmolyee);
+                }
+            });
+        }
+    });
+    document.getElementById('previous-btn-link').addEventListener('click', function(event) {
+        event.stopPropagation(); // Stop the form submission from being triggered
+    });
+
+    </script>
 
 @endsection
