@@ -226,30 +226,32 @@
             @foreach($empEducation as $index => $education)
                 if (serialNo === {{ $index }}) {
                     modalContent.innerHTML += `
-                        <div>
-                            <p class="label">Degree:</p>
-                            <p class="value">{{ ucfirst($education->degree ?? 'N/A') }}</p>
-                        </div>
-                        <div>
-                            <p class="label">University:</p>
-                            <p class="value">{{ ucfirst($education->university ?? 'N/A') }}</p>
-                        </div>
-                        <div>
-                            <p class="label">Institution:</p>
-                            <p class="value">{{ ucfirst($education->institution ?? 'N/A') }}</p>
-                        </div>
-                        <div>
-                            <p class="label">Passing Year:</p>
-                            <p class="value">{{ $education->year_of_passing ? \Carbon\Carbon::parse($education->year_of_passing)->format('d-m-Y') : 'N/A' }}</p>
-                        </div>
-                        <div>
-                            <p class="label">Course Type:</p>
-                            <p class="value">{{ ucfirst($education->course_type ?? 'N/A') }}</p>
-                        </div>
-                        <div>
-                            <p class="label">Percentage:</p>
-                            <p class="value">{{ ucfirst($education->percentage ?? 'N/A') }}</p>
-                        </div>
+                        <table class="details-table">
+                            <tr>
+                                <th>Degree</th>
+                                <td>{{ ucfirst($education->degree ?? 'N/A') }}</td>
+                            </tr>
+                            <tr>
+                                <th>University</th>
+                                <td>{{ ucfirst($education->university ?? 'N/A') }}</td>
+                            </tr>
+                            <tr>
+                                <th>Institution</th>
+                                <td>{{ ucfirst($education->institution ?? 'N/A') }}</td>
+                            </tr>
+                            <tr>
+                                <th>Passing Year</th>
+                                <td>{{ $education->year_of_passing ? \Carbon\Carbon::parse($education->year_of_passing)->format('d-m-Y') : 'N/A' }}</td>
+                            </tr>
+                            <tr>
+                                <th>Course Type</th>
+                                <td>{{ ucfirst($education->course_type ?? 'N/A') }}</td>
+                            </tr>
+                            <tr>
+                                <th>Percentage</th>
+                                <td>{{ ucfirst($education->percentage ?? 'N/A') }}</td>
+                            </tr>
+                        </table>
                     `;
                 }
             @endforeach
@@ -264,18 +266,20 @@
             @foreach($empEducation as $index => $education)
                 if (serialNo === {{ $index }}) {
                     modalContent.innerHTML += `
-                        <div>
-                            <p class="label">Certification Name:</p>
-                            <p class="value">{{ ucfirst($education->certification_name ?? 'N/A') }}</p>
-                        </div>
-                        <div>
-                            <p class="label">Marks Obtained:</p>
-                            <p class="value">{{ ucfirst($education->marks_obtained ?? 'N/A') }}</p>
-                        </div>
-                        <div>
-                            <p class="label">Certificate Date:</p>
-                            <p class="value">{{ $education->certificate_date ? \Carbon\Carbon::parse($education->certificate_date)->format('d-m-Y') : 'N/A' }}</p>
-                        </div>
+                        <table class="details-table">
+                            <tr>
+                                <th>Certification Name</th>
+                                <td>{{ ucfirst($education->certification_name ?? 'N/A') }}</td>
+                            </tr>
+                            <tr>
+                                <th>Marks Obtained</th>
+                                <td>{{ ucfirst($education->marks_obtained ?? 'N/A') }}</td>
+                            </tr>
+                            <tr>
+                                <th>Certificate Date</th>
+                                <td>{{ $education->certificate_date ? \Carbon\Carbon::parse($education->certificate_date)->format('d-m-Y') : 'N/A' }}</td>
+                            </tr>
+                        </table>
                     `;
                 }
             @endforeach
@@ -288,6 +292,34 @@
             document.getElementById(modalId).style.display = "none";
         }
     </script>
+     <style>
+        .details-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+
+        .details-table th,
+        .details-table td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+
+        .details-table th {
+            background-color: #f4f4f4;
+            font-weight: bold;
+        }
+
+        .details-table tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        .details-table tr:hover {
+            background-color: #f1f1f1;
+        }
+    </style>
+
 @endsection
 </body>
 </html>
