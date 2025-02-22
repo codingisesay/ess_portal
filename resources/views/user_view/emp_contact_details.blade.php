@@ -400,7 +400,22 @@ $id = Auth::guard('web')->user()->id;
 
 <script>
 
-
+window.onload = function() {
+        // Get all the select elements
+        const dropdowns = document.querySelectorAll('.dropdown');
+        
+        dropdowns.forEach(dropdown => {
+          const selectedValue = dropdown.value;
+    
+          // Loop through each dropdown's options and hide the selected one
+          for (let option of dropdown.options) {
+            if (option.value === selectedValue) {
+              option.style.display = 'none';  // Hide the selected option
+              break; // Only hide the selected option
+            }
+          }
+        });
+      };
 
 function getSelectedCountryValue() {
     var selectElement = document.getElementById("nationality_permanent");
