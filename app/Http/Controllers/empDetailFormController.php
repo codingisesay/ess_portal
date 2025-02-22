@@ -803,31 +803,16 @@ public function insertBank(Request $request){
   // Handle file upload request
   public function upload(Request $request)
   {
-      // Validate the incoming request
-    //   $validated = $request->validate([
-    //       'file' => 'required|file|mimes:pdf,jpeg,jpg,png|max:10240', // 10MB max
-    //   ]);
-
-    // dd($file = $request->file('file'));
-
-      // Handle the uploaded file
-      if ($request->hasFile('file')) {
-          $file = $request->file('file');
-          
-          // Generate a unique filename
-          $filename = time() . '_' . $file->getClientOriginalName();
-          
-          // Store the file in the 'documents' directory in the storage
-          $path = $file->storeAs('documents', $filename, 'public');
-
-          // Return success response
-          return true;
-      }
-
-    //   // Return error response if file is not uploaded
-
     
-      return false;
-  }   
+     $file = $request->file('photo');
+     $request->validate([
+        'photo' => 'required'
+     ]);
+
+     $path = $request->file('photo')->store('image','public');
+
+     dd($path);
+
+   }
 }
 

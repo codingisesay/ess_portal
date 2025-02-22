@@ -61,7 +61,7 @@ Route::post('user/logout', [UserAuthController::class, 'logout'])->name('user.lo
 
 Route::middleware(['auth'])->group(function () {
     Route::get('user/dashboard',[empDetailFormController::class,'index'])->name('user.dashboard');
-    Route::get('user/contact',[empDetailFormController::class,'php'])->name('user.contact');
+    Route::get('user/contact',[empDetailFormController::class,'loadcontectuser'])->name('user.contact');
     Route::get('user/edu',[empDetailFormController::class,'loadeducationuser'])->name('user.edu');
     Route::get('user/bank',[empDetailFormController::class,'loadbankuser'])->name('user.bank');
     Route::get('user/family',[empDetailFormController::class,'loadfamilyuser'])->name('user.family');

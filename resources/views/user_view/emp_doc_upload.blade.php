@@ -57,7 +57,6 @@
     
     <form action="/file-upload" method="POST" enctype="multipart/form-data" id="">
         @csrf
-        <input type="hidden" name="form_step10" value="document_step">
         
         <!-- Previous Employment Documents -->
         <div class="service-card">
@@ -142,7 +141,7 @@
 
     var myDropZone = new Dropzone('#previous-employment-documents',{
             url: "{{ route('documents.upload') }}",
-            paramName: "file",
+            paramName: "photo",
             maxFilesize: 10,
             acceptedFiles: ".pdf,.jpg,.jpeg,.png",
             uploadMultiple: true,
