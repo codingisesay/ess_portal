@@ -803,31 +803,38 @@ public function insertBank(Request $request){
   // Handle file upload request
   public function upload(Request $request)
   {
-      // Validate the incoming request
-    //   $validated = $request->validate([
-    //       'file' => 'required|file|mimes:pdf,jpeg,jpg,png|max:10240', // 10MB max
-    //   ]);
-
-    // dd($file = $request->file('file'));
-
-      // Handle the uploaded file
-      if ($request->hasFile('file')) {
-          $file = $request->file('file');
-          
-          // Generate a unique filename
-          $filename = time() . '_' . $file->getClientOriginalName();
-          
-          // Store the file in the 'documents' directory in the storage
-          $path = $file->storeAs('documents', $filename, 'public');
-
-          // Return success response
-          return true;
-      }
-
-    //   // Return error response if file is not uploaded
-
     
-      return false;
-  }   
+    $request->validate([
+        'photo' => 'required', // ensure it's an array of files
+        'photo.*' => 'file', // ensure each element is a valid file
+    ]);
+     // Get the original file name
+    //  $originalFileName = $file->getClientOriginalName();
+
+    foreach ($request->file('photo') as $file) {
+        $path = $file->store('image', 'public');
+        $originalFileName = $file->getClientOriginalName();
+       
+    }
+    // dd($path); // This will dump the path for the first file
+    $loginUserInfo = Auth::user();
+    if($path){
+
+        DB::table('document_uploads')->insert([
+            'user_id' => $loginUserInfo->id,
+            'document_type' => $originalFileName,
+            'file_path' => $path,
+            'created_at' => NOW(),
+            'updated_at' => NOW(),
+        ]);
+
+        return true;
+
+    }else{
+
+        return false;
+
+    }
+   }
 }
 

@@ -3,7 +3,7 @@
 @section('content')  <!-- Defining the content section -->
 <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
 <?php 
-// error_reporting(0);
+error_reporting(0);
 $id = Auth::guard('web')->user()->id;
 // {{ old('employmentType', $emp_contact_datas[0]->per_building_no) }}
 // echo $emp_contact_datas[0]->per_building_no;
@@ -400,7 +400,22 @@ $id = Auth::guard('web')->user()->id;
 
 <script>
 
-
+window.onload = function() {
+        // Get all the select elements
+        const dropdowns = document.querySelectorAll('.dropdown');
+        
+        dropdowns.forEach(dropdown => {
+          const selectedValue = dropdown.value;
+    
+          // Loop through each dropdown's options and hide the selected one
+          for (let option of dropdown.options) {
+            if (option.value === selectedValue) {
+              option.style.display = 'none';  // Hide the selected option
+              break; // Only hide the selected option
+            }
+          }
+        });
+      };
 
 function getSelectedCountryValue() {
     var selectElement = document.getElementById("nationality_permanent");

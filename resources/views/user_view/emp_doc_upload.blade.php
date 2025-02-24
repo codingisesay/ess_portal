@@ -57,7 +57,6 @@
     
     <form action="/file-upload" method="POST" enctype="multipart/form-data" id="">
         @csrf
-        <input type="hidden" name="form_step10" value="document_step">
         
         <!-- Previous Employment Documents -->
         <div class="service-card">
@@ -67,7 +66,7 @@
             <div class="dropzone" id="previous-employment-documents"></div>
             {{-- <input type="file" name="file" /> --}}
         </div>
-    </form>
+    
 
         <!-- Academic Testimonials (Marks Cards & Certificates) -->
         <div class="service-card">
@@ -125,6 +124,8 @@
             <div class="dropzone" id="additional-id-proof"></div>
         </div>
 
+    </form>
+
         <div class="button-container">
             <a href="{{ route('user.preemp') }}" style="text-decoration:none;">
                 <button type="button" class="previous-btn">
@@ -142,7 +143,191 @@
 
     var myDropZone = new Dropzone('#previous-employment-documents',{
             url: "{{ route('documents.upload') }}",
-            paramName: "file",
+            paramName: "photo",
+            maxFilesize: 10,
+            acceptedFiles: ".pdf,.jpg,.jpeg,.png",
+            uploadMultiple: true,
+            parallelUploads: 4,
+            addRemoveLinks: true,
+            maxFiles: 10,
+            headers: {
+                    'X-CSRF-TOKEN': csrfToken // Include CSRF token in the request headers
+                     },
+            success: function(file,response){
+                if(response == true){
+
+                    alert('File Uploaded');
+
+                }else{
+
+                    alert('File Not uploaded');
+
+                }
+            }
+
+    });
+
+
+    // Initialize Dropzone for each section
+    var myDropZone = new Dropzone('#academic-documents',{
+            url: "{{ route('documents.upload') }}",
+            paramName: "photo",
+            maxFilesize: 10,
+            acceptedFiles: ".pdf,.jpg,.jpeg,.png",
+            uploadMultiple: true,
+            parallelUploads: 4,
+            addRemoveLinks: true,
+            maxFiles: 10,
+            headers: {
+                    'X-CSRF-TOKEN': csrfToken // Include CSRF token in the request headers
+                     },
+            success: function(file,response){
+                if(response == true){
+
+                    alert('File Uploaded');
+
+                }else{
+
+                    alert('File Not uploaded');
+
+                }
+            }
+
+    });
+
+    var myDropZone = new Dropzone('#pan-card',{
+            url: "{{ route('documents.upload') }}",
+            paramName: "photo",
+            maxFilesize: 10,
+            acceptedFiles: ".pdf,.jpg,.jpeg,.png",
+            uploadMultiple: true,
+            parallelUploads: 4,
+            addRemoveLinks: true,
+            maxFiles: 1,
+            headers: {
+                    'X-CSRF-TOKEN': csrfToken // Include CSRF token in the request headers
+                     },
+            success: function(file,response){
+                if(response == true){
+
+                    alert('File Uploaded');
+
+                }else{
+
+                    alert('File Not uploaded');
+
+                }
+            }
+
+    });
+
+    var myDropZone = new Dropzone('#address-proof',{
+            url: "{{ route('documents.upload') }}",
+            paramName: "photo",
+            maxFilesize: 10,
+            acceptedFiles: ".pdf,.jpg,.jpeg,.png",
+            uploadMultiple: true,
+            parallelUploads: 4,
+            addRemoveLinks: true,
+            maxFiles: 1,
+            headers: {
+                    'X-CSRF-TOKEN': csrfToken // Include CSRF token in the request headers
+                     },
+            success: function(file,response){
+                if(response == true){
+
+                    alert('File Uploaded');
+
+                }else{
+
+                    alert('File Not uploaded');
+
+                }
+            }
+
+    });
+
+    var myDropZone = new Dropzone('#passport-size-self',{
+            url: "{{ route('documents.upload') }}",
+            paramName: "photo",
+            maxFilesize: 10,
+            acceptedFiles: ".pdf,.jpg,.jpeg,.png",
+            uploadMultiple: true,
+            parallelUploads: 4,
+            addRemoveLinks: true,
+            maxFiles: 1,
+            headers: {
+                    'X-CSRF-TOKEN': csrfToken // Include CSRF token in the request headers
+                     },
+            success: function(file,response){
+                if(response == true){
+
+                    alert('File Uploaded');
+
+                }else{
+
+                    alert('File Not uploaded');
+
+                }
+            }
+
+    });
+
+    var myDropZone = new Dropzone('#passport-size-dependents',{
+            url: "{{ route('documents.upload') }}",
+            paramName: "photo",
+            maxFilesize: 10,
+            acceptedFiles: ".pdf,.jpg,.jpeg,.png",
+            uploadMultiple: true,
+            parallelUploads: 4,
+            addRemoveLinks: true,
+            maxFiles: 10,
+            headers: {
+                    'X-CSRF-TOKEN': csrfToken // Include CSRF token in the request headers
+                     },
+            success: function(file,response){
+                if(response == true){
+
+                    alert('File Uploaded');
+
+                }else{
+
+                    alert('File Not uploaded');
+
+                }
+            }
+
+    });
+
+    var myDropZone = new Dropzone('#passport-copy',{
+            url: "{{ route('documents.upload') }}",
+            paramName: "photo",
+            maxFilesize: 10,
+            acceptedFiles: ".pdf,.jpg,.jpeg,.png",
+            uploadMultiple: true,
+            parallelUploads: 4,
+            addRemoveLinks: true,
+            maxFiles: 1,
+            headers: {
+                    'X-CSRF-TOKEN': csrfToken // Include CSRF token in the request headers
+                     },
+            success: function(file,response){
+                if(response == true){
+
+                    alert('File Uploaded');
+
+                }else{
+
+                    alert('File Not uploaded');
+
+                }
+            }
+
+    });
+
+    var myDropZone = new Dropzone('#additional-id-proof',{
+            url: "{{ route('documents.upload') }}",
+            paramName: "photo",
             maxFilesize: 10,
             acceptedFiles: ".pdf,.jpg,.jpeg,.png",
             uploadMultiple: true,
@@ -166,131 +351,31 @@
 
     });
 
-    // $('document').on('change',function(){
+    // var myDropZone = new Dropzone('#previous-employment-documents',{
+    //         url: "{{ route('documents.upload') }}",
+    //         paramName: "photo",
+    //         maxFilesize: 10,
+    //         acceptedFiles: ".pdf,.jpg,.jpeg,.png",
+    //         uploadMultiple: true,
+    //         parallelUploads: 4,
+    //         addRemoveLinks: true,
+    //         maxFiles: 3,
+    //         headers: {
+    //                 'X-CSRF-TOKEN': csrfToken // Include CSRF token in the request headers
+    //                  },
+    //         success: function(file,response){
+    //             if(response == true){
 
-    //     myDropZone.processQueue();
+    //                 alert('File Uploaded');
+
+    //             }else{
+
+    //                 alert('File Not uploaded');
+
+    //             }
+    //         }
 
     // });
-
-    // // Initialize Dropzone for each section
-    // Dropzone.options.previousEmploymentDocuments = {
-    //     url: "{{ route('documents.upload') }}",
-    //     paramName: "file",
-    //     maxFilesize: 10,
-    //     acceptedFiles: ".pdf,.jpg,.jpeg,.png",
-    //     uploadMultiple: true,
-    //     parallelUploads: 4,
-    //     addRemoveLinks: true,
-    //     maxFiles: 3,
-    //     maxFilesMessage: "You can only upload 3 files.",
-    //     init: function() {
-    //         this.on("sending", function(file, xhr, formData) {
-    //             formData.append("_token", csrfToken); // Add CSRF token
-    //             formData.append("category", "previous_employment_documents"); // Add category to each file
-    //             console.log('dfssd');
-    //         });
-    //     }
-    // };
-
-    // Dropzone.options.academicDocuments = {
-    //     url: "{{ route('documents.upload') }}",
-    //     paramName: "file",
-    //     maxFilesize: 2,
-    //     acceptedFiles: ".pdf,.jpg,.jpeg,.png",
-    //     addRemoveLinks: true,
-    //     init: function() {
-    //         this.on("sending", function(file, xhr, formData) {
-    //             formData.append("_token", csrfToken);
-    //             formData.append("category", "academic_documents"); // Add category to each file
-    //         });
-    //     }
-    // };
-
-    // Dropzone.options.panCard = {
-    //     url: "{{ route('documents.upload') }}",
-    //     paramName: "file",
-    //     maxFilesize: 2,
-    //     acceptedFiles: ".pdf,.jpg,.jpeg,.png",
-    //     addRemoveLinks: true,
-    //     init: function() {
-    //         this.on("sending", function(file, xhr, formData) {
-    //             formData.append("_token", csrfToken);
-    //             formData.append("category", "pan_card"); // Add category to each file
-                
-    //         });
-    //     }
-    // };
-
-    // Dropzone.options.addressProof = {
-    //     url: "{{ route('documents.upload') }}",
-    //     paramName: "file",
-    //     maxFilesize: 2,
-    //     acceptedFiles: ".pdf,.jpg,.jpeg,.png",
-    //     addRemoveLinks: true,
-    //     init: function() {
-    //         this.on("sending", function(file, xhr, formData) {
-    //             formData.append("_token", csrfToken);
-    //             formData.append("category", "address_proof"); // Add category to each file
-    //         });
-    //     }
-    // };
-
-    // Dropzone.options.passportSizeSelf = {
-    //     url: "{{ route('documents.upload') }}",
-    //     paramName: "file",
-    //     maxFilesize: 2,
-    //     acceptedFiles: ".jpg,.jpeg,.png",
-    //     addRemoveLinks: true,
-    //     init: function() {
-    //         this.on("sending", function(file, xhr, formData) {
-    //             formData.append("_token", csrfToken);
-    //             formData.append("category", "passport_size_self"); // Add category to each file
-                
-    //         });
-    //     }
-    // };
-
-    // Dropzone.options.passportSizeDependents = {
-    //     url: "{{ route('documents.upload') }}",
-    //     paramName: "file",
-    //     maxFilesize: 2,
-    //     acceptedFiles: ".jpg,.jpeg,.png",
-    //     addRemoveLinks: true,
-    //     init: function() {
-    //         this.on("sending", function(file, xhr, formData) {
-    //             formData.append("_token", csrfToken);
-    //             formData.append("category", "passport_size_dependents"); // Add category to each file
-    //         });
-    //     }
-    // };
-
-    // Dropzone.options.passportCopy = {
-    //     url: "{{ route('documents.upload') }}",
-    //     paramName: "file",
-    //     maxFilesize: 2,
-    //     acceptedFiles: ".pdf,.jpg,.jpeg,.png",
-    //     addRemoveLinks: true,
-    //     init: function() {
-    //         this.on("sending", function(file, xhr, formData) {
-    //             formData.append("_token", csrfToken);
-    //             formData.append("category", "passport_copy"); // Add category to each file
-    //         });
-    //     }
-    // };
-
-    // Dropzone.options.additionalIdProof = {
-    //     url: "{{ route('documents.upload') }}",
-    //     paramName: "file",
-    //     maxFilesize: 2,
-    //     acceptedFiles: ".pdf,.jpg,.jpeg,.png",
-    //     addRemoveLinks: true,
-    //     init: function() {
-    //         this.on("sending", function(file, xhr, formData) {
-    //             formData.append("_token", csrfToken);
-    //             formData.append("category", "additional_id_proof"); // Add category to each file
-    //         });
-    //     }
-    // };
 </script>
 
 @endsection
