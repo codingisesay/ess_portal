@@ -2,11 +2,9 @@
 @section('content')  <!-- Defining the content section -->
 
 <?php 
-
 $id = Auth::guard('superadmin')->user()->id;
-
-
 ?>
+
 @if(session('success'))
     <div class="alert alert-success">
         {{ session('success') }}
@@ -18,116 +16,114 @@ $id = Auth::guard('superadmin')->user()->id;
         {{ session('error') }}
     </div>
 @endif
-
-<div class="w3-container">
-
-
-    <div class="w3-main" style="margin-left:300px;margin-top:43px;">
-        <br><br>
-        <h3>Create Branches For Your Organisation</h3>
-        <form method="POST" action="{{ route('insert_designation') }}">
+<!DOCTYPE html>
+<html>
+<head>
+<title>Template</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<link rel="stylesheet" href="{{ asset('admin_end/css/admin_form.css') }}">
+<div class="container">
+    <h2>Create Branches For Your Organisation</h2>
+    <form method="POST" action="{{ route('insert_designation') }}">
         @csrf
-    <div class="w3-row-padding">
-      <div class="w3-third">
-        <label>Name</label>
-        <input class="w3-input w3-border" placeholder="Enter Branch Name" name="username">
-      </div>
-      <div class="w3-third">
-        <label>Mobile</label>
-        <input class="w3-input w3-border" placeholder="Enter Branch Mobile" name="empid">
-      </div>
-    
-      <div class="w3-third">
-        <label>Branch Email</label>
-        <input class="w3-input w3-border" placeholder="Enter Branch Email" name="usermailid">
-      </div>
-    </div>
-    <br>
-    <div class="w3-row-padding">
-      <div class="w3-third">
-        <label>Building No</label>
-        <input class="w3-input w3-border" id="passwordField" placeholder="Building No" readonly name="userpassword" value="akash@1234">
-      </div>
-      <div class="w3-third">
-        <label>Premises Name</label>
-        <input class="w3-input w3-border" type="text" name="name" placeholder="Branch Premises Name">
-      </div>
-      <div class="w3-third">
-        <label>Landmark</label>
-        <input class="w3-input w3-border" type="text" name="name" placeholder="Branch Landmark">
-      </div>
-    </div>
-    <br>
-      <div class="w3-row-padding">
-        <div class="w3-third">
-            <label>Road Street</label>
-            <input class="w3-input w3-border" type="text" name="name" placeholder="Branch Road Street">
-        </div>
-        <div class="w3-third">
-            <label>pincode</label>
-            <input class="w3-input w3-border" type="text" name="name" placeholder="Branch Pincode">
-        </div>
-        <div class="w3-third">
-            <label>district</label>
-            <input  class="w3-input w3-border" type="text" name="name" placeholder="Branch District">
-        </div>
-    </div>
-    <br>
-        <div class="w3-row-padding">
-            <div class="w3-third">
-             <label>State</label>
-             <input class="w3-input w3-border" type="text" name="name" placeholder="Branch State">
+        <div class="form-container">
+            <div class="form-group">
+                <input type="text" name="username" required>
+                <label>Name</label>
             </div>
-            <div class="w3-third">
+            <div class="form-group">
+                <input type="text" name="empid" required>
+                <label>Mobile</label>
+            </div>
+            <div class="form-group">
+                <input type="email" name="usermailid" required>
+                <label>Branch Email</label>
+            </div>
+            <div class="form-group">
+                <input type="text" name="userpassword" value="" readonly>
+                <label>Building No</label>
+            </div>
+        </div>
+        <div class="form-container">
+           
+            <div class="form-group">
+                <input type="text" name="premises_name" required>
+                <label>Premises Name</label>
+            </div>
+            <div class="form-group">
+                <input type="text" name="landmark" required>
+                <label>Landmark</label>
+            </div>
+            <div class="form-group">
+                <input type="text" name="road_street" required>
+                <label>Road Street</label>
+            </div>
+            <div class="form-group">
+                <input type="text" name="pincode" required>
+                <label>Pincode</label>
+            </div>
+        </div>
+        <div class="form-container">
+            
+            <div class="form-group">
+                <input type="text" name="district" required>
+                <label>District</label>
+            </div>
+            <div class="form-group">
+                <input type="text" name="state" required>
+                <label>State</label>
+            </div>
+            <div class="form-group">
+                <input type="text" name="country" required>
                 <label>Country</label>
-                <input class="w3-input w3-border" type="text" name="name" placeholder="Branch Country">
             </div>
-            <div class="w3-third">
-               <br>
-                <button class="w3-button w3-green" type="submit">Create Branch</button>
+        </div>
+        <div class="form-container">
+           
+            <div class="form-group">
+                <button class="create-btn" type="submit">Create Branch</button>
             </div>
-    </div>
-    
+        </div>
     </form>
-      
-    
-                    @if($errors->any())
-                    <ul>
-                    @foreach ($errors->all() as $error)
-                        <li>{{ $error }}</li>
-                    @endforeach
-                    </ul>
-                    @endif
-    
-    {{-- <div class="w3-twothird"> --}}
-      <h5>Branch</h5>
-      <table class="w3-table w3-bordered">
-    <tr>
-        <th> Name</th>
-        <th> Mobile</th>
-        <th> E-mail</th>
-        <th>Edit</th>
-    
-    </tr>
 
-    @foreach($branchs as $branch)
-    <tr>
-        <td>{{ $branch->name }}</td>
-        <td>{{ $branch->mobile }}</td>
-        <td>{{ $branch->branch_email }}</td>
-        <td><button class="w3-button w3-green">Edit</button></td>
-    
-    </tr>
-    @endforeach
-     
-    
-    </table>
+    @if($errors->any())
+        <ul>
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    @endif
+
+    <h3>Branch</h3>
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Mobile</th>
+                    <th>E-mail</th>
+                    <th>Edit</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach($branchs as $branch)
+                    <tr>
+                        <td>{{ $branch->name }}</td>
+                        <td>{{ $branch->mobile }}</td>
+                        <td>{{ $branch->branch_email }}</td>
+                        <td><button class="edit-icon">Edit</button></td>
+                    </tr>
+                @endforeach
+            </tbody>
+        </table>
     </div>
-    </div>
-    </div>
-    </div>
-    <hr>
-    
-    </div>
+</div>
+
+
 
 @endsection
+
