@@ -103,6 +103,7 @@ $id = Auth::guard('superadmin')->user()->id;
         <table>
             <thead>
                 <tr>
+                    
                     <th>Name</th>
                     <th>Mobile</th>
                     <th>E-mail</th>

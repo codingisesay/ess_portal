@@ -64,6 +64,7 @@ $id = Auth::guard('superadmin')->user()->id;
         <table>
             <thead>
                 <tr>
+                    
                     <th>Department Name</th>
                     <th>Branch Name</th>
                     <th>Designation Name</th>
