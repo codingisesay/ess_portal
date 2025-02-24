@@ -13,10 +13,7 @@ $name = Auth::guard('superadmin')->user()->name;
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <style>
-html,body,h1,h2,h3,h4,h5 {font-family: "Raleway", sans-serif}
-tr,th,td{
-border:1px solid black;
-}
+
 body {
     display: flex;
     height: 100vh;
@@ -87,6 +84,22 @@ nav ul li a:hover {
     justify-content: center;
 }
 
+.logout-button {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background-color: #F6F5F7;
+    padding: 10px;
+    border-radius: 5px;
+    text-decoration: none;
+    color: #333;
+    font-weight: bold;
+}
+
+.logout-button:hover {
+    background-color: #ddd;
+}
+
 @media (max-width: 768px) {
     .sidebar {
         width: 100%;
@@ -114,10 +127,8 @@ nav ul li a:hover {
 <body class="body">
 
 <!-- Top container -->
-<!-- <div class="w3-bar w3-top w3-black w3-large" style="z-index:4">
-  <button class="w3-bar-item w3-button w3-hide-large w3-hover-none w3-hover-text-light-grey" onclick="w3_open();"><i class="fa fa-bars"></i>  Menu</button>
-  <a href="{{ route('superadmin.logout') }}"><span class="w3-bar-item w3-right">logout</span></a>
-</div> -->
+<a href="{{ route('superadmin.logout') }}" class="logout-button">Logout</a>
+
 
 <!-- Sidebar/menu -->
 <nav class="sidebar" id="mySidebar"><br>
