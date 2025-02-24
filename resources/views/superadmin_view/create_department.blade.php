@@ -141,7 +141,7 @@ h2 {
     font-size: 16px;
     cursor: pointer;
     display: block;
-    margin-top: 10px;
+    margin-top: 0px;
 }
 
 .create-btn:hover {

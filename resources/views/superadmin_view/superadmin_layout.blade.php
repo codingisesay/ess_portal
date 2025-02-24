@@ -140,7 +140,7 @@ nav ul li a:hover {
   </div>
   <hr>
   <div class="sidebar-content">
-    <h5>Dashboard</h5>
+    
   <ul> 
   <li><a href="{{ route('create_user') }}" class="active"><img src="{{ asset('admin_end/images/man.png') }}" width="30" height="30" alt=""> Create User</a></li>
       <li><a href="{{ route('create_branch_form') }}"><img src="{{ asset('admin_end/images/createbranch.png') }}" width="30" height="30" alt=""> Create Branch</a></li>
