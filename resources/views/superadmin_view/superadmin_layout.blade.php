@@ -17,88 +17,161 @@ html,body,h1,h2,h3,h4,h5 {font-family: "Raleway", sans-serif}
 tr,th,td{
 border:1px solid black;
 }
+body {
+    display: flex;
+    height: 100vh;
+    margin: 0;
+    font-family: 'Poppins', sans-serif;
+    background-color: #f6f6f6;
+    color: #333;
+}
+
+.sidebar {
+    width: 250px;
+    background-color: #F6F5F7;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+    border-radius: 15px;
+    margin-left: -10px; /* Move sidebar slightly to the left */
+}
+
+.logo img {
+    height: 50px;
+    margin-bottom: 20px;
+}
+
+nav ul {
+    list-style: none;
+    padding: 0;
+    width: 100%;
+}
+
+nav ul li {
+    margin-bottom: 20px;
+}
+
+nav ul li a {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: #b1b1b1;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+nav ul li a.active,
+nav ul li a:hover {
+    color: #8A3366;
+    font-weight: bold;
+}
+
+.sidebar-icons {
+    margin-top: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.searchcircle,
+.bellcircle,
+.profilecircle {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background-color: #F6F5F7;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+@media (max-width: 768px) {
+    .sidebar {
+        width: 100%;
+        margin-left: 0;
+        border-radius: 0;
+    }
+
+    .logo img {
+        height: 40px;
+    }
+
+    nav ul li {
+        margin-bottom: 15px;
+    }
+
+    .searchcircle,
+    .bellcircle,
+    .profilecircle {
+        width: 40px;
+        height: 40px;
+    }
+}
 </style>
 </head>
-<body class="w3-light-grey">
+<body class="body">
 
 <!-- Top container -->
-<div class="w3-bar w3-top w3-black w3-large" style="z-index:4">
+<!-- <div class="w3-bar w3-top w3-black w3-large" style="z-index:4">
   <button class="w3-bar-item w3-button w3-hide-large w3-hover-none w3-hover-text-light-grey" onclick="w3_open();"><i class="fa fa-bars"></i>  Menu</button>
   <a href="{{ route('superadmin.logout') }}"><span class="w3-bar-item w3-right">logout</span></a>
-</div>
+</div> -->
 
 <!-- Sidebar/menu -->
-<nav class="w3-sidebar w3-collapse w3-white w3-animate-left" style="z-index:3;width:300px;" id="mySidebar"><br>
-  <div class="w3-container w3-row">
-    <div class="w3-col s4">
-      <img src="/w3images/avatar2.png" class="w3-circle w3-margin-right" style="width:46px">
+<nav class="sidebar" id="mySidebar"><br>
+  <div class="sidebar-header">
+    <div class="logo">
+    <img src="{{ asset('user_end/images/STPL Logo with TagLine HD Transparent.png') }}" alt="STPL Logo">
     </div>
-    <div class="w3-col s8 w3-bar">
-      <span>Welcome, <strong><?php echo $name; ?></strong></span><br>
-      <a href="#" class="w3-bar-item w3-button"><i class="fa fa-envelope"></i></a>
-      <a href="#" class="w3-bar-item w3-button"><i class="fa fa-user"></i></a>
-      <a href="#" class="w3-bar-item w3-button"><i class="fa fa-cog"></i></a>
-    </div>
+    
   </div>
   <hr>
-  <div class="w3-container">
+  <div class="sidebar-content">
     <h5>Dashboard</h5>
-  </div>
-  <div class="w3-bar-block">
-    <a href="#" class="w3-bar-item w3-button w3-padding-16 w3-hide-large w3-dark-grey w3-hover-black" onclick="w3_close()" title="close menu"><i class="fa fa-remove fa-fw"></i>  Close Menu</a>
-    <a href="{{ route('create_user') }}" class="w3-bar-item w3-button w3-padding w3-blue"><i class="fa fa-users fa-fw"></i> Create User</a>
-    <a href="{{ route('create_branch_form') }}" class="w3-bar-item w3-button w3-padding"><i class="fa fa-eye fa-fw"></i>Create Branch</a>
-    <a href="{{ route('create_department_form') }}" class="w3-bar-item w3-button w3-padding"><i class="fa fa-users fa-fw"></i>Create Department</a>
-    <a href="{{ route('create_designation_form') }}" class="w3-bar-item w3-button w3-padding"><i class="fa fa-bullseye fa-fw"></i>Create Designation</a>
-    <!-- <a href="#" class="w3-bar-item w3-button w3-padding"><i class="fa fa-diamond fa-fw"></i>  Orders</a>
-    <a href="#" class="w3-bar-item w3-button w3-padding"><i class="fa fa-bell fa-fw"></i>  News</a>
-    <a href="#" class="w3-bar-item w3-button w3-padding"><i class="fa fa-bank fa-fw"></i>  General</a>
-    <a href="#" class="w3-bar-item w3-button w3-padding"><i class="fa fa-history fa-fw"></i>  History</a>
-    <a href="#" class="w3-bar-item w3-button w3-padding"><i class="fa fa-cog fa-fw"></i>  Settings</a><br><br> -->
+  <ul> 
+  <li><a href="{{ route('create_user') }}" class="active"><img src="{{ asset('admin_end/images/man.png') }}" width="30" height="30" alt=""> Create User</a></li>
+      <li><a href="{{ route('create_branch_form') }}"><img src="{{ asset('admin_end/images/createbranch.png') }}" width="30" height="30" alt=""> Create Branch</a></li>
+      <li><a href="{{ route('create_department_form') }}"><img src="{{ asset('admin_end/images/corporation.png') }}" width="30" height="30" alt=""> Create Department</a></li>
+      <li><a href="{{ route('create_designation_form') }}"><img src="{{ asset('admin_end/images/createdesignation.png') }}" width="30" height="30" alt="">  Create Designation</a></li>
+    </ul>
   </div>
 </nav>
 
 
 <!-- Overlay effect when opening sidebar on small screens -->
-<div class="w3-overlay w3-hide-large w3-animate-opacity" onclick="w3_close()" style="cursor:pointer" title="close side menu" id="myOverlay"></div>
+<!-- <div class="w3-overlay w3-hide-large w3-animate-opacity" onclick="w3_close()" style="cursor:pointer" title="close side menu" id="myOverlay"></div> -->
 
 <!-- !PAGE CONTENT! -->
 
   @yield('content')
   
   <!-- Footer -->
-  <footer class="w3-container w3-padding-16 w3-light-grey">
+  <!-- <footer class="w3-container w3-padding-16 w3-light-grey">
     <h4>FOOTER</h4>
     <p>Powered by <a href="https://www.w3schools.com/w3css/default.asp" target="_blank">w3.css</a></p>
-  </footer>
+  </footer> -->
 
   <!-- End page content -->
 </div>
 
 <script>
-// Get the Sidebar
-var mySidebar = document.getElementById("mySidebar");
-
-// Get the DIV with overlay effect
-var overlayBg = document.getElementById("myOverlay");
-
-// Toggle between showing and hiding the sidebar, and add overlay effect
-function w3_open() {
-  if (mySidebar.style.display === 'block') {
-    mySidebar.style.display = 'none';
-    overlayBg.style.display = "none";
-  } else {
-    mySidebar.style.display = 'block';
-    overlayBg.style.display = "block";
-  }
-}
-
-// Close the sidebar with the close button
-function w3_close() {
-  mySidebar.style.display = "none";
-  overlayBg.style.display = "none";
-}
-</script>
+        document.addEventListener("DOMContentLoaded", function() {
+            var navLinks = document.querySelectorAll('nav ul li a');
+            navLinks.forEach(function(link) {
+                link.classList.remove('active');
+            });
+            var currentPage = window.location.pathname.split('/').pop();
+            navLinks.forEach(function(link) {
+                var linkPath = link.getAttribute('href').split('/').pop();
+                if (linkPath === currentPage) {
+                    link.classList.add('active');
+                }
+            });
+            
+        });
+    </script>
 
 </body>
 </html>
