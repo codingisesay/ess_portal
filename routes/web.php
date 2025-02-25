@@ -12,6 +12,7 @@ use App\Http\Controllers\empDetailFormController;
 use App\Http\Controllers\homePagecontroller;
 use App\Http\Controllers\headerController;
 use App\Http\Controllers\employmentDataController;
+use App\Http\Controllers\hrPolicyViewController;
 
 
 /*
@@ -70,6 +71,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('user/homepage',[homePagecontroller::class,'showHomepage'])->name('user.homepage');
     Route::get('user/header', [headerController::class, 'showHeader'])->name('header');
     Route::get('user/employment-data', [employmentDataController::class, 'showemploymentData'])->name('user.employment.data');
+    Route::get('user/hr-policy', [hrPolicyViewController::class, 'showHrPolicy'])->name('user.hr.policy');
     
     //Insert data
 
