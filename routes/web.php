@@ -12,12 +12,8 @@ use App\Http\Controllers\empDetailFormController;
 use App\Http\Controllers\homePagecontroller;
 use App\Http\Controllers\headerController;
 use App\Http\Controllers\employmentDataController;
-<<<<<<< HEAD
 use App\Http\Controllers\ororganisationMailConController;
-
-=======
 use App\Http\Controllers\hrPolicyViewController;
->>>>>>> 50c3f96a4980ad934d2d6a24ff4a5c1c514388f8
 
 
 /*
