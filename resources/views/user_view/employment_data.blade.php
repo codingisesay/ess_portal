@@ -80,7 +80,7 @@
                 <div class="left1"><p>Total Experience</p> <b>{{ ucfirst($userDetails->total_experience ?? 'N/A') }}</b></div>
             </div>
 
-            <div class="section1">
+            <div class="section">
                 <h2>Salary Bank Details</h2>
                 <div class="left1"><p>Bank Name</p> <b>{{ ucfirst($userDetails->bank_name ?? 'N/A') }}</b></div>
                 <div class="left1"><p>Branch Name</p> <b>{{ ucfirst($userDetails->sal_branch_name ?? 'N/A') }}</b></div>
@@ -98,7 +98,7 @@
                 <div class="left1"><p>Visa Expiry Date</p> <b>{{ $userDetails->visa_expiry_date ? \Carbon\Carbon::parse($userDetails->visa_expiry_date)->format('d-m-Y') : 'N/A' }}</b></div>
             </div>
 
-            <div class="section1">
+            <div class="section">
                 <h2>Welfare Benefits</h2>
                 <div class="left1"><p>UAN</p> <b>{{ ucfirst($userDetails->universal_account_number ?? 'N/A') }}</b></div>
                 <div class="left1"><p>Provident Fund</p> <b>{{ ucfirst($userDetails->provident_fund ?? 'N/A') }}</b></div>
@@ -110,7 +110,13 @@
                 @foreach($empEducation as $education)
                     <div style="display: flex;">
                         <p class="left2">
-                            <div style="width: 200px">{{ ucfirst($education->course_type ?? '') }}</div>
+                            <div style="width: 200px">
+                                @if($education->course_type == 'degree')
+                                    {{ ucfirst($education->degree ?? 'N/A') }}
+                                @elseif($education->course_type == 'certification')
+                                    {{ ucfirst($education->certification_name ?? 'N/A') }}
+                                @endif
+                            </div>
                             @if($education->course_type == 'degree')
                                 <button class="view-btn" onclick="openDegreeModal({{ $loop->index }})">View</button>
                             @elseif($education->course_type == 'certification')

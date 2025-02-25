@@ -103,7 +103,7 @@ $id = Auth::guard('superadmin')->user()->id;
         <table>
             <thead>
                 <tr>
-                    
+                    <th>Serial No</th>
                     <th>Name</th>
                     <th>Mobile</th>
                     <th>E-mail</th>
@@ -111,8 +111,9 @@ $id = Auth::guard('superadmin')->user()->id;
                 </tr>
             </thead>
             <tbody>
-                @foreach($branchs as $branch)
+                @foreach($branchs as $index => $branch)
                     <tr>
+                        <td>{{ $index + 1 }}</td>
                         <td>{{ $branch->name }}</td>
                         <td>{{ $branch->mobile }}</td>
                         <td>{{ $branch->branch_email }}</td>
