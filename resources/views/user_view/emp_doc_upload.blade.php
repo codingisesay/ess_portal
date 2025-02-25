@@ -23,17 +23,15 @@
     @endif
 </div>
 
-
-
 <link rel="stylesheet" href="https://unpkg.com/dropzone@5/dist/min/dropzone.min.css" type="text/css" />
 <head>
     <meta name="csrf-token" content="{{ csrf_token() }}">
 </head>
 <style>
-/* Increase the width and height of the Dropzone container */
+/* Reduce the width and height of the Dropzone container */
 .dropzone {
     width: 100%;  /* Adjust as needed */
-    height: 300px; /* Adjust to the desired height */
+    height: 200px; /* Adjust to the desired height */
     border: 2px dashed #ccc; /* Optional: Style the border */
     border-radius: 8px; /* Optional: Rounded corners */
     padding: 20px; /* Optional: Add some padding */
@@ -58,73 +56,71 @@
     <form action="/file-upload" method="POST" enctype="multipart/form-data" id="">
         @csrf
         
-        <!-- Previous Employment Documents -->
-        <div class="service-card">
-            <div class="service-icon">📑</div>
-            <div class="service-title">Previous Employment Documents</div>
-            <div class="service-description">Upload past experience certificates, relieving letters, and last 3 months' pay slips.</div>
-            <div class="dropzone" id="previous-employment-documents"></div>
-            {{-- <input type="file" name="file" /> --}}
-        </div>
-    
+        <div class="services-container">
+            <!-- Previous Employment Documents -->
+            <div class="service-card">
+                <div class="service-icon">📑</div>
+                <div class="service-title">Previous Employment Documents</div>
+                <div class="service-description">Upload past experience certificates, relieving letters, and last 3 months' pay slips.</div>
+                <div class="dropzone" id="previous-employment-documents"></div>
+            </div>
 
-        <!-- Academic Testimonials (Marks Cards & Certificates) -->
-        <div class="service-card">
-            <div class="service-icon">🎓</div>
-            <div class="service-title">Academic Testimonials (Marks Cards & Certificates)</div>
-            <div class="service-description">Upload documents for X Standard, XII Standard, Graduation, Post-Graduation, and other qualifications.</div>
-            <div class="dropzone" id="academic-documents"></div>
-        </div>
+            <!-- Academic Testimonials (Marks Cards & Certificates) -->
+            <div class="service-card">
+                <div class="service-icon">🎓</div>
+                <div class="service-title">Academic Testimonials (Marks Cards & Certificates)</div>
+                <div class="service-description">Upload documents for X Standard, XII Standard, Graduation, Post-Graduation, and other qualifications.</div>
+                <div class="dropzone" id="academic-documents"></div>
+            </div>
 
-        <!-- PAN Card -->
-        <div class="service-card">
-            <div class="service-icon">🪪</div>
-            <div class="service-title">PAN Card</div>
-            <div class="service-description">Upload your PAN card</div>
-            <div class="dropzone" id="pan-card"></div>
-        </div>
+            <!-- PAN Card -->
+            <div class="service-card">
+                <div class="service-icon">🪪</div>
+                <div class="service-title">PAN Card</div>
+                <div class="service-description">Upload your PAN card</div>
+                <div class="dropzone" id="pan-card"></div>
+            </div>
 
-        <!-- Address Proof -->
-        <div class="service-card">
-            <div class="service-icon">🏠</div>
-            <div class="service-title">Address Proof</div>
-            <div class="service-description">Upload your address proof (utility bill, rental agreement, etc.).</div>
-            <div class="dropzone" id="address-proof"></div>
-        </div>
+            <!-- Address Proof -->
+            <div class="service-card">
+                <div class="service-icon">🏠</div>
+                <div class="service-title">Address Proof</div>
+                <div class="service-description">Upload your address proof (utility bill, rental agreement, etc.).</div>
+                <div class="dropzone" id="address-proof"></div>
+            </div>
 
-        <!-- Passport Size Photographs (Self) -->
-        <div class="service-card">
-            <div class="service-icon">🖼️</div>
-            <div class="service-title">Passport Size Photographs (Self)</div>
-            <div class="service-description">Upload passport size photos of yourself.</div>
-            <div class="dropzone" id="passport-size-self"></div>
-        </div>
+            <!-- Passport Size Photographs (Self) -->
+            <div class="service-card">
+                <div class="service-icon">🖼️</div>
+                <div class="service-title">Passport Size Photographs (Self)</div>
+                <div class="service-description">Upload passport size photos of yourself.</div>
+                <div class="dropzone" id="passport-size-self"></div>
+            </div>
 
-        <!-- Passport Size Photographs (Dependents) -->
-        <div class="service-card">
-            <div class="service-icon">👪</div>
-            <div class="service-title">Passport Size Photographs (Dependents)</div>
-            <div class="service-description">Upload 1 passport size photograph of each dependent (Parents, Spouse, Children, Sibling, and Other).</div>
-            <div class="dropzone" id="passport-size-dependents"></div>
-        </div>
+            <!-- Passport Size Photographs (Dependents) -->
+            <div class="service-card">
+                <div class="service-icon">👪</div>
+                <div class="service-title">Passport Size Photographs (Dependents)</div>
+                <div class="service-description">Upload 1 passport size photograph of each dependent (Parents, Spouse, Children, Sibling, and Other).</div>
+                <div class="dropzone" id="passport-size-dependents"></div>
+            </div>
 
-        <!-- Passport Copy -->
-        <div class="service-card">
-            <div class="service-icon">📷</div>
-            <div class="service-title">Passport Copy (if available)</div>
-            <div class="service-description">Upload a scanned copy of your passport.</div>
-            <div class="dropzone" id="passport-copy"></div>
-        </div>
+            <!-- Passport Copy -->
+            <div class="service-card">
+                <div class="service-icon">📷</div>
+                <div class="service-title">Passport Copy (if available)</div>
+                <div class="service-description">Upload a scanned copy of your passport.</div>
+                <div class="dropzone" id="passport-copy"></div>
+            </div>
 
-        <!-- Additional ID Proof -->
-        <div class="service-card">
-            <div class="service-icon">🆔</div>
-            <div class="service-title">Additional ID Proof</div>
-            <div class="service-description">Upload Additional ID proof (Voter's ID, Driving License, or Passport).</div>
-            <div class="dropzone" id="additional-id-proof"></div>
+            <!-- Additional ID Proof -->
+            <div class="service-card">
+                <div class="service-icon">🆔</div>
+                <div class="service-title">Additional ID Proof</div>
+                <div class="service-description">Upload Additional ID proof (Voter's ID, Driving License, or Passport).</div>
+                <div class="dropzone" id="additional-id-proof"></div>
+            </div>
         </div>
-
-    </form>
 
         <div class="button-container">
             <a href="{{ route('user.preemp') }}" style="text-decoration:none;">
@@ -134,7 +130,7 @@
             </a>
             <button type="submit" class="next-btn">Submit</button>
         </div>
-    
+    </form>
 </div>
 
 <script src="https://unpkg.com/dropzone@5/dist/min/dropzone.min.js"></script>
@@ -166,7 +162,6 @@
             }
 
     });
-
 
     // Initialize Dropzone for each section
     var myDropZone = new Dropzone('#academic-documents',{
@@ -350,32 +345,6 @@
             }
 
     });
-
-    // var myDropZone = new Dropzone('#previous-employment-documents',{
-    //         url: "{{ route('documents.upload') }}",
-    //         paramName: "photo",
-    //         maxFilesize: 10,
-    //         acceptedFiles: ".pdf,.jpg,.jpeg,.png",
-    //         uploadMultiple: true,
-    //         parallelUploads: 4,
-    //         addRemoveLinks: true,
-    //         maxFiles: 3,
-    //         headers: {
-    //                 'X-CSRF-TOKEN': csrfToken // Include CSRF token in the request headers
-    //                  },
-    //         success: function(file,response){
-    //             if(response == true){
-
-    //                 alert('File Uploaded');
-
-    //             }else{
-
-    //                 alert('File Not uploaded');
-
-    //             }
-    //         }
-
-    // });
 </script>
 
 @endsection

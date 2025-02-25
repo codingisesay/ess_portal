@@ -50,8 +50,8 @@ Route::middleware(['auth.superadmin'])->group(function () {
     Route::get('superadmin/create_permission/{org_id}/{desig_id}/{b_id}',[permissionController::class,'index'])->name('create_permission_form');
     Route::post('superadmin/save_permission/{org_id}/{desig_id}/{b_id}',[permissionController::class,'insertPermission'])->name('insert_permission');
 
-    
-
+    Route::get('superadmin/create_hr_policy', [hrPolicyViewController::class, 'createHrPolicy'])->name('create_hr_policy');
+    Route::post('superadmin/save_hr_policy', [hrPolicyViewController::class, 'saveHrPolicy'])->name('save_hr_policy');
     
 });
 

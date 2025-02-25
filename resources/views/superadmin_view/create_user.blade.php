@@ -78,7 +78,7 @@ $id = Auth::guard('superadmin')->user()->id;
                     <th>ID</th>
                     <th>Name</th>
                     <th>Email</th>
-                    <th>Edit</th>
+                    <th>Action</th>
                 </tr>
             </thead>
             <tbody>
