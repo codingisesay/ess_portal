@@ -144,6 +144,105 @@ tbody tr:nth-child(even) {
     color: #702851;
 }
 
+/* Popup Styling */
+.popup-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    visibility: hidden;
+    opacity: 0;
+    transition: visibility 0s, opacity 0.3s;
+}
+
+.popup-overlay.active {
+    visibility: visible;
+    opacity: 1;
+}
+
+.popup-content {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    width: 90%;
+    max-width: 600px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    position: relative;
+}
+
+.popup-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.popup-header h3 {
+    margin: 0;
+    color: #333;
+}
+
+.popup-close {
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    color: #333;
+}
+
+.popup-body {
+    max-height: 400px;
+    overflow-y: auto;
+    padding-right: 10px;
+}
+
+.popup-body h3 {
+    color: #8A3366;
+    margin-bottom: 10px;
+}
+
+.popup-body .checkbox-group {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.popup-body .checkbox-group input[type="checkbox"] {
+    margin-right: 10px;
+}
+
+.popup-body .checkbox-group label {
+    margin: 0;
+    font-size: 16px;
+    color: #333;
+}
+
+.popup-footer {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 20px;
+}
+
+.popup-footer button {
+    background-color: #8A3366;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.popup-footer button:hover {
+    background-color: #702851;
+}
+
 /* 🔹 RESPONSIVE DESIGN */
 @media screen and (max-width: 1024px) {
     .form-group {
@@ -182,5 +281,14 @@ tbody tr:nth-child(even) {
     .table-container {
         overflow-x: auto;
         /* Table scrolls horizontally */
+    }
+
+    .popup-content {
+        width: 95%;
+        padding: 15px;
+    }
+
+    .popup-body {
+        max-height: 300px;
     }
 }
