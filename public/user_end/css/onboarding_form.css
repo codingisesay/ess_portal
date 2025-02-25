@@ -174,8 +174,8 @@
 
 /* Input Styles */
 .form-control {
+    /* width: 100%; */
     width: 90%;
-    /* Reduced width */
     padding: 10px 8px;
     /* Reduced padding */
     border: 1px solid #020101;
@@ -296,7 +296,7 @@ form {
     /* Gradient background */
     border: none;
     cursor: pointer;
-    transition: transform 0.3s ease, background-color 0.3s ease, box-shadow 0.3s ease;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
     box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.2);
     /* Subtle shadow */
 }
@@ -308,6 +308,8 @@ form {
     /* Lighter gradient on hover */
     box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
     /* Enhanced shadow */
+    transform: translateY(-3px);
+    /* Slight lift effect */
     transform: translateY(-3px);
     /* Slight lift effect */
 }
@@ -664,45 +666,31 @@ body {
 
 /* Updated CSS for service container and cards */
 .services-container {
-    display: flex;
-    flex-direction: column;
-    align-items: stretch;
-    /* Ensure the cards take the full width */
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
     gap: 20px;
     width: 100%;
-    /* Ensure the container takes full width */
     margin: 0;
     padding: 20px;
 }
 
 .service-card {
-    width: 100%;
-    /* Ensure the card takes full width of the container */
     background-color: #ffffff;
     border-radius: 8px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     padding: 20px;
     text-align: left;
-    /* Align text to the left */
-    transition: transform 0.3s;
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    /* Align items to the left */
     justify-content: space-between;
-}
-
-.service-card:hover {
-    transform: scale(1.05);
 }
 
 .service-icon {
     font-size: 40px;
-    /* Adjust size as needed */
     color: #007bff;
     margin-bottom: 10px;
     align-self: flex-start;
-    /* Align icon to the left */
 }
 
 .service-title {
@@ -710,19 +698,18 @@ body {
     color: #333;
     margin: 10px 0;
     text-align: left;
-    /* Align text to the left */
 }
 
 .service-description {
     color: #777;
     font-size: 14px;
     text-align: left;
-    /* Align text to the left */
 }
 
 /* Responsive adjustments */
 @media (max-width: 768px) {
     .services-container {
+        grid-template-columns: 1fr;
         padding: 10px;
     }
 
