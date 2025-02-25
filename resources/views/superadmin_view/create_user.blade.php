@@ -74,6 +74,7 @@ $id = Auth::guard('superadmin')->user()->id;
         <table>
             <thead>
                 <tr>
+                    <th>Serial No</th>
                     <th>ID</th>
                     <th>Name</th>
                     <th>Email</th>
@@ -81,8 +82,9 @@ $id = Auth::guard('superadmin')->user()->id;
                 </tr>
             </thead>
             <tbody>
-                @foreach($users as $user)
+                @foreach($users as $index => $user)
                     <tr>
+                        <td>{{ $index + 1 }}</td>
                         <td>{{ $user->id }}</td>
                         <td>{{ $user->name }}</td>
                         <td>{{ $user->email }}</td>
@@ -93,8 +95,6 @@ $id = Auth::guard('superadmin')->user()->id;
         </table>
     </div>
 </div>
-
-
 
 <script>
     function generateSecurePassword(length = 12) {

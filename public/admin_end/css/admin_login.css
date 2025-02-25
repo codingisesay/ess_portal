@@ -1,10 +1,11 @@
-@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
 
+/* login.css */
 * {
     box-sizing: border-box;
     margin: 0;
     padding: 0;
-    font-family: 'Poppins', sans-serif;
+    font-family: 'poppins';
 }
 
 body {
@@ -123,49 +124,12 @@ body {
     color: #8c187d;
 }
 
-.btn-outline-secondary {
-    width: 100%;
-    background-color: white;
-    color: #8c187d;
-    padding: 0.75rem 1.5rem;
-    border: 1px solid #8c187d;
-    border-radius: 10px;
-    font-size: 1rem;
-    cursor: pointer;
-    text-decoration: none;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.btn-outline-secondary:hover {
-    background-color: #8c187d;
-    color: white;
-}
-
-.text-center {
-    text-align: center;
-}
-
-.text-muted {
-    color: #6c757d;
-}
-
-.text-decoration-none {
-    color: #8c187d;
-}
-
-.text-decoration-none:hover {
-    text-decoration: underline;
-}
-
 @media (max-width: 768px) {
     .right-container {
         padding: 1rem;
     }
 
-    .signup-button,
-    .btn-outline-secondary {
+    .signup-button {
         width: 100%;
     }
 }

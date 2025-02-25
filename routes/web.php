@@ -12,8 +12,12 @@ use App\Http\Controllers\empDetailFormController;
 use App\Http\Controllers\homePagecontroller;
 use App\Http\Controllers\headerController;
 use App\Http\Controllers\employmentDataController;
+<<<<<<< HEAD
 use App\Http\Controllers\ororganisationMailConController;
 
+=======
+use App\Http\Controllers\hrPolicyViewController;
+>>>>>>> 50c3f96a4980ad934d2d6a24ff4a5c1c514388f8
 
 
 /*
@@ -75,6 +79,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('user/homepage',[homePagecontroller::class,'showHomepage'])->name('user.homepage');
     Route::get('user/header', [headerController::class, 'showHeader'])->name('header');
     Route::get('user/employment-data', [employmentDataController::class, 'showemploymentData'])->name('user.employment.data');
+    Route::get('user/hr-policy', [hrPolicyViewController::class, 'showHrPolicy'])->name('user.hr.policy');
     
     //Insert data
 
