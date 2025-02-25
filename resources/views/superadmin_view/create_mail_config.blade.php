@@ -2,7 +2,7 @@
 @section('content')  <!-- Defining the content section -->
 
 <?php 
-// error_reporting(0);
+error_reporting(0);
 $id = Auth::guard('superadmin')->user()->id;
 
 // echo $mailDatas[0]->MAIL_MAILER;
@@ -113,7 +113,7 @@ $id = Auth::guard('superadmin')->user()->id;
                         <td>{{ $mailDatas[0]->MAIL_PASSWORD }}</td>
                         <td>{{ $mailDatas[0]->MAIL_ENCRYPTION }}</td>
                         <td>{{ $mailDatas[0]->MAIL_FROM_ADDRESS }}</td>
-                        <td>{{ $mailDatas[0]->MAIL_FROM_NAME }}></td>
+                        <td>{{ $mailDatas[0]->MAIL_FROM_NAME }}</td>
                         <td><button class="edit-icon">Edit</button></td>
                     </tr>
                 
