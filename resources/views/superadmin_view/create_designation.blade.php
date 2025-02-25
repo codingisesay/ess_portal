@@ -79,7 +79,7 @@ $id = Auth::guard('superadmin')->user()->id;
                     <th>Department Name</th>
                     <th>Branch Name</th>
                     <th>Designation Name</th>
-                    <th>Edit Permissions</th>
+                    <th>Action</th>
                 </tr>
             </thead>
             <tbody>

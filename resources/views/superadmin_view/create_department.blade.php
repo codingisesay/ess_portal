@@ -60,7 +60,7 @@ $id = Auth::guard('superadmin')->user()->id;
                     <th>Serial No</th>
                     <th>ID</th>
                     <th>Name</th>
-                    <th>Edit</th>
+                    <th>Action</th>
                 </tr>
             </thead>
             <tbody>

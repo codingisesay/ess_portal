@@ -146,7 +146,11 @@ nav ul li a:hover {
       <li><a href="{{ route('create_branch_form') }}"><img src="{{ asset('admin_end/images/createbranch.png') }}" width="30" height="30" alt=""> Create Branch</a></li>
       <li><a href="{{ route('create_department_form') }}"><img src="{{ asset('admin_end/images/corporation.png') }}" width="30" height="30" alt=""> Create Department</a></li>
       <li><a href="{{ route('create_designation_form') }}"><img src="{{ asset('admin_end/images/createdesignation.png') }}" width="30" height="30" alt="">  Create Designation</a></li>
+<<<<<<< HEAD
       <li><a href="{{ route('load_mail_config_form') }}"><img src="{{ asset('admin_end/images/createdesignation.png') }}" width="30" height="30" alt="">  Mail Settings</a></li>
+=======
+      <li><a href="{{ route('create_hr_policy') }}"><img src="{{ asset('admin_end/images/createdesignation.png') }}" width="30" height="30" alt="">  Create HR Policy</a></li>
+>>>>>>> 027476705d636fa559405786196c0b83e33952da
     </ul>
   </div>
 </nav>
