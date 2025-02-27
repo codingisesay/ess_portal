@@ -14,7 +14,7 @@ class ororganisationMailConController extends Controller
         $id = Auth::guard('superadmin')->user()->id;
         // $mailDatas = organisation_config_mail::where('organisation_id',$id)->get();
 
-        $mailDatas = DB::table('organisation_config_mail')
+        $mailDatas = DB::table('organisation_config_mails')
                ->where('organisation_id', $id)
                ->get();
         return view('superadmin_view.create_mail_config',compact('mailDatas'));
@@ -34,7 +34,7 @@ class ororganisationMailConController extends Controller
         ]);
 
 
-        $organisationConfigMail =  DB::table('organisation_config_mail')->insert([
+        $organisationConfigMail =  DB::table('organisation_config_mails')->insert([
             'MAIL_MAILER' => $data['MAIL_MAILER'],
             'MAIL_HOST' => $data['MAIL_HOST'],
             'MAIL_PORT' => $data['MAIL_PORT'],

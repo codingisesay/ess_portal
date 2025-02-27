@@ -53,7 +53,7 @@
 
                 <!-- Forgot Password -->
                 <div class="text-center mt-3">
-                    <a href="forgot_pass.php" class="text-decoration-none">Forgot Password?</a>
+                    <a href="{{ route('password.request') }}" class="text-decoration-none">Forgot Password?</a>
                 </div>
 
                 <!-- OR Separator -->
