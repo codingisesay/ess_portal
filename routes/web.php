@@ -57,6 +57,11 @@ Route::middleware(['auth.superadmin'])->group(function () {
     Route::get('superadmin/create_hr_policy', [hrPolicyViewController::class, 'createHrPolicy'])->name('create_hr_policy');
     Route::post('superadmin/save_hr_policy', [hrPolicyViewController::class, 'saveHrPolicy'])->name('save_hr_policy');
     
+    Route::get('superadmin/create_policy_category', [hrPolicyViewController::class, 'createPolicyCategory'])->name('create_policy_category');
+    Route::post('superadmin/save_policy_category', [hrPolicyViewController::class, 'savePolicyCategory'])->name('save_policy_category');
+    // Route::get('superadmin/list_policy_categories', [hrPolicyViewController::class, 'listPolicyCategories'])->name('list_policy_categories');
+    Route::post('superadmin/update_policy_category/{id}', [hrPolicyViewController::class, 'updatePolicyCategory'])->name('update_policy_category');
+    
 });
 
 //user end route
@@ -76,6 +81,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('user/header', [headerController::class, 'showHeader'])->name('header');
     Route::get('user/employment-data', [employmentDataController::class, 'showemploymentData'])->name('user.employment.data');
     Route::get('user/hr-policy', [hrPolicyViewController::class, 'showHrPolicy'])->name('user.hr.policy');
+    Route::get('user/hr-policy/category/{id}', [hrPolicyViewController::class, 'getPoliciesByCategory'])->name('user.hr.policy.category');
     
     //Insert data
 

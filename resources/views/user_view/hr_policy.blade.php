@@ -18,7 +18,7 @@
         <div class="search-bar">
             <input type="text" placeholder="Search here..." id="searchInput">
             <div class="search-icon-circle">
-                <img src="../resource/image/hrpolicy/hr_img/search (2) 2.png" alt="Search Icon">
+                <img src="{{ asset('resource/image/hrpolicy/hr_img/search (2) 2.png') }}" alt="Search Icon">
             </div>
         </div>
     </div>
@@ -28,188 +28,42 @@
         <div class="main-container">
             <!-- Sidebar -->
             <div class="sidebar">
-                <div class="category-item" data-category="Purpose & Scope">
-                    <div class="category-icon">
-                        <img src="dart-board 1.png">
+                @foreach($categories as $category)
+                    <div class="category-item" data-category="{{ $category->id }}">
+                        <div class="category-icon">
+                            <!-- Fetch icon from storage -->
+                            <img src="{{ Storage::url($category->iconLink) }}" alt="Category Icon">
+                        </div>
+                        <div class="category-text">
+                            <span>{{ $category->name }}</span>
+                        </div>
                     </div>
-                    <div class="category-text">
-                        <span>Purpose & Scope</span>
-                    </div>
-                </div>
-                <div class="category-item" data-category="Employment Practices">
-                    <div class="category-icon">
-                        <img src="employment 1.png">
-                    </div>
-                    <div class="category-text">
-                        <span>Employment Practices</span>
-                    </div>
-                </div>
-                <div class="category-item" data-category="Compensation Benefits">
-                    <div class="category-icon">
-                        <img src="employee-benefit 1.png">
-                    </div>
-                    <div class="category-text">
-                        <span>Compensation Benefits</span>
-                    </div>
-                </div>
-                <div class="category-item" data-category="Work Hours & Attendance">
-                    <div class="category-icon">
-                        <img src="business (1) 1.png">
-                    </div>
-                    <div class="category-text">
-                        <span>Work Hours & Attendance</span>
-                    </div>
-                </div>
-                <div class="category-item" data-category="Code Of Conduct">
-                    <div class="category-icon">
-                        <img src="code-of-conduct 1.png">
-                    </div>
-                    <div class="category-text">
-                        <span>Code Of Conduct</span>
-                    </div>
-                </div>
-                <!-- Add more categories as needed -->
+                @endforeach
             </div>
 
             <!-- Content Area -->
-            <div class="content-area" data-category="Purpose & Scope">
-                <a href="path/to/employment-document.pdf" class="download-btn" download>
-                    <img src="../resource/image/hrpolicy/hr_img/download 1 (2).png" alt="Download Icon"> Download
-                </a>
+            @foreach($categories as $category)
+                <div class="content-area" data-category="{{ $category->id }}">
+                    @foreach($policies->where('policy_categorie_id', $category->id) as $policy)
+                        <a href="{{ Storage::url($policy->docLink) }}" class="download-btn" download>
+                            <img src="{{ asset('resource/image/hrpolicy/hr_img/download 1 (2).png') }}" alt="Download Icon"> Download
+                        </a>
 
-                <div class="policy-content">
-                    <div class="content-text">
-                        <div class="content-item">
-                            <h3>Objective</h3>
-                            <p>This policy outlines the standards and procedures for managing employee relations,
-                                benefits and workplace conduct at SIL Technologies.</p>
+                        <div class="policy-content">
+                            <div class="content-text">
+                                <div class="content-item">
+                                    <h3>{{ $policy->policy_title }}</h3>
+                                    <p>{{ $policy->policy_content }}</p>
+                                </div>
+                            </div>
+                            <div class="content-image">
+                                <!-- Fetch content image from storage -->
+                                <img src="{{ Storage::url($policy->imgLink) }}">
+                            </div>
                         </div>
-                        <div class="content-item">
-                            <h3>Scope</h3>
-                            <p>This policy applies to all employees including full-time, part-time, temporary and
-                                contractual staffs</p>
-                        </div>
-                    </div>
-                    <div class="content-image">
-                        <img src="purpose.png">
-                    </div>
+                    @endforeach
                 </div>
-            </div>
-
-            <div class="content-area" data-category="Employment Practices">
-                <a href="path/to/compensation-document.pdf" class="download-btn" download>
-                    <img src="../resource/image/hrpolicy/hr_img/download 1 (2).png" alt="Download Icon"> Download
-                </a>
-
-                <div class="policy-content">
-                    <div class="content-text">
-                        <div class="content-item">
-                            <h3>Equal opportunity to employment</h3>
-                            <p>SIL Technologies is an equal opportunity employer. We do not discriminate based on race,
-                                color, religion, sex, national origin, age, disability, or any other protected category.
-                            </p>
-                        </div>
-                        <div class="content-item">
-                            <h3>Recruitment and Hiring</h3>
-                            <p>All recruitment and hiring practices will be conducted fairly and in accordance with
-                                applicable laws. Job postings, interviewing, and selection will be based on
-                                qualifications and experience.
-                            </p>
-                        </div>
-                    </div>
-                    <div class="content-image">
-                        <img src="4151017 1.png" alt="Compensation Benefits Image">
-                    </div>
-                </div>
-            </div>
-            <div class="content-area" data-category="Compensation Benefits">
-                <a href="path/to/compensation-document.pdf" class="download-btn" download>
-                    <img src="../resource/image/hrpolicy/hr_img/download 1 (2).png" alt="Download Icon"> Download
-                </a>
-
-                <div class="policy-content">
-                    <div class="content-text">
-                        <div class="content-item">
-                            <h3>Salary Structure</h3>
-                            <p>Salaries will be determined based on job responsibilities, market rates, and individual
-                                performance. </p>
-                        </div>
-                        <div class="content-item">
-                            <h3>Benefits</h3>
-                            <p>Employees are eligible for [list of benefits, e.g., health insurance, retirement plans,
-                                paid leave]. Detailed information about benefits is provided during the onboarding
-                                process.
-
-                            </p>
-                        </div>
-                    </div>
-                    <div class="content-image">
-                        <img src="leave.jpg" alt="Compensation Benefits Image">
-                    </div>
-                </div>
-            </div>
-            <div class="content-area" data-category="Work Hours & Attendance">
-                <a href="path/to/compensation-document.pdf" class="download-btn" download>
-                    <img src="../resource/image/hrpolicy/hr_img/download 1 (2).png" alt="Download Icon"> Download
-                </a>
-
-                <div class="policy-content">
-                    <div class="content-text">
-                        <div class="content-item">
-                            <h3>Work Schedule</h3>
-                            <p>Standard working hours are from [start time] to [end time], [days of the week]. Any
-                                changes to this schedule will be communicated in advance. </p>
-                        </div>
-                        <div class="content-item">
-                            <h3>Attendance</h3>
-                            <p>Employees are expected to be punctual and present during their scheduled work hours.
-                                Absences must be reported to [supervisor/HR] as soon as possible.
-                            </p>
-                        </div>
-                        <div class="content-item">
-                            <h3>Leave Policies</h3>
-                            <p>Employees are entitled to various types of leave, including sick leave, vacation leave,
-                                and personal leave. Requests for leave must be submitted in advance and approved by
-                                [supervisor/HR].
-                            </p>
-                        </div>
-                    </div>
-                    <div class="content-image">
-                        <img src="work.jpg" alt="Compensation Benefits Image">
-                    </div>
-                </div>
-            </div>
-            <div class="content-area" data-category="Code Of Conduct">
-                <a href="path/to/compensation-document.pdf" class="download-btn" download>
-                    <img src="../resource/image/hrpolicy/hr_img/download 1 (2).png" alt="Download Icon"> Download
-                </a>
-
-                <div class="policy-content">
-                    <div class="content-text">
-                        <div class="content-item">
-                            <h3>Professional Behavior</h3>
-                            <p>Employees are expected to conduct themselves in a professional manner that reflects the
-                                values and standards of [SIL Technologies]. </p>
-                        </div>
-                        <div class="content-item">
-                            <h3>Harassment and Discrimination</h3>
-                            <p> [SIL Technologies] has a zero-tolerance policy for harassment or discrimination. Any
-                                incidents should be reported to HR immediately for investigation.
-                            </p>
-                        </div>
-                        <div class="content-item">
-                            <h3>Confidentiality</h3>
-                            <p> Employees must maintain the confidentiality of sensitive company information and not
-                                disclose it to unauthorized individuals.
-                            </p>
-                        </div>
-                    </div>
-                    <div class="content-image">
-                        <img src="thumb.jpg" alt="Compensation Benefits Image">
-                    </div>
-                </div>
-            </div>
-            <!-- Add more content areas as needed -->
+            @endforeach
         </div>
     </div>
 
@@ -297,8 +151,15 @@
                     categoryItems.forEach(item => item.classList.remove('active'));
                 }
             });
-        });
 
+            // Activate the first category and its content area by default
+            if (categoryItems.length > 0) {
+                const firstCategory = categoryItems[0];
+                const firstCategoryId = firstCategory.getAttribute('data-category');
+                firstCategory.classList.add('active'); // Mark the first category as active
+                showCategoryContent(firstCategoryId);
+            }
+        });
     </script>
     @endsection
 </body>
