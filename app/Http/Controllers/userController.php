@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use App\Services\EmailService;
 use Illuminate\Http\Request;
 use App\Models\User;
 use App\Mail\UserRegistrationMail;
@@ -11,6 +11,15 @@ use Illuminate\Support\Facades\Auth;
 // use App\Events\UserCreated;
 class userController extends Controller
 {
+
+
+    protected $emailService;
+
+    public function __construct(EmailService $emailService)
+    {
+        $this->emailService = $emailService;
+    }
+
     public function register(Request $request){
         $validated = $request->validate([
             'organisation_id' => 'required',
@@ -36,8 +45,15 @@ class userController extends Controller
                 
         if($user_create){
 
+            $subject = 'Registration Successful';
+            $data = [
+                'username' => $user_create->email,
+                'password' => $request->userpassword,
+            ];
+
             // Send the registration email
-           Mail::to($user_create->email)->send(new UserRegistrationMail($user_create->email, $request->userpassword));
+        //    Mail::to($user_create->email)->send(new UserRegistrationMail($user_create->email, $request->userpassword));
+           $this->emailService->sendEmailWithOrgConfig($subject, $data);
            return redirect()->route('create_user')->with('success', 'User created successfully!');
 
         }else{

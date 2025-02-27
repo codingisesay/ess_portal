@@ -13,20 +13,31 @@ class UserRegistrationMail extends Mailable
 {
     use Queueable, SerializesModels;
 
-    public $userEmail;
-    public $userPassword;
+    // public $userEmail;
+    // public $userPassword;
+
+    public $subject;
+    public $data;
+
+ 
 
     /**
      * Create a new message instance.
      *
-     * @param string $userEmail
-     * @param string $userPassword
+     * @param string $subject
+     * @param string $data
      * @return void
      */
-    public function __construct($userEmail, $userPassword)
+    // public function __construct($userEmail, $userPassword)
+    // {
+    //     $this->userEmail = $userEmail;
+    //     $this->userPassword = $userPassword;
+    // }
+
+    public function __construct($subject, $data)
     {
-        $this->userEmail = $userEmail;
-        $this->userPassword = $userPassword;
+        $this->subject = $subject;
+        $this->data = $data;
     }
 
 
@@ -41,13 +52,11 @@ class UserRegistrationMail extends Mailable
      */
     public function build()
     {
-        return $this->subject('Registration Successful')
+        return $this->subject($this->subject)
                     ->view('emails.welcome')
-                    ->with([
-                        'email' => $this->userEmail,
-                        'password' => $this->userPassword,
-                    ]);
-    }
+                    ->with($this->data);
+                
+                }
 
     // /**
     //  * Get the message envelope.
