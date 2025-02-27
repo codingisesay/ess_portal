@@ -160,6 +160,10 @@ body {
 }
 
 @media (max-width: 768px) {
+    .left-container {
+        display: none;
+    }
+
     .right-container {
         padding: 1rem;
     }
