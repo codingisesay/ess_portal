@@ -121,16 +121,19 @@
                 <div class="dropzone" id="additional-id-proof"></div>
             </div>
         </div>
-
+    </form>
         <div class="button-container">
             <a href="{{ route('user.preemp') }}" style="text-decoration:none;">
                 <button type="button" class="previous-btn">
                     <span>&#8249;</span>
                 </button>
             </a>
+            <form action="{{ route('homePage') }}" method="POST">
+                @csrf
             <button type="submit" class="next-btn">Submit</button>
+            </form>
         </div>
-    </form>
+    
 </div>
 
 <script src="https://unpkg.com/dropzone@5/dist/min/dropzone.min.js"></script>

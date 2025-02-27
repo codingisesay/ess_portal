@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\userHomePageStatus;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class UserAuthController extends Controller
 {
@@ -22,7 +24,31 @@ class UserAuthController extends Controller
         // $credentials = $request->only('email', 'password');
 
         if (Auth::guard('web')->attempt($credentials)) {
-            return redirect()->route('user.dashboard');
+
+            $loginUserInfo = Auth::user();
+            $data = userHomePageStatus::where('user_id', $loginUserInfo->id)->get(); 
+            // dd($data);
+            if($data->isNotEmpty()){
+
+                if($data[0]->homePageStatus == 1){
+
+                    return redirect()->route('user.homepage');
+    
+                }else{
+    
+                    return redirect()->route('user.dashboard');
+    
+                }
+
+            }else{
+
+                return redirect()->route('user.dashboard');
+
+
+
+            }
+            
+            
         }
 
         return back()->withErrors(['email' => 'Invalid credentials']);

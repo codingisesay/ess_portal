@@ -46,6 +46,8 @@ class userController extends Controller
         if($user_create){
 
             $subject = 'Registration Successful';
+            $org_id = $data['organisation_id'];
+            $mail_flag = "registration_mail";
             $data = [
                 'username' => $user_create->email,
                 'password' => $request->userpassword,
@@ -53,7 +55,7 @@ class userController extends Controller
 
             // Send the registration email
         //    Mail::to($user_create->email)->send(new UserRegistrationMail($user_create->email, $request->userpassword));
-           $this->emailService->sendEmailWithOrgConfig($subject, $data);
+           $this->emailService->sendEmailWithOrgConfig($org_id,$subject,$mail_flag,$data);
            return redirect()->route('create_user')->with('success', 'User created successfully!');
 
         }else{
