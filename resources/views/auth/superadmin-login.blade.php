@@ -26,7 +26,7 @@
                 <div class="form-group password-container">
                     <input type="password" id="password" name="password" placeholder=" " value="akash@1234" required>
                     <label for="password">Password</label>
-                    <span class="eye-icon" onclick="togglePasswordVisibility()">👁️</span>
+                    <img id="password-icon" src="{{ asset('user_end/images/hidden.png') }}" alt="Show Password" class="eye-icon" onclick="togglePasswordVisibility('password')">
                 </div>
                 @if($errors->any())
                     <ul>
@@ -41,15 +41,18 @@
     </div>
 
     <script>
-        function togglePasswordVisibility() {
-            var passwordField = document.getElementById('password');
-            var eyeIcon = document.querySelector('.eye-icon');
+        function togglePasswordVisibility(fieldId) {
+            const passwordField = document.getElementById(fieldId);
+            const iconImg = document.getElementById(fieldId + '-icon');
+
             if (passwordField.type === 'password') {
                 passwordField.type = 'text';
-                eyeIcon.textContent = '🙈';
+                iconImg.src = "{{ asset('user_end/images/eye.png') }}"; // Open eye icon
+                iconImg.alt = "Hide Password";
             } else {
                 passwordField.type = 'password';
-                eyeIcon.textContent = '👁️';
+                iconImg.src = "{{ asset('user_end/images/hidden.png') }}"; // Closed eye icon
+                iconImg.alt = "Show Password";
             }
         }
     </script>

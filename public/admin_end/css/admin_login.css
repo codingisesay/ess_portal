@@ -120,11 +120,17 @@ body {
     top: 50%;
     transform: translateY(-50%);
     cursor: pointer;
-    font-size: 1.2rem;
-    color: #8c187d;
+    width: 24px;
+    /* Adjust the size as needed */
+    height: 24px;
+    /* Adjust the size as needed */
 }
 
 @media (max-width: 768px) {
+    .left-container {
+        display: none;
+    }
+
     .right-container {
         padding: 1rem;
     }
