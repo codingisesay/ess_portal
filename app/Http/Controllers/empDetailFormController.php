@@ -10,6 +10,7 @@ use App\Models\emp_education;
 use App\Models\emp_bank_details;
 use App\Models\emp_details;
 use App\Models\countrie;
+use App\Models\userHomePageStatus;
 use App\Models\emp_contact_details;
 use App\Models\organisation_department;
 use App\Models\organisation_designation;
@@ -836,5 +837,40 @@ public function insertBank(Request $request){
 
     }
    }
+
+   public function homePageRedirect(){
+    $loginUserInfo = Auth::user();
+
+    $results = DB::table('emp_details')
+    ->join('employee_types', 'emp_details.employee_type', '=', 'employee_types.id')
+    ->join('organisation_designations', 'emp_details.designation', '=', 'organisation_designations.id')
+    ->join('users', 'emp_details.reporting_manager', '=', 'users.id')
+    ->join('organisation_departments', 'emp_details.department', '=', 'organisation_departments.id')
+    ->select('emp_details.*', 
+             'employee_types.*',
+             'organisation_designations.*',
+             'users.*',
+             'organisation_departments.*')
+    ->where('emp_details.user_id', '=', $loginUserInfo->id)
+    ->get();
+
+    // dd($results);
+    if(is_null($results['0']->employee_type) && is_null($results['0']->employee_no) && is_null($results['0']->employee_name)){
+
+        return redirect()->route('user.logout');
+
+    }else{
+
+        userHomePageStatus::insert([
+            'user_id' => $loginUserInfo->id,
+            'homePageStatus' => '1',
+            'created_at' => NOW(),
+            'updated_at' => NOW(),
+        ]);
+    
+        return redirect()->route('user.homepage');
+
+    }
+}
 }
 

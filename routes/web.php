@@ -14,6 +14,7 @@ use App\Http\Controllers\headerController;
 use App\Http\Controllers\employmentDataController;
 use App\Http\Controllers\ororganisationMailConController;
 use App\Http\Controllers\hrPolicyViewController;
+use App\Http\Controllers\ForgotPasswordController;
 
 
 /*
@@ -69,6 +70,14 @@ Route::get('/', [UserAuthController::class, 'showLoginForm'])->name('user.login'
 Route::post('/', [UserAuthController::class, 'login']);
 Route::post('user/logout', [UserAuthController::class, 'logout'])->name('user.logout');
 
+//forgot password routes
+
+Route::get('password/reset', [ForgotPasswordController::class, 'showLinkRequestForm'])->name('password.request');
+Route::post('password/email', [ForgotPasswordController::class, 'sendResetLinkEmail'])->name('password.email');
+Route::get('password/reset/{token}', [ForgotPasswordController::class, 'showResetForm'])->name('password.reset');
+Route::post('password/reset', [ForgotPasswordController::class, 'reset'])->name('password.update');
+
+
 Route::middleware(['auth'])->group(function () {
     Route::get('user/dashboard',[empDetailFormController::class,'index'])->name('user.dashboard');
     Route::get('user/contact',[empDetailFormController::class,'loadcontectuser'])->name('user.contact');
@@ -99,6 +108,9 @@ Route::middleware(['auth'])->group(function () {
     Route::delete('user/del_family/{id}', [empDetailFormController::class, 'DeleteFamily'])->name('family.destroy');
     Route::delete('user/pre_emply/{id}', [empDetailFormController::class, 'DeletePreViousEmpy'])->name('previous.destroy');
 
-});
+    //Redirect homepage
 
+    Route::post('user/homePage',[empDetailFormController::class,'homePageRedirect'])->name('homePage');
+
+});
 

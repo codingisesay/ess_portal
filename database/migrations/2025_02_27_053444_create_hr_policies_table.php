@@ -21,7 +21,11 @@ return new class extends Migration
             $table->string('docLink')->nullable();
             $table->string('iconName',100)->nullable();
             $table->string('iconLink')->nullable();
+<<<<<<< HEAD
             $table->string('imgName',100)->nullable();
+=======
+            $table->string('imgnName',100)->nullable();
+>>>>>>> 9fc7440e7995260cb56afec2c2bbaf04f896468b
             $table->string('imgLink')->nullable();
             $table->timestamps();
         });
