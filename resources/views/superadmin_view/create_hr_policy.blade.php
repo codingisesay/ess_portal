@@ -26,6 +26,19 @@ $id = Auth::guard('superadmin')->user()->id;
                 <label for="policy_title">Policy Title</label>
             </div>
             <div class="form-group">
+                <select id="category_id" name="category_id" class="form-control" required>
+                    <option value="" disabled selected></option>
+                    @foreach($categories as $category)
+                        <option value="{{ $category->id }}">{{ $category->name }}</option>
+                    @endforeach
+                </select>
+                <label for="category_id">Select Category</label>
+            </div>
+            <div class="form-group">
+                <input type="text" id="policy_content" name="policy_content" class="form-control" required></textarea>
+                <label for="policy_content">Policy Content</label>
+            </div>
+            <div class="form-group">
                 <input type="file" id="document" name="document" class="form-control">
                 <label for="document">Upload Document</label>
             </div>

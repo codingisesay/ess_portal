@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('hr_policies', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('policy_categorie_id'); 
+            $table->unsignedBigInteger('policy_categorie_id');
             $table->foreign('policy_categorie_id')->references('id')->on('hr_policy_categories')->onDelete('cascade');
             $table->string('policy_title',50)->nullable();
             $table->string('policy_content')->nullable();
@@ -21,7 +21,11 @@ return new class extends Migration
             $table->string('docLink')->nullable();
             $table->string('iconName',100)->nullable();
             $table->string('iconLink')->nullable();
+<<<<<<< HEAD
+            $table->string('imgName',100)->nullable();
+=======
             $table->string('imgnName',100)->nullable();
+>>>>>>> 9fc7440e7995260cb56afec2c2bbaf04f896468b
             $table->string('imgLink')->nullable();
             $table->timestamps();
         });
