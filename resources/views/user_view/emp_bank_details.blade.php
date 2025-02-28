@@ -319,6 +319,46 @@ $id = Auth::guard('web')->user()->id;
 </div>
 <script src="{{ asset('user_end/js/onboarding_form.js') }}"></script>
 
+<script>
+    // ...existing code...
+
+    document.getElementById('bankName2').addEventListener('change', function () {
+        const selectedBank = this.value.trim();
+
+        // Get all dependent fields
+        const branchName2 = document.getElementById('branchName2');
+        const accountNumber2 = document.getElementById('accountNumber2');
+        const ifscCode2 = document.getElementById('ifscCode2');
+
+        // Get asterisk spans
+        const branchNameRequired = document.querySelector('.branch-name-required');
+        const accountNumberRequired = document.querySelector('.account-number-required');
+        const ifscCodeRequired = document.querySelector('.ifsc-code-required');
+
+        if (selectedBank !== "") {
+            // Make fields required and show asterisks
+            branchName2.setAttribute('required', 'true');
+            accountNumber2.setAttribute('required', 'true');
+            ifscCode2.setAttribute('required', 'true');
+
+            branchNameRequired.style.display = 'inline';
+            accountNumberRequired.style.display = 'inline';
+            ifscCodeRequired.style.display = 'inline';
+        } else {
+            // Remove required attribute and hide asterisks
+            branchName2.removeAttribute('required');
+            accountNumber2.removeAttribute('required');
+            ifscCode2.removeAttribute('required');
+
+            branchNameRequired.style.display = 'none';
+            accountNumberRequired.style.display = 'none';
+            ifscCodeRequired.style.display = 'none';
+        }
+    });
+
+    // ...existing code...
+</script>
+
 @endsection
 
 {{-- <head>
@@ -477,7 +517,7 @@ $id = Auth::guard('web')->user()->id;
 // // Add an event listener to the marital status select dropdown
 // maritalStatusSelect.addEventListener("change", function() {
 //     // Enable Anniversary_Date input for "Married" or "Divorced" options
-//     if (maritalStatusSelect.value === "Married" || maritalStatusSelect.value === "Divorced") {
+//     if (maritalStatusSelect.value === "Married" || "Divorced") {
 //         anniversaryDateInput.disabled = false;  // Enable the date input
 //     } else {
 //         anniversaryDateInput.disabled = true;   // Disable the date input

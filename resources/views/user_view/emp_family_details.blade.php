@@ -175,6 +175,11 @@ oninput="this.value = this.value.replace(/[^0-9]/g, '')"></td>
         tableBody.appendChild(newRow);
 
         familyCounter++; // Increment the serial counter
+
+        // Add event listeners to the new row
+        newRow.querySelectorAll('input[name="name[]"]').forEach(input => {
+            input.addEventListener('keypress', restrictNumbers);
+        });
     }
 
     let educationCounter = @json(count($familyDetails)) + 1;
@@ -216,6 +221,19 @@ oninput="this.value = this.value.replace(/[^0-9]/g, '')"></td>
         const row = button.closest('tr');
         // Add your edit logic here (toggle between edit/view mode)
     }
+
+    // Function to restrict numbers in text fields
+    function restrictNumbers(event) {
+        const keyCode = event.which ? event.which : event.keyCode;
+        if (keyCode >= 48 && keyCode <= 57) {
+            event.preventDefault();
+        }
+    }
+
+    // Add event listeners to name fields
+    document.querySelectorAll('input[name="name[]"]').forEach(input => {
+        input.addEventListener('keypress', restrictNumbers);
+    });
 </script>
 {{-- <script src="{{ asset('user_end/js/onboarding_form.js') }}"></script> --}}
 <script>
