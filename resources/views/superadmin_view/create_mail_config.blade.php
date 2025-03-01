@@ -1,6 +1,6 @@
 @extends('superadmin_view/superadmin_layout')  <!-- Extending the layout file -->
 @section('content')  <!-- Defining the content section -->
-
+<link rel="stylesheet" href="{{ asset('errors/error.css') }}">
 <?php 
 error_reporting(0);
 $id = Auth::guard('superadmin')->user()->id;
@@ -8,18 +8,6 @@ $id = Auth::guard('superadmin')->user()->id;
 // echo $mailDatas[0]->MAIL_MAILER;
 ?>
 
-@if(session('success'))
-    <div class="alert alert-success">
-        {{ session('success') }}
-    </div>
-@endif
-
-@if(session('error'))
-    <div class="alert alert-danger">
-        {{ session('error') }}
-    </div>
-@endif
-<!DOCTYPE html>
 <html>
 <head>
 <title>Template</title>
@@ -32,6 +20,22 @@ $id = Auth::guard('superadmin')->user()->id;
 
 <div class="container">
     <h2>Configure Mail Settings</h2>
+
+    @if(session('success'))
+    <div class="alert custom-alert-success">
+        <strong>{{ session('success') }}</strong> 
+        <button class="close-btn" onclick="this.parentElement.style.display='none';">&times;</button>
+        
+    </div>
+@endif
+
+@if(session('error'))
+<div class="alert custom-alert-error">
+    <strong> {{ session('error') }}</strong>
+    <button class="close-btn" onclick="this.parentElement.style.display='none';">&times;</button>
+    </div>
+@endif
+
     <form action="{{ route('insert_configuration') }}" method="POST">
         @csrf
         <div class="form-container">
@@ -74,18 +78,10 @@ $id = Auth::guard('superadmin')->user()->id;
             
             
             <div class="form-group">
-                <button class="create-btn" type="submit">Configure</button>
+                <button class="create-btn" type="submit" <?php echo $status = ($mailDatas[0]->MAIL_MAILER == "") ? ('') : ('disabled');  ?>>Configure</button>
             </div>
         </div>
     </form>
-
-    @if($errors->any())
-        <ul>
-            @foreach ($errors->all() as $error)
-                <li>{{ $error }}</li>
-            @endforeach
-        </ul>
-    @endif
 
     <h3>Configuration</h3>
     <div class="table-container">
@@ -97,7 +93,7 @@ $id = Auth::guard('superadmin')->user()->id;
                     <th>HOST</th>
                     <th>PORT</th>
                     <th>USERNAME</th>
-                    <th>PASSWORD</th>
+                    {{-- <th>PASSWORD</th> --}}
                     <th>ENCRYPTION</th>
                     <th>FROM ADDRESS</th>
                     <th>FROM NAME</th>
@@ -110,7 +106,7 @@ $id = Auth::guard('superadmin')->user()->id;
                         <td>{{ $mailDatas[0]->MAIL_HOST }}</td>
                         <td>{{ $mailDatas[0]->MAIL_PORT }}</td>
                         <td>{{ $mailDatas[0]->MAIL_USERNAME }}</td>
-                        <td>{{ $mailDatas[0]->MAIL_PASSWORD }}</td>
+                        {{-- <td>{{ $mailDatas[0]->MAIL_PASSWORD }}</td> --}}
                         <td>{{ $mailDatas[0]->MAIL_ENCRYPTION }}</td>
                         <td>{{ $mailDatas[0]->MAIL_FROM_ADDRESS }}</td>
                         <td>{{ $mailDatas[0]->MAIL_FROM_NAME }}</td>

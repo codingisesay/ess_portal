@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('hr_policy_categories', function (Blueprint $table) {
             $table->id();
             $table->string('name',50);
+            $table->enum('status', ['Active', 'Inactive'])->nullable();
             $table->unsignedBigInteger('organisation_id'); 
             $table->foreign('organisation_id')->references('id')->on('organisation')->onDelete('cascade');
             $table->timestamps();

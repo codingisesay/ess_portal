@@ -1,0 +1,59 @@
+.alert {
+    position: relative;
+    padding: 25px;
+    border-radius: 5px;
+    margin: 10px 0;
+    font-family: Arial, sans-serif;
+    font-size: 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+/* Close button */
+.alert .close-btn {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    background: transparent;
+    border: none;
+    font-size: 20px;
+    cursor: pointer;
+    color: inherit; /* Keep text color consistent with alert */
+}
+
+/* Custom success alert box */
+.custom-alert-success {
+    background-color: #d4edda; /* Light green background */
+    color: #155724; /* Dark green text color */
+    border: 1px solid #c3e6cb; /* Light green border */
+}
+
+.custom-alert-success:hover {
+    background-color: #c3e6cb;
+    border-color: #b1dfbb;
+}
+
+/* Custom error (danger) alert box */
+.custom-alert-error {
+    background-color: #f8d7da; /* Light red background */
+    color: #721c24; /* Dark red text color */
+    border: 1px solid #f5c6cb; /* Light red border */
+}
+
+.custom-alert-error:hover {
+    background-color: #f1b0b7;
+    border-color: #f08080;
+}
+
+/* Custom warning alert box */
+.custom-alert-warning {
+    background-color: #fff3cd; /* Light yellow background */
+    color: #856404; /* Dark yellow/brown text color */
+    border: 1px solid #ffeeba; /* Light yellow border */
+}
+
+.custom-alert-warning:hover {
+    background-color: #ffeeba;
+    border-color: #ffd36b;
+}

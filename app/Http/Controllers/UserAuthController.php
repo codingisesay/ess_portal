@@ -51,7 +51,8 @@ class UserAuthController extends Controller
             
         }
 
-        return back()->withErrors(['email' => 'Invalid credentials']);
+        // return back()->withErrors(['error' => 'Invalid credentials']);
+        return redirect()->route('user.login')->with('error','Invalid credentials');
     }
 
     public function logout()

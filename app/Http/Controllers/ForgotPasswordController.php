@@ -37,8 +37,17 @@ class ForgotPasswordController extends Controller
 
         // dd($user);
 
-        if($user){
+        if($user->count() == 1){
 
+            $checkforduplicate = DB::table('password_reset_tokens')->where('email',$request->email)->get();
+
+            if($checkforduplicate->count() == 1){
+
+                return redirect()->route('password.request')->with('error', 'You Have Alreay Sent a link!');
+
+            }else{
+
+                
         // Create a unique reset token
         $token = Str::random(60);
 
@@ -64,9 +73,15 @@ class ForgotPasswordController extends Controller
          $this->emailService->sendEmailWithOrgConfig($org_id,$subject,$mail_flag,$data);
         //  return redirect()->route('create_user')->with('success', 'User created successfully!');
 
-        return back()->with('status', 'We have emailed your password reset link!');
+        // return back()->with('status', 'We have emailed your password reset link!');
+        return redirect()->route('password.request')->with('success', 'Password Reset Link Sent!');
+
+            }
+
 
         }else{
+
+            return redirect()->route('password.request')->with('error', 'You Have Not Registered Yet!');
 
         }
 
@@ -109,7 +124,7 @@ class ForgotPasswordController extends Controller
         // Delete the password reset token
         DB::table('password_reset_tokens')->where('email', $request->email)->delete();
 
-        return redirect()->route('user.login')->with('status', 'Your password has been reset!');
+        return redirect()->route('user.login')->with('success', 'Your password has been reset!');
     }
 }
 
