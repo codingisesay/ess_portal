@@ -15,18 +15,17 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('policy_categorie_id');
             $table->foreign('policy_categorie_id')->references('id')->on('hr_policy_categories')->onDelete('cascade');
+            $table->unsignedBigInteger('organisation_id'); 
+            $table->foreign('organisation_id')->references('id')->on('organisation')->onDelete('cascade');
             $table->string('policy_title',50)->nullable();
             $table->string('policy_content')->nullable();
             $table->string('docName',100)->nullable();
             $table->string('docLink')->nullable();
             $table->string('iconName',100)->nullable();
             $table->string('iconLink')->nullable();
-<<<<<<< HEAD
             $table->string('imgName',100)->nullable();
-=======
-            $table->string('imgnName',100)->nullable();
->>>>>>> 9fc7440e7995260cb56afec2c2bbaf04f896468b
             $table->string('imgLink')->nullable();
+            $table->enum('status', ['Active', 'Inactive'])->nullable();
             $table->timestamps();
         });
     }

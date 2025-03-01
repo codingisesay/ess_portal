@@ -308,158 +308,144 @@ class empDetailFormController extends Controller
         return view('user_view.emp_doc_upload');
     }
 
-    public function insertDetail(Request $request){
+    public function insertDetail(Request $request)
+{
+    $validated = $request->validate([
+        'employmentType' => 'required',
+        'employeeNo' => 'required',
+        'employeeName' => 'required',
+        'joiningDate' => 'required',
+        'reportingManager' => 'required',
+        'totalExperience' => 'required',
+        'designation' => 'required',
+        'department' => 'required',
+        'gender' => 'required',
+        'dateOfBirth' => 'required',
+        'bloodGroup' => 'nullable',
+        'nationality' => 'required',
+        'religion' => 'required',
+        'maritalStatus' => 'required',
+        'anniversaryDate' => 'sometimes|required_if:maritalStatus,Married|nullable|date',
+        'uan' => 'nullable',
+        'providentFund' => 'nullable',
+        'esicNo' => 'nullable',
+    ]);
 
-        $validated = $request->validate([
-            'employmentType' => 'required',
-            'employeeNo' => 'required',
-            'employeeName' => 'required',
-            'joiningDate' => 'required',
-            'reportingManager' => 'required',
-            // 'totalExperience' => 'required',
-            'designation' => 'required',
-            'department' => 'required',
-            'gender' => 'required',
-            'dateOfBirth' => 'required',
-            // 'bloodGroup' => 'required',
-            'nationality' => 'required',
-            'religion' => 'required',
-            'maritalStatus' => 'required',
-            // 'anniversaryDate' => 'required',
-            // 'uan' => 'required',
-            // 'providentFund' => 'required',
-            // 'esicNo' => 'required',
+    $data = $request->all();
+    $data['anniversaryDate'] = $data['anniversaryDate'] ?? null; // Ensure anniversaryDate is always set
 
-        ]);
-    
+    $loginUserInfo = Auth::user();
+    $loginUserInfo->id;
+// dd($data);
+    $users = User::where('organisation_id', $loginUserInfo->organisation_id)->get();
+    $empStatus = emp_details::where('user_id', $loginUserInfo->id)->get();
 
-        $data = $request->all();
-        $loginUserInfo = Auth::user();
-        $loginUserInfo->id;
+    if ($empStatus->isNotEmpty()) {
+        $updatestatus = DB::table('emp_details')
+            ->where('user_id', $loginUserInfo->id)
+            ->update([
+                'employee_type' => $data['employmentType'],
+                'employee_no' => $data['employeeNo'],
+                'employee_name' => $data['employeeName'],
+                'Joining_date' => $data['joiningDate'],
+                'reporting_manager' => $data['reportingManager'],
+                'total_experience' => $data['totalExperience'],
+                'designation' => $data['designation'],
+                'department' => $data['department'],
+                'gender' => $data['gender'],
+                'date_of_birth' => $data['dateOfBirth'],
+                'blood_group' => $data['bloodGroup'],
+                'nationality' => $data['nationality'],
+                'religion' => $data['religion'],
+                'marital_status' => $data['maritalStatus'],
+                'anniversary_date' => $data['anniversaryDate'],
+                'universal_account_number' => $data['uan'],
+                'provident_fund' => $data['providentFund'],
+                'esic_no' => $data['esicNo'],
+            ]);
 
-        $users = User::where('organisation_id', $loginUserInfo->organisation_id)->get();
-        $empStatus = emp_details::where('user_id', $loginUserInfo->id)->get();
-        // dd($empStatus);
-        if($empStatus->isNotEmpty()){
-
-            $updatestatus = DB::table('emp_details')
-                ->where('user_id', $loginUserInfo->id) 
-                ->update([
-                    'employee_type' => $data['employmentType'],
-                    'employee_no' => $data['employeeNo'],
-                    'employee_name' => $data['employeeName'],
-                    'Joining_date' => $data['joiningDate'],
-                    'reporting_manager' => $data['reportingManager'],
-                    'total_experience' => $data['totalExperience'],
-                    'designation' => $data['designation'],
-                    'department' => $data['department'],
-                    'gender' => $data['gender'],
-                    'date_of_birth' => $data['dateOfBirth'],
-                    'blood_group' => $data['bloodGroup'],
-                    'nationality' => $data['nationality'],
-                    'religion' => $data['religion'],
-                    'marital_status' => $data['maritalStatus'],
-                    'anniversary_date' => $data['anniversaryDate'],
-                    'universal_account_number' => $data['uan'],
-                    'provident_fund' => $data['providentFund'],
-                    'esic_no' => $data['esicNo'],
-                ]);
-
-                if($updatestatus){
-                    session()->flash('success', 'Data has been updated successfully!');
-                    return redirect()->route('user.contact');
-
-                }else{
-
-                    session()->flash('error', 'No Item Modified!');
-                    return redirect()->route('user.contact');
-                }
-
-        }else{
-
-            // Using Query Builder to insert data
-     $emp_detail_status =  DB::table('emp_details')->insert([
-        'employee_type' => $data['employmentType'],
-        'employee_no' => $data['employeeNo'],
-        'employee_name' => $data['employeeName'],
-        'Joining_date' => $data['joiningDate'],
-        'reporting_manager' => $data['reportingManager'],
-        'total_experience' => $data['totalExperience'],
-        'designation' => $data['designation'],
-        'department' => $data['department'],
-        'gender' => $data['gender'],
-        'date_of_birth' => $data['dateOfBirth'],
-        'blood_group' => $data['bloodGroup'],
-        'nationality' => $data['nationality'],
-        'religion' => $data['religion'],
-        'marital_status' => $data['maritalStatus'],
-        'anniversary_date' => $data['anniversaryDate'],
-        'universal_account_number' => $data['uan'],
-        'provident_fund' => $data['providentFund'],
-        'esic_no' => $data['esicNo'],
-        'user_id' => $loginUserInfo->id,
-        'created_at' => NOW(),
-        'updated_at' => NOW(),
-         ]);
-    
-         if($emp_detail_status){
+        if ($updatestatus) {
             session()->flash('success', 'Data has been updated successfully!');
             return redirect()->route('user.contact');
-    
-         }else{
-
-            session()->flash('error', 'Data has Not been updated successfully!');
-
-            return redirect()->route('user.dashboard');
-
-         }
-
+        } else {
+            session()->flash('error', 'No Item Modified!');
+            return redirect()->route('user.contact');
         }
-
-    }
-
-    public function insertcontact(Request $request){
-
-        $validated = $request->validate([
-            // 'permanent_building_no' => 'required',
-            'permanent_premises_name' => 'required',
-            'permanent_landmark' => 'required',
-            'permanent_road_street' => 'required',
-            'permanent_country' => 'required',
-            'permanent_pincode' => 'required',
-            'permanent_district' => 'required',
-            'permanent_city' => 'required',
-            'permanent_state' => 'required',
-
-            // 'correspondence_building_no' => 'required',
-            'correspondence_premises_name' => 'required',
-            'correspondence_landmark' => 'required',
-            'correspondence_road_street' => 'required',
-            'correspondence_country' => 'required',
-            'correspondence_pincode' => 'required',
-            'correspondence_district' => 'required',
-            'correspondence_city' => 'required',
-            'correspondence_state' => 'required',
-
-            'phoneNumber' => 'required',
-            // 'alternate_phone_number' => 'required',
-            'emailID' => 'required',
-            'email' => 'required',
-
-            'emergency_contact_name' => 'required',
-            'emergency_contact_number' => 'required',
-
+    } else {
+        $emp_detail_status = DB::table('emp_details')->insert([
+            'employee_type' => $data['employmentType'],
+            'employee_no' => $data['employeeNo'],
+            'employee_name' => $data['employeeName'],
+            'Joining_date' => $data['joiningDate'],
+            'reporting_manager' => $data['reportingManager'],
+            'total_experience' => $data['totalExperience'],
+            'designation' => $data['designation'],
+            'department' => $data['department'],
+            'gender' => $data['gender'],
+            'date_of_birth' => $data['dateOfBirth'],
+            'blood_group' => $data['bloodGroup'],
+            'nationality' => $data['nationality'],
+            'religion' => $data['religion'],
+            'marital_status' => $data['maritalStatus'],
+            'anniversary_date' => $data['anniversaryDate'],
+            'universal_account_number' => $data['uan'],
+            'provident_fund' => $data['providentFund'],
+            'esic_no' => $data['esicNo'],
+            'user_id' => $loginUserInfo->id,
+            'created_at' => NOW(),
+            'updated_at' => NOW(),
         ]);
 
-        $data = $request->all();
-        $loginUserInfo = Auth::user();
-        $empContactStatus = emp_contact_details::where('user_id', $loginUserInfo->id)->get();
+        if ($emp_detail_status) {
+            session()->flash('success', 'Data has been updated successfully!');
+            return redirect()->route('user.contact');
+        } else {
+            session()->flash('error', 'Data has Not been updated successfully!');
+            return redirect()->route('user.dashboard');
+        }
+    }
+}
 
-        if($empContactStatus->isNotEmpty()){
-            // Using Query Builder to update data
+    public function insertcontact(Request $request)
+{
+    $validated = $request->validate([
+        'permanent_building_no' => 'required',
+        'permanent_premises_name' => 'required',
+        'permanent_landmark' => 'required',
+        'permanent_road_street' => 'required',
+        'permanent_country' => 'required',
+        'permanent_pincode' => 'sometimes|required_if:permanent_country,India',
+        'permanent_district' => 'required',
+        'permanent_city' => 'required',
+        'permanent_state' => 'required',
 
-            $updatecontactstatus = DB::table('emp_contact_details')
-            ->where('user_id', $loginUserInfo->id) 
+        'correspondence_building_no' => 'required',
+        'correspondence_premises_name' => 'required',
+        'correspondence_landmark' => 'required',
+        'correspondence_road_street' => 'required',
+        'correspondence_country' => 'required',
+        'correspondence_pincode' => 'sometimes|required_if:correspondence_country,India',
+        'correspondence_district' => 'required',
+        'correspondence_city' => 'required',
+        'correspondence_state' => 'required',
+
+        'phoneNumber' => 'required',
+        // 'alternate_phone_number' => 'required',
+        'emailID' => 'required',
+        'email' => 'required',
+
+        'emergency_contact_name' => 'required',
+        'emergency_contact_number' => 'required',
+    ]);
+
+    $data = $request->all();
+    $loginUserInfo = Auth::user();
+    $empContactStatus = emp_contact_details::where('user_id', $loginUserInfo->id)->get();
+
+    if ($empContactStatus->isNotEmpty()) {
+        // Using Query Builder to update data
+        $updatecontactstatus = DB::table('emp_contact_details')
+            ->where('user_id', $loginUserInfo->id)
             ->update([
                 'per_building_no' => $data['permanent_building_no'],
                 'per_name_of_premises' => $data['permanent_premises_name'],
@@ -470,7 +456,7 @@ class empDetailFormController extends Controller
                 'per_district' => $data['permanent_district'],
                 'per_city' => $data['permanent_city'],
                 'per_state' => $data['permanent_state'],
-        
+
                 'cor_building_no' => $data['correspondence_building_no'],
                 'cor_name_of_premises' => $data['correspondence_premises_name'],
                 'cor_nearby_landmark' => $data['correspondence_landmark'],
@@ -480,82 +466,67 @@ class empDetailFormController extends Controller
                 'cor_district' => $data['correspondence_district'],
                 'cor_city' => $data['correspondence_city'],
                 'cor_state' => $data['correspondence_state'],
-        
+
                 'offical_phone_number' => $data['phoneNumber'],
                 'alternate_phone_number' => $data['alternate_phone_number'],
                 'email_address' => $data['emailID'],
                 'offical_email_address' => $data['email'],
-        
+
                 'emergency_contact_person' => $data['emergency_contact_name'],
                 'emergency_contact_number' => $data['emergency_contact_number'],
-              
             ]);
 
-            
-                 if($updatecontactstatus){
-        
-                    session()->flash('success', 'Data has been updated successfully!');
-                    return redirect()->route('user.edu');
-            
-                 }else{
-        
-                    session()->flash('error', 'Data has Not been updated successfully!');
-                    return redirect()->route('user.edu');
-        
-                 }
-
-        }else{
-
-         // Using Query Builder to insert data
-     $emp_contact_status =  DB::table('emp_contact_details')->insert([
-        'per_building_no' => $data['permanent_building_no'],
-        'per_name_of_premises' => $data['permanent_premises_name'],
-        'per_nearby_landmark' => $data['permanent_landmark'],
-        'per_road_street' => $data['permanent_road_street'],
-        'per_country' => $data['permanent_country'],
-        'per_pincode' => $data['permanent_pincode'],
-        'per_district' => $data['permanent_district'],
-        'per_city' => $data['permanent_city'],
-        'per_state' => $data['permanent_state'],
-
-        'cor_building_no' => $data['correspondence_building_no'],
-        'cor_name_of_premises' => $data['correspondence_premises_name'],
-        'cor_nearby_landmark' => $data['correspondence_landmark'],
-        'cor_road_street' => $data['correspondence_road_street'],
-        'cor_country' => $data['correspondence_country'],
-        'cor_pincode' => $data['correspondence_pincode'],
-        'cor_district' => $data['correspondence_district'],
-        'cor_city' => $data['correspondence_city'],
-        'cor_state' => $data['correspondence_state'],
-
-        'offical_phone_number' => $data['phoneNumber'],
-        'alternate_phone_number' => $data['alternate_phone_number'],
-        'email_address' => $data['emailID'],
-        'offical_email_address' => $data['email'],
-
-        'emergency_contact_person' => $data['emergency_contact_name'],
-        'emergency_contact_number' => $data['emergency_contact_number'],
-        'user_id' => $loginUserInfo->id,
-        'created_at' => NOW(),
-        'updated_at' => NOW(),
-         ]);
-    
-         if($emp_contact_status){
-
+        if ($updatecontactstatus) {
             session()->flash('success', 'Data has been updated successfully!');
             return redirect()->route('user.edu');
-    
-         }else{
-
+        } else {
             session()->flash('error', 'Data has Not been updated successfully!');
             return redirect()->route('user.edu');
-
-         }
-
         }
+    } else {
+        // Using Query Builder to insert data
+        $emp_contact_status = DB::table('emp_contact_details')->insert([
+            'per_building_no' => $data['permanent_building_no'],
+            'per_name_of_premises' => $data['permanent_premises_name'],
+            'per_nearby_landmark' => $data['permanent_landmark'],
+            'per_road_street' => $data['permanent_road_street'],
+            'per_country' => $data['permanent_country'],
+            'per_pincode' => $data['permanent_pincode'],
+            'per_district' => $data['permanent_district'],
+            'per_city' => $data['permanent_city'],
+            'per_state' => $data['permanent_state'],
 
+            'cor_building_no' => $data['correspondence_building_no'],
+            'cor_name_of_premises' => $data['correspondence_premises_name'],
+            'cor_nearby_landmark' => $data['correspondence_landmark'],
+            'cor_road_street' => $data['correspondence_road_street'],
+            'cor_country' => $data['correspondence_country'],
+            'cor_pincode' => $data['correspondence_pincode'],
+            'cor_district' => $data['correspondence_district'],
+            'cor_city' => $data['correspondence_city'],
+            'cor_state' => $data['correspondence_state'],
 
+            'offical_phone_number' => $data['phoneNumber'],
+            'alternate_phone_number' => $data['alternate_phone_number'],
+            'email_address' => $data['emailID'],
+            'offical_email_address' => $data['email'],
+
+            'emergency_contact_person' => $data['emergency_contact_name'],
+            'emergency_contact_number' => $data['emergency_contact_number'],
+            'user_id' => $loginUserInfo->id,
+            'created_at' => NOW(),
+            'updated_at' => NOW(),
+        ]);
+
+        if ($emp_contact_status) {
+            session()->flash('success', 'Data has been updated successfully!');
+            return redirect()->route('user.edu');
+        } else {
+            session()->flash('error', 'Data has Not been updated successfully!');
+            return redirect()->route('user.edu');
+        }
     }
+}
 
     public function insertEducation(Request $request){
 // Store Education Data

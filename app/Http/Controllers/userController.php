@@ -33,36 +33,50 @@ class userController extends Controller
 
         $data = $request->all();
 
-        $user_create = User::create([
+         $checkExist = User::where('email', $data['usermailid'])->get();
 
-                      'organisation_id' => $data['organisation_id'],
-                      'employeeID' => $data['empid'],
-                      'name' => $data['username'],
-                      'email' => $data['usermailid'],
-                      'password' => bcrypt($data['userpassword'])
+        
 
-                      ]);
-                
-        if($user_create){
+        if($checkExist->count() == 0){
 
-            $subject = 'Registration Successful';
-            $org_id = $data['organisation_id'];
-            $mail_flag = "registration_mail";
-            $data = [
-                'username' => $user_create->email,
-                'password' => $request->userpassword,
-            ];
+            $user_create = User::create([
 
-            // Send the registration email
-        //    Mail::to($user_create->email)->send(new UserRegistrationMail($user_create->email, $request->userpassword));
-           $this->emailService->sendEmailWithOrgConfig($org_id,$subject,$mail_flag,$data);
-           return redirect()->route('create_user')->with('success', 'User created successfully!');
+                'organisation_id' => $data['organisation_id'],
+                'employeeID' => $data['empid'],
+                'name' => $data['username'],
+                'email' => $data['usermailid'],
+                'password' => bcrypt($data['userpassword'])
+
+                ]);
+          
+          if($user_create){
+
+      $subject = 'Registration Successful';
+      $org_id = $data['organisation_id'];
+      $mail_flag = "registration_mail";
+      $data = [
+          'username' => $user_create->email,
+          'password' => $request->userpassword,
+      ];
+
+      // Send the registration email
+  //    Mail::to($user_create->email)->send(new UserRegistrationMail($user_create->email, $request->userpassword));
+     $this->emailService->sendEmailWithOrgConfig($org_id,$subject,$mail_flag,$data);
+     return redirect()->route('create_user')->with('success', 'User created successfully!');
+
+  }else{
+
+    return redirect()->route('create_user')->with('error', 'There was an issue creating the user. Please try again.');
+
+  }
 
         }else{
 
             return redirect()->route('create_user')->with('error', 'There was an issue creating the user. Please try again.');
 
         }
+
+  
     }
 
     public function index()

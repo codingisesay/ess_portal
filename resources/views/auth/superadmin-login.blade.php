@@ -5,15 +5,45 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900&display=swap">
+   
     <!-- Custom CSS -->
     <link rel="stylesheet" href="{{ asset('admin_end/css/admin_login.css') }}">
+    <link rel="stylesheet" href="{{ asset('errors/error.css') }}">
 </head>
 <body>
+
+
+  
     <div class="container">
+       
         <div class="left-container">
             <img src="{{ asset('user_end/images/Vector 58.jpg') }}" class="img-fluid vh-100 w-100 object-fit-cover" alt="Login Image">
         </div>
         <div class="right-container">
+            @if($errors->has('email'))
+            <div class="alert custom-alert-error">
+                <strong>Error : {{ $errors->first('email') }}</strong>
+                <button class="close-btn" onclick="this.parentElement.style.display='none';">&times;</button>
+              
+             </div>
+            @endif
+
+            {{-- <div class="alert custom-alert-success">
+                <strong>Success! This alert box could indicate a successful or positive action.</strong> 
+                <button class="close-btn" onclick="this.parentElement.style.display='none';">&times;</button>
+            </div>
+            
+            <div class="alert custom-alert-error">
+                <strong>Error! Something went wrong. Please try again later.</strong> 
+                <button class="close-btn" onclick="this.parentElement.style.display='none';">&times;</button>
+            </div>
+            
+            <div class="alert custom-alert-warning">
+                <strong>Warning! Be cautious when making changes. Please double-check your input.</strong> 
+                <button class="close-btn" onclick="this.parentElement.style.display='none';">&times;</button>
+            </div> --}}
+            
+            
             <div class="logo">
             <img src="{{ asset('user_end/images/STPL Logo with TagLine HD Transparent.png') }}" alt="SIL Logo" class="img-fluid" width="180">
             </div>
@@ -28,13 +58,7 @@
                     <label for="password">Password</label>
                     <img id="password-icon" src="{{ asset('user_end/images/hidden.png') }}" alt="Show Password" class="eye-icon" onclick="togglePasswordVisibility('password')">
                 </div>
-                @if($errors->any())
-                    <ul>
-                        @foreach ($errors->all() as $error)
-                            <li>{{ $error }}</li>
-                        @endforeach
-                    </ul>
-                @endif
+                
                 <button type="submit" class="signup-button">Login</button>
             </form>
         </div>

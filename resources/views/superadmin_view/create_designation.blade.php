@@ -1,23 +1,11 @@
 @extends('superadmin_view/superadmin_layout')  <!-- Extending the layout file -->
 @section('content')  <!-- Defining the content section -->
-
+<link rel="stylesheet" href="{{ asset('errors/error.css') }}">
 <?php 
 $id = Auth::guard('superadmin')->user()->id;
 ?>
 
-@if(session('success'))
-    <div class="alert alert-success">
-        {{ session('success') }}
-    </div>
-@endif
 
-@if(session('error'))
-    <div class="alert alert-danger">
-        {{ session('error') }}
-    </div>
-@endif
-
-<!DOCTYPE html>
 <html>
 <head>
 <title>Template</title>
@@ -30,6 +18,22 @@ $id = Auth::guard('superadmin')->user()->id;
 
 <div class="container">
     <h2>Create Designation For Your Organisation</h2>
+
+    @if(session('success'))
+    <div class="alert custom-alert-success">
+        <strong>{{ session('success') }}</strong> 
+        <button class="close-btn" onclick="this.parentElement.style.display='none';">&times;</button>
+        
+    </div>
+@endif
+
+@if(session('error'))
+<div class="alert custom-alert-error">
+    <strong> {{ session('error') }}</strong>
+    <button class="close-btn" onclick="this.parentElement.style.display='none';">&times;</button>
+    </div>
+@endif
+
     <form method="POST" action="{{ route('insert_designation') }}">
         @csrf
         <div class="form-container">
@@ -56,19 +60,11 @@ $id = Auth::guard('superadmin')->user()->id;
                 <input type="text" name="name" placeholder=" " required>
                 <label>Designation Name</label>
             </div>
-            <div class="form-group">
+            <div class="form-group" style="position: relative; bottom:8px;">
                 <button class="create-btn" type="submit">Create Designation</button>
             </div>
         </div>
     </form>
-
-    @if($errors->any())
-        <ul>
-            @foreach ($errors->all() as $error)
-                <li>{{ $error }}</li>
-            @endforeach
-        </ul>
-    @endif
 
     <h3>Organisation Designations</h3>
     <div class="table-container">
