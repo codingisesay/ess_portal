@@ -2,8 +2,7 @@
 @section('content')  <!-- Defining the content section -->
 <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
 <link rel="stylesheet" href="{{ asset('errors/error.css') }}">
-@extends('user_view/employee_form_layout')
-@section('content')
+
 <link rel="stylesheet" href="{{ asset('user_end/css/onboarding_form.css') }}">
 <?php 
 error_reporting(0);
