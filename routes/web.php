@@ -15,6 +15,7 @@ use App\Http\Controllers\employmentDataController;
 use App\Http\Controllers\ororganisationMailConController;
 use App\Http\Controllers\hrPolicyViewController;
 use App\Http\Controllers\ForgotPasswordController;
+use App\Http\Controllers\settingController;
 
 
 /*
@@ -48,6 +49,7 @@ Route::middleware(['auth.superadmin'])->group(function () {
     Route::post('superadmin/save_desihnation',[organisationDesignationController::class,'insertDesignation'])->name('insert_designation');
     //branch controller route
     Route::get('superadmin/create_branch',[ororganisationBranchController::class,'index'])->name('create_branch_form');
+    Route::POST('superadmin/insert_branch',[ororganisationBranchController::class,'insertBranch'])->name('insert_branch');
     //permission controller rolute
     Route::get('superadmin/create_permission/{org_id}/{desig_id}/{b_id}',[permissionController::class,'index'])->name('create_permission_form');
     Route::post('superadmin/save_permission/{org_id}/{desig_id}/{b_id}',[permissionController::class,'insertPermission'])->name('insert_permission');
@@ -61,6 +63,9 @@ Route::middleware(['auth.superadmin'])->group(function () {
     Route::post('superadmin/save_hr_policy', [hrPolicyViewController::class, 'saveHrPolicy'])->name('save_hr_policy');
     
     Route::post('superadmin/update_policy_category/{id}', [hrPolicyViewController::class, 'updatePolicyCategory'])->name('update_policy_category');
+
+    Route::post('superadmin/save_thought', [settingController::class, 'saveThought'])->name('save_thought');
+    Route::post('superadmin/save_news_events', [settingController::class, 'saveNewsEvents'])->name('save_news_events');
     
 });
 
@@ -90,7 +95,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('user/employment-data', [employmentDataController::class, 'showemploymentData'])->name('user.employment.data');
     Route::get('user/hr-policy', [hrPolicyViewController::class, 'showHrPolicy'])->name('user.hr.policy');
     Route::get('user/hr-policy/category/{id}', [hrPolicyViewController::class, 'getPoliciesByCategory'])->name('user.hr.policy.category');
-    
+    Route::get('user/setting', [settingController::class, 'showsetting'])->name('user.setting');
     //Insert data
 
     Route::post('user/detail_insert',[empDetailFormController::class,'insertDetail'])->name('detail_insert');
@@ -111,5 +116,8 @@ Route::middleware(['auth'])->group(function () {
 
     Route::post('user/homePage',[empDetailFormController::class,'homePageRedirect'])->name('homePage');
 
+    // Save Thought and News & Events
+    Route::post('user/save_thought', [settingController::class, 'saveThought'])->name('save_thought');
+    Route::post('user/save_news_events', [settingController::class, 'saveNewsEvents'])->name('save_news_events');
 });
 

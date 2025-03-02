@@ -1,4 +1,3 @@
-
 @extends('user_view.header');
 @section('content')
 <?php
@@ -53,7 +52,13 @@
                 <!-- Birthday Carousel Container -->
                 <div class="birthday-carousel-container">
                     <div class="birthday-carousel" id="birthdayCarousel">
-                        <!-- Employee birthday cards will be added dynamically here -->
+                        @foreach ($upcomingBirthdays as $birthday)
+                        <div class="card birthday">
+                            <img src="{{ asset('user_end/images/Group303.png') }}" height="40" width="40" alt="Avatar">
+                            <h6>Wish To {{ $birthday->Employee_Name }}</h6>
+                            <p>Happy Birthday <span class="count-circle">{{ $birthday->age }}</span></p>
+                        </div>
+                        @endforeach
                     </div>
                     <!-- Navigation buttons -->
                     <!-- <button class="prev" id="prevSlide">❮</button> 
@@ -67,7 +72,7 @@
                 <div class="card thought">
                     <img src="{{ asset('user_end/images/Group326.png'); }}" alt="">
                     <h4>Thought Of The Day</h4>
-                    
+                    <p>{{ $thoughtOfTheDay->thought }}</p>
                 </div>
 
                 <!-- Upcoming Holiday Card -->
@@ -79,76 +84,6 @@
             </div>
 
         </section>
-       
-        <script>
-            document.addEventListener("DOMContentLoaded", function () {
-                // Fetch birthday data from the PHP script
-                fetch('fetch_birthday.php')
-                    .then(response => {
-                        if (!response.ok) {
-                            throw new Error(`HTTP error! status: ${response.status}`);
-                        }
-                        return response.json();
-                    })
-                    .then(data => {
-                        // Debug: Log fetched data
-                        console.log("Fetched birthday data:", data);
-
-                        const birthdayCarousel = document.getElementById('birthdayCarousel');
-
-                        // Check if data is not empty
-                        if (data.length > 0) {
-                            // Clear previous content
-                            birthdayCarousel.innerHTML = "";
-
-                            // Add cards for each employee
-                            data.forEach(employee => {
-                                console.log("Processing employee:", employee); // Debug each employee
-
-                                const card = document.createElement('div');
-                                card.classList.add('card', 'birthday');
-
-                                card.innerHTML = `
-                        <img src="../resource/image/dashboard/Group303.png" height="40" width="40" alt="Avatar">
-                        <h6>Wish To ${employee.Employee_Name}</h6>
-                        <p>Happy Birthday <span class="count-circle">${calculateAge(employee.date_of_birth)}</span></p>
-                    `;
-                                birthdayCarousel.appendChild(card);
-                            });
-                        } else {
-                            // If no birthdays, still show the card with only the 'Wish To' and 'Happy Birthday' text
-                            const card = document.createElement('div');
-                            card.classList.add('card', 'birthday');
-
-                            card.innerHTML = `
-                    <img src="../resource/image/dashboard/Group303.png" height="40" width="40" alt="Avatar">
-                    <h6>Wish To Everyone</h6>
-                    <p>Happy Birthday</p>
-                `;
-                            birthdayCarousel.innerHTML = "";
-                            birthdayCarousel.appendChild(card);
-                        }
-                    })
-                    .catch(error => {
-                        console.error("Error fetching birthday data:", error);
-                        const birthdayCarousel = document.getElementById('birthdayCarousel');
-                        birthdayCarousel.innerHTML = "<p>Error loading birthdays.</p>";
-                    });
-            });
-
-            // Function to calculate the age based on birthdate
-            function calculateAge(birthDate) {
-                const birthDateObj = new Date(birthDate);
-                const today = new Date();
-                let age = today.getFullYear() - birthDateObj.getFullYear();
-                const month = today.getMonth();
-                if (month < birthDateObj.getMonth() || (month === birthDateObj.getMonth() && today.getDate() < birthDateObj.getDate())) {
-                    age--;
-                }
-                return age;
-            }
-
-        </script>
        
         <!-- Floating Check-Out Button -->
         <form action="{{route('user.logout')}}" method="POST"><div id="floating-btn">
@@ -340,7 +275,19 @@
 <section class="upcoming-anniversary">
     <h3>Anniversary</h3>
     <div class="anniversary">
-        
+        @forelse ($anniversaries as $anniversary)
+        <div class="employee-card">
+            <div class="employee-info">
+                <h3><strong>{{ $anniversary->Employee_Name }}</strong></h3>
+                <div class="details">
+                    <p>{{ $anniversary->yearsCompleted }} Years Completed</p>
+                    <div class="badge">{{ $anniversary->badgeText }}</div>
+                </div>
+            </div>
+        </div>
+        @empty
+        <p>No anniversaries for the current month.</p>
+        @endforelse
     </div>
 </section>
 
@@ -702,7 +649,14 @@
     <h3>News & Events</h3>
     <div class="container-events">
         <ul>
-          
+            @foreach ($newsAndEvents as $event)
+            <li>
+                <span class="date">{{ \Carbon\Carbon::parse($event->startdate)->format('d M') }}</span>
+                <span class="event"><strong>{{ $event->title }}</strong>
+                    <p><small>{{ $event->description }}</small></p>
+                </span>
+            </li>
+            @endforeach
         </ul>
     </div>
 </section>
@@ -720,11 +674,23 @@
         </section>
        
         <section class="upcoming-birthdays">
-    <h3>Upcoming Birthdays</h3>
-    <div class="birthday-cards">
-       
+        <h3>Upcoming Birthdays</h3>
+    
+        @forelse ($upcomingBirthdays as $birthday)
+        <div class="employee-card">
+            <img src="{{ asset('user_end/images/default_avatar.png') }}" alt="Profile Image" class="profile-image">
+            <div class="employee-info">
+                <h3><strong>{{ $birthday->Employee_Name }}</strong></h3>
+                <p>{{ $birthday->Designation }}</p>
+                <div class="badge">{{ $birthday->badgeText }}</div>
+            </div>
+        
+        @empty
+        <p>No upcoming birthdays this month.</p>
+        @endforelse
     </div>
 </section>
+
 
 
 

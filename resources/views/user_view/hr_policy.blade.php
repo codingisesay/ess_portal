@@ -30,23 +30,23 @@ error_reporting(0);
         <div class="main-container">
             <!-- Sidebar -->
             <div class="sidebar">
-                @foreach($categories as $category)
-                    <div class="category-item" data-category="{{ $category->id }}">
+                @foreach($policies->groupBy('policy_categorie_id') as $categoryId => $categoryPolicies)
+                    <div class="category-item" data-category="{{ $categoryId }}">
                         <div class="category-icon">
                             <!-- Fetch icon from storage -->
-                            <img src="{{ Storage::url($category->iconLink) }}" alt="Category Icon">
+                            <img src="{{ Storage::url($categoryPolicies->first()->iconLink) }}" alt="Category Icon">
                         </div>
                         <div class="category-text">
-                            <span>{{ $category->name }}</span>
+                            <span>{{ $categoryPolicies->first()->category_name }}</span>
                         </div>
                     </div>
                 @endforeach
             </div>
 
             <!-- Content Area -->
-            @foreach($categories as $category)
-                <div class="content-area" data-category="{{ $category->id }}">
-                    @foreach($policies->where('policy_categorie_id', $category->id) as $policy)
+            @foreach($policies->groupBy('policy_categorie_id') as $categoryId => $categoryPolicies)
+                <div class="content-area" data-category="{{ $categoryId }}">
+                    @foreach($categoryPolicies as $policy)
                         <a href="{{ Storage::url($policy->docLink) }}" class="download-btn" download>
                             <img src="{{ asset('resource/image/hrpolicy/hr_img/download 1 (2).png') }}" alt="Download Icon"> Download
                         </a>
