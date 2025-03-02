@@ -14,6 +14,7 @@ $employeeID = Auth::guard('web')->user()->employeeID;
 // dd($results);
 
 ?>
+
         @if(session('success'))
         <div class="alert custom-alert-success">
             <strong>{{ session('success') }}</strong> 
@@ -32,18 +33,27 @@ $employeeID = Auth::guard('web')->user()->employeeID;
     @if($errors->any())
     <div class="alert custom-alert-warning">
 <ul>
-@foreach($errors->all() as $error)
-    <li style="color: red;">{{ $error }}</li>
-    
-@endforeach
+    @foreach($errors->all() as $error)
+        <li style="color: red;">{{ $error }}</li>
+    @endforeach
 </ul>
-    </div>
 @endif
 
+<div class="w3-container">
+    @if(session('success'))
+    <div class="w3-panel w3-green">
+        {{ session('success') }} 
+    </div>
+    @endif
+
+    @if(session('error'))
+    <div class="w3-panel w3-red">
+        {{ session('error') }} 
+    </div>
+    @endif
+</div>
 
 <div class="tab-content active" id="tab1">
-
-
     <form action="{{ route('detail_insert') }}" method="POST">
         @csrf
         <input type="hidden" name="form_step" value="form_step">
@@ -51,10 +61,8 @@ $employeeID = Auth::guard('web')->user()->employeeID;
         <div class="column" style="flex: 1; border: 1px solid #ba184e; padding: 20px; border-radius: 8px;">
             <div class="address-form">
                 <h3>Employee Details</h3>
-                <!-- Left Column with border -->
                 <div class="form-row">
                     <div class="form-group">
-                        
                         <select id="employmentType" class="form-control dropdown" name="employmentType" placeholder="" required>
                             <option value="{{ old('employmentType', $results[0]->employee_type) }}">{{ old('employmentType', $results[0]->employee_type_name) }}</option>
                             @foreach($emp_types as $emp_type)
@@ -62,125 +70,54 @@ $employeeID = Auth::guard('web')->user()->employeeID;
                             @endforeach
                         </select>
                         <label for="employmentType">Employment Type<span style="color: red;">*</span></label>
-                        <!-- <span class="error" id="employmentTypeError"></span> -->
                     </div>
-    
-    
                     <div class="form-group">
-                       
-                        <input type="text" id="employeeNo" class="form-control" name="employeeNo"
-                            value="{{$employeeID}}" readonly placeholder="" required>
-                            <label for="employeeNo">Employee No</label>
-                        <!-- <span class="error" id="employeeNoError"></span> -->
-                      
+                        <input type="text" id="employeeNo" class="form-control" name="employeeNo" value="{{$employeeID}}" readonly placeholder="" required>
+                        <label for="employeeNo">Employee No</label>
                     </div>
-                    
-    
                     <div class="form-group">
-                        <input type="text" id="employeeName" class="form-control" name="employeeName"
-                            value="{{$name}}" readonly required placeholder="">
+                        <input type="text" id="employeeName" class="form-control" name="employeeName" value="{{$name}}" readonly required placeholder="">
                         <label for="employeeName">Employee Name</label>
                     </div>
-    
-                    
-    
-    
-                </div>
-    
-                <!-- Right Column with border -->
-                <div class="form-row">
                     <div class="form-group">
-                        
                         <input type="date" id="joiningDate" class="form-control" name="joiningDate" placeholder="" value="{{old('joiningDate',$results[0]->Joining_date) }}" max="<?php echo date('Y-m-d'); ?>" required>
                         <label for="joiningDate">Joining Date<span style="color: red;">*</span></label>
-                        <!-- <span class="error" id="joiningDateError"></span> -->
                     </div>
-    
-                   
+                </div>
+                <div class="form-row">
                     <div class="form-group">
-                       
-                        <select id="reportingManager" class="form-control dropdown" name="reportingManager"  placeholder="" required>
+                        <select id="reportingManager" class="form-control dropdown" name="reportingManager" placeholder="" required>
                             <option value="{{ old('reportingManager',$results[0]->reporting_manager_id) }}">{{old('reportingManager',$results[0]->reporting_manager_name) }}</option>
                             <option value="None"></option>
-                        @foreach($users as $user)
-
-                        <option value="{{$user->id}}">{{$user->name}}</option>
-
-                        @endforeach
-                            ?>
+                            @foreach($users as $user)
+                            <option value="{{$user->id}}">{{$user->name}}</option>
+                            @endforeach
                         </select>
-                        <label for="reportingManager">Reporting Manager<span
-                        style="color: red;">*</span></label>
-                        <!-- <span class="error" id="reportingManagerError"></span> -->
+                        <label for="reportingManager">Reporting Manager<span style="color: red;">*</span></label>
                     </div>
-    
-    
-    
-                  
-              
-
-     <div class="form-group">
-        <input 
-            type="number" 
-            id="totalExperience" 
-            class="form-control" 
-            name="totalExperience" 
-            placeholder="e.g., 6.2" 
-            value="{{ old('totalExperience', $results[0]->total_experience) }}" 
-            title="Enter experience in the format Years.Months (e.g., 6.2), where months must be between 0 and 11."
-            required 
-            step="any" 
-          
-            maxlength="5"
-            pattern="^\d+(\.\d{1,2})?$" 
-            oninput="validateExperience()">
-        
-        <label for="totalExperience">
-            Total Experience (Format: Years.Months, e.g., 6.2 or 12.11) 
-            <span style="color: red;">*</span>
-        </label>
-        
-        <span class="error" id="totalExperienceError" style="color: red;"></span>
-    </div>
-    
-    
-                  
-    
-    
-                </div>
-            </div>
-            <div class="address-form1">
-                <div class="form-row1">
                     <div class="form-group">
-                        
+                        <input type="number" id="totalExperience" class="form-control" name="totalExperience" placeholder="e.g., 6.2" value="{{ old('totalExperience', $results[0]->total_experience) }}" title="Enter experience in the format Years.Months (e.g., 6.2), where months must be between 0 and 11." required step="any" maxlength="5" pattern="^\d+(\.\d{1,2})?$" oninput="validateExperience()">
+                        <label for="totalExperience">Total Experience (Format: Years.Months, e.g., 6.2 or 12.11) <span style="color: red;">*</span></label>
+                        <span class="error" id="totalExperienceError" style="color: red;"></span>
+                    </div>
+                    <div class="form-group">
                         <select id="designation" class="form-control dropdown" name="designation" placeholder="" required>
                             <option value="{{ old('designation',$results[0]->designation_id) }}">{{ old('designation',$results[0]->role_name) }}</option>
                             @foreach($designations as $designation)
                             <option value="{{$designation->id}}">{{$designation->name}}</option>
                             @endforeach
                         </select>
-                        <label for="designation">
-                            Designation <span style="color: red;">*</span>
-                        </label>
-    
-                        <!-- <span class="error" id="designationError"></span> -->
+                        <label for="designation">Designation <span style="color: red;">*</span></label>
                     </div>
-                                            <div class="form-group">
-                    
-                    <select id="department" class="form-control dropdown" name="department" placeholder="" required>
-                        <option value="{{ old('department',$results[0]->department_id) }}">{{ old('department',$results[0]->department_name ) }}</option>
-                        @foreach($departments as $department)
-                        <option value="{{$department->id}}">{{$department->name}}</option>
-                         @endforeach
-                    </select>
-                    <label for="department">
-                        Department <span style="color: red;">*</span>
-                    </label>
-    
-                    <!-- <span class="error" id="departmentError"></span> -->
-                </div>
-    
-    
+                    <div class="form-group">
+                        <select id="department" class="form-control dropdown" name="department" placeholder="" required>
+                            <option value="{{ old('department',$results[0]->department_id) }}">{{ old('department',$results[0]->department_name ) }}</option>
+                            @foreach($departments as $department)
+                            <option value="{{$department->id}}">{{$department->name}}</option>
+                            @endforeach
+                        </select>
+                        <label for="department">Department <span style="color: red;">*</span></label>
+                    </div>
                 </div>
             </div>
         </div>
@@ -189,8 +126,6 @@ $employeeID = Auth::guard('web')->user()->employeeID;
                 <h3>Basic Details</h3>
                 <div class="form-row">
                     <div class="form-group">
-    
-                       
                         <select id="gender" class="form-control dropdown" name="gender" placeholder="" required>
                             <option value="{{ old('gender',$results[0]->gender) }}">{{ old('gender',$results[0]->gender) }}</option>
                             <option value="Male">Male</option>
@@ -198,20 +133,13 @@ $employeeID = Auth::guard('web')->user()->employeeID;
                             <option value="Other">Other</option>
                         </select>
                         <label for="gender">Gender<span style="color: red;">*</span></label>
-                        <!-- <span class="error" id="genderError"></span> -->
                     </div>
-    
                     <div class="form-group">
-                       
-                        <input type="date" id="dateOfBirth" class="form-control" value="{{ old('dateOfBirth',$results[0]->date_of_birth) }}" name="dateOfBirth" placeholder=""  max="<?php echo date('Y-m-d'); ?>" required>
+                        <input type="date" id="dateOfBirth" class="form-control" value="{{ old('dateOfBirth',$results[0]->date_of_birth) }}" name="dateOfBirth" placeholder="" max="<?php echo date('Y-m-d'); ?>" required>
                         <label for="dateOfBirth">Date of Birth <span style="color: red;">*</span></label>
-                        <!-- <span class="error" id="dateOfBirthError"></span> -->
                     </div>
-    
-                  
                     <div class="form-group">
-                       
-                        <select id="bloodGroup" class="form-control dropdown" name="bloodGroup" >
+                        <select id="bloodGroup" class="form-control dropdown" name="bloodGroup">
                             <option value="{{ old('bloodGroup',$results[0]->blood_group) }}">{{ old('bloodGroup',$results[0]->blood_group) }}</option>
                             <option value="A+">A+</option>
                             <option value="A-">A-</option>
@@ -223,26 +151,16 @@ $employeeID = Auth::guard('web')->user()->employeeID;
                             <option value="O-">O-</option>
                         </select>
                         <label for="bloodGroup">Blood Group</label>
-                        <!-- <span class="error" id=" GroupError"></span> -->
                     </div>
-                </div>
-            </div>
-            <div class="address-form">
-                <div class="form-row">
                     <div class="form-group">
-                        
-                        <span class="error" id="nationalityError"></span>
                         <select id="nationality" class="form-control dropdown" name="nationality" placeholder="" required>
-                            <option value="{{ old('nationality',$results[0]->nationality) }}" >{{ old('nationality',$results[0]->nationality) }}</option>
-                           
+                            <option value="{{ old('nationality',$results[0]->nationality) }}">{{ old('nationality',$results[0]->nationality) }}</option>
                         </select>
                         <label for="nationality">Nationality <span style="color: red;">*</span></label>
                     </div>
-    
-    
-                   
+                </div>
+                <div class="form-row">
                     <div class="form-group">
-                       {{-- //'Hinduism','Islam','Christianity','Sikhism','Buddhism','Jainism','Zoroastrianism','Judaism','Baha i Faith','Other' --}}
                         <select id="religion" class="form-control dropdown" name="religion" placeholder="" required>
                             <option value="{{ old('religion',$results[0]->religion) }}" disable Select> {{ old('religion', $results[0]->religion) }}</option>
                             <option value="Hinduism">Hinduism</option>
@@ -253,17 +171,11 @@ $employeeID = Auth::guard('web')->user()->employeeID;
                             <option value="Jainism">Jainism</option>
                             <option value="Zoroastrianism">Zoroastrianism</option>
                             <option value="Baha i Faith">Baha i Faith</option>
-                            
                             <option value="Other">Other</option>
-                           
                         </select>
                         <label for="religion">Religion <span style="color: red;">*</span></label>
-                        <!-- <span class="error" id="religionError"></span> -->
                     </div>
-    
-    
                     <div class="form-group">
-                        
                         <select id="maritalStatus" class="form-control dropdown" name="maritalStatus" required placeholder="">
                             <option value="{{ old('maritalStatus',$results[0]->marital_status) }}">{{ old('maritalStatus',$results[0]->marital_status) }}</option>
                             <option value="Single">Single</option>
@@ -273,20 +185,11 @@ $employeeID = Auth::guard('web')->user()->employeeID;
                         <label for="maritalStatus">Marital Status <span style="color: red;">*</span></label>
                         <span class="error" id="maritalStatusError"></span>
                     </div>
-                </div>
-            </div>
-            <div class="address-form">
-                <div class="form-row">
-    
                     <div class="form-group">
-                        
-                        <input type="date" id="anniversaryDate" class="form-control" value="{{ old('anniversaryDate',$results[0]->anniversary_date) }}" name="anniversaryDate" placeholder=""
-                        max="{{ \Carbon\Carbon::now()->toDateString() }}" disabled>
+                        <input type="date" id="anniversaryDate" class="form-control" value="{{ old('anniversaryDate',$results[0]->anniversary_date) }}" name="anniversaryDate" placeholder="" max="{{ \Carbon\Carbon::now()->toDateString() }}" disabled>
                         <span class="error" id="anniversaryDateError" style="color: red;"></span>
-                        <label for="anniversaryDate">Anniversary Date <span id="anniversaryRequiredMark"
-                                style="color: red; display: none;">*</span></label>
+                        <label for="anniversaryDate">Anniversary Date <span id="anniversaryRequiredMark" style="color: red; display: none;">*</span></label>
                     </div>
-    
                 </div>
             </div>
         </div>
@@ -295,198 +198,150 @@ $employeeID = Auth::guard('web')->user()->employeeID;
                 <h3>Welfare Benefits</h3>
                 <div class="form-row">
                     <div class="form-group">
-                        
-                        <input type="text" id="uan" name="uan" class="form-control"
-                            placeholder="Enter Universal Account Number" minlength="12" value='{{old('uan',$results[0]->universal_account_number)}}' maxlength="16"
-                            pattern="\d{12,16}" oninput="validateUAN(this)" placeholder=""
-                            onkeypress="return isNumberKey(event)">
-                            <label for="uan">Universal Account Number</label>
+                        <input type="text" id="uan" name="uan" class="form-control" placeholder="Enter Universal Account Number" minlength="12" value='{{old('uan',$results[0]->universal_account_number)}}' maxlength="16" pattern="\d{12,16}" oninput="validateUAN(this)" placeholder="" onkeypress="return isNumberKey(event)">
+                        <label for="uan">Universal Account Number</label>
                         <span class="error" id="uanError"></span>
                     </div>
-    
-    
-    
                     <div class="form-group">
-                        
-                        <input type="text" id="providentFund" class="form-control" name="providentFund" value="{{old('providentFund',$results[0]->provident_fund)}}"
-                            placeholder="Enter Provident Fund" maxlength="18" pattern="[A-Za-z0-9]{1,18}" placeholder=""
-                            oninput="this.value = this.value.toUpperCase()">
+                        <input type="text" id="providentFund" class="form-control" name="providentFund" value="{{old('providentFund',$results[0]->provident_fund)}}" placeholder="Enter Provident Fund" maxlength="18" pattern="[A-Za-z0-9]{1,18}" placeholder="" oninput="this.value = this.value.toUpperCase()">
                         <span class="error" id="providentFundError"></span>
                         <label for="providentFund">Provident Fund</label>
                     </div>
-    
-    
-    
                     <div class="form-group">
-                        
-                        <input type="text" id="esicNo" class="form-control" name="esicNo"
-                            placeholder="Enter ESIC No" value="{{old('esicNo',$results[0]->esic_no)}}">
+                        <input type="text" id="esicNo" class="form-control" name="esicNo" placeholder="Enter ESIC No" value="{{old('esicNo',$results[0]->esic_no)}}">
                         <span class="error" id="esicNoError"></span>
                         <label for="esicNo">ESIC No</label>
                     </div>
                 </div>
             </div>
         </div>
-        <!-- <div class="button-container">
-            <!-- <button class="previous-btn">Previous</button> 
-            <button type="submit" class="next-btn">Next</button>
-        </div> -->
         <div class="button-container">
-            <!-- <button class="previous-btn">
-                <span>&#8249;</span>
-            </button> -->
             <button type="submit" class="next-btn">
                 <span>&#8250;</span>
             </button>
         </div>
-    
-    
     </form>
-    </div>
-<script>
+</div>
 
+<script>
     const maritalStatusSelect = document.getElementById("maritalStatus");
     const anniversaryDateInput = document.getElementById("anniversaryDate");
     const anniversaryRequiredMark = document.getElementById("anniversaryRequiredMark");
     const form = document.querySelector("form");
 
-    // Add an event listener to the marital status select dropdown
     maritalStatusSelect.addEventListener("change", function() {
-        // Enable Anniversary_Date input for "Married" options
         if (maritalStatusSelect.value === "Married") {
-            anniversaryDateInput.disabled = false;  // Enable the date input
-            anniversaryDateInput.required = true;   // Make it required
-            anniversaryRequiredMark.style.display = 'inline'; // Show the asterisk
+            anniversaryDateInput.disabled = false;
+            anniversaryDateInput.required = true;
+            anniversaryRequiredMark.style.display = 'inline';
         } else {
-            anniversaryDateInput.disabled = true;   // Disable the date input
-            anniversaryDateInput.required = false;  // Make it not required
-            anniversaryDateInput.value = "";        // Clear the value when disabled
-            anniversaryRequiredMark.style.display = 'none'; // Hide the asterisk
+            anniversaryDateInput.disabled = true;
+            anniversaryDateInput.required = false;
+            anniversaryDateInput.value = "";
+            anniversaryRequiredMark.style.display = 'none';
         }
     });
 
-    // Trigger change event on page load to set the initial state
     maritalStatusSelect.dispatchEvent(new Event('change'));
 
-    // Add an event listener to the form submission
     form.addEventListener("submit", function(event) {
         if (maritalStatusSelect.value === "Married" && !anniversaryDateInput.value) {
-            event.preventDefault(); // Prevent form submission
+            event.preventDefault();
             alert("Please enter your anniversary date.");
         }
     });
 
-    // //     /**
-    //                                  * Function to fetch nationalities from an API with retry logi                                  */
-                                    async function fetchNationalities(retries = 3) {
-                                        const selectElement = document.getElementById('nationality');
-    
-                                        const fetchWithRetries = async () => {
-                                            try {
-                                                const response = await fetch('https://restcountries.com/v3.1/all', {
-                                                    headers: { "Content-Type": "application/json" },
-                                                });
-    
-                                                if (!response.ok) {
-                                                    throw new Error('Network response was not ok');
-                                                }
-    
-                                                const data = await response.json();
-                                                populateDropdown(data);
-                                            } catch (error) {
-                                                console.error("Error fetching nationalities: ", error);
-    
-                                                if (retries > 0) {
-                                                    console.log('Retrying fetch...');
-                                                    setTimeout(() => fetchWithRetries(retries - 1), 1000);
-                                                } else {
-                                                    alert("Unable to load nationalities after multiple attempts.");
-                                                }
-                                            }
-                                        };
-    
-                                        const populateDropdown = (countries) => {
-                                            const sortedCountries = countries.sort((a, b) =>
-                                                a.name?.common?.localeCompare(b.name?.common)
-                                            );
-    
-                                            selectElement.innerHTML = ""; // Clear dropdown before appending data
-                                            sortedCountries.forEach(country => {
-                                                const option = document.createElement('option');
-                                                option.value = country.name?.common?.toLowerCase() || '';
-                                                option.textContent = country.name?.common || 'Unknown';
-                                                selectElement.appendChild(option);
-                                            });
-    
-                                            // Set default nationality to India if available
-                                            const indiaOption = Array.from(selectElement.options).find(option => option.value === "india");
-                                            if (indiaOption) {
-                                                indiaOption.selected = true;
-                                            }
-                                        };
-    
-                                        // Call the fetch with retry
-                                        fetchWithRetries();
-                                    }
-    
-                                    // Wait for DOM to load and execute the function
-                                    document.addEventListener("DOMContentLoaded", function () {
-                                        fetchNationalities();
-                                    });
-    
-    
-    
-        window.onload = function() {
-        // Get all the select elements
+    async function fetchNationalities(retries = 3) {
+        const selectElement = document.getElementById('nationality');
+
+        const fetchWithRetries = async () => {
+            try {
+                const response = await fetch('https://restcountries.com/v3.1/all', {
+                    headers: { "Content-Type": "application/json" },
+                });
+
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+
+                const data = await response.json();
+                populateDropdown(data);
+            } catch (error) {
+                console.error("Error fetching nationalities: ", error);
+
+                if (retries > 0) {
+                    console.log('Retrying fetch...');
+                    setTimeout(() => fetchWithRetries(retries - 1), 1000);
+                } else {
+                    alert("Unable to load nationalities after multiple attempts.");
+                }
+            }
+        };
+
+        const populateDropdown = (countries) => {
+            const sortedCountries = countries.sort((a, b) =>
+                a.name?.common?.localeCompare(b.name?.common)
+            );
+
+            selectElement.innerHTML = ""; // Clear dropdown before appending data
+            sortedCountries.forEach(country => {
+                const option = document.createElement('option');
+                option.value = country.name?.common?.toLowerCase() || '';
+                option.textContent = country.name?.common || 'Unknown';
+                selectElement.appendChild(option);
+            });
+
+            const indiaOption = Array.from(selectElement.options).find(option => option.value === "india");
+            if (indiaOption) {
+                indiaOption.selected = true;
+            }
+        };
+
+        fetchWithRetries();
+    }
+
+    document.addEventListener("DOMContentLoaded", function () {
+        fetchNationalities();
+    });
+
+    window.onload = function() {
         const dropdowns = document.querySelectorAll('.dropdown');
         
         dropdowns.forEach(dropdown => {
           const selectedValue = dropdown.value;
     
-          // Loop through each dropdown's options and hide the selected one
           for (let option of dropdown.options) {
             if (option.value === selectedValue) {
-              option.style.display = 'none';  // Hide the selected option
-              break; // Only hide the selected option
+              option.style.display = 'none';
+              break;
             }
           }
         });
       };
 
-//Validation for total Experience
-      function validateExperience() {
+    function validateExperience() {
         var input = document.getElementById('totalExperience');
         var errorSpan = document.getElementById('totalExperienceError');
         var value = input.value.trim();
-        var regex = /^(\d+(\.\d{1,2})?)$/; // Regular expression to match the format "years.months"
-
-        // console.log(input);
-        // console.log(errorSpan);
-        // console.log(value);
-        // console.log(regex);
-
-        // console.log(value.length);
-       
+        var regex = /^(\d+(\.\d{1,2})?)$/;
 
         if(value.length >= 6){
-    input.value = '';  // Clears the input value
-}
+            input.value = '';
+        }
 
         if (regex.test(value)) {
             var parts = value.split('.');
             var years = parseInt(parts[0]);
             var months = parseInt(parts[1] || '0');
 
-            // Check if months exceed 11, and convert to next year if so
             if (months >= 12) {
-                years += Math.floor(months / 12); // Add the number of years equivalent to the months
-                months = months % 12; // Keep only the remaining months (0-11)
-                input.value = years + '.' + months; // Update the input with the new value
+                years += Math.floor(months / 12);
+                months = months % 12;
+                input.value = years + '.' + months;
             }
 
-            // Check if months are between 0 and 11
             if (months >= 0 && months <= 11) {
-                errorSpan.textContent = ''; // Clear error if valid
+                errorSpan.textContent = '';
             } else {
                 errorSpan.textContent = 'Months must be between 0 and 11.';
             }
@@ -494,7 +349,7 @@ $employeeID = Auth::guard('web')->user()->employeeID;
             errorSpan.textContent = 'Please enter experience in the correct format (e.g., 6.2 or 12.11).';
         }
     }
-     </script>
-    <script src="{{ asset('user_end/js/onboarding_form.js') }}"></script>
+</script>
+<script src="{{ asset('user_end/js/onboarding_form.js') }}"></script>
 @endsection
 </body>

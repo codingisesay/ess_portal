@@ -334,23 +334,6 @@ form {
     font-weight: bold;
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 /* .form-group {
     margin-bottom: 15px;
 }
@@ -361,10 +344,6 @@ form {
     margin-bottom: 5px;
 }
  */
-
-
-
-
 
 /* Add your styles here to match the Family Details section */
 
@@ -792,58 +771,31 @@ h4 {
 
 /* General Form Row Styling */
 .form-row,
-.form-row1 {
-    display: flex;
-    justify-content: left;
-    /* Align to center for a balanced look */
-    flex-wrap: wrap;
-    /* Prevents overflow on smaller screens */
-    gap: 2vw;
-    /* Maintain balanced spacing */
-    margin-bottom: 15px;
-    width: 100%;
-    /* Ensures full width */
-}
-
-
-
-/* Specific Styling for 3rd Row */
+.form-row1,
 .form-row3 {
     display: flex;
-    justify-content: center;
-    /* Centers inputs */
-    align-items: center;
-    /* Aligns to middle line */
+    /* justify-content: space-between; */
     flex-wrap: wrap;
-    gap: 3vw;
+    gap: 1vw;
+    /* Ensure the gap is consistent across all form rows */
+    margin-bottom: 15px;
     width: 100%;
 }
 
-/* Form Group Styling */
 /* Form Group Styling */
 .form-group {
     flex: 1;
-    min-width: 30%;
-    /* Prevents shrinking */
-    max-width: 32%;
-    /* Keeps consistency */
+    min-width: 23%;
+    max-width: 23%;
     box-sizing: border-box;
     display: flex;
     flex-direction: column;
-    /* align-items: flex-start; */
-    /* Aligns text and input boxes to the left */
 }
 
-/* Adjustments for Third Row */
+/* Adjustments for 3 input boxes in one row */
 .form-row3 .form-group {
-    justify-content: center;
-    /* Aligns inputs to the middle */
-    text-align: center;
-}
-
-/* Remove right margin for last item */
-.form-group:last-child {
-    margin-right: 0;
+    min-width: 30%;
+    max-width: 30%;
 }
 
 /* Responsive Adjustments */

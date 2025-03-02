@@ -2,6 +2,9 @@
 @section('content')  <!-- Defining the content section -->
 <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
 <link rel="stylesheet" href="{{ asset('errors/error.css') }}">
+@extends('user_view/employee_form_layout')
+@section('content')
+<link rel="stylesheet" href="{{ asset('user_end/css/onboarding_form.css') }}">
 <?php 
 error_reporting(0);
 $id = Auth::guard('web')->user()->id;
@@ -78,8 +81,6 @@ $id = Auth::guard('web')->user()->id;
                               <label for="permanent_landmark">Nearby Landmark<span
                               style="color: red;">*</span></label>
                       </div>
-                  </div>
-                  <div class="form-row">
                       <div class="form-group">
                           
                           <input type="text" id="permanent_road_street" class="form-control" maxlength="35"
@@ -87,18 +88,9 @@ $id = Auth::guard('web')->user()->id;
                               <label for="permanent_road_street">Road/Street<span
                                   style="color: red;">*</span></label>
                       </div>
-                      <!-- {{-- <div class="form-group">
-                         
-                          <input list="permanent_countries" id="permanent_country" name="permanent_country"
-                              required class="form-control" placeholder="" value="India"
-                              oninput="checkCountryAndTogglePincode()" value="{{ old('permanent_country', $emp_contact_datas[0]->per_country) }}">
-                              <label for="permanent_country">Country<span style="color: red;"
-                              id="country-required">*</span></label>
-                          <datalist id="permanent_countries"></datalist>
-                      </div> --}} -->
-
-                      
-                            <div class="form-group">
+                  </div>
+                  <div class="form-row">
+                      <div class="form-group">
                                 
                                 <span class="error" id="nationalityError"></span>
                                 <select id="nationality_permanent" class="form-control dropdown" name="permanent_country" placeholder="" required>
@@ -120,8 +112,6 @@ $id = Auth::guard('web')->user()->id;
        <label for="permanent_pincode">Pincode/Zipcode<span style="color: red;"
        id="pincode-required">*</span></label>
                       </div>
-                  </div>
-                  <div class="form-row">
                       <div class="form-group">
                          
                           <input type="text" id="district_permanent" name="permanent_district" required maxlength="35"
@@ -184,8 +174,6 @@ $id = Auth::guard('web')->user()->id;
                               <label for="correspondence_landmark">Nearby Landmark<span
                           style="color: red;">*</span></label>
                       </div>
-                  </div>
-                  <div class="form-row">
                       <div class="form-group">
                          
                           <input type="text" id="correspondence_road_street" name="correspondence_road_street" maxlength="35" required
