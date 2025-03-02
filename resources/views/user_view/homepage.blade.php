@@ -2,7 +2,7 @@
 @section('content')
 <?php
 // dd($logs);
-
+error_reporting(0);
 ?>
 <head>
     <meta charset="UTF-8">
