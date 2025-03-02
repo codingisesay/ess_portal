@@ -1,27 +1,31 @@
 @extends('user_view/employee_form_layout')
 @section('content') 
-
-@if($errors->any())
-<ul>
-    @foreach($errors->all() as $error)
-        <li style="color: red;">{{ $error }}</li>
-    @endforeach
-</ul>
+<link rel="stylesheet" href="{{ asset('errors/error.css') }}">
+@if(session('success'))
+<div class="alert custom-alert-success">
+    <strong>{{ session('success') }}</strong> 
+    <button class="close-btn" onclick="this.parentElement.style.display='none';">&times;</button>
+    
+</div>
 @endif
 
-<div class="w3-container">
-    @if(session('success'))
-    <div class="w3-panel w3-green">
-        {{ session('success') }} 
-    </div>
-    @endif
-    
-    @if(session('error'))
-    <div class="w3-panel w3-red">
-        {{ session('error') }} 
-    </div>
-    @endif
+@if(session('error'))
+<div class="alert custom-alert-error">
+<strong> {{ session('error') }}</strong>
+<button class="close-btn" onclick="this.parentElement.style.display='none';">&times;</button>
 </div>
+@endif
+
+@if($errors->any())
+<div class="alert custom-alert-warning">
+<ul>
+@foreach($errors->all() as $error)
+<li style="color: red;">{{ $error }}</li>
+
+@endforeach
+</ul>
+</div>
+@endif
 
 <link rel="stylesheet" href="https://unpkg.com/dropzone@5/dist/min/dropzone.min.css" type="text/css" />
 <head>

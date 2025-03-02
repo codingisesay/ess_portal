@@ -1,3 +1,7 @@
+@extends('user_view/employee_form_layout')  <!-- Extending the layout file -->
+@section('content')  <!-- Defining the content section -->
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<link rel="stylesheet" href="{{ asset('errors/error.css') }}">
 @extends('user_view/employee_form_layout')
 @section('content')
 <link rel="stylesheet" href="{{ asset('user_end/css/onboarding_form.css') }}">
@@ -11,29 +15,31 @@ $id = Auth::guard('web')->user()->id;
 // dd($countrys);
 
 ?>
-@if($errors->any())
-<ul>
-    @foreach($errors->all() as $error)
-        <li style="color: red;">{{ $error }}</li>
-    @endforeach
-</ul>
+@if(session('success'))
+<div class="alert custom-alert-success">
+    <strong>{{ session('success') }}</strong> 
+    <button class="close-btn" onclick="this.parentElement.style.display='none';">&times;</button>
+    
+</div>
 @endif
 
-<div class="w3-container">
-    
-    @if(session('success'))
-    <div class="w3-panel w3-green">
-        {{ session('success') }} 
-    </div>
-    @endif
+@if(session('error'))
+<div class="alert custom-alert-error">
+<strong> {{ session('error') }}</strong>
+<button class="close-btn" onclick="this.parentElement.style.display='none';">&times;</button>
+</div>
+@endif
 
-    
-        @if(session('error'))
-       
-        <div class="w3-panel w3-red">
-            {{ session('error') }} 
-        </div>
-        @endif
+@if($errors->any())
+<div class="alert custom-alert-warning">
+<ul>
+@foreach($errors->all() as $error)
+<li style="color: red;">{{ $error }}</li>
+
+@endforeach
+</ul>
+</div>
+@endif
     
   </div>
 <div class="tab-content active" id="tab2">

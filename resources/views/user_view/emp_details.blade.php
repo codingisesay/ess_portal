@@ -1,14 +1,37 @@
 @extends('user_view/employee_form_layout')  <!-- Extending the layout file -->
 @section('content')  <!-- Defining the content section -->
 <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<link rel="stylesheet" href="{{ asset('errors/error.css') }}">
 <?php 
 error_reporting(0);
 $id = Auth::guard('web')->user()->id;
 $name = Auth::guard('web')->user()->name;
 $employeeID = Auth::guard('web')->user()->employeeID;
+
+// dd($results);
+
+
+// dd($results);
+
 ?>
 
-@if($errors->any())
+        @if(session('success'))
+        <div class="alert custom-alert-success">
+            <strong>{{ session('success') }}</strong> 
+            <button class="close-btn" onclick="this.parentElement.style.display='none';">&times;</button>
+            
+        </div>
+    @endif
+    
+    @if(session('error'))
+    <div class="alert custom-alert-error">
+        <strong> {{ session('error') }}</strong>
+        <button class="close-btn" onclick="this.parentElement.style.display='none';">&times;</button>
+        </div>
+    @endif
+
+    @if($errors->any())
+    <div class="alert custom-alert-warning">
 <ul>
     @foreach($errors->all() as $error)
         <li style="color: red;">{{ $error }}</li>
