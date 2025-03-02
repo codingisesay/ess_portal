@@ -232,9 +232,6 @@ $id = Auth::guard('web')->user()->id;
        fetchCityAndState('correspondence_pincode', 'correspondence_city', 'correspondence_state', 'correspondence_district')" value="{{ old('correspondence_pincode', $emp_contact_datas[0]->cor_pincode) }}">
        <label for="correspondence_pincode">Pincode/Zipcode <span id="pincode-asterisk" style="color: red; display: none;">*</span></label>
                       </div>
-
-                  </div>
-                  <div class="form-row">
                       <div class="form-group">
                           
                           <input type="text" id="district_correspondence" name="correspondence_district" maxlength="35" required
@@ -249,6 +246,9 @@ $id = Auth::guard('web')->user()->id;
                               <label for="correspondence_city">City/Town/Village<span
                               style="color: red;">*</span></label>
                       </div>
+                  </div>
+                  <div class="form-row">
+                      
 
                       <div class="form-group">
                           
