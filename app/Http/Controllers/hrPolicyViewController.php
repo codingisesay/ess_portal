@@ -102,6 +102,10 @@ class hrPolicyViewController extends Controller
         // return redirect()->route('create_hr_policy')->with('success', 'HR Policy saved successfully.');
     }
 
+    public function showHrPolicy(){
+        return view('user_view.hr_policy');
+    }
+
    
 
    

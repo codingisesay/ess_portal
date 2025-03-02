@@ -1,8 +1,10 @@
 
-
 @extends('user_view.header');
 @section('content')
+<?php
+// dd($logs);
 
+?>
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -28,23 +30,24 @@
     <main class="main-group">
         <section class="greeting">
  
-
+            @foreach ($logs as $log)
             <h2>Good Morning</h2>
             <div class="top-cards">
                 <!-- Check In Card -->
                 <div class="card checkin">
-                    <img src="image/Group490.png" alt="">
+                    <img src="{{ asset('user_end/images/Group490.png'); }}" alt="">
                     <h4>Check In</h4>
+                    <p>{{ $log->login_time }}</p>
                    
                 </div>
 
                 <!-- Check Out Card -->
                 <div class="card checkout">
-                    <img src="image/Group491.png" alt="">
+                    <img src="{{ asset('user_end/images/Group491.png'); }}" alt="">
                     <h4>Check Out</h4>
-                   
+                    <p>{{ $log->logout_time ?? 'Not Logged Out Yet' }}</p>
                 </div>
-
+                @endforeach
 
                 <!-- Birthday Card -->
                 <!-- Birthday Carousel Container -->
@@ -62,7 +65,7 @@
             <div class="bottom-cards">
                 <!-- Thought of the Day Card -->
                 <div class="card thought">
-                    <img src="image/Group326.png" alt="">
+                    <img src="{{ asset('user_end/images/Group326.png'); }}" alt="">
                     <h4>Thought Of The Day</h4>
                     
                 </div>
@@ -148,10 +151,11 @@
         </script>
        
         <!-- Floating Check-Out Button -->
-        <div id="floating-btn">
-            <i class="fas fa-power-off" style="color: #ffffff; font-size: 30px;"></i>
+        <form action="{{route('user.logout')}}" method="POST"><div id="floating-btn">
+            @csrf
+            <button type="submit" class="fas fa-power-off" style="color: #ffffff; font-size: 30px;"></button>
             <!-- Power off icon with custom color -->
-        </div>
+        </div></form>
         <!-- <div id="floating-btn">Check Out</div> -->
 
         <script>
@@ -172,21 +176,21 @@
                     }
                 }
 
-                function mouseUpHandler() {
-                    if (!isDragging && mouseDown) {
-                        // If no drag occurred, execute check-out logic
-                        alert("Check-Out Process Initiated");
-                        window.location.href = 'logout.php';
-                    }
+                // function mouseUpHandler() {
+                //     if (!isDragging && mouseDown) {
+                //         // If no drag occurred, execute check-out logic
+                //         alert("Check-Out Process Initiated");
+                //         window.location.href = 'logout.php';
+                //     }
 
-                    mouseDown = false; // Reset the mouseDown state
-                    isDragging = false;
-                    document.removeEventListener('mousemove', mouseMoveHandler);
-                    document.removeEventListener('mouseup', mouseUpHandler);
-                }
+                //     mouseDown = false; // Reset the mouseDown state
+                //     isDragging = false;
+                //     document.removeEventListener('mousemove', mouseMoveHandler);
+                //     document.removeEventListener('mouseup', mouseUpHandler);
+                // }
 
-                document.addEventListener('mousemove', mouseMoveHandler);
-                document.addEventListener('mouseup', mouseUpHandler);
+                // document.addEventListener('mousemove', mouseMoveHandler);
+                // document.addEventListener('mouseup', mouseUpHandler);
             });
         </script>
       
@@ -423,28 +427,28 @@
                 <!-- Leave Card -->
                 <div class="approval-card" onclick="openModal()">
                     <div class="card-left">
-                        <img src="image/Leave.png" alt="Leave Icon" class="icon">
+                        <img src="{{ asset('user_end/images/Leave.png'); }}" alt="Leave Icon" class="icon">
                         <div class="details">
                             <h4>Leave</h4>
                            
                         </div>
                     </div>
                     <div class="card-right">
-                        <img src="image/cake 5.png" alt="Alert Icon" class="alert-icon">
+                        <img src="{{ asset('user_end/images/cake 5.png'); }}" alt="Alert Icon" class="alert-icon">
                     </div>
                 </div>
 
                 <!-- Task Card -->
                 <div class="approval-card" onclick="openTaskModal()">
                     <div class="card-left">
-                        <img src="image/Task.png" alt="Task Icon" class="icon">
+                        <img src="{{ asset('user_end/images/Task.png'); }}" alt="Task Icon" class="icon">
                         <div class="details">
                             <h4>Task</h4>
                             
                         </div>
                     </div>
                     <div class="card-right">
-                        <img src="image/cake 5.png" alt="Alert Icon" class="alert-icon">
+                        <img src="{{ asset('user_end/images/cake 5.png'); }}" alt="Alert Icon" class="alert-icon">
                     </div>
                 </div>
 
