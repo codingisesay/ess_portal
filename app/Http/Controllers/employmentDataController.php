@@ -17,7 +17,7 @@ use App\Models\organisation_designation;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
-class EmploymentDataController extends Controller
+class employmentDataController extends Controller
 {
     public function showEmploymentData()
     {
