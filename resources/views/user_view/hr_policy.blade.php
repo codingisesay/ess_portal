@@ -20,7 +20,7 @@ error_reporting(0);
         <div class="search-bar">
             <input type="text" placeholder="Search here..." id="searchInput">
             <div class="search-icon-circle">
-                <img src="{{ asset('resource/image/hrpolicy/hr_img/search (2) 2.png') }}" alt="Search Icon">
+                <img src="{{ asset('user_end/images/search (2) 2.png') }}" alt="Search Icon">
             </div>
         </div>
     </div>
@@ -48,7 +48,7 @@ error_reporting(0);
                 <div class="content-area" data-category="{{ $categoryId }}">
                     @foreach($categoryPolicies as $policy)
                         <a href="{{ Storage::url($policy->docLink) }}" class="download-btn" download>
-                            <img src="{{ asset('resource/image/hrpolicy/hr_img/download 1 (2).png') }}" alt="Download Icon"> Download
+                            <img src="{{ Storage::url($policy->docLink) }}" alt="Download Icon"> Download
                         </a>
 
                         <div class="policy-content">
