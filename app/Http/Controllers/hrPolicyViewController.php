@@ -13,20 +13,19 @@ class hrPolicyViewController extends Controller
     public function createPolicyCategory()
     {
         $id = Auth::guard('superadmin')->user()->id;
-        $datas = DB::table('hr_policy_categories')->where('organisation_id',$id)->get();
-        // dd($datas);
-        return view('superadmin_view.create_policy_category',compact('datas'));
+        $datas = DB::table('hr_policy_categories')->where('organisation_id', $id)->get();
+        return view('superadmin_view.create_policy_category', compact('datas'));
     }
 
-    public function savePolicyCategory(Request $request){
-
+    public function savePolicyCategory(Request $request)
+    {
         $request->validate([
             'category_name' => 'required',
             'status' => 'required',
         ]);
         $id = Auth::guard('superadmin')->user()->id;
 
-       $status = DB::table('hr_policy_categories')->insert([
+        $status = DB::table('hr_policy_categories')->insert([
             'name' => $request->category_name,
             'status' => $request->status,
             'organisation_id' => $id,
@@ -34,24 +33,20 @@ class hrPolicyViewController extends Controller
             'updated_at' => now(),
         ]);
 
-        if($status){
-
+        if ($status) {
             return redirect()->route('create_policy_category')->with('success', 'Policy Category saved successfully.');
-
-        }else{
-
-            return redirect()->route('create_policy_category')->with('success', 'Policy Category saved successfully.');
-
+        } else {
+            return redirect()->route('create_policy_category')->with('error', 'Policy Category not saved successfully.');
         }
-
     }
 
-    public function createHrPolicy(){
+    public function createHrPolicy()
+    {
         $id = Auth::guard('superadmin')->user()->id;
-        $categories = DB::table('hr_policy_categories')->where('organisation_id',$id)->get();
-        $datas = DB::table('hr_policies')->where('organisation_id',$id)->get();
+        $categories = DB::table('hr_policy_categories')->where('organisation_id', $id)->get();
+        $datas = DB::table('hr_policies')->where('organisation_id', $id)->get();
 
-        return view('superadmin_view.create_hr_policy',compact('categories','datas'));
+        return view('superadmin_view.create_hr_policy', compact('categories', 'datas'));
     }
 
     // Save a new HR policy
@@ -69,10 +64,10 @@ class hrPolicyViewController extends Controller
 
         $documentPath = $request->file('document') ? $request->file('document')->store('documents', 'public') : null;
         $iconPath = $request->file('icon') ? $request->file('icon')->store('icons', 'public') : null;
-        $contentImagePath = $request->file('content_image') ? $request->file('content_image')->store('image', 'public') : null;
-        
+        $contentImagePath = $request->file('content_image') ? $request->file('content_image')->store('images', 'public') : null;
+
         $id = Auth::guard('superadmin')->user()->id;
-// dd($data);
+
         $status = DB::table('hr_policies')->insert([
             'policy_categorie_id' => $request->category_id,
             'organisation_id' => $id,
@@ -89,24 +84,41 @@ class hrPolicyViewController extends Controller
             'updated_at' => now(),
         ]);
 
-        if($status){
-
+        if ($status) {
             return redirect()->route('create_hr_policy')->with('success', 'HR Policy saved successfully.');
-
-        }else{
-
-            return redirect()->route('create_hr_policy')->with('error', 'HR Policy Not saved successfully.');
-
+        } else {
+            return redirect()->route('create_hr_policy')->with('error', 'HR Policy not saved successfully.');
         }
-
-        // return redirect()->route('create_hr_policy')->with('success', 'HR Policy saved successfully.');
     }
 
-    public function showHrPolicy(){
-        return view('user_view.hr_policy');
+    public function showHrPolicy()
+    {
+        $loginUserInfo = Auth::user();
+        $organisationId = $loginUserInfo->organisation_id;
+
+        $policies = DB::table('hr_policies')
+            ->join('hr_policy_categories', 'hr_policies.policy_categorie_id', '=', 'hr_policy_categories.id')
+            ->where('organisation_id', $organisationId)
+            ->select('hr_policies.*', 'hr_policy_categories.name as category_name')
+            ->get();
+
+        // dd($policies); // Debugging statement to check fetched data
+
+        return view('user_view.hr_policy', compact('policies'));
     }
 
-   
+    public function getPoliciesByCategory($id)
+    {
+        $loginUserInfo = Auth::user();
+        $organisationId = $loginUserInfo->organisation_id;
 
-   
+        $policies = DB::table('hr_policies')
+            ->where('policy_categorie_id', $id)
+            ->where('organisation_id', $organisationId)
+            ->get();
+
+        // dd($policies); // Debugging statement to check fetched data
+
+        return view('user_view.hr_policy_category', compact('policies'));
+    }
 }
