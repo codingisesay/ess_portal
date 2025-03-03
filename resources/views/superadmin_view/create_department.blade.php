@@ -14,6 +14,7 @@ $id = Auth::guard('superadmin')->user()->id;
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <link rel="stylesheet" href="{{ asset('admin_end/css/admin_form.css') }}">
+<link rel="stylesheet" href="{{ asset('admin_end/css/popup_form.css') }}">
 
 <div class="container">
     <h2>Create Department For Your Organisation</h2>
@@ -22,16 +23,15 @@ $id = Auth::guard('superadmin')->user()->id;
     <div class="alert custom-alert-success">
         <strong>{{ session('success') }}</strong> 
         <button class="close-btn" onclick="this.parentElement.style.display='none';">&times;</button>
-        
     </div>
-@endif
+    @endif
 
-@if(session('error'))
-<div class="alert custom-alert-error">
-    <strong> {{ session('error') }}</strong>
-    <button class="close-btn" onclick="this.parentElement.style.display='none';">&times;</button>
+    @if(session('error'))
+    <div class="alert custom-alert-error">
+        <strong> {{ session('error') }}</strong>
+        <button class="close-btn" onclick="this.parentElement.style.display='none';">&times;</button>
     </div>
-@endif
+    @endif
 
     <form method="POST" action="{{ route('insert_department') }}">
         @csrf
@@ -64,7 +64,7 @@ $id = Auth::guard('superadmin')->user()->id;
                         <td>{{ $index + 1 }}</td>
                         <td>{{ $department->id }}</td>
                         <td>{{ $department->name }}</td>
-                        <td><button class="edit-icon">Edit</button></td>
+                        <td><button class="edit-icon" onclick="openEditDepartmentModal({{ $department }})">Edit</button></td>
                     </tr>
                 @endforeach
             </tbody>
@@ -72,6 +72,37 @@ $id = Auth::guard('superadmin')->user()->id;
     </div>
 </div>
 
+<!-- Edit Department Modal -->
+<div id="editDepartmentModal" class="w3-modal">
+    <div class="w3-modal-content w3-animate-top w3-card-4">
+        <header class="w3-container w3-teal"> 
+            <span onclick="document.getElementById('editDepartmentModal').style.display='none'" 
+            class="w3-button w3-display-topright">&times;</span>
+            <h2>Edit Department</h2>
+        </header>
+        <div class="w3-container">
+            <form id="editDepartmentForm" action="{{ route('update_department') }}" method="POST">
+                @csrf
+                <input type="hidden" name="department_id" id="editDepartmentId">
+                <div class="popup-form-group">
+                    <label for="editDepartmentName">Department Name</label>
+                    <input type="text" name="department_name" id="editDepartmentName" required>
+                </div>
+                <div class="popup-form-group">
+                    <button class="create-btn1" type="submit">Save Changes</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    function openEditDepartmentModal(department) {
+        document.getElementById('editDepartmentId').value = department.id;
+        document.getElementById('editDepartmentName').value = department.name;
+        document.getElementById('editDepartmentModal').style.display = 'block';
+    }
+</script>
 
 @endsection
 

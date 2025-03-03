@@ -14,6 +14,7 @@ class ororganisationBranchController extends Controller
     public function index(){
         $id = Auth::guard('superadmin')->user()->id;
         $branchs = branche::where('organisation_id', $id)->get();
+        // dd($branchs);
         return view('superadmin_view.create_branch',compact('branchs'));
     }
 
@@ -62,5 +63,38 @@ class ororganisationBranchController extends Controller
 
         }
 
+    }
+
+    public function update(Request $request)
+    {
+        $validated = $request->validate([
+            'branchname' => 'required',
+            'mobile' => 'required',
+            'branchmailid' => 'required|email',
+            'Building_No' => 'required',
+            'premises_name' => 'required',
+            'landmark' => 'required',
+            'road_street' => 'required',
+            'pincode' => 'required',
+            'district' => 'required',
+            'state' => 'required',
+            'country' => 'required',
+        ]);
+
+        $branch = branche::find($request->branch_id);
+        $branch->name = $request->branchname;
+        $branch->mobile = $request->mobile;
+        $branch->branch_email = $request->branchmailid;
+        $branch->building_no = $request->Building_No;
+        $branch->premises_name = $request->premises_name;
+        $branch->landmark = $request->landmark;
+        $branch->road_street = $request->road_street;
+        $branch->pincode = $request->pincode;
+        $branch->district = $request->district;
+        $branch->state = $request->state;
+        $branch->country = $request->country;
+        $branch->save();
+
+        return redirect()->back()->with('success', 'Branch updated successfully');
     }
 }
