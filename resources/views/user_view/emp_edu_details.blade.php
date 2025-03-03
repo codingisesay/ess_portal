@@ -131,8 +131,8 @@
                 </select>
             </td>
             <td><input type="text" name="degree[]" class="degree-input" required placeholder="Enter Degree" maxlength="100"></td>
-            <td><input type="text" name="university[]" class="university-input" required placeholder="Enter University/Board" maxlength="100" pattern="[A-Za-z\s]*" title="Only alphabets and spaces are allowed"></td>
-            <td><input type="text" name="institution[]" class="institution-input" required placeholder="Enter Institution" maxlength="100" pattern="[A-Za-z\s]*" title="Only alphabets and spaces are allowed"></td>
+            <td><input type="text" name="university[]" class="university-input" required placeholder="Enter University/Board" maxlength="100"  title="Only alphabets and spaces are allowed"></td>
+            <td><input type="text" name="institution[]" class="institution-input" required placeholder="Enter Institution" maxlength="100"  title="Only alphabets and spaces are allowed"></td>
             <td>
                 <select name="passing_year[]" class="year-input" required>
                     <option value="" disabled selected>Select Passing Year</option>
