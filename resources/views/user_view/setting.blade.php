@@ -81,10 +81,15 @@
                                 <textarea id="description" name="description" placeholder="Detailed information about the news or event"></textarea>
                             </div>
                             <div class="form-group">
-                                <label for="event-date">Event Date:</label>
+                                <label for="event-start-date">Event Start Date:</label>
                                 <div class="input-with-icon">
-                                    <img src="{{ asset('resource/image/setting/calendar (4) 1.png') }}" alt="Calendar" class="calendar-icon" />
-                                    <input type="date" id="event-date" name="event-date" placeholder="Select Start Date - End Date">
+                                    <input type="date" id="event-start-date" name="startdate" placeholder="Select Start Date">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="event-end-date">Event End Date:</label>
+                                <div class="input-with-icon">
+                                    <input type="date" id="event-end-date" name="enddate" placeholder="Select End Date">
                                 </div>
                             </div>
                             <div class="form-group">
@@ -138,18 +143,20 @@
         document.getElementById("date").addEventListener("input", validateNewsForm);
         document.getElementById("title").addEventListener("input", validateNewsForm);
         document.getElementById("description").addEventListener("input", validateNewsForm);
-        document.getElementById("event-date").addEventListener("input", validateNewsForm);
+        document.getElementById("event-start-date").addEventListener("input", validateNewsForm);
+        document.getElementById("event-end-date").addEventListener("input", validateNewsForm);
         document.getElementById("location").addEventListener("input", validateNewsForm);
 
         function validateNewsForm() {
             const date = document.getElementById("date").value;
             const title = document.getElementById("title").value;
             const description = document.getElementById("description").value;
-            const eventDate = document.getElementById("event-date").value;
+            const eventStartDate = document.getElementById("event-start-date").value;
+            const eventEndDate = document.getElementById("event-end-date").value;
             const location = document.getElementById("location").value;
             const submitButton = document.getElementById("submitNews");
 
-            if (date && title && description && eventDate && location) {
+            if (date && title && description && eventStartDate && eventEndDate && location) {
                 submitButton.disabled = false;
             } else {
                 submitButton.disabled = true;
@@ -192,9 +199,14 @@
                 allowInput: true, // Allows manual input
             });
 
-            // Initialize Flatpickr for the date range field
-            const dateRangePicker = flatpickr("#event-date", {
-                mode: "range", // Enables range selection
+            // Initialize Flatpickr for the start date field
+            const startDatePicker = flatpickr("#event-start-date", {
+                dateFormat: "d/m/Y", // Format: DD/MM/YYYY
+                allowInput: true, // Allows manual input
+            });
+
+            // Initialize Flatpickr for the end date field
+            const endDatePicker = flatpickr("#event-end-date", {
                 dateFormat: "d/m/Y", // Format: DD/MM/YYYY
                 allowInput: true, // Allows manual input
             });
@@ -206,8 +218,10 @@
                     const inputField = this.nextElementSibling; // Target the input next to the icon
                     if (inputField.id === "date") {
                         singleDatePicker.open(); // Open single date picker
-                    } else if (inputField.id === "event-date") {
-                        dateRangePicker.open(); // Open date range picker
+                    } else if (inputField.id === "event-start-date") {
+                        startDatePicker.open(); // Open start date picker
+                    } else if (inputField.id === "event-end-date") {
+                        endDatePicker.open(); // Open end date picker
                     }
                 });
             });

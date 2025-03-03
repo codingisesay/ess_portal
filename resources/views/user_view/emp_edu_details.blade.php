@@ -145,7 +145,7 @@
                     ?>
                 </select>
             </td>
-            <td><input type="text" name="percentage[]" class="percentage-input" required placeholder="Enter Percentage" maxlength="5" pattern="\d+(\.\d{1,2})?" title="Only numbers and up to two decimal places are allowed"></td>
+            <td><input type="text" name="percentage[]" class="percentage-input" required placeholder="Enter Percentage" maxlength="5" title="Only numbers and up to two decimal places are allowed"></td>
             <td><input type="text" name="certification_name[]" class="certification-name-input" required placeholder="Enter Certification Name" maxlength="50"></td>
             <td><input type="text" name="marks_obtained[]" class="marks-input" required placeholder="Enter Marks Obtained" maxlength="3"></td>
             <td><input type="text" name="total_marks[]" class="total-marks-input" required placeholder="Enter Total Marks" maxlength="3"></td>
