@@ -64,8 +64,8 @@ Route::middleware(['auth.superadmin'])->group(function () {
     
     Route::post('superadmin/update_policy_category/{id}', [hrPolicyViewController::class, 'updatePolicyCategory'])->name('update_policy_category');
 
-    Route::post('superadmin/save_thought', [settingController::class, 'saveThought'])->name('save_thought');
-    Route::post('superadmin/save_news_events', [settingController::class, 'saveNewsEvents'])->name('save_news_events');
+    // Route::post('superadmin/save_thought', [settingController::class, 'saveThought'])->name('save_thought');
+    // Route::post('superadmin/save_news_events', [settingController::class, 'saveNewsEvents'])->name('save_news_events');
     
 });
 
