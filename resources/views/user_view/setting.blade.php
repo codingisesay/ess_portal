@@ -49,7 +49,7 @@
                                 <label for="entryDate">Date:</label>
                                 <div class="input-with-icon">
                                     <input type="date" id="thoughtDate" name="date" placeholder="DD/MM/YYYY">
-                                    <img src="{{ asset('resource/image/setting/calendar (4) 1.png') }}" alt="Calendar" class="calendar-icon" />
+                                    <!-- <img src="{{ asset('resource/image/setting/calendar (4) 1.png') }}" alt="Calendar" class="calendar-icon" /> -->
                                 </div>
                             </div>
                             <div class="form-group">
@@ -68,7 +68,7 @@
                             <div class="form-group">
                                 <label for="entryDate">Date:</label>
                                 <div class="input-with-icon">
-                                    <img src="{{ asset('resource/image/setting/calendar (4) 1.png') }}" alt="Calendar" class="calendar-icon" />
+                                    <!-- <img src="{{ asset('resource/image/setting/calendar (4) 1.png') }}" alt="Calendar" class="calendar-icon" /> -->
                                     <input type="date" id="date" name="date" placeholder="DD/MM/YYYY">
                                 </div>
                             </div>

@@ -75,7 +75,7 @@
             <div class="section">
                 <h2>Employee Details</h2>
                 <div class="left1"><p>Employment Status</p> <b>{{ ucfirst($userDetails->employment_status ?? 'N/A') }}</b></div>
-                <div class="left1"><p>Employment Type</p> <b>{{ ucfirst($userDetails->employee_type ?? 'N/A') }}</b></div>
+                <div class="left1"><p>Employment Type</p> <b>{{ ucfirst($userDetails->employee_type_name ?? 'N/A') }}</b></div>
                 <div class="left1"><p>Start Date</p> <b>{{ $userDetails->Joining_date ? \Carbon\Carbon::parse($userDetails->Joining_date)->format('d-m-Y') : 'N/A' }}</b></div>
                 <div class="left1"><p>Total Experience</p> <b>{{ ucfirst($userDetails->total_experience ?? 'N/A') }}</b></div>
             </div>
@@ -239,7 +239,7 @@
                             </tr>
                             <tr>
                                 <th>University</th>
-                                <td>{{ ucfirst($education->university ?? 'N/A') }}</td>
+                                <td>{{ ucfirst($education->university_board  ?? 'N/A') }}</td>
                             </tr>
                             <tr>
                                 <th>Institution</th>
@@ -247,12 +247,12 @@
                             </tr>
                             <tr>
                                 <th>Passing Year</th>
-                                <td>{{ $education->year_of_passing ? \Carbon\Carbon::parse($education->year_of_passing)->format('d-m-Y') : 'N/A' }}</td>
+                                <td>{{ $education->passing_year ? \Carbon\Carbon::parse($education->passing_year )->format('d-m-Y') : 'N/A' }}</td>
                             </tr>
                            
                             <tr>
                                 <th>Percentage</th>
-                                <td>{{ ucfirst($education->percentage ?? 'N/A') }}</td>
+                                <td>{{ ucfirst($education->percentage_cgpa ?? 'N/A') }}</td>
                             </tr>
                         </table>
                     `;
@@ -280,7 +280,7 @@
                             </tr>
                             <tr>
                                 <th>Certificate Date</th>
-                                <td>{{ $education->certificate_date ? \Carbon\Carbon::parse($education->certificate_date)->format('d-m-Y') : 'N/A' }}</td>
+                                <td>{{ $education->date_of_certificate ? \Carbon\Carbon::parse($education->date_of_certificate)->format('d-m-Y') : 'N/A' }}</td>
                             </tr>
                         </table>
                     `;

@@ -33,11 +33,11 @@ class employmentDataController extends Controller
             ->leftJoin('emp_details', 'users.id', '=', 'emp_details.user_id')
             ->leftJoin('emp_contact_details', 'users.id', '=', 'emp_contact_details.user_id')
             ->leftJoin('emp_bank_details', 'users.id', '=', 'emp_bank_details.user_id')
-            ->leftJoin('organisation_departments', 'emp_details.id', '=', 'organisation_departments.id')  // Join for department name
-            ->leftJoin('organisation_designations', 'emp_details.id', '=', 'organisation_designations.id')  // Join for designation name
-            ->leftJoin('employee_types', 'emp_details.id', '=', 'employee_types.id')  // Join for employee type name
+            ->leftJoin('organisation_departments', 'emp_details.department', '=', 'organisation_departments.id')  // Join for department name
+            ->leftJoin('organisation_designations', 'emp_details.designation', '=', 'organisation_designations.id')  // Join for designation name
+            ->leftJoin('employee_types', 'emp_details.employee_type', '=', 'employee_types.id')  // Join for employee type name
             ->leftJoin('users as managers', 'users.id', '=', 'managers.id')  // Join for reporting manager name
-            ->leftJoin('banks', 'emp_bank_details.id', '=', 'banks.id')  // Join for bank name
+            ->leftJoin('banks', 'emp_bank_details.sal_bank_name', '=', 'banks.id')  // Join for bank name using sal_bank_name
             ->select(
                 'users.*',
                 'emp_details.*',

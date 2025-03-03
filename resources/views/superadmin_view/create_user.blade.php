@@ -17,6 +17,7 @@ $id = Auth::guard('superadmin')->user()->id;
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <link rel="stylesheet" href="{{ asset('admin_end/css/admin_form.css') }}">
+<link rel="stylesheet" href="{{ asset('admin_end/css/popup_form.css') }}">
 
 <div class="container">
     <h2>Create User Of Your Organisation</h2>
@@ -66,7 +67,7 @@ $id = Auth::guard('superadmin')->user()->id;
                 <label>Email</label>
             </div>
             <div class="form-group">
-                <input type="text" id="passwordField" name="userpassword" value="akash@1234" readonly>
+                <input type="text" id="passwordField" name="userpassword" readonly>
                 <label>Password</label>
             </div>
         </div>
@@ -108,11 +109,43 @@ $id = Auth::guard('superadmin')->user()->id;
                         <td>{{ $user->id }}</td>
                         <td>{{ $user->name }}</td>
                         <td>{{ $user->email }}</td>
-                        <td><button class="edit-icon">Edit</button></td>
+                        <td><button class="edit-icon" onclick="openEditModal({{ $user }})">Edit</button></td>
                     </tr>
                 @endforeach
             </tbody>
         </table>
+    </div>
+</div>
+
+<!-- Edit User Modal -->
+<div id="editUserModal" class="w3-modal">
+    <div class="w3-modal-content w3-animate-top w3-card-4">
+        <header class="w3-container w3-teal"> 
+            <span onclick="document.getElementById('editUserModal').style.display='none'" 
+            class="w3-button w3-display-topright">&times;</span>
+            <h2>Edit User</h2>
+        </header>
+        <div class="w3-container">
+            <form id="editUserForm" action="{{ route('update_user') }}" method="POST">
+                @csrf
+                <input type="hidden" name="user_id" id="editUserId">
+                <div class="popup-form-group">
+                    <label for="editUsername">Name</label>
+                    <input type="text" name="username" id="editUsername" required>
+                </div>
+                <div class="popup-form-group">
+                    <label for="editEmpid">Company Emp ID</label>
+                    <input type="text" name="empid" id="editEmpid" required>
+                </div>
+                <div class="popup-form-group">
+                    <label for="editUsermailid">Email</label>
+                    <input type="email" name="usermailid" id="editUsermailid" required>
+                </div>
+                <div class="popup-form-group">
+                    <button class="create-btn1" type="submit">Save Changes</button>
+                </div>
+            </form>
+        </div>
     </div>
 </div>
 
@@ -127,6 +160,14 @@ $id = Auth::guard('superadmin')->user()->id;
     function generateAndDisplayPassword() {
         const password = generateSecurePassword(12);
         document.getElementById('passwordField').value = password;
+    }
+
+    function openEditModal(user) {
+        document.getElementById('editUserId').value = user.id;
+        document.getElementById('editUsername').value = user.name;
+        document.getElementById('editEmpid').value = user.employeeID;
+        document.getElementById('editUsermailid').value = user.email;
+        document.getElementById('editUserModal').style.display = 'block';
     }
 </script>
 

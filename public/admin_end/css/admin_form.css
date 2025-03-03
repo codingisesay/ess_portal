@@ -16,10 +16,10 @@ body {
 }
 
 /* Form Styling */
-h2 {
+/* h2 {
     color: #333;
     margin-bottom: 2%;
-}
+} */
 
 .form-container {
     display: flex;
