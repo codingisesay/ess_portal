@@ -234,7 +234,7 @@ $id = Auth::guard('web')->user()->id;
                   </div>
                   <div class="form-group">
                       <input type="date" id="insuranceExpiry" class="form-control" name="insuranceExpiry"
-                          style="pointer-events: none; opacity: 0.6;" oninput="validateYear(this)" value="{{ old('insuranceExpiry', $emp_bank_datas[0]->insurance_expiry_date) }}">
+                          style="pointer-events: none; opacity: 0.6;"  min="<?php echo date('Y-m-d'); ?>" oninput="validateYear(this)" value="{{ old('insuranceExpiry', $emp_bank_datas[0]->insurance_expiry_date) }}">
                       <label for="insuranceExpiry">Insurance Expiry Date<span
                               class="insurance-expiry-required"
                               style="display: none; color: red;">*</span></label>
@@ -293,6 +293,48 @@ $id = Auth::guard('web')->user()->id;
             branchNameRequired.style.display = 'none';
             accountNumberRequired.style.display = 'none';
             ifscCodeRequired.style.display = 'none';
+        }
+    });
+
+    document.getElementById('vehicleType').addEventListener('change', function () {
+        const selectedVehicleType = this.value.trim();
+
+        // Get all dependent fields
+        const vehicleModel = document.getElementById('vehicleModel');
+        const vehicleOwner = document.getElementById('vehicleOwner');
+        const registrationNumber = document.getElementById('registrationNumber');
+
+        // Get asterisk spans
+        const vehicleModelRequired = document.querySelector('.vehicle-model-required');
+        const vehicleOwnerRequired = document.querySelector('.vehicle-owner-required');
+        const registrationNumberRequired = document.querySelector('.registration-number-required');
+
+        if (selectedVehicleType !== "") {
+            // Make fields required and show asterisks
+            vehicleModel.removeAttribute('style');
+            vehicleOwner.removeAttribute('style');
+            registrationNumber.removeAttribute('style');
+
+            vehicleModel.setAttribute('required', 'true');
+            vehicleOwner.setAttribute('required', 'true');
+            registrationNumber.setAttribute('required', 'true');
+
+            vehicleModelRequired.style.display = 'inline';
+            vehicleOwnerRequired.style.display = 'inline';
+            registrationNumberRequired.style.display = 'inline';
+        } else {
+            // Remove required attribute and hide asterisks
+            vehicleModel.setAttribute('style', 'pointer-events: none; opacity: 0.6;');
+            vehicleOwner.setAttribute('style', 'pointer-events: none; opacity: 0.6;');
+            registrationNumber.setAttribute('style', 'pointer-events: none; opacity: 0.6;');
+
+            vehicleModel.removeAttribute('required');
+            vehicleOwner.removeAttribute('required');
+            registrationNumber.removeAttribute('required');
+
+            vehicleModelRequired.style.display = 'none';
+            vehicleOwnerRequired.style.display = 'none';
+            registrationNumberRequired.style.display = 'none';
         }
     });
 
