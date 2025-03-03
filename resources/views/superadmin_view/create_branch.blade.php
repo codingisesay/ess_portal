@@ -1,21 +1,11 @@
 @extends('superadmin_view/superadmin_layout')  <!-- Extending the layout file -->
 @section('content')  <!-- Defining the content section -->
+<link rel="stylesheet" href="{{ asset('errors/error.css') }}">
 
 <?php 
 $id = Auth::guard('superadmin')->user()->id;
 ?>
 
-@if(session('success'))
-    <div class="alert alert-success">
-        {{ session('success') }}
-    </div>
-@endif
-
-@if(session('error'))
-    <div class="alert alert-danger">
-        {{ session('error') }}
-    </div>
-@endif
 <!DOCTYPE html>
 <html>
 <head>
@@ -28,23 +18,59 @@ $id = Auth::guard('superadmin')->user()->id;
 <link rel="stylesheet" href="{{ asset('admin_end/css/admin_form.css') }}">
 <div class="container">
     <h2>Create Branches For Your Organisation</h2>
-    <form method="POST" action="{{ route('insert_designation') }}">
+    
+        @if(session('success'))
+        <div class="alert custom-alert-success">
+            <strong>{{ session('success') }}</strong> 
+            <button class="close-btn" onclick="this.parentElement.style.display='none';">&times;</button>
+            
+        </div>
+    @endif
+    
+    @if(session('error'))
+    <div class="alert custom-alert-error">
+        <strong> {{ session('error') }}</strong>
+        <button class="close-btn" onclick="this.parentElement.style.display='none';">&times;</button>
+        </div>
+    @endif
+
+    @if($errors->any())
+    <ul>
+        @foreach ($errors->all() as $error)
+            <li>{{ $error }}</li>
+        @endforeach
+    </ul>
+@endif
+
+@if($errors->any())
+<div class="alert custom-alert-warning">
+<ul>
+@foreach($errors->all() as $error)
+<li style="color: red;">{{ $error }}</li>
+
+@endforeach
+</ul>
+</div>
+@endif
+
+
+    <form method="POST" action="{{ route('insert_branch') }}">
         @csrf
         <div class="form-container">
             <div class="form-group">
-                <input type="text" name="username" required>
-                <label>Name</label>
+                <input type="text" name="branchname" required>
+                <label>Branch Name</label>
             </div>
             <div class="form-group">
-                <input type="text" name="empid" required>
+                <input type="text" name="mobile" required>
                 <label>Mobile</label>
             </div>
             <div class="form-group">
-                <input type="email" name="usermailid" required>
+                <input type="email" name="branchmailid" required>
                 <label>Branch Email</label>
             </div>
             <div class="form-group">
-                <input type="text" name="userpassword" value="" readonly>
+                <input type="text" name="Building_No" value="" required>
                 <label>Building No</label>
             </div>
         </div>
@@ -90,13 +116,7 @@ $id = Auth::guard('superadmin')->user()->id;
         </div>
     </form>
 
-    @if($errors->any())
-        <ul>
-            @foreach ($errors->all() as $error)
-                <li>{{ $error }}</li>
-            @endforeach
-        </ul>
-    @endif
+   
 
     <h3>Branch</h3>
     <div class="table-container">

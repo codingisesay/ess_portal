@@ -49,6 +49,7 @@ Route::middleware(['auth.superadmin'])->group(function () {
     Route::post('superadmin/save_desihnation',[organisationDesignationController::class,'insertDesignation'])->name('insert_designation');
     //branch controller route
     Route::get('superadmin/create_branch',[ororganisationBranchController::class,'index'])->name('create_branch_form');
+    Route::POST('superadmin/insert_branch',[ororganisationBranchController::class,'insertBranch'])->name('insert_branch');
     //permission controller rolute
     Route::get('superadmin/create_permission/{org_id}/{desig_id}/{b_id}',[permissionController::class,'index'])->name('create_permission_form');
     Route::post('superadmin/save_permission/{org_id}/{desig_id}/{b_id}',[permissionController::class,'insertPermission'])->name('insert_permission');
@@ -63,8 +64,8 @@ Route::middleware(['auth.superadmin'])->group(function () {
     
     Route::post('superadmin/update_policy_category/{id}', [hrPolicyViewController::class, 'updatePolicyCategory'])->name('update_policy_category');
 
-    Route::post('superadmin/save_thought', [settingController::class, 'saveThought'])->name('save_thought');
-    Route::post('superadmin/save_news_events', [settingController::class, 'saveNewsEvents'])->name('save_news_events');
+    // Route::post('superadmin/save_thought', [settingController::class, 'saveThought'])->name('save_thought');
+    // Route::post('superadmin/save_news_events', [settingController::class, 'saveNewsEvents'])->name('save_news_events');
     
 });
 

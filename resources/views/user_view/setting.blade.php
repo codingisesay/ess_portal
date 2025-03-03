@@ -14,11 +14,11 @@
             </div>
 
             <!-- Leave Section (With Link to hr_universal.php) -->
-            <div class="accordion-item">
+            {{-- <div class="accordion-item">
                 <div class="accordion-header" onclick="window.location.href='{{ url('hr_universal') }}'">
                     Global Leaves
                 </div>
-            </div>
+            </div> --}}
 
             <!-- Thought of the Day -->
             <div class="accordion-item">
@@ -103,18 +103,18 @@
             </div>
 
             <!-- HR Policy -->
-            <div class="accordion-item">
+            {{-- <div class="accordion-item">
                 <div class="accordion-header" onclick="window.location.href='{{ url('fetch_policies') }}'">
                     Human Resources Policy
                 </div>
-            </div>
+            </div> --}}
 
             <!-- PMS-->
-            <div class="accordion-item">
+            {{-- <div class="accordion-item">
                 <div class="accordion-header" onclick="window.location.href='{{ url('pms') }}'">
                     PMS-Performance Management System
                 </div>
-            </div>
+            </div> --}}
         </div>
     </main>
     <script>

@@ -96,9 +96,11 @@ class hrPolicyViewController extends Controller
         $loginUserInfo = Auth::user();
         $organisationId = $loginUserInfo->organisation_id;
 
+        // dd($organisationId);
+
         $policies = DB::table('hr_policies')
             ->join('hr_policy_categories', 'hr_policies.policy_categorie_id', '=', 'hr_policy_categories.id')
-            ->where('organisation_id', $organisationId)
+            ->where('hr_policies.organisation_id', $organisationId)
             ->select('hr_policies.*', 'hr_policy_categories.name as category_name')
             ->get();
 
