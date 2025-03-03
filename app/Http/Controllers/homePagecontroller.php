@@ -3,9 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\LoginLog;
-use App\Models\thoughtOfTheDay;
-use App\Models\newsAndEvents;
-use App\Models\emp_Details;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -23,15 +20,23 @@ class homePagecontroller extends Controller
                         ->get();
 
         // Fetch additional data
-        $thoughtOfTheDay = thoughtOfTheDay::where('organisation_id', $user->organisation_id)->latest()->first();
-        $newsAndEvents = newsAndEvents::where('organisation_id', $user->organisation_id)->orderBy('startdate', 'desc')->get();
+        $thoughtOfTheDay = DB::table('thought_of_the_days')
+                             ->where('organisation_id', $user->organisation_id)
+                             ->latest()
+                             ->first();
+
+        $newsAndEvents = DB::table('news_and_events')
+                           ->where('organisation_id', $user->organisation_id)
+                           ->orderBy('startdate', 'desc')
+                           ->get();
 
         // Fetch upcoming and today's birthdays
         $currentDate = Carbon::now();
         $currentMonth = $currentDate->month;
         $currentDay = $currentDate->day;
 
-        $upcomingBirthdays = emp_Details::select('Employee_Name', 'date_of_birth', 'Designation')
+        $upcomingBirthdays = DB::table('emp_details')
+            ->select('Employee_Name', 'date_of_birth', 'Designation')
             ->whereMonth('date_of_birth', '=', $currentMonth)
             ->whereDay('date_of_birth', '>=', $currentDay)
             ->get()
@@ -44,7 +49,8 @@ class homePagecontroller extends Controller
             });
 
         // Fetch upcoming anniversaries
-        $anniversaries = emp_Details::select('Employee_Name', 'Joining_Date')
+        $anniversaries = DB::table('emp_details')
+            ->select('Employee_Name', 'Joining_Date')
             ->whereMonth('Joining_Date', '=', $currentMonth)
             ->whereDay('Joining_Date', '>=', $currentDay)
             ->get()
