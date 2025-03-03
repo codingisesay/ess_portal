@@ -47,4 +47,17 @@ class organisationDepartmentController extends Controller
 
     }
 
+    public function update(Request $request)
+    {
+        $validated = $request->validate([
+            'department_name' => 'required',
+        ]);
+
+        $department = organisation_department::find($request->department_id);
+        $department->name = $request->department_name;
+        $department->save();
+
+        return redirect()->back()->with('success', 'Department updated successfully');
+    }
+
 }

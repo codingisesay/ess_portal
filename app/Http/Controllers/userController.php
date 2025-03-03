@@ -90,4 +90,26 @@ class userController extends Controller
         return view('superadmin_view.create_user', compact('users'));
     }
 
+    public function update(Request $request)
+    {
+        $validated = $request->validate([
+            'username' => 'required',
+            'empid' => 'required',
+            'usermailid' => 'required|email',
+        ]);
+
+        $user = User::find($request->user_id);
+        $user->name = $request->username;
+        $user->employeeID = $request->empid;
+        $user->email = $request->usermailid;
+       $s = $user->save();
+
+       if($s){
+        return redirect()->back()->with('success', 'User updated successfully');
+       }else{
+        return redirect()->back()->with('error', 'User not updated successfully');
+       }
+       
+    }
+
 }

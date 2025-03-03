@@ -41,15 +41,18 @@ Route::middleware(['auth.superadmin'])->group(function () {
 //User Controller Routes
     Route::get('superadmin/create_user',[userController::class,'index'])->name('create_user');
     Route::post('superadmin/register_user',[userController::class,'register'])->name('register_save');
+    Route::post('superadmin/update_user', [userController::class, 'update'])->name('update_user');
     //Department Controller Routes
     Route::get('superadmin/create_department',[organisationDepartmentController::class,'index'])->name('create_department_form');
     Route::post('superadmin/save_department',[organisationDepartmentController::class,'insertDepartment'])->name('insert_department');
+    Route::post('superadmin/update_department', [organisationDepartmentController::class, 'update'])->name('update_department');
     //Designations Controller Routes
     Route::get('superadmin/create_designation',[organisationDesignationController::class,'index'])->name('create_designation_form');
     Route::post('superadmin/save_desihnation',[organisationDesignationController::class,'insertDesignation'])->name('insert_designation');
     //branch controller route
     Route::get('superadmin/create_branch',[ororganisationBranchController::class,'index'])->name('create_branch_form');
     Route::POST('superadmin/insert_branch',[ororganisationBranchController::class,'insertBranch'])->name('insert_branch');
+    Route::post('superadmin/update_branch', [ororganisationBranchController::class, 'update'])->name('update_branch');
     //permission controller rolute
     Route::get('superadmin/create_permission/{org_id}/{desig_id}/{b_id}',[permissionController::class,'index'])->name('create_permission_form');
     Route::post('superadmin/save_permission/{org_id}/{desig_id}/{b_id}',[permissionController::class,'insertPermission'])->name('insert_permission');
@@ -119,5 +122,6 @@ Route::middleware(['auth'])->group(function () {
     // Save Thought and News & Events
     Route::post('user/save_thought', [settingController::class, 'saveThought'])->name('save_thought');
     Route::post('user/save_news_events', [settingController::class, 'saveNewsEvents'])->name('save_news_events');
+    
 });
 
