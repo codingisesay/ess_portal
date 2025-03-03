@@ -75,7 +75,7 @@
             <div class="section">
                 <h2>Employee Details</h2>
                 <div class="left1"><p>Employment Status</p> <b>{{ ucfirst($userDetails->employment_status ?? 'N/A') }}</b></div>
-                <div class="left1"><p>Employment Type</p> <b>{{ ucfirst($userDetails->employee_type ?? 'N/A') }}</b></div>
+                <div class="left1"><p>Employment Type</p> <b>{{ ucfirst($userDetails->employee_type_name ?? 'N/A') }}</b></div>
                 <div class="left1"><p>Start Date</p> <b>{{ $userDetails->Joining_date ? \Carbon\Carbon::parse($userDetails->Joining_date)->format('d-m-Y') : 'N/A' }}</b></div>
                 <div class="left1"><p>Total Experience</p> <b>{{ ucfirst($userDetails->total_experience ?? 'N/A') }}</b></div>
             </div>
