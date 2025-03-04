@@ -35,12 +35,15 @@ $id = Auth::guard('superadmin')->user()->id;
     @endif
 
     @if($errors->any())
-    <ul>
-        @foreach ($errors->all() as $error)
-            <li>{{ $error }}</li>
-        @endforeach
-    </ul>
-    @endif
+    <div class="alert custom-alert-warning">
+<ul>
+@foreach($errors->all() as $error)
+    <li style="color: red;">{{ $error }}</li>
+    
+@endforeach
+</ul>
+    </div>
+@endif
 
     <form method="POST" action="{{ route('insert_branch') }}">
         @csrf

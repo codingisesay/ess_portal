@@ -50,6 +50,17 @@ $id = Auth::guard('superadmin')->user()->id;
     <button class="close-btn" onclick="this.parentElement.style.display='none';">&times;</button>
     </div>
 @endif
+
+@if($errors->any())
+<div class="alert custom-alert-warning">
+<ul>
+@foreach($errors->all() as $error)
+<li style="color: red;">{{ $error }}</li>
+
+@endforeach
+</ul>
+</div>
+@endif
     <form action="{{ route('register_save') }}" method="POST">
         @csrf
         <div class="form-container">
