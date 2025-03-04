@@ -30,16 +30,20 @@ class ForgotPasswordController extends Controller
     public function sendResetLinkEmail(Request $request)
     {
         $request->validate([
-            'email' => 'required|email|exists:users,email',
+            'email' => 'required|email',
         ]);
 
-        $user = User::where('email', $request->email)->first();
-
+        $user = User::where('email', $request->email)->get();
+        // echo $user[0]->email;
         // dd($user);
+        // echo $user->count();
+        // exit();
+
+        $user[0]->email;
 
         if($user->count() == 1){
 
-            $checkforduplicate = DB::table('password_reset_tokens')->where('email',$request->email)->get();
+            $checkforduplicate = DB::table('password_reset_tokens')->where('email',$user[0]->email)->get();
 
             if($checkforduplicate->count() == 1){
 
@@ -51,21 +55,23 @@ class ForgotPasswordController extends Controller
         // Create a unique reset token
         $token = Str::random(60);
 
+        // dd($token);
+
         // Insert the reset token into the password_resets table
         DB::table('password_reset_tokens')->insert([
-            'email' => $user->email,
+            'email' => $user[0]->email,
             'token' => $token,
             'created_at' => now(),
         ]);
 
         
-          $resetUrl = route('password.reset', ['token' => $token, 'email' => $user->email]);
+          $resetUrl = route('password.reset', ['token' => $token, 'email' => $user[0]->email]);
         //   exit();
           $subject = 'Password Reset Request';
-          $org_id = $user->organisation_id;
+          $org_id = $user[0]->organisation_id;
           $mail_flag = "forgot_password_link";
           $data = [
-              'username' => $user->email,
+              'username' => $user[0]->email,
               'reset_password_link' => $resetUrl,
           ];
 
@@ -101,7 +107,7 @@ class ForgotPasswordController extends Controller
     {
         // Validate the password reset form
         $request->validate([
-            'email' => 'required|email|exists:users,email',
+            'email' => 'required|email|',
             'password' => 'required|confirmed|min:8',
             'token' => 'required',
         ]);

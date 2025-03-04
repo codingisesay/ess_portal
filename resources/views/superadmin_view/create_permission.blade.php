@@ -17,6 +17,17 @@ $id = Auth::guard('superadmin')->user()->id;
     </div>
 @endif
 
+@if($errors->any())
+<div class="alert custom-alert-warning">
+<ul>
+@foreach($errors->all() as $error)
+<li style="color: red;">{{ $error }}</li>
+
+@endforeach
+</ul>
+</div>
+@endif
+
 <!DOCTYPE html>
 <html>
 <head>
