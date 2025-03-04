@@ -96,6 +96,18 @@ $employeeID = Auth::guard('web')->user()->employeeID;
                         </select>
                         <label for="designation">Designation <span style="color: red;">*</span></label>
                     </div>
+
+
+                    <div class="form-group">
+                        <select id="designation" class="form-control dropdown" name="branch" placeholder="" required>
+                            <option value="{{ old('branch',$results[0]->branch_id) }}">{{ old('designation',$results[0]->branch_name) }}</option>
+                            @foreach($branches as $branche)
+                            <option value="{{$branche->id}}">{{$branche->name}}</option>
+                            @endforeach
+                        </select>
+                        <label for="designation">Branch <span style="color: red;">*</span></label>
+                    </div>
+
                     <div class="form-group">
                         <select id="department" class="form-control dropdown" name="department" placeholder="" required>
                             <option value="{{ old('department',$results[0]->department_id) }}">{{ old('department',$results[0]->department_name ) }}</option>
