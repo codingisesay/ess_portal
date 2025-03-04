@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 use App\Models\employee_type;
 use App\Models\User;
 use App\Models\bank;
+use App\Models\branche;
 use App\Models\emp_previous_employment;
 use App\Models\emp_family_details;
 use App\Models\emp_education;
@@ -32,6 +33,9 @@ class empDetailFormController extends Controller
         $users = User::where('organisation_id', $loginUserInfo->organisation_id)->get();
         $departments = organisation_department::where('organisation_id', $loginUserInfo->organisation_id)->get();
         $designations = organisation_designation::where('organisation_id', $loginUserInfo->organisation_id)->get();
+        $branches = branche::where('organisation_id', $loginUserInfo->organisation_id)->get();
+
+        // dd($branches);
 
         $emp_types = employee_type::get();
 
@@ -40,17 +44,20 @@ class empDetailFormController extends Controller
         ->join('organisation_designations', 'emp_details.designation', '=', 'organisation_designations.id')
         ->join('users', 'emp_details.reporting_manager', '=', 'users.id')
         ->join('organisation_departments', 'emp_details.department', '=', 'organisation_departments.id')
+        ->join('branches','emp_details.branch_id', '=', 'branches.id')
         ->select('emp_details.employee_type as employee_type','employee_types.name as employee_type_name','emp_details.employee_no as employee_no','emp_details.employee_name as employee_name',
                  'emp_details.Joining_date as Joining_date','emp_details.reporting_manager as reporting_manager_id','users.name as reporting_manager_name','emp_details.total_experience as total_experience',
                  'organisation_designations.name as role_name','emp_details.designation as designation_id','organisation_departments.name as department_name','emp_details.department as department_id','emp_details.gender as gender',
                  'emp_details.date_of_birth as date_of_birth','emp_details.blood_group as blood_group','emp_details.nationality as nationality',
                  'emp_details.religion as religion','emp_details.marital_status as marital_status','emp_details.anniversary_date as anniversary_date',
-                 'emp_details.universal_account_number as universal_account_number','emp_details.provident_fund as provident_fund','emp_details.esic_no as esic_no',)
+                 'emp_details.universal_account_number as universal_account_number','emp_details.provident_fund as provident_fund','emp_details.esic_no as esic_no',
+                 'emp_details.branch_id as branch_id', 'branches.name as branch_name')
+
         ->where('emp_details.user_id', '=', $loginUserInfo->id) // Adding a WHERE condition to filter by department name
         ->get();
 
 
-        return view('user_view.emp_details',compact('emp_types','users','departments','designations','results'));
+        return view('user_view.emp_details',compact('emp_types','users','departments','designations','results','branches'));
         // return view('user_view.emp_details');
     }
 
@@ -324,6 +331,7 @@ class empDetailFormController extends Controller
         'reportingManager' => 'required',
         'totalExperience' => 'required',
         'designation' => 'required',
+        'branch' => 'required',
         'department' => 'required',
         'gender' => 'required',
         'dateOfBirth' => 'required',
@@ -357,6 +365,7 @@ class empDetailFormController extends Controller
                 'reporting_manager' => $data['reportingManager'],
                 'total_experience' => $data['totalExperience'],
                 'designation' => $data['designation'],
+                'branch_id' => $data['branch'],
                 'department' => $data['department'],
                 'gender' => $data['gender'],
                 'date_of_birth' => $data['dateOfBirth'],
@@ -386,6 +395,7 @@ class empDetailFormController extends Controller
             'reporting_manager' => $data['reportingManager'],
             'total_experience' => $data['totalExperience'],
             'designation' => $data['designation'],
+            'branch_id' => $data['branch'],
             'department' => $data['department'],
             'gender' => $data['gender'],
             'date_of_birth' => $data['dateOfBirth'],
