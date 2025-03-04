@@ -33,6 +33,8 @@ body {
     box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
     border-radius: 15px;
     margin-left: -10px; /* Move sidebar slightly to the left */
+    overflow: auto
+
 }
 
 .logo img {
@@ -149,6 +151,12 @@ nav ul li a:hover {
             <li><a href="{{ route('load_mail_config_form') }}"><img src="{{ asset('admin_end/images/createdesignation.png') }}" width="30" height="30" alt="">  Mail Settings</a></li>
             <li><a href="{{ route('create_policy_category') }}"><img src="{{ asset('admin_end/images/createdesignation.png') }}" width="30" height="30" alt="">  Create Policy Category</a></li>
             <li><a href="{{ route('create_hr_policy') }}"><img src="{{ asset('admin_end/images/createdesignation.png') }}" width="30" height="30" alt="">  Create HR Policy</a></li>
+
+            <li><a href="{{ route('create_policy_time_slot') }}"><img src="{{ asset('admin_end/images/createdesignation.png') }}" width="30" height="30" alt="">  Leave Policy Slot</a></li>
+            <li><a href="{{ route('create_policy_type') }}"><img src="{{ asset('admin_end/images/createdesignation.png') }}" width="30" height="30" alt="">  Leave Policy Type</a></li>
+            <li><a href="{{ route('create_policy') }}"><img src="{{ asset('admin_end/images/createdesignation.png') }}" width="30" height="30" alt="">  Leave policy Creation</a></li>
+            <li><a href="{{ route('employee_policy') }}"><img src="{{ asset('admin_end/images/createdesignation.png') }}" width="30" height="30" alt="">  Leave Emp policy</a></li>
+            
           </ul>
   </div>
 </nav>

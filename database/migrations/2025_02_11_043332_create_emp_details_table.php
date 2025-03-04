@@ -26,6 +26,9 @@ return new class extends Migration
             // $table->string('designation',50); //fk
             $table->bigInteger('designation'); 
             $table->foreign('designation')->references('id')->on('organisation_designations')->onDelete('cascade');
+
+            $table->bigInteger('branch_id'); 
+            $table->foreign('branch_id')->references('id')->on('branches')->onDelete('cascade');
             // $table->string('department',50); //fk
             $table->bigInteger('department'); 
             $table->foreign('department')->references('id')->on('organisation_departments')->onDelete('cascade');
