@@ -97,7 +97,7 @@ $employeeID = Auth::guard('web')->user()->employeeID;
                     </div>
                     <div class="form-group">
                         <input type="number" id="totalExperience" class="form-control" name="totalExperience" placeholder="e.g., 6.2" value="{{ old('totalExperience', $results[0]->total_experience) }}" title="Enter experience in the format Years.Months (e.g., 6.2), where months must be between 0 and 11." required step="any" maxlength="5" pattern="^\d+(\.\d{1,2})?$" oninput="validateExperience()">
-                        <label for="totalExperience">Total Experience (Format: Years.Months, e.g., 6.2 or 12.11) <span style="color: red;">*</span></label>
+                        <label for="totalExperience">Total Experience (Format: Years.Months) <span style="color: red;">*</span></label>
                         <span class="error" id="totalExperienceError" style="color: red;"></span>
                     </div>
                     <div class="form-group">
