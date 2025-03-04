@@ -88,7 +88,7 @@ $employeeID = Auth::guard('web')->user()->employeeID;
                     <div class="form-group">
                         <select id="reportingManager" class="form-control dropdown" name="reportingManager" placeholder="" required>
                             <option value="{{ old('reportingManager',$results[0]->reporting_manager_id) }}">{{old('reportingManager',$results[0]->reporting_manager_name) }}</option>
-                            <option value="None"></option>
+                            <!-- <option value="None"></option> -->
                             @foreach($users as $user)
                             <option value="{{$user->id}}">{{$user->name}}</option>
                             @endforeach
