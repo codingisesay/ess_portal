@@ -33,6 +33,17 @@ $id = Auth::guard('superadmin')->user()->id;
     </div>
     @endif
 
+    @if($errors->any())
+    <div class="alert custom-alert-warning">
+<ul>
+@foreach($errors->all() as $error)
+    <li style="color: red;">{{ $error }}</li>
+    
+@endforeach
+</ul>
+    </div>
+@endif
+
     <form method="POST" action="{{ route('insert_department') }}">
         @csrf
         <div class="form-container">

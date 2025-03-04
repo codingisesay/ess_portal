@@ -86,11 +86,11 @@ error_reporting(0);
         </section>
        
         <!-- Floating Check-Out Button -->
-        <form action="{{route('user.logout')}}" method="POST"><div id="floating-btn">
+        <!-- <form action="{{route('user.logout')}}" method="POST"><div id="floating-btn">
             @csrf
-            <button type="submit" class="fas fa-power-off" style="color: #ffffff; font-size: 30px;"></button>
+            <button type="submit" class="fas fa-power-off" style="color: #ffffff; font-size: 30px;"></button> -->
             <!-- Power off icon with custom color -->
-        </div></form>
+        <!-- </div></form> -->
         <!-- <div id="floating-btn">Check Out</div> -->
 
         <script>

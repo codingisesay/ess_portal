@@ -16,6 +16,10 @@ use App\Http\Controllers\ororganisationMailConController;
 use App\Http\Controllers\hrPolicyViewController;
 use App\Http\Controllers\ForgotPasswordController;
 use App\Http\Controllers\settingController;
+use App\Http\Controllers\organisationController;
+use App\Http\Controllers\leavePolicyController;
+
+
 
 
 /*
@@ -67,8 +71,17 @@ Route::middleware(['auth.superadmin'])->group(function () {
     
     Route::post('superadmin/update_policy_category/{id}', [hrPolicyViewController::class, 'updatePolicyCategory'])->name('update_policy_category');
 
+    Route::get('superadmin/create_organisation', [organisationController::class, 'index'])->name('create_organisation_form');
+    Route::post('superadmin/insert_organisation', [organisationController::class, 'insert'])->name('insert_organisation');
+    Route::post('superadmin/update_organisation', [organisationController::class, 'update'])->name('update_organisation');
+
     // Route::post('superadmin/save_thought', [settingController::class, 'saveThought'])->name('save_thought');
     // Route::post('superadmin/save_news_events', [settingController::class, 'saveNewsEvents'])->name('save_news_events');
+
+    Route::get('superadmin/create_leave_slot',[leavePolicyController::class,'loadPolicyTimeSlot'])->name('create_policy_time_slot');
+    Route::get('superadmin/create_leave_policy_type',[leavePolicyController::class,'loadPolicyType'])->name('create_policy_type');
+    Route::get('superadmin/create_leave_policy',[leavePolicyController::class,'loadPolicy'])->name('create_policy');
+    Route::get('superadmin/employee_policy',[leavePolicyController::class,'loadEmpPolicy'])->name('employee_policy');
     
 });
 
@@ -99,6 +112,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('user/hr-policy', [hrPolicyViewController::class, 'showHrPolicy'])->name('user.hr.policy');
     Route::get('user/hr-policy/category/{id}', [hrPolicyViewController::class, 'getPoliciesByCategory'])->name('user.hr.policy.category');
     Route::get('user/setting', [settingController::class, 'showsetting'])->name('user.setting');
+    Route::get('user/organisation', [organisationController::class, 'showOrganisation'])->name('view_organisation');
     //Insert data
 
     Route::post('user/detail_insert',[empDetailFormController::class,'insertDetail'])->name('detail_insert');
@@ -122,6 +136,7 @@ Route::middleware(['auth'])->group(function () {
     // Save Thought and News & Events
     Route::post('user/save_thought', [settingController::class, 'saveThought'])->name('save_thought');
     Route::post('user/save_news_events', [settingController::class, 'saveNewsEvents'])->name('save_news_events');
-    
+
+   
 });
 

@@ -14,7 +14,7 @@ $id = Auth::guard('superadmin')->user()->id;
 </head>
 <body>
     <div class="container">
-        <h1>Create Policy Category</h1>
+        <h1>Create Leave Type</h1>
         @if(session('success'))
         <div class="alert custom-alert-success">
             <strong>{{ session('success') }}</strong> 
@@ -41,46 +41,84 @@ $id = Auth::guard('superadmin')->user()->id;
     </div>
 @endif
 
-        <form action="{{ route('save_policy_category') }}" method="POST" enctype="multipart/form-data" class="form-container">
+        <form action="" method="POST" enctype="multipart/form-data" class="form-container">
             @csrf
             <div class="form-group">
-                <input type="text" id="category_name" name="category_name" class="form-control" required>
-                <label for="category_name">Category Name</label>
+                <select id="category_id" name="category_id" class="form-control" required>
+                    <option value="" disabled selected></option>
+                    
+                </select>
+                <label for="category_id">Select Cycle</label>
             </div>
             <div class="form-group">
+                <input type="text" id="category_name" name="category_name" class="form-control" required>
+                <label for="category_name">Leave Type Name</label>
+            </div>
+            <div class="form-group">
+                <select id="category_id" name="category_id" class="form-control" required>
+                    <option value=""></option>
+                    <option>Yes</option>
+                    <option>No</option>
+                    
+                </select>
+                <label for="category_name">Half Day Applicable?</label>
+            </div>
+            <div class="form-group">
+                <select id="category_id" name="category_id" class="form-control" required>
+                    <option value=""></option>
+                    <option>Active</option>
+                    <option>Inactive</option>
+                    
+                </select>
+                <label for="category_id">Status</label>
+            </div>
+            {{-- <div class="form-group"> --}}
+                {{-- <input type="year" id="category_name" name="category_name" class="form-control" required>
+                <label for="category_name">Year</label> --}}
+
+                
+                {{-- <select id="year" name="year" id="category_name" name="category_name" class="form-control" required></select>
+                <label for="year">Select Year:</label>
+            </div> --}}
+            {{-- <div class="form-group">
                 <select id="category_id" name="status" class="form-control" required>
                     <option value="" disabled selected></option>
                     <option value="Active">Active</option>
                     <option value="Inactive">Inactive</option>
                 </select>
                 <label for="category_id">Status</label>
-            </div>
-            <button type="submit" class="create-btn" style="position: relative; bottom:8px;">Save Category</button>
+            </div> --}}
+            <button type="submit" class="create-btn" style="position: relative; bottom:8px;">Save Type</button>
         </form>
 
-        <h3>Policy Category</h3>
+        <h3>Leave Type</h3>
         <div class="table-container">
             <table>
                 <thead>
                     <tr>
                         
                         <th>Id</th>
-                        <th>Name</th>
+                        <th>Cycle Name</th>
+                        <th>Leave Type</th>
+                        <th>Half Day</th>
                         <th>Status</th>
-                        <th>EDIT</th>
+                        <th>Edit</th>
+                      
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach ($datas as $data)
+              
 
                     <tr>
-                        <td>{{ $loop->iteration }}</td>
-                        <td>{{$data->name}}</td>
-                        <td>{{$data->status}}</td>
+                        <td>1</td>
+                        <td>1-April-2025 to 31-March-2026 </td>
+                        <td>General Leave Policy</td>
+                        <td>Yes</td>
+                        <td>Active</td>
                         <td><button class="edit-icon">Edit</button></td>
                     </tr>
                         
-                    @endforeach
+                 
                         
                     
                 </tbody>
