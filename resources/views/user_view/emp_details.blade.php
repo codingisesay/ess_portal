@@ -39,19 +39,7 @@ $employeeID = Auth::guard('web')->user()->employeeID;
 </ul>
 @endif
 
-<div class="w3-container">
-    @if(session('success'))
-    <div class="w3-panel w3-green">
-        {{ session('success') }} 
-    </div>
-    @endif
 
-    @if(session('error'))
-    <div class="w3-panel w3-red">
-        {{ session('error') }} 
-    </div>
-    @endif
-</div>
 
 <div class="tab-content active" id="tab1">
     <form action="{{ route('detail_insert') }}" method="POST">
@@ -119,6 +107,7 @@ $employeeID = Auth::guard('web')->user()->employeeID;
                         <label for="department">Department <span style="color: red;">*</span></label>
                     </div>
                 </div>
+                
             </div>
         </div>
         <div class="column" style="flex: 1; border: 1px solid #ba184e; padding: 20px; border-radius: 8px;">

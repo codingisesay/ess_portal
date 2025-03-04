@@ -675,7 +675,7 @@ error_reporting(0);
        
         <section class="upcoming-birthdays">
         <h3>Upcoming Birthdays</h3>
-    
+<div class="birthday-cards">
         @forelse ($upcomingBirthdays as $birthday)
         <div class="employee-card">
             <img src="{{ asset('user_end/images/default_avatar.png') }}" alt="Profile Image" class="profile-image">
@@ -683,6 +683,7 @@ error_reporting(0);
                 <h3><strong>{{ $birthday->Employee_Name }}</strong></h3>
                 <p>{{ $birthday->Designation }}</p>
                 <div class="badge">{{ $birthday->badgeText }}</div>
+            </div>
             </div>
         
         @empty
