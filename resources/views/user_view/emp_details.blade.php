@@ -118,6 +118,7 @@ $employeeID = Auth::guard('web')->user()->employeeID;
                         <label for="department">Department <span style="color: red;">*</span></label>
                     </div>
                 </div>
+                
             </div>
         </div>
         <div class="column" style="flex: 1; border: 1px solid #ba184e; padding: 20px; border-radius: 8px;">
