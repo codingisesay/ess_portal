@@ -10,8 +10,7 @@ error_reporting(0);
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Organisation Chart</title>
-    <link rel="icon" href=
-    "../resource/image/common/STPLLogo butterfly.png" />
+    <link rel="icon" href= "../resource/image/common/STPLLogo butterfly.png" />
     <link rel="stylesheet" href="{{ asset('/user_end/css/organisation.css') }}">
 </head>
 <body>

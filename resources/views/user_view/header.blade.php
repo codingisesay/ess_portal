@@ -5,6 +5,63 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Header</title>
     <link rel="stylesheet" href="{{ asset('/user_end/css/header.css') }}">
+    <style>
+        /* Add your custom CSS here */
+        .profile-dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+        .profile-dropdown-content {
+            display: none;
+            position: absolute;
+            right: 0;
+            background-color: #f9f9f9;
+            min-width: 77px;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+            z-index: 1;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .profile-dropdown-content a {
+            color: black;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+        }
+
+        .profile-dropdown-content a:hover {
+            background-color: #f1f1f1;
+        }
+
+        .profile-dropdown:hover .profile-dropdown-content {
+            display: block;
+        }
+
+        .profile-dropdown:hover .profile-pic {
+            border: 2px solid #8A3366;
+        }
+
+        .profile-pic {
+            cursor: pointer;
+        }
+
+        .logout-icon, .camera-icon {
+            background-color: transparent;
+            border: none;
+            color: #8A3366;
+            font-size: 20px;
+            cursor: pointer;
+            padding: 10px;
+            display: flex;
+            align-items: center;
+        }
+
+        .logout-icon:hover, .camera-icon:hover {
+            color: #6a2a52;
+        }
+    </style>
 </head>
 <body>
     <header>
@@ -41,10 +98,18 @@
                     <img src="{{ asset('user_end/images/bell.png') }}" alt="Bell Icon" style="height: 20px; vertical-align: middle;">
                 </a>
             </div>
-            <div class="profilecircle">
+            <div class="profilecircle profile-dropdown">
                 <a href="javascript:void(0)" id="profileIcon">
                     <img src="" class="profile-pic" style="height: 50px; width: 50px; border-radius: 50%; margin-bottom: 4px; vertical-align: middle;">
                 </a>
+                <div class="profile-dropdown-content">
+                    <!-- <a href="#">Profile</a> -->
+                    <form action="{{ route('user.logout') }}" method="POST">
+                        @csrf
+                        <button type="submit" class="logout-icon"><i class="fas fa-power-off"></i></button>
+                    </form>
+                    <button class="camera-icon"><i class="fas fa-camera"></i></button>
+                </div>
             </div>
         </div>
     </header>
@@ -78,63 +143,6 @@
             if (currentPage === '' || currentPage === 'ESS_HOME.php' || currentPage === 'ESS_HOME.PHP') {
                 // Ensure Dashboard is highlighted on the first login
                 navLinks[0].classList.add('active');
-            }
-        });
-    </script>
-
-    <!-- Profile Popup -->
-    <div id="profilePopup" class="popup-container">
-        <div class="popup-content">
-            <button class="close-btn" id="closePopup">&times;</button>
-            <h3>Employee Profile Information</h3>
-            <div class="profile-pic-section">
-                <form id="profilePicForm" method="POST" enctype="multipart/form-data">
-                    <input type="file" name="profilePic" id="profilePicInput" style="display: none;">
-                    <button type="button" class="change-profile" id="changeProfileBtn">Change Profile</button>
-                    <button type="submit" class="save-profile" style="display: none;" id="saveProfileBtn">Save</button>
-                </form>
-            </div>
-            <form id="profileForm">
-                <div class="form-group">
-                    <label for="fullName">Full Name</label>
-                    <input type="text" id="fullName" value="{{ htmlspecialchars($employee_data['Employee_Name'] ?? '') }}" readonly>
-                </div>
-                <div class="form-group">
-                    <label for="contactNo">Contact No.</label>
-                    <input type="text" id="contactNo" value="{{ htmlspecialchars($employee_data['Phone_Number'] ?? '') }}" readonly>
-                </div>
-                <div class="form-group">
-                    <label for="dob">Date of Birth</label>
-                    <input type="text" id="dob" value="{{ htmlspecialchars($employee_data['Date_of_Birth'] ?? '') }}" readonly>
-                </div>
-                <div class="form-group">
-                    <label for="email">Email Id</label>
-                    <input type="email" id="email" value="{{ htmlspecialchars($employee_data['Email_ID'] ?? '') }}" readonly>
-                </div>
-                <div class="form-group">
-                    <label for="designation">Designation</label>
-                    <input type="text" id="designation" value="{{ htmlspecialchars($employee_data['Designation'] ?? '') }}" readonly>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    <script>
-        // Show the profile popup and fetch employee details using AJAX
-        document.getElementById('profileIcon').addEventListener('click', function () {
-            document.getElementById('profilePopup').style.display = 'flex';
-            fetchEmployeeDetails();  // Fetch data when popup is opened
-        });
-
-        // Close the popup when the close button is clicked
-        document.getElementById('closePopup').addEventListener('click', function () {
-            document.getElementById('profilePopup').style.display = 'none';
-        });
-
-        // Close the popup when clicking outside the popup content
-        window.addEventListener('click', function (event) {
-            if (event.target === document.getElementById('profilePopup')) {
-                document.getElementById('profilePopup').style.display = 'none';
             }
         });
     </script>
