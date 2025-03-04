@@ -16,6 +16,7 @@ use App\Http\Controllers\ororganisationMailConController;
 use App\Http\Controllers\hrPolicyViewController;
 use App\Http\Controllers\ForgotPasswordController;
 use App\Http\Controllers\settingController;
+use App\Http\Controllers\organisationController;
 use App\Http\Controllers\leavePolicyController;
 
 
