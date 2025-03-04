@@ -1,12 +1,18 @@
+@extends('user_view.header')
+@section('content')
+<?php 
+error_reporting(0);
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Organization Hierarchy</title>
+    <title>Organisation Chart</title>
     <link rel="icon" href=
     "../resource/image/common/STPLLogo butterfly.png" />
-  
+    <link rel="stylesheet" href="{{ asset('/user_end/css/organisation.css') }}">
 </head>
 <body>
 
@@ -428,5 +434,6 @@
 }
 
     </style>
+    @endsection
 </body>
 </html>
