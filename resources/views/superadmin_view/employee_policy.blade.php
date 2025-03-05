@@ -4,6 +4,7 @@
 <?php 
 $id = Auth::guard('superadmin')->user()->id;
 // dd($datas);
+// dd($dataFromLeaveRestctions);
 ?>
 <head>
     <meta charset="UTF-8">
@@ -41,18 +42,35 @@ $id = Auth::guard('superadmin')->user()->id;
     </div>
 @endif
 
-        <form action="" method="POST" enctype="multipart/form-data" class="form-container">
+        <form action="{{route('insert_emp_restriction')}}" method="POST" class="form-container">
             @csrf
             <div class="form-group">
-                <input type="text" id="category_name" name="category_name" class="form-control" required>
+                <select id="category_id" name="restriction_id" class="form-control" required>
+                    <option value="" disabled selected></option>
+                    @foreach ($dataFromLeaveRestctions as $dataFromLeaveRestction)
+
+                    <option value="{{ $dataFromLeaveRestction->leave_restriction_id }}">{{ $dataFromLeaveRestction->leave_type }}</option>
+               
+                        
+                    @endforeach
+                    
+                </select>
                 <label for="category_name">Leave Type</label>
             </div>
             <div class="form-group">
-                <input type="datetime-local" id="category_name" name="category_name" class="form-control" required>
+                <select id="category_id" name="emp_id" class="form-control" required>
+                    <option value="" disabled selected></option>
+                    @foreach ($empTypes as $empType)
+
+                    <option value="{{ $empType->id }}">{{ $empType->name }}</option>
+                        
+                    @endforeach
+                   
+                </select>
                 <label for="category_name">Employee Type</label>
             </div>
             <div class="form-group">
-                <input type="datetime-local" id="category_name" name="category_name" class="form-control" required>
+                <input type="number" id="category_name" name="leave_count" class="form-control" required>
                 <label for="category_name">Leave Count</label>
             </div>
             <div class="form-group">
@@ -60,7 +78,7 @@ $id = Auth::guard('superadmin')->user()->id;
                 <label for="category_name">Year</label> --}}
 
                 
-                <select id="year" name="year" id="category_name" name="category_name" class="form-control" required></select>
+                <input type="number" id="date" name="month_start" id="category_name" name="category_name" class="form-control" required max="30" oninput="validateInput(this)" >
                 <label for="year">Month Start</label>
             </div>
             {{-- <div class="form-group">
@@ -81,24 +99,28 @@ $id = Auth::guard('superadmin')->user()->id;
                     <tr>
                         
                         <th>Id</th>
-                        <th>Name</th>
-                        <th>Start</th>
-                        <th>End</th>
-                        <th>Year</th>
+                        <th>Leave Type</th>
+                        <th>Employee Type</th>
+                        <th>Leave Count</th>
+                        <th>Month Start</th>
                         <th>edit</th>
                     </tr>
                 </thead>
                 <tbody>
               
+@foreach ($dataFroms as $dataFrom)
 
-                    <tr>
-                        <td>1</td>
-                        <td>1-April-2025 to 31-March-2026 </td>
-                        <td>1-April-2025</td>
-                        <td>31-March-2026</td>
-                        <td>2025-26</td>
-                        <td><button class="edit-icon">Edit</button></td>
-                    </tr>
+<tr>
+    <td>{{ $loop->iteration }}</td>
+    <td>{{ $dataFrom->leave_type }} </td>
+    <td>{{ $dataFrom->employee_type }}</td>
+    <td>{{ $dataFrom->leave_count }}</td>
+    <td>{{ $dataFrom->month_start }}</td>
+    <td><button class="edit-icon">Edit</button></td>
+</tr>
+    
+@endforeach
+                   
                         
                  
                         
@@ -119,6 +141,14 @@ $id = Auth::guard('superadmin')->user()->id;
           option.textContent = year;
           select.appendChild(option);
         }
+
+        function validateInput(input) {
+    if (input.value > 30) {
+        input.value = 30;  // Set the value to 30 if it exceeds the limit
+        alert('The value cannot exceed 30.');
+    }
+}
+
       </script>
 @endsection
 </body>

@@ -80,6 +80,8 @@ class empDetailFormController extends Controller
         $banks = bank::orderBy('id', 'asc')->get();
         $loginUserInfo = Auth::user();
 
+        $countrys = DB::table('countries')->get();
+
         $emp_bank_datas = DB::table('emp_bank_details')
         // First join for per_bank_name
         ->join('banks as per_bank', 'emp_bank_details.per_bank_name', '=', 'per_bank.id')
@@ -100,7 +102,7 @@ class empDetailFormController extends Controller
         // $emp_bank_datas = emp_bank_details::where('user_id', $loginUserInfo->id)->get();
 
        
-        return view('user_view.emp_bank_details',compact('banks','emp_bank_datas'));
+        return view('user_view.emp_bank_details',compact('banks','emp_bank_datas','countrys'));
 
     }
 

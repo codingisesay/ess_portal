@@ -4,6 +4,7 @@
 <?php 
 $id = Auth::guard('superadmin')->user()->id;
 // dd($datas);
+// dd($leaveCycleDatas);
 ?>
 <head>
     <meta charset="UTF-8">
@@ -41,18 +42,18 @@ $id = Auth::guard('superadmin')->user()->id;
     </div>
 @endif
 
-        <form action="" method="POST" enctype="multipart/form-data" class="form-container">
+        <form action="{{ route('insert_policy_slot') }}" method="POST" class="form-container">
             @csrf
             <div class="form-group">
-                <input type="text" id="category_name" name="category_name" class="form-control" required>
+                <input type="text" id="category_name" name="cycle_name" class="form-control" required>
                 <label for="category_name">Cycle Name</label>
             </div>
             <div class="form-group">
-                <input type="datetime-local" id="category_name" name="category_name" class="form-control" required>
+                <input type="datetime-local" id="category_name" name="start_date_time" class="form-control" required>
                 <label for="category_name">Start Date Time</label>
             </div>
             <div class="form-group">
-                <input type="datetime-local" id="category_name" name="category_name" class="form-control" required>
+                <input type="datetime-local" id="category_name" name="end_date_time" class="form-control" required>
                 <label for="category_name">End Date Time</label>
             </div>
             <div class="form-group">
@@ -60,8 +61,8 @@ $id = Auth::guard('superadmin')->user()->id;
                 <label for="category_name">Year</label> --}}
 
                 
-                <select id="year" name="year" id="category_name" name="category_name" class="form-control" required></select>
-                <label for="year">Select Year:</label>
+                <input id="text" id="category_name" name="year_slot" class="form-control" required>
+                <label for="year">Input Year: (EX: 2025-26)</label>
             </div>
             {{-- <div class="form-group">
                 <select id="category_id" name="status" class="form-control" required>
@@ -89,18 +90,18 @@ $id = Auth::guard('superadmin')->user()->id;
                     </tr>
                 </thead>
                 <tbody>
-              
+              @foreach ($leaveCycleDatas as $leaveCycleData)
 
                     <tr>
-                        <td>1</td>
-                        <td>1-April-2025 to 31-March-2026 </td>
-                        <td>1-April-2025</td>
-                        <td>31-March-2026</td>
-                        <td>2025-26</td>
+                        <td>{{ $loop->iteration }}</td>
+                        <td>{{ $leaveCycleData->name }}</td>
+                        <td>{{ $leaveCycleData->start_date }}</td>
+                        <td>{{ $leaveCycleData->end_date }}</td>
+                        <td>{{ $leaveCycleData->year }}</td>
                         <td><button class="edit-icon">Edit</button></td>
                     </tr>
                         
-                 
+                 @endforeach
                         
                     
                 </tbody>

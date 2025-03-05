@@ -20,7 +20,7 @@
                 <div class="job-title">
                     <p><strong>Designation</strong> <weak>{{ ucfirst($userDetails->designation_name ?? 'N/A') }}</weak></p>
                     <p><strong>Department</strong> <weak>{{ ucfirst($userDetails->department_name ?? 'N/A') }}</weak></p>
-                    <p><strong>Office</strong> <weak>{{ ucfirst($userDetails->office ?? 'N/A') }}</weak></p>
+                    <p><strong>Office</strong> <weak>{{ ucfirst($userDetails->branch_name ?? 'N/A') }}</weak></p>
                     <p><strong>Reporting Manager</strong> <weak>{{ ucfirst($userDetails->reporting_manager_name ?? 'N/A') }}</weak></p>
                 </div>
                 <div class="contact-details">
