@@ -77,11 +77,24 @@ Route::middleware(['auth.superadmin'])->group(function () {
 
     // Route::post('superadmin/save_thought', [settingController::class, 'saveThought'])->name('save_thought');
     // Route::post('superadmin/save_news_events', [settingController::class, 'saveNewsEvents'])->name('save_news_events');
-
+   //Load pages routes leavePolicyController superadmin
     Route::get('superadmin/create_leave_slot',[leavePolicyController::class,'loadPolicyTimeSlot'])->name('create_policy_time_slot');
     Route::get('superadmin/create_leave_policy_type',[leavePolicyController::class,'loadPolicyType'])->name('create_policy_type');
     Route::get('superadmin/create_leave_policy',[leavePolicyController::class,'loadPolicy'])->name('create_policy');
     Route::get('superadmin/employee_policy',[leavePolicyController::class,'loadEmpPolicy'])->name('employee_policy');
+
+    //Insert routess leavePolicyController superadmin
+     
+    Route::post('superadmin/insert_policy_slot',[leavePolicyController::class,'insertPolicyTimeSlot'])->name('insert_policy_slot');
+    Route::post('superadmin/insert_policy_type',[leavePolicyController::class,'insertPolicyType'])->name('insert_policy_type');
+    Route::post('superadmin/insert_policy_restriction',[leavePolicyController::class,'insertPolicyConf'])->name('insertPolicyConf');
+    Route::post('superadmin/insert_emp_restriction',[leavePolicyController::class,'insertEmpRestriction'])->name('insert_emp_restriction');
+
+ 
+
+    
+    
+    
     
 });
 
@@ -136,6 +149,11 @@ Route::middleware(['auth'])->group(function () {
     // Save Thought and News & Events
     Route::post('user/save_thought', [settingController::class, 'saveThought'])->name('save_thought');
     Route::post('user/save_news_events', [settingController::class, 'saveNewsEvents'])->name('save_news_events');
+
+       //userend
+
+       Route::get('user/leave_dashboard',[leavePolicyController::class,'showLeaveDashboard'])->name('leave_dashboard');
+       Route::get('user/leave_request',[leavePolicyController::class,'showLeaveRequest'])->name('leave_request');
 
    
 });

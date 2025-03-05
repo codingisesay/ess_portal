@@ -4,6 +4,7 @@
 <?php 
 $id = Auth::guard('superadmin')->user()->id;
 // dd($datas);
+// dd($results);
 ?>
 <head>
     <meta charset="UTF-8">
@@ -41,64 +42,57 @@ $id = Auth::guard('superadmin')->user()->id;
     </div>
 @endif
 
-        <form action="" method="POST" enctype="multipart/form-data" class="form-container">
+        <form action="{{ route('insertPolicyConf') }}" method="POST" enctype="multipart/form-data" class="form-container">
             @csrf
             <div class="form-group">
-                <select id="category_id" name="category_id" class="form-control" required>
+                <select id="category_id" name="leave_type_id" class="form-control" required>
                     <option value="" disabled selected></option>
-                    <option>General Leave Policy</option>
+                    @foreach ($results as $result)
+
+                    <option value="{{ $result->leave_type_id }}">{{ $result->leave_type }}</option>
+                        
+                    @endforeach
+                
                 </select>
                 <label for="category_id">Select Leave Type</label>
             </div>
 
             <div class="form-group">
-                <input type="number" id="category_name" name="category_name" class="form-control" required>
+                <input type="number" id="category_name" name="max_leave_count" class="form-control" required>
                 <label for="category_name">Max Leave</label>
             </div>
             <div class="form-group">
-                <input type="number" id="category_name" name="category_name" class="form-control" required>
+                <input type="number" id="category_name" name="max_leave_at_time" class="form-control" required>
                 <label for="category_name">Max Leave At Time</label>
             </div>
             <div class="form-group">
-                <input type="number" id="category_name" name="category_name" class="form-control" required>
+                <input type="number" id="category_name" name="min_leave_at_time" class="form-control" required step="0.5">
                 <label for="category_name">Min Leave At Time</label>
             </div>
-            {{-- <div class="form-group">
-                <select id="category_id" name="category_id" class="form-control" required>
-                    <option value=""></option>
-                    <option>Yes</option>
-                    <option>No</option> 
-                </select>
-                <label for="category_name">Is Leave Laps?</label>
-            </div>
-            <div class="form-group">
-                <input type="number" id="category_name" name="category_name" class="form-control" required>
-                <label for="category_name">No. Of Leave Laps</label>
-            </div> --}}
 
             <div class="form-group">
-                <select id="category_id" name="category_id" class="form-control" required>
-                    <option value=""></option>
-                    <option>Yes</option>
-                    <option>No</option> 
+                <select id="category_id" name="is_carry_forward" class="form-control" required>
+                    <option value="" disabled selected></option>
+                    <option value="Yes">Yes</option>
+                    <option value="No">No</option> 
                 </select>
                 <label for="category_name">Is Carry Forward?</label>
             </div>
             <div class="form-group">
-                <input type="number" id="category_name" name="category_name" class="form-control" required>
+                <input type="number" id="category_name" name="no_of_carry_forward" class="form-control" required>
                 <label for="category_name">No. Of Carry Forward</label>
             </div>
 
             <div class="form-group">
-                <select id="category_id" name="category_id" class="form-control" required>
-                    <option value=""></option>
-                    <option>Yes</option>
-                    <option>No</option> 
+                <select id="category_id" name="leave_encash" class="form-control" required>
+                    <option value="" disabled selected></option>
+                    <option value="Yes">Yes</option>
+                    <option value="No">No</option> 
                 </select>
                 <label for="category_name">Is Leave Encash?</label>
             </div>
             <div class="form-group">
-                <input type="number" id="category_name" name="category_name" class="form-control" required>
+                <input type="number" id="category_name" name="leave_encash_count" class="form-control" required>
                 <label for="category_name">No. Of Leave Encash</label>
             </div>
             {{-- <div class="form-group">
@@ -134,20 +128,24 @@ $id = Auth::guard('superadmin')->user()->id;
                     </tr>
                 </thead>
                 <tbody>
-              
+              @foreach ($dataFromLeaveRestctions as $dataFromLeaveRestction)
 
-                    <tr>
-                        <td>1</td>
-                        <td>General Leave Policy</td>
-                        <td>24</td>
-                        <td>2</td>
-                        <td>0.5</td>
-                        <td>Yes</td>
-                        <td>8</td>
-                        <td>Yes</td>
-                        <td>8</td>
-                        <td><button class="edit-icon">Edit</button></td>
-                    </tr>
+              <tr>
+                <td>{{ $loop->iteration }}</td>
+                <td>{{ $dataFromLeaveRestction->leave_type }}</td>
+                <td>{{ $dataFromLeaveRestction->max_leave }}</td>
+                <td>{{ $dataFromLeaveRestction->max_leave_at_time }}</td>
+                <td>{{ $dataFromLeaveRestction->min_leave_at_time }}</td>
+                <td>{{ $dataFromLeaveRestction->carry_forward }}</td>
+                <td>{{ $dataFromLeaveRestction->no_carry_forward }}</td>
+                <td>{{ $dataFromLeaveRestction->leave_encash }}</td>
+                <td>{{ $dataFromLeaveRestction->no_leave_encash }}</td>
+                <td><button class="edit-icon">Edit</button></td>
+            </tr>
+                  
+              @endforeach
+
+                    
                         
                  
                         
