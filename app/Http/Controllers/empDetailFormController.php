@@ -156,7 +156,7 @@ class empDetailFormController extends Controller
          }else{
 
             // session()->flash('error', 'Your Family Details has Not been updated successfully!');
-            return redirect()->route('user.family')->with('error', 'Your Family Details has been updated successfully!');
+            return redirect()->route('user.preemp')->with('error', 'Your Family Details has been updated successfully!');
             // return redirect()->route('user.preemp');
 
          }
@@ -190,7 +190,7 @@ class empDetailFormController extends Controller
             // session()->flash('error', 'Your Family Details has Not been Inserted successfully!');
             // return redirect()->route('user.preemp');
 
-            return redirect()->route('user.family')->with('error', 'Your Family Details has not been inserted successfully!');
+            return redirect()->route('user.preemp')->with('error', 'Your Family Details has not been inserted successfully!');
 
          }
 
@@ -272,7 +272,7 @@ class empDetailFormController extends Controller
          }else{
 
             // session()->flash('error', 'Data has Not been updated successfully!');
-            return redirect()->route('user.preemp')->with('error','No Item Modified!');
+            return redirect()->route('user.docupload')->with('error','No Item Modified!');
 
          }
 
@@ -313,7 +313,7 @@ class empDetailFormController extends Controller
 
             // session()->flash('error', 'Data has Not been Inserted successfully!');
             // return redirect()->route('user.docupload');
-            return redirect()->route('user.preemp')->with('error','Data has been not inserted successfully!');
+            return redirect()->route('user.docupload')->with('error','Data has been not inserted successfully!');
 
          }
 
@@ -386,7 +386,7 @@ class empDetailFormController extends Controller
             return redirect()->route('user.contact')->with('success', 'Data has been updated successfully!');
         } else {
             // session()->flash('error', 'No Item Modified!');
-            return redirect()->route('user.dashboard')->with('error', 'No Item Modified!');;
+            return redirect()->route('user.contact')->with('error', 'No Item Modified!');;
         }
     } else {
         $emp_detail_status = DB::table('emp_details')->insert([
@@ -419,7 +419,7 @@ class empDetailFormController extends Controller
             return redirect()->route('user.contact')->with('success', 'Data has been inserted successfully!');
         } else {
             // session()->flash('error', 'Data has Not been updated successfully!');
-            return redirect()->route('user.dashboard')->with('error', 'Issue while inserting Data!');;
+            return redirect()->route('user.contact')->with('error', 'Issue while inserting Data!');;
         }
     }
 }
@@ -499,7 +499,7 @@ class empDetailFormController extends Controller
             return redirect()->route('user.edu')->with('success', 'Data has been updated successfully!');
         } else {
             // session()->flash('error', 'Data has Not been updated successfully!');
-            return redirect()->route('user.contact')->with('error', 'No Item Modified!');
+            return redirect()->route('user.edu')->with('error', 'No Item Modified!');
         }
     } else {
         // Using Query Builder to insert data
@@ -541,7 +541,7 @@ class empDetailFormController extends Controller
             return redirect()->route('user.edu')->with('success', 'Data has been inserted successfully!');
         } else {
             // session()->flash('error', 'Data has Not been inserted successfully!');
-            return redirect()->route('user.contact')->with('error', 'Data has Not been inserted successfully!');
+            return redirect()->route('user.edu')->with('error', 'Data has Not been inserted successfully!');
         }
     }
 }
@@ -596,7 +596,7 @@ class empDetailFormController extends Controller
 
 }else{
     // session()->flash('error', 'Data has Not been Updated successfully!');
-        return redirect()->route('user.edu')->with('error', 'No Item Modified!');
+        return redirect()->route('user.bank')->with('error', 'No Item Modified!');
 
 }
         
@@ -630,7 +630,7 @@ class empDetailFormController extends Controller
 
     }else{
         // session()->flash('error', 'Data has Not been Inserted successfully!');
-            return redirect()->route('user.edu')->with('error','Data has Not been Inserted successfully!');
+            return redirect()->route('user.bank')->with('error','Data has Not been Inserted successfully!');
 
     }
 
@@ -734,7 +734,7 @@ public function insertBank(Request $request){
          }else{
     
             // session()->flash('error', 'Data has Not been updated successfully!');
-            return redirect()->route('user.bank')->with('error','No Item Modified!');
+            return redirect()->route('user.family')->with('error','No Item Modified!');
     
          }
 
@@ -781,7 +781,7 @@ public function insertBank(Request $request){
      }else{
 
         // session()->flash('error', 'Data has Not been Inserted successfully!');
-        return redirect()->route('user.bank')->with('error','Data has Not been inserted successfully!');
+        return redirect()->route('user.family')->with('error','Data has Not been inserted successfully!');
 
      }
 
