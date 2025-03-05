@@ -22,7 +22,8 @@ class organisationController extends Controller
                 'emp_details.employee_name',
                 'emp_details.designation',
                 'emp_details.employee_no',
-                'managers.name as reporting_manager',  // Select reporting manager name
+                'emp_details.reporting_manager',  // Keep the reporting manager ID
+                'managers.name as reporting_manager_name',  // Select reporting manager name
                 'organisation_departments.name as department',  // Select department name
                 'organisation_designations.name as designation',  // Select designation name
                 'emp_contact_details.per_city',
