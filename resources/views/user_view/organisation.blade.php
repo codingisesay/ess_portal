@@ -10,8 +10,7 @@ error_reporting(0);
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Organisation Chart</title>
-    <link rel="icon" href=
-    "../resource/image/common/STPLLogo butterfly.png" />
+    <link rel="icon" href= "../resource/image/common/STPLLogo butterfly.png" />
     <link rel="stylesheet" href="{{ asset('/user_end/css/organisation.css') }}">
 </head>
 <body>
@@ -36,18 +35,55 @@ error_reporting(0);
     <div class="employee-list">  
         <ul class="tree">  
             @foreach ($employees as $employee)
-                <li onclick="displayEmployeeDetails(
-                    '{{ $employee->user_id }}',
-                    '{{ $employee->employee_name }}',
-                    '{{ $employee->designation }}',
-                    '{{ $employee->employee_no }}',
-                    '{{ $employee->reporting_manager }}',
-                    '{{ $employee->department }}',
-                    '{{ $employee->per_city }}',
-                    '{{ $employee->offical_phone_number }}',
-                    '{{ $employee->offical_email_address }}'
-                )">
-                    {{ $employee->employee_name }}
+                <li>
+                    @php
+                        $hasSubordinates = false;
+                        foreach ($employees as $subordinate) {
+                            if ($subordinate->reporting_manager == $employee->user_id) {
+                                $hasSubordinates = true;
+                                break;
+                            }
+                        }
+                    @endphp
+                    @if ($hasSubordinates)
+                        <button class="toggle-button" data-user-id="{{ $employee->user_id }}" onclick="toggleChildren(this)">+</button>
+                    @endif
+                    <span onclick="displayEmployeeDetails(
+                        '{{ $employee->user_id }}',
+                        '{{ $employee->employee_name }}',
+                        '{{ $employee->designation }}',
+                        '{{ $employee->employee_no }}',
+                        '{{ $employee->reporting_manager_name }}',  // Use manager's name for display
+                        '{{ $employee->department }}',
+                        '{{ $employee->per_city }}',
+                        '{{ $employee->offical_phone_number }}',
+                        '{{ $employee->offical_email_address }}'
+                    )">
+                        {{ $employee->employee_name }}
+                    </span>
+                    @if ($hasSubordinates)
+                        <ul data-manager-id="{{ $employee->user_id }}" style="display: none;">
+                            @foreach ($employees as $subordinate)
+                                @if ($subordinate->reporting_manager == $employee->user_id)
+                                    <li>
+                                        <span onclick="displayEmployeeDetails(
+                                            '{{ $subordinate->user_id }}',
+                                            '{{ $subordinate->employee_name }}',
+                                            '{{ $subordinate->designation }}',
+                                            '{{ $subordinate->employee_no }}',
+                                            '{{ $subordinate->reporting_manager_name }}',  // Use manager's name for display
+                                            '{{ $subordinate->department }}',
+                                            '{{ $subordinate->per_city }}',
+                                            '{{ $subordinate->offical_phone_number }}',
+                                            '{{ $subordinate->offical_email_address }}'
+                                        )">
+                                            {{ $subordinate->employee_name }}
+                                        </span>
+                                    </li>
+                                @endif
+                            @endforeach
+                        </ul>
+                    @endif
                 </li>
             @endforeach
         </ul>  
@@ -84,8 +120,8 @@ error_reporting(0);
 <script>  
     // Function to toggle visibility of employee children  
     function toggleChildren(button) {  
-        var empId = button.getAttribute('data-emp-id');  
-        var children = document.querySelectorAll(`[data-manager-id='${empId}']`);  
+        var userId = button.getAttribute('data-user-id');  
+        var children = document.querySelectorAll(`[data-manager-id='${userId}']`);  
         children.forEach(child => {  
             child.style.display = (child.style.display === 'none') ? 'block' : 'none';  
         });  
@@ -431,6 +467,14 @@ error_reporting(0);
     background-color: #f5f5f5;
     cursor: pointer;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.toggle-button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+    margin-right: 5px;
 }
 
     </style>

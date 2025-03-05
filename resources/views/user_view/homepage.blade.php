@@ -15,11 +15,6 @@ error_reporting(0);
     <link rel="stylesheet" href="{{ asset('/user_end/css/header.css') }}">
     <!-- Add Flatpickr CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
-
-
-
-    
-
 </head>
 
 <body>
@@ -903,17 +898,37 @@ error_reporting(0);
         }
     </script>
 
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            // Get all navigation links
+            var navLinks = document.querySelectorAll('nav ul li a');
+
+            // Initially remove the active class from all links
+            navLinks.forEach(function (link) {
+                link.classList.remove('active');
+            });
+
+            // Get the current page's filename
+            var currentPage = window.location.pathname.split('/').pop();
+
+            // Loop through each link and check if its href matches the current page
+            navLinks.forEach(function (link) {
+                var linkPath = link.getAttribute('href').split('/').pop();
+
+                // If the current page matches the link's href, add the 'active' class
+                if (linkPath === currentPage) {
+                    link.classList.add('active');
+                }
+            });
+
+            // If no page matches (like the user is on the default page), add the active class to Dashboard
+            if (currentPage === '' || currentPage === 'ESS_HOME.php' || currentPage === 'ESS_HOME.PHP') {
+                // Ensure Dashboard is highlighted on the first login
+                navLinks[0].classList.add('active');
+            }
+        });
+    </script>
 
 @endsection
-
-
-
-
-
-
-   
-
-   
 </body>
-
 </html>
