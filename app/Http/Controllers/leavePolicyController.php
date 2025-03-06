@@ -288,18 +288,17 @@ class leavePolicyController extends Controller
         $emp_details = DB::table('emp_details')->where('user_id',$loginUserInfo->id)->get();
 
         $leave_restriction = DB::table('leave_type_restrictions')->where('leave_type_id',$leave_id)->get();
+        $leave_restrictionforemp = DB::table('leave_type_emp_categories')->where('leave_restriction_id',$leave_restriction[0]->id)->get();
 
-        dd($leave_restriction);
+        // dd($leave_restriction);
 
         if($emp_details[0]->employee_type == 1){
 
-
-
-            $remaning_leave = 24;
+            $remaning_leave = $leave_restriction[0]->max_leave;
 
         }elseif($emp_details[0]->employee_type == 2){
 
-            $remaning_leave = 12;
+            $remaning_leave = $leave_restrictionforemp[0]->leave_count;
 
         }
 
