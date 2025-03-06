@@ -101,12 +101,14 @@ body {
 =========================== */
 .greeting {
     text-align: left;
-    margin-bottom: 20px;
+    margin-top: 13px;
+    margin: auto;
 }
 
 .greeting p {
     color: #333;
     margin-top: -9px;
+
 }
 
 .greeting h2 {
@@ -161,6 +163,7 @@ body {
     width: 260px;
     padding: 20px;
     background-color: rgba(48, 134, 255, 0.5);
+    text-align: left;
 }
 
 /* Birthday & Upcoming Holiday Cards */
@@ -171,6 +174,7 @@ body {
     text-align: center;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     background-color: rgba(255, 193, 7, 0.5);
+    height: 150px;
 }
 
 /* Bottom Cards Container */
@@ -199,17 +203,18 @@ body {
     /* white-space: nowrap; */
     gap: 0.5rem;
     scroll-behavior: smooth;
-    min-width: 100%;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
-    padding: 20px;
-    text-align: center;
-    background-color: #f9e79f;
-    border-radius: 8px;
+    /* min-width: 100%; */
+    /* box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2); */
+    /* padding: 20px; */
+    /* text-align: center; */
+    /* background-color: #f9e79f; */
+    /* border-radius: 8px; */
     display: flex;
-    justify-content: center;
-    align-items: center;
+    /* justify-content: center; */
+    /* align-items: center; */
     white-space: nowrap;
-    height: 100%;
+    /* height: 100%; */
+    ;
 
 }
 
@@ -543,8 +548,10 @@ button {
 
 /* Upcoming Anniversary */
 .upcoming-anniversary {
-    max-width: 600px;
+    /* max-width: 600px; */
     margin-top: 13px;
+    width: 268px;
+    margin-left: 90px;
 }
 
 .anniversary {
@@ -622,6 +629,7 @@ button {
     margin: 20px auto;
     max-width: 400px;
     margin-top: -3px;
+    margin-right: -80px;
 }
 
 .to-do-list h3 {

@@ -1,6 +1,6 @@
 @extends('user_view/employee_form_layout')  <!-- Extending the layout file -->
 @section('content')  <!-- Defining the content section -->
-<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<!-- <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css"> -->
 <link rel="stylesheet" href="{{ asset('errors/error.css') }}">
 @if(session('success'))
 <div class="alert custom-alert-success">
