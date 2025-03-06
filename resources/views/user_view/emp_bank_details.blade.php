@@ -228,7 +228,7 @@ $id = Auth::guard('web')->user()->id;
               <div class="form-row">
                   <div class="form-group">
                       <input type="text" id="insuranceProvider" class="form-control" name="insuranceProvider"
-                          placeholder="Enter Insurance Provider" oninput="toggleInsuranceFields()" value="{{ old('insuranceProvider', $emp_bank_datas[0]->insurance_provider) }}">
+                          placeholder="Enter Insurance Provider" oninput="this.value = this.value.replace(/[0-9]/g, ''); toggleInsuranceFields()" value="{{ old('insuranceProvider', $emp_bank_datas[0]->insurance_provider) }}">
                       <label for="insuranceProvider">Insurance Provider<span class="insurance-provider-required" style="color: red; display: none;">*</span></label>
                       <span class="error" id="insuranceProviderError"></span>
                   </div>
