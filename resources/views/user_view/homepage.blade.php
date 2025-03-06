@@ -31,7 +31,7 @@ error_reporting(0);
                 <div class="card checkin">
                     <img src="{{ asset('user_end/images/Group490.png'); }}" alt="">
                     <h4>Check In</h4>
-                    <p>{{ $log->login_time }}</p>
+                    <p>{{ \Carbon\Carbon::parse($log->login_time)->format('H:i:s') }}</p>
                    
                 </div>
 
@@ -39,7 +39,7 @@ error_reporting(0);
                 <div class="card checkout">
                     <img src="{{ asset('user_end/images/Group491.png'); }}" alt="">
                     <h4>Check Out</h4>
-                    <p>{{ $log->logout_time ?? 'Not Logged Out Yet' }}</p>
+                    <p>{{ $log->logout_time ? \Carbon\Carbon::parse($log->logout_time)->format('H:i:s') : '' }}</p>
                 </div>
                 @endforeach
 
