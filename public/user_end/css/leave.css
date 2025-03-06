@@ -1,0 +1,641 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
+body {
+    background-color: #f6f6f6;
+    color: #333;
+    font-family: poppins;
+    width: 100%;
+    padding: 5px;
+}
+
+.main h1 {
+    font-size: 20px;
+}
+
+.request-btn {
+    display: flex;
+    justify-content: space-between;
+}
+
+.apply-leave {
+    background-color: #8A3366;
+    color: white;
+    width: 178px;
+    height: 55.19px;
+    border-radius: 10px;
+
+}
+
+.main {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+
+}
+
+.left-sec {
+    width: 76%;
+    display: flex;
+    flex-direction: column;
+}
+
+.one {
+
+    display: flex;
+    flex-direction: row;
+    gap: 30px;
+    /* justify-content: flex-start; */
+    width: fit-content;
+}
+
+.two {
+
+    display: flex;
+    flex-direction: row;
+    gap: 30px;
+    margin-top: 20px;
+    /* justify-content: flex-start; */
+}
+
+.three {
+    margin-top: 20px;
+}
+
+
+/* Average hours worked */
+.attendance-header {
+    text-align: left;
+
+    /* width: 100%; */
+    height: 460px;
+}
+
+.attendance-header h2 {
+    font-size: 28px;
+}
+
+.chart-container {
+    width: 659px;
+    height: 366px;
+    padding-right: 29px;
+    background-color: white;
+    border-radius: 30px;
+    margin: auto;
+}
+
+
+
+
+/* Leave-Summary */
+.leave-summary-container {
+    display: grid;
+    /* Use grid layout */
+    grid-template-columns: repeat(2, 1fr);
+    /* Create two columns */
+    gap: 30px;
+    /* Space between items */
+    padding: 20px;
+    max-height: 400px;
+    /* Set a maximum height to allow for scrolling */
+    overflow-y: auto;
+    /* Enable vertical scrolling if content exceeds max height */
+}
+
+/* Styling for individual leave cards */
+.leave-card {
+    width: 300px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 100%;
+    /* Allow it to stretch to container width */
+    height: 170px;
+    text-align: center;
+    /* border: 2px solid #ccc; */
+    padding: 20px;
+    border-radius: 30px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Container for the donut chart */
+.chart-container-leave {
+    position: relative;
+    /* width: 60%; */
+    height: 100%;
+}
+
+/* Styling for the legend next to the donut chart */
+.legend {
+    /* width: 35%; */
+    text-align: left;
+    /* padding: 30px; */
+    /* padding-left: 20px; */
+}
+
+/* Styling for the color dots in the legend */
+.dot {
+    height: 10px;
+    width: 10px;
+    border-radius: 50%;
+    display: inline-block;
+    margin-right: 5px;
+}
+
+@media (max-width: 768px) {
+    .leave-summary-container {
+        grid-template-columns: 1fr;
+        /* Stack all cards in a single column on small screens */
+        max-height: 400px;
+        /* Optional: adjust max-height for small screens */
+    }
+}
+
+
+
+
+/* Applied leaves */
+
+/* Applied leaves section */
+.applied-leaves {
+    max-width: 900px;
+
+}
+
+/* .applied-leaves h1 {
+    text-align: center;
+   
+    font-size: 28px;
+    margin-bottom: 20px;
+} */
+
+.container {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    max-height: 400px;
+    /* Adjust the height as needed */
+    overflow-y: auto;
+    /* Enables vertical scrolling */
+    padding-right: 10px;
+    /* Prevents scroll bar overlap with content */
+    width: 460px;
+}
+
+/* Style for each leave request */
+/* Style for each leave request */
+.status-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: 10px;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    width: 100%;
+    /* Make sure it takes up full width of the container */
+}
+
+.status-item .date {
+    font-weight: bold;
+    color: #555;
+    font-size: 15px;
+    flex-shrink: 0;
+    /* Prevent shrinking of the date */
+    margin-right: 15px;
+    /* Add space between the date and the reason */
+}
+
+.status-item .note {
+    color: #777;
+    font-size: 15px;
+    margin-top: 5px;
+    word-wrap: break-word;
+    word-break: break-word;
+    flex-grow: 1;
+    /* Allow the note to take available space */
+    margin-right: 15px;
+    /* Add space between the note and the button */
+}
+
+.btn {
+    padding: 13px 17px;
+    border-radius: 30px;
+    font-weight: bold;
+    cursor: pointer;
+    width: 110px;
+    text-align: center;
+    border: none;
+    align-self: flex-start;
+    /* Align the button to the top of the container */
+}
+
+
+.btn.pending {
+    background-color: #FFC107;
+    color: #fff;
+}
+
+.btn.rejected {
+    background-color: #D53040;
+    color: #fff;
+}
+
+.btn.approved {
+    background-color: #0E8D4A;
+    color: #fff;
+}
+
+.btn:hover {
+    opacity: 0.8;
+}
+
+
+
+/* Attendance Overview */
+.attendance {
+    /* background-color: white; */
+    width: 700px;
+    /* height: 1200px; */
+    border-radius: 30px;
+    /* padding: 20px; */
+
+}
+
+
+
+.attendance-overview {
+
+    background-color: white;
+    border-radius: 30px;
+    padding: 20px;
+    width: 806px;
+    height: 500px;
+}
+
+.legend1 {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+    width: 800px;
+}
+
+.legend1 div {
+    width: 20px;
+    height: 20px;
+    margin: 0 10px;
+    border-radius: 4px;
+}
+
+.on-time {
+    background-color: #8A3366;
+}
+
+/* Dark Purple */
+.late {
+    background-color: #E0AFA0;
+}
+
+/* Light Pink */
+.absent {
+    background-color: #D9D9D9;
+}
+
+/* Light Gray */
+.chart {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 364px;
+
+}
+
+.month {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 55px;
+    color: #B1B1B1;
+}
+
+.bar {
+    width: 100%;
+    border-radius: 12px;
+    margin-bottom: 5px;
+    position: relative;
+    width: 40px;
+}
+
+.tooltip {
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #333;
+    color: #fff;
+    padding: 5px;
+    border-radius: 5px;
+    visibility: hidden;
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+.bar:hover .tooltip {
+    visibility: visible;
+    opacity: 1;
+}
+
+
+.chart1 {
+    display: flex;
+    align-items: flex-end;
+}
+
+.y-axis {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    margin-right: 10px;
+    gap: 21px;
+    color: #B1B1B1;
+
+}
+
+
+
+
+/* Attendance-rate */
+/* chart-container1{
+    width: 659px;  
+    height: 366px;
+    padding: 30px;  
+    background-color: white;
+    border-radius: 30px;
+    margin: auto; 
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+
+} */
+
+
+/* Leave type */
+.leave-type {
+    margin-top: 50px;
+}
+
+.container-type {
+    /* max-width: 305px;   */
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    background: white;
+    padding: 25px;
+    border-radius: 30px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    gap: 5px;
+    height: 300px;
+    margin-bottom: 50px;
+    overflow: auto;
+}
+
+
+
+/* Basic styling for all buttons */
+/* Basic styling for all buttons */
+/* Basic styling for all buttons */
+.button {
+    padding: 10px 20px;
+    font-size: 16px;
+    border: none;
+    border-radius: 30px;
+    cursor: pointer;
+    margin: 10px;
+    width: 200px;
+    text-align: center;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+/* Color styles for different leave types */
+.sick_leave {
+    background-color: #D53040;
+    /* Red for Sick Leave */
+    color: white;
+}
+
+.privilege_leave {
+    background-color: #8A3366;
+    /* Green for Privilege Leave */
+    color: white;
+}
+
+.casual_leave {
+    background-color: #2196F3;
+    /* Blue for Casual Leave */
+    color: white;
+}
+
+.maternity_leave {
+    background-color: #D9C4EC;
+    /* Orange for Maternity Leave */
+    color: white;
+}
+
+.paternity_leave {
+    background-color: #135627;
+    /* green for paternity Leave */
+    color: white;
+}
+
+
+/* Hover effect for buttons */
+.button:hover {
+    transform: scale(1.05);
+    /* Slightly enlarge button on hover */
+    opacity: 0.8;
+}
+
+
+
+/* 
+Holidays */
+
+.holidays {
+    height: 630px;
+    overflow: auto;
+    /* Always allow vertical scrolling */
+    position: relative;
+    transition: all 0.3s ease-in-out;
+    border-radius: 30px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+
+}
+
+.container-holiday {
+
+
+
+    background-color: white;
+    height: 630px;
+    overflow-y: auto;
+    position: relative;
+
+
+}
+
+
+.holiday-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.holiday-item {
+    display: flex;
+    flex-direction: row;
+    /* Layout items horizontally */
+    justify-content: space-between;
+    align-items: center;
+    /* Ensure items are centered vertically */
+    padding: 10px;
+    height: 80px;
+    /* Set a fixed height for each item */
+    width: 100%;
+    /* Ensure the item takes up full width of container */
+    box-sizing: border-box;
+    /* Include padding and border in total size */
+    /* border-bottom: 1px solid #ddd; */
+    transition: background-color 0.3s;
+}
+
+.holiday-item.hidden {
+    display: none;
+    /* Initially hide past holidays */
+}
+
+.holiday-item:hover {
+    background-color: #eef;
+}
+
+
+.yellow-box {
+    background-color: #8A3366;
+    color: #000;
+    padding: 5px 10px;
+    border-radius: 15px;
+    height: 55px;
+    width: 50px;
+}
+
+.gray-box {
+    background-color: #ccc;
+    color: #000;
+    padding: 5px 10px;
+    border-radius: 5px;
+}
+
+.holiday-name {
+    flex-grow: 1;
+    text-align: left;
+    margin-left: 10px;
+    font-weight: bold;
+}
+
+.day {
+    font-style: italic;
+    color: #666;
+}
+
+.disabled {
+    opacity: 0.6;
+}
+
+.holidays::-webkit-scrollbar {
+    width: 8px;
+}
+
+.holidays::-webkit-scrollbar-thumb {
+    background-color: #888;
+    border-radius: 4px;
+}
+
+.holidays::-webkit-scrollbar-thumb:hover {
+    background-color: #555;
+}
+
+
+
+
+
+
+/* leave-summary table */
+.leave-balance {
+    background-color: white;
+
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+    background-color: #fff;
+    border-radius: 8px;
+    overflow: hidden;
+    /* To round the corners */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    /* Optional shadow for better aesthetics */
+}
+
+th,
+td {
+    padding: 12px;
+    text-align: center;
+    border: 1px solid #e0e0e0;
+    /* Border between cells */
+}
+
+th {
+    background-color: #d8a5a1;
+    /* Light pink color */
+    color: #fff;
+    padding: 40px;
+}
+
+tr:nth-child(even) {
+    background-color: #f4f4f4;
+    /* Alternate row color */
+}
+
+tr:hover {
+    background-color: #f1f1f1;
+    /* Highlight on hover */
+}
+
+
+/* Absenteeism rate */
+.container-absent {
+    /* max-width: 1319px;
+    height: 550px; */
+    background-color: white;
+    border-radius: 30px;
+    width: 1193px;
+
+}
+
+.bottom {
+    margin-top: 20px;
+}
+
+.bottom h1 {
+    font-size: 20px;
+    margin-bottom: -17px;
+}
+
+/* canvas {
+    max-width: 100%;
+    height: 500px;
+} */
+
+
+.right-sec {
+    margin-left: 96px;
+    width: 266px !important;
+}

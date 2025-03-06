@@ -1,24 +1,273 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use App\Models\leaveCycle;
+use App\Models\leaveType;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 
 class leavePolicyController extends Controller
 {
+    //superadmin end
     public function loadPolicyTimeSlot(){
-        return view('superadmin_view.create_leave_slot');
+        $id = Auth::guard('superadmin')->user()->id;
+        $leaveCycleDatas = leaveCycle::where('organisation_id', $id)->get();
+        return view('superadmin_view.create_leave_slot',compact('leaveCycleDatas'));
+    }
+
+    public function insertPolicyTimeSlot(Request $request){
+        $data = $request->validate([
+            'cycle_name' => 'required',
+            'start_date_time' => 'required',
+            'end_date_time' => 'required',
+            'year_slot' => 'required',
+        ]);
+
+        $id = Auth::guard('superadmin')->user()->id;
+
+        // dd($data);
+
+        $status = DB::table('leave_cycles')->insert([
+            'name' => $data['cycle_name'],
+            'start_date' => $data['start_date_time'],
+            'end_date'=> $data['end_date_time'],
+            'organisation_id'=> $id,
+            'year'=> $data['year_slot'],
+            'created_at'=> NOW(),
+            'updated_at'=> NOW(),
+        ]);
+
+        if($status){
+
+            return redirect()->route('create_policy_time_slot')->with('success', 'Record Inserted successfully!');
+
+        }else{
+
+            return redirect()->route('create_policy_time_slot')->with('error', 'Record Not Inserted successfully!');
+
+        }
+
+
+
     }
 
     public function loadPolicyType(){
-        return view('superadmin_view.create_leave_type');
+        $id = Auth::guard('superadmin')->user()->id;
+
+       
+        // $results = DB::table('emp_details')
+        // ->join('employee_types', 'emp_details.employee_type', '=', 'employee_types.id')
+        // ->select('emp_details.employee_type as employee_type','employee_types.name as employee_type_name','emp_details.employee_no as employee_no','emp_details.employee_name as employee_name');
+ 
+        $results = DB::table('leave_types')
+                   ->join('leave_cycles', 'leave_types.leave_cycle_id', '=', 'leave_cycles.id')
+                   ->select('leave_types.name as leave_type','leave_types.half_day as leave_half_status','leave_types.status as leave_status','leave_types.id as leave_type_id', 'leave_cycles.name as leave_cycle_name','leave_cycles.id as leave_cycle_id','leave_cycles.organisation_id as leave_cycle_organisation_id') // Select all columns from both tables
+                   ->where('leave_cycles.organisation_id', '=', $id)
+                   ->get();
+
+    // dd($results);
+
+
+
+        $leaveCycleDatas = leaveCycle::where('organisation_id', $id)->get();
+        return view('superadmin_view.create_leave_type',compact('leaveCycleDatas','results'));
+    }
+
+    public function insertPolicyType(Request $request){
+
+        $data = $request->validate([
+            'cycle_slot_id' => 'required',
+            'leave_category' => 'required',
+            'half_day_status' => 'required',
+            'status' => 'required',
+        ]);
+
+        $id = Auth::guard('superadmin')->user()->id;
+
+        // dd($data);
+
+        $status = DB::table('leave_types')->insert([
+            'name' => $data['leave_category'],
+            'half_day' => $data['half_day_status'],
+            'status'=> $data['status'],
+            'leave_cycle_id'=> $data['cycle_slot_id'],
+            'created_at'=> NOW(),
+            'updated_at'=> NOW(),
+        ]);
+
+        if($status){
+
+            return redirect()->route('create_policy_type')->with('success', 'Record Inserted successfully!');
+
+        }else{
+
+            return redirect()->route('create_policy_type')->with('error', 'Record Not Inserted successfully!');
+
+        }
+
+
+
     }
 
     public function loadPolicy(){
-        return view('superadmin_view.create_leave_policy');
+        $id = Auth::guard('superadmin')->user()->id;
+        $results = DB::table('leave_types')
+                   ->join('leave_cycles', 'leave_types.leave_cycle_id', '=', 'leave_cycles.id')
+                   ->select('leave_types.name as leave_type','leave_types.half_day as leave_half_status','leave_types.status as leave_status','leave_types.id as leave_type_id', 'leave_cycles.name as leave_cycle_name','leave_cycles.id as leave_cycle_id','leave_cycles.organisation_id as leave_cycle_organisation_id') // Select all columns from both tables
+                   ->where('leave_cycles.organisation_id', '=', $id)
+                   ->where('leave_types.status', '=', 'Active')
+                   ->get();
+
+                   $dataFromLeaveRestctions = DB::table('leave_type_restrictions')
+                   ->join('leave_types', 'leave_type_restrictions.leave_type_id', '=', 'leave_types.id')
+                   ->join('leave_cycles', 'leave_types.leave_cycle_id','=', 'leave_cycles.id')
+                   ->select('leave_types.name as leave_type','leave_type_restrictions.*') // Select all columns from both tables
+                   ->where('leave_cycles.organisation_id', '=', $id)
+                   ->get();
+
+                //    dd($dataFromLeaveRestctions);
+
+        return view('superadmin_view.create_leave_policy',compact('results','dataFromLeaveRestctions'));
+    }
+
+
+    public function insertPolicyConf(Request $request){
+
+        $data = $request->validate([
+            'leave_type_id' => 'required',
+            'max_leave_count' => 'required',
+            'max_leave_at_time' => 'required',
+            'min_leave_at_time' => 'required',
+
+            'is_carry_forward' => 'required',
+            'no_of_carry_forward' => 'required',
+            'leave_encash' => 'required',
+            'leave_encash_count' => 'required',
+        ]);
+
+        $id = Auth::guard('superadmin')->user()->id;
+
+        $insertStatus = DB::table('leave_type_restrictions')->where('leave_type_id',$data['leave_type_id'])->get();
+
+        if($insertStatus->count() == 1){
+
+            return redirect()->route('create_policy')->with('error', 'This Policy is alreay created, Please edit same instance!');
+
+        }else{
+
+            $status = DB::table('leave_type_restrictions')->insert([
+                'leave_type_id' => $data['leave_type_id'],
+                'max_leave' => $data['max_leave_count'],
+                'max_leave_at_time'=> $data['max_leave_at_time'],
+                'min_leave_at_time'=> $data['min_leave_at_time'],
+                'carry_forward'=> $data['is_carry_forward'],
+                'no_carry_forward' => $data['no_of_carry_forward'],
+                'leave_encash' => $data['leave_encash'],
+                'no_leave_encash' => $data['leave_encash_count'],
+                'created_at'=> NOW(),
+                'updated_at'=> NOW(),
+            ]);
+    
+            if($status){
+    
+                return redirect()->route('create_policy')->with('success', 'Record Inserted successfully!');
+    
+            }else{
+    
+                return redirect()->route('create_policy')->with('error', 'Record Not Inserted successfully!');
+    
+            }
+    
+
+        }
+
+        // dd($insertStatus);
+
+     
+
+
     }
 
     public function loadEmpPolicy(){
-        return view('superadmin_view.employee_policy');
+        $id = Auth::guard('superadmin')->user()->id;
+
+        
+        $dataFroms = DB::table('leave_type_emp_categories')
+        ->join('leave_type_restrictions', 'leave_type_emp_categories.leave_restriction_id', '=', 'leave_type_restrictions.id')
+        ->join('leave_types', 'leave_type_restrictions.leave_type_id','=', 'leave_types.id')
+        ->join('leave_cycles', 'leave_types.leave_cycle_id','=', 'leave_cycles.id')
+        ->join('employee_types', 'leave_type_emp_categories.employee_category_id','=', 'employee_types.id')
+        ->select('employee_types.name as employee_type','leave_types.name as leave_type','leave_type_restrictions.id as leave_restriction_id','leave_type_emp_categories.*') // Select all columns from both tables
+        ->where('leave_cycles.organisation_id', '=', $id)
+        ->get();
+
+        // dd($dataFrom);
+
+        $dataFromLeaveRestctions = DB::table('leave_type_restrictions')
+        ->join('leave_types', 'leave_type_restrictions.leave_type_id', '=', 'leave_types.id')
+        ->join('leave_cycles', 'leave_types.leave_cycle_id','=', 'leave_cycles.id')
+        ->select('leave_types.name as leave_type','leave_type_restrictions.id as leave_restriction_id') // Select all columns from both tables
+        ->where('leave_cycles.organisation_id', '=', $id)
+        ->where('leave_types.status', '=', 'Active')
+        ->get();
+
+        $empTypes = DB::table('employee_types')->get();
+        // dd($empTypes);
+        return view('superadmin_view.employee_policy',compact('dataFromLeaveRestctions','empTypes','dataFroms'));
+    }
+
+    public function insertEmpRestriction(Request $request){
+
+        $data = $request->validate([
+            'restriction_id' => 'required',
+            'emp_id' => 'required',
+            'leave_count' => 'required',
+            'month_start' => 'required',
+        ]);
+
+        $insertStatus = DB::table('leave_type_emp_categories')->where('leave_restriction_id',$data['restriction_id'])->get();
+
+        if($insertStatus->count() == 1){
+
+            return redirect()->route('employee_policy')->with('error', 'This Policy is alreay created, Please edit same instance!');
+
+        }else{
+
+            $status = DB::table('leave_type_emp_categories')->insert([
+                'leave_restriction_id' => $data['restriction_id'],
+                'employee_category_id' => $data['emp_id'],
+                'leave_count'=> $data['leave_count'],
+                'month_start'=> $data['month_start'],
+                'created_at'=> NOW(),
+                'updated_at'=> NOW(),
+            ]);
+    
+            if($status){
+    
+                return redirect()->route('employee_policy')->with('success', 'Record Inserted successfully!');
+    
+            }else{
+    
+                return redirect()->route('employee_policy')->with('error', 'Record Not Inserted successfully!');
+    
+            }
+
+        }
+
+
+
+    }
+
+    //userend
+
+    public function showLeaveDashboard(){
+        return view('user_view.leave_dashboard');
+    }
+
+    public function showLeaveRequest(){
+        return view('user_view.leave_request');
     }
 }
