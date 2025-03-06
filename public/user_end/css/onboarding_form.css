@@ -709,8 +709,10 @@ body {
 
 h3,
 h4 {
-    color: #333;
+    /* color: #333; */
+    color: #8A3366;
     margin-bottom: 30px;
+    font-size: 20px;
 }
 
 
@@ -786,7 +788,7 @@ h4 {
 .form-group {
     flex: 1;
     min-width: 23%;
-    max-width: 23%;
+    max-width: 24%;
     box-sizing: border-box;
     display: flex;
     flex-direction: column;
