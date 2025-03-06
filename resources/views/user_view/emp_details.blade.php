@@ -1,6 +1,6 @@
 @extends('user_view/employee_form_layout')  <!-- Extending the layout file -->
 @section('content')  <!-- Defining the content section -->
-<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<!-- <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css"> -->
 <link rel="stylesheet" href="{{ asset('errors/error.css') }}">
 <?php 
 error_reporting(0);
@@ -84,7 +84,7 @@ $employeeID = Auth::guard('web')->user()->employeeID;
                     </div>
                     <div class="form-group">
                         <input type="number" id="totalExperience" class="form-control" name="totalExperience" placeholder="e.g., 6.2" value="{{ old('totalExperience', $results[0]->total_experience) }}" title="Enter experience in the format Years.Months (e.g., 6.2), where months must be between 0 and 11." required step="any" maxlength="5" pattern="^\d+(\.\d{1,2})?$" oninput="validateExperience()">
-                        <label for="totalExperience">Total Experience (Format: Years.Months) <span style="color: red;">*</span></label>
+                        <label for="totalExperience">Total Experience(Years.Month)<span style="color: red;">*</span></label>
                         <span class="error" id="totalExperienceError" style="color: red;"></span>
                     </div>
                     <div class="form-group">
