@@ -57,7 +57,7 @@ error_reporting(0);
     <label for="end_date">End Date:</label>
     <input type="date" id="end_date" name="end_date" required min="2023-01-01">
     <br>
-
+<div id="display_half_day" style="display:none;">
     <label for="leave_slot">Slot:</label>
     <select name="leave_slot" id="leave_slot" required>
         <option value="" disabled selected>Select An Option</option>
@@ -66,6 +66,7 @@ error_reporting(0);
         <option value="">Second Half</option>
        
     </select>
+</div>
 <br>
     <label for="reason">Reason:</label>
     <textarea id="reason" name="reason" required></textarea>
@@ -147,7 +148,10 @@ $(document).ready(function () {
                   type: 'get',
                   success: function (response) {
                       // Handle success
-                      $('#remaining_days').val(response.remaining_leave);
+                     $('#display_half_day').css({
+                        display:response.half_day_status
+                     })
+                    // console.log(response);
                   },
                   error: function (xhr, status, error) {
                       // Handle error

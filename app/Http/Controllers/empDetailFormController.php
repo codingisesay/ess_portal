@@ -675,7 +675,7 @@ public function insertBank(Request $request){
         'accountNumber2' => 'required',
         'ifscCode2' => 'required',
         'passportNumber' => '',
-        'issuingCountry' => '',
+        'country' => '',
         'passportIssueDate' => '',
         'passportExpiryDate' => '',
         'usaVisa' => '',
@@ -710,7 +710,7 @@ public function insertBank(Request $request){
             'sal_account_number' => $data['accountNumber2'],
             'sal_ifsc_code' => $data['ifscCode2'],
             'passport_number' => $data['passportNumber'],
-            'issuing_country' => $data['issuingCountry'],
+            'issuing_country' => $data['country'],
             'passport_issue_date' => $data['passportIssueDate'],
             'passport_expiry_date' => $data['passportExpiryDate'],
     
@@ -754,7 +754,7 @@ public function insertBank(Request $request){
         'sal_account_number' => $data['accountNumber2'],
         'sal_ifsc_code' => $data['ifscCode2'],
         'passport_number' => $data['passportNumber'],
-        'issuing_country' => $data['issuingCountry'],
+        'issuing_country' => $data['country'],
         'passport_issue_date' => $data['passportIssueDate'],
         'passport_expiry_date' => $data['passportExpiryDate'],
 

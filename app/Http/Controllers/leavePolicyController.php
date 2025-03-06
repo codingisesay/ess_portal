@@ -284,12 +284,41 @@ class leavePolicyController extends Controller
     }
 
     public function fetchRemainingLeave($leave_id){
-    //    dd($leave_id);
-    $x = 24;
-    // echo $x;
+        $loginUserInfo = Auth::user();
+        $emp_details = DB::table('emp_details')->where('user_id',$loginUserInfo->id)->get();
+
+        $leave_restriction = DB::table('leave_type_restrictions')->where('leave_type_id',$leave_id)->get();
+
+        dd($leave_restriction);
+
+        if($emp_details[0]->employee_type == 1){
+
+
+
+            $remaning_leave = 24;
+
+        }elseif($emp_details[0]->employee_type == 2){
+
+            $remaning_leave = 12;
+
+        }
+
+        // dd($emp_details[0]->employee_type);
+  
+   
 
     return response()->json([
-        'remaining_leave' => $x,  // This is the data you will send back to the front-end
+        'remaining_leave' => $remaning_leave,  // This is the data you will send back to the front-end
     ]);
+    }
+
+    public function fetchStatusHalfDay($leave_id,$start_date,$end_date){
+     
+
+        return response()->json([
+            'half_day_status' => 'block',  // This is the data you will send back to the front-end
+        ]);
+    
+
     }
 }

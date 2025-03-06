@@ -141,8 +141,8 @@ $id = Auth::guard('web')->user()->id;
                   </div>
                   <div class="form-group">
                       <span class="error" id="nationalityError"></span>
-                      <select id="nationality" class="form-control" placeholder="" name="issuingCountry">
-                          <option value="{{ old('issuingCountry', $emp_bank_datas[0]->issuing_country) }}" disabled selected>{{ old('issuingCountry', $emp_bank_datas[0]->issuing_country) }}</option>
+                      <select class="form-control" name="country">
+                          <option value="{{ old('issuingCountry', $emp_bank_datas[0]->issuing_country) }}">{{ old('issuingCountry', $emp_bank_datas[0]->issuing_country) }}</option>
                           <!-- Add your country options here -->
                           @foreach ($countrys as $country)
 
