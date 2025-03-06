@@ -1,5 +1,5 @@
-<!DOCTYPE html>
-<html lang="en">
+@extends('user_view.header');
+@section('content')
 
 <head>
     <meta charset="UTF-8">
@@ -7,6 +7,7 @@
     <title>Leave & Attendance Dashboard</title>
     <link rel="icon" href="{{ asset('user_end/images/STPLLogo butterfly.png') }}" />
     <link rel="stylesheet" href="{{ asset('user_end/css/leave.css') }}">
+    
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
@@ -456,5 +457,5 @@
         </div>
     </div>
 </body>
-
+@endsection
 </html>
