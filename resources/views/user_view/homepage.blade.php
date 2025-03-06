@@ -13,12 +13,38 @@ error_reporting(0);
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="stylesheet" href="{{ asset('/user_end/css/homepage.css') }}">
     <link rel="stylesheet" href="{{ asset('/user_end/css/header.css') }}">
+    <link rel="stylesheet" href="{{ asset('errors/error.css') }}">
     <!-- Add Flatpickr CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 </head>
 
 <body>
-   
+
+@if(session('success'))
+<div class="alert custom-alert-success">
+    <strong>{{ session('success') }}</strong> 
+    <button class="close-btn" onclick="this.parentElement.style.display='none';">&times;</button>
+    
+</div>
+@endif
+
+@if(session('error'))
+<div class="alert custom-alert-error">
+<strong> {{ session('error') }}</strong>
+<button class="close-btn" onclick="this.parentElement.style.display='none';">&times;</button>
+</div>
+@endif
+
+@if($errors->any())
+<div class="alert custom-alert-warning">
+<ul>
+@foreach($errors->all() as $error)
+<li style="color: red;">{{ $error }}</li>
+
+@endforeach
+</ul>
+</div>
+@endif
 
     <!-- First main for three sections -->
     <main class="main-group">
@@ -126,7 +152,8 @@ error_reporting(0);
       
         <section class="to-do-list">
             <h3>To-do List</h3>
-            <form id="todo-form" class="to-do-list-container">
+            <form id="todo-form" class="to-do-list-container" method="POST" action="{{ route('user.save_todo') }}">
+                @csrf
                 <div class="to-do-list-container">
                     <div class="date-picker-container">
                         <input type="date" name="task_date" id="task_date" class="date-display" required>
@@ -163,46 +190,6 @@ error_reporting(0);
             </div>
         </div>
 
-        <script>
-    // Handle form submission via AJAX
-    document.getElementById('todo-form').addEventListener('submit', function (e) {
-        e.preventDefault(); // Prevent default form submission
-
-        // Gather form data
-        var formData = new FormData(this);
-
-        // Send data to the server via AJAX
-        var xhr = new XMLHttpRequest();
-        xhr.open('POST', 'save_todo.php', true);
-        xhr.onload = function () {
-            if (xhr.status === 200) {
-                // Check the server response
-                if (xhr.responseText === 'success') {
-                    showSuccessModal(); // Show success modal on success
-                    document.getElementById('todo-form').reset(); // Reset the form
-                } else {
-                    alert('Error saving task: ' + xhr.responseText); // Show error if any
-                }
-            } else {
-                alert('AJAX error: ' + xhr.status); // Show AJAX error
-            }
-        };
-        xhr.send(formData); // Send form data to the server
-    });
-
-    // Show success modal and apply blur effect
-    function showSuccessModal() {
-        document.getElementById('success-modal').style.display = 'flex'; // Show modal
-        document.body.classList.add('modal-active'); // Apply blur effect to the body
-    }
-
-    // Close the success modal and refresh the page
-    function closeSuccessModal() {
-        document.getElementById('success-modal').style.display = 'none'; // Hide modal
-        document.body.classList.remove('modal-active'); // Remove blur effect from the body
-        location.reload(); // Refresh the page
-    }
-</script>
 
 
 
