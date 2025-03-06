@@ -205,7 +205,7 @@ $employeeID = Auth::guard('web')->user()->employeeID;
                         <label for="providentFund">Provident Fund</label>
                     </div>
                     <div class="form-group">
-                        <input type="text" id="esicNo" class="form-control" name="esicNo" placeholder="Enter ESIC No" value="{{old('esicNo',$results[0]->esic_no)}}">
+                        <input type="text" id="esicNo" class="form-control" name="esicNo" placeholder="Enter ESIC No" maxlength="17" value="{{old('esicNo',$results[0]->esic_no)}}" oninput="this.value = this.value.toUpperCase()">
                         <span class="error" id="esicNoError"></span>
                         <label for="esicNo">ESIC No</label>
                     </div>
@@ -345,6 +345,13 @@ $employeeID = Auth::guard('web')->user()->employeeID;
         } else {
             errorSpan.textContent = 'Please enter experience in the correct format (e.g., 6.2 or 12.11).';
         }
+    }
+
+    function isNumberKey(evt) {
+        var charCode = (evt.which) ? evt.which : evt.keyCode;
+        if (charCode > 31 && (charCode < 48 || charCode > 57))
+            return false;
+        return true;
     }
 </script>
 <script src="{{ asset('user_end/js/onboarding_form.js') }}"></script>
