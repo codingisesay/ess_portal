@@ -1,6 +1,6 @@
 @extends('user_view/employee_form_layout')  <!-- Extending the layout file -->
 @section('content')  <!-- Defining the content section -->
-<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<!-- <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css"> -->
 <link rel="stylesheet" href="{{ asset('errors/error.css') }}">
 
 <link rel="stylesheet" href="{{ asset('user_end/css/onboarding_form.css') }}">
@@ -86,7 +86,7 @@ $id = Auth::guard('web')->user()->id;
               <div class="correspondence-header1">
                   <h3>Salary Bank Details</h3>
                   <div class="same-address-container">
-                    <br><br>
+                    
                       <input type="checkbox" id="copyBankDetails1" class="styled-checkbox2"
                           onclick="copyBankDetails()">
                       <label for="copyBankDetails" class="checkbox-label1">Same as above</label>

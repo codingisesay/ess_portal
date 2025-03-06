@@ -1,6 +1,6 @@
 @extends('user_view/employee_form_layout')  <!-- Extending the layout file -->
 @section('content')  <!-- Defining the content section -->
-<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<!-- <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css"> -->
 <link rel="stylesheet" href="{{ asset('errors/error.css') }}">
 
 <link rel="stylesheet" href="{{ asset('user_end/css/onboarding_form.css') }}">
@@ -144,7 +144,7 @@ $id = Auth::guard('web')->user()->id;
                   <div class="correspondence-header">
                       <h3 class="address-title">Correspondence Address</h3>
                       <div class="same-address-container">
-                        <br><br>
+                        
                           <input type="checkbox" id="copy_address_checkbox" class="styled-checkbox"
                               onclick="copyPermanentToCorrespondence()">
                           <label for="same_as_permanent" class="checkbox-label">Same as above</label>
