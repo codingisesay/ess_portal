@@ -19,6 +19,7 @@ return new class extends Migration
             $table->unsignedBigInteger('organisation_id'); 
             $table->foreign('organisation_id')->references('id')->on('organisations')->onDelete('cascade');
             $table->string('year',50);
+            $table->enum('status', ['Active', 'Inactive'])->default('Active');
             $table->timestamps();
         });
     }

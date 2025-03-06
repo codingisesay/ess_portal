@@ -65,8 +65,8 @@ $id = Auth::guard('web')->user()->id;
                   </div>
                   <div class="form-group">
                       <input type="text" class="form-control" id="accountNumber1" name="accountNumber1"
-                          placeholder="" maxlength="18" pattern="[A-Za-z0-9]{9,18}"
-                          oninput="validateAccountNumber(this)" value="{{ old('accountNumber1', $emp_bank_datas[0]->per_account_number) }}" required>
+                          placeholder="" maxlength="18" pattern="\d{9,18}"
+                          oninput="validateAccountNumber(this)" value="{{ old('accountNumber1', $emp_bank_datas[0]->per_account_number) }}" required onkeypress="return isNumberKey(event)">
                       <label for="accountNumber1">Account Number <span style="color: red;">*</span></label>
                       <span class="error" id="accountNumber1Error"></span>
                   </div>
@@ -111,8 +111,8 @@ $id = Auth::guard('web')->user()->id;
                   </div>
                   <div class="form-group">
                       <input type="text" id="accountNumber2" class="form-control" name="accountNumber2"
-                          placeholder="" maxlength="18" pattern="[A-Za-z0-9]{9,18}"
-                          oninput="validateAccountNumber(this)" value="{{ old('accountNumber2', $emp_bank_datas[0]->sal_account_number) }}">
+                          placeholder="" maxlength="18" pattern="\d{9,18}"
+                          oninput="validateAccountNumber(this)" value="{{ old('accountNumber2', $emp_bank_datas[0]->sal_account_number) }}" onkeypress="return isNumberKey(event)">
                       <label for="accountNumber2">Account Number<span class="account-number-required"
                               style="display: none; color: red;">*</span></label>
                       <span class="error" id="accountNumber2Error"></span>
@@ -233,7 +233,7 @@ $id = Auth::guard('web')->user()->id;
               <div class="form-row">
                   <div class="form-group">
                       <input type="text" id="insuranceProvider" class="form-control" name="insuranceProvider"
-                          placeholder="Enter Insurance Provider" oninput="toggleInsuranceFields()" value="{{ old('insuranceProvider', $emp_bank_datas[0]->insurance_provider) }}">
+                          placeholder="Enter Insurance Provider" oninput="this.value = this.value.replace(/[0-9]/g, ''); toggleInsuranceFields()" value="{{ old('insuranceProvider', $emp_bank_datas[0]->insurance_provider) }}">
                       <label for="insuranceProvider">Insurance Provider<span class="insurance-provider-required" style="color: red; display: none;">*</span></label>
                       <span class="error" id="insuranceProviderError"></span>
                   </div>
@@ -342,6 +342,19 @@ $id = Auth::guard('web')->user()->id;
             registrationNumberRequired.style.display = 'none';
         }
     });
+
+    document.getElementById('passportIssueDate').addEventListener('input', function() {
+        const issueDate = new Date(this.value);
+        const expiryDate = new Date(issueDate.setFullYear(issueDate.getFullYear() + 10));
+        document.getElementById('passportExpiryDate').value = expiryDate.toISOString().split('T')[0];
+    });
+
+    function isNumberKey(evt) {
+        var charCode = (evt.which) ? evt.which : evt.keyCode;
+        if (charCode > 31 && (charCode < 48 || charCode > 57))
+            return false;
+        return true;
+    }
 
     // ...existing code...
 </script>

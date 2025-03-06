@@ -268,6 +268,28 @@ class leavePolicyController extends Controller
     }
 
     public function showLeaveRequest(){
-        return view('user_view.leave_request');
+        $loginUserInfo = Auth::user();
+
+        $datas = DB::table('leave_types')
+        // ->join('leave_types', 'leave_type_restrictions.leave_type_id', '=', 'leave_types.id')
+        ->join('leave_cycles', 'leave_types.leave_cycle_id','=', 'leave_cycles.id')
+        ->select('leave_types.name as leave_type','leave_types.id as leave_type_id') // Select all columns from both tables
+        ->where('leave_cycles.organisation_id', '=', $loginUserInfo->organisation_id)
+        ->where('leave_cycles.status', '=', 'Active')
+        ->where('leave_types.status', '=', 'Active')
+        ->get();
+        
+        // dd($data);
+        return view('user_view.leave_request',compact('loginUserInfo','datas'));
+    }
+
+    public function fetchRemainingLeave($leave_id){
+    //    dd($leave_id);
+    $x = 24;
+    // echo $x;
+
+    return response()->json([
+        'remaining_leave' => $x,  // This is the data you will send back to the front-end
+    ]);
     }
 }

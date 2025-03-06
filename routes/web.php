@@ -154,6 +154,9 @@ Route::middleware(['auth'])->group(function () {
 
        Route::get('user/leave_dashboard',[leavePolicyController::class,'showLeaveDashboard'])->name('leave_dashboard');
        Route::get('user/leave_request',[leavePolicyController::class,'showLeaveRequest'])->name('leave_request');
+       Route::get('user/remaning_leave/{leave_id}',[leavePolicyController::class,'fetchRemainingLeave'])->name('remaing_leave');
+       Route::get('user/half_days_status/{leave_id}/{start_date}/{end_date}',[leavePolicyController::class,'fetchStatusHalfDay'])->name('half_day_status');
+     
 
    
 });
