@@ -28,10 +28,11 @@ class organisationController extends Controller
                 'organisation_designations.name as designation',  // Select designation name
                 'emp_contact_details.per_city',
                 'emp_contact_details.offical_phone_number',
-                'emp_contact_details.offical_email_address'
+                'emp_contact_details.offical_email_address',
+                'emp_details.gender'  // Select gender
             )
             ->get();
-// dd($employees);
+
         return view('user_view.organisation', compact('user', 'employees'));
     }
 
