@@ -521,6 +521,7 @@ table tbody tr:nth-child(even) {
     color: white;
     border: 1px solid;
     text-align: center;
+    height: 25px;
 }
 
 h3 {

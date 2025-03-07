@@ -265,6 +265,7 @@ class leavePolicyController extends Controller
     //userend
 
     public function showLeaveDashboard(){
+        
         return view('user_view.leave_dashboard');
     }
 

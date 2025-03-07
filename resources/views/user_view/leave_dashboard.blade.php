@@ -328,7 +328,7 @@
         <div class="right-sec">
             <h1>Attendance Rate</h1>
             <div class="chart-container1" style="width: 100%; padding:30px; text-align: center; background-color:white;  border-radius: 30px;">
-                <canvas id="chartContainer"></canvas>
+                <!-- <canvas id="chartContainer"></canvas> -->
             </div>
             <script>
                 const attendanceRateData = {
