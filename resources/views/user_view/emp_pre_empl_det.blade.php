@@ -50,10 +50,6 @@
                         <th>Designation</th>
                         <th>Last Drawn Annual Salary</th>
                         <th>Relevant Experience</th>
-                        <!-- <th>Designation While Joining</th>
-                        <th>Role While Joining</th>
-                        <th>Designation While Leaving</th>
-                        <th>Role While Leaving</th> -->
                         <th>Reason For Leaving</th>
                         <th>Major Responsibilities Held</th>
                         <th>Remove</th>

@@ -26,6 +26,31 @@ class UserAuthController extends Controller
         if (Auth::guard('web')->attempt($credentials)) {
 
             $loginUserInfo = Auth::user();
+
+            $desDepBran = DB::table('emp_details')
+            ->where('user_id',$loginUserInfo->id)
+            ->get();
+
+            $permissions = DB::table('permissions')
+                ->where('organisation_designations_id',$desDepBran[0]->designation)
+                ->where('branch_id',$desDepBran[0]->branch_id)
+                ->where('organisation_id',$loginUserInfo->organisation_id)
+                ->get();
+           
+            $permission_array = [];
+
+            foreach($permissions as $pr){
+
+                array_push($permission_array,$pr->feature_id);
+
+            }
+
+            // Assign the $permission_array to a session variable
+            session(['permission_array' => $permission_array]);
+
+            // dd($permission_array);
+
+            // $permission_array = session('permission_array');
             $data = userHomePageStatus::where('user_id', $loginUserInfo->id)->get(); 
             // dd($data);
 

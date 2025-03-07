@@ -3,6 +3,15 @@
 
 <?php 
 $id = Auth::guard('superadmin')->user()->id;
+// dd($results);
+// dd($features);
+$permis = [];
+// dd($permissions);
+foreach($permissions as $per){
+
+array_push($permis, $per->feature_id);
+
+}
 ?>
 
 @if(session('success'))
@@ -56,13 +65,14 @@ $id = Auth::guard('superadmin')->user()->id;
         <div class="popup-body">
             <form action="{{ route('insert_permission',['org_id' => $org_id, 'desig_id' => $desig_id, 'b_id' => $b_id]) }}" method="POST">
                 @csrf
+
                 <?php
                 foreach($results as $result){
                     echo '<h3>'.$result->module_name.'</h3>'."<br>";
                     foreach($features as $feature){
                         if($result->module_name == $feature->module_name){?>
                             <div class="checkbox-group">
-                                <input type="checkbox" name="features[]" value="<?php echo $feature->feature_id ?>">
+                                <input type="checkbox" name="features[]" value="<?php echo $feature->feature_id ?>" <?php echo in_array($feature->feature_id, $permis) ? 'checked' : '';?> >
                                 <label><?php echo $feature->name; ?></label>
                             </div>
                         <?php
