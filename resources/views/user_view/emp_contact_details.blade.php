@@ -355,26 +355,37 @@ $id = Auth::guard('web')->user()->id;
 
   </form>
 </div>
+
 <script>
+
 window.onload = function() {
-    // Get all the select elements
-    const dropdowns = document.querySelectorAll('.dropdown');
+        // Get all the select elements
+        const dropdowns = document.querySelectorAll('.dropdown');
+        
+        dropdowns.forEach(dropdown => {
+          const selectedValue = dropdown.value;
     
-    dropdowns.forEach(dropdown => {
-        const selectedValue = dropdown.value;
-
-        // Loop through each dropdown's options and hide the selected one
-        for (let option of dropdown.options) {
+          // Loop through each dropdown's options and hide the selected one
+          for (let option of dropdown.options) {
             if (option.value === selectedValue) {
-                option.style.display = 'none';  // Hide the selected option
-                break; // Only hide the selected option
+              option.style.display = 'none';  // Hide the selected option
+              break; // Only hide the selected option
             }
-        }
-    });
+          }
+        });
 
-    // Initialize the pincode asterisk display and field validation
-    togglePincodeAsterisk();
-    validateAddressFields();
+        // Initialize the pincode asterisk display based on the default country value
+        togglePincodeAsterisk();
+      };
+
+function getSelectedCountryValue() {
+    var selectElement = document.getElementById("nationality_permanent");
+    var selectedValue = selectElement.value;
+    console.log(selectedValue); // Logs the selected value
+}
+window.onload = function() {
+    // Your function to access the select value
+    getSelectedCountryValue();
 };
 
 function togglePincodeAsterisk() {
@@ -394,110 +405,96 @@ function togglePincodeAsterisk() {
     } else {
         correspondencePincodeAsterisk.style.display = 'none'; // Hide the asterisk
     }
-
-    validateAddressFields();
 }
 
-// Function to enforce required fields if country is India
-function validateAddressFields() {
-    const fields = ['pincode', 'state', 'city', 'district'];
+// Add event listeners to country dropdowns to toggle the asterisk
+document.getElementById('nationality_permanent').addEventListener('change', togglePincodeAsterisk);
+document.getElementById('nationality_correspondence').addEventListener('change', togglePincodeAsterisk);
 
-    ['permanent', 'correspondence'].forEach(addressType => {
-        const countryValue = document.getElementById(`nationality_${addressType}`).value.trim().toLowerCase();
-        const isRequired = countryValue === 'india';
-
-        fields.forEach(field => {
-            const inputField = document.getElementById(`${field}_${addressType}`);
-            if (inputField) {
-                inputField.required = isRequired;
-            }
-        });
-    });
-}
-
-// Add event listeners to country dropdowns to toggle the asterisk and validation
-document.getElementById('nationality_permanent').addEventListener('change', function () {
-    togglePincodeAsterisk();
-    validateAddressFields();
-});
-
-document.getElementById('nationality_correspondence').addEventListener('change', function () {
-    togglePincodeAsterisk();
-    validateAddressFields();
-});
-
-// Fetch location details based on Pincode
-async function fetchLocationDetails(addressType) {
-    const pincode = document.getElementById(`pincode_${addressType}`).value;
-    const stateField = document.getElementById(`state_${addressType}`);
-    const cityField = document.getElementById(`city_${addressType}`);
-    const districtField = document.getElementById(`district_${addressType}`);
-
-    if (pincode.length < 6) return;
-
-    // Clear the previous values
-    stateField.value = '';
-    cityField.value = '';
-    districtField.value = '';
-
-    try {
-        const response = await fetch(`https://api.postalpincode.in/pincode/${pincode}`);
-        
-        if (!response.ok) {
-            throw new Error('Unable to fetch location details.');
-        }
-
-        const data = await response.json();
-        
-        if (data[0].Status === "Success") {
-            const place = data[0].PostOffice[0];
-            stateField.value = place.State || 'Not Available';
-            cityField.value = place.Taluk || place.District || 'Not Available';
-            districtField.value = place.District || 'Not Available';
-        } else {
-            alert('No data found for this pincode.');
-        }
-    } catch (error) {
-        console.error("Error fetching location details:", error);
-        alert('Error fetching location details.');
-    }
-}
-
-// Copy Permanent Address to Correspondence Address
-function copyPermanentToCorrespondence() {
-    const isChecked = document.getElementById('copy_address_checkbox').checked;
     
-    if (isChecked) {
-        document.getElementById('correspondence_building_no').value = document.getElementById('permanent_building_no').value;
-        document.getElementById('correspondence_premises_name').value = document.getElementById('permanent_premises_name').value;
-        document.getElementById('correspondence_landmark').value = document.getElementById('permanent_landmark').value;
-        document.getElementById('correspondence_road_street').value = document.getElementById('permanent_road_street').value;
-        document.getElementById('nationality_correspondence').value = document.getElementById('nationality_permanent').value;
-        document.getElementById('pincode_correspondence').value = document.getElementById('pincode_permanent').value;
-        document.getElementById('district_correspondence').value = document.getElementById('district_permanent').value;
-        document.getElementById('city_correspondence').value = document.getElementById('city_permanent').value;
-        document.getElementById('state_correspondence').value = document.getElementById('state_permanent').value;
-    } else {
-        document.getElementById('correspondence_building_no').value = '';
-        document.getElementById('correspondence_premises_name').value = '';
-        document.getElementById('correspondence_landmark').value = '';
-        document.getElementById('correspondence_road_street').value = '';
-        document.getElementById('nationality_correspondence').value = '';
-        document.getElementById('pincode_correspondence').value = '';
-        document.getElementById('district_correspondence').value = '';
-        document.getElementById('city_correspondence').value = '';
-        document.getElementById('state_correspondence').value = '';
+    //fetch by pin code
+    
+    // Function to fetch district, city, and state based on pincode for either Permanent or Correspondence address
+    async function fetchLocationDetails(addressType) {
+        const pincode = document.getElementById(`pincode_${addressType}`).value;
+        const stateField = document.getElementById(`state_${addressType}`);
+        const cityField = document.getElementById(`city_${addressType}`);
+        const districtField = document.getElementById(`district_${addressType}`);
+    
+        // Make sure pincode is at least 6 characters long
+        if (pincode.length < 6) {
+            return;
+        }
+    
+        // Clear the previous values
+        stateField.value = '';
+        cityField.value = '';
+        districtField.value = '';
+    
+        try {
+            // Call API to fetch data based on pincode
+            const response = await fetch(`https://api.postalpincode.in/pincode/${pincode}`);
+            
+            if (!response.ok) {
+                throw new Error('Unable to fetch location details.');
+            }
+    
+            const data = await response.json();
+            
+            if (data[0].Status === "Success") {
+                const place = data[0].PostOffice[0];
+    
+                // Populate the State input
+                stateField.value = place.State || 'Not Available';
+    
+                // Populate the City input (or Taluk)
+                cityField.value = place.Taluk || place.District || 'Not Available';
+    
+                // Populate the District input
+                districtField.value = place.District || 'Not Available';
+            } else {
+                alert('No data found for this pincode.');
+            }
+        } catch (error) {
+            console.error("Error fetching location details:", error);
+            alert('Error fetching location details.');
+        }
     }
-
-    validateAddressFields();
-}
-
-// Prevent form submission on clicking 'Previous' button
-document.getElementById('previous-btn-link').addEventListener('click', function(event) {
-    event.stopPropagation(); // Stop the form submission from being triggered
-});
-</script>
-
+    
+    // Function to copy Permanent Address to Correspondence Address
+    function copyPermanentToCorrespondence() {
+        // Check if the checkbox is checked
+        const isChecked = document.getElementById('copy_address_checkbox').checked;
+        
+        if (isChecked) {
+            // Copy the values from Permanent Address to Correspondence Address
+            document.getElementById('correspondence_building_no').value = document.getElementById('permanent_building_no').value;
+            document.getElementById('correspondence_premises_name').value = document.getElementById('permanent_premises_name').value;
+            document.getElementById('correspondence_landmark').value = document.getElementById('permanent_landmark').value;
+            document.getElementById('correspondence_road_street').value = document.getElementById('permanent_road_street').value;
+            document.getElementById('nationality_correspondence').value = document.getElementById('nationality_permanent').value;
+            document.getElementById('pincode_correspondence').value = document.getElementById('pincode_permanent').value;
+            document.getElementById('district_correspondence').value = document.getElementById('district_permanent').value;
+            document.getElementById('city_correspondence').value = document.getElementById('city_permanent').value;
+            document.getElementById('state_correspondence').value = document.getElementById('state_permanent').value;
+        } else {
+            // Clear the Correspondence Address fields if checkbox is unchecked
+            document.getElementById('correspondence_building_no').value = '';
+            document.getElementById('correspondence_premises_name').value = '';
+            document.getElementById('correspondence_landmark').value = '';
+            document.getElementById('correspondence_road_street').value = '';
+            document.getElementById('nationality_correspondence').value = '';
+            document.getElementById('pincode_correspondence').value = '';
+            document.getElementById('district_correspondence').value = '';
+            document.getElementById('city_correspondence').value = '';
+            document.getElementById('state_correspondence').value = '';
+        }
+    }
+    
+        document.getElementById('previous-btn-link').addEventListener('click', function(event) {
+            event.stopPropagation(); // Stop the form submission from being triggered
+        });
+        </script>
 
 <script src="{{ asset('user_end/js/onboarding_form.js') }}"></script>
 
