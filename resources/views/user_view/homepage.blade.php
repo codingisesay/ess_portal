@@ -71,20 +71,24 @@ error_reporting(0);
 
                 <!-- Birthday Card -->
                 <!-- Birthday Carousel Container -->
-                <div class="birthday-carousel-container">
-                    <div class="birthday-carousel" id="birthdayCarousel">
-                        @foreach ($upcomingBirthdays as $birthday)
-                        <div class="card birthday">
-                            <img src="{{ asset('user_end/images/Group303.png') }}" height="40" width="40" alt="Avatar">
-                            <h6>Wish To {{ $birthday->Employee_Name }}</h6>
-                            <p>Happy Birthday <span class="count-circle">{{ $birthday->age }}</span></p>
-                        </div>
-                        @endforeach
-                    </div>
-                    <!-- Navigation buttons -->
-                    <!-- <button class="prev" id="prevSlide">❮</button> 
-                   <button class="next" id="nextSlide">❯</button> -->
+                <!-- Birthday Card -->
+        <!-- Birthday Carousel Container -->
+        <div class="birthday-carousel-container">
+            <div class="birthday-carousel" id="birthdayCarousel">
+                @foreach ($upcomingBirthdays->filter(function($birthday) {
+                    return \Carbon\Carbon::parse($birthday->birthdate)->isToday();
+                }) as $birthday)
+                <div class="card birthday">
+                    <img src="{{ asset('user_end/images/Group303.png') }}" height="40" width="40" alt="Avatar">
+                    <h6>Wish To {{ $birthday->Employee_Name }}</h6>
+                    <p>Happy Birthday <span class="count-circle">{{ $birthday->age }}</span></p>
                 </div>
+                @endforeach
+            </div>
+            <!-- Navigation buttons -->
+            <!-- <button class="prev" id="prevSlide">❮</button> 
+            <button class="next" id="nextSlide">❯</button> -->
+        </div>
 
             </div>
 

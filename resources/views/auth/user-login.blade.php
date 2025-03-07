@@ -41,7 +41,7 @@
             <form class="signup-form" method="POST" action="{{ route('user.login') }}">
                 @csrf
                 <div class="form-group">
-                    <input type="text" name="email" id="username" placeholder=" " value="akash.tech.0394@gmail.com" oninput="this.value = this.value.toUpperCase(); validateUsername()" required>
+                    <input type="text" name="email" id="username" placeholder=" " oninput="this.value = this.value.toUpperCase(); validateUsername()" required>
                     <label for="username">Username</label>
                     <span class="eye-icon">
                         <img src="{{ asset('user_end/images/user.png') }}" alt="Username Icon" width="24" height="24">
@@ -50,14 +50,15 @@
                 </div>
 
                 <div class="form-group password-container">
-                    <input type="password" name="password" id="password" placeholder=" " value="akash@1234" oninput="validatePassword()" required>
+                    <input type="password" name="password" id="password" placeholder=" "  oninput="validatePassword()" required>
                     <label for="password">Password</label>
                     <span class="eye-icon" onclick="togglePasswordVisibility('password')">
                         <img src="{{ asset('user_end/images/hidden.png') }}" alt="Show Password" width="24" height="24" id="password-icon">
                     </span>
                     <div class="text-danger small"></div>
                 </div>
-
+                <!-- value="akash@1234" -->
+                <!-- value="akash.tech.0394@gmail.com"  -->
                 <!-- Remember Me -->
                 <div class="form-check mb-3">
                     <input class="form-check-input" type="checkbox" id="remember-me">
