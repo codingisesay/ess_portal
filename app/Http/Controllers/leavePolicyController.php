@@ -289,6 +289,13 @@ class leavePolicyController extends Controller
 
         $leave_restriction = DB::table('leave_type_restrictions')->where('leave_type_id',$leave_id)->get();
         $leave_restrictionforemp = DB::table('leave_type_emp_categories')->where('leave_restriction_id',$leave_restriction[0]->id)->get();
+        // $leaveCountArray = DB::table('leave_applies')
+        // ->where('leave_type_id',$leave_id)
+        // ->where('user_id',$loginUserInfo)
+        // ->where('leave_approve_status','Approved')
+        // ->get();
+
+        // dd($leaveCountArray);
 
         // dd($leave_restriction);
 

@@ -171,7 +171,7 @@ $id = Auth::guard('web')->user()->id;
               </div>
               <div class="form-row">
                   <div class="form-group">
-                      <select id="usaVisa" class="form-control" name="usaVisa"
+                      <select id="usaVisa" class="form-control dropdown" name="usaVisa"
                           onchange="toggleVisaExpiryDate()" placeholder="" style="pointer-events: none; opacity: 0.6;">
                           <option value="{{ old('usaVisa', $emp_bank_datas[0]->active_visa) }}">{{ old('usaVisa', $emp_bank_datas[0]->active_visa) }}</option>
                           <option value="Yes">Yes</option>
@@ -355,6 +355,21 @@ $id = Auth::guard('web')->user()->id;
             return false;
         return true;
     }
+
+    window.onload = function() {
+        const dropdowns = document.querySelectorAll('.dropdown');
+        
+        dropdowns.forEach(dropdown => {
+          const selectedValue = dropdown.value;
+    
+          for (let option of dropdown.options) {
+            if (option.value === selectedValue) {
+              option.style.display = 'none';
+              break;
+            }
+          }
+        });
+      };
 
     // ...existing code...
 </script>
