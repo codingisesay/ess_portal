@@ -181,16 +181,6 @@ $id = Auth::guard('web')->user()->id;
                               style="color: red;">*</span></label>
                       </div>
                      
-                      {{-- <div class="form-group">
-                         
-                          <input list="correspondence_countries" id="correspondence_countries"
-                              name="correspondence_country" class="form-control" placeholder="" required
-                              value="India"
-                              oninput="togglePincodeAsterisk1()" value="{{ old('correspondence_country', $emp_contact_datas[0]->cor_country) }}">
-                              <label for="correspondence_country">Country<span
-                              style="color: red;">*</span></label>
-                          <datalist id="correspondence_countries"></datalist>
-                      </div> --}}
 
                       <div class="form-group">
                                 
@@ -204,26 +194,6 @@ $id = Auth::guard('web')->user()->id;
                         <label for="nationality">Country <span style="color: red;">*</span></label>
                     </div>
                       <div class="form-group">
-{{-- 
-
-                        <div class="col-xs-4">
-                            <label for="ex3">Pincode</label>
-                            <input type="text" id="pincode_correspondence" value="" class="form-control pincode" name="pincode_correspondence" onkeyup="fetchLocationDetails('correspondence')" required />
-                          </div>
-                    </div>
-                          <div class="form-group row">
-                          <div class="col-xs-4">
-                            <label for="ex2">City</label>
-                            <input type="text" id="city_correspondence" value="" class="form-control" name="city_correspondence" readonly />
-                          </div>
-                          <div class="col-xs-4">
-                            <label for="ex3">State</label>
-                            <input type="text" id="state_correspondence" value="" class="form-control" name="state_correspondence" readonly />
-                          </div>
-                        <div class="col-xs-4">
-                        <label for="district">District</label>
-                        <input type="text" id="district_correspondence" value="" class="form-control" name="district_correspondence" readonly />
-                    </div> --}}
                           
                           <input type="text" id="pincode_correspondence" name="correspondence_pincode" onkeyup="fetchLocationDetails('correspondence')"
                               class="form-control" placeholder="" minlength="5" required

@@ -35,8 +35,14 @@ class permissionController extends Controller
     ->select('features.id as feature_id', 'features.name', 'modules.name as module_name')
     ->get();
 
+    $permissions = DB::table('permissions')
+        ->where('organisation_designations_id',$desig_id)
+        ->where('branch_id',$b_id)
+        ->where('organisation_id',$org_id)
+        ->get();
 
-        return view('superadmin_view.create_permission',compact('results','features','org_id', 'desig_id', 'b_id'));
+
+        return view('superadmin_view.create_permission',compact('results','features','org_id', 'desig_id', 'b_id','permissions'));
     }
 
     public function insertPermission(Request $request,$org_id,$desig_id,$b_id){
@@ -62,12 +68,18 @@ class permissionController extends Controller
                 'branch_id' => $b_id,
                 'organisation_id' => $org_id,
             ]);
-
           
         }
+
+        if($permission_insert){
+
+            return redirect()->route('create_designation_form')->with('success', 'Features processed successfully.');
+
+        }
+
     } else {
         // No features were selected
-        return redirect()->back()->with('message', 'No features selected.');
+        return redirect()->back()->with('error', 'No features selected.');
     }
 
     // Redirect or return a response

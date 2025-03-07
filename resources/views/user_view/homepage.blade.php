@@ -3,6 +3,8 @@
 <?php
 // dd($logs);
 error_reporting(0);
+// $permission_array = session('permission_array');
+// dd($permission_array);
 ?>
 <head>
     <meta charset="UTF-8">
