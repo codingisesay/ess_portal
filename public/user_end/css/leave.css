@@ -110,7 +110,7 @@ body {
     align-items: center;
     max-width: 100%;
     /* Allow it to stretch to container width */
-    height: 170px;
+    height: max-content;
     text-align: center;
     /* border: 2px solid #ccc; */
     padding: 20px;

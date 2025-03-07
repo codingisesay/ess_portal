@@ -106,11 +106,11 @@
 
             if (passwordField.type === 'password') {
                 passwordField.type = 'text';
-                iconImg.src = "image/eye.png"; // Open eye icon
+                iconImg.src = "/user_end/images/eye.png"; // Open eye icon
                 iconImg.alt = "Hide Password";
             } else {
                 passwordField.type = 'password';
-                iconImg.src = "image/hidden.png"; // Closed eye icon
+                iconImg.src = "/user_end/images/hidden.png"; // Closed eye icon
                 iconImg.alt = "Show Password";
             }
         }
