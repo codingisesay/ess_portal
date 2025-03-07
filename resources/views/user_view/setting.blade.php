@@ -7,11 +7,11 @@
         <h1>Settings</h1>
         <div class="accordion">
             <!-- Upcoming Holidays -->
-            <div class="accordion-item">
+            <!-- <div class="accordion-item">
                 <div class="accordion-header" onclick="window.location.href='{{ url('holiday') }}'">
                     Calender Master
                 </div>
-            </div>
+            </div> -->
 
             <!-- Leave Section (With Link to hr_universal.php) -->
             {{-- <div class="accordion-item">
