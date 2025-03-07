@@ -264,11 +264,59 @@ class leavePolicyController extends Controller
 
     //userend
 
-    public function showLeaveDashboard(){
+    // public function showLeaveDashboard(){
         
-        return view('user_view.leave_dashboard');
+    //     return view('user_view.leave_dashboard');
+    // }
+    public function showLeaveDashboard()
+    {
+        // Fetch all leave types from the 'leave_types' table
+        $leaveTypes = DB::table('leave_types')->get();  // Get all leave types from the 'leave_types' table
+    
+        // Initialize an array to store the leave summary data
+        $leaveSummary = [];
+    
+        foreach ($leaveTypes as $leaveType) {
+            // Get the total entitled leave days from the 'leave_types' table
+            // $entitledDays = $leaveType->entitled_days;  
+            // This is directly from the 'leave_types' table
+            
+            // Get the max leave info from the 'leave_type_restrictions' table
+            $restriction = DB::table('leave_type_restrictions')
+                ->where('leave_type_id', $leaveType->id)
+                ->first();  // Get the restriction data for the current leave type
+    
+            // Check if there are restrictions available, and if not, set max_leave to 0
+            $maxLeave = $restriction ? $restriction->max_leave : 0;
+    
+            // Calculate consumed (taken) leaves from the 'leave_applies' table
+            $takenLeaves = DB::table('leave_applies')
+                ->where('leave_type_id', $leaveType->id)
+                ->where('leave_approve_status', 'APPROVED')  // Only approved leaves
+                ->where(function($query) {
+                    // You can add date filters if necessary
+                    $query->whereDate('end_date', '>=', now())
+                        ->orWhereDate('start_date', '<=', now());
+                })
+                ->sum(DB::raw('DATEDIFF(end_date, start_date) + 1')); // Sum of days between start_date and end_date
+    
+            // Calculate remaining leaves
+            $remainingLeaves = $maxLeave - $takenLeaves;
+    
+            // Store the data in the summary array
+            $leaveSummary[] = [
+                'leave_type' => $leaveType->name,  // Leave Type Name
+                'total_leaves' => $maxLeave,  // Max leave days from the leave_type_restrictions table
+                'consumed_leaves' => $takenLeaves,
+                // 'remaining_leaves' => $remainingLeaves, // Remaining leaves calculated
+            ];
+        }
+    // dd($leaveSummary);
+        // Pass this data to your view
+        return view('user_view.leave_dashboard', compact('leaveSummary'));
     }
-
+    
+    
     public function showLeaveRequest(){
         $loginUserInfo = Auth::user();
 

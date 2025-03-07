@@ -108,78 +108,91 @@
                 </div>
 
                 <div class="summary">
-                    <h1>Leave Summary</h1>
-                    <div class="leave-summary-container">
-                        <!-- Leave cards will be dynamically inserted here -->
+                        <h1>Leave Summary</h1>
+        <div class="leave-summary-container">
+            <!-- Leave cards will be dynamically inserted here -->
+            @foreach($leaveSummary as $index => $leave)
+            <div class="leave-card">
+                <div class="chart-container-leave">
+                    <canvas id="chart{{ $index }}" style="width: 130px; height: 200px;"></canvas>
+                </div>
+                <div class="legend">
+                    <h2>{{ $leave['leave_type'] }}</h2>
+                    <div><span class="dot" style="background-color:#8a3366"></span>{{ $leave['total_leaves'] }} Total Leaves</div>
+                    <div><span class="dot" style="background-color:#ffc107"></span>{{ $leave['consumed_leaves'] }} Consumed</div>
+                </div>
+            </div>
+            @endforeach
+        </div>
+
+        <script>
+            const leaveData = @json($leaveSummary);  // Pass the leave summary data to JavaScript
+
+            console.log(leaveData); // Check the data in the console to ensure no duplicates
+
+            const colorPalette = [
+                ['#8a3366', '#ffc107'], // Two colors: Total Leaves and Consumed Leaves
+                ['#2B53C1', '#8A3366']
+            ];
+
+            const container = $('.leave-summary-container');
+
+            leaveData.forEach((leave, index) => {
+                const totalLeaves = leave.total_leaves;
+                const consumed = leave.consumed_leaves || 0;
+                const [availableColor, consumedColor] = colorPalette[index % colorPalette.length];
+
+                const cardHtml = `
+                    <div class="leave-card">
+                        <div class="chart-container-leave">
+                            <canvas id="chart${index}" style="width: 130px; height: 200px;"></canvas>
+                        </div>
+                        <div class="legend">
+                            <h2>${leave.leave_type}</h2>
+                            <div><span class="dot" style="background-color:${availableColor}"></span>${totalLeaves} Total Leaves</div>
+                            <div><span class="dot" style="background-color:${consumedColor}"></span>${consumed} Consumed</div>
+                        </div>
                     </div>
-                    <script>
-                        const leaveData = [
-                            { leave_type: 'Annual Leave', entitled_days: 20, consumed_leaves: 5 },
-                            { leave_type: 'Sick Leave', entitled_days: 10, consumed_leaves: 2 }
-                        ];
+                `;
 
-                        const colorPalette = [
-                            ['#8a3366', '#ffc107'],
-                            ['#2B53C1', '#8A3366']
-                        ];
+                container.append(cardHtml);
 
-                        const container = $('.leave-summary-container');
+                const ctx = document.getElementById(`chart${index}`).getContext('2d');
 
-                        leaveData.forEach((leave, index) => {
-                            const available = leave.entitled_days;
-                            const consumed = leave.consumed_leaves || 0;
-                            const [availableColor, consumedColor] = colorPalette[index % colorPalette.length];
-
-                            const cardHtml = `
-                                <div class="leave-card">
-                                    <div class="chart-container-leave">
-                                        <canvas id="chart${index}" style="width: 130px; height: 200px;"></canvas>
-                                    </div>
-                                    <div class="legend">
-                                        <h2>${leave.leave_type}</h2>
-                                        <div><span class="dot" style="background-color:${availableColor}"></span>${available} Available</div>
-                                        <div><span class="dot" style="background-color:${consumedColor}"></span>${consumed} Consumed</div>
-                                    </div>
-                                </div>
-                            `;
-
-                            container.append(cardHtml);
-
-                            const ctx = document.getElementById(`chart${index}`).getContext('2d');
-
-                            new Chart(ctx, {
-                                type: 'doughnut',
-                                data: {
-                                    datasets: [{
-                                        data: [available, consumed],
-                                        backgroundColor: [availableColor, consumedColor],
-                                        borderColor: [availableColor, consumedColor],
-                                        borderWidth: 2,
-                                        offset: 20
-                                    }]
-                                },
-                                options: {
-                                    responsive: true,
-                                    cutout: '50%',
-                                    rotation: Math.PI / 2.8,
-                                    plugins: {
-                                        legend: {
-                                            position: 'top',
-                                        },
-                                        tooltip: {
-                                            callbacks: {
-                                                label: function (tooltipItem) {
-                                                    const total = tooltipItem.dataset.data.reduce((a, b) => a + b, 0);
-                                                    const percentage = Math.round((tooltipItem.raw / total) * 100);
-                                                    return `${tooltipItem.label}: ${percentage}%`;
-                                                }
-                                            }
-                                        }
+                new Chart(ctx, {
+                    type: 'doughnut',
+                    data: {
+                        datasets: [{
+                            data: [totalLeaves, consumed],
+                            backgroundColor: [availableColor, consumedColor],
+                            borderColor: [availableColor, consumedColor],
+                            borderWidth: 2,
+                            offset: 20
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        cutout: '50%',
+                        rotation: Math.PI / 2.8,
+                        plugins: {
+                            legend: {
+                                position: 'top',
+                            },
+                            tooltip: {
+                                callbacks: {
+                                    label: function (tooltipItem) {
+                                        const total = tooltipItem.dataset.data.reduce((a, b) => a + b, 0);
+                                        const percentage = Math.round((tooltipItem.raw / total) * 100);
+                                        return `${tooltipItem.label}: ${percentage}%`;
                                     }
                                 }
-                            });
-                        });
-                    </script>
+                            }
+                        }
+                    }
+                });
+            });
+        </script>
+
                 </div>
             </div>
 
