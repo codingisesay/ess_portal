@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
+// use Carbon\Carbon;
 
 class leavePolicyController extends Controller
 {
@@ -289,23 +290,85 @@ class leavePolicyController extends Controller
 
         $leave_restriction = DB::table('leave_type_restrictions')->where('leave_type_id',$leave_id)->get();
         $leave_restrictionforemp = DB::table('leave_type_emp_categories')->where('leave_restriction_id',$leave_restriction[0]->id)->get();
-        // $leaveCountArray = DB::table('leave_applies')
-        // ->where('leave_type_id',$leave_id)
-        // ->where('user_id',$loginUserInfo)
-        // ->where('leave_approve_status','Approved')
-        // ->get();
 
-        // dd($leaveCountArray);
+        $leaveCountArray = DB::table('leave_applies')
+        ->where('leave_type_id',$leave_id)
+        ->where('user_id',$loginUserInfo->id)
+        ->where('leave_approve_status','Approved')
+        ->get();
 
-        // dd($leave_restriction);
+        //  dd($leaveCountArray->count());
+
+      
+
+        // $takenLeave = 0;
+        
+        // for ($i = 0; $i < $leaveCountArray->count(); $i++) {
+        //     // Convert start_date and end_date to Carbon instances if they are not already
+        //     $startDate = Carbon::parse($leaveCountArray[$i]->start_date);
+        //     $endDate = Carbon::parse($leaveCountArray[$i]->end_date);
+        
+        //     // Check if the leave is a full day or half day
+        //     if ($leaveCountArray[$i]->half_day == null) {
+        //         $leaveCount = 0.5; // Half-day leave
+        //     } else {
+        //         // Calculate the difference in days
+        //         $dateDiff = $startDate->diff($endDate);
+        
+        //         // Extract the total days from the DateInterval object and add 1 (if end_date is the same day)
+        //         $leaveCount = $dateDiff->days + 1;
+        //     }
+        
+        //     // Add the leave count to the total taken leave
+        //     $takenLeave += $leaveCount;
+        // }
+        
+        // dd($takenLeave);
+
+
+
+$takenLeave = 0;
+
+for ($i = 0; $i < $leaveCountArray->count(); $i++) {
+    // Convert the start_date and end_date to DateTime objects
+    
+
+    // Check if the leave is a full day or half day
+    if ($leaveCountArray[$i]->half_day == 'First Half' || $leaveCountArray[$i]->half_day == 'Second Half') {
+
+        $leaveCount = 0.5; // Half-day leave
+
+    } elseif($leaveCountArray[$i]->half_day == 'Full Day') {
+
+        $leaveCount = 1;
+    
+    }else{
+
+            // Calculate the difference in days
+            $startDate = new \DateTime($leaveCountArray[$i]->start_date);
+            $endDate = new \DateTime($leaveCountArray[$i]->end_date);
+    
+            $dateDiff = $startDate->diff($endDate);
+    
+    
+            // Extract the total days from the DateInterval object and add 1 (if end_date is the same day)
+            $leaveCount = $dateDiff->days + 1;
+
+    }
+
+    // Add the leave count to the total taken leave
+    $takenLeave += $leaveCount;
+}
+
+// dd($takenLeave);
 
         if($emp_details[0]->employee_type == 1){
 
-            $remaning_leave = $leave_restriction[0]->max_leave;
+            $remaning_leave = $leave_restriction[0]->max_leave - $takenLeave;
 
         }elseif($emp_details[0]->employee_type == 2){
 
-            $remaning_leave = $leave_restrictionforemp[0]->leave_count;
+            $remaning_leave = $leave_restrictionforemp[0]->leave_count - $takenLeave;
 
         }
 
