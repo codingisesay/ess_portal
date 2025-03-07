@@ -25,7 +25,8 @@ error_reporting(0);
 ?>
 <body>
     <div style="margin-top: 200px;">
-<form action="leave_request_app.php" method="POST" id="leave_form">
+<form action="{{ route('insert_leave') }}" method="POST" id="leave_form">
+    @csrf
     <div class="close-btn" onclick="confirmCancel()">&#10005;</div>
     <h1>Leave Request Form</h1>
         
@@ -59,11 +60,11 @@ error_reporting(0);
     <br>
 <div id="display_half_day" style="display:none;">
     <label for="leave_slot">Slot:</label>
-    <select name="leave_slot" id="leave_slot" required>
-        <option value="" disabled selected>Select An Option</option>
-        <option value="">Full Day</option>
-        <option value="">First Half</option>
-        <option value="">Second Half</option>
+    <select name="leave_slot" id="leave_slot" >
+        <option value="">Select An Option</option>
+        <option value="Full Day">Full Day</option>
+        <option value="First Half">First Half</option>
+        <option value="Second Half">Second Half</option>
        
     </select>
 </div>
@@ -72,7 +73,7 @@ error_reporting(0);
     <textarea id="reason" name="reason" required></textarea>
     <br>
 
-    <button type="button" class="submit-btn" onclick="showConfirmationMessageBox()">Submit Leave Request</button>
+    <button type="submit" class="submit-btn">Submit Leave Request</button>
 </form>
     </div>
 <div id="customAlert" class="custom-alert">
@@ -83,7 +84,7 @@ error_reporting(0);
     </div>
 </div>
 
-<div id="confirmationModal" class="modal">
+{{-- <div id="confirmationModal" class="modal">
     <div class="modal-content">
         <span class="close" onclick="closeModal()">x</span>
         <h3>Leave Request Confirmation</h3>
@@ -91,7 +92,7 @@ error_reporting(0);
         <button class="btn" onclick="submitForm()">Submit</button>
         <button class="btn cancel" onclick="closeModal()">Cancel</button>
     </div>
-</div>
+</div> --}}
 
 <script>
 
@@ -256,10 +257,7 @@ $(document).ready(function () {
         document.getElementById("confirmationModal").style.display = "none";
     }
 
-    function submitForm() {
-        closeModal();
-        document.getElementById("leave_form").submit();
-    }
+
 </script>
 
 </body>
