@@ -169,7 +169,7 @@ body {
 /* Birthday & Upcoming Holiday Cards */
 .birthday {
     width: 250px;
-    padding: 20px;
+    padding: 50px;
     border-radius: 15px;
     text-align: center;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
@@ -710,6 +710,73 @@ button {
    CALENDAR
 =========================== */
 .calendar-container {
+    width: 100%;
+    max-width: 400px;
+    margin: 10px auto;
+    font-family: Arial, sans-serif;
+}
+
+.calendar-header {
+    text-align: left;
+    margin-bottom: 20px;
+}
+
+.main-cal {
+    display: flex;
+    flex-direction: column;
+}
+
+#calendar-controls {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 5px;
+}
+
+.slider-btn {
+    padding: 10px;
+    cursor: pointer;
+    font-size: 18px;
+    background-color: #a34b71;
+    border: 1px solid #ccc;
+    border-radius: 15px;
+}
+
+#dropdown-container {
+    display: flex;
+    margin: 0 10px;
+}
+
+select {
+    padding: 5px;
+    font-size: 16px;
+    margin: 0 5px;
+}
+
+#calendar {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 1px;
+    text-align: center;
+    margin-top: 30px;
+}
+
+#calendar .day {
+    padding: 10px;
+    border: 1px solid #902323;
+    border-radius: 5px;
+}
+
+#calendar .day.header {
+    background-color: #f0f0f0;
+    font-weight: bold;
+}
+
+#calendar .day.empty {
+    background-color: #f9f9f9;
+}
+
+/* .calendar-container {
     max-width: 600px;
     margin: 20px auto;
     text-align: center;
@@ -851,7 +918,7 @@ button {
 
 #otherNote {
     margin-top: 5px;
-}
+} */
 
 /* ===========================
    APPROVAL PENDING SECTION
