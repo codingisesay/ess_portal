@@ -7,12 +7,38 @@
     <title>Leave & Attendance Dashboard</title>
     <link rel="icon" href="{{ asset('user_end/images/STPLLogo butterfly.png') }}" />
     <link rel="stylesheet" href="{{ asset('user_end/css/leave.css') }}">
+    <link rel="stylesheet" href="{{ asset('errors/error.css') }}">
     
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 
 <body>
+    @if(session('success'))
+<div class="alert custom-alert-success">
+    <strong>{{ session('success') }}</strong> 
+    <button class="close-btn" onclick="this.parentElement.style.display='none';">&times;</button>
+    
+</div>
+@endif
+
+@if(session('error'))
+<div class="alert custom-alert-error">
+<strong> {{ session('error') }}</strong>
+<button class="close-btn" onclick="this.parentElement.style.display='none';">&times;</button>
+</div>
+@endif
+
+@if($errors->any())
+<div class="alert custom-alert-warning">
+<ul>
+@foreach($errors->all() as $error)
+<li style="color: red;">{{ $error }}</li>
+
+@endforeach
+</ul>
+</div>
+@endif
     <div class="request-btn">
         <h1>Leave & Attendance</h1>
         <button class="apply-leave" onclick="redirectToForm()">Apply Leave</button>

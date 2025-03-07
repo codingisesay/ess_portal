@@ -31,7 +31,7 @@ class organisationController extends Controller
                 'emp_contact_details.offical_email_address'
             )
             ->get();
-
+// dd($employees);
         return view('user_view.organisation', compact('user', 'employees'));
     }
 

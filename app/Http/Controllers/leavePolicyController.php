@@ -288,18 +288,17 @@ class leavePolicyController extends Controller
         $emp_details = DB::table('emp_details')->where('user_id',$loginUserInfo->id)->get();
 
         $leave_restriction = DB::table('leave_type_restrictions')->where('leave_type_id',$leave_id)->get();
+        $leave_restrictionforemp = DB::table('leave_type_emp_categories')->where('leave_restriction_id',$leave_restriction[0]->id)->get();
 
-        dd($leave_restriction);
+        // dd($leave_restriction);
 
         if($emp_details[0]->employee_type == 1){
 
-
-
-            $remaning_leave = 24;
+            $remaning_leave = $leave_restriction[0]->max_leave;
 
         }elseif($emp_details[0]->employee_type == 2){
 
-            $remaning_leave = 12;
+            $remaning_leave = $leave_restrictionforemp[0]->leave_count;
 
         }
 
@@ -313,12 +312,64 @@ class leavePolicyController extends Controller
     }
 
     public function fetchStatusHalfDay($leave_id,$start_date,$end_date){
-     
+      if($start_date == $end_date){
 
         return response()->json([
             'half_day_status' => 'block',  // This is the data you will send back to the front-end
         ]);
+
+      }
+
+        
     
+
+    }
+
+    public function insertLeave(Request $request){
+
+        $data = $request->validate([
+            'employee_no' => 'required',
+            'employee_name' => 'required',
+            'leave_type' => 'required',
+            'start_date' => 'required',
+            'end_date' => 'required',
+            'reason' => 'required',
+            'leave_slot' => '',
+        ]);
+        $loginUserInfo = Auth::user();
+
+        try {
+            // Try to insert or update the record
+            $status = DB::table('leave_applies')->insert([
+                'leave_type_id' => $data['leave_type'],
+                'start_date' => $data['start_date'],
+                'end_date' => $data['end_date'],
+                'user_id' => $loginUserInfo->id,
+                'description' => $data['reason'],
+                'apply_date' => date('Y-m-d'),
+                'half_day' => $data['leave_slot'],
+                'created_at' => NOW(),
+                'updated_at' => NOW(),
+    
+            ]);
+
+            if($status){
+
+                return redirect()->route('leave_dashboard')->with('success', 'You have applied leave successfully!');
+    
+            }
+
+        } catch (\Illuminate\Database\QueryException $e) {
+            if ($e->errorInfo[1] == 1062) {
+                // Handle duplicate key error
+                return redirect()->route('leave_dashboard')->with('error', 'Error while applying leave,It may Possible that you have applied same day leave alreay!');
+            }
+            throw $e; // re-throw the error if it's not a unique constraint violation
+        }
+
+       
+
+        // dd($data);
 
     }
 }

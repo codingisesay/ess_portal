@@ -120,6 +120,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('user/preemp',[empDetailFormController::class,'loadpreempuser'])->name('user.preemp');
     Route::get('user/docupload',[empDetailFormController::class,'loaddocuploaduser'])->name('user.docupload');
     Route::get('user/homepage',[homePagecontroller::class,'showHomepage'])->name('user.homepage');
+    Route::post('user/save_todo',[homePagecontroller::class,'saveToDoList'])->name('user.save_todo');
     Route::get('user/header', [headerController::class, 'showHeader'])->name('header');
     Route::get('user/employment-data', [employmentDataController::class, 'showemploymentData'])->name('user.employment.data');
     Route::get('user/hr-policy', [hrPolicyViewController::class, 'showHrPolicy'])->name('user.hr.policy');
@@ -156,6 +157,7 @@ Route::middleware(['auth'])->group(function () {
        Route::get('user/leave_request',[leavePolicyController::class,'showLeaveRequest'])->name('leave_request');
        Route::get('user/remaning_leave/{leave_id}',[leavePolicyController::class,'fetchRemainingLeave'])->name('remaing_leave');
        Route::get('user/half_days_status/{leave_id}/{start_date}/{end_date}',[leavePolicyController::class,'fetchStatusHalfDay'])->name('half_day_status');
+       Route::post('user/insert_leave',[leavePolicyController::class,'insertLeave'])->name('insert_leave');
      
 
    
