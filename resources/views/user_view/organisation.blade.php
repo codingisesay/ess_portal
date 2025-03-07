@@ -35,56 +35,93 @@ error_reporting(0);
     <div class="employee-list">  
         <ul class="tree">  
             @foreach ($employees as $employee)
-                <li>
-                    @php
-                        $hasSubordinates = false;
-                        foreach ($employees as $subordinate) {
-                            if ($subordinate->reporting_manager == $employee->user_id) {
-                                $hasSubordinates = true;
-                                break;
+                @if ($employee->reporting_manager == 27)  <!-- Check for top-level managers with ID 27 -->
+                    <li>
+                        @php
+                            $hasSubordinates = false;
+                            foreach ($employees as $subordinate) {
+                                if ($subordinate->reporting_manager == $employee->user_id) {
+                                    $hasSubordinates = true;
+                                    break;
+                                }
                             }
-                        }
-                    @endphp
-                    @if ($hasSubordinates)
-                        <button class="toggle-button" data-user-id="{{ $employee->user_id }}" onclick="toggleChildren(this)">+</button>
-                    @endif
-                    <span onclick="displayEmployeeDetails(
-                        '{{ $employee->user_id }}',
-                        '{{ $employee->employee_name }}',
-                        '{{ $employee->designation }}',
-                        '{{ $employee->employee_no }}',
-                        '{{ $employee->reporting_manager_name }}',  // Use manager's name for display
-                        '{{ $employee->department }}',
-                        '{{ $employee->per_city }}',
-                        '{{ $employee->offical_phone_number }}',
-                        '{{ $employee->offical_email_address }}'
-                    )">
-                        {{ $employee->employee_name }}
-                    </span>
-                    @if ($hasSubordinates)
-                        <ul data-manager-id="{{ $employee->user_id }}" style="display: none;">
-                            @foreach ($employees as $subordinate)
-                                @if ($subordinate->reporting_manager == $employee->user_id)
-                                    <li>
-                                        <span onclick="displayEmployeeDetails(
-                                            '{{ $subordinate->user_id }}',
-                                            '{{ $subordinate->employee_name }}',
-                                            '{{ $subordinate->designation }}',
-                                            '{{ $subordinate->employee_no }}',
-                                            '{{ $subordinate->reporting_manager_name }}',  // Use manager's name for display
-                                            '{{ $subordinate->department }}',
-                                            '{{ $subordinate->per_city }}',
-                                            '{{ $subordinate->offical_phone_number }}',
-                                            '{{ $subordinate->offical_email_address }}'
-                                        )">
-                                            {{ $subordinate->employee_name }}
-                                        </span>
-                                    </li>
-                                @endif
-                            @endforeach
-                        </ul>
-                    @endif
-                </li>
+                        @endphp
+                        @if ($hasSubordinates)
+                            <button class="toggle-button" data-user-id="{{ $employee->user_id }}" onclick="toggleChildren(this)">+</button>
+                        @endif
+                        <span onclick="displayEmployeeDetails(
+                            '{{ $employee->user_id }}',
+                            '{{ $employee->employee_name }}',
+                            '{{ $employee->designation }}',
+                            '{{ $employee->employee_no }}',
+                            '{{ $employee->reporting_manager_name }}',
+                            '{{ $employee->department }}',
+                            '{{ $employee->per_city }}',
+                            '{{ $employee->offical_phone_number }}',
+                            '{{ $employee->offical_email_address }}'
+                        )">
+                            {{ $employee->employee_name }}
+                        </span>
+                        @if ($hasSubordinates)
+                            <ul data-manager-id="{{ $employee->user_id }}" style="display: none;">
+                                @foreach ($employees as $subordinate)
+                                    @if ($subordinate->reporting_manager == $employee->user_id)
+                                        <li>
+                                            @php
+                                                $hasSubSubordinates = false;
+                                                foreach ($employees as $subSubordinate) {
+                                                    if ($subSubordinate->reporting_manager == $subordinate->user_id) {
+                                                        $hasSubSubordinates = true;
+                                                        break;
+                                                    }
+                                                }
+                                            @endphp
+                                            @if ($hasSubSubordinates)
+                                                <button class="toggle-button" data-user-id="{{ $subordinate->user_id }}" onclick="toggleChildren(this)">+</button>
+                                            @endif
+                                            <span onclick="displayEmployeeDetails(
+                                                '{{ $subordinate->user_id }}',
+                                                '{{ $subordinate->employee_name }}',
+                                                '{{ $subordinate->designation }}',
+                                                '{{ $subordinate->employee_no }}',
+                                                '{{ $subordinate->reporting_manager_name }}',
+                                                '{{ $subordinate->department }}',
+                                                '{{ $subordinate->per_city }}',
+                                                '{{ $subordinate->offical_phone_number }}',
+                                                '{{ $subordinate->offical_email_address }}'
+                                            )">
+                                                {{ $subordinate->employee_name }}
+                                            </span>
+                                            @if ($hasSubSubordinates)
+                                                <ul data-manager-id="{{ $subordinate->user_id }}" style="display: none;">
+                                                    @foreach ($employees as $subSubordinate)
+                                                        @if ($subSubordinate->reporting_manager == $subordinate->user_id)
+                                                            <li>
+                                                                <span onclick="displayEmployeeDetails(
+                                                                    '{{ $subSubordinate->user_id }}',
+                                                                    '{{ $subSubordinate->employee_name }}',
+                                                                    '{{ $subSubordinate->designation }}',
+                                                                    '{{ $subSubordinate->employee_no }}',
+                                                                    '{{ $subSubordinate->reporting_manager_name }}',
+                                                                    '{{ $subSubordinate->department }}',
+                                                                    '{{ $subSubordinate->per_city }}',
+                                                                    '{{ $subSubordinate->offical_phone_number }}',
+                                                                    '{{ $subSubordinate->offical_email_address }}'
+                                                                )">
+                                                                    {{ $subSubordinate->employee_name }}
+                                                                </span>
+                                                            </li>
+                                                        @endif
+                                                    @endforeach
+                                                </ul>
+                                            @endif
+                                        </li>
+                                    @endif
+                                @endforeach
+                            </ul>
+                        @endif
+                    </li>
+                @endif
             @endforeach
         </ul>  
     </div>  
