@@ -38,6 +38,7 @@ class employmentDataController extends Controller
             ->leftJoin('employee_types', 'emp_details.employee_type', '=', 'employee_types.id')  // Join for employee type name
             ->leftJoin('users as managers', 'emp_details.reporting_manager', '=', 'managers.id')  // Join for reporting manager name
             ->leftJoin('banks', 'emp_bank_details.sal_bank_name', '=', 'banks.id')  // Join for bank name using sal_bank_name
+            ->leftJoin('branches', 'emp_details.branch_id', '=', 'branches.id')  // Join for branch name using branch_id
             ->select(
                 'users.*',
                 'emp_details.*',
@@ -47,7 +48,8 @@ class employmentDataController extends Controller
                 'organisation_designations.name as designation_name',  // Select designation name
                 'employee_types.name as employee_type_name',  // Select employee type name
                 'managers.name as reporting_manager_name',  // Select reporting manager name
-                'banks.name as bank_name'  // Select bank name
+                'banks.name as bank_name',  // Select bank name
+                'branches.name as branch_name'  // Select branch name
             )
             ->where('users.id', $userId)
             ->where('users.organisation_id', $organisationId)
