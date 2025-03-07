@@ -13,12 +13,38 @@ error_reporting(0);
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="stylesheet" href="{{ asset('/user_end/css/homepage.css') }}">
     <link rel="stylesheet" href="{{ asset('/user_end/css/header.css') }}">
+    <link rel="stylesheet" href="{{ asset('errors/error.css') }}">
     <!-- Add Flatpickr CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 </head>
 
 <body>
-   
+
+@if(session('success'))
+<div class="alert custom-alert-success">
+    <strong>{{ session('success') }}</strong> 
+    <button class="close-btn" onclick="this.parentElement.style.display='none';">&times;</button>
+    
+</div>
+@endif
+
+@if(session('error'))
+<div class="alert custom-alert-error">
+<strong> {{ session('error') }}</strong>
+<button class="close-btn" onclick="this.parentElement.style.display='none';">&times;</button>
+</div>
+@endif
+
+@if($errors->any())
+<div class="alert custom-alert-warning">
+<ul>
+@foreach($errors->all() as $error)
+<li style="color: red;">{{ $error }}</li>
+
+@endforeach
+</ul>
+</div>
+@endif
 
     <!-- First main for three sections -->
     <main class="main-group">
@@ -126,7 +152,8 @@ error_reporting(0);
       
         <section class="to-do-list">
             <h3>To-do List</h3>
-            <form id="todo-form" class="to-do-list-container">
+            <form id="todo-form" class="to-do-list-container" method="POST" action="{{ route('user.save_todo') }}">
+                @csrf
                 <div class="to-do-list-container">
                     <div class="date-picker-container">
                         <input type="date" name="task_date" id="task_date" class="date-display" required>
@@ -163,46 +190,6 @@ error_reporting(0);
             </div>
         </div>
 
-        <script>
-    // Handle form submission via AJAX
-    document.getElementById('todo-form').addEventListener('submit', function (e) {
-        e.preventDefault(); // Prevent default form submission
-
-        // Gather form data
-        var formData = new FormData(this);
-
-        // Send data to the server via AJAX
-        var xhr = new XMLHttpRequest();
-        xhr.open('POST', 'save_todo.php', true);
-        xhr.onload = function () {
-            if (xhr.status === 200) {
-                // Check the server response
-                if (xhr.responseText === 'success') {
-                    showSuccessModal(); // Show success modal on success
-                    document.getElementById('todo-form').reset(); // Reset the form
-                } else {
-                    alert('Error saving task: ' + xhr.responseText); // Show error if any
-                }
-            } else {
-                alert('AJAX error: ' + xhr.status); // Show AJAX error
-            }
-        };
-        xhr.send(formData); // Send form data to the server
-    });
-
-    // Show success modal and apply blur effect
-    function showSuccessModal() {
-        document.getElementById('success-modal').style.display = 'flex'; // Show modal
-        document.body.classList.add('modal-active'); // Apply blur effect to the body
-    }
-
-    // Close the success modal and refresh the page
-    function closeSuccessModal() {
-        document.getElementById('success-modal').style.display = 'none'; // Hide modal
-        document.body.classList.remove('modal-active'); // Remove blur effect from the body
-        location.reload(); // Refresh the page
-    }
-</script>
 
 
 
@@ -288,28 +275,23 @@ error_reporting(0);
 
 
        
-        <section class="calendar-container">
-            <h2 class="calendar-header">Calendar</h2>
-            <div class="main-cal">
-                <div id="calendar-controls">
-                    <button id="prev-month" class="slider-btn">&lt;</button>
+<section class="calendar-container">
+    <h3 class="calendar-header">Calendar</h3>
+    <div class="main-cal">
+        <div id="calendar-controls">
+            <button id="prev-month" class="slider-btn">&lt;</button>
 
-                    <!-- Dropdowns for Year and Month placed between the sliders -->
-                    <div id="dropdown-container">
-                        <select id="year-select" class="slider-btn">
-                            <!-- Year options will be populated dynamically in JS -->
-                        </select>
-                        <select id="month-select" class="slider-btn">
-                            <!-- Month options will be populated dynamically in JS -->
-                        </select>
-                    </div>
-
-                    <button id="next-month" class="slider-btn">&gt;</button>
-                </div>
-
-                <div id="calendar"></div>
+            <div id="dropdown-container">
+                <select id="year-select" class="slider-btn"></select>
+                <select id="month-select" class="slider-btn"></select>
             </div>
-        </section>
+
+            <button id="next-month" class="slider-btn">&gt;</button>
+        </div>
+
+        <div id="calendar"></div>
+    </div>
+</section>
 
 
     </main>
@@ -721,165 +703,117 @@ error_reporting(0);
     </script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
-        $(document).ready(function () {
-            let currentYear = new Date().getFullYear();
-            let currentMonth = new Date().getMonth(); // 0-based month for internal use
+    // Initialize global variables
+    const calendarContainer = document.getElementById("calendar");
+    const yearSelect = document.getElementById("year-select");
+    const monthSelect = document.getElementById("month-select");
+    let currentYear = new Date().getFullYear();
+    let currentMonth = new Date().getMonth();
 
-            // Initialize the year and month dropdowns
-            populateYearDropdown();
-            populateMonthDropdown();
-            updateMonthDisplay();
-            loadCalendar(currentYear, currentMonth + 1); // 1-based month for display
+    // Function to populate year and month select dropdowns
+    function populateDropdowns() {
+        // Populate Year Dropdown
+        yearSelect.innerHTML = '';
+        for (let i = currentYear - 50; i <= currentYear + 50; i++) {
+            const option = document.createElement("option");
+            option.value = i;
+            option.textContent = i;
+            if (i === currentYear) option.selected = true;
+            yearSelect.appendChild(option);
+        }
 
-            // Handle year change
-            $('#year-select').on('change', function () {
-                currentYear = parseInt($(this).val());
-                loadCalendar(currentYear, currentMonth + 1);
-            });
-
-            // Handle month change
-            $('#month-select').on('change', function () {
-                currentMonth = parseInt($(this).val()) - 1; // 0-based month
-                loadCalendar(currentYear, currentMonth + 1); // 1-based month for display
-            });
-
-            // Handle previous and next month clicks
-            $("#prev-month").on("click", function () {
-                if (currentMonth === 0) {
-                    currentMonth = 11;
-                    currentYear -= 1;
-                } else {
-                    currentMonth -= 1;
-                }
-                updateMonthDisplay();
-                loadCalendar(currentYear, currentMonth + 1); // 1-based month
-                updateDropdowns(); // Update dropdowns to match the new month/year
-            });
-
-            $("#next-month").on("click", function () {
-                if (currentMonth === 11) {
-                    currentMonth = 0;
-                    currentYear += 1;
-                } else {
-                    currentMonth += 1;
-                }
-                updateMonthDisplay();
-                loadCalendar(currentYear, currentMonth + 1); // 1-based month
-                updateDropdowns(); // Update dropdowns to match the new month/year
-            });
-
-            // Update the displayed month in the slider
-            function updateMonthDisplay() {
-                const monthName = new Date(currentYear, currentMonth).toLocaleString('default', { month: 'long' });
-                $("#current-month").text(`${monthName} ${currentYear}`);
-            }
-
-            // Populate the year dropdown
-            function populateYearDropdown() {
-                const yearSelect = $('#year-select');
-                const startYear = currentYear - 5; // Starting from 5 years before current year
-                const endYear = currentYear + 5; // Ending at 5 years after current year
-
-                for (let year = startYear; year <= endYear; year++) {
-                    yearSelect.append(new Option(year, year, year === currentYear, year === currentYear));
-                }
-            }
-
-            // Populate the month dropdown
-            function populateMonthDropdown() {
-                const monthSelect = $('#month-select');
-                const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-
-                months.forEach((month, index) => {
-                    monthSelect.append(new Option(month, index + 1, index === currentMonth, index === currentMonth)); // 1-based index
-                });
-            }
-
-            // Fetch calendar data and render calendar
-            function loadCalendar(year, month) {
-                $.getJSON(`fetch_calendar_data.php?year=${year}&month=${month}`, function (data) {
-                    if (data.error) {
-                        console.error(data.error);
-                        return;
-                    }
-                    generateCalendar(year, month, data);
-                });
-            }
-
-            // Generate calendar grid
-            function generateCalendar(year, month, data) {
-                const calendarContainer = $('#calendar');
-                const daysInMonth = new Date(year, month, 0).getDate();
-                const firstDay = new Date(year, month - 1, 1).getDay();
-
-                const weekDays = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
-                const statuses = {};
-                data.forEach(entry => {
-                    statuses[entry.day] = {
-                        status: entry.status,
-                        name: entry.holiday_name,
-                        description: entry.holiday_description,
-                        checkIn: entry.check_in ? entry.check_in : '',
-                        checkOut: entry.check_out ? entry.check_out : ''
-                    };
-                });
-
-                let html = `<div class="calendar-grid">`;
-
-                weekDays.forEach(day => html += `<div class="day-label">${day}</div>`);
-
-                for (let i = 0; i < firstDay; i++) {
-                    html += `<div class="empty"></div>`;
-                }
-
-                for (let day = 1; day <= daysInMonth; day++) {
-                    let dayClass = "working";
-                    let tooltip = "";
-                    let holidayName = "";
-                    let holidayDescription = "";
-                    let checkInOutText = "";
-
-                    if (statuses[day]) {
-                        const status = statuses[day].status;
-                        dayClass = status.toLowerCase();
-                        tooltip = statuses[day].name || status;
-                        holidayName = statuses[day].name || "";
-                        holidayDescription = statuses[day].description || "";
-                        checkInOutText = `Check-in: ${statuses[day].checkIn} / Check-out: ${statuses[day].checkOut}`;
-                    }
-
-                    html += `<div class="day ${dayClass}"
-                         title="${tooltip}\n${checkInOutText}"
-                         data-day="${day}"
-                         data-holiday-name="${holidayName}"
-                         data-holiday-description="${holidayDescription}">
-                         ${day}
-                     </div>`;
-                }
-
-                html += `</div>`;
-                calendarContainer.html(html);
-
-                // Highlight current day and set cursor
-                const currentDate = new Date();
-                const currentDay = currentDate.getDate();
-                const currentMonth = currentDate.getMonth(); // 0-based index for month
-                const currentYear = currentDate.getFullYear();
-
-                // Highlight the current day by adding 'current-day' class
-                $(`.day[data-day="${currentDay}"]`).addClass("current-day");
-            }
-
-            // Update the year and month dropdown values based on current month and year
-            function updateDropdowns() {
-                // Update the year dropdown
-                $("#year-select").val(currentYear);
-
-                // Update the month dropdown (1-based month)
-                $("#month-select").val(currentMonth + 1);
-            }
+        // Populate Month Dropdown
+        monthSelect.innerHTML = '';
+        const months = [
+            "January", "February", "March", "April", "May", "June",
+            "July", "August", "September", "October", "November", "December"
+        ];
+        months.forEach((month, index) => {
+            const option = document.createElement("option");
+            option.value = index;
+            option.textContent = month;
+            if (index === currentMonth) option.selected = true;
+            monthSelect.appendChild(option);
         });
-    </script>
+    }
+
+    // Function to generate calendar
+    function generateCalendar(year, month) {
+        // Get the first day of the month and the number of days in the month
+        const firstDay = new Date(year, month, 1);
+        const lastDay = new Date(year, month + 1, 0);
+        const numDays = lastDay.getDate();
+        const firstDayOfWeek = firstDay.getDay(); // 0 - Sunday, 1 - Monday, etc.
+
+        // Clear previous calendar
+        calendarContainer.innerHTML = '';
+
+        // Add day headers (Sun, Mon, Tue, etc.)
+        const headers = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+        headers.forEach(day => {
+            const dayHeader = document.createElement('div');
+            dayHeader.classList.add('day', 'header');
+            dayHeader.textContent = day;
+            calendarContainer.appendChild(dayHeader);
+        });
+
+        // Add empty days before the start of the month
+        for (let i = 0; i < firstDayOfWeek; i++) {
+            const emptyDay = document.createElement('div');
+            emptyDay.classList.add('day', 'empty');
+            calendarContainer.appendChild(emptyDay);
+        }
+
+        // Add actual days
+        for (let day = 1; day <= numDays; day++) {
+            const dayElement = document.createElement('div');
+            dayElement.classList.add('day');
+            dayElement.textContent = day;
+            calendarContainer.appendChild(dayElement);
+        }
+    }
+
+    // Event listeners for month/year dropdown changes
+    yearSelect.addEventListener("change", (e) => {
+        currentYear = parseInt(e.target.value);
+        generateCalendar(currentYear, currentMonth);
+    });
+
+    monthSelect.addEventListener("change", (e) => {
+        currentMonth = parseInt(e.target.value);
+        generateCalendar(currentYear, currentMonth);
+    });
+
+    // Event listeners for previous and next buttons
+    document.getElementById("prev-month").addEventListener("click", () => {
+        if (currentMonth === 0) {
+            currentMonth = 11;
+            currentYear--;
+        } else {
+            currentMonth--;
+        }
+        yearSelect.value = currentYear;
+        monthSelect.value = currentMonth;
+        generateCalendar(currentYear, currentMonth);
+    });
+
+    document.getElementById("next-month").addEventListener("click", () => {
+        if (currentMonth === 11) {
+            currentMonth = 0;
+            currentYear++;
+        } else {
+            currentMonth++;
+        }
+        yearSelect.value = currentYear;
+        monthSelect.value = currentMonth;
+        generateCalendar(currentYear, currentMonth);
+    });
+
+    // Initialize the calendar
+    populateDropdowns();
+    generateCalendar(currentYear, currentMonth);
+</script>
+
 
 
     <script>

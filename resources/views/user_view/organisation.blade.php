@@ -108,15 +108,6 @@ error_reporting(0);
     </div>  
 </div>  
 
-<!-- <div class="notes">  
-    <h3>Notes</h3>  
-    <ul>  
-        <li>To expand an employee level, you can click on the + icon near the employee's name.</li>  
-        <li>To see the full details of an employee, click on the employee's name.</li>  
-        <li>You can search for an employee by entering the employee's name in the search field.</li>  
-    </ul>  
-</div>   -->
-
 <script>  
     // Function to toggle visibility of employee children  
     function toggleChildren(button) {  
@@ -128,7 +119,7 @@ error_reporting(0);
         button.innerText = (button.innerText === '-') ? '+' : '-';  
     }  
 
-    function displayEmployeeDetails(empId, name, designation, empNo, manager, department, city, phone, email) {  
+    function displayEmployeeDetails(userId, name, designation, empNo, manager, department, city, phone, email) {  
         document.getElementById('emp-name').textContent = name;  
         document.getElementById('emp-designation').textContent = designation;  
         document.getElementById('emp-no').textContent = empNo;  
@@ -141,7 +132,7 @@ error_reporting(0);
 
     function highlightEmployee() {  
         const searchQuery = document.getElementById('search-bar').value.toLowerCase();  
-        const employees = document.querySelectorAll('.emp-name');  
+        const employees = document.querySelectorAll('.tree span');  
 
         employees.forEach(employee => {  
             // Highlight matching names or remove highlight  
@@ -172,7 +163,7 @@ error_reporting(0);
         const empNo = "{{ Auth::user()->employee_no }}";
         const empName = "{{ Auth::user()->employee_name }}";
         const empDesignation = "{{ Auth::user()->designation }}";
-        const empManager = "{{ Auth::user()->reporting_manager }}";
+        const empManager = "{{ Auth::user()->reporting_manager_name }}"; // Ensure this is the manager's name
         const empDepartment = "{{ Auth::user()->department }}";
         const empCity = "{{ Auth::user()->per_city }}";
         const empPhone = "{{ Auth::user()->offical_phone_number }}";
@@ -182,302 +173,297 @@ error_reporting(0);
         displayEmployeeDetails(empNo, empName, empDesignation, empNo, empManager, empDepartment, empCity, empPhone, empEmail);  
     };  
 </script>
-      <style>
-        /* CSS code omitted for brevity. Retain your original CSS here. */
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f5f5f5;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            height: 100vh;
-        }
+<style>
+    /* CSS code omitted for brevity. Retain your original CSS here. */
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f5f5f5;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        height: 100vh;
+    }
 
-        header{
-            width: 100% !important;
-        }
+    header{
+        width: 100% !important;
+    }
 
-        .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 20px 30px;
-            background-color: #f5f5f5;
-            border-radius: 10px;
-            width: 100%;
-            height: 30px;
-        }
+    .header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 20px 30px;
+        background-color: #f5f5f5;
+        border-radius: 10px;
+        width: 100%;
+        height: 30px;
+    }
 
-        .header .organization-name {
-            font-size: 30px;
-            font-weight: bold;
-            margin-left: 15px;
-        }
+    .header .organization-name {
+        font-size: 30px;
+        font-weight: bold;
+        margin-left: 15px;
+    }
 
-        .header .search-bar-container {
-            display: flex;
-            align-items: center;
-            background-color: #f5f5f5;
-            border-radius: 50px;
-            padding: 5px;
-            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-            border: solid #FFFFFF 5px;
-            height: 50px;
-            width: 250px;
-            position: relative;
-        }
+    .header .search-bar-container {
+        display: flex;
+        align-items: center;
+        background-color: #f5f5f5;
+        border-radius: 50px;
+        padding: 5px;
+        box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+        border: solid #FFFFFF 5px;
+        height: 50px;
+        width: 250px;
+        position: relative;
+    }
 
-        .header .search-bar-container input {
-            border: none;
-            outline: none;
-            background: transparent;
-            width: 100%;
-            padding: 0 10px;
-            font-size: 14px;
-            color: #333;
-        }
+    .header .search-bar-container input {
+        border: none;
+        outline: none;
+        background: transparent;
+        width: 100%;
+        padding: 0 10px;
+        font-size: 14px;
+        color: #333;
+    }
 
-        .header .search-bar-container .search-icon {
-            width: 30px;
-            height: 30px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            background-color: #8A3366;
-            border-radius: 50%;
-            position: absolute;
-            right: 5px;
-            top: 50%;
-            transform: translateY(-50%);
-            font-size: 16px;
-            color: white;
-            cursor: pointer;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-            border: 2px solid white;
-        }
+    .header .search-bar-container .search-icon {
+        width: 30px;
+        height: 30px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background-color: #8A3366;
+        border-radius: 50%;
+        position: absolute;
+        right: 5px;
+        top: 50%;
+        transform: translateY(-50%);
+        font-size: 16px;
+        color: white;
+        cursor: pointer;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        border: 2px solid white;
+    }
 
-        .header .search-bar-container .search-icon img {
-            width: 50%;
-            height: 50%;
-            object-fit: cover;
-            border-radius: 50%;
-        }
+    .header .search-bar-container .search-icon img {
+        width: 50%;
+        height: 50%;
+        object-fit: cover;
+        border-radius: 50%;
+    }
 
-        .container {
-            width: 95%;
-            max-width: 1500px;
-            background-color: #f5f5f5;
-            border-radius: 15px;
-            padding: 20px;
-            display: grid;
-            grid-template-columns: 1fr 2fr;
-            gap: 20px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-            margin-top: 20px;
-            height: 550px;
-            overflow: hidden;
-            margin-bottom: 50px;
-        }
+    .container {
+        width: 95%;
+        max-width: 1500px;
+        background-color: #f5f5f5;
+        border-radius: 15px;
+        padding: 20px;
+        display: grid;
+        grid-template-columns: 1fr 2fr;
+        gap: 20px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        margin-top: 20px;
+        height: 550px;
+        overflow: hidden;
+        margin-bottom: 50px;
+    }
 
-        .employee-list {
-            grid-column: 1;
-            padding: 10px;
-            background: #ffffff;
-            border-radius: 10px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-            overflow-y: auto;
-            height: 100%;
-        }
+    .employee-list {
+        grid-column: 1;
+        padding: 10px;
+        background: #ffffff;
+        border-radius: 10px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        overflow-y: auto;
+        height: 100%;
+    }
 
-        .employee-list ul {
-            list-style: none;
-            padding-left: 0;
-        }
+    .employee-list ul {
+        list-style: none;
+        padding-left: 0;
+    }
 
-        .employee-list li {
-            margin: 5px 0;
-            padding: 5px;
-            cursor: pointer;
-            padding-bottom: 0px;
-            padding-left: 17px;
-            font-size: 14px;
-        }
+    .employee-list li {
+        margin: 5px 0;
+        padding: 5px;
+        cursor: pointer;
+        padding-bottom: 0px;
+        padding-left: 17px;
+        font-size: 14px;
+    }
 
-       
+    .employee-details {
+        grid-column: 2 / 3;
+        display: flex;
+        flex-direction: row;
+        gap: 20px;
+        overflow-y: auto;
+        height: 100%;
+    }
 
+    .employee-details .left {
+        width: 30%;
+        background-color: #fff;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        text-align: center;
+        height: 300px;
+        font-weight: bold;
+    }
 
-        .employee-details {
-            grid-column: 2 / 3;
-            display: flex;
-            flex-direction: row;
-            gap: 20px;
-            overflow-y: auto;
-            height: 100%;
-        }
+    .employee-details .left .heading {
+        font-size: 18px;
+        font-weight: bold;
+        margin-bottom: 15px;
+        background-color: #FFC107;
+        color: #FFFFFF;
+        width: 180px;
+        height: 37px;
+        border-radius: 7px;
+        padding: 2px;
+        margin-left: 25px;
+    }
 
-        .employee-details .left {
-            width: 30%;
-            background-color: #fff;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-            text-align: center;
-            height: 300px;
-            font-weight: bold;
-        }
+    .employee-details .left .profile-circle {
+        width: 120px;
+        height: 120px;
+        border-radius: 50%;
+        background-color: #ddd;
+        margin: 0 auto 15px;
+        overflow: hidden;
+    }
 
-        .employee-details .left .heading {
-            font-size: 18px;
-            font-weight: bold;
-            margin-bottom: 15px;
-            background-color: #FFC107;
-            color: #FFFFFF;
-            width: 180px;
-            height: 37px;
-            border-radius: 7px;
-            padding: 2px;
-            margin-left: 25px;
-        }
+    .employee-details .left img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
 
-        .employee-details .left .profile-circle {
-            width: 120px;
-            height: 120px;
-            border-radius: 50%;
-            background-color: #ddd;
-            margin: 0 auto 15px;
-            overflow: hidden;
-        }
+    .employee-details .right {
+        width: 70%;
+        background-color: #fff;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        height: 300px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        gap: 15px;
+    }
 
-        .employee-details .left img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
+    .detail-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 15px;
+        font-weight: bold;
+    }
 
-        .employee-details .right {
-            width: 70%;
-            background-color: #fff;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-            height: 300px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            gap: 15px;
-        }
+    .detail-item span:first-child {
+        color: darkgrey;
+        flex: 1;
+        text-align: left;
+        margin-left: 100px;
+    }
 
-        .detail-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-size: 15px;
-            font-weight: bold;
-        }
+    .detail-item span:last-child {
+        color: black;
+        flex: 2;
+        text-align: left;
+    }
 
-        .detail-item span:first-child {
-            color: darkgrey;
-            flex: 1;
-            text-align: left;
-            margin-left: 100px;
-        }
+    .notes {
+        grid-column: 1 / 3;
+        background-color: #FFFFFF;
+        border-radius: 10px;
+        padding: 30px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        width: 935px;
+        margin-left: 480px;
+        margin-top: -250px;
+        height: 180px;
+        padding-top: 20px;
+    }
 
-        .detail-item span:last-child {
-            color: black;
-            flex: 2;
-            text-align: left;
-        }
+    .notes h3 {
+        text-align: center;
+        border-radius: 7px;
+        padding: 5px;
+        background-color: #FFC107;
+        color: #FFFFFF;
+        width: 180px;
+        margin: 0px;
+        height: 37px;
+    }
 
-        .notes {
-            grid-column: 1 / 3;
-            background-color: #FFFFFF;
-            border-radius: 10px;
-            padding: 30px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-            width: 935px;
-            margin-left: 480px;
-            margin-top: -250px;
-           
-            height: 180px;
-            padding-top: 20px;
-        }
+    .highlight {
+        background-color: #8A3366;
+        font-weight: bold;
+        color: white;
+    }
 
-        .notes h3 {
-            text-align: center;
-            border-radius: 7px;
-            padding: 5px;
-            background-color: #FFC107;
-            color: #FFFFFF;
-            width: 180px;
-            margin: 0px;
-            height: 37px;
-        }
+    .gender-icon {
+        width: 20px;
+        height: 20px;
+        vertical-align: middle;
+        margin-right: 8px;
+    }
 
-        .highlight {
-            background-color: #8A3366;
-            font-weight: bold;
-            color: white;
-        }
+    .icon-container {
+        display: flex;
+        justify-content: center;
+        gap: 20px;
+        margin-top: 10px;
+    }
 
-        .gender-icon {
-            width: 20px;
-            height: 20px;
-            vertical-align: middle;
-            margin-right: 8px;
-        }
+    .icon-container a {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 15px;
+        height: 15px;
+        background-color: #F6F5F7;
+        border-radius: 50%;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        color: white;
+        text-decoration: none;
+        font-size: 20px;
+    }
 
-        .icon-container {
-            display: flex;
-            justify-content: center;
-            gap: 20px;
-            margin-top: 10px;
-        }
+    .icon-container a img {
+        width: 20%;
+        height: 20%;
+    }
 
-        .icon-container a {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            width: 15px;
-            height: 15px;
-            background-color: #F6F5F7;
-            border-radius: 50%;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-            color: white;
-            text-decoration: none;
-            font-size: 20px;
-        }
+    .dropdown {
+        margin-left: 15px;
+        position: relative;
+    }
 
-        .icon-container a img {
-            width: 20%;
-            height: 20%;
-        }
+    .dropdown select {
+        padding: 5px 10px;
+        font-size: 14px;
+        border: 2px solid white;
+        border-radius: 10px;
+        background-color: #f5f5f5;
+        cursor: pointer;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
 
-        .dropdown {
-    margin-left: 15px;
-    position: relative;
-}
-
-.dropdown select {
-    padding: 5px 10px;
-    font-size: 14px;
-    border: 2px solid white;
-    border-radius: 10px;
-    background-color: #f5f5f5;
-    cursor: pointer;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-}
-
-.toggle-button {
-    background: none;
-    border: none;
-    cursor: pointer;
-    font-size: 16px;
-    margin-right: 5px;
-}
-
-    </style>
-    @endsection
+    .toggle-button {
+        background: none;
+        border: none;
+        cursor: pointer;
+        font-size: 16px;
+        margin-right: 5px;
+    }
+</style>
+@endsection
 </body>
 </html>

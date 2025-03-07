@@ -166,7 +166,7 @@
 .form-group input:not(:placeholder-shown)~label,
 .form-group select:focus~label,
 .form-group select:not([value=""]):valid~label {
-    top: 5px;
+    top: 0px;
     left: 10px;
     font-size: 13px;
     color: #2a1e1e;
@@ -178,7 +178,7 @@
     width: 90%;
     padding: 10px 8px;
     /* Reduced padding */
-    border: 2px solid #020101;
+    border: 2px solid #ccc;
     border-radius: 5px;
     font-size: 14px;
     background-color: #f9f9f9;
@@ -193,7 +193,7 @@
 
 /* Focus Effects */
 .form-control:focus {
-    /* border-color: #3498db; */
+    border-color: #2a1e1e;
     box-shadow: 0 4px 12px rgba(52, 152, 219, 0.2);
     outline: none;
 }
