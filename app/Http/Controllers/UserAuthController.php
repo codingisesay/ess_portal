@@ -31,64 +31,111 @@ class UserAuthController extends Controller
             ->where('user_id',$loginUserInfo->id)
             ->get();
 
+            if($desDepBran->count() == 1){
+
+                
             $permissions = DB::table('permissions')
-                ->where('organisation_designations_id',$desDepBran[0]->designation)
-                ->where('branch_id',$desDepBran[0]->branch_id)
-                ->where('organisation_id',$loginUserInfo->organisation_id)
-                ->get();
-           
-            $permission_array = [];
+            ->where('organisation_designations_id',$desDepBran[0]->designation)
+            ->where('branch_id',$desDepBran[0]->branch_id)
+            ->where('organisation_id',$loginUserInfo->organisation_id)
+            ->get();
+       
+        $permission_array = [];
 
-            foreach($permissions as $pr){
+        foreach($permissions as $pr){
 
-                array_push($permission_array,$pr->feature_id);
+            array_push($permission_array,$pr->feature_id);
 
-            }
+        }
 
-            // Assign the $permission_array to a session variable
-            session(['permission_array' => $permission_array]);
+        // Assign the $permission_array to a session variable
+        session(['permission_array' => $permission_array]);
 
-            // dd($permission_array);
+        // dd($permission_array);
 
-            // $permission_array = session('permission_array');
-            $data = userHomePageStatus::where('user_id', $loginUserInfo->id)->get(); 
-            // dd($data);
+        // $permission_array = session('permission_array');
+        $data = userHomePageStatus::where('user_id', $loginUserInfo->id)->get(); 
+        // dd($data);
 
-             // Check if the user has logged in today
-             $todayLog = LoginLog::whereDate('login_time', today())
-             ->where('user_id', $loginUserInfo->id)
-             ->first();
+         // Check if the user has logged in today
+         $todayLog = LoginLog::whereDate('login_time', today())
+         ->where('user_id', $loginUserInfo->id)
+         ->first();
 
-              // If there's no log for today, create a new login log entry
-            if (!$todayLog) {
-                LoginLog::create([
-                    'user_id' => $loginUserInfo->id,
-                    'login_time' => now(), // Full timestamp
-                    'login_date' => today(), // Only the date
-                ]);
-            }
+          // If there's no log for today, create a new login log entry
+        if (!$todayLog) {
+            LoginLog::create([
+                'user_id' => $loginUserInfo->id,
+                'login_time' => now(), // Full timestamp
+                'login_date' => today(), // Only the date
+            ]);
+        }
 
-             // Redirect based on home page status
-            if($data->isNotEmpty()){
+         // Redirect based on home page status
+        if($data->isNotEmpty()){
 
-                if($data[0]->homePageStatus == 1){
+            if($data[0]->homePageStatus == 1){
 
-                    return redirect()->route('user.homepage');
-    
-                }else{
-    
-                    return redirect()->route('user.dashboard');
-    
-                }
+                return redirect()->route('user.homepage');
 
             }else{
 
                 return redirect()->route('user.dashboard');
 
+            }
 
+        }else{
+
+            return redirect()->route('user.dashboard');
+
+
+
+        }
+        
+
+            }else{
+
+        $data = userHomePageStatus::where('user_id', $loginUserInfo->id)->get(); 
+        // dd($data);
+
+         // Check if the user has logged in today
+         $todayLog = LoginLog::whereDate('login_time', today())
+         ->where('user_id', $loginUserInfo->id)
+         ->first();
+
+          // If there's no log for today, create a new login log entry
+        if (!$todayLog) {
+            LoginLog::create([
+                'user_id' => $loginUserInfo->id,
+                'login_time' => now(), // Full timestamp
+                'login_date' => today(), // Only the date
+            ]);
+        }
+
+         // Redirect based on home page status
+        if($data->isNotEmpty()){
+
+            if($data[0]->homePageStatus == 1){
+
+                return redirect()->route('user.homepage');
+
+            }else{
+
+                return redirect()->route('user.dashboard');
 
             }
-            
+
+        }else{
+
+            return redirect()->route('user.dashboard');
+
+
+
+        }
+        
+
+            }
+
             
         }
  // If login fails, redirect back with an error
@@ -115,6 +162,9 @@ class UserAuthController extends Controller
             $todayLog->logout_time = now();
             $todayLog->save();
         }
+        // In your logout logic
+session()->flush();
+
 
         // Log out the user
         Auth::guard('web')->logout();
