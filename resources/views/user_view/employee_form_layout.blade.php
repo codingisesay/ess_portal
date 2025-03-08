@@ -72,43 +72,47 @@
     <!-- Content Area (Where Forms Will Be Loaded Dynamically) -->
     @yield('content')
 
-    <!-- !PAGE CONTENT! -->
+     <!-- Include the section for the current step -->
+     @stack('step')  <!-- Push the current step to be used in JavaScript -->
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const steps = document.querySelectorAll('.step');
-            const stepCount = steps.length;
-
+            
             // Retrieve saved progress from localStorage
             const savedProgress = localStorage.getItem('progress');
             const progress = savedProgress ? JSON.parse(savedProgress) : [];
+            
+            // Get the current route
+            const currentRoute = window.location.pathname;
 
-            // Apply saved progress to the steps
+            // Loop through the steps and update based on the current route
             steps.forEach((step, index) => {
-                if (progress.includes(index)) {
-                    step.classList.add('completed');
-                }
-                if (progress.length > 0 && progress[progress.length - 1] >= index) {
+                const route = step.getAttribute('data-route');
+
+                // If the current route matches the step's route, mark it as active
+                if (currentRoute === route) {
                     step.classList.add('active');
+                }
+
+                // Mark all previous steps as completed
+                if (progress.includes(index) || index < progress.length) {
+                    step.classList.add('completed');
                 }
             });
 
-            // When a step is clicked
+            // Update the progress and store it in localStorage when a step is clicked
             steps.forEach((step, index) => {
                 step.addEventListener('click', function() {
-                    // Get the route URL from the data-route attribute
                     const route = step.getAttribute('data-route');
-                    
+
                     // Remove 'active' class from all steps
                     steps.forEach(s => s.classList.remove('active'));
 
                     // Add 'active' class to the clicked step
                     step.classList.add('active');
 
-                    // Mark the clicked step as completed
-                    step.classList.add('completed');
-
-                    // Mark previous steps as completed as well
+                    // Mark the clicked step as completed and all previous steps
                     steps.forEach((s, i) => {
                         if (i <= index) {
                             s.classList.add('completed');
@@ -117,7 +121,7 @@
                         }
                     });
 
-                    // Save progress to localStorage (only the steps up to the clicked step)
+                    // Save progress to localStorage
                     const updatedProgress = [];
                     steps.forEach((s, i) => {
                         if (s.classList.contains('completed')) {
@@ -127,11 +131,7 @@
                     localStorage.setItem('progress', JSON.stringify(updatedProgress));
 
                     // Redirect to the route
-                    if (route) {
-                        window.location.href = route;
-                    } else {
-                        console.error('Route is missing for step: ' + step.id);
-                    }
+                    window.location.href = route;
                 });
             });
         });

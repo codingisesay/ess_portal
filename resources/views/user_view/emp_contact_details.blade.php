@@ -495,5 +495,6 @@ document.getElementById('nationality_correspondence').addEventListener('change',
               background-color: #d40000;
           }
       </style>
+
 @endsection
 </body>

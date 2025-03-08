@@ -45,46 +45,51 @@ class permissionController extends Controller
         return view('superadmin_view.create_permission',compact('results','features','org_id', 'desig_id', 'b_id','permissions'));
     }
 
-    public function insertPermission(Request $request,$org_id,$desig_id,$b_id){
 
-        // echo "Org id".$org_id."<br>";
-        // echo "Desig id".$desig_id."<br>";;
-        // echo "branch id".$b_id."<br>";;
-       
-
-            // Retrieve the selected checkbox values
-    $selectedFeatures = $request->input('features', []); // Default to an empty array if no checkboxes are selected
-
-    // dd($selectedFeatures);
-
-    // Optionally, you can check if there are selected features
-    if (!empty($selectedFeatures)) {
-        // Process the selected features, e.g., save to the database or perform some logic
-        foreach ($selectedFeatures as $featureId) {
-
-          $permission_insert = permission::create([
-                'organisation_designations_id' => $desig_id,
-                'feature_id' => $featureId,
-                'branch_id' => $b_id,
-                'organisation_id' => $org_id,
-            ]);
-          
-        }
-
-        if($permission_insert){
-
-            return redirect()->route('create_designation_form')->with('success', 'Features processed successfully.');
-
-        }
-
-    } else {
-        // No features were selected
-        return redirect()->back()->with('error', 'No features selected.');
-    }
-
-    // Redirect or return a response
-    return redirect()->route('create_designation_form')->with('message', 'Features processed successfully.');
+    public function insertPermission(Request $request, $org_id, $desig_id, $b_id)
+    {
+        // Retrieve the selected checkbox values
+        $selectedFeatures = $request->input('features', []); // Default to an empty array if no checkboxes are selected
     
-
+        // If no features are selected, delete all permissions for the given designation, branch, and organisation
+        if (empty($selectedFeatures)) {
+            // Delete all permissions for the given designation, branch, and organisation
+            Permission::where('organisation_designations_id', $desig_id)
+                ->where('branch_id', $b_id)
+                ->where('organisation_id', $org_id)
+                ->delete();
+    
+            return redirect()->route('create_designation_form')->with('success', 'All features have been removed.');
+        } else {
+            // First, delete the permissions that are no longer selected (deselected)
+            Permission::where('organisation_designations_id', $desig_id)
+                ->where('branch_id', $b_id)
+                ->where('organisation_id', $org_id)
+                ->whereNotIn('feature_id', $selectedFeatures) // Deselect features that are no longer selected
+                ->delete();
+    
+            // Now, update or create the permissions for the selected features
+            foreach ($selectedFeatures as $featureId) {
+                Permission::updateOrCreate(
+                    [
+                        'organisation_designations_id' => $desig_id,
+                        'feature_id' => $featureId,
+                        'branch_id' => $b_id,
+                        'organisation_id' => $org_id,
+                    ],
+                    [
+                        'organisation_designations_id' => $desig_id,
+                        'feature_id' => $featureId,
+                        'branch_id' => $b_id,
+                        'organisation_id' => $org_id,
+                    ]
+                );
+            }
+    
+            // Redirect with a success message
+            return redirect()->route('create_designation_form')->with('success', 'Features processed successfully.');
+        }
     }
+    
+        
 }
