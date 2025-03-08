@@ -843,8 +843,10 @@ public function insertBank(Request $request){
     ->where('emp_details.user_id', '=', $loginUserInfo->id)
     ->get();
 
-    // dd($results);
-    if(is_null($results['0']->employee_type) && is_null($results['0']->employee_no) && is_null($results['0']->employee_name)){
+    if($results->count() == 1){
+
+            // dd($results);
+    if(is_null($results[0]->employee_type) && is_null($results[0]->employee_no) && is_null($results[0]->employee_name)){
 
         return redirect()->route('user.logout');
 
@@ -860,6 +862,14 @@ public function insertBank(Request $request){
         return redirect()->route('user.homepage');
 
     }
+
+    }else{
+
+        return redirect()->route('user.dashboard')->with('error','It is mandatory to fill all the required field forms!!');
+
+    }
+
+
 }
 }
 
