@@ -2,16 +2,81 @@
 
 @section('content')
 <link rel="stylesheet" href="{{ asset('/user_end/css/setting.css') }}">
+<head>
+    <style>
+        /* Style for the collapsible button */
+        /* .collapsible {
+            background-color: white;
+            color: black;
+            cursor: pointer;
+            padding: 10px;
+            width: 100%;
+            text-align: left;
+            border: none;
+            outline: none;
+            font-size: 15px;
+        }
+
+        .active, .collapsible:hover {
+            background-color: rgba(0,0,0,0.1);
+        } */
+
+        /* Style for the collapsible content (table container) */
+        .content {
+            padding: 0 18px;
+            display: block;
+            overflow: hidden;
+            background-color: #f1f1f1;
+        }
+
+        /* Style for the table */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        table, th, td {
+            border: 1px solid black;
+        }
+
+        th, td {
+            padding: 10px;
+            text-align: left;
+        }
+
+
+ 
+    </style>
+</head>
     <!-- Main Content -->
     <main class="settings-container">
+        <?php 
+            
+            $permission_array = session('permission_array');
+
+            // dd($permission_array);
+            
+            ?>
         <h1>Settings</h1>
         <div class="accordion">
             <!-- Upcoming Holidays -->
-            <!-- <div class="accordion-item">
+            <?php 
+            if(in_array(11,$permission_array)){?>
+            
+            <div class="accordion-item">
                 <div class="accordion-header" onclick="window.location.href='{{ url('holiday') }}'">
                     Calender Master
                 </div>
-            </div> -->
+            </div> 
+            
+            
+            <?php
+
+            }
+            
+            
+            ?>
+            
 
             <!-- Leave Section (With Link to hr_universal.php) -->
             {{-- <div class="accordion-item">
@@ -21,6 +86,11 @@
             </div> --}}
 
             <!-- Thought of the Day -->
+            <?php 
+            if(in_array(13,$permission_array)){?>
+            
+            
+            
             <div class="accordion-item">
                 <div class="accordion-header" onclick="toggleDropdown()">Thought of the Day/News & Events</div>
                 <div class="dropdown-content" id="dropdownContent">
@@ -101,13 +171,66 @@
                     </div>
                 </div>
             </div>
-
-            <!-- HR Policy -->
-            {{-- <div class="accordion-item">
-                <div class="accordion-header" onclick="window.location.href='{{ url('fetch_policies') }}'">
-                    Human Resources Policy
+            
+            <?php
+            }
+            
+            
+            
+            ?>
+         
+            <!-- Employee Edit -->
+            <?php 
+            if(in_array(12,$permission_array)){?>
+            
+            <div class="accordion-item">
+                <div class="accordion-header">
+                    Employee Details Edit
                 </div>
-            </div> --}}
+            </div>
+
+            {{-- <button class="collapsible">Open Table</button> --}}
+
+                <!-- Collapsible Content (Table) -->
+    <div class="content">
+        <table>
+            <thead>
+                <tr>
+                    <th>S.No</th>
+                    <th>Name</th>
+                    <th>Email ID</th>
+                    <th>Edit</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach ($users as $user)
+
+                <tr>
+                    <td>{{ $loop->iteration }}</td>
+                    <td>{{$user->name}}</td>
+                    <td>{{$user->email}}</td>
+                    <td><button type="">Edit</button></td>
+                </tr>
+                    
+                @endforeach
+                
+            </tbody>
+        </table>
+        <div class="d-flex justify-content-center">
+            {{ $users->links() }} <!-- Pagination links -->
+        </div>
+      
+
+    </div>
+  
+    </div>
+ 
+            <?php
+
+            }
+            
+            ?>
+            
 
             <!-- PMS-->
             {{-- <div class="accordion-item">
@@ -118,6 +241,28 @@
         </div>
     </main>
     <script>
+
+      // Get all collapsible buttons
+      var coll = document.getElementsByClassName("collapsible");
+
+// Loop through the buttons and add an event listener for the click event
+for (var i = 0; i < coll.length; i++) {
+    coll[i].addEventListener("click", function() {
+        // Toggle the "active" class for the button
+        this.classList.toggle("active");
+
+        // Get the next element (the content div)
+        var content = this.nextElementSibling;
+
+        // Toggle the display of the content (show or hide it)
+        if (content.style.display === "block") {
+            content.style.display = "none";
+        } else {
+            content.style.display = "block";
+        }
+    });
+}
+
         function toggleDropdown() {
             const dropdownContent = document.getElementById("dropdownContent");
             dropdownContent.style.display = dropdownContent.style.display === "block" ? "none" : "block";

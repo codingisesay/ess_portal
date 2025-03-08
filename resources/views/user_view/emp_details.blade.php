@@ -355,5 +355,6 @@ $employeeID = Auth::guard('web')->user()->employeeID;
     }
 </script>
 <script src="{{ asset('user_end/js/onboarding_form.js') }}"></script>
+
 @endsection
 </body>

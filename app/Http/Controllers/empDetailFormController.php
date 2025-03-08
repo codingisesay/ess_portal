@@ -437,6 +437,7 @@ public function insertcontact(Request $request)
         'permanent_city' => 'required',
         'permanent_state' => 'required',
 
+<<<<<<< HEAD
         // Correspondence address fields are now optional
         'correspondence_building_no' => 'nullable',
         'correspondence_premises_name' => 'nullable',
@@ -447,6 +448,17 @@ public function insertcontact(Request $request)
         'correspondence_district' => 'nullable',
         'correspondence_city' => 'nullable',
         'correspondence_state' => 'nullable',
+=======
+        'correspondence_building_no' => '',
+        'correspondence_premises_name' => '',
+        'correspondence_landmark' => '',
+        'correspondence_road_street' => '',
+        'correspondence_country' => '',
+        'correspondence_pincode' => '',
+        'correspondence_district' => '',
+        'correspondence_city' => '',
+        'correspondence_state' => '',
+>>>>>>> c4b0c0d688b5d8588d646811c2a6ad22de77a34b
 
         'phoneNumber' => 'required',
         'emailID' => 'required',
