@@ -424,7 +424,7 @@ class empDetailFormController extends Controller
     }
 }
 
-    public function insertcontact(Request $request)
+public function insertcontact(Request $request)
 {
     $validated = $request->validate([
         'permanent_building_no' => 'required',
@@ -437,18 +437,18 @@ class empDetailFormController extends Controller
         'permanent_city' => 'required',
         'permanent_state' => 'required',
 
-        'correspondence_building_no' => 'required',
-        'correspondence_premises_name' => 'required',
-        'correspondence_landmark' => 'required',
-        'correspondence_road_street' => 'required',
-        'correspondence_country' => 'required',
-        'correspondence_pincode' => 'sometimes|required_if:correspondence_country,India',
-        'correspondence_district' => 'required',
-        'correspondence_city' => 'required',
-        'correspondence_state' => 'required',
+        // Correspondence address fields are now optional
+        'correspondence_building_no' => 'nullable',
+        'correspondence_premises_name' => 'nullable',
+        'correspondence_landmark' => 'nullable',
+        'correspondence_road_street' => 'nullable',
+        'correspondence_country' => 'nullable',
+        'correspondence_pincode' => 'nullable',
+        'correspondence_district' => 'nullable',
+        'correspondence_city' => 'nullable',
+        'correspondence_state' => 'nullable',
 
         'phoneNumber' => 'required',
-        // 'alternate_phone_number' => 'required',
         'emailID' => 'required',
         'email' => 'required',
 
@@ -461,6 +461,10 @@ class empDetailFormController extends Controller
     $empContactStatus = emp_contact_details::where('user_id', $loginUserInfo->id)->get();
 
     if ($empContactStatus->isNotEmpty()) {
+        // Ensure all correspondence fields are checked or set to null if not provided
+        $correspondenceCountry = $data['correspondence_country'] ?? null;
+        $correspondencePincode = $data['correspondence_pincode'] ?? null;
+
         // Using Query Builder to update data
         $updatecontactstatus = DB::table('emp_contact_details')
             ->where('user_id', $loginUserInfo->id)
@@ -479,14 +483,14 @@ class empDetailFormController extends Controller
                 'cor_name_of_premises' => $data['correspondence_premises_name'],
                 'cor_nearby_landmark' => $data['correspondence_landmark'],
                 'cor_road_street' => $data['correspondence_road_street'],
-                'cor_country' => $data['correspondence_country'],
-                'cor_pincode' => $data['correspondence_pincode'],
+                'cor_country' => $correspondenceCountry,
+                'cor_pincode' => $correspondencePincode,
                 'cor_district' => $data['correspondence_district'],
                 'cor_city' => $data['correspondence_city'],
                 'cor_state' => $data['correspondence_state'],
 
                 'offical_phone_number' => $data['phoneNumber'],
-                'alternate_phone_number' => $data['alternate_phone_number'],
+                'alternate_phone_number' => $data['alternate_phone_number'] ?? null,
                 'email_address' => $data['emailID'],
                 'offical_email_address' => $data['email'],
 
@@ -495,13 +499,15 @@ class empDetailFormController extends Controller
             ]);
 
         if ($updatecontactstatus) {
-            // session()->flash('success', 'Data has been updated successfully!');
             return redirect()->route('user.edu')->with('success', 'Data has been updated successfully!');
         } else {
-            // session()->flash('error', 'Data has Not been updated successfully!');
             return redirect()->route('user.edu')->with('error', 'No Item Modified!');
         }
     } else {
+        // Ensure all correspondence fields are checked or set to null if not provided
+        $correspondenceCountry = $data['correspondence_country'] ?? null;
+        $correspondencePincode = $data['correspondence_pincode'] ?? null;
+
         // Using Query Builder to insert data
         $emp_contact_status = DB::table('emp_contact_details')->insert([
             'per_building_no' => $data['permanent_building_no'],
@@ -518,14 +524,14 @@ class empDetailFormController extends Controller
             'cor_name_of_premises' => $data['correspondence_premises_name'],
             'cor_nearby_landmark' => $data['correspondence_landmark'],
             'cor_road_street' => $data['correspondence_road_street'],
-            'cor_country' => $data['correspondence_country'],
-            'cor_pincode' => $data['correspondence_pincode'],
+            'cor_country' => $correspondenceCountry,
+            'cor_pincode' => $correspondencePincode,
             'cor_district' => $data['correspondence_district'],
             'cor_city' => $data['correspondence_city'],
             'cor_state' => $data['correspondence_state'],
 
             'offical_phone_number' => $data['phoneNumber'],
-            'alternate_phone_number' => $data['alternate_phone_number'],
+            'alternate_phone_number' => $data['alternate_phone_number'] ?? null,
             'email_address' => $data['emailID'],
             'offical_email_address' => $data['email'],
 
@@ -537,10 +543,8 @@ class empDetailFormController extends Controller
         ]);
 
         if ($emp_contact_status) {
-            // session()->flash('success', 'Data has been updated successfully!');
             return redirect()->route('user.edu')->with('success', 'Data has been inserted successfully!');
         } else {
-            // session()->flash('error', 'Data has Not been inserted successfully!');
             return redirect()->route('user.edu')->with('error', 'Data has Not been inserted successfully!');
         }
     }

@@ -57,54 +57,58 @@
         <div class="left-sec">
             <div class="one">
                 <div class="attendance-header">
-                    <h1>Average Working Hours</h1>
-                    <canvas id="attendanceChart" style="width: 500px; height: 400px;"></canvas>
-                    <script>
-                        const attendanceData = {
-                            dates: ['2023-01-01', '2023-01-02', '2023-01-03'],
-                            hours: [8, 7.5, 8.5]
-                        };
+                <div class="attendance-header">
+    <h1>Average Working Hours</h1>
+    <canvas id="attendanceChart" style="width: 500px; height: 400px;"></canvas>
+    <script>
+        // Passing PHP variables into JavaScript using Blade
+        const attendanceData = {
+            dates: @json(array_column($workingHoursData['working_hours'], 'date')),  // Extract dates array
+            hours: @json(array_column($workingHoursData['working_hours'], 'worked_hours'))  // Extract hours array
+        };
 
-                        const ctx = document.getElementById('attendanceChart').getContext('2d');
-                        const attendanceChart = new Chart(ctx, {
-                            type: 'bar',
-                            data: {
-                                labels: attendanceData.dates,
-                                datasets: [{
-                                    label: 'Hours Worked',
-                                    data: attendanceData.hours,
-                                    backgroundColor: '#0E8D4A',
-                                    borderColor: 'rgba(75, 192, 192, 1)',
-                                    borderWidth: 1
-                                }]
-                            },
-                            options: {
-                                scales: {
-                                    y: {
-                                        beginAtZero: true,
-                                        title: {
-                                            display: true,
-                                            text: 'Hours Worked'
-                                        }
-                                    },
-                                    x: {
-                                        title: {
-                                            display: true,
-                                            text: 'Date'
-                                        }
-                                    }
-                                },
-                                plugins: {
-                                    legend: {
-                                        display: true
-                                    }
-                                },
-                                barThickness: 'flex',
-                                categoryPercentage: 0.6,
-                                barPercentage: 0.6
-                            }
-                        });
-                    </script>
+        const ctx = document.getElementById('attendanceChart').getContext('2d');
+        const attendanceChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: attendanceData.dates,  // Dates array passed from PHP
+                datasets: [{
+                    label: 'Hours Worked',
+                    data: attendanceData.hours,  // Hours array passed from PHP
+                    backgroundColor: '#0E8D4A',
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: 'Hours Worked'
+                        }
+                    },
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Date'
+                        }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        display: true
+                    }
+                },
+                barThickness: 'flex',
+                categoryPercentage: 0.6,
+                barPercentage: 0.6
+            }
+        });
+    </script>
+</div>
+
                 </div>
 
                 <div class="summary">
@@ -198,25 +202,26 @@
 
             <div class="two">
                 <div class="applied-leaves">
-                    <h1>Applied Leave</h1>
-                    <div class="container">
-                        <div class='status-item'>
-                            <div>
-                                <span class='date'>01 January, 2023</span><br>
-                                <span class='note'>Family emergency</span>
-                            </div>
-                            <button class='btn pending'>PENDING</button>
+                <h1>Applied Leave</h1>
+        <div class="container">
+            @foreach($appliedLeaves as $leave)
+                <div class='status-item'>
+                    <div>
+                        <span class='date'>
+                            {{ \Carbon\Carbon::parse($leave->start_date)->format('d F, Y') }} - 
+                            {{ \Carbon\Carbon::parse($leave->end_date)->format('d F, Y') }}
+                        </span><br>
+                        <span class='note'>{{ $leave->description }}</span>
                         </div>
-                        <div class='status-item'>
-                            <div>
-                                <span class='date'>15 February, 2023</span><br>
-                                <span class='note'>Medical appointment</span>
-                            </div>
-                            <button class='btn approved'>APPROVED</button>
-                        </div>
+                        @if(isset($leave->leave_approve_status))
+                            <p>Status: {{ $leave->leave_approve_status }}</p>
+                        @endif
+                </div>
+            @endforeach
                     </div>
                 </div>
-
+               
+                
                 <div class="attendance">
                     <h1>Attendance Overview</h1>
                     <canvas id="newAttendanceChart" width="900px" height="550px"></canvas>
@@ -424,13 +429,17 @@
                 });
             </script>
 
-            <div class="leave-type">
-                <h1>Leave Type</h1>
-                <div class="container-type">
-                    <button class='button' style='background-color: #8a3366;'>Annual Leave</button>
-                    <button class='button' style='background-color: #2B53C1;'>Sick Leave</button>
-                </div>
-            </div>
+<div class="leave-type">
+    <h1>Leave Type</h1>
+    <div class="container-type">
+        @foreach($leaveSummary as $leave)
+            <button class="button" style="background-color: {{ $loop->index % 2 == 0 ? '#8a3366' : '#2B53C1' }};">
+                {{ $leave['leave_type'] }}
+            </button>
+        @endforeach
+    </div>
+</div>
+
 
             <h1>Upcoming Holidays</h1>
             <div class="holidays">
@@ -458,43 +467,36 @@
     </div>
 
     <div class="bottom">
-        <div class="leave-details">
-            <h1>Leave Balance Summary</h1>
-            <table>
-                <thead>
+    <div class="leave-details">
+        <h1>Leave Balance Summary</h1>
+        <table>
+            <thead>
+                <tr>
+                    <th>Leave Type</th>
+                    <th>Entitled Days</th>
+                    <th>Carry Forward</th>
+                    <th>Encash</th>
+                    <th>Taken Leaves</th>
+                    <th>Remaining Leave</th>
+                    <th>Loss of Pay</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach ($leaveSummary as $leave)
                     <tr>
-                        <th>Leave Type</th>
-                        <th>Entitled Days</th>
-                        <th>Carry Forward</th>
-                        <th>Encash</th>
-                        <th>Taken Leaves</th>
-                        <th>Remaining Leave</th>
-                        <th>Loss of Pay</th>
+                        <td>{{ $leave['leave_type'] }}</td>
+                        <td>{{ $leave['total_leaves'] }} days</td>
+                        <td>{{ $leave['no_carry_forward'] }} days</td>
+                        <td>{{ $leave['no_leave_encash'] }} days</td>
+                        <td>{{ $leave['consumed_leaves'] }} days</td>
+                        <td>{{ $leave['remaining_leaves'] }} days</td>
+                        <td>0 days</td> <!-- Assuming static value or you can fetch from DB if needed -->
                     </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>Annual Leave</td>
-                        <td>20 days</td>
-                        <td>5 days</td>
-                        <td>2 days</td>
-                        <td>10 days</td>
-                        <td>8 days</td>
-                        <td>0 days</td>
-                    </tr>
-                    <tr>
-                        <td>Sick Leave</td>
-                        <td>10 days</td>
-                        <td>0 days</td>
-                        <td>0 days</td>
-                        <td>2 days</td>
-                        <td>8 days</td>
-                        <td>0 days</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
+                @endforeach
+            </tbody>
+        </table>
     </div>
-</body>
+</div>
+
 @endsection
 </html>
