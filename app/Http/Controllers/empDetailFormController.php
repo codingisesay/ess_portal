@@ -859,7 +859,7 @@ public function insertBank(Request $request){
             'updated_at' => NOW(),
         ]);
     
-        return redirect()->route('user.homepage');
+        return redirect()->route('user.login');
 
     }
 
