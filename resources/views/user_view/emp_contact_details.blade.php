@@ -161,60 +161,59 @@ $id = Auth::guard('web')->user()->id;
                       </div>
                       <div class="form-group">
                           
-                          <input type="text" id="correspondence_premises_name" class="form-control" maxlength="35" required
+                          <input type="text" id="correspondence_premises_name" class="form-control" maxlength="35" 
                               name="correspondence_premises_name" placeholder="" value="{{ old('correspondence_premises_name', $emp_contact_datas[0]->cor_name_of_premises) }}">
-                              <label for="correspondence_premises_name">Name of the Premises/Bldg<span
-                          style="color: red;">*</span></label>
+                              <label for="correspondence_premises_name">Name of the Premises/Bldg</label>
+                          
                       </div>
                       <div class="form-group">
                           
-                          <input type="text" id="correspondence_landmark" name="correspondence_landmark" maxlength="35" required
+                          <input type="text" id="correspondence_landmark" name="correspondence_landmark" maxlength="35" 
                               class="form-control" placeholder="" value="{{ old('correspondence_landmark', $emp_contact_datas[0]->cor_nearby_landmark) }}">
-                              <label for="correspondence_landmark">Nearby Landmark<span
-                          style="color: red;">*</span></label>
+                              <label for="correspondence_landmark">Nearby Landmark</label>   
                       </div>
                       <div class="form-group">
                          
-                          <input type="text" id="correspondence_road_street" name="correspondence_road_street" maxlength="35" required
+                          <input type="text" id="correspondence_road_street" name="correspondence_road_street" maxlength="35" 
                               class="form-control" placeholder="Enter Road/Street" value="{{ old('correspondence_road_street', $emp_contact_datas[0]->cor_road_street) }}">
-                              <label for="correspondence_road_street">Road/Street<span
-                              style="color: red;">*</span></label>
+                              <label for="correspondence_road_street">Road/Street
+                              </label>
                       </div>
                      
 
                       <div class="form-group">
                                 
                         <span class="error" id="nationalityError"></span>
-                        <select id="nationality_correspondence" class="form-control dropdown" name="correspondence_country" placeholder="" required>
+                        <select id="nationality_correspondence" class="form-control dropdown" name="correspondence_country" placeholder="" >
                             <option value="India" selected>India</option> <!-- Default value set to India -->
                             @foreach($countrys as $country)
                             <option value="{{$country->name }}">{{ $country->name }}</option>
                             @endforeach
                         </select>
-                        <label for="nationality">Country <span style="color: red;">*</span></label>
+                        <label for="nationality">Country</label>
                     </div>
                       <div class="form-group">
                           
                           <input type="text" id="pincode_correspondence" name="correspondence_pincode" onkeyup="fetchLocationDetails('correspondence')"
-                              class="form-control" placeholder="" minlength="5" required
+                              class="form-control" placeholder="" minlength="5" 
                               maxlength="6" pattern="\d{5,6}"
                               oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 6); 
        fetchCityAndState('correspondence_pincode', 'correspondence_city', 'correspondence_state', 'correspondence_district')" value="{{ old('correspondence_pincode', $emp_contact_datas[0]->cor_pincode) }}">
-       <label for="correspondence_pincode">Pincode/Zipcode <span id="pincode-asterisk" style="color: red; display: none;">*</span></label>
+       <label for="correspondence_pincode">Pincode/Zipcode <span id="pincode-asterisk"></span></label>
                       </div>
                       <div class="form-group">
                           
-                          <input type="text" id="district_correspondence" name="correspondence_district" maxlength="35" required
+                          <input type="text" id="district_correspondence" name="correspondence_district" maxlength="35" 
                               class="form-control" placeholder="" value="{{ old('correspondence_district', $emp_contact_datas[0]->cor_district) }}">
-                              <label for="correspondence_district">District<span
-                          style="color: red;">*</span></label>
+                              <label for="correspondence_district">District
+                          </label>
                       </div>
                       <div class="form-group">
                          
-                          <input type="text" id="city_correspondence" name="correspondence_city" maxlength="35" required
+                          <input type="text" id="city_correspondence" name="correspondence_city" maxlength="35" 
                               class="form-control" placeholder="" value="{{ old('correspondence_city', $emp_contact_datas[0]->cor_city) }}">
-                              <label for="correspondence_city">City/Town/Village<span
-                              style="color: red;">*</span></label>
+                              <label for="correspondence_city">City/Town/Village
+                              </label>
                       </div>
                   </div>
                   <div class="form-row">
@@ -222,10 +221,10 @@ $id = Auth::guard('web')->user()->id;
 
                       <div class="form-group">
                           
-                          <input type="text" id="state_correspondence" name="correspondence_state" maxlength="35" required
+                          <input type="text" id="state_correspondence" name="correspondence_state" maxlength="35" 
                               class="form-control" placeholder="" value="{{ old('correspondence_state', $emp_contact_datas[0]->cor_state) }}">
-                              <label for="correspondence_state">State/Province<span
-                          style="color: red;">*</span></label>
+                              <label for="correspondence_state">State/Province
+                          </label>
                       </div>
                   </div>
               </div>
