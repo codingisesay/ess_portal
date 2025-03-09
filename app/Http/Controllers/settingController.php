@@ -7,6 +7,8 @@ use App\Models\User;
 use App\Mail\UserRegistrationMail;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 
 
 class settingController extends Controller
@@ -15,7 +17,7 @@ class settingController extends Controller
     {
         $loginUserInfo = Auth::user();
        
-        $users = User::where('organisation_id', $loginUserInfo->organisation_id)->paginate(1);
+        $users = User::where('organisation_id', $loginUserInfo->organisation_id)->paginate(10);
         return view('user_view.setting',compact('users'));
     }
 
