@@ -18,6 +18,7 @@ use App\Http\Controllers\ForgotPasswordController;
 use App\Http\Controllers\settingController;
 use App\Http\Controllers\organisationController;
 use App\Http\Controllers\leavePolicyController;
+use App\Http\Controllers\editUserController;
 
 
 
@@ -119,9 +120,37 @@ Route::middleware(['auth'])->group(function () {
     Route::get('user/family',[empDetailFormController::class,'loadfamilyuser'])->name('user.family');
     Route::get('user/preemp',[empDetailFormController::class,'loadpreempuser'])->name('user.preemp');
     Route::get('user/docupload',[empDetailFormController::class,'loaddocuploaduser'])->name('user.docupload');
+   
+    //Edit user Controller routes
+
+    Route::get('user/edit/dashboard/{id}',[editUserController::class,'index'])->name('user.editdashboard');
+    Route::get('user/edit/contact/{id?}',[editUserController::class,'loadcontectuser'])->name('user.editcontact');
+    Route::get('user/edit/edu/{id?}',[editUserController::class,'loadeducationuser'])->name('user.editedu');
+    Route::get('user/edit/bank/{id?}',[editUserController::class,'loadbankuser'])->name('user.editbank');
+    Route::get('user/edit/family/{id?}',[editUserController::class,'loadfamilyuser'])->name('user.editfamily');
+    Route::get('user/edit/preemp/{id?}',[editUserController::class,'loadpreempuser'])->name('user.editpreemp');
+    Route::get('user/edit/docupload/{id?}',[editUserController::class,'loaddocuploaduser'])->name('user.editdocupload');
+    //Update edit users Routes
+    Route::post('user/edit/detail_insert',[editUserController::class,'insertDetail'])->name('edit_detail_insert');
+    Route::post('user/edit/contact_insert',[editUserController::class,'insertcontact'])->name('edit_contact_insert');
+    Route::post('user/edit/education_insert',[editUserController::class,'insertEducation'])->name('edit_education_insert');
+    Route::post('user/edit/bank_insert',[editUserController::class,'insertBank'])->name('edit_bank_insert');
+    Route::post('user/edit/family_insert',[editUserController::class,'insertfamity'])->name('edit_family_insert');
+    Route::post('user/edit/preemp_insert',[editUserController::class,'insertPreEmp'])->name('edit_preEmp_insert');
+    Route::post('/user/edit/documents_upload', [editUserController::class, 'upload'])->name('edit_documents.upload');
+
+    //Delete data
+
+    Route::delete('user/edit/del_education/{id}', [editUserController::class, 'DeleteEducation'])->name('edit_edu.destroy');
+    Route::delete('user/edit/del_family/{id}', [editUserController::class, 'DeleteFamily'])->name('edit_family.destroy');
+    Route::delete('user/edit/pre_emply/{id}', [editUserController::class, 'DeletePreViousEmpy'])->name('edit_previous.destroy');
+
+
+
     Route::get('user/homepage',[homePagecontroller::class,'showHomepage'])->name('user.homepage');
     Route::post('user/save_todo',[homePagecontroller::class,'saveToDoList'])->name('user.save_todo');
     Route::get('user/header', [headerController::class, 'showHeader'])->name('header');
+    Route::post('/user/upload-profile-photo', [headerController::class, 'uploadProfilePhoto'])->name('user.uploadProfilePhoto');
     Route::get('user/employment-data', [employmentDataController::class, 'showemploymentData'])->name('user.employment.data');
     Route::get('user/hr-policy', [hrPolicyViewController::class, 'showHrPolicy'])->name('user.hr.policy');
     Route::get('user/hr-policy/category/{id}', [hrPolicyViewController::class, 'getPoliciesByCategory'])->name('user.hr.policy.category');

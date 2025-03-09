@@ -192,6 +192,7 @@
             {{-- <button class="collapsible">Open Table</button> --}}
 
                 <!-- Collapsible Content (Table) -->
+                
     <div class="content">
         <table>
             <thead>
@@ -202,6 +203,7 @@
                     <th>Edit</th>
                 </tr>
             </thead>
+
             <tbody>
                 @foreach ($users as $user)
 
@@ -209,7 +211,7 @@
                     <td>{{ $loop->iteration }}</td>
                     <td>{{$user->name}}</td>
                     <td>{{$user->email}}</td>
-                    <td><button type="">Edit</button></td>
+                    <td><a type="button" href="{{ route('user.editdashboard',['id' => $user->id]) }}" type="">Edit</button></td>
                 </tr>
                     
                 @endforeach
@@ -222,7 +224,7 @@
       
 
     </div>
-  
+               
     </div>
  
             <?php

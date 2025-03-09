@@ -18,7 +18,7 @@ header {
     justify-content: space-between;
     align-items: center;
     padding: 15px 2%;
-    background-color: #F6F5F7;
+    /* background-color: #F6F5F7; */
     flex-wrap: wrap;
 }
 

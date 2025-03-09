@@ -6,6 +6,7 @@ error_reporting(0);
 // $permission_array = session('permission_array');
 // dd($permission_array);
 ?>
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -162,7 +163,7 @@ error_reporting(0);
                 @csrf
                 <div class="to-do-list-container">
                     <div class="date-picker-container">
-                        <input type="date" name="task_date" id="task_date" class="date-display" required>
+                        <input type="date" name="task_date" id="task_date" class="input-field" required>
                     </div>
 
                     <div class="form-group">
@@ -370,17 +371,17 @@ error_reporting(0);
 
                 <!-- Task Card -->
                 <div class="approval-card" onclick="openTaskModal()">
-                    <div class="card-left">
-                        <img src="{{ asset('user_end/images/Task.png'); }}" alt="Task Icon" class="icon">
-                        <div class="details">
-                            <h4>Task</h4>
-                            
-                        </div>
-                    </div>
-                    <div class="card-right">
-                        <img src="{{ asset('user_end/images/cake 5.png'); }}" alt="Alert Icon" class="alert-icon">
-                    </div>
-                </div>
+    <div class="card-left">
+        <img src="{{ asset('user_end/images/Task.png'); }}" alt="Task Icon" class="icon">
+        <div class="details">
+            <h4>Task</h4>
+        </div>
+    </div>
+    <div class="card-right">
+        <img src="{{ asset('user_end/images/cake 5.png'); }}" alt="Alert Icon" class="alert-icon">
+    </div>
+</div>
+
 
                 <!-- Meeting Card -->
                 <!-- <div class="approval-card">
@@ -438,163 +439,43 @@ error_reporting(0);
                     <th>Action</th> <!-- New Column for Delete Icon -->
                 </tr>
             </thead>
-           
+            <tbody>
+                @foreach($toDoList as $task)
+                    <tr>
+                        <td>{{ \Carbon\Carbon::parse($task->date)->format('d-m-Y') }}</td>
+                        <td>{{ $task->project_name }}</td>
+                        <td>{{ $task->task }}</td>
+                        <td>{{ $task->hours }}</td>
+                        <td>
+                            <!-- Add Delete Button -->
+                            <button onclick="deleteTask({{ $task->id }})">Delete</button>
+                        </td>
+                    </tr>
+                @endforeach
+            </tbody>
         </table>
     </div>
 </div>
 <script>
-    function deleteTask(taskId) {
-    if (confirm("Are you sure you want to delete this task?")) {
-        // Send AJAX request to delete the task
-        fetch('delete_task.php', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ id: taskId }),
-        })
-        .then((response) => response.json())
-        .then((data) => {
-            if (data.success) {
-                alert('Task deleted successfully!');
-                location.reload(); // Reload the page to update the task list
-            } else {
-                alert('Error deleting task: ' + data.message);
-            }
-        })
-        .catch((error) => {
-            console.error('Error:', error);
-            alert('An error occurred while deleting the task.');
-        });
+    // Open the task modal
+function openTaskModal() {
+    document.getElementById('taskModal').style.display = 'block';  // Show the modal
+}
+
+// Close the task modal
+function closeTaskModal() {
+    document.getElementById('taskModal').style.display = 'none';  // Hide the modal
+}
+
+// Close the modal if the user clicks outside of it
+window.onclick = function(event) {
+    var modal = document.getElementById('taskModal');
+    if (event.target === modal) {
+        closeTaskModal();
     }
 }
 
 </script>
-
-<style>
-    .delete-task {
-    background: none;
-    border: none;
-    color: red;
-    font-size: 18px;
-    cursor: pointer;
-    padding: 0;
-}
-.delete-task:hover {
-    color: darkred;
-}
-
-</style>
-<script>
-    // Open Leave Modal
-    function openModal() {
-        document.getElementById("leaveModal").style.display = "flex";
-    }
-
-    // Close Leave Modal
-    function closeModal() {
-        document.getElementById("leaveModal").style.display = "none";
-    }
-
-    // Fetch and populate leave data
-    fetch("fetch_pending_leaves.php")
-        .then(response => {
-            if (!response.ok) {
-                throw new Error(`HTTP error! Status: ${response.status}`);
-            }
-            return response.json();
-        })
-        .then(data => {
-            const tableBody = document.querySelector("#leaveModal tbody");
-            tableBody.innerHTML = ""; // Clear existing rows
-
-            if (data.length === 0) {
-                tableBody.innerHTML = "<tr><td colspan='7'>No leave requests found.</td></tr>";
-            } else {
-                data.forEach(leave => {
-                    tableBody.innerHTML += `
-                        <tr>
-                            <td>${leave.Employee_NO || "N/A"}</td>
-                            <td>${leave.Employee_Name || "N/A"}</td>
-                            <td>${leave.leave_type || "N/A"}</td>
-                            <td>${leave.start_date || "N/A"}</td>
-                            <td>${leave.end_date || "N/A"}</td>
-                            <td>${leave.reason || "N/A"}</td>
-                            <td>
-                                <button class="approve-btn" onclick="processLeave(${leave.request_id}, 'APPROVED')">Approve</button>
-                                <button class="reject-btn" onclick="processLeave(${leave.request_id}, 'REJECTED')">Reject</button>
-                            </td>
-                        </tr>
-                    `;
-                });
-            }
-        })
-        .catch(error => console.error("Error fetching data:", error));
-
-    // Function to process leave requests
-    function processLeave(requestId, action) {
-        fetch("process_manager_approval.php", {
-            method: "POST",
-            headers: { "Content-Type": "application/x-www-form-urlencoded" },
-            body: `request_id=${requestId}&status=${action}`
-
-        })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    alert(data.message);
-                    location.reload(); // Refresh the page after approving/rejecting
-                } else {
-                    alert("Error: " + data.message);
-                }
-            })
-            .catch(error => console.error("Error processing leave request:", error));
-    }
-
-    // Close modal when clicking outside of it
-    window.onclick = function (event) {
-        const leaveModal = document.getElementById("leaveModal");
-        if (event.target === leaveModal) {
-            closeModal();
-        }
-    };
-</script>
-
-        <script>
-            // Open Leave Modal
-            function openModal() {
-                document.getElementById("leaveModal").style.display = "flex"; // Use flex to show the modal
-            }
-
-            // Close Leave Modal
-            function closeModal() {
-                document.getElementById("leaveModal").style.display = "none"; // Hide the modal
-            }
-
-            // Open Task Modal
-            function openTaskModal() {
-                document.getElementById("taskModal").style.display = "flex"; // Use flex to show the modal
-            }
-
-            // Close Task Modal
-            function closeTaskModal() {
-                document.getElementById("taskModal").style.display = "none"; // Hide the modal
-            }
-
-            // Close modal when clicking outside of it
-            window.onclick = function (event) {
-                const leaveModal = document.getElementById("leaveModal");
-                const taskModal = document.getElementById("taskModal");
-
-                if (event.target === leaveModal) {
-                    closeModal();
-                }
-                if (event.target === taskModal) {
-                    closeTaskModal();
-                }
-            };
-
-        </script>
 
         <!-- <section class="news-events"> 
             <h3>News & Events</h3>
@@ -649,12 +530,59 @@ error_reporting(0);
 
 
       
-        <section class="leaves">
+        <!-- <section class="leaves">
             <h3>Leaves</h3>
             <ul>
               
             </ul>
-        </section>
+        </section> -->
+        <section class="leaves">
+    <h3>Leave Types</h3>
+    <ul>
+        @foreach($leaveUsage as $leave)
+            <li>
+                <strong>{{ $leave['leaveType'] }}</strong>
+                <div class="progress-bar-container">
+                    <div class="progress-bar" style="width: {{ $leave['percentage'] }}%; background-color: {{ $leave['progressColor'] }};"></div>
+                </div>
+                <p>{{ $leave['takenLeave'] }} / {{ $leave['maxLeave'] }} days taken ({{ round($leave['percentage'], 2) }}% used)</p>
+                <!-- <p><strong>Remaining Leaves:</strong> {{ $leave['remainingLeave'] }} days</p> -->
+
+                <!-- If applicable, show no carry forward and no leave encashment details -->
+                <!-- @if($leave['noCarryForward'])
+                    <p><strong>No Carry Forward:</strong> Yes</p>
+                @else
+                    <p><strong>No Carry Forward:</strong> No</p>
+                @endif -->
+
+                <!-- @if($leave['noLeaveEncash'])
+                    <p><strong>No Leave Encashment:</strong> Yes</p>
+                @else
+                    <p><strong>No Leave Encashment:</strong> No</p>
+                @endif -->
+            </li>
+        @endforeach
+    </ul>
+</section>
+
+
+<style>
+    .progress-bar-container {
+        width: 100%;
+        height: 20px;
+        background-color: #f3f3f3;
+        border-radius: 10px;
+        margin-top: 5px;
+    }
+
+    .progress-bar {
+        height: 100%;
+        border-radius: 10px;
+    }
+</style>
+
+
+
        
         <section class="upcoming-birthdays">
         <h3>Upcoming Birthdays</h3>

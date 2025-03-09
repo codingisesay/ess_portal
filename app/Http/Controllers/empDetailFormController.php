@@ -557,7 +557,7 @@ public function insertcontact(Request $request)
         'degree' => 'required|array',
         'university' => 'required|array',
         'institution' => 'required|array',
-        // 'passing_year' => 'required|array',
+        'passing_year' => 'required|array',
         'percentage' => 'required|array',
         'certification_name' => 'nullable|array',
         'marks_obtained' => 'nullable|array',
