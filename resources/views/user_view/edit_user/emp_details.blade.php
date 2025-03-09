@@ -1,15 +1,15 @@
-@extends('user_view/employee_form_layout')  <!-- Extending the layout file -->
+@extends('user_view/edit_user/employee_form_layout')  <!-- Extending the layout file -->
 @section('content')  <!-- Defining the content section -->
 <!-- <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css"> -->
 <link rel="stylesheet" href="{{ asset('errors/error.css') }}">
 <?php 
 error_reporting(0);
-$id = Auth::guard('web')->user()->id;
-$name = Auth::guard('web')->user()->name;
-$employeeID = Auth::guard('web')->user()->employeeID;
+// $id = Auth::guard('web')->user()->id;
+// $name = Auth::guard('web')->user()->name;
+// $employeeID = Auth::guard('web')->user()->employeeID;
 
 
-
+$editUser = $_REQUEST['id'];
 // dd($results);
 
 
@@ -43,7 +43,7 @@ $employeeID = Auth::guard('web')->user()->employeeID;
 
 
 <div class="tab-content active" id="tab1">
-    <form action="{{ route('detail_insert') }}" method="POST">
+    <form action="{{ route('edit_detail_insert') }}" method="POST">
         @csrf
         <input type="hidden" name="form_step" value="form_step">
         <!-- Hidden input to identify the step -->
@@ -61,11 +61,11 @@ $employeeID = Auth::guard('web')->user()->employeeID;
                         <label for="employmentType">Employment Type<span style="color: red;">*</span></label>
                     </div>
                     <div class="form-group">
-                        <input type="text" id="employeeNo" class="form-control" name="employeeNo" value="{{$employeeID}}" readonly placeholder="" required>
+                        <input type="text" id="employeeNo" class="form-control" name="employeeNo" value="{{$loginUserInfo->employeeID}}" readonly placeholder="" required>
                         <label for="employeeNo">Employee No</label>
                     </div>
                     <div class="form-group">
-                        <input type="text" id="employeeName" class="form-control" name="employeeName" value="{{$name}}" readonly required placeholder="">
+                        <input type="text" id="employeeName" class="form-control" name="employeeName" value="{{$loginUserInfo->name}}" readonly required placeholder="">
                         <label for="employeeName">Employee Name</label>
                     </div>
                     <div class="form-group">
