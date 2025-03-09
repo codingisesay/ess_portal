@@ -104,13 +104,28 @@
                     <img src="" class="profile-pic" style="height: 50px; width: 50px; border-radius: 50%; margin-bottom: 4px; vertical-align: middle;">
                 </a>
                 <div class="profile-dropdown-content">
-                    <!-- <a href="#">Profile</a> -->
-                    <form action="{{ route('user.logout') }}" method="POST">
-                        @csrf
-                        <button type="submit" class="logout-icon"><i class="fas fa-power-off"></i></button>
-                    </form>
-                    <button class="camera-icon"><i class="fas fa-camera"></i></button>
-                </div>
+    <!-- Logout Form -->
+    <form action="{{ route('user.logout') }}" method="POST">
+        @csrf
+        <button type="submit" class="logout-icon">
+            <i class="fas fa-power-off"></i>
+        </button>
+    </form>
+
+    <!-- Camera Icon to Trigger File Upload -->
+    <button class="camera-icon" onclick="document.getElementById('profile-photo-upload').click();">
+        <i class="fas fa-camera"></i>
+    </button>
+
+    <!-- Hidden File Input for Image Upload -->
+    <form id="profile-upload-form" action="{{ route('user.uploadProfilePhoto') }}" method="POST" enctype="multipart/form-data">
+        @csrf
+        <!-- The file input is hidden, but it will be triggered by the camera icon -->
+        <input type="file" id="profile-photo-upload" name="profile_image" accept="image/*" style="display:none;" onchange="this.form.submit();">
+    </form>
+</div>
+
+
             </div>
         </div>
     </header>

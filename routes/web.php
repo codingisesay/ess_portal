@@ -150,6 +150,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('user/homepage',[homePagecontroller::class,'showHomepage'])->name('user.homepage');
     Route::post('user/save_todo',[homePagecontroller::class,'saveToDoList'])->name('user.save_todo');
     Route::get('user/header', [headerController::class, 'showHeader'])->name('header');
+    Route::post('/user/upload-profile-photo', [headerController::class, 'uploadProfilePhoto'])->name('user.uploadProfilePhoto');
     Route::get('user/employment-data', [employmentDataController::class, 'showemploymentData'])->name('user.employment.data');
     Route::get('user/hr-policy', [hrPolicyViewController::class, 'showHrPolicy'])->name('user.hr.policy');
     Route::get('user/hr-policy/category/{id}', [hrPolicyViewController::class, 'getPoliciesByCategory'])->name('user.hr.policy.category');
