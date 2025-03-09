@@ -546,10 +546,25 @@ window.onclick = function(event) {
                     <div class="progress-bar" style="width: {{ $leave['percentage'] }}%; background-color: {{ $leave['progressColor'] }};"></div>
                 </div>
                 <p>{{ $leave['takenLeave'] }} / {{ $leave['maxLeave'] }} days taken ({{ round($leave['percentage'], 2) }}% used)</p>
+                <!-- <p><strong>Remaining Leaves:</strong> {{ $leave['remainingLeave'] }} days</p> -->
+
+                <!-- If applicable, show no carry forward and no leave encashment details -->
+                <!-- @if($leave['noCarryForward'])
+                    <p><strong>No Carry Forward:</strong> Yes</p>
+                @else
+                    <p><strong>No Carry Forward:</strong> No</p>
+                @endif -->
+
+                <!-- @if($leave['noLeaveEncash'])
+                    <p><strong>No Leave Encashment:</strong> Yes</p>
+                @else
+                    <p><strong>No Leave Encashment:</strong> No</p>
+                @endif -->
             </li>
         @endforeach
     </ul>
 </section>
+
 
 <style>
     .progress-bar-container {
