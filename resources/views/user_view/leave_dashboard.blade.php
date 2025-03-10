@@ -116,7 +116,7 @@
         <div class="leave-summary-container">
             <!-- Leave cards will be dynamically inserted here -->
             @foreach($leaveSummary as $index => $leave)
-            <div class="leave-card">
+            {{-- <div class="leave-card">
                 <div class="chart-container-leave">
                     <canvas id="chart{{ $index }}" style="width: 130px; height: 200px;"></canvas>
                 </div>
@@ -125,7 +125,7 @@
                     <div><span class="dot" style="background-color:#8a3366"></span>{{ $leave['total_leaves'] }} Total Leaves</div>
                     <div><span class="dot" style="background-color:#ffc107"></span>{{ $leave['consumed_leaves'] }} Consumed</div>
                 </div>
-            </div>
+            </div> --}}
             @endforeach
         </div>
 
