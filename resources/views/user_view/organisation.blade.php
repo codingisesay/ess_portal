@@ -35,17 +35,17 @@ error_reporting(0);
     <div class="employee-list">  
         <ul class="tree">  
             @foreach ($employees as $employee)
-                @if ($employee->reporting_manager == 27)  <!-- Check for top-level managers with ID 27 -->
-                    <li>
-                        @php
-                            $hasSubordinates = false;
-                            foreach ($employees as $subordinate) {
-                                if ($subordinate->reporting_manager == $employee->user_id) {
-                                    $hasSubordinates = true;
-                                    break;
-                                }
-                            }
-                        @endphp
+            @if ($employee->reporting_manager == $noneUserId)  <!-- Check for the top-level managers dynamically -->
+                                <li>
+                                    @php
+                                        $hasSubordinates = false;
+                                        foreach ($employees as $subordinate) {
+                                            if ($subordinate->reporting_manager == $employee->user_id) {
+                                                $hasSubordinates = true;
+                                                break;
+                                            }
+                                        }
+                                    @endphp
                         @if ($hasSubordinates)
                             <button class="toggle-button" data-user-id="{{ $employee->user_id }}" onclick="toggleChildren(this)">+</button>
                         @endif
