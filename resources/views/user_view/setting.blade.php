@@ -5,24 +5,7 @@
     <link rel="stylesheet" href="{{ asset('/user_end/css/setting.css') }}">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
-        /* Style for the collapsible button */
-        /* .collapsible {
-            background-color: white;
-            color: black;
-            cursor: pointer;
-            padding: 10px;
-            width: 100%;
-            text-align: left;
-            border: none;
-            outline: none;
-            font-size: 15px;
-        }
-
-        .active, .collapsible:hover {
-            background-color: rgba(0,0,0,0.1);
-        } */
-
-        /* Style for the collapsible content (table container) */
+  
         .content {
             padding: 0 18px;
             display: block;
@@ -58,6 +41,31 @@
             // dd($permission_array);
             
             ?>
+            @if(session('success'))
+            <div class="alert custom-alert-success">
+                <strong>{{ session('success') }}</strong> 
+                <button class="close-btn" onclick="this.parentElement.style.display='none';">&times;</button>
+                
+            </div>
+            @endif
+            
+            @if(session('error'))
+            <div class="alert custom-alert-error">
+            <strong> {{ session('error') }}</strong>
+            <button class="close-btn" onclick="this.parentElement.style.display='none';">&times;</button>
+            </div>
+            @endif
+            
+            @if($errors->any())
+            <div class="alert custom-alert-warning">
+            <ul>
+            @foreach($errors->all() as $error)
+            <li style="color: red;">{{ $error }}</li>
+            
+            @endforeach
+            </ul>
+            </div>
+            @endif
         <h1>Settings</h1>
         <div class="accordion">
             <!-- Upcoming Holidays -->
@@ -77,16 +85,7 @@
             
             
             ?>
-            
-
-            <!-- Leave Section (With Link to hr_universal.php) -->
-            {{-- <div class="accordion-item">
-                <div class="accordion-header" onclick="window.location.href='{{ url('hr_universal') }}'">
-                    Global Leaves
-                </div>
-            </div> --}}
-
-            <!-- Thought of the Day -->
+       
             <?php 
             if(in_array(13,$permission_array)){?>
             
