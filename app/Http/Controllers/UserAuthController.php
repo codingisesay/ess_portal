@@ -51,6 +51,12 @@ class UserAuthController extends Controller
         // Assign the $permission_array to a session variable
         session(['permission_array' => $permission_array]);
 
+        $userData = DB::table('user_status_imgs')->where('user_id',$loginUserInfo->id)->first();
+        $imagePath = optional($userData)->imagelink ?? 'user_profile_image/zSwombNHcqFVGdIaGcsfRg22o8sQU5egRseNEzLI.png';
+     
+       
+        session(['profile_image' => $imagePath]);
+
         // dd($permission_array);
 
         // $permission_array = session('permission_array');
