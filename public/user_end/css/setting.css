@@ -28,7 +28,6 @@ body {
 .accordion {
     background-color: #f8f8f8;
     border-radius: 8px;
-
 }
 
 /* Accordion Item styling - ensure vertical separation */
@@ -84,17 +83,7 @@ body {
     background: #ffffff;
 }
 
-
-/* Icon Styling for Arrow */
-/* .accordion-header::after {
-content: "▼";
-float: right;
-font-size: 14px;
-color: #888;
-transition: transform 0.3s;
-} */
-
-/* Arrow Rotation on Active */
+/* Arrow Rotation on Active (Optional: to rotate an arrow when the accordion is active) */
 .accordion-header.active::after {
     transform: rotate(180deg);
 }
@@ -103,7 +92,6 @@ transition: transform 0.3s;
     display: flex;
     gap: 10px;
     /* Space between the buttons */
-
 }
 
 .create-modify-buttons button {
@@ -128,7 +116,10 @@ transition: transform 0.3s;
     background: #ffffff;
     border-radius: 5px;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    margin-top: 10px;
+    overflow-y: auto;
 }
+
 
 /* Form */
 form {
@@ -272,4 +263,130 @@ input[type="radio"] {
 
 .input-with-icon input:focus {
     border-color: #007BFF;
+}
+
+/* Dropdown Styling */
+
+/* General Dropdown Style for <select> elements */
+select {
+    width: 100%;
+    /* Full width */
+    padding: 10px;
+    /* Padding for select box */
+    border: 1px solid #ccc;
+    /* Border color */
+    border-radius: 5px;
+    /* Rounded corners */
+    font-size: 14px;
+    /* Font size */
+    background-color: #ffffff;
+    /* White background */
+    transition: border-color 0.3s ease;
+    /* Smooth border color transition */
+    outline: none;
+    /* Remove outline on focus */
+}
+
+/* Focus Effect for Dropdown */
+select:focus {
+    border-color: #007BFF;
+    /* Change border color on focus */
+}
+
+/* Dropdown Menu Container (custom dropdown) */
+.dropdown-menu {
+    display: none;
+    /* Hidden by default */
+    position: absolute;
+    /* Position relative to parent */
+    background-color: #ffffff;
+    /* White background */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    /* Drop shadow effect */
+    border-radius: 5px;
+    /* Rounded corners */
+    width: 200px;
+    /* Set width */
+    padding: 5px 0;
+    /* Padding for the list items */
+    top: 100%;
+    /* Position the dropdown just below the select element */
+    left: 0;
+    /* Align to the left of the parent */
+    z-index: 10;
+    /* Make sure it's on top */
+}
+
+/* Dropdown Items */
+.dropdown-menu li {
+    padding: 10px;
+    /* Padding inside each item */
+    font-size: 14px;
+    /* Font size */
+    color: #333;
+    /* Text color */
+    cursor: pointer;
+    /* Pointer cursor on hover */
+    transition: background-color 0.3s ease;
+    /* Smooth background color transition */
+}
+
+/* Hover Effect for Dropdown Items */
+.dropdown-menu li:hover {
+    background-color: #f2f2f2;
+    /* Change background on hover */
+}
+
+/* Display the Dropdown when Active */
+.select-container.active .dropdown-menu {
+    display: block;
+    /* Show the dropdown when active */
+}
+
+/* Dropdown Icon (for indicating the dropdown state) */
+.dropdown-icon {
+    position: absolute;
+    /* Position the icon inside the select container */
+    right: 10px;
+    /* Align to the right */
+    top: 50%;
+    /* Vertically center */
+    transform: translateY(-50%);
+    /* Adjust the vertical alignment */
+    pointer-events: none;
+    /* Prevent clicking on the icon */
+    color: #333;
+    /* Icon color */
+}
+
+/* Rotate Dropdown Icon when Active (on dropdown open) */
+.select-container.active .dropdown-icon {
+    transform: translateY(-50%) rotate(180deg);
+    /* Rotate the icon */
+}
+
+/* Dropdown Toggle Button (If used for custom dropdowns) */
+.dropdown-toggle {
+    background-color: #8A3366;
+    /* Button color */
+    color: white;
+    /* Text color */
+    padding: 10px 15px;
+    /* Button padding */
+    border-radius: 5px;
+    /* Rounded corners */
+    font-size: 14px;
+    /* Font size */
+    cursor: pointer;
+    /* Pointer cursor on hover */
+    border: none;
+    /* Remove border */
+    transition: background-color 0.3s ease;
+    /* Smooth color transition */
+}
+
+/* Hover Effect for the Dropdown Button */
+.dropdown-toggle:hover {
+    background-color: #9b4bab;
+    /* Change background on hover */
 }

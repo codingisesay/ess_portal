@@ -26,8 +26,8 @@
         .content {
             padding: 0 18px;
             display: block;
-            overflow: hidden;
-            background-color: #f1f1f1;
+            overflow-y: auto;
+            background-color: #ffffff;
         }
 
         /* Style for the table */
@@ -38,6 +38,7 @@
 
         table, th, td {
             border: 1px solid black;
+            background-color: beige;
         }
 
         th, td {
@@ -62,22 +63,89 @@
         <div class="accordion">
             <!-- Upcoming Holidays -->
             <?php 
-            if(in_array(11,$permission_array)){?>
-            
-            <div class="accordion-item">
-                <div class="accordion-header" onclick="window.location.href='{{ url('holiday') }}'">
-                    Calender Master
-                </div>
-            </div> 
-            
-            
-            <?php
+if(in_array(11, $permission_array)){ 
+?>
+    <div class="accordion-item">
+        <!-- Accordion Header with a toggle dropdown -->
+        <div class="accordion-header" onclick="toggleCalendarMasterDropdown()">
+            Calendar Master
+        </div>
 
-            }
-            
-            
-            ?>
-            
+        <!-- Dropdown content (initially hidden) -->
+        <div id="calendarMasterDropdown" class="dropdown-content" style="display: none;">
+            <form id="calendarMasterForm" method="POST" action="holidaybackend.php">
+                <!-- Year Selection -->
+                <div class="form-group">
+                    <label for="year">Select Year:</label>
+                    <select id="year" name="year">
+                        <option value="">--Select Year--</option>
+                    </select>
+                    <span class="error" id="yearError"></span>
+                </div>
+
+                <!-- Type of Selection (Week Off / Holiday) -->
+                <div class="form-group">
+                    <label for="weekOffHolidaySelect">Select Type:</label>
+                    <select id="weekOffHolidaySelect" name="weekOffHolidaySelect">
+                        <option value="">--Select--</option>
+                        <option value="weekoff">Week Off</option>
+                        <option value="holiday">Holiday</option>
+                    </select>
+                    <span class="error" id="typeError"></span>
+                </div>
+
+                <!-- Week Off Selection (checkboxes) -->
+                <div id="weekOffSelection" style="display:none;">
+                    <div class="form-group">
+                        <!-- <label></label><br> -->
+                        <div class="checkbox-grid">
+                            <div><input type="checkbox" id="sunday" name="weekoff[]" value="0"> Sunday</div>
+                            <div><input type="checkbox" id="monday" name="weekoff[]" value="1"> Monday</div>
+                            <div><input type="checkbox" id="tuesday" name="weekoff[]" value="2"> Tuesday</div>
+                            <div><input type="checkbox" id="wednesday" name="weekoff[]" value="3"> Wednesday</div>
+                            <div><input type="checkbox" id="thursday" name="weekoff[]" value="4"> Thursday</div>
+                            <div><input type="checkbox" id="friday" name="weekoff[]" value="5"> Friday</div>
+                            <div><input type="checkbox" id="saturday" name="weekoff[]" value="6"> Saturday</div>
+                        </div>
+                    </div>
+                    <span class="error" id="weekOffError"></span>
+                </div>
+
+                <!-- Holiday Selection (Date, Name, and Description) -->
+                <div id="holidayUpdate" style="display:none;">
+                    <div class="form-group">
+                        <label for="holiday_date">Holiday Date:</label>
+                        <input type="date" id="holiday_date" name="holiday_date">
+                        <span class="error" id="holidayDateError"></span><br><br>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="holiday_name">Holiday Name:</label>
+                        <input type="text" id="holiday_name" name="holiday_name">
+                        <span class="error" id="holidayNameError"></span><br><br>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="holiday_desc">Holiday Description:</label>
+                        <textarea id="holiday_desc" name="holiday_desc"></textarea>
+                        <span class="error" id="holidayDescError"></span>
+                    </div>
+                </div>
+
+                <!-- Working Hours Container (Dynamically populated) -->
+                <div id="workingHoursContainer" style="display:none;">
+                    <!-- Working hours will be dynamically inserted here -->
+                </div>
+
+                <!-- Submit Button -->
+                <button type="submit" class="submit-btn">Submit</button>
+            </form>
+        </div>
+    </div>
+<?php 
+}
+?>
+
 
             <!-- Leave Section (With Link to hr_universal.php) -->
             {{-- <div class="accordion-item">
@@ -182,57 +250,54 @@
          
             <!-- Employee Edit -->
             <?php 
-            if(in_array(12,$permission_array)){?>
-            
-            <div class="accordion-item">
-                <div class="accordion-header">
-                    Employee Details Edit
+if(in_array(12, $permission_array)){ 
+?>
+    <div class="accordion-item">
+        <!-- Accordion Header with a toggle dropdown -->
+        <div class="accordion-header" onclick="toggleEmployeeDetailsDropdown()">
+            Employee Details Edit
+        </div>
+
+        <!-- Dropdown content (initially hidden) -->
+        <div id="employeeDetailsDropdown" class="dropdown-content" style="display: none;">
+            <!-- Collapsible Content (Table) -->
+            <div class="content">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>S.No</th>
+                            <th>Name</th>
+                            <th>Email ID</th>
+                            <th>Edit</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        @foreach ($users as $user)
+                            <tr>
+                                <td>{{ $loop->iteration }}</td>
+                                <td>{{$user->name}}</td>
+                                <td>{{$user->email}}</td>
+                                <!-- <td><a type="button" href="{{ route('user.editdashboard',['id' => $user->id]) }}" type="">Edit</a></td> -->
+                                <td>
+                                    <a type="button" href="{{ route('user.editdashboard',['id' => $user->id]) }}">
+                                        <img src="{{ asset('user_end/images/edit 1.png') }}" alt="Edit" style="width: 20px; height: 20px;"/>
+                                    </a>
+                                </td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+
+                <div class="d-flex justify-content-center">
+                    {{ $users->links() }} <!-- Pagination links -->
                 </div>
             </div>
-
-            {{-- <button class="collapsible">Open Table</button> --}}
-
-                <!-- Collapsible Content (Table) -->
-                
-    <div class="content">
-        <table>
-            <thead>
-                <tr>
-                    <th>S.No</th>
-                    <th>Name</th>
-                    <th>Email ID</th>
-                    <th>Edit</th>
-                </tr>
-            </thead>
-
-            <tbody>
-                @foreach ($users as $user)
-
-                <tr>
-                    <td>{{ $loop->iteration }}</td>
-                    <td>{{$user->name}}</td>
-                    <td>{{$user->email}}</td>
-                    <td><a type="button" href="{{ route('user.editdashboard',['id' => $user->id]) }}" type="">Edit</button></td>
-                </tr>
-                    
-                @endforeach
-                
-            </tbody>
-        </table>
-        <div class="d-flex justify-content-center">
-            {{ $users->links() }} <!-- Pagination links -->
         </div>
-      
-
     </div>
-               
-    </div>
- 
-            <?php
-
-            }
-            
-            ?>
+<?php 
+}
+?>
             
 
             <!-- PMS-->
@@ -243,6 +308,117 @@
             </div> --}}
         </div>
     </main>
+
+    <!-- JavaScript for toggling dropdown -->
+<script>
+    function toggleEmployeeDetailsDropdown() {
+        var dropdown = document.getElementById("employeeDetailsDropdown");
+        if (dropdown.style.display === "none" || dropdown.style.display === "") {
+            dropdown.style.display = "block";
+        } else {
+            dropdown.style.display = "none";
+        }
+    }
+</script>
+    <!-- calender script  -->
+     
+<script>
+    // Function to toggle the visibility of the Calendar Master dropdown
+    function toggleCalendarMasterDropdown() {
+        var dropdown = document.getElementById("calendarMasterDropdown");
+        // Check the current display style, and toggle between 'none' and 'block'
+        if (dropdown.style.display === "none") {
+            dropdown.style.display = "block"; // Show the dropdown
+        } else {
+            dropdown.style.display = "none"; // Hide the dropdown
+        }
+    }
+
+    // Wait for the DOM to be fully loaded before running the JavaScript
+    document.addEventListener("DOMContentLoaded", function () {
+        const yearSelect = document.getElementById("year");
+        const weekOffHolidaySelect = document.getElementById("weekOffHolidaySelect");
+        const weekOffSelection = document.getElementById("weekOffSelection");
+        const holidayUpdate = document.getElementById("holidayUpdate");
+        const workingHoursContainer = document.getElementById("workingHoursContainer");
+
+        // Initially hide the sections related to Week Off, Holiday, and Working Hours
+        weekOffSelection.style.display = "none";
+        holidayUpdate.style.display = "none";
+        workingHoursContainer.style.display = "none"; // Hide working hours section initially
+
+        // Show the appropriate sections based on the selected type (Week Off or Holiday)
+        weekOffHolidaySelect.addEventListener("change", function () {
+            const selectedOption = weekOffHolidaySelect.value;
+
+            // If 'Week Off' is selected, show week-off selection and working hours section
+            if (selectedOption === "weekoff") {
+                weekOffSelection.style.display = "block";
+                holidayUpdate.style.display = "none";
+                workingHoursContainer.style.display = "block"; // Show working hours input fields
+            } 
+            // If 'Holiday' is selected, show the holiday details section
+            else if (selectedOption === "holiday") {
+                weekOffSelection.style.display = "none";
+                holidayUpdate.style.display = "block";
+                workingHoursContainer.style.display = "none"; // Hide working hours section
+            }
+        });
+
+        // Function to populate the year dropdown dynamically (current year + next 50 years)
+        function populateYearDropdown() {
+            const currentYear = new Date().getFullYear(); // Get the current year
+            // Populate the dropdown with years from the current year to the next 50 years
+            for (let year = currentYear; year <= currentYear + 50; year++) {
+                const option = document.createElement('option');
+                option.value = year;
+                option.textContent = year; // Display the year in the dropdown
+                yearSelect.appendChild(option); // Append the option to the dropdown
+            }
+        }
+
+        // Call populateYearDropdown when DOM is ready to populate the year dropdown
+        populateYearDropdown();
+
+        // Event listener to update the working hours dynamically based on week-off days
+        const weekOffCheckboxes = document.querySelectorAll('input[name="weekoff[]"]');
+        weekOffCheckboxes.forEach(checkbox => {
+            checkbox.addEventListener('change', function () {
+                updateWorkingHoursFields(); // Update working hours based on the checked week-off days
+            });
+        });
+
+        // Function to update working hours based on selected week-off days
+        function updateWorkingHoursFields() {
+            const weekOffDays = [];
+            workingHoursContainer.innerHTML = "";  // Clear any existing working hours fields
+
+            // Loop through the checkboxes and collect the selected (checked) week-off days
+            weekOffCheckboxes.forEach(checkbox => {
+                if (checkbox.checked) {
+                    weekOffDays.push(checkbox.value); // Add the checked day to the weekOffDays array
+                }
+            });
+
+            const allDays = ["sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday"];
+            const workingDays = allDays.filter(day => !weekOffDays.includes(day)); // Filter out week-off days from the working days
+
+            // If there are working days left, show the working hours input fields
+            if (workingDays.length > 0) {
+                workingHoursContainer.innerHTML = `
+                    <label>Set Working Hours for All Working Days:</label><br>
+                    <label for="start_time">Start Time:</label>
+                    <input type="time" id="start_time" name="working_start_time"><br>
+                    <label for="end_time">End Time:</label>
+                    <input type="time" id="end_time" name="working_end_time"><br>
+                `;
+            } else {
+                // If no working days are left (all days selected as week off), show a message
+                workingHoursContainer.innerHTML = "<p>No working days left. Please select week off days first.</p>";
+            }
+        }
+    });
+</script>
     <script>
 
       // Get all collapsible buttons
