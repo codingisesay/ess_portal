@@ -93,7 +93,7 @@ $id = Auth::guard('web')->user()->id;
                                 
                                 <span class="error" id="nationalityError"></span>
                                 <select id="nationality_permanent" class="form-control dropdown" name="permanent_country" placeholder="" required>
-                                    <option value="India" selected>India</option> <!-- Default value set to India -->
+                                    <option value="{{$emp_contact_datas[0]->per_country}}">{{ $emp_contact_datas[0]->per_country }}</option> <!-- Default value set to India -->
                                     @foreach($countrys as $country)
                                     <option value="{{$country->name }}">{{ $country->name }}</option>
                                     @endforeach
@@ -185,7 +185,7 @@ $id = Auth::guard('web')->user()->id;
                                 
                         <span class="error" id="nationalityError"></span>
                         <select id="nationality_correspondence" class="form-control dropdown" name="correspondence_country" placeholder="" >
-                            <option value="India" selected>India</option> <!-- Default value set to India -->
+                            <option value="{{$emp_contact_datas[0]->cor_country}}">{{$emp_contact_datas[0]->cor_country}}</option> <!-- Default value set to India -->
                             @foreach($countrys as $country)
                             <option value="{{$country->name }}">{{ $country->name }}</option>
                             @endforeach

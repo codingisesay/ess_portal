@@ -24,17 +24,20 @@ class homePagecontroller extends Controller
     // Fetch additional data
     $thoughtOfTheDay = DB::table('thought_of_the_days')
                          ->where('organisation_id', $user->organisation_id)
-                         ->latest()
-                         ->first();
+                         ->where('creationDate',today())
+                         ->get();
 
-    $newsAndEvents = DB::table('news_and_events')
-                       ->where('organisation_id', $user->organisation_id)
-                       ->orderBy('startdate', 'desc')
-                       ->get();
+$newsAndEvents = DB::table('news_and_events')
+                   ->where('organisation_id', $user->organisation_id)
+                   ->where('enddate', '>=', today()) // Corrected this line
+                   ->orderBy('startdate', 'desc')
+                   ->get();
 
     // Fetch to-do list
+    
     $toDoList = DB::table('to_do_lists')
                   ->where('user_id', $user->id)
+                  ->where('status', 'pending')
                   ->get();
 // Fetch the leave types with restrictions
 $leaveTypes = DB::table('leave_types')
@@ -111,7 +114,9 @@ foreach ($leaveTypes as $leaveType) {
     $currentDay = $currentDate->day;
 
     $upcomingBirthdays = DB::table('emp_details')
-        ->select('Employee_Name', 'date_of_birth', 'Designation')
+        ->join('organisation_designations','emp_details.designation','=','organisation_designations.id')
+        ->leftjoin('user_status_imgs','emp_details.user_id','=','user_status_imgs.user_id')
+        ->select('emp_details.employee_name as employee_nme', 'date_of_birth', 'organisation_designations.name as designation_name','user_status_imgs.*')
         ->whereMonth('date_of_birth', '=', $currentMonth)
         ->whereDay('date_of_birth', '>=', $currentDay)
         ->get()
@@ -122,6 +127,26 @@ foreach ($leaveTypes as $leaveType) {
             $employee->badgeText = $birthDay === $currentDay ? "Today" : "Upcoming in " . ($birthDay - $currentDay) . " days";
             return $employee;
         });
+
+        // dd($upcomingBirthdays);
+
+        //Fetch Today Birthday
+
+        $todayBirthdays = DB::table('emp_details')
+        ->join('organisation_designations','emp_details.designation','=','organisation_designations.id')
+        ->leftjoin('user_status_imgs','emp_details.user_id','=','user_status_imgs.user_id')
+        ->select('emp_details.employee_name as employee_nme', 'date_of_birth', 'organisation_designations.name as designation_name','user_status_imgs.*')
+        ->whereDay('date_of_birth', '=', $currentDay)
+        ->get()
+        ->map(function ($employee) use ($currentDay, $currentDate) {
+            $birthDate = new Carbon($employee->date_of_birth);
+            $birthDay = $birthDate->day;
+            $employee->age = $birthDate->age;
+            $employee->badgeText = $birthDay === $currentDay ? "Today" : "Upcoming in " . ($birthDay - $currentDay) . " days";
+            return $employee;
+        });
+
+        // dd($todayBirthdays);
 
     // Fetch upcoming anniversaries
     $anniversaries = DB::table('emp_details')
@@ -137,8 +162,10 @@ foreach ($leaveTypes as $leaveType) {
             return $employee;
         });
 
+        // dd($anniversaries);
+
     // Return a view with the logs and additional data
-    return view('user_view.homepage', compact('logs', 'thoughtOfTheDay', 'newsAndEvents', 'upcomingBirthdays', 'anniversaries', 'toDoList', 'currentMonth', 'currentDay', 'leaveUsage', 'appliedLeaves'));
+    return view('user_view.homepage', compact('logs', 'thoughtOfTheDay', 'newsAndEvents', 'upcomingBirthdays','todayBirthdays', 'anniversaries', 'toDoList', 'currentMonth', 'currentDay', 'leaveUsage', 'appliedLeaves'));
 }
 
     
@@ -169,5 +196,30 @@ foreach ($leaveTypes as $leaveType) {
         } else {
             return redirect()->route('user.homepage')->with('error', 'Task not saved successfully!');
         }
+    }
+
+    public function updateToDo(Request $request, $id){
+
+        $request->validate([
+            'status' => 'required',
+        ]);
+
+
+        $status = DB::table('to_do_lists')
+        ->where('id', $id)
+        ->update(['status' => $request->status]);
+
+        if($status){
+
+            return redirect()->route('user.homepage')->with('success', 'Status updated successfully!');
+
+        }else{
+
+            return redirect()->route('user.homepage')->with('error', 'Status Not updated successfully!');
+
+        }
+
+   
+
     }
 }

@@ -72,7 +72,7 @@ $profileimahe = session('profile_image');
         }
 
                 /* Modal Styles */
-.modal {
+.modall {
     display: none;
     position: fixed;
     z-index: 1;
@@ -128,7 +128,7 @@ $profileimahe = session('profile_image');
 }
 
 /* Button Styles */
-button {
+/* button {
     padding: 10px 20px;
     margin-top: 20px;
     background-color: #4CAF50;
@@ -139,7 +139,7 @@ button {
 
 button:hover {
     background-color: #45a049;
-}
+} */
     </style>
 </head>
 <body>
@@ -200,7 +200,7 @@ button:hover {
     </form>
 
     <!-- Camera Icon to Trigger File Upload -->
-    <button class="camera-icon" onclick="openModal()">
+    <button class="camera-icon" onclick="openModall()">
         <i class="fas fa-camera" ></i>
     </button>
 </div>
@@ -210,11 +210,11 @@ button:hover {
         </div>
     </header>
      <!-- Modal -->
-     <div id="myModal" class="modal">
+     <div id="myModall" class="modall">
         <form id="profile-upload-form" action="{{ route('user.uploadProfilePhoto') }}" method="POST" enctype="multipart/form-data">
             @csrf
         <div class="modal-content">
-            <span class="close" onclick="closeModal()">&times;</span>
+            <span class="close" onclick="closeModall()">&times;</span>
             <h2>Upload your image</h2>
             <div class="image-container">
                 <img id="imagePreview" class="image-preview" src="" alt="No Image" />
@@ -257,13 +257,13 @@ button:hover {
 
         
                     // Open the modal
-function openModal() {
-    document.getElementById("myModal").style.display = "block";
+function openModall() {
+    document.getElementById("myModall").style.display = "block";
 }
 
 // Close the modal
-function closeModal() {
-    document.getElementById("myModal").style.display = "none";
+function closeModall() {
+    document.getElementById("myModall").style.display = "none";
 }
 
 // Preview the selected image
