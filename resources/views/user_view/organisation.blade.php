@@ -500,7 +500,7 @@ error_reporting(0);
     }
 
     .toggle-button {
-        background: none;
+        /* background: none; */
         border: none;
         cursor: pointer;
         font-size: 16px;

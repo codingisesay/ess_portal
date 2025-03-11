@@ -72,16 +72,14 @@ error_reporting(0);
                 </div>
                 @endforeach
 
+                
                 <!-- Birthday Card -->
-                <!-- Birthday Carousel Container -->
-                <!-- Birthday Card -->
-        <!-- Birthday Carousel Container -->
         <div class="birthday-carousel-container">
             <div class="birthday-carousel" id="birthdayCarousel">
                 @foreach ($todayBirthdays->filter(function($birthday) {
                     return \Carbon\Carbon::parse($birthday->birthdate)->isToday();
                 }) as $birthday)
-                <div class="card birthday">
+                <div class="birthday">
                     <img src="{{ asset('user_end/images/Group303.png') }}" height="40" width="40" alt="Avatar">
                     <h6>Wish To {{ $birthday->employee_nme }}</h6>
                     <p>Happy Birthday <span class="count-circle">{{ $birthday->age }}</span></p>
