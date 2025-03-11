@@ -225,7 +225,7 @@ button:hover {
     </form>
     </div>
 
-    @yield('content');
+    @yield('content')
 
     <script>
         document.addEventListener("DOMContentLoaded", function () {

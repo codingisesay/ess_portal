@@ -203,64 +203,6 @@ error_reporting(0);
 
 
 
-        <!-- CSS for Popup -->
-        <style>
-            /* Modal Background */
-            #success-modal {
-                position: fixed;
-                top: 0;
-                left: 0;
-                width: 100%;
-                height: 100%;
-                background: rgba(0, 0, 0, 0.5);
-                /* Semi-transparent background */
-                display: none;
-                justify-content: center;
-                align-items: center;
-                z-index: 9999;
-            }
-
-            /* Modal Content */
-            #success-modal .modal-content {
-                background: white;
-                padding: 20px;
-                border-radius: 8px;
-                max-width: 400px;
-                width: 100%;
-                text-align: center;
-                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            }
-
-            /* Close Button */
-            #success-modal .modal-content button {
-                background-color: #4CAF50;
-                color: white;
-                border: none;
-                padding: 10px 20px;
-                border-radius: 4px;
-                cursor: pointer;
-                font-size: 16px;
-                margin-top: 10px;
-            }
-
-            #success-modal .modal-content button:hover {
-                background-color: #45a049;
-            }
-
-            /* Blur Effect for Background */
-            body.modal-active {
-                /* filter: blur(5px);*/
-            }
-
-            /* Optionally, add some transitions for smoother effects */
-            #success-modal {
-                transition: opacity 0.3s ease, visibility 0.3s ease;
-            }
-
-            body.modal-active {
-                transition: filter 0.3s ease;
-            }
-        </style>
 
 
 
@@ -312,7 +254,7 @@ error_reporting(0);
             <h3>Approval Pending</h3>
             <div class="approval-cards">
                 <!-- Leave Card -->
-                <div class="approval-card" onclick="openModal()">
+                <div class="approval-card" onclick="openLeaveModal()">
                     <div class="card-left">
                         <img src="{{ asset('user_end/images/Leave.png'); }}" alt="Leave Icon" class="icon">
                         <div class="details">
@@ -347,7 +289,7 @@ error_reporting(0);
         <!-- Popup Modal -->
         <div id="leaveModal" class="modal">
     <div class="modal-content">
-        <span class="close" onclick="closeModal()">&times;</span>
+        <span class="close" onclick="closeLeaveModal()">&times;</span>
         <h2>Leave Details</h2>
         <table>
             <thead>
@@ -415,25 +357,33 @@ error_reporting(0);
     </div>
 </div>
 <script>
-    // Open the task modal
-function openTaskModal() {
-    document.getElementById('taskModal').style.display = 'block';  // Show the modal
-}
-
-// Close the task modal
-function closeTaskModal() {
-    document.getElementById('taskModal').style.display = 'none';  // Hide the modal
-}
-
-// Close the modal if the user clicks outside of it
-window.onclick = function(event) {
-    var modal = document.getElementById('taskModal');
-    if (event.target === modal) {
-        closeTaskModal();
+    // Open the leave modal
+    function openLeaveModal() {
+        document.getElementById('leaveModal').style.display = 'block';  // Show the modal
     }
-}
 
+    // Close the leave modal
+    function closeLeaveModal() {
+        document.getElementById('leaveModal').style.display = 'none';  // Hide the modal
+    }
+
+    // Close the modal if the user clicks outside of it
+    window.onclick = function(event) {
+        var taskModal = document.getElementById('taskModal');
+        var leaveModal = document.getElementById('leaveModal');
+
+        // Close task modal if clicked outside
+        if (event.target === taskModal) {
+            closeTaskModal();
+        }
+
+        // Close leave modal if clicked outside
+        if (event.target === leaveModal) {
+            closeLeaveModal();
+        }
+    }
 </script>
+
 
         <!-- <section class="news-events"> 
             <h3>News & Events</h3>
