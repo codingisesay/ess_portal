@@ -5,8 +5,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{{ asset('/user_end/css/employment_data.css') }}">
-    <title>Employee Details</title>
+    {{-- <title>Employee Details</title> --}}
     <link rel="icon" href="{{ asset('user_end/images/STPLLogo butterfly.png') }}" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
     <div class="container">
@@ -14,7 +15,10 @@
             <h1>Employment Details</h1>
             <div class="employee-info">
                 <div class="profile-image">
-                    <img src="{{ asset('path/to/profile/picture.jpg') }}" width="80" height="80" alt="Profile Picture">
+                    <?php 
+                    $profileimahe = session('profile_image');
+                    ?>
+                    <img src="{{ asset('storage/'.$profileimahe) }}" width="80" height="80" alt="Profile Picture">
                 </div>
                 <h2>{{ ucfirst($userDetails->name ?? 'N/A') }}</h2>
                 <div class="job-title">

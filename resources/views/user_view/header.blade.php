@@ -1,9 +1,19 @@
-<html lang="en">
+<?php 
+
+// // dd($userData);
+// echo $userData->imagelink;
+// exit();
+
+$profileimahe = session('profile_image');
+
+
+?>
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Header</title>
     <link rel="stylesheet" href="{{ asset('/user_end/css/header.css') }}">
+    
     <style>
         /* Add your custom CSS here */
         .profile-dropdown {
@@ -60,6 +70,76 @@
         .logout-icon:hover, .camera-icon:hover {
             color: #6a2a52;
         }
+
+                /* Modal Styles */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.4);
+}
+
+.modal-content {
+    background-color: #fefefe;
+    margin: 15% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 50%;
+    text-align: center;
+    position: relative;
+}
+
+.close {
+    color: #aaa;
+    font-size: 28px;
+    font-weight: bold;
+    position: absolute;
+    top: 10px;
+    right: 25px;
+    cursor: pointer;
+}
+
+.close:hover,
+.close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+/* Image Container (Circle view) */
+.image-container {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    overflow: hidden;
+    margin: 10px auto;
+}
+
+.image-preview {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+/* Button Styles */
+button {
+    padding: 10px 20px;
+    margin-top: 20px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #45a049;
+}
     </style>
 </head>
 <body>
@@ -101,7 +181,14 @@
             </div>
             <div class="profilecircle profile-dropdown">
                 <a href="javascript:void(0)" id="profileIcon">
-                    <img src="" class="profile-pic" style="height: 50px; width: 50px; border-radius: 50%; margin-bottom: 4px; vertical-align: middle;">
+                 
+
+                    <img src="{{ asset('storage/'.$profileimahe) }}" alt="Profile Picture" style="height: 50px; width: 50px; border-radius: 50%; margin-bottom: 4px; vertical-align: middle;">
+                        
+           
+                    
+                   
+                    {{-- <img src="" class="profile-pic" style="height: 50px; width: 50px; border-radius: 50%; margin-bottom: 4px; vertical-align: middle;"> --}}
                 </a>
                 <div class="profile-dropdown-content">
     <!-- Logout Form -->
@@ -113,22 +200,30 @@
     </form>
 
     <!-- Camera Icon to Trigger File Upload -->
-    <button class="camera-icon" onclick="document.getElementById('profile-photo-upload').click();">
-        <i class="fas fa-camera"></i>
+    <button class="camera-icon" onclick="openModal()">
+        <i class="fas fa-camera" ></i>
     </button>
-
-    <!-- Hidden File Input for Image Upload -->
-    <form id="profile-upload-form" action="{{ route('user.uploadProfilePhoto') }}" method="POST" enctype="multipart/form-data">
-        @csrf
-        <!-- The file input is hidden, but it will be triggered by the camera icon -->
-        <input type="file" id="profile-photo-upload" name="profile_image" accept="image/*" style="display:none;" onchange="this.form.submit();">
-    </form>
 </div>
 
 
             </div>
         </div>
     </header>
+     <!-- Modal -->
+     <div id="myModal" class="modal">
+        <form id="profile-upload-form" action="{{ route('user.uploadProfilePhoto') }}" method="POST" enctype="multipart/form-data">
+            @csrf
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <h2>Upload your image</h2>
+            <div class="image-container">
+                <img id="imagePreview" class="image-preview" src="" alt="No Image" />
+            </div>
+            <input type="file" id="fileInput" name="profile_image" accept="image/*" onchange="previewImage()" />
+            <button id="uploadButton" onclick="uploadImage()">Upload</button>
+        </div>
+    </form>
+    </div>
 
     @yield('content');
 
@@ -155,13 +250,41 @@
                 }
             });
 
-            // If no page matches (like the user is on the default page), add the active class to Dashboard
-            if (currentPage === '' || currentPage === 'ESS_HOME.php' || currentPage === 'ESS_HOME.PHP') {
-                // Ensure Dashboard is highlighted on the first login
-                navLinks[0].classList.add('active');
-            }
+        
+
+
         });
+
+        
+                    // Open the modal
+function openModal() {
+    document.getElementById("myModal").style.display = "block";
+}
+
+// Close the modal
+function closeModal() {
+    document.getElementById("myModal").style.display = "none";
+}
+
+// Preview the selected image
+function previewImage() {
+    const file = document.getElementById("fileInput").files[0];
+    const reader = new FileReader();
+
+    reader.onloadend = function () {
+        document.getElementById("imagePreview").src = reader.result;
+    };
+
+    if (file) {
+        reader.readAsDataURL(file);
+    }
+}
+
+// Upload the image (you can add actual upload logic here)
+// function uploadImage() {
+//     alert('Image uploaded successfully!');
+//     closeModal();
+// }
     </script>
 </body>
 
-</html>

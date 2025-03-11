@@ -9,9 +9,11 @@ error_reporting(0);
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Organisation Chart</title>
+    {{-- <title>Organisation Chart</title> --}}
     <link rel="icon" href= "../resource/image/common/STPLLogo butterfly.png" />
     <link rel="stylesheet" href="{{ asset('/user_end/css/organisation.css') }}">
+    
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
 
@@ -128,8 +130,12 @@ error_reporting(0);
     <div class="employee-details">  
         <div class="left">  
             <div class="heading">Employee Profile</div>  
+            <?php 
+            $profileimahe = session('profile_image');
+            
+            ?>
             <div class="profile-circle">  
-                <img id="profile-image" src="default-profile.jpg" alt="Profile">   
+                <img id="profile-image" src="{{ asset('storage/'.$profileimahe) }}" alt="Profile">   
             </div>  
             <div class="emp-name" id="emp-name">Name</div>  
             <div class="emp-designation" id="emp-designation">Designation</div>  

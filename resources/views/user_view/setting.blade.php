@@ -1,8 +1,9 @@
 @extends('user_view.header')
-
 @section('content')
-<link rel="stylesheet" href="{{ asset('/user_end/css/setting.css') }}">
+
 <head>
+    <link rel="stylesheet" href="{{ asset('/user_end/css/setting.css') }}">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
         /* Style for the collapsible button */
         /* .collapsible {
