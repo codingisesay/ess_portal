@@ -60,7 +60,7 @@ error_reporting(0);
                 <div class="card checkin">
                     <img src="{{ asset('user_end/images/Group490.png'); }}" alt="">
                     <h4>Check In</h4>
-                    <p>{{ \Carbon\Carbon::parse($log->login_time)->format('H:i:s') }}</p>
+                    <p>{{ date('h:i:s A', strtotime($log->login_time)) }}</p>
                    
                 </div>
 
@@ -68,7 +68,7 @@ error_reporting(0);
                 <div class="card checkout">
                     <img src="{{ asset('user_end/images/Group491.png'); }}" alt="">
                     <h4>Check Out</h4>
-                    <p>{{ $log->logout_time ? \Carbon\Carbon::parse($log->logout_time)->format('H:i:s') : '' }}</p>
+                    <p>{{ date('h:i:s A', strtotime($log->logout_time)) }}</p>
                 </div>
                 @endforeach
 
@@ -78,12 +78,12 @@ error_reporting(0);
         <!-- Birthday Carousel Container -->
         <div class="birthday-carousel-container">
             <div class="birthday-carousel" id="birthdayCarousel">
-                @foreach ($upcomingBirthdays->filter(function($birthday) {
+                @foreach ($todayBirthdays->filter(function($birthday) {
                     return \Carbon\Carbon::parse($birthday->birthdate)->isToday();
                 }) as $birthday)
                 <div class="card birthday">
                     <img src="{{ asset('user_end/images/Group303.png') }}" height="40" width="40" alt="Avatar">
-                    <h6>Wish To {{ $birthday->Employee_Name }}</h6>
+                    <h6>Wish To {{ $birthday->employee_nme }}</h6>
                     <p>Happy Birthday <span class="count-circle">{{ $birthday->age }}</span></p>
                 </div>
                 @endforeach
@@ -100,7 +100,12 @@ error_reporting(0);
                 <div class="card thought">
                     <img src="{{ asset('user_end/images/Group326.png'); }}" alt="">
                     <h4>Thought Of The Day</h4>
-                    <p>{{ $thoughtOfTheDay->thought }}</p>
+                    @foreach ($thoughtOfTheDay as $item)
+
+                    <p>{{ $item->thought }}</p>
+                        
+                    @endforeach
+                    
                 </div>
 
                 <!-- Upcoming Holiday Card -->
@@ -303,54 +308,7 @@ error_reporting(0);
 
     </main>
 
-    <!-- Second main for four sections -->
-    <!-- <main class="main-group">
-        <section class="approval-pending">
-            <h3>Approval Pending</h3>
-            <div class="approval-cards">
-                <!-- Leave Card 
-                <div class="approval-card">
-                    <div class="card-left">
-                        <img src="Leave.png" alt="Leave Icon" class="icon">
-                        <div class="details">
-                            <h4>Leave</h4>
-                            <p>Privilege Leave</p>
-                        </div>
-                    </div>
-                    <div class="card-right">
-                        <img src="cake 5.png" alt="Alert Icon" class="alert-icon">
-                    </div>
-                </div>
-
-                <!-- Task Card 
-                <div class="approval-card">
-                    <div class="card-left">
-                        <img src="Task.png" alt="Task Icon" class="icon">
-                        <div class="details">
-                            <h4>Task</h4>
-                            <p>UI/UX Designer</p>
-                        </div>
-                    </div>
-                    <div class="card-right">
-                        <img src="cake 5.png" alt="Alert Icon" class="alert-icon">
-                    </div>
-                </div>
-
-                <!-- Meeting Card 
-                <div class="approval-card">
-                    <div class="card-left">
-                        <img src="Meeting (1).png" alt="Meeting Icon" class="icon">
-                        <div class="details">
-                            <h4>Meeting</h4>
-                            <p>Frontend Developer</p>
-                        </div>
-                    </div>
-                    <div class="card-right">
-                        <img src="cake 5.png" alt="Alert Icon" class="alert-icon">
-                    </div>
-                </div>
-            </div>
-        </section> -->
+  
     <main class="main-group">
         <section class="approval-pending">
             <h3>Approval Pending</h3>
@@ -383,19 +341,6 @@ error_reporting(0);
 </div>
 
 
-                <!-- Meeting Card -->
-                <!-- <div class="approval-card">
-                    <div class="card-left">
-                        <img src="../resource/image/dashboard/Meeting (1).png" alt="Meeting Icon" class="icon">
-                        <div class="details">
-                            <h4>Meeting</h4>
-                            
-                        </div>
-                    </div>
-                    <div class="card-right">
-                        <img src="../resource/image/dashboard/cake 5.png" alt="Alert Icon" class="alert-icon">
-                    </div>
-                </div> -->
             </div>
         </section>
 
@@ -436,22 +381,37 @@ error_reporting(0);
                     <th>Project</th>
                     <th>Task</th>
                     <th>Hours</th>
-                    <th>Action</th> <!-- New Column for Delete Icon -->
+                    <th>Status</th> <!-- New Column for Delete Icon -->
+                    <th>Action</th>
                 </tr>
             </thead>
             <tbody>
+                
                 @foreach($toDoList as $task)
                     <tr>
-                        <td>{{ \Carbon\Carbon::parse($task->date)->format('d-m-Y') }}</td>
+                        <td>{{ date('d-m-Y', strtotime($task->date)) }}</td>
                         <td>{{ $task->project_name }}</td>
                         <td>{{ $task->task }}</td>
                         <td>{{ $task->hours }}</td>
                         <td>
-                            <!-- Add Delete Button -->
-                            <button onclick="deleteTask({{ $task->id }})">Delete</button>
+                            <form action="{{ route('update_do_do', $task->id) }}" method="POST">
+                                @csrf
+                                @method('PUT')
+                                <input type="hidden" name="id" value="{{ $task->id }}">
+                                <select name="status">
+                                    <option value="{{ $task->status }}" selected>{{ $task->status }}</option>
+                                    <option value="Completed">Completed</option>
+                                    <option value="Cancelled">Cancelled</option>
+                                </select>
+                            </td>
+                            <td>
+                                <button type="submit">Update</button>
+                            
                         </td>
+                    </form>
                     </tr>
                 @endforeach
+                </form>
             </tbody>
         </table>
     </div>
@@ -589,10 +549,10 @@ window.onclick = function(event) {
 <div class="birthday-cards">
         @forelse ($upcomingBirthdays as $birthday)
         <div class="employee-card">
-            <img src="{{ asset('user_end/images/default_avatar.png') }}" alt="Profile Image" class="profile-image">
+            <img src="{{ asset('storage/'.$birthday->imagelink) }}" alt="Profile Image" class="profile-image">
             <div class="employee-info">
-                <h3><strong>{{ $birthday->Employee_Name }}</strong></h3>
-                <p>{{ $birthday->Designation }}</p>
+                <h3><strong>{{ $birthday->employee_nme }}</strong></h3>
+                <p>{{ $birthday->designation_name }}</p>
                 <div class="badge">{{ $birthday->badgeText }}</div>
             </div>
             </div>
