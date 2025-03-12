@@ -6,6 +6,7 @@ error_reporting(0);
 // $permission_array = session('permission_array');
 // dd($permission_array);
 // dd($todayBirthdays);
+// dd($leaveLists);
 ?>
 
 <head>
@@ -315,11 +316,42 @@ error_reporting(0);
                     <th>Start Date</th>
                     <th>End Date</th>
                     <th>Reason</th>
-                    <th>Action</th>
+                    <th>Approve</th>
+                    <th>Reject</th>
                 </tr>
             </thead>
             <tbody>
-                <!-- Data will be populated here by JavaScript -->
+                @foreach ($leaveLists as $leaveApply)
+                @foreach ($leaveApply as $leave)
+                    <tr>
+                        <td>{{ $leave->employee_no }}</td>
+                        <td>{{ $leave->employee_name }}</td>
+                        <td>{{ $leave->leave_name }}</td>
+                        <td>{{ \Carbon\Carbon::parse($leave->leave_start_date)->format('d-m-Y') }}</td>
+                        <td>{{ \Carbon\Carbon::parse($leave->leave_end_date)->format('d-m-Y') }}</td>
+                        <td>{{ $leave->leave_resion }}</td>
+            
+                        <!-- Approve Form -->
+                        <td>
+                            <form action="{{ route('leave_update_status', ['id' => $leave->leave_appliy_id, 'status' => 'Approved']) }}" method="POST">
+                                @csrf
+                                @method('PUT')
+                                <button type="submit" class="btn btn-success">Approve</button>
+                            </form>
+                        </td>
+            
+                        <!-- Reject Form -->
+                        <td>
+                            <form action="{{ route('leave_update_status', ['id' => $leave->leave_appliy_id, 'status' => 'Reject']) }}" method="POST">
+                                @csrf
+                                @method('PUT')
+                                <button type="submit" class="btn btn-danger">Reject</button>
+                            </form>
+                        </td>
+                    </tr>
+                @endforeach
+            @endforeach
+
             </tbody>
         </table>
     </div>

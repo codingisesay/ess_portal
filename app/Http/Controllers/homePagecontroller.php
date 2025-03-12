@@ -162,10 +162,41 @@ foreach ($leaveTypes as $leaveType) {
             return $employee;
         });
 
+       // Fetch data from emp_details with respect to manager
+$dataOfteamMambers = DB::table('emp_details')->where('reporting_manager', '=', $user->id)->get();
+
+// Initialize the leave lists array
+$leaveLists = array();
+
+for ($teamMamber = 0; $teamMamber < $dataOfteamMambers->count(); $teamMamber++) {
+    $leaveApply = DB::table('leave_applies')
+        ->join('leave_types', 'leave_applies.leave_type_id', '=', 'leave_types.id')
+        ->join('emp_details', 'leave_applies.user_id', '=', 'emp_details.user_id')
+        ->select(
+            'leave_applies.start_date as leave_start_date', 'leave_applies.end_date as leave_end_date', 
+            'leave_applies.description as leave_resion', 'leave_applies.id as leave_appliy_id',
+            'leave_types.name as leave_name', 'emp_details.employee_no as employee_no', 
+            'emp_details.employee_name as employee_name'
+        )
+        ->where('leave_applies.user_id', '=', $dataOfteamMambers[$teamMamber]->user_id)
+        ->whereIn('leave_applies.leave_approve_status', ['Pending', 'Rejected'])
+        ->get();
+
+    // Add the retrieved leave apply data to the leaveLists array
+    array_push($leaveLists, $leaveApply);
+}
+
+     
+       
+
+       
+       
+
+
         // dd($anniversaries);
 
     // Return a view with the logs and additional data
-    return view('user_view.homepage', compact('logs', 'thoughtOfTheDay', 'newsAndEvents', 'upcomingBirthdays','todayBirthdays', 'anniversaries', 'toDoList', 'currentMonth', 'currentDay', 'leaveUsage', 'appliedLeaves'));
+    return view('user_view.homepage', compact('logs', 'thoughtOfTheDay', 'newsAndEvents', 'upcomingBirthdays','todayBirthdays', 'anniversaries', 'toDoList', 'currentMonth', 'currentDay', 'leaveUsage', 'appliedLeaves','leaveLists'));
 }
 
     
@@ -222,4 +253,28 @@ foreach ($leaveTypes as $leaveType) {
    
 
     }
+
+    public function updateLeaveStatus($id, $status){
+        $user = Auth::user();
+          
+    $update = DB::table('leave_applies')
+    ->where('id', $id)
+    ->update([
+        'leave_approve_status' => $status, // Set the leave status
+        'status_updated_by' => $user->id, // Set the user who updated the status
+        'status_update_date_time' => NOW() // Set the current datetime (updated_at column should exist in the table)
+    ]);
+
+
+if ($update) {
+    return redirect()->route('user.homepage')->with('success', 'Leave status updated successfully.');
+}else{
+
+    return redirect()->route('user.homepage')->with('error', 'Leave status not updated successfully.');
+
+}
+
+
+    }
+
 }
