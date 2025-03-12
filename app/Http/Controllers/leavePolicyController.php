@@ -270,6 +270,8 @@ class leavePolicyController extends Controller
     // }
     public function showLeaveDashboard()
     {
+
+        $title = "Leave & Attendance";
         // Fetch all leave types from the 'leave_types' table
         $leaveTypes = DB::table('leave_types')->get();  // Get all leave types from the 'leave_types' table
     
@@ -335,7 +337,7 @@ class leavePolicyController extends Controller
         }
     
         // Pass the leave summary data, applied leaves, and total working hours to the view
-        return view('user_view.leave_dashboard', compact('leaveSummary', 'workingHoursData', 'appliedLeaves'));
+        return view('user_view.leave_dashboard', compact('leaveSummary', 'workingHoursData', 'appliedLeaves','title'));
     }
     
     

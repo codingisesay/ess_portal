@@ -14,6 +14,7 @@ class homePagecontroller extends Controller
     public function showHomepage(Request $request)
 {
     $user = Auth::user(); // Get the logged-in user
+    $title = 'Dashboard';
 
     // Fetch the login logs for today
     $logs = DB::table('login_logs')
@@ -196,7 +197,7 @@ for ($teamMamber = 0; $teamMamber < $dataOfteamMambers->count(); $teamMamber++) 
         // dd($anniversaries);
 
     // Return a view with the logs and additional data
-    return view('user_view.homepage', compact('logs', 'thoughtOfTheDay', 'newsAndEvents', 'upcomingBirthdays','todayBirthdays', 'anniversaries', 'toDoList', 'currentMonth', 'currentDay', 'leaveUsage', 'appliedLeaves','leaveLists'));
+    return view('user_view.homepage', compact('title','logs', 'thoughtOfTheDay', 'newsAndEvents', 'upcomingBirthdays','todayBirthdays', 'anniversaries', 'toDoList', 'currentMonth', 'currentDay', 'leaveUsage', 'appliedLeaves','leaveLists'));
 }
 
     

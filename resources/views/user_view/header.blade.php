@@ -11,7 +11,11 @@ $profileimahe = session('profile_image');
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Header</title>
+    <link rel="icon" href="{{ asset('user_end/images/STPLLogo.png') }}" type="image/png">
+  
+    <title>@isset($title){{ $title }}@else{{ 'ESS Portal' }}@endisset</title>
+    
+  
     <link rel="stylesheet" href="{{ asset('/user_end/css/header.css') }}">
     
     <style>

@@ -25,6 +25,8 @@ class employmentDataController extends Controller
         $userId = $loginUserInfo->id;
         $organisationId = $loginUserInfo->organisation_id;
 
+        $title = "Employment Details";
+
         // Store user ID and organisation ID in the session
         session(['user_id' => $userId, 'organisation_id' => $organisationId]);
 
@@ -72,6 +74,7 @@ class employmentDataController extends Controller
             'empEducation',
             'empPreviousEmployments',
             'empFamilyDetails',
+            'title',
             'documents'
         ));
     }
