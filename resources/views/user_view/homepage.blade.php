@@ -555,7 +555,10 @@ error_reporting(0);
 <div class="birthday-cards">
         @forelse ($upcomingBirthdays as $birthday)
         <div class="employee-card">
-            <img src="{{ asset('storage/'.$birthday->imagelink) }}" alt="Profile Image" class="profile-image">
+            <!-- <img src="{{ asset('storage/'.$birthday->imagelink) }}" alt="Profile Image" class="profile-image"> -->
+             <!-- Check if the image exists or use the default image -->
+            <img src="{{ asset('storage/' . ($birthday->imagelink ?: 'user_profile_image/Oqr4VRqo7RpQxnmiZCh12zybbcdsyUin2FhAKD3O.jpg')) }}" alt="Profile Image" class="profile-image">
+
             <div class="employee-info">
                 <h3><strong>{{ $birthday->employee_nme }}</strong></h3>
                 <p>{{ $birthday->designation_name }}</p>
