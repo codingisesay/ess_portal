@@ -150,6 +150,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('user/homepage',[homePagecontroller::class,'showHomepage'])->name('user.homepage');
     Route::post('user/save_todo',[homePagecontroller::class,'saveToDoList'])->name('user.save_todo');
     Route::put('user/edit_to_do/{id}',[homePagecontroller::class,'updateToDo'])->name('update_do_do');
+    Route::put('user/approve_leave_status/{id}/{status}',[homePagecontroller::class,'updateLeaveStatus'])->name('leave_update_status');
 
 
     Route::get('user/header', [headerController::class, 'showHeader'])->name('header');
