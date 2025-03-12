@@ -5,6 +5,7 @@
 error_reporting(0);
 // $permission_array = session('permission_array');
 // dd($permission_array);
+// dd($todayBirthdays);
 ?>
 
 <head>
@@ -74,22 +75,36 @@ error_reporting(0);
 
                 
                 <!-- Birthday Card -->
-        <div class="birthday-carousel-container">
-            <div class="birthday-carousel" id="birthdayCarousel">
-                @foreach ($todayBirthdays->filter(function($birthday) {
-                    return \Carbon\Carbon::parse($birthday->birthdate)->isToday();
-                }) as $birthday)
+                <div class="birthday-carousel-container">
+    <div class="birthday-carousel" id="birthdayCarousel">
+        @php
+            $todaysBirthdays = $todayBirthdays->filter(function($birthday) {
+                return \Carbon\Carbon::parse($birthday->birthdate)->isToday();
+            });
+        @endphp
+
+        @if ($todaysBirthdays->isEmpty())  <!-- Check if no birthdays today -->
+            <div class="birthday">
+                <img src="{{ asset('user_end/images/Group303.png') }}" height="40" width="40" alt="Avatar">
+                <h6>No birthdays today</h6>
+                <p>Check back later!</p>
+            </div>
+        @else  <!-- If there are birthdays, loop through them -->
+            @foreach ($todaysBirthdays as $birthday)
                 <div class="birthday">
                     <img src="{{ asset('user_end/images/Group303.png') }}" height="40" width="40" alt="Avatar">
                     <h6>Wish To {{ $birthday->employee_nme }}</h6>
                     <p>Happy Birthday <span class="count-circle">{{ $birthday->age }}</span></p>
                 </div>
-                @endforeach
-            </div>
-            <!-- Navigation buttons -->
-            <!-- <button class="prev" id="prevSlide">❮</button> 
-            <button class="next" id="nextSlide">❯</button> -->
-        </div>
+            @endforeach
+        @endif
+    </div>
+
+    <!-- Navigation buttons -->
+    <!-- <button class="prev" id="prevSlide">❮</button>
+    <button class="next" id="nextSlide">❯</button> -->
+</div>
+
 
             </div>
 
@@ -381,6 +396,17 @@ error_reporting(0);
         if (event.target === leaveModal) {
             closeLeaveModal();
         }
+    }
+</script>
+<script>
+     // Open the leave modal
+     function openTaskModal() {
+        document.getElementById('taskModal').style.display = 'block';  // Show the modal
+    }
+
+    // Close the leave modal
+    function closeTaskModal() {
+        document.getElementById('taskModal').style.display = 'none';  // Hide the modal
     }
 </script>
 
