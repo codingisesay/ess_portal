@@ -30,6 +30,13 @@ class employmentDataController extends Controller
         // Store user ID and organisation ID in the session
         session(['user_id' => $userId, 'organisation_id' => $organisationId]);
 
+        $userId = Auth::id();
+
+        // Fetch the documents for the logged-in user
+        $documents = DB::table('document_uploads')
+            ->where('user_id', $userId)
+            ->get();
+
         // Fetch user details using joins
         $userDetails = DB::table('users')
             ->leftJoin('emp_details', 'users.id', '=', 'emp_details.user_id')
@@ -67,8 +74,16 @@ class employmentDataController extends Controller
             'empEducation',
             'empPreviousEmployments',
             'empFamilyDetails',
-            'title'
-
+            'title',
+            'documents'
         ));
     }
 }
+
+ // Get the logged-in user's ID
+ $userId = Auth::id();
+
+ // Fetch the documents for the logged-in user
+ $documents = DB::table('document_uploads')
+     ->where('user_id', $userId)
+     ->get();

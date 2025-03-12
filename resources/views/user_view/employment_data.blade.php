@@ -294,6 +294,66 @@
         </div>
     </div>
 
+    <div class="right-section1">
+    <div class="section table-section">
+        <h3>Uploaded Documents</h3>
+        <div class="table-scroll-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th class="tableh-one">Sr. No.</th>
+                        <th class="tableh-two">Document Type</th>
+                        <!-- <th class="tableh-three">File Path</th> -->
+                        <th class="tableh-four">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach($documents as $index => $document)
+                        <tr>
+                            <td class="tableh-one">{{ $index + 1 }}</td>
+                            <td class="tableh-two">{{ ucfirst($document->document_type ?? 'N/A') }}</td>
+                            <!-- <td class="tableh-three">{{ ucfirst($document->file_path ?? 'N/A') }}</td> -->
+                            <td class="tableh-four">
+                                @if($document->file_path)
+                                    <a href="{{ asset('storage/' . $document->file_path) }}" download>
+                                        <button class="download-btn">Download</button>
+                                    </a>
+                                @else
+                                    <span>No File</span>
+                                @endif
+                            </td>
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<style>
+    /* Basic button styling */
+.download-btn {
+    padding: 10px 20px; /* Add some padding around the text */
+    background-color: #8A3366; /* Green background */
+    color: white; /* White text */
+    font-size: 16px; /* Adjust font size */
+    border: none; /* Remove default border */
+    border-radius: 5px; /* Rounded corners */
+    cursor: pointer; /* Change cursor to pointer on hover */
+    transition: background-color 0.3s ease; /* Smooth background color transition */
+}
+
+/* Hover effect */
+.download-btn:hover {
+    background-color: #8A3366; /* Darker green on hover */
+}
+
+/* Focus effect for accessibility */
+.download-btn:focus {
+    outline: none; /* Remove outline */
+    box-shadow: 0 0 3px 3px rgba(4, 4, 4, 0.3); /* Add a green box-shadow */
+}
+</style>
     <script>
         // JavaScript to handle modal popup
         function openDegreeModal(serialNo) {
