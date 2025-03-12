@@ -368,5 +368,3 @@
     </script>
    
 @endsection
-</body>
-</html>

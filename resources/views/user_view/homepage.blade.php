@@ -13,8 +13,8 @@ error_reporting(0);
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     {{-- <title>Dashboard</title> --}}
-    <link rel="icon" href=
-    "{{ asset('user_end/images/STPLLogo butterfly.png') }}" />
+   
+   
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="stylesheet" href="{{ asset('/user_end/css/homepage.css') }}">
     <link rel="stylesheet" href="{{ asset('/user_end/css/header.css') }}">
@@ -764,5 +764,3 @@ error_reporting(0);
     </script>
 
 @endsection
-</body>
-</html>

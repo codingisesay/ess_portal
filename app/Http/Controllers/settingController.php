@@ -15,10 +15,11 @@ class settingController extends Controller
 {
     public function showsetting()
     {
+        $title = "Settings";
         $loginUserInfo = Auth::user();
        
         $users = User::where('organisation_id', $loginUserInfo->organisation_id)->paginate(10);
-        return view('user_view.setting',compact('users'));
+        return view('user_view.setting',compact('users','title'));
     }
 
     public function saveThought(Request $request)

@@ -9,6 +9,8 @@ class OrganisationController extends Controller
 {
     public function showOrganisation()
     {
+
+        $title = "Orgnization Chart";
         $user = Auth::user(); // Get the logged-in user
         
         // Get the ID of the user with name "none" in the same organisation
@@ -43,6 +45,6 @@ class OrganisationController extends Controller
             )
             ->get();
 
-        return view('user_view.organisation', compact('user', 'employees', 'noneUserId'));
+        return view('user_view.organisation', compact('user', 'employees', 'noneUserId','title'));
     }
 }

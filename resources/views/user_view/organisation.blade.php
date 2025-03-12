@@ -508,5 +508,3 @@ error_reporting(0);
     }
 </style>
 @endsection
-</body>
-</html>

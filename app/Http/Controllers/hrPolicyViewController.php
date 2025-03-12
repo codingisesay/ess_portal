@@ -93,6 +93,7 @@ class hrPolicyViewController extends Controller
 
     public function showHrPolicy()
     {
+        $title = "HR Policy";
         $loginUserInfo = Auth::user();
         $organisationId = $loginUserInfo->organisation_id;
 
@@ -106,7 +107,7 @@ class hrPolicyViewController extends Controller
 
         // dd($policies); // Debugging statement to check fetched data
 
-        return view('user_view.hr_policy', compact('policies'));
+        return view('user_view.hr_policy', compact('policies','title'));
     }
 
     public function getPoliciesByCategory($id)
