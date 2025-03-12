@@ -52,7 +52,7 @@ class UserAuthController extends Controller
         session(['permission_array' => $permission_array]);
 
         $userData = DB::table('user_status_imgs')->where('user_id',$loginUserInfo->id)->first();
-        $imagePath = optional($userData)->imagelink ?? 'user_profile_image/zSwombNHcqFVGdIaGcsfRg22o8sQU5egRseNEzLI.png';
+        $imagePath = optional($userData)->imagelink ?? 'user_profile_image/Oqr4VRqo7RpQxnmiZCh12zybbcdsyUin2FhAKD3O.jpg';
      
        
         session(['profile_image' => $imagePath]);
