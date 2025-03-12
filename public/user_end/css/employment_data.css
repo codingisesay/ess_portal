@@ -224,6 +224,14 @@ a:hover {
     margin-top: 20px;
 }
 
+.right-section1 {
+    display: grid;
+    /* grid-template-columns: repeat(2, 1fr); */
+    gap: 20px;
+    width: 99%;
+    margin-top: 20px;
+}
+
 .section1 {
     background-color: #ffffff;
     border-radius: 25px;
@@ -282,7 +290,7 @@ th,
 td {
     border: 1px solid #ddd;
     padding: 8px;
-    text-align: left;
+    text-align: center;
     white-space: nowrap;
 }
 
@@ -299,7 +307,7 @@ tr:nth-child(even) {
     width: 100%;
     overflow: auto;
     margin: 20px 0;
-    border: 1px solid #ddd;
+    border: 1px solid #8A3366;
     border-radius: 8px;
 }
 
@@ -372,7 +380,7 @@ tr:nth-child(even) {
     width: 100%;
     overflow-x: auto;
     margin: 20px 0;
-    border: 1px solid #ddd;
+    border: 1px solid #8A3366;
     border-radius: 8px;
 }
 
@@ -441,6 +449,7 @@ table tbody tr:nth-child(even) {
     background-color: rgba(0, 0, 0, 0.4);
     padding-top: 60px;
     overflow: auto;
+    /* Ensures the entire modal is scrollable if content overflows */
 }
 
 .modal-content {
@@ -449,13 +458,19 @@ table tbody tr:nth-child(even) {
     padding: 20px;
     border: 1px solid #888;
     width: 90%;
-    max-width: 500px;
+    /* max-width: none; */
+    /* Removed max-width so the modal adjusts based on content */
     border-radius: 40px;
+    max-height: 80%;
+    overflow-y: auto;
+    /* Allow scrolling inside the modal if content overflows */
+    box-sizing: border-box;
 }
 
 .modal h2 {
     text-align: center;
-    margin-left: -243px;
+    margin-left: 0;
+    /* Adjust the alignment of the title */
 }
 
 .close {
@@ -466,12 +481,88 @@ table tbody tr:nth-child(even) {
     padding: 10px;
     border-radius: 50%;
     cursor: pointer;
+    top: -17px;
 }
 
 .close:hover,
 .close:focus {
     color: black;
     background-color: white;
+}
+
+/* Media Query for smaller screens */
+@media screen and (max-width: 600px) {
+    .modal-content {
+        width: 95%;
+        /* Make the modal a bit smaller on small screens */
+        padding: 15px;
+    }
+
+    .modal h2 {
+        font-size: 1.5em;
+        /* Adjust the title font size for smaller screens */
+    }
+
+    .close {
+        font-size: 24px;
+        /* Smaller close button on small screens */
+    }
+}
+
+/* To make the table inside modal scrollable on small screens */
+.table-wrapper {
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    margin-top: 10px;
+}
+
+.details-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+    table-layout: fixed;
+    /* Ensures the table layout doesn't break */
+}
+
+.details-table th,
+.details-table td {
+    border: 1px solid #ddd;
+    padding: 5px;
+    text-align: left;
+    word-wrap: break-word;
+    /* Allow words to wrap in cells */
+}
+
+.details-table th {
+    background-color: #f4f4f4;
+    font-weight: bold;
+    /* width: 141px; */
+}
+
+.details-table tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+.details-table tr:hover {
+    background-color: #f1f1f1;
+}
+
+/* Media Query for smaller screens */
+@media screen and (max-width: 768px) {
+
+    .details-table th,
+    .details-table td {
+        padding: 6px;
+        /* Adjust padding for smaller screens */
+        font-size: 14px;
+        /* Adjust font size */
+    }
+
+    .details-table {
+        font-size: 14px;
+        /* Adjust the table font size */
+    }
 }
 
 .form-container {

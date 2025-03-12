@@ -108,7 +108,74 @@
                 <div class="left1"><p>Provident Fund</p> <b>{{ ucfirst($userDetails->provident_fund ?? 'N/A') }}</b></div>
                 <div class="left1"><p>ESIC NO</p> <b>{{ ucfirst($userDetails->esic_no ?? 'N/A') }}</b></div>
             </div>
+            <!-- <table class="section-table">
+    <tr>
+        <td colspan="2">
+            <h2>Welfare Benefits</h2>
+        </td>
+    </tr>
+    <tr>
+        <td><p>UAN</p></td>
+        <td><b>{{ ucfirst($userDetails->universal_account_number ?? 'N/A') }}</b></td>
+    </tr>
+    <tr>
+        <td><p>Provident Fund</p></td>
+        <td><b>{{ ucfirst($userDetails->provident_fund ?? 'N/A') }}</b></td>
+    </tr>
+    <tr>
+        <td><p>ESIC NO</p></td>
+        <td><b>{{ ucfirst($userDetails->esic_no ?? 'N/A') }}</b></td>
+    </tr>
+</table>
 
+<style>
+    /* Table container */
+.section-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 10px auto;
+}
+
+/* Table cell for section content */
+.section-table td {
+    padding: 15px;
+    text-align: left;
+    vertical-align: middle;
+}
+
+/* Table header for title */
+.section-table h2 {
+    text-align: center;
+    margin: 0;
+}
+
+/* Adding background color and box shadow to the table cells */
+.section-table td {
+    background-color: #ffffff;
+    border-radius: 25px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Optional: Styling for <p> inside table */
+.section-table td p {
+    margin: 0;
+    font-weight: bold;
+}
+
+/* Optional: Styling for <b> inside table */
+.section-table td b {
+    font-weight: bold;
+}
+
+/* Media Query for smaller screens */
+@media screen and (max-width: 768px) {
+    .section-table td {
+        padding: 10px;
+        font-size: 14px;
+    }
+}
+
+</style> -->
             <div class="section educational-details-section">
                 <h2>Educational Details</h2>
                 @foreach($empEducation as $education)
@@ -151,7 +218,7 @@
         </div>
     </div>
 
-    <div class="right-section">
+    <div class="right-section1">
         <div class="section table-section">
             <h3>Family Details</h3>
             <div class="table-scroll-container">
@@ -299,34 +366,7 @@
             document.getElementById(modalId).style.display = "none";
         }
     </script>
-     <style>
-        .details-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 10px;
-        }
-
-        .details-table th,
-        .details-table td {
-            border: 1px solid #ddd;
-            padding: 8px;
-            text-align: left;
-        }
-
-        .details-table th {
-            background-color: #f4f4f4;
-            font-weight: bold;
-        }
-
-        .details-table tr:nth-child(even) {
-            background-color: #f9f9f9;
-        }
-
-        .details-table tr:hover {
-            background-color: #f1f1f1;
-        }
-    </style>
-
+   
 @endsection
 </body>
 </html>
