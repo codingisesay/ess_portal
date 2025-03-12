@@ -14,11 +14,11 @@
         <div class="employment-details">
             <h1>Employment Details</h1>
             <div class="employee-info">
-                <div class="profile-image">
+                <div class="profile-image1">
                     <?php 
                     $profileimahe = session('profile_image');
                     ?>
-                    <img src="{{ asset('storage/'.$profileimahe) }}" width="80" height="80" alt="Profile Picture">
+                    <img src="{{ asset('storage/'.$profileimahe) }}" class="profile-image" alt="Profile Picture">
                 </div>
                 <h2>{{ ucfirst($userDetails->name ?? 'N/A') }}</h2>
                 <div class="job-title">
