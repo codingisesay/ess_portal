@@ -65,7 +65,7 @@
         </div>
 
         <div class="right-section">
-            <div class="section">
+            <!-- <div class="section">
                 <h2>Personal Information</h2>
                 <div class="left1"><p>Date of Birth</p> <b>{{ $userDetails->date_of_birth ? \Carbon\Carbon::parse($userDetails->date_of_birth)->format('d-m-Y') : 'N/A' }}</b></div>
                 <div class="left1"><p>Gender</p> <b>{{ ucfirst($userDetails->gender ?? 'N/A') }}</b></div>
@@ -74,40 +74,158 @@
                 <div class="left1"><p>Blood Group</p> <b>{{ ucfirst($userDetails->blood_group ?? 'N/A') }}</b></div>
                 <div class="left1"><p>Religion</p> <b>{{ ucfirst($userDetails->religion ?? 'N/A') }}</b></div>
                 <div class="left1"><p>Anniversary Date</p> <b>{{ $userDetails->anniversary_date ? \Carbon\Carbon::parse($userDetails->anniversary_date)->format('d-m-Y') : 'N/A' }}</b></div>
-            </div>
-
+            </div> -->
             <div class="section">
-                <h2>Employee Details</h2>
-                <div class="left1"><p>Employment Status</p> <b>{{ ucfirst($userDetails->employment_status ?? 'Active') }}</b></div>
-                <div class="left1"><p>Employment Type</p> <b>{{ ucfirst($userDetails->employee_type_name ?? 'N/A') }}</b></div>
-                <div class="left1"><p>Start Date</p> <b>{{ $userDetails->Joining_date ? \Carbon\Carbon::parse($userDetails->Joining_date)->format('d-m-Y') : 'N/A' }}</b></div>
-                <div class="left1"><p>Total Experience</p> <b>{{ ucfirst($userDetails->total_experience ?? 'N/A') }}</b></div>
-            </div>
+    <h2>Personal Information</h2>
+    <table>
+        <tr>
+            <th>Date of Birth</th>
+            <td><b>{{ $userDetails->date_of_birth ? \Carbon\Carbon::parse($userDetails->date_of_birth)->format('d-m-Y') : 'N/A' }}</b></td>
+        </tr>
+        <tr>
+            <th>Gender</th>
+            <td><b>{{ ucfirst($userDetails->gender ?? 'N/A') }}</b></td>
+        </tr>
+        <tr>
+            <th>Nationality</th>
+            <td><b>{{ ucfirst($userDetails->nationality ?? 'N/A') }}</b></td>
+        </tr>
+        <tr>
+            <th>Marital Status</th>
+            <td><b>{{ ucfirst($userDetails->marital_status ?? 'N/A') }}</b></td>
+        </tr>
+        <tr>
+            <th>Blood Group</th>
+            <td><b>{{ ucfirst($userDetails->blood_group ?? 'N/A') }}</b></td>
+        </tr>
+        <tr>
+            <th>Religion</th>
+            <td><b>{{ ucfirst($userDetails->religion ?? 'N/A') }}</b></td>
+        </tr>
+        <tr>
+            <th>Anniversary Date</th>
+            <td><b>{{ $userDetails->anniversary_date ? \Carbon\Carbon::parse($userDetails->anniversary_date)->format('d-m-Y') : 'N/A' }}</b></td>
+        </tr>
+    </table>
+</div>
 
-            <div class="section">
-                <h2>Salary Bank Details</h2>
-                <div class="left1"><p>Bank Name</p> <b>{{ ucfirst($userDetails->bank_name ?? 'N/A') }}</b></div>
-                <div class="left1"><p>Branch Name</p> <b>{{ ucfirst($userDetails->sal_branch_name ?? 'N/A') }}</b></div>
-                <div class="left1"><p>Account Number</p> <b>{{ ucfirst($userDetails->sal_account_number ?? 'N/A') }}</b></div>
-                <div class="left1"><p>IFSC Code</p> <b>{{ ucfirst($userDetails->sal_ifsc_code ?? 'N/A') }}</b></div>
-            </div>
 
-            <div class="section">
-                <h2>Passport & Visa</h2>
-                <div class="left1"><p>Passport Number</p> <b>{{ ucfirst($userDetails->passport_number ?? 'N/A') }}</b></div>
-                <div class="left1"><p>Issuing Country</p> <b>{{ ucfirst($userDetails->issuing_country ?? 'N/A') }}</b></div>
-                <div class="left1"><p>Issue Date</p> <b>{{ $userDetails->passport_issue_date ? \Carbon\Carbon::parse($userDetails->passport_issue_date)->format('d-m-Y') : 'N/A' }}</b></div>
-                <div class="left1"><p>Expiry Date</p> <b>{{ $userDetails->passport_expiry_date ? \Carbon\Carbon::parse($userDetails->passport_expiry_date)->format('d-m-Y') : 'N/A' }}</b></div>
-                <div class="left1"><p>USA Visa</p> <b>{{ ucfirst($userDetails->active_visa ?? 'N/A') }}</b></div>
-                <div class="left1"><p>Visa Expiry Date</p> <b>{{ $userDetails->visa_expiry_date ? \Carbon\Carbon::parse($userDetails->visa_expiry_date)->format('d-m-Y') : 'N/A' }}</b></div>
-            </div>
+<div class="section">
+    <table>
+        <!-- Header row with h2 centered across the table -->
+        <h2> Employee Details</h2>
+        <tr>
+            <!-- <th colspan="2" style="text-align: center; font-size: 1.5em; padding: 15px; background-color: #f2f2f2;">
+                Employee Details
+            </th> -->
+        </tr>
+        <tr>
+            <th>Employment Status</th>
+            <td><b>{{ ucfirst($userDetails->employment_status ?? 'Active') }}</b></td>
+        </tr>
+        <tr>
+            <th>Employment Type</th>
+            <td><b>{{ ucfirst($userDetails->employee_type_name ?? 'N/A') }}</b></td>
+        </tr>
+        <tr>
+            <th>Start Date</th>
+            <td><b>{{ $userDetails->Joining_date ? \Carbon\Carbon::parse($userDetails->Joining_date)->format('d-m-Y') : 'N/A' }}</b></td>
+        </tr>
+        <tr>
+            <th>Total Experience</th>
+            <td><b>{{ ucfirst($userDetails->total_experience ?? 'N/A') }}</b></td>
+        </tr>
+    </table>
+</div>
 
-            <div class="section">
-                <h2>Welfare Benefits</h2>
-                <div class="left1"><p>UAN</p> <b>{{ ucfirst($userDetails->universal_account_number ?? 'N/A') }}</b></div>
-                <div class="left1"><p>Provident Fund</p> <b>{{ ucfirst($userDetails->provident_fund ?? 'N/A') }}</b></div>
-                <div class="left1"><p>ESIC NO</p> <b>{{ ucfirst($userDetails->esic_no ?? 'N/A') }}</b></div>
-            </div>
+<div class="section">
+    <table>
+        <!-- Header row with h2 centered across the table -->
+         <h2>Salary Bank Details</h2>
+        <tr>
+            <!-- <th colspan="2" style="text-align: center; font-size: 1.5em; padding: 15px; background-color: #f2f2f2;">
+                Salary Bank Details
+            </th> -->
+        </tr>
+        <tr>
+            <th>Bank Name</th>
+            <td><b>{{ ucfirst($userDetails->bank_name ?? 'N/A') }}</b></td>
+        </tr>
+        <tr>
+            <th>Branch Name</th>
+            <td><b>{{ ucfirst($userDetails->sal_branch_name ?? 'N/A') }}</b></td>
+        </tr>
+        <tr>
+            <th>Account Number</th>
+            <td><b>{{ ucfirst($userDetails->sal_account_number ?? 'N/A') }}</b></td>
+        </tr>
+        <tr>
+            <th>IFSC Code</th>
+            <td><b>{{ ucfirst($userDetails->sal_ifsc_code ?? 'N/A') }}</b></td>
+        </tr>
+    </table>
+</div>
+
+<div class="section">
+    <table class="custom-table">
+        <!-- Header row with h2 centered across the table -->
+         <h2>Passport & Visa</h2>
+        <tr>
+            <!-- <th colspan="2" style="text-align: center; font-size: 1.5em; padding: 15px; background-color: #f2f2f2;">
+                Passport & Visa
+            </th> -->
+        </tr>
+        <tr>
+            <th>Passport Number</th>
+            <td><b>{{ ucfirst($userDetails->passport_number ?? 'N/A') }}</b></td>
+        </tr>
+        <tr>
+            <th>Issuing Country</th>
+            <td><b>{{ ucfirst($userDetails->issuing_country ?? 'N/A') }}</b></td>
+        </tr>
+        <tr>
+            <th>Issue Date</th>
+            <td><b>{{ $userDetails->passport_issue_date ? \Carbon\Carbon::parse($userDetails->passport_issue_date)->format('d-m-Y') : 'N/A' }}</b></td>
+        </tr>
+        <tr>
+            <th>Expiry Date</th>
+            <td><b>{{ $userDetails->passport_expiry_date ? \Carbon\Carbon::parse($userDetails->passport_expiry_date)->format('d-m-Y') : 'N/A' }}</b></td>
+        </tr>
+        <tr>
+            <th>USA Visa</th>
+            <td><b>{{ ucfirst($userDetails->active_visa ?? 'N/A') }}</b></td>
+        </tr>
+        <tr>
+            <th>Visa Expiry Date</th>
+            <td><b>{{ $userDetails->visa_expiry_date ? \Carbon\Carbon::parse($userDetails->visa_expiry_date)->format('d-m-Y') : 'N/A' }}</b></td>
+        </tr>
+    </table>
+</div>
+
+<div class="section">
+    <table>
+        <!-- Header row with h2 centered across the table -->
+         <h2>Welfare Benefits</h2>
+        <tr>
+            <!-- <th colspan="2" style="text-align: center; font-size: 1.5em; padding: 15px; background-color: #f2f2f2;">
+                Welfare Benefits
+            </th> -->
+        </tr>
+        <tr>
+            <th>UAN</th>
+            <td><b>{{ ucfirst($userDetails->universal_account_number ?? 'N/A') }}</b></td>
+        </tr>
+        <tr>
+            <th>Provident Fund</th>
+            <td><b>{{ ucfirst($userDetails->provident_fund ?? 'N/A') }}</b></td>
+        </tr>
+        <tr>
+            <th>ESIC NO</th>
+            <td><b>{{ ucfirst($userDetails->esic_no ?? 'N/A') }}</b></td>
+        </tr>
+    </table>
+</div>
+
             <!-- <table class="section-table">
     <tr>
         <td colspan="2">
@@ -378,7 +496,7 @@
                             </tr>
                             <tr>
                                 <th>Passing Year</th>
-                                <td>{{ $education->passing_year ? \Carbon\Carbon::parse($education->passing_year )->format('d-m-Y') : 'N/A' }}</td>
+                              <td>{{ $education->passing_year ? $education->passing_year : 'N/A' }}</td>
                             </tr>
                            
                             <tr>
@@ -408,6 +526,10 @@
                             <tr>
                                 <th>Marks Obtained</th>
                                 <td>{{ ucfirst($education->marks_obtained ?? 'N/A') }}</td>
+                            </tr>
+                            <tr>
+                                <th>Total Marks</th>
+                                <td>{{ ucfirst($education->out_of_marks_total_marks ?? 'N/A') }}</td>
                             </tr>
                             <tr>
                                 <th>Certificate Date</th>
