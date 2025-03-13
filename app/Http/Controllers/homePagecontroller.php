@@ -40,75 +40,191 @@ $newsAndEvents = DB::table('news_and_events')
                   ->where('user_id', $user->id)
                   ->where('status', 'pending')
                   ->get();
-// Fetch the leave types with restrictions
-$leaveTypes = DB::table('leave_types')
-                ->join('leave_type_restrictions', 'leave_types.id', '=', 'leave_type_restrictions.leave_type_id')
-                ->where('leave_types.status', 'ACTIVE')
-                ->get();
+//fetch for leave representation
+
+                  $total_leaves_of_org = DB::table('leave_types')
+                  // ->join('leave_types', 'leave_type_restrictions.leave_type_id', '=', 'leave_types.id')
+                  ->join('leave_cycles', 'leave_types.leave_cycle_id','=', 'leave_cycles.id')
+                  ->select('leave_types.name as leave_type','leave_types.id as leave_type_id') // Select all columns from both tables
+                  ->where('leave_cycles.organisation_id', '=', $user->organisation_id)
+                  ->where('leave_cycles.status', '=', 'Active')
+                  ->where('leave_types.status', '=', 'Active')
+                  ->get();
+
+                // dd($total_leaves_of_org);
 
 // Fetch the applied leaves for the logged-in user (only approved leaves)
-$appliedLeaves = DB::table('leave_applies')
-                   ->join('leave_apply_statuses', 'leave_applies.id', '=', 'leave_apply_statuses.leave_apply_id')
+$approvedleave = DB::table('leave_applies')
                    ->where('leave_applies.user_id', $user->id)
-                   ->where('leave_apply_statuses.leave_approve_status', 'APPROVED')
+                   ->where('leave_applies.leave_approve_status', 'Approved')
                    ->get();
+
+                   $emp_details = DB::table('emp_details')->where('user_id',$user->id)->first();
+
+
+                //    dd($appliedLeaves);
+
 
 // Calculate total taken leaves for each leave type
 $leaveUsage = [];
-foreach ($leaveTypes as $leaveType) {
-    $totalLeave = $leaveType->max_leave; // Available leave
+
+for($leave_type = 0; $leave_type < $total_leaves_of_org->count(); $leave_type++){
+
+    $leave_single_data = [];
+
+    array_push($leave_single_data,$total_leaves_of_org[$leave_type]->leave_type);
+
+    if($emp_details->employee_type == 1){
+
+        $leave_restriction = DB::table('leave_type_restrictions')
+        ->select('max_leave')
+        ->where('leave_type_id','=',$total_leaves_of_org[$leave_type]->leave_type_id)->first();
+        array_push($leave_single_data,$leave_restriction->max_leave);
+        // $percentage = $takenLeave*100/$leave_restriction->max_leave;
+
+    }elseif($emp_details->employee_type == 2){
+
+        $leave_res = DB::table('leave_type_restrictions')
+        ->select('id')
+        ->where('leave_type_id','=',$total_leaves_of_org[$leave_type]->leave_type_id)->first();
+
+        $leave_restrictionforemp = DB::table('leave_type_emp_categories')
+        ->select('leave_count')
+        ->where('leave_restriction_id',$leave_res->id)->first();
+        array_push($leave_single_data,$leave_restrictionforemp->leave_count);
+        // $percentage = $takenLeave*100/$leave_restrictionforemp->leave_count;
+
+    }
+
+  
+
+    $leaveCountArray = DB::table('leave_applies')
+    ->where('leave_type_id',$total_leaves_of_org[$leave_type]->leave_type_id)
+    ->where('user_id',$user->id)
+    ->where('leave_approve_status','Approved')
+    ->get();
+
     $takenLeave = 0;
 
-    // Full-day leave calculation
-    foreach ($appliedLeaves as $leave) {
-        if ($leave->leave_type_id == $leaveType->id) {
-            $leaveDuration = Carbon::parse($leave->start_date)->diffInDays(Carbon::parse($leave->end_date)) + 1;
-            $takenLeave += $leaveDuration;
-        }
+for ($i = 0; $i < $leaveCountArray->count(); $i++) {
+
+    if ($leaveCountArray[$i]->half_day == 'First Half' || $leaveCountArray[$i]->half_day == 'Second Half') {
+
+        $leaveCount = 0.5; // Half-day leave
+
+    } elseif($leaveCountArray[$i]->half_day == 'Full Day') {
+
+        $leaveCount = 1;
+    
+    }else{
+
+            // Calculate the difference in days
+            $startDate = new \DateTime($leaveCountArray[$i]->start_date);
+            $endDate = new \DateTime($leaveCountArray[$i]->end_date);
+    
+            $dateDiff = $startDate->diff($endDate);
+    
+    
+            // Extract the total days from the DateInterval object and add 1 (if end_date is the same day)
+            $leaveCount = $dateDiff->days;
+
     }
 
-    // Half-day leave calculation
-    $halfDayLeaves = DB::table('leave_applies')
-        ->where('user_id', $user->id)
-        ->where('leave_type_id', $leaveType->id)
-        ->whereIn('half_day', ['first half', 'second half'])  // Checking for first or second half
-        ->where('leave_approve_status', 'APPROVED')  // Only approved half-day leaves
-        ->count();  // Count the number of half-day leaves
-
-    // Subtract 0.5 for each half-day leave from the total taken leave
-    $takenLeave -= $halfDayLeaves * 0.5;
-
-    // Apply restrictions for carry forward and leave encashment (optional, depending on your requirements)
-    $noCarryForward = $leaveType->no_carry_forward; // No carry forward flag
-    $noLeaveEncash = $leaveType->no_leave_encash;  // No leave encashment flag
-
-    // Calculate the remaining leaves
-    $remainingLeave = max(0, $totalLeave - $takenLeave); // Ensure no negative remaining leaves
-
-    // Calculate the percentage of leave used
-    $percentage = min(100, ($takenLeave / $totalLeave) * 100); 
-
-    // Directly determine the progress bar color in the controller
-    if ($percentage >= 80) {
-        $progressColor = 'red'; // 80% or more
-    } elseif ($percentage >= 50) {
-        $progressColor = 'orange'; // Between 50% and 80%
-    } else {
-        $progressColor = 'green'; // Less than 50%
-    }
-
-    // Store the data for display
-    $leaveUsage[] = [
-        'leaveType' => $leaveType->name,
-        'maxLeave' => $totalLeave,
-        'takenLeave' => $takenLeave,
-        'remainingLeave' => $remainingLeave,
-        'percentage' => $percentage,
-        'progressColor' => $progressColor, // The color is directly calculated here
-        'noCarryForward' => $noCarryForward,
-        'noLeaveEncash' => $noLeaveEncash,
-    ];
+    // Add the leave count to the total taken leave
+    $takenLeave += $leaveCount;
 }
+
+//calculate percentage
+
+// $leave_restriction->max_leave*x/100=$takenLeave;
+
+if($emp_details->employee_type == 1){
+
+    $percentage = $takenLeave*100/$leave_restriction->max_leave;
+
+    $roundPer = round($percentage, 2);
+
+}elseif($emp_details->employee_type == 2){
+
+
+    $percentage = $takenLeave*100/$leave_restrictionforemp->leave_count;
+
+    $roundPer = round($percentage, 2);
+
+}
+
+
+//pushing Max leave of this leave type
+    // array_push($leave_single_data,$leave_restriction->max_leave);
+//pushing taken leave of this leave type
+    array_push($leave_single_data,$takenLeave);
+//pushing percentage
+    array_push($leave_single_data,$roundPer);
+//pushing sub array to main array
+    array_push($leaveUsage,$leave_single_data);
+
+}
+// $emp_details = DB::table('emp_details')->where('user_id',$loginUserInfo->id)->get();
+
+// dd($leaveUsage);
+
+
+// foreach ($leaveTypes as $leaveType) {
+//     $totalLeave = $leaveType->max_leave; // Available leave
+//     $takenLeave = 0;
+
+//     // Full-day leave calculation
+//     foreach ($appliedLeaves as $leave) {
+//         if ($leave->leave_type_id == $leaveType->id) {
+//             $leaveDuration = Carbon::parse($leave->start_date)->diffInDays(Carbon::parse($leave->end_date)) + 1;
+//             $takenLeave += $leaveDuration;
+//         }
+//     }
+
+//     dd($takenLeave);
+
+//     // Half-day leave calculation
+//     $halfDayLeaves = DB::table('leave_applies')
+//         ->where('user_id', $user->id)
+//         ->where('leave_type_id', $leaveType->id)
+//         ->whereIn('half_day', ['first half', 'second half'])  // Checking for first or second half
+//         ->where('leave_approve_status', 'APPROVED')  // Only approved half-day leaves
+//         ->count();  // Count the number of half-day leaves
+
+//     // Subtract 0.5 for each half-day leave from the total taken leave
+//     $takenLeave -= $halfDayLeaves * 0.5;
+
+//     // Apply restrictions for carry forward and leave encashment (optional, depending on your requirements)
+//     $noCarryForward = $leaveType->no_carry_forward; // No carry forward flag
+//     $noLeaveEncash = $leaveType->no_leave_encash;  // No leave encashment flag
+
+//     // Calculate the remaining leaves
+//     $remainingLeave = max(0, $totalLeave - $takenLeave); // Ensure no negative remaining leaves
+
+//     // Calculate the percentage of leave used
+//     $percentage = min(100, ($takenLeave / $totalLeave) * 100); 
+
+//     // Directly determine the progress bar color in the controller
+//     if ($percentage >= 80) {
+//         $progressColor = 'red'; // 80% or more
+//     } elseif ($percentage >= 50) {
+//         $progressColor = 'orange'; // Between 50% and 80%
+//     } else {
+//         $progressColor = 'green'; // Less than 50%
+//     }
+
+//     // Store the data for display
+//     $leaveUsage[] = [
+//         'leaveType' => $leaveType->name,
+//         'maxLeave' => $totalLeave,
+//         'takenLeave' => $takenLeave,
+//         'remainingLeave' => $remainingLeave,
+//         'percentage' => $percentage,
+//         'progressColor' => $progressColor, // The color is directly calculated here
+//         'noCarryForward' => $noCarryForward,
+//         'noLeaveEncash' => $noLeaveEncash,
+//     ];
+// }
     // Fetch upcoming and today's birthdays
     $currentDate = Carbon::now();
     $currentMonth = $currentDate->month;
@@ -197,7 +313,7 @@ for ($teamMamber = 0; $teamMamber < $dataOfteamMambers->count(); $teamMamber++) 
         // dd($anniversaries);
 
     // Return a view with the logs and additional data
-    return view('user_view.homepage', compact('title','logs', 'thoughtOfTheDay', 'newsAndEvents', 'upcomingBirthdays','todayBirthdays', 'anniversaries', 'toDoList', 'currentMonth', 'currentDay', 'leaveUsage', 'appliedLeaves','leaveLists'));
+    return view('user_view.homepage', compact('title','logs', 'thoughtOfTheDay', 'newsAndEvents', 'upcomingBirthdays','todayBirthdays', 'anniversaries', 'toDoList', 'currentMonth', 'currentDay', 'leaveUsage','leaveLists'));
 }
 
     

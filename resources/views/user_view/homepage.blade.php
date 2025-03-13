@@ -7,6 +7,7 @@ error_reporting(0);
 // dd($permission_array);
 // dd($todayBirthdays);
 // dd($leaveLists);
+// dd($leaveUsage);
 ?>
 
 <head>
@@ -19,6 +20,8 @@ error_reporting(0);
     <link rel="stylesheet" href="{{ asset('/user_end/css/homepage.css') }}">
     <link rel="stylesheet" href="{{ asset('/user_end/css/header.css') }}">
     <link rel="stylesheet" href="{{ asset('errors/error.css') }}">
+  
+
     <!-- Add Flatpickr CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 </head>
@@ -502,34 +505,32 @@ error_reporting(0);
               
             </ul>
         </section> -->
+        {{-- 0 => array:4 [▼
+        0 => "General Leave Policy"
+        1 => "24"
+        2 => 10.5
+        3 => 43.75
+      ] --}}
         <section class="leaves">
-    <h3>Leave Types</h3>
-    <ul>
-        @foreach($leaveUsage as $leave)
-            <li>
-                <strong>{{ $leave['leaveType'] }}</strong>
-                <div class="progress-bar-container">
-                    <div class="progress-bar" style="width: {{ $leave['percentage'] }}%; background-color: {{ $leave['progressColor'] }};"></div>
-                </div>
-                <p>{{ $leave['takenLeave'] }} / {{ $leave['maxLeave'] }} days taken ({{ round($leave['percentage'], 2) }}% used)</p>
-                <!-- <p><strong>Remaining Leaves:</strong> {{ $leave['remainingLeave'] }} days</p> -->
+            <h3>Leave Types</h3>
+            <ul>
+                @foreach($leaveUsage as $leave)
+                    <li>
+                        <strong>{{ $leave[0] }}</strong> <!-- The first item is the leave type name -->
+                        <div class="progress-bar-container">
+                            <div class="progress-bar" style="width: {{ $leave[3] }}%; background-color: 
+                                @if($leave[3] <= 50) #4caf50
+                                @elseif($leave[3] <= 75) #ff9800
+                                @else #f44336
+                                @endif;"></div> <!-- This will set the color based on the percentage -->
+                        </div>
+                        <p>{{ $leave[1] }} / {{ $leave[2] }} days taken ({{ round($leave[3], 2) }}% used)</p>
+                    </li>
+                @endforeach
+            </ul>
+        </section>
 
-                <!-- If applicable, show no carry forward and no leave encashment details -->
-                <!-- @if($leave['noCarryForward'])
-                    <p><strong>No Carry Forward:</strong> Yes</p>
-                @else
-                    <p><strong>No Carry Forward:</strong> No</p>
-                @endif -->
-
-                <!-- @if($leave['noLeaveEncash'])
-                    <p><strong>No Leave Encashment:</strong> Yes</p>
-                @else
-                    <p><strong>No Leave Encashment:</strong> No</p>
-                @endif -->
-            </li>
-        @endforeach
-    </ul>
-</section>
+        
 
 
 <style>
