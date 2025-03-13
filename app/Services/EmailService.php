@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\DB;
 // use App\Mail\YourMailable;
 use App\Mail\UserRegistrationMail;
 use App\Mail\UserForgotPassword;
+use App\Mail\UserAppliedLeave;
 use Illuminate\Support\Facades\Auth;
 
 class EmailService
@@ -61,7 +62,14 @@ class EmailService
                     Mail::to($data['username'])
                     ->send(new UserForgotPassword($subject, $data));  // Pass the subject and data to your mailable
 
-                }else{
+                }elseif($mail_flag == "applied_leave")
+                {
+
+                    Mail::to($data['username'])
+                    ->send(new UserAppliedLeave($subject, $data));  // Pass the subject and data to your mailable
+
+                }
+                else{
 
                     return response()->json(['error' => 'Mail Not Sent.'], 404); 
 
