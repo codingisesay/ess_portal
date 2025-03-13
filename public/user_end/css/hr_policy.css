@@ -76,7 +76,7 @@ body {
 .main-container {
     display: flex;
     width: 100%;
-    max-width: 1200px;
+    /* max-width: 1200px; */
     margin-top: 20px;
     height: 100vh;
     margin: 25px;
@@ -91,7 +91,7 @@ body {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    height: 949px;
+    height: auto;
     border-radius: 30px;
     Top: 243px;
     Left: 37px;
