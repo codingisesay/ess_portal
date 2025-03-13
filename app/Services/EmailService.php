@@ -55,18 +55,18 @@ class EmailService
                 if($mail_flag == "registration_mail"){
 
                     Mail::to($data['username'])
-                    ->send(new UserRegistrationMail($subject, $data));  // Pass the subject and data to your mailable
+                    ->queue(new UserRegistrationMail($subject, $data));  // Pass the subject and data to your mailable
 
                 }elseif($mail_flag == "forgot_password_link"){
 
                     Mail::to($data['username'])
-                    ->send(new UserForgotPassword($subject, $data));  // Pass the subject and data to your mailable
+                    ->queue(new UserForgotPassword($subject, $data));  // Pass the subject and data to your mailable
 
                 }elseif($mail_flag == "applied_leave")
                 {
 
                     Mail::to($data['username'])
-                    ->send(new UserAppliedLeave($subject, $data));  // Pass the subject and data to your mailable
+                    ->queue(new UserAppliedLeave($subject, $data));  // Pass the subject and data to your mailable
 
                 }
                 else{
