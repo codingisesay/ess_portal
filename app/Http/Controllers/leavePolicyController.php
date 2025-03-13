@@ -9,9 +9,22 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 // use Carbon\Carbon;
+use App\Services\EmailService;
+use App\Models\User;
+use App\Mail\UserRegistrationMail;
+
+
 
 class leavePolicyController extends Controller
 {
+
+    protected $emailService;
+
+    public function __construct(EmailService $emailService)
+    {
+        $this->emailService = $emailService;
+    }
+
     //superadmin end
     public function loadPolicyTimeSlot(){
         $id = Auth::guard('superadmin')->user()->id;
@@ -413,34 +426,6 @@ class leavePolicyController extends Controller
         ->where('leave_approve_status','Approved')
         ->get();
 
-        //  dd($leaveCountArray->count());
-
-      
-
-        // $takenLeave = 0;
-        
-        // for ($i = 0; $i < $leaveCountArray->count(); $i++) {
-        //     // Convert start_date and end_date to Carbon instances if they are not already
-        //     $startDate = Carbon::parse($leaveCountArray[$i]->start_date);
-        //     $endDate = Carbon::parse($leaveCountArray[$i]->end_date);
-        
-        //     // Check if the leave is a full day or half day
-        //     if ($leaveCountArray[$i]->half_day == null) {
-        //         $leaveCount = 0.5; // Half-day leave
-        //     } else {
-        //         // Calculate the difference in days
-        //         $dateDiff = $startDate->diff($endDate);
-        
-        //         // Extract the total days from the DateInterval object and add 1 (if end_date is the same day)
-        //         $leaveCount = $dateDiff->days + 1;
-        //     }
-        
-        //     // Add the leave count to the total taken leave
-        //     $takenLeave += $leaveCount;
-        // }
-        
-        // dd($takenLeave);
-
 
 
 $takenLeave = 0;
@@ -525,6 +510,13 @@ for ($i = 0; $i < $leaveCountArray->count(); $i++) {
         $loginUserInfo = Auth::user();
 
         try {
+
+            $loginUserInfo = Auth::user();
+
+            $leave_type = DB::table('leave_types')
+            ->select('name')
+            ->where('id','=',$data['leave_type'])
+            ->first();
             // Try to insert or update the record
             $status = DB::table('leave_applies')->insert([
                 'leave_type_id' => $data['leave_type'],
@@ -540,6 +532,22 @@ for ($i = 0; $i < $leaveCountArray->count(); $i++) {
             ]);
 
             if($status){
+
+                $subject = 'Leave Application Submitted '.$leave_type->name;
+                $org_id = $loginUserInfo->organisation_id;
+                $mail_flag = "applied_leave";
+
+                $data = [
+                    'username' => $loginUserInfo->email,
+                    'name' => $loginUserInfo->name,
+                    'leave_type' => $leave_type->name,
+                    'start_date' => $data['start_date'],
+                    'end_date' => $data['end_date'],
+                ];
+          
+                // Send the registration email
+            //    Mail::to($user_create->email)->send(new UserRegistrationMail($user_create->email, $request->userpassword));
+               $this->emailService->sendEmailWithOrgConfig($org_id,$subject,$mail_flag,$data);
 
                 return redirect()->route('leave_dashboard')->with('success', 'You have applied leave successfully!');
     
