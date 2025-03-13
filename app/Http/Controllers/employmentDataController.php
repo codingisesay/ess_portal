@@ -68,7 +68,7 @@ class employmentDataController extends Controller
         $empEducation = emp_education::where('user_id', $userId)->get();
         $empPreviousEmployments = emp_previous_employment::where('user_id', $userId)->get();
         $empFamilyDetails = emp_family_details::where('user_id', $userId)->get();
-
+// dd($empEducation);
         return view('user_view.employment_data', compact(
             'userDetails',
             'empEducation',

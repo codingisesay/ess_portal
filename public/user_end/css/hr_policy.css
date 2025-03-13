@@ -91,7 +91,7 @@ body {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    height: auto;
+    height: fit-content;
     border-radius: 30px;
     Top: 243px;
     Left: 37px;

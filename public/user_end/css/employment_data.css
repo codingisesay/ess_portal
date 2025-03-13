@@ -290,7 +290,7 @@ a:hover {
 
 .left1 b {
     /* width: 133px !important; */
-    width: 111px !important;
+    width: 173px !important;
     margin-top: 7px;
 }
 
@@ -339,6 +339,32 @@ tr:nth-child(even) {
     padding-top: 5px;
     margin-left: 10px;
 }
+
+.custom-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+    table-layout: auto;
+}
+
+.custom-table th,
+.custom-table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: center;
+    white-space: nowrap;
+}
+
+.custom-table th {
+    background-color: #E0AFA0;
+    font-weight: bold;
+}
+
+.custom-table tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+
 
 .emergency-contact-section {
     width: 100%;
