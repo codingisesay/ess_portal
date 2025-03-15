@@ -75,7 +75,7 @@
                 <div class="left1"><p>Religion</p> <b>{{ ucfirst($userDetails->religion ?? 'N/A') }}</b></div>
                 <div class="left1"><p>Anniversary Date</p> <b>{{ $userDetails->anniversary_date ? \Carbon\Carbon::parse($userDetails->anniversary_date)->format('d-m-Y') : 'N/A' }}</b></div>
             </div> -->
-            <div class="section">
+            <div class="section custom-table">
     <h2>Personal Information</h2>
     <table>
         <tr>
@@ -110,7 +110,7 @@
 </div>
 
 
-<div class="section">
+<div class="section custom-table">
     <table>
         <!-- Header row with h2 centered across the table -->
         <h2> Employee Details</h2>
@@ -138,7 +138,7 @@
     </table>
 </div>
 
-<div class="section">
+<div class="section custom-table">
     <table>
         <!-- Header row with h2 centered across the table -->
          <h2>Salary Bank Details</h2>
@@ -166,7 +166,7 @@
     </table>
 </div>
 
-<div class="section">
+<div class="section custom-table">
     <table class="custom-table">
         <!-- Header row with h2 centered across the table -->
          <h2>Passport & Visa</h2>
@@ -202,7 +202,7 @@
     </table>
 </div>
 
-<div class="section">
+<div class="section custom-table">
     <table>
         <!-- Header row with h2 centered across the table -->
          <h2>Welfare Benefits</h2>
