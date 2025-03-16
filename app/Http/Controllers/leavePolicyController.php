@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Storage;
 use App\Services\EmailService;
 use App\Models\User;
 use App\Mail\UserRegistrationMail;
+use Carbon\Carbon;
 
 
 
@@ -277,124 +278,200 @@ class leavePolicyController extends Controller
 
     //userend
 
-    // public function showLeaveDashboard(){
-        
-    //     return view('user_view.leave_dashboard');
-    // }
     public function showLeaveDashboard()
     {
 
         $title = "Leave & Attendance";
+        $user = Auth::user();
+
         // Fetch all leave types from the 'leave_types' table
-        $leaveTypes = DB::table('leave_types')->get();  // Get all leave types from the 'leave_types' table
+        $leaveTypes = DB::table('leave_types')
+                  // ->join('leave_types', 'leave_type_restrictions.leave_type_id', '=', 'leave_types.id')
+                  ->join('leave_cycles', 'leave_types.leave_cycle_id','=', 'leave_cycles.id')
+                  ->select('leave_types.name as leave_type','leave_types.id as leave_type_id') // Select all columns from both tables
+                  ->where('leave_cycles.organisation_id', '=', $user->organisation_id)
+                  ->where('leave_cycles.status', '=', 'Active')
+                  ->where('leave_types.status', '=', 'Active')
+                  ->get();
+
+                //   dd($leaveTypes);
     
-        // Initialize an array to store the leave summary data
-        $leaveSummary = [];
-        
-        $userId = auth()->id();  // Get the currently logged-in user's ID
-        
         // Calculate total working hours for the current user
-        $workingHoursData = $this->calculateWorkingHours($userId); // Get working hours data
+        $workingHoursData = $this->calculateWorkingHours($user->id); // Get working hours data
     
         // Fetch applied leaves for the logged-in user (including approved, pending, and rejected)
         $appliedLeaves = DB::table('leave_applies')
-            ->where('user_id', $userId)
-            ->get();  // Get all applied leaves for the logged-in user
+            ->where('user_id', $user->id)
+            ->get(); 
+
     // dd($appliedLeaves);
+
+    $emp_details = DB::table('emp_details')->where('user_id',$user->id)->first();
+
+    $leaveSummary = [];
         foreach ($leaveTypes as $leaveType) {
-            // Get the max leave info from the 'leave_type_restrictions' table
+
+            $leave_single_data['leave_type'] = $leaveType->leave_type;
+
             $restriction = DB::table('leave_type_restrictions')
-                ->where('leave_type_id', $leaveType->id)
-                ->first();  // Get the restriction data for the current leave type
-    
-            $maxLeave = $restriction ? $restriction->max_leave : 0;
-            $no_carry_forward = $restriction ? $restriction->no_carry_forward : 0;
-            $no_leave_encash = $restriction ? $restriction->no_leave_encash : 0;
-    
-            // Initialize takenLeaves to 0
-            $takenLeaves = 0;
-    
-            // Full-day leave calculation
-            $takenLeaves += DB::table('leave_applies')
-                ->where('user_id', $userId)
-                ->where('leave_type_id', $leaveType->id)
-                ->where('leave_approve_status', 'APPROVED')  // Only approved leaves
-                ->where(function ($query) {
-                    $query->whereDate('end_date', '>=', now())
-                        ->orWhereDate('start_date', '<=', now());
-                })
-                ->sum(DB::raw('DATEDIFF(end_date, start_date) + 1'));  // Full-day leave calculation (inclusive of end date)
-    
-            // Half-day leave calculation
-            $halfDayLeaves = DB::table('leave_applies')
-                ->where('user_id', $userId)
-                ->where('leave_type_id', $leaveType->id)
-                ->whereIn('half_day', ['first half', 'second half'])  // Checking for first or second half
-                ->where('leave_approve_status', 'APPROVED')  // Only approved half-day leaves
-                ->count();  // Count the number of half-day leaves
-    
-            // Subtract 0.5 for each half-day leave from the total
-            $takenLeaves -= $halfDayLeaves * 0.5;
-    
-            $remainingLeaves = $maxLeave - $takenLeaves;
-    
-            // Store leave data in the summary array
-            $leaveSummary[] = [
-                'leave_type' => $leaveType->name,
+                ->where('leave_type_id', $leaveType->leave_type_id)
+                ->first();
+            
+            if($emp_details->employee_type == 1){
+
+                $maxLeave = $restriction->max_leave;
+
+                $leave_single_data['leave_type'] = $maxLeave;
+
+            }elseif($emp_details->employee_type == 2){
+
+                $leave_res = DB::table('leave_type_restrictions')
+                ->select('id')
+                ->where('leave_type_id','=',$leaveType->leave_type_id)->first();
+        
+                $leave_restrictionforemp = DB::table('leave_type_emp_categories')
+                ->select('leave_count')
+                ->where('leave_restriction_id',$leave_res->id)->first();
+
+                $maxLeave = $leave_restrictionforemp->leave_count;
+
+                $leave_single_data['leave_type'] = $maxLeave;
+
+
+            }
+            //carry Forward
+            $no_carry_forward = $restriction->no_carry_forward;
+            $leave_single_data['no_carry_forward'] = $no_carry_forward;
+
+            //Leave Encash
+            $no_leave_encash = $restriction->no_leave_encash;
+            $leave_single_data['no_leave_encash'] = $no_leave_encash;
+
+
+            $leaveCountArray = DB::table('leave_applies')
+            ->where('leave_type_id',$leaveType->leave_type_id)
+            ->where('user_id',$user->id)
+            ->where('leave_approve_status','Approved')
+            ->get();
+        
+            $takenLeave = 0;
+        
+        for ($i = 0; $i < $leaveCountArray->count(); $i++) {
+        
+            if ($leaveCountArray[$i]->half_day == 'First Half' || $leaveCountArray[$i]->half_day == 'Second Half') {
+        
+                $leaveCount = 0.5; // Half-day leave
+        
+            } elseif($leaveCountArray[$i]->half_day == 'Full Day') {
+        
+                $leaveCount = 1;
+            
+            }else{
+        
+                    // Calculate the difference in days
+                    $startDate = new \DateTime($leaveCountArray[$i]->start_date);
+                    $endDate = new \DateTime($leaveCountArray[$i]->end_date);
+            
+                    $dateDiff = $startDate->diff($endDate);
+                    // Extract the total days from the DateInterval object and add 1 (if end_date is the same day)
+                    $leaveCount = $dateDiff->days;
+        
+            }
+        
+            // Add the leave count to the total taken leave
+            $takenLeave += $leaveCount;
+        }
+
+        $leave_single_data['consumed_leaves'] = $takenLeave;
+
+        $remainingLeaves = $maxLeave - $takenLeave;
+          
+            $leave_single_data = [
+                'leave_type' => $leaveType->leave_type,
                 'total_leaves' => $maxLeave,
                 'no_carry_forward' => $no_carry_forward,
                 'no_leave_encash' => $no_leave_encash,
-                'consumed_leaves' => $takenLeaves,
+                'consumed_leaves' => $takenLeave,
                 'remaining_leaves' => $remainingLeaves,
             ];
+
+          
+    
+          array_push($leaveSummary,$leave_single_data); 
         }
+
+        // dd($leaveSummary);
+
+        //Load upcoming holidays
+
+         // Fetch upcoming and today's birthdays
+         $currentDate = Carbon::now();
+         $currentMonth = $currentDate->month;
+         $currentDay = $currentDate->day;
+         
+         $holidays_upcoming = DB::table('calendra_masters')
+             ->select('date', 'holiday_name', 'day')
+             ->where('holiday', '=', 'Yes')
+             ->whereMonth('date', '=', $currentMonth) // Filter by the current month
+             ->whereDay('date', '>=', $currentDay)   // Filter by day of the month in 'date'
+             ->get();
+
+             $holidays_upcoming = $holidays_upcoming->map(function ($holiday) {
+                // Format the date to '19-March'
+                $holiday->formatted_date = Carbon::parse($holiday->date)->format('d-F'); 
+                return $holiday;
+            });
+         
+        //  dd($holidays_upcoming);
+
+
+
     
         // Pass the leave summary data, applied leaves, and total working hours to the view
-        return view('user_view.leave_dashboard', compact('leaveSummary', 'workingHoursData', 'appliedLeaves','title'));
+        return view('user_view.leave_dashboard', compact('leaveSummary', 'workingHoursData', 'appliedLeaves','title','holidays_upcoming'));
     }
-    
-    
-    /**
-     * Calculate total working hours for the logged-in user
-     */
+ 
+
     private function calculateWorkingHours($userId)
-    {
-        // Fetch login logs for the user
-        $loginLogs = DB::table('login_logs')
-            ->where('user_id', $userId)
-            ->whereNotNull('logout_time')  // Only consider logs with valid logout times
-            ->get();
-    
-        // Arrays to store dates and calculated hours
-        $workingHours = [];
-        $totalHours = 0;
-    
-        foreach ($loginLogs as $log) {
-            // Calculate the difference between login and logout times
-            $loginTime = new \Carbon\Carbon($log->login_time);
-            $logoutTime = new \Carbon\Carbon($log->logout_time);
-    
-            // Calculate the total working hours
-            $workedHours = $logoutTime->diffInHours($loginTime) + ($logoutTime->minute / 60 - $loginTime->minute / 60);
-    
-            // Add to the total hours worked
-            $totalHours += $workedHours;
-    
-            // Store individual working hours data
-            $workingHours[] = [
-                'date' => $log->login_date,
-                'worked_hours' => $workedHours
-            ];
-        }
-    
-        // Calculate average working hours
-        $averageWorkingHours = count($workingHours) > 0 ? $totalHours / count($workingHours) : 0;
-    
-        return [
-            'working_hours' => $workingHours,
-            'average_working_hours' => $averageWorkingHours
+{
+    $loginLogs = DB::table('login_logs')
+    ->where('user_id', $userId)
+    ->whereNotNull('logout_time')  // Only consider logs with valid logout times
+    ->orderBy('login_date', 'asc')  // Sort by login_time in descending order
+    ->take(7)  // Get only the last 7 records
+    ->get();
+
+    // Arrays to store dates and calculated hours
+    $workingHours = [];
+    $totalHours = 0;
+
+    foreach ($loginLogs as $log) {
+        // Calculate the difference between login and logout times
+        $loginTime = new \Carbon\Carbon($log->login_time);
+        $logoutTime = new \Carbon\Carbon($log->logout_time);
+
+        // Calculate the total working hours
+        $workedHours = $logoutTime->diffInHours($loginTime) + ($logoutTime->minute / 60 - $loginTime->minute / 60);
+
+        // Add to the total hours worked
+        $totalHours += $workedHours;
+
+        // Store individual working hours data with the formatted date (dd:mm:yy)
+        $workingHours[] = [
+            'date' => $loginTime->format('d/m/y'), // Format the date as dd:mm:yy
+            'worked_hours' => $workedHours
         ];
     }
+
+    // Calculate average working hours
+    $averageWorkingHours = count($workingHours) > 0 ? $totalHours / count($workingHours) : 0;
+
+    return [
+        'working_hours' => $workingHours,
+        'average_working_hours' => $averageWorkingHours
+    ];
+}
+
     
     
     public function showLeaveRequest(){
@@ -475,7 +552,6 @@ for ($i = 0; $i < $leaveCountArray->count(); $i++) {
 
         // dd($emp_details[0]->employee_type);
   
-   
 
     return response()->json([
         'remaining_leave' => $remaning_leave,  // This is the data you will send back to the front-end
@@ -545,7 +621,6 @@ for ($i = 0; $i < $leaveCountArray->count(); $i++) {
                     'end_date' => $data['end_date'],
                 ];
           
-                // Send the registration email
             //    Mail::to($user_create->email)->send(new UserRegistrationMail($user_create->email, $request->userpassword));
                $this->emailService->sendEmailWithOrgConfig($org_id,$subject,$mail_flag,$data);
 
