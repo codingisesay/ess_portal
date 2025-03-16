@@ -434,12 +434,20 @@ class leavePolicyController extends Controller
 
     private function calculateWorkingHours($userId)
 {
+    // $loginLogs = DB::table('login_logs')
+    // ->where('user_id', $userId)
+    // ->whereNotNull('logout_time')  // Only consider logs with valid logout times
+    // ->orderBy('login_date', 'asc')  // Sort by login_time in descending order
+    // ->take(7)  // Get only the last 7 records
+    // ->get();
+
     $loginLogs = DB::table('login_logs')
     ->where('user_id', $userId)
     ->whereNotNull('logout_time')  // Only consider logs with valid logout times
-    ->orderBy('login_date', 'asc')  // Sort by login_time in descending order
+    ->orderBy('login_date', 'desc')  // Sort by login_date in descending order (latest first)
     ->take(7)  // Get only the last 7 records
-    ->get();
+    ->get()
+    ->reverse();
 
     // Arrays to store dates and calculated hours
     $workingHours = [];
