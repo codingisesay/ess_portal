@@ -1,5 +1,41 @@
 @extends('user_view.header')
 @section('content')
+<?php
+
+function renderEmployeeNode($employee) {
+    $hasSubordinates = !empty($employee->subordinates);
+    ob_start();
+    ?>
+    <li>
+        <?php if ($hasSubordinates): ?>
+            <button class="toggle-button" data-user-id="<?= $employee->user_id ?>" onclick="toggleChildren(this)">+</button>
+        <?php endif; ?>
+        <span onclick="displayEmployeeDetails(
+            '<?= $employee->user_id ?>',
+            '<?= $employee->employee_name ?>',
+            '<?= $employee->designation ?>',
+            '<?= $employee->employee_no ?>',
+            '<?= $employee->reporting_manager_name ?>',
+            '<?= $employee->department ?>',
+            '<?= $employee->per_city ?>',
+            '<?= $employee->offical_phone_number ?>',
+            '<?= $employee->offical_email_address ?>'
+        )">
+            <?= $employee->employee_name ?>
+        </span>
+        <?php if ($hasSubordinates): ?>
+            <ul data-manager-id="<?= $employee->user_id ?>" style="display: none;">
+                <?php foreach ($employee->subordinates as $subordinate) {
+                    echo renderEmployeeNode($subordinate);
+                } ?>
+            </ul>
+        <?php endif; ?>
+    </li>
+    <?php
+    return ob_get_clean();
+}
+
+?>
 <?php 
 error_reporting(0);
 ?>
@@ -29,104 +65,18 @@ error_reporting(0);
     </div>
     <div class="search-bar-container">
         <input type="text" id="search-bar" placeholder="Search here..." onkeyup="highlightEmployee()">
-        <span class="search-icon"><img src="../resource/image/common/search (1).png" alt="Search Icon"></span>
+        <span class="search-icon"> <img src="{{ asset('user_end/images/search (2) 3.png') }}" alt="Search Icon"></span>
     </div>
 </div>
 
 <div class="container">  
-    <div class="employee-list">  
-        <ul class="tree">  
-            @foreach ($employees as $employee)
-            @if ($employee->reporting_manager == $noneUserId)  <!-- Check for the top-level managers dynamically -->
-                                <li>
-                                    @php
-                                        $hasSubordinates = false;
-                                        foreach ($employees as $subordinate) {
-                                            if ($subordinate->reporting_manager == $employee->user_id) {
-                                                $hasSubordinates = true;
-                                                break;
-                                            }
-                                        }
-                                    @endphp
-                        @if ($hasSubordinates)
-                            <button class="toggle-button" data-user-id="{{ $employee->user_id }}" onclick="toggleChildren(this)">+</button>
-                        @endif
-                        <span onclick="displayEmployeeDetails(
-                            '{{ $employee->user_id }}',
-                            '{{ $employee->employee_name }}',
-                            '{{ $employee->designation }}',
-                            '{{ $employee->employee_no }}',
-                            '{{ $employee->reporting_manager_name }}',
-                            '{{ $employee->department }}',
-                            '{{ $employee->per_city }}',
-                            '{{ $employee->offical_phone_number }}',
-                            '{{ $employee->offical_email_address }}'
-                        )">
-                            {{ $employee->employee_name }}
-                        </span>
-                        @if ($hasSubordinates)
-                            <ul data-manager-id="{{ $employee->user_id }}" style="display: none;">
-                                @foreach ($employees as $subordinate)
-                                    @if ($subordinate->reporting_manager == $employee->user_id)
-                                        <li>
-                                            @php
-                                                $hasSubSubordinates = false;
-                                                foreach ($employees as $subSubordinate) {
-                                                    if ($subSubordinate->reporting_manager == $subordinate->user_id) {
-                                                        $hasSubSubordinates = true;
-                                                        break;
-                                                    }
-                                                }
-                                            @endphp
-                                            @if ($hasSubSubordinates)
-                                                <button class="toggle-button" data-user-id="{{ $subordinate->user_id }}" onclick="toggleChildren(this)">+</button>
-                                            @endif
-                                            <span onclick="displayEmployeeDetails(
-                                                '{{ $subordinate->user_id }}',
-                                                '{{ $subordinate->employee_name }}',
-                                                '{{ $subordinate->designation }}',
-                                                '{{ $subordinate->employee_no }}',
-                                                '{{ $subordinate->reporting_manager_name }}',
-                                                '{{ $subordinate->department }}',
-                                                '{{ $subordinate->per_city }}',
-                                                '{{ $subordinate->offical_phone_number }}',
-                                                '{{ $subordinate->offical_email_address }}'
-                                            )">
-                                                {{ $subordinate->employee_name }}
-                                            </span>
-                                            @if ($hasSubSubordinates)
-                                                <ul data-manager-id="{{ $subordinate->user_id }}" style="display: none;">
-                                                    @foreach ($employees as $subSubordinate)
-                                                        @if ($subSubordinate->reporting_manager == $subordinate->user_id)
-                                                            <li>
-                                                                <span onclick="displayEmployeeDetails(
-                                                                    '{{ $subSubordinate->user_id }}',
-                                                                    '{{ $subSubordinate->employee_name }}',
-                                                                    '{{ $subSubordinate->designation }}',
-                                                                    '{{ $subSubordinate->employee_no }}',
-                                                                    '{{ $subSubordinate->reporting_manager_name }}',
-                                                                    '{{ $subSubordinate->department }}',
-                                                                    '{{ $subSubordinate->per_city }}',
-                                                                    '{{ $subSubordinate->offical_phone_number }}',
-                                                                    '{{ $subSubordinate->offical_email_address }}'
-                                                                )">
-                                                                    {{ $subSubordinate->employee_name }}
-                                                                </span>
-                                                            </li>
-                                                        @endif
-                                                    @endforeach
-                                                </ul>
-                                            @endif
-                                        </li>
-                                    @endif
-                                @endforeach
-                            </ul>
-                        @endif
-                    </li>
-                @endif
+<div class="employee-list">
+        <ul class="tree">
+            @foreach ($employeeHierarchy as $employee)
+                {!! renderEmployeeNode($employee) !!}
             @endforeach
-        </ul>  
-    </div>  
+        </ul>
+    </div>
     <div class="employee-details">  
         <div class="left">  
             <div class="heading">Employee Profile</div>  
@@ -153,14 +103,15 @@ error_reporting(0);
 
 <script>  
     // Function to toggle visibility of employee children  
-    function toggleChildren(button) {  
-        var userId = button.getAttribute('data-user-id');  
-        var children = document.querySelectorAll(`[data-manager-id='${userId}']`);  
-        children.forEach(child => {  
-            child.style.display = (child.style.display === 'none') ? 'block' : 'none';  
-        });  
-        button.innerText = (button.innerText === '-') ? '+' : '-';  
-    }  
+    function toggleChildren(button) {
+        const userId = button.getAttribute('data-user-id');
+        const childrenContainer = document.querySelector(`ul[data-manager-id="${userId}"]`);
+        if (childrenContainer) {
+            const isVisible = childrenContainer.style.display === "block";
+            childrenContainer.style.display = isVisible ? "none" : "block";
+            button.textContent = isVisible ? "+" : "-";
+        }
+    }
 
     function displayEmployeeDetails(userId, name, designation, empNo, manager, department, city, phone, email) {  
         document.getElementById('emp-name').textContent = name;  
@@ -216,6 +167,7 @@ error_reporting(0);
         displayEmployeeDetails(empNo, empName, empDesignation, empNo, empManager, empDepartment, empCity, empPhone, empEmail);  
     };  
 </script>
+
 <style>
     /* CSS code omitted for brevity. Retain your original CSS here. */
     body {
@@ -506,5 +458,50 @@ error_reporting(0);
         font-size: 16px;
         margin-right: 5px;
     }
+    .tree {
+    list-style-type: none;
+    padding-left: 20px;
+}
+
+.tree li {
+    margin: 5px 0;
+    padding-left: 10px;
+    position: relative;
+}
+
+/* .tree li::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 10px;
+    height: 100%;
+    border-left: 1px solid #ccc;
+} */
+
+.tree li span {
+    cursor: pointer;
+    padding: 5px;
+    display: inline-block;
+    border-radius: 5px;
+    transition: background 0.3s;
+}
+
+.tree li span:hover {
+    background: #f4f4f4;
+}
+
+.toggle-button {
+    margin-right: 5px;
+    cursor: pointer;
+    background: white;
+    color: black;
+    border: none;
+    padding: 2px 6px;
+    border-radius: 50%;
+    font-weight: bold;
+}
+
 </style>
+
 @endsection
