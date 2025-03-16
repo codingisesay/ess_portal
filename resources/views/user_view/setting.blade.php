@@ -4,6 +4,7 @@
 <head>
     <link rel="stylesheet" href="{{ asset('/user_end/css/setting.css') }}">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+<link rel="stylesheet" href="{{ asset('errors/error.css') }}">
     <style>
   
         .content {
@@ -81,7 +82,8 @@ if(in_array(11, $permission_array)){
 
         <!-- Dropdown content (initially hidden) -->
         <div id="calendarMasterDropdown" class="dropdown-content" style="display: none;">
-            <form id="calendarMasterForm" method="POST" action="holidaybackend.php">
+            <form id="calendarMasterForm" method="POST" action="{{ route('create_calendra_master') }}">
+                @csrf
                 <!-- Year Selection -->
                 <div class="form-group">
                     <label for="year">Select Year:</label>

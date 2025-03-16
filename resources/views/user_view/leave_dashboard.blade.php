@@ -14,6 +14,7 @@
     
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+   
 </head>
 
 <body>
@@ -47,9 +48,7 @@
         <button class="apply-leave" onclick="redirectToForm()">Apply Leave</button>
     </div>
     <script>
-        // function redirectToForm() {
-        //     window.location.href = 'leave_request_app.php'; // Replace with the actual form URL
-        // }
+
 
         function redirectToForm() {
             window.location.href = '{{route('leave_request')}}'; // Replace with the actual form URL
@@ -139,7 +138,7 @@
 
             const colorPalette = [
                 ['#8a3366', '#ffc107'], // Two colors: Total Leaves and Consumed Leaves
-                ['#2B53C1', '#8A3366']
+                ['#2B53C1', '#ffc107']
             ];
 
             const container = $('.leave-summary-container');
@@ -186,14 +185,19 @@
                                 position: 'top',
                             },
                             tooltip: {
-                                callbacks: {
-                                    label: function (tooltipItem) {
-                                        const total = tooltipItem.dataset.data.reduce((a, b) => a + b, 0);
-                                        const percentage = Math.round((tooltipItem.raw / total) * 100);
-                                        return `${tooltipItem.label}: ${percentage}%`;
-                                    }
-                                }
-                            }
+    callbacks: {
+        label: function (tooltipItem) {
+            // tooltipItem.raw gives the value of the current slice
+            const total = tooltipItem.dataset.data[0] + tooltipItem.dataset.data[1];  // 24 + 0.5 = 24.5
+
+            // Calculate percentage
+            const percentage = Math.round((tooltipItem.raw / total) * 100);  
+
+            // Return both value and percentage
+            return `${tooltipItem.raw} (${percentage}%)`;  // Shows value and percentage
+        }
+    }
+}                
                         }
                     }
                 });
@@ -228,41 +232,45 @@
                 <div class="attendance">
                     <h1>Attendance Overview</h1>
                     <canvas id="newAttendanceChart" width="900px" height="550px"></canvas>
+
+
                     <script>
-                        const newCtx = document.getElementById('newAttendanceChart').getContext('2d');
-
-                        const attendanceData = {
-                            'April': { on_time: 20, late: 5, absent: 2 },
-                            'May': { on_time: 22, late: 3, absent: 1 },
-                            'June': { on_time: 18, late: 7, absent: 3 }
-                        };
-
-                        const months = ['April', 'May', 'June'];
-                        const onTimeData = months.map(month => attendanceData[month]?.on_time || 0);
-                        const lateData = months.map(month => attendanceData[month]?.late || 0);
-                        const absentData = months.map(month => attendanceData[month]?.absent || 0);
-
-                        const maxDays = Math.max(...Object.values(attendanceData).flatMap(obj =>
-                            [obj.on_time || 0, obj.late || 0, obj.absent || 0]
-                        ));
-
-                        new Chart(newCtx, {
-                            type: 'bar',
-                            data: {
-                                labels: months,
-                                datasets: [
-                                    { label: 'On Time', data: onTimeData, backgroundColor: '#8A3366' },
-                                    { label: 'Late', data: lateData, backgroundColor: '#E0AFA0' },
-                                    { label: 'Absent', data: absentData, backgroundColor: '#D9D9D9' }
-                                ]
-                            },
-                            options: {
-                                responsive: true,
-                                scales: {
-                                    x: { stacked: true },
-                                    y: { stacked: true, beginAtZero: true, suggestedMax: maxDays }
+                        document.addEventListener("DOMContentLoaded", function() {
+                            const newCtx = document.getElementById('newAttendanceChart').getContext('2d');
+                    
+                            const attendanceData = {
+                                'April': { on_time: 20, late: 5, absent: 2 },
+                                'May': { on_time: 22, late: 3, absent: 1 },
+                                'June': { on_time: 18, late: 7, absent: 3 }
+                            };
+                    
+                            const months = ['April', 'May', 'June'];
+                            const onTimeData = months.map(month => attendanceData[month]?.on_time || 0);
+                            const lateData = months.map(month => attendanceData[month]?.late || 0);
+                            const absentData = months.map(month => attendanceData[month]?.absent || 0);
+                    
+                            const maxDays = Math.max(...Object.values(attendanceData).flatMap(obj =>
+                                [obj.on_time || 0, obj.late || 0, obj.absent || 0]
+                            ));
+                    
+                            new Chart(newCtx, {
+                                type: 'bar',
+                                data: {
+                                    labels: months,
+                                    datasets: [
+                                        { label: 'On Time', data: onTimeData, backgroundColor: '#8A3366' },
+                                        { label: 'Late', data: lateData, backgroundColor: '#E0AFA0' },
+                                        { label: 'Absent', data: absentData, backgroundColor: '#D9D9D9' }
+                                    ]
+                                },
+                                options: {
+                                    responsive: true,
+                                    scales: {
+                                        x: { stacked: true },
+                                        y: { stacked: true, beginAtZero: true, suggestedMax: maxDays }
+                                    }
                                 }
-                            }
+                            });
                         });
                     </script>
                 </div>
@@ -349,7 +357,8 @@
         <div class="right-sec">
             <h1>Attendance Rate</h1>
             <div class="chart-container1" style="width: 100%; padding:30px; text-align: center; background-color:white;  border-radius: 30px;">
-                <!-- <canvas id="chartContainer"></canvas> -->
+                <canvas id="chartContainer"></canvas>
+                
             </div>
             <script>
                 const attendanceRateData = {
@@ -362,8 +371,9 @@
                 const totalDays = presentDays + absentDays;
                 const attendanceRate = totalDays ? ((presentDays / totalDays) * 100).toFixed(2) : 0;
 
-                const ctx = document.getElementById('chartContainer').getContext('2d');
-                const chartContainer = new Chart(ctx, {
+
+                const ctxs = document.getElementById('chartContainer').getContext('2d');
+                const chartContainer = new Chart(ctxs, {
                     type: 'doughnut',
                     data: {
                         datasets: [{
@@ -448,21 +458,16 @@
             <div class="holidays">
                 <div class="container-holiday">
                     <ul class="holiday-list">
+                        @foreach ($holidays_upcoming as $holiday)
+
                         <li class='holiday-item highlight'>
-                            <span class='date1 yellow-box'>14 JAN</span>
-                            <span class='holiday-name'>New Year's Day</span>
-                            <span class='day'>Monday</span>
-                        </li>
-                        <li class='holiday-item'>
-                            <span class='date1 yellow-box'>25 DEC</span>
-                            <span class='holiday-name'>Christmas Day</span>
-                            <span class='day'>Friday</span>
-                        </li>
-                        <li class='holiday-item hidden'>
-                            <span class='date1 gray-box'>01 MAY</span>
-                            <span class='holiday-name'>Labor Day</span>
-                            <span class='day'>Saturday</span>
-                        </li>
+                            <span class='date1 yellow-box'>{{$holiday->formatted_date}}</span>
+                            <span class='holiday-name'>{{$holiday->holiday_name}}</span>
+                            <span class='day'>{{$holiday->day}}</span>
+                        </li>  
+                            
+                        @endforeach
+                        
                     </ul>
                 </div>
             </div>

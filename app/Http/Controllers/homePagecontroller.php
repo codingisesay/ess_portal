@@ -40,6 +40,7 @@ $newsAndEvents = DB::table('news_and_events')
                   ->where('user_id', $user->id)
                   ->where('status', 'pending')
                   ->get();
+                  
 //fetch for leave representation
 
                   $total_leaves_of_org = DB::table('leave_types')
@@ -96,8 +97,6 @@ for($leave_type = 0; $leave_type < $total_leaves_of_org->count(); $leave_type++)
 
     }
 
-  
-
     $leaveCountArray = DB::table('leave_applies')
     ->where('leave_type_id',$total_leaves_of_org[$leave_type]->leave_type_id)
     ->where('user_id',$user->id)
@@ -153,9 +152,6 @@ if($emp_details->employee_type == 1){
 
 }
 
-
-//pushing Max leave of this leave type
-    // array_push($leave_single_data,$leave_restriction->max_leave);
 //pushing taken leave of this leave type
     array_push($leave_single_data,$takenLeave);
 //pushing percentage
@@ -164,67 +160,7 @@ if($emp_details->employee_type == 1){
     array_push($leaveUsage,$leave_single_data);
 
 }
-// $emp_details = DB::table('emp_details')->where('user_id',$loginUserInfo->id)->get();
 
-// dd($leaveUsage);
-
-
-// foreach ($leaveTypes as $leaveType) {
-//     $totalLeave = $leaveType->max_leave; // Available leave
-//     $takenLeave = 0;
-
-//     // Full-day leave calculation
-//     foreach ($appliedLeaves as $leave) {
-//         if ($leave->leave_type_id == $leaveType->id) {
-//             $leaveDuration = Carbon::parse($leave->start_date)->diffInDays(Carbon::parse($leave->end_date)) + 1;
-//             $takenLeave += $leaveDuration;
-//         }
-//     }
-
-//     dd($takenLeave);
-
-//     // Half-day leave calculation
-//     $halfDayLeaves = DB::table('leave_applies')
-//         ->where('user_id', $user->id)
-//         ->where('leave_type_id', $leaveType->id)
-//         ->whereIn('half_day', ['first half', 'second half'])  // Checking for first or second half
-//         ->where('leave_approve_status', 'APPROVED')  // Only approved half-day leaves
-//         ->count();  // Count the number of half-day leaves
-
-//     // Subtract 0.5 for each half-day leave from the total taken leave
-//     $takenLeave -= $halfDayLeaves * 0.5;
-
-//     // Apply restrictions for carry forward and leave encashment (optional, depending on your requirements)
-//     $noCarryForward = $leaveType->no_carry_forward; // No carry forward flag
-//     $noLeaveEncash = $leaveType->no_leave_encash;  // No leave encashment flag
-
-//     // Calculate the remaining leaves
-//     $remainingLeave = max(0, $totalLeave - $takenLeave); // Ensure no negative remaining leaves
-
-//     // Calculate the percentage of leave used
-//     $percentage = min(100, ($takenLeave / $totalLeave) * 100); 
-
-//     // Directly determine the progress bar color in the controller
-//     if ($percentage >= 80) {
-//         $progressColor = 'red'; // 80% or more
-//     } elseif ($percentage >= 50) {
-//         $progressColor = 'orange'; // Between 50% and 80%
-//     } else {
-//         $progressColor = 'green'; // Less than 50%
-//     }
-
-//     // Store the data for display
-//     $leaveUsage[] = [
-//         'leaveType' => $leaveType->name,
-//         'maxLeave' => $totalLeave,
-//         'takenLeave' => $takenLeave,
-//         'remainingLeave' => $remainingLeave,
-//         'percentage' => $percentage,
-//         'progressColor' => $progressColor, // The color is directly calculated here
-//         'noCarryForward' => $noCarryForward,
-//         'noLeaveEncash' => $noLeaveEncash,
-//     ];
-// }
     // Fetch upcoming and today's birthdays
     $currentDate = Carbon::now();
     $currentMonth = $currentDate->month;

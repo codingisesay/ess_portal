@@ -183,6 +183,7 @@ Route::middleware(['auth'])->group(function () {
     // Save Thought and News & Events
     Route::post('user/save_thought', [settingController::class, 'saveThought'])->name('save_thought');
     Route::post('user/save_news_events', [settingController::class, 'saveNewsEvents'])->name('save_news_events');
+    Route::post('user/save_calendra_master', [settingController::class, 'createCalendraMaster'])->name('create_calendra_master');
 
        //userend
 
