@@ -548,5 +548,102 @@
             document.getElementById(modalId).style.display = "none";
         }
     </script>
+    <style>
+        /* General modal styling */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1; /* Sit on top */
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto; /* Allow scrolling if the content is too large */
+    background-color: rgba(0, 0, 0, 0.4); /* Background overlay */
+    padding-top: 50px; /* Space for modal header */
+}
+
+/* Modal content box */
+.modal-content {
+    background-color: #fff;
+    margin: 5% auto; /* Center the modal */
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%; /* Width can be adjusted */
+    max-width: 900px; /* Set a max width to prevent it from stretching too much */
+    border-radius: 10px; /* Rounded corners for a soft look */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    overflow-y: auto; /* Enable vertical scrolling inside the modal */
+    max-height: 80vh; /* Limit height to 80% of the viewport height */
+}
+
+/* Modal close button */
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+/* Close button on hover */
+.close:hover,
+.close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+/* Content inside the modal */
+#degree-modal-content-details, #certification-modal-content-details {
+    max-height: 60vh; /* Allow modal content to scroll */
+    overflow-y: auto;
+}
+
+/* Tables inside modals for a clean layout */
+.details-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+.details-table th,
+.details-table td {
+    padding: 8px;
+    text-align: left;
+    border: 1px solid #ddd;
+}
+
+.details-table th {
+    background-color: #f4f4f4;
+    font-weight: bold;
+}
+
+.details-table td {
+    background-color: #fafafa;
+}
+
+/* Add spacing for a clean look */
+.details-table tr:not(:last-child) {
+    margin-bottom: 10px;
+}
+
+/* Responsive design for small screens */
+@media (max-width: 768px) {
+    .modal-content {
+        width: 90%; /* Increase width for small screens */
+        padding: 15px;
+    }
+
+    .details-table th, .details-table td {
+        font-size: 14px; /* Adjust font size for readability on smaller screens */
+    }
+
+    .close {
+        font-size: 24px;
+    }
+}
+
+    </style>
    
 @endsection

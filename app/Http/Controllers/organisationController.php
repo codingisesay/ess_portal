@@ -45,7 +45,7 @@ class OrganisationController extends Controller
                 'user_status_imgs.imagelink as profile_image' // Fetch profile image
             )
             ->get();
-dd($employees);
+// dd($employees);
         // Build hierarchy
         $employeeHierarchy = $this->buildHierarchy($employees, $noneUserId);
 
