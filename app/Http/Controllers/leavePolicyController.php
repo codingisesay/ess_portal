@@ -595,8 +595,6 @@ for ($i = 0; $i < $leaveCountArray->count(); $i++) {
 
         try {
 
-            $loginUserInfo = Auth::user();
-
             $leave_type = DB::table('leave_types')
             ->select('name')
             ->where('id','=',$data['leave_type'])
@@ -617,17 +615,36 @@ for ($i = 0; $i < $leaveCountArray->count(); $i++) {
 
             if($status){
 
+                $fetchManager = DB::table('emp_details')
+                ->join('users','emp_details.reporting_manager','=','users.id')
+                ->select('users.email as manager_mail_id','users.name as manager_name')
+                ->where('emp_details.user_id','=',$loginUserInfo->id)
+                ->first();
+                // dd($fetchManager);
+                $mail_to = [];
+                $mail_cc = [];
+
                 $subject = 'Leave Application Submitted '.$leave_type->name;
+
                 $org_id = $loginUserInfo->organisation_id;
                 $mail_flag = "applied_leave";
 
+                $mail_to[] =$fetchManager->manager_mail_id;
+                $mail_cc[] =$loginUserInfo->email;
+
+
+
                 $data = [
-                    'username' => $loginUserInfo->email,
-                    'name' => $loginUserInfo->name,
+                    'username' => $fetchManager->manager_mail_id, //mail to
+                    'cc' => $mail_cc, 
+                    'managername' => $fetchManager->manager_name,
+                    'employeename' => $loginUserInfo->name,
                     'leave_type' => $leave_type->name,
                     'start_date' => $data['start_date'],
                     'end_date' => $data['end_date'],
                 ];
+
+                // dd($data);
           
             //    Mail::to($user_create->email)->send(new UserRegistrationMail($user_create->email, $request->userpassword));
                $this->emailService->sendEmailWithOrgConfig($org_id,$subject,$mail_flag,$data);

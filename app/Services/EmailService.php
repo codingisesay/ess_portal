@@ -68,6 +68,7 @@ class EmailService
                 {
 
                     Mail::to($data['username'])
+                    ->cc($data['cc'])
                     ->queue(new UserAppliedLeave($subject, $data));  // Pass the subject and data to your mailable
 
                 }elseif($mail_flag == "leave_approve_status"){
