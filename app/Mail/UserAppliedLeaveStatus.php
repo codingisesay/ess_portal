@@ -42,12 +42,12 @@ class UserAppliedLeaveStatus extends Mailable implements ShouldQueue
     /**
      * Get the message envelope.
      */
-    public function envelope(): Envelope
-    {
-        return new Envelope(
-            subject: 'User Applied Leave Status',
-        );
-    }
+    // public function envelope(): Envelope
+    // {
+    //     return new Envelope(
+    //         subject: 'User Applied Leave Status',
+    //     );
+    // }
 
     public function build()
     {
