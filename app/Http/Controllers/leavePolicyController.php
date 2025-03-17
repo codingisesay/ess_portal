@@ -554,22 +554,63 @@ class leavePolicyController extends Controller
     }
  
 
-    private function calculateWorkingHours($userId)
-{
-    // $loginLogs = DB::table('login_logs')
-    // ->where('user_id', $userId)
-    // ->whereNotNull('logout_time')  // Only consider logs with valid logout times
-    // ->orderBy('login_date', 'asc')  // Sort by login_time in descending order
-    // ->take(7)  // Get only the last 7 records
-    // ->get();
+//     private function calculateWorkingHours($userId)
+// {
+//     // $loginLogs = DB::table('login_logs')
+//     // ->where('user_id', $userId)
+//     // ->whereNotNull('logout_time')  // Only consider logs with valid logout times
+//     // ->orderBy('login_date', 'asc')  // Sort by login_time in descending order
+//     // ->take(7)  // Get only the last 7 records
+//     // ->get();
 
+//     $loginLogs = DB::table('login_logs')
+//     ->where('user_id', $userId)
+//     ->whereNotNull('logout_time')  // Only consider logs with valid logout times
+//     ->orderBy('login_date', 'desc')  // Sort by login_date in descending order (latest first)
+//     ->take(7)  // Get only the last 7 records
+//     ->get()
+//     ->reverse();
+
+//     // Arrays to store dates and calculated hours
+//     $workingHours = [];
+//     $totalHours = 0;
+
+//     foreach ($loginLogs as $log) {
+//         // Calculate the difference between login and logout times
+//         $loginTime = new \Carbon\Carbon($log->login_time);
+//         $logoutTime = new \Carbon\Carbon($log->logout_time);
+
+//         // Calculate the total working hours
+//         $workedHours = $logoutTime->diffInHours($loginTime) + ($logoutTime->minute / 60 - $loginTime->minute / 60);
+
+//         // Add to the total hours worked
+//         $totalHours += $workedHours;
+
+//         // Store individual working hours data with the formatted date (dd:mm:yy)
+//         $workingHours[] = [
+//             'date' => $loginTime->format('d/m/y'), // Format the date as dd:mm:yy
+//             'worked_hours' => $workedHours
+//         ];
+//     }
+
+//     // Calculate average working hours
+//     $averageWorkingHours = count($workingHours) > 0 ? $totalHours / count($workingHours) : 0;
+
+//     return [
+//         'working_hours' => $workingHours,
+//         'average_working_hours' => $averageWorkingHours
+//     ];
+// }
+
+private function calculateWorkingHours($userId)
+{
     $loginLogs = DB::table('login_logs')
-    ->where('user_id', $userId)
-    ->whereNotNull('logout_time')  // Only consider logs with valid logout times
-    ->orderBy('login_date', 'desc')  // Sort by login_date in descending order (latest first)
-    ->take(7)  // Get only the last 7 records
-    ->get()
-    ->reverse();
+        ->where('user_id', $userId)
+        ->whereNotNull('logout_time')  // Only consider logs with valid logout times
+        ->orderBy('login_date', 'desc')  // Sort by login_date in descending order (latest first)
+        ->take(7)  // Get only the last 7 records
+        ->get()
+        ->reverse();
 
     // Arrays to store dates and calculated hours
     $workingHours = [];
@@ -589,7 +630,7 @@ class leavePolicyController extends Controller
         // Store individual working hours data with the formatted date (dd:mm:yy)
         $workingHours[] = [
             'date' => $loginTime->format('d/m/y'), // Format the date as dd:mm:yy
-            'worked_hours' => $workedHours
+            'worked_hours' => number_format($workedHours, 2) // Format worked hours to 2 decimal places
         ];
     }
 
@@ -598,9 +639,10 @@ class leavePolicyController extends Controller
 
     return [
         'working_hours' => $workingHours,
-        'average_working_hours' => $averageWorkingHours
+        'average_working_hours' => number_format($averageWorkingHours, 2) // Format average to 2 decimal places
     ];
 }
+
 
     
     
