@@ -719,13 +719,13 @@ for ($i = 0; $i < $leaveCountArray->count(); $i++) {
                 $org_id = $loginUserInfo->organisation_id;
                 $mail_flag = "applied_leave";
 
-                $mail_to[] =$fetchManager->manager_mail_id;
-                $mail_cc[] =$loginUserInfo->email;
+                array_push($mail_to,$fetchManager->manager_mail_id);
+                array_push($mail_cc,$loginUserInfo->email);
 
 
 
                 $data = [
-                    'username' => $fetchManager->manager_mail_id, //mail to
+                    'username' => $mail_to, //mail to
                     'cc' => $mail_cc, 
                     'managername' => $fetchManager->manager_name,
                     'employeename' => $loginUserInfo->name,
