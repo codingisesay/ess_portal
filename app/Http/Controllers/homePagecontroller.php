@@ -7,10 +7,19 @@ use App\Models\ToDoList;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use App\Services\EmailService;
 use Carbon\Carbon;
 
 class homePagecontroller extends Controller
 {
+
+    protected $emailService;
+
+    public function __construct(EmailService $emailService)
+    {
+        $this->emailService = $emailService;
+    }
+
     public function showHomepage(Request $request)
 {
     $user = Auth::user(); // Get the logged-in user
@@ -320,7 +329,46 @@ for ($teamMamber = 0; $teamMamber < $dataOfteamMambers->count(); $teamMamber++) 
 
 
 if ($update) {
+
+    $leave_apply = DB::table('leave_applies')
+    ->where('id','=',$id)
+    ->first();
+
+    $apply_leaveuser_data = DB::table('users')->where('id','=',$leave_apply->user_id)->first();
+
+    $leave_type = DB::table('leave_types')
+    ->select('name')
+    ->where('id','=',$leave_apply->leave_type_id)
+    ->first();
+
+    if($status == 'Approved'){
+
+        $subject = 'Leave Approved- '.$leave_type->name;
+
+    }elseif($status == 'Reject'){
+
+        $subject = 'Leave Rejected- '.$leave_type->name;
+
+    }
+    // $subject = 'Leave Application Submitted '.$leave_type->name;
+    $org_id = $user->organisation_id;
+    $mail_flag = "leave_approve_status";
+
+    $data = [
+        'username' => $apply_leaveuser_data->email,
+        'name' => $apply_leaveuser_data->name,
+        'leave_type' => $leave_type->name,
+        'start_date' => $leave_apply->start_date,
+        'end_date' => $leave_apply->end_date,
+        'leave_status' => $status,
+        'approved_by' => $user->name,
+    ];
+
+//    Mail::to($user_create->email)->send(new UserRegistrationMail($user_create->email, $request->userpassword));
+   $this->emailService->sendEmailWithOrgConfig($org_id,$subject,$mail_flag,$data);
+
     return redirect()->route('user.homepage')->with('success', 'Leave status updated successfully.');
+
 }else{
 
     return redirect()->route('user.homepage')->with('error', 'Leave status not updated successfully.');
