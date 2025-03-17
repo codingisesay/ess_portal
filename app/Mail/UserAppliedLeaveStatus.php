@@ -9,16 +9,14 @@ use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
-class UserAppliedLeave extends Mailable implements ShouldQueue
+class UserAppliedLeaveStatus extends Mailable implements ShouldQueue
 {
     use Queueable, SerializesModels;
-
-     // public $userEmail;
-    // public $userPassword;
 
     public $subject;
     public $data;
 
+   
     /**
      * Create a new message instance.
      */
@@ -44,15 +42,18 @@ class UserAppliedLeave extends Mailable implements ShouldQueue
     /**
      * Get the message envelope.
      */
-    // * Build the message.
-    // *
-    // * @return $this
-    // */
-   public function build()
-   {
-       return $this->subject($this->subject)
-                   ->view('emails.applied_leave_status')
-                   ->with($this->data);
-               
-               }
+    public function envelope(): Envelope
+    {
+        return new Envelope(
+            subject: 'User Applied Leave Status',
+        );
+    }
+
+    public function build()
+    {
+        return $this->subject($this->subject)
+                    ->view('emails.applied_leave_status')
+                    ->with($this->data);
+                
+                }
 }

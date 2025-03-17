@@ -11,6 +11,7 @@ use App\Mail\UserRegistrationMail;
 use App\Mail\UserForgotPassword;
 use App\Mail\UserAppliedLeave;
 use App\Mail\UserAppliedLeaveStatus;
+
 use Illuminate\Support\Facades\Auth;
 
 class EmailService

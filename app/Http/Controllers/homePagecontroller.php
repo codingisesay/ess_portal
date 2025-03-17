@@ -364,6 +364,8 @@ if ($update) {
         'approved_by' => $user->name,
     ];
 
+    // dd($subject);
+
 //    Mail::to($user_create->email)->send(new UserRegistrationMail($user_create->email, $request->userpassword));
    $this->emailService->sendEmailWithOrgConfig($org_id,$subject,$mail_flag,$data);
 
