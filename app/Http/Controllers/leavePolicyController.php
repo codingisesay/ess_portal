@@ -298,7 +298,6 @@ class leavePolicyController extends Controller
     
         // Calculate total working hours for the current user
         $workingHoursData = $this->calculateWorkingHours($user->id); // Get working hours data
-        
     
         // Fetch applied leaves for the logged-in user (including approved, pending, and rejected)
         $appliedLeaves = DB::table('leave_applies')
@@ -407,169 +406,202 @@ class leavePolicyController extends Controller
 
          // Fetch upcoming and today's birthdays
          $currentDate = Carbon::now();
-$currentMonth = $currentDate->month;
-$currentDay = $currentDate->day;
-$currentYear = $currentDate->year;  // Get the current year
+         $currentMonth = $currentDate->month;
+         $currentDay = $currentDate->day;
+         
+         $holidays_upcoming = DB::table('calendra_masters')
+             ->select('date', 'holiday_name', 'day')
+             ->where('holiday', '=', 'Yes')
+             ->whereMonth('date', '=', $currentMonth) // Filter by the current month
+             ->whereDay('date', '>=', $currentDay)   // Filter by day of the month in 'date'
+             ->get();
 
-// Query for upcoming holidays
-$holidays_upcoming = DB::table('calendra_masters')
-    ->select('date', 'holiday_name', 'day')
-    ->where('holiday', '=', 'Yes')
-    ->whereMonth('date', '=', $currentMonth) // Filter by the current month
-    ->whereDay('date', '>=', $currentDay)   // Filter by day of the month in 'date'
-    ->get();
+             $holidays_upcoming = $holidays_upcoming->map(function ($holiday) {
+                // Format the date to '19-March'
+                $holiday->formatted_date = Carbon::parse($holiday->date)->format('d F'); 
+                return $holiday;
+            });
+         
+        //  dd($holidays_upcoming);
 
-// Format the date of holidays
-$holidays_upcoming = $holidays_upcoming->map(function ($holiday) {
-    // Format the date to '19-March'
-    $holiday->formatted_date = Carbon::parse($holiday->date)->format('d-F');
-    return $holiday;
-});
+        // attendence  rate query start
+        // ---------------------------- Attendance rate ----------------------------
+        
+        
+        $userId = auth()->id();  // Get the current authenticated user's ID
 
-$currentDate = Carbon::now();
-$currentYear = $currentDate->year;
-
-// Query for attendance data and join with calendra_masters
-$attendanceData = DB::table('login_logs')
-    ->join('calendra_masters', 'user_id', '=', 'login_logs.user_id')
-    ->select(
-        'login_logs.user_id',
-        'login_logs.login_time',
-        'login_logs.logout_time',
-        'calendra_masters.working_start_time',
-        'calendra_masters.working_end_time',
-        'calendra_masters.week_off',  // Include week_off field for checking
-        'login_logs.login_date'
-    )
-    ->whereYear('login_logs.login_date', '=', $currentYear) // Filter for the selected year
-    ->get();
-
-// Map through the attendance data to calculate status
-$attendance = $attendanceData->map(function ($log) {
-    // Convert to Carbon instances for easy comparison
-    $loginTime = Carbon::parse($log->login_time);
-    $logoutTime = Carbon::parse($log->logout_time);
-    $startTime = Carbon::parse($log->working_start_time); // Use working_start_time from calendra_masters
-    $endTime = Carbon::parse($log->working_end_time);     // Use working_end_time from calendra_masters
-
-    // If the day is a week-off, skip attendance calculation
-    if ($log->week_off === 'YES') {
-        $log->status = 'Week Off';
-        return $log;
-    }
-
-    // Determine if the user is on time or late based on login and logout times
-    if ($loginTime->lessThanOrEqualTo($startTime)) {
-        $status = 'On Time';
-    } else {
-        $status = 'Late';
-    }
-
-    // Check if the logout time exceeds the end time
-    if ($logoutTime->greaterThan($endTime)) {
-        $status = 'Late';
-    }
-
-    // If no login/logout time, mark as absent
-    if (is_null($log->login_time) || is_null($log->logout_time)) {
-        $status = 'Absent';
-    }
-
-    // Add the calculated status to the log
-    $log->status = $status;
-    return $log;
-});
-
-// Group by year and month for the attendance summary
-$monthlyAttendance = $attendance->groupBy(function ($log) {
-    return Carbon::parse($log->login_date)->format('Y-F'); // Group by Year and Month
-});
-
-// Summarize the attendance by month for absenteeism calculation
-$attendanceSummary = [];
-foreach ($monthlyAttendance as $month => $logs) {
-    $onTime = $logs->where('status', 'On Time')->count();
-    $late = $logs->where('status', 'Late')->count();
-    $absent = $logs->where('status', 'Absent')->count();
-    $weekOff = $logs->where('status', 'Week Off')->count(); // Count week offs separately
-
-    $totalWorkingDays = $logs->count();  // Total days worked including week-offs
-    $totalAbsentDays = $absent;         // Absent days to calculate absenteeism rate
-
-    $attendanceSummary[$month] = [
-        'on_time' => $onTime,
-        'late' => $late,
-        'absent' => $totalAbsentDays,
-        'week_off' => $weekOff,
-        'total_working_days' => $totalWorkingDays,
-        'absenteeism_rate' => $totalAbsentDays / ($totalWorkingDays - $weekOff), // Excluding week-offs
-    ];
-}
-        // Pass the leave summary data, applied leaves, and total working hours to the view
-        return view('user_view.leave_dashboard', compact('leaveSummary', 'workingHoursData', 'appliedLeaves','title','holidays_upcoming', 'attendanceSummary', 'currentYear'));
-    }
-    
-    public function calculateWorkingHours($userId)
-    {
-        // Get the current month and number of days in the current month
-        $currentMonth = now()->month;
-        $daysInMonth = now()->daysInMonth;  // Dynamically get the number of days in the current month
-    
-        // Get the login logs for the current month
-        $loginLogs = DB::table('login_logs')
+        // Get the start and end date for the current month
+        $startOfMonth = now()->startOfMonth()->toDateString();
+        $endOfMonth = now()->endOfMonth()->toDateString();
+        
+        // Query to get the distinct login dates for the user within the current month
+        $presentDaysQuery = DB::table('login_logs')
             ->where('user_id', $userId)
-            ->whereNotNull('logout_time')  // Only consider logs with valid logout times
-            ->whereMonth('login_time', $currentMonth)  // Get logs only for the current month
-            ->orderBy('login_date', 'desc')  // Sort by login_date in descending order
+            ->whereBetween('login_date', [$startOfMonth, $endOfMonth])
+            ->select('login_date')
+            ->groupBy('login_date');
+        
+        // Join with calendar_masters table to get the holiday and week_off information
+        $calendarData = DB::table('calendra_masters')
+            ->whereBetween('date', [$startOfMonth, $endOfMonth])
+            ->select('date', 'week_off', 'holiday')
+            ->get()
+            ->keyBy('date'); // Convert the result into an associative array with date as the key
+        
+        // Count the number of present days considering holidays and week-offs
+        $presentDays = $presentDaysQuery->get()->filter(function ($login) use ($calendarData) {
+            $loginDate = $login->login_date;
+            
+            // Check if the user logged in on a holiday or week-off
+            if (isset($calendarData[$loginDate])) {
+                $calendar = $calendarData[$loginDate];
+        
+                // If it's a holiday or week-off, the user isn't absent even if they didn't log in
+                if ($calendar->holiday == 'YES' || $calendar->week_off == 'YES') {
+                    return true;
+                }
+            }
+            
+            // If not a holiday or week-off, the user is present if they logged in
+            return true;
+        })->count();
+        
+        // Total days in the current month
+        $totalDaysInMonth = now()->daysInMonth;
+        
+        // Calculate absent days (total days in month - present days)
+        $absentDays = $totalDaysInMonth - $presentDays;
+        
+        // Calculate the attendance rate
+        $attendanceRate = ($totalDaysInMonth > 0) ? round(($presentDays / $totalDaysInMonth) * 100, 2) : 0;
+
+        // ---------------------------- Attendance Overview ----------------------------
+
+        $userId = auth()->id();  // Get the current authenticated user's ID
+
+        // Get the start and end date for the current year
+        $startOfYear = now()->startOfYear()->toDateString();
+        $endOfYear = now()->endOfYear()->toDateString();
+    
+        // Get the attendance data (on time, late, absent) for each month in the year
+        $attendanceData = DB::table('login_logs')
+            ->leftJoin('calendra_masters', 'login_logs.login_date', '=', 'calendra_masters.date')
+            ->where('login_logs.user_id', $userId)
+            ->whereBetween('login_logs.login_date', [$startOfYear, $endOfYear])
+            ->select(
+                'login_logs.login_date',
+                'login_logs.login_time',
+                'calendra_masters.working_start_time',
+                'calendra_masters.working_end_time',
+                'calendra_masters.week_off',
+                'calendra_masters.holiday',
+            )
             ->get();
     
-        // Variables to store the working hours and attendance data
-        $workingHours = [];
-        $totalHours = 0;
-        $presentDays = 0;
-    
-        // Loop over the login logs to calculate working hours and attendance
-        foreach ($loginLogs as $log) {
-            $loginTime = new \Carbon\Carbon($log->login_time);
-            $logoutTime = new \Carbon\Carbon($log->logout_time);
-    
-            // Calculate the total worked hours
-            $workedHours = $logoutTime->diffInHours($loginTime) + ($logoutTime->minute / 60 - $loginTime->minute / 60);
-    
-            // Add to the total hours worked
-            $totalHours += $workedHours;
-    
-            // Store individual working hours data with the formatted date (dd:mm:yy)
-            $workingHours[] = [
-                'date' => $loginTime->format('d/m/y'),
-                'worked_hours' => $workedHours
+        // Initialize counters for each category for each month
+        $attendanceOverview = [];
+        foreach (range(1, 12) as $month) {
+            $attendanceOverview[$month] = [
+                'on_time' => 0,
+                'late' => 0,
+                'absent' => 0,
             ];
-    
-            // If the login was in the current month, count it as a present day
-            $presentDays++;
         }
     
-        // Calculate absent days: Total days in the current month minus present days
-        $absentDays = $daysInMonth - $presentDays;
+        // Process each day of attendance
+        foreach ($attendanceData as $data) {
+            $month = \Carbon\Carbon::parse($data->login_date)->month;
     
-        // Calculate the attendance rate for the current month
-        $totalDays = $presentDays + $absentDays;
-        $monthlyAttendanceRate = $totalDays ? ((($presentDays) / $totalDays) * 100) : 0;
+            // Skip holidays and week offs for absence calculation
+            if ($data->holiday == 'YES' || $data->week_off == 'YES') {
+                continue;
+            }
     
-        // Calculate average working hours (optional, but useful for additional insights)
-        $averageWorkingHours = count($workingHours) > 0 ? $totalHours / count($workingHours) : 0;
+            // Compare login_time with working_start_time and working_end_time
+            $loginTime = \Carbon\Carbon::parse($data->login_time);
+            $startOfDay = \Carbon\Carbon::parse($data->login_date . ' ' . $data->working_start_time);
+            $endOfDay = \Carbon\Carbon::parse($data->login_date . ' ' . $data->working_end_time);
     
-        // Return the data including present and absent days
-        return [
-            'working_hours' => $workingHours,
-            'average_working_hours' => $averageWorkingHours,
-            'monthly_attendance_rate' => $monthlyAttendanceRate,
-            'present_days' => $presentDays,
-            'absent_days' => $absentDays
+            // Increment "on_time" or "late"
+            if ($loginTime <= $startOfDay) {
+                $attendanceOverview[$month]['on_time']++;
+            } elseif ($loginTime <= $endOfDay) {
+                $attendanceOverview[$month]['late']++;
+            }
+        }
+    
+        // To calculate absences, we check for days where the user didn't log in and it's not a holiday or week off
+        foreach (range(1, 12) as $month) {
+            $daysInMonth = \Carbon\Carbon::parse("2025-$month-01")->daysInMonth;
+            $loggedInDays = count($attendanceData->filter(function ($data) use ($month) {
+                return \Carbon\Carbon::parse($data->login_date)->month == $month;
+            }));
+            // Exclude holidays and week-offs
+            $workingDays = DB::table('calendra_masters')
+                ->whereYear('date', 2025)  // Make sure to match the year
+                ->whereMonth('date', $month)
+                ->where('week_off', 'NO')
+                ->where('holiday', 'NO')
+                ->count();
+    
+            // Calculate the absent days
+            $attendanceOverview[$month]['absent'] = $workingDays - $loggedInDays;
+        }
+
+    
+        // Pass the leave summary data, applied leaves, and total working hours to the view
+        return view('user_view.leave_dashboard', compact('leaveSummary', 'workingHoursData', 'appliedLeaves','title','holidays_upcoming', 'attendanceRate', 'presentDays', 'absentDays', 'totalDaysInMonth', 'attendanceOverview'));
+    }
+ 
+
+    private function calculateWorkingHours($userId)
+{
+    // $loginLogs = DB::table('login_logs')
+    // ->where('user_id', $userId)
+    // ->whereNotNull('logout_time')  // Only consider logs with valid logout times
+    // ->orderBy('login_date', 'asc')  // Sort by login_time in descending order
+    // ->take(7)  // Get only the last 7 records
+    // ->get();
+
+    $loginLogs = DB::table('login_logs')
+    ->where('user_id', $userId)
+    ->whereNotNull('logout_time')  // Only consider logs with valid logout times
+    ->orderBy('login_date', 'desc')  // Sort by login_date in descending order (latest first)
+    ->take(7)  // Get only the last 7 records
+    ->get()
+    ->reverse();
+
+    // Arrays to store dates and calculated hours
+    $workingHours = [];
+    $totalHours = 0;
+
+    foreach ($loginLogs as $log) {
+        // Calculate the difference between login and logout times
+        $loginTime = new \Carbon\Carbon($log->login_time);
+        $logoutTime = new \Carbon\Carbon($log->logout_time);
+
+        // Calculate the total working hours
+        $workedHours = $logoutTime->diffInHours($loginTime) + ($logoutTime->minute / 60 - $loginTime->minute / 60);
+
+        // Add to the total hours worked
+        $totalHours += $workedHours;
+
+        // Store individual working hours data with the formatted date (dd:mm:yy)
+        $workingHours[] = [
+            'date' => $loginTime->format('d/m/y'), // Format the date as dd:mm:yy
+            'worked_hours' => $workedHours
         ];
     }
-    
-    
+
+    // Calculate average working hours
+    $averageWorkingHours = count($workingHours) > 0 ? $totalHours / count($workingHours) : 0;
+
+    return [
+        'working_hours' => $workingHours,
+        'average_working_hours' => $averageWorkingHours
+    ];
+}
+
     
     
     public function showLeaveRequest(){
@@ -685,8 +717,6 @@ for ($i = 0; $i < $leaveCountArray->count(); $i++) {
 
         try {
 
-            $loginUserInfo = Auth::user();
-
             $leave_type = DB::table('leave_types')
             ->select('name')
             ->where('id','=',$data['leave_type'])
@@ -707,17 +737,36 @@ for ($i = 0; $i < $leaveCountArray->count(); $i++) {
 
             if($status){
 
+                $fetchManager = DB::table('emp_details')
+                ->join('users','emp_details.reporting_manager','=','users.id')
+                ->select('users.email as manager_mail_id','users.name as manager_name')
+                ->where('emp_details.user_id','=',$loginUserInfo->id)
+                ->first();
+                // dd($fetchManager);
+                $mail_to = [];
+                $mail_cc = [];
+
                 $subject = 'Leave Application Submitted '.$leave_type->name;
+
                 $org_id = $loginUserInfo->organisation_id;
                 $mail_flag = "applied_leave";
 
+                array_push($mail_to,$fetchManager->manager_mail_id);
+                array_push($mail_cc,$loginUserInfo->email);
+
+
+
                 $data = [
-                    'username' => $loginUserInfo->email,
-                    'name' => $loginUserInfo->name,
+                    'username' => $mail_to, //mail to
+                    'cc' => $mail_cc, 
+                    'managername' => $fetchManager->manager_name,
+                    'employeename' => $loginUserInfo->name,
                     'leave_type' => $leave_type->name,
                     'start_date' => $data['start_date'],
                     'end_date' => $data['end_date'],
                 ];
+
+                // dd($data);
           
             //    Mail::to($user_create->email)->send(new UserRegistrationMail($user_create->email, $request->userpassword));
                $this->emailService->sendEmailWithOrgConfig($org_id,$subject,$mail_flag,$data);
