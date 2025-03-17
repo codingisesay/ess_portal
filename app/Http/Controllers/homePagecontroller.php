@@ -355,7 +355,7 @@ $endDate = new DateTime($leave_apply->end_date);
 $interval = $startDate->diff($endDate);
 
 // Get the number of days from the difference
-$daysBetween = $interval->days;
+$daysBetween = $interval->days+1;
 
 
     if($status == 'Approved'){

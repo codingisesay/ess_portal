@@ -21,9 +21,9 @@
 
 <p>Dear <b>{{ $data['managername'] }},</b></p>
  
-<p><b>{{ $data['employeename'] }},</b>leave request for <b>{{ $data['leave_type'] }}</b> from <b>{{ $startformattedDate }}</b> to <b>{{ $endformattedDate }}</b> has been submitted successfully in EmployeeXpert.</p>
+<p><b>{{ $data['employeename'] }},</b> leave request for <b>{{ $data['leave_type'] }}</b> from <b>{{ $startformattedDate }}</b> to <b>{{ $endformattedDate }}</b> has been submitted successfully in EmployeeXpert.</p>
  
-<p>You are requested to check the same and approve/reject..</p>
+<p>You are requested to check the same and approve/reject.</p>
  
 
 

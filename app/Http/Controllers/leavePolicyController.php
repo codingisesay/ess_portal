@@ -13,6 +13,7 @@ use App\Services\EmailService;
 use App\Models\User;
 use App\Mail\UserRegistrationMail;
 use Carbon\Carbon;
+use DateTime;
 
 
 
@@ -552,55 +553,7 @@ class leavePolicyController extends Controller
         // Pass the leave summary data, applied leaves, and total working hours to the view
         return view('user_view.leave_dashboard', compact('leaveSummary', 'workingHoursData', 'appliedLeaves','title','holidays_upcoming', 'attendanceRate', 'presentDays', 'absentDays', 'totalDaysInMonth', 'attendanceOverview'));
     }
- 
 
-//     private function calculateWorkingHours($userId)
-// {
-//     // $loginLogs = DB::table('login_logs')
-//     // ->where('user_id', $userId)
-//     // ->whereNotNull('logout_time')  // Only consider logs with valid logout times
-//     // ->orderBy('login_date', 'asc')  // Sort by login_time in descending order
-//     // ->take(7)  // Get only the last 7 records
-//     // ->get();
-
-//     $loginLogs = DB::table('login_logs')
-//     ->where('user_id', $userId)
-//     ->whereNotNull('logout_time')  // Only consider logs with valid logout times
-//     ->orderBy('login_date', 'desc')  // Sort by login_date in descending order (latest first)
-//     ->take(7)  // Get only the last 7 records
-//     ->get()
-//     ->reverse();
-
-//     // Arrays to store dates and calculated hours
-//     $workingHours = [];
-//     $totalHours = 0;
-
-//     foreach ($loginLogs as $log) {
-//         // Calculate the difference between login and logout times
-//         $loginTime = new \Carbon\Carbon($log->login_time);
-//         $logoutTime = new \Carbon\Carbon($log->logout_time);
-
-//         // Calculate the total working hours
-//         $workedHours = $logoutTime->diffInHours($loginTime) + ($logoutTime->minute / 60 - $loginTime->minute / 60);
-
-//         // Add to the total hours worked
-//         $totalHours += $workedHours;
-
-//         // Store individual working hours data with the formatted date (dd:mm:yy)
-//         $workingHours[] = [
-//             'date' => $loginTime->format('d/m/y'), // Format the date as dd:mm:yy
-//             'worked_hours' => $workedHours
-//         ];
-//     }
-
-//     // Calculate average working hours
-//     $averageWorkingHours = count($workingHours) > 0 ? $totalHours / count($workingHours) : 0;
-
-//     return [
-//         'working_hours' => $workingHours,
-//         'average_working_hours' => $averageWorkingHours
-//     ];
-// }
 
 private function calculateWorkingHours($userId)
 {
@@ -788,7 +741,17 @@ for ($i = 0; $i < $leaveCountArray->count(); $i++) {
                 $mail_to = [];
                 $mail_cc = [];
 
-                $subject = 'Leave Application Submitted '.$leave_type->name;
+                        // Convert start and end dates to DateTime objects
+$startDate = new DateTime($data['start_date']);
+$endDate = new DateTime($data['end_date']);
+
+// Calculate the difference between the two dates
+$interval = $startDate->diff($endDate);
+
+// Get the number of days from the difference
+$daysBetween = $interval->days+1;
+
+                $subject = 'Leave Application Submitted '.$leave_type->name.' - '.$daysBetween.' days';
 
                 $org_id = $loginUserInfo->organisation_id;
                 $mail_flag = "applied_leave";
