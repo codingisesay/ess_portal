@@ -19,11 +19,11 @@
         
         ?>
 
-<p>Dear <b>{{ $data['name'] }},</b></p>
+<p>Dear <b>{{ $data['managername'] }},</b></p>
  
-<p>Your leave request for <b>{{ $data['leave_type'] }}</b> from <b>{{ $startformattedDate }}</b> to <b>{{ $endformattedDate }}</b> has been submitted successfully in EmployeeXpert.</p>
+<p><b>{{ $data['employeename'] }},</b>leave request for <b>{{ $data['leave_type'] }}</b> from <b>{{ $startformattedDate }}</b> to <b>{{ $endformattedDate }}</b> has been submitted successfully in EmployeeXpert.</p>
  
-<p>You will be notified once your leave is approved or rejected.</p>
+<p>You are requested to check the same and approve/reject..</p>
  
 
 
@@ -31,11 +31,5 @@
     <b>Best regards,</b><br>
 <b>EmployeeXpert Team</b><br>
     </address>
-
-    {{-- <h1>Welcome to Our Platform</h1>
-    <p>Your registration was successful!</p>
-    <p><strong>Your Email:</strong> {{ $data['username'] }}</p>
-    <p><strong>Your Password:</strong> {{ $data['password'] }}</p>
-    <p>Please make sure to change your password after logging in.</p> --}}
 </body>
 </html>
