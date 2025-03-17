@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use DateTime;
 use App\Models\LoginLog;
 use App\Models\ToDoList;
 use Illuminate\Http\Request;
@@ -330,6 +330,9 @@ for ($teamMamber = 0; $teamMamber < $dataOfteamMambers->count(); $teamMamber++) 
 
 if ($update) {
 
+    $mail_to = [];
+    $mail_cc = [];
+
     $leave_apply = DB::table('leave_applies')
     ->where('id','=',$id)
     ->first();
@@ -341,30 +344,49 @@ if ($update) {
     ->where('id','=',$leave_apply->leave_type_id)
     ->first();
 
+    array_push($mail_to,$apply_leaveuser_data->email);
+    array_push($mail_cc,$user->email);
+
+        // Convert start and end dates to DateTime objects
+$startDate = new DateTime($leave_apply->start_date);
+$endDate = new DateTime($leave_apply->end_date);
+
+// Calculate the difference between the two dates
+$interval = $startDate->diff($endDate);
+
+// Get the number of days from the difference
+$daysBetween = $interval->days;
+
+
     if($status == 'Approved'){
 
-        $subject = 'Leave Approved- '.$leave_type->name;
+        $subject = 'Leave Approved - '.$leave_type->name.' - '.$daysBetween.' Days';
 
     }elseif($status == 'Reject'){
 
-        $subject = 'Leave Rejected- '.$leave_type->name;
+        $subject = 'Leave Rejected - '.$leave_type->name.' - '.$daysBetween.' Days';;
 
     }
+
+    // dd($subject);
     // $subject = 'Leave Application Submitted '.$leave_type->name;
     $org_id = $user->organisation_id;
     $mail_flag = "leave_approve_status";
 
+
     $data = [
-        'username' => $apply_leaveuser_data->email,
+        'username' => $mail_to,
+        'cc' => $mail_cc,
         'name' => $apply_leaveuser_data->name,
         'leave_type' => $leave_type->name,
         'start_date' => $leave_apply->start_date,
         'end_date' => $leave_apply->end_date,
         'leave_status' => $status,
         'approved_by' => $user->name,
+        'days_count' => $daysBetween,
     ];
 
-    // dd($subject);
+    // dd($data);
 
 //    Mail::to($user_create->email)->send(new UserRegistrationMail($user_create->email, $request->userpassword));
    $this->emailService->sendEmailWithOrgConfig($org_id,$subject,$mail_flag,$data);
