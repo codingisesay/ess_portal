@@ -10,6 +10,8 @@ use Illuminate\Support\Facades\DB;
 use App\Mail\UserRegistrationMail;
 use App\Mail\UserForgotPassword;
 use App\Mail\UserAppliedLeave;
+use App\Mail\UserAppliedLeaveStatus;
+
 use Illuminate\Support\Facades\Auth;
 
 class EmailService
@@ -66,7 +68,19 @@ class EmailService
                 {
 
                     Mail::to($data['username'])
+                    ->cc($data['cc'])
                     ->queue(new UserAppliedLeave($subject, $data));  // Pass the subject and data to your mailable
+
+                }elseif($mail_flag == "leave_approve_status"){
+
+                    Mail::to($data['username'])
+                    ->cc($data['cc'])
+                    ->queue(new UserAppliedLeaveStatus($subject, $data));  // Pass the subject and data to your mailable
+
+    //                 Mail::to($data['username'])
+    // ->cc(['cc1@example.com', 'cc2@example.com']) // Multiple CC recipients
+    // ->bcc(['bcc1@example.com', 'bcc2@example.com']) // Multiple BCC recipients
+    // ->queue(new UserAppliedLeave($subject, $data));
 
                 }
                 else{

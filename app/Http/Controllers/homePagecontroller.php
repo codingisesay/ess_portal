@@ -1,16 +1,25 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use DateTime;
 use App\Models\LoginLog;
 use App\Models\ToDoList;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use App\Services\EmailService;
 use Carbon\Carbon;
 
 class homePagecontroller extends Controller
 {
+
+    protected $emailService;
+
+    public function __construct(EmailService $emailService)
+    {
+        $this->emailService = $emailService;
+    }
+
     public function showHomepage(Request $request)
 {
     $user = Auth::user(); // Get the logged-in user
@@ -334,7 +343,119 @@ $holidays_upcoming = $holidays_upcoming->map(function ($holiday) {
 
 
 if ($update) {
+
+    $mail_to = [];
+    $mail_cc = [];
+
+    $leave_apply = DB::table('leave_applies')
+    ->where('id','=',$id)
+    ->first();
+
+    $apply_leaveuser_data = DB::table('users')->where('id','=',$leave_apply->user_id)->first();
+
+    $leave_type = DB::table('leave_types')
+    ->select('name')
+    ->where('id','=',$leave_apply->leave_type_id)
+    ->first();
+
+    array_push($mail_to,$apply_leaveuser_data->email);
+    array_push($mail_cc,$user->email);
+
+        // Convert start and end dates to DateTime objects
+$startDate = new DateTime($leave_apply->start_date);
+$endDate = new DateTime($leave_apply->end_date);
+
+// Calculate the difference between the two dates
+$interval = $startDate->diff($endDate);
+
+// Get the number of days from the difference
+$daysBetween = $interval->days+1;
+
+// $leave_apply->half_day;
+if($leave_apply->half_day == 'First Half' || $leave_apply->half_day == 'Second Half'){
+
+    $halfDay = 0.5;
+    
+    // $subject = $data['leave_slot'].' Leave Application Submitted - '.$leave_type->name.' - '.$halfDay.' day';
+
+    if($status == 'Approved'){
+
+        $subject = $leave_apply->half_day.' Leave Approved - '.$leave_type->name.' - '.$halfDay.' Day';
+
+    }elseif($status == 'Reject'){
+
+        $subject = $leave_apply->half_day.' Leave Rejected - '.$leave_type->name.' - '.$halfDay.' Day';;
+
+    }
+
+}elseif($leave_apply->half_day == 'Full Day'){
+
+    $fullday = 1;
+
+    // $subject = $data['leave_slot'].' Leave Application Submitted - '.$leave_type->name.' - '.$fullday.' day';
+
+    if($status == 'Approved'){
+
+        $subject = $leave_apply->half_day.' Leave Approved - '.$leave_type->name.' - '.$fullday.' Day';
+
+    }elseif($status == 'Reject'){
+
+        $subject = $leave_apply->half_day.' Leave Rejected - '.$leave_type->name.' - '.$fullday.' Day';;
+
+    }
+
+}else{
+
+    // $subject = 'Leave Application Submitted - '.$leave_type->name.' - '.$daysBetween.' days';
+
+    if($status == 'Approved'){
+
+        $subject = 'Leave Approved - '.$leave_type->name.' - '.$daysBetween.' Days';
+
+    }elseif($status == 'Reject'){
+
+        $subject = 'Leave Rejected - '.$leave_type->name.' - '.$daysBetween.' Days';;
+
+    }
+
+}
+
+
+    // if($status == 'Approved'){
+
+    //     $subject = 'Leave Approved - '.$leave_type->name.' - '.$daysBetween.' Days';
+
+    // }elseif($status == 'Reject'){
+
+    //     $subject = 'Leave Rejected - '.$leave_type->name.' - '.$daysBetween.' Days';;
+
+    // }
+
+    // dd($subject);
+    // $subject = 'Leave Application Submitted '.$leave_type->name;
+    $org_id = $user->organisation_id;
+    $mail_flag = "leave_approve_status";
+
+
+    $data = [
+        'username' => $mail_to,
+        'cc' => $mail_cc,
+        'name' => $apply_leaveuser_data->name,
+        'leave_type' => $leave_type->name,
+        'start_date' => $leave_apply->start_date,
+        'end_date' => $leave_apply->end_date,
+        'leave_status' => $status,
+        'approved_by' => $user->name,
+        'days_count' => $daysBetween,
+    ];
+
+    // dd($subject);
+
+//    Mail::to($user_create->email)->send(new UserRegistrationMail($user_create->email, $request->userpassword));
+   $this->emailService->sendEmailWithOrgConfig($org_id,$subject,$mail_flag,$data);
+
     return redirect()->route('user.homepage')->with('success', 'Leave status updated successfully.');
+
 }else{
 
     return redirect()->route('user.homepage')->with('error', 'Leave status not updated successfully.');
