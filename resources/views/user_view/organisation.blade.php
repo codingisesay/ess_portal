@@ -127,7 +127,7 @@ error_reporting(0);
 
     // Update the profile image
     // document.getElementById('profile-image').src = profileImage;
-    document.getElementById('profile-image').src = profileImage || '{{ asset('storage/' .user_profile_image/Oqr4VRqo7RpQxnmiZCh12zybbcdsyUin2FhAKD3O.jpg) }}';
+    document.getElementById('profile-image').src = profileImage || '{{ asset('storage/' .$profileimahe) }}';
 
 }
 
