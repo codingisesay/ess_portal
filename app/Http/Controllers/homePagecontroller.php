@@ -357,6 +357,42 @@ $interval = $startDate->diff($endDate);
 // Get the number of days from the difference
 $daysBetween = $interval->days+1;
 
+// $leave_apply->half_day;
+if($leave_apply->half_day == 'First Half' || $leave_apply->half_day == 'Second Half'){
+
+    $halfDay = 0.5;
+    
+    // $subject = $data['leave_slot'].' Leave Application Submitted - '.$leave_type->name.' - '.$halfDay.' day';
+
+    if($status == 'Approved'){
+
+        $subject = $leave_apply->half_day.' Leave Approved - '.$leave_type->name.' - '.$halfDay.' Day';
+
+    }elseif($status == 'Reject'){
+
+        $subject = $leave_apply->half_day.' Leave Rejected - '.$leave_type->name.' - '.$halfDay.' Day';;
+
+    }
+
+}elseif($leave_apply->half_day == 'Full Day'){
+
+    $fullday = 1;
+
+    // $subject = $data['leave_slot'].' Leave Application Submitted - '.$leave_type->name.' - '.$fullday.' day';
+
+    if($status == 'Approved'){
+
+        $subject = $leave_apply->half_day.' Leave Approved - '.$leave_type->name.' - '.$fullday.' Day';
+
+    }elseif($status == 'Reject'){
+
+        $subject = $leave_apply->half_day.' Leave Rejected - '.$leave_type->name.' - '.$fullday.' Day';;
+
+    }
+
+}else{
+
+    // $subject = 'Leave Application Submitted - '.$leave_type->name.' - '.$daysBetween.' days';
 
     if($status == 'Approved'){
 
@@ -367,6 +403,19 @@ $daysBetween = $interval->days+1;
         $subject = 'Leave Rejected - '.$leave_type->name.' - '.$daysBetween.' Days';;
 
     }
+
+}
+
+
+    // if($status == 'Approved'){
+
+    //     $subject = 'Leave Approved - '.$leave_type->name.' - '.$daysBetween.' Days';
+
+    // }elseif($status == 'Reject'){
+
+    //     $subject = 'Leave Rejected - '.$leave_type->name.' - '.$daysBetween.' Days';;
+
+    // }
 
     // dd($subject);
     // $subject = 'Leave Application Submitted '.$leave_type->name;
@@ -386,7 +435,7 @@ $daysBetween = $interval->days+1;
         'days_count' => $daysBetween,
     ];
 
-    // dd($data);
+    // dd($subject);
 
 //    Mail::to($user_create->email)->send(new UserRegistrationMail($user_create->email, $request->userpassword));
    $this->emailService->sendEmailWithOrgConfig($org_id,$subject,$mail_flag,$data);

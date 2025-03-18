@@ -708,6 +708,8 @@ for ($i = 0; $i < $leaveCountArray->count(); $i++) {
             'reason' => 'required',
             'leave_slot' => '',
         ]);
+
+        // dd($data);
         $loginUserInfo = Auth::user();
 
         try {
@@ -751,7 +753,25 @@ $interval = $startDate->diff($endDate);
 // Get the number of days from the difference
 $daysBetween = $interval->days+1;
 
-                $subject = 'Leave Application Submitted '.$leave_type->name.' - '.$daysBetween.' days';
+if($data['leave_slot'] == 'First Half' || $data['leave_slot'] == 'Second Half'){
+
+    $halfDay = 0.5;
+    
+    $subject = $data['leave_slot'].' Leave Application Submitted - '.$leave_type->name.' - '.$halfDay.' day';
+
+}elseif($data['leave_slot'] == 'Full Day'){
+
+    $fullday = 1;
+
+    $subject = $data['leave_slot'].' Leave Application Submitted - '.$leave_type->name.' - '.$fullday.' day';
+
+}else{
+
+    $subject = 'Leave Application Submitted - '.$leave_type->name.' - '.$daysBetween.' days';
+
+}
+
+                // $subject = 'Leave Application Submitted '.$leave_type->name.' - '.$daysBetween.' days';
 
                 $org_id = $loginUserInfo->organisation_id;
                 $mail_flag = "applied_leave";
