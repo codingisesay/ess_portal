@@ -230,29 +230,32 @@
                
                 
                 <div class="attendance">
-                    <h1>Attendance Overview</h1>
+                <h1>Attendance Overview</h1>
                     <canvas id="newAttendanceChart" width="900px" height="550px"></canvas>
 
-
+                    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
                     <script>
                         document.addEventListener("DOMContentLoaded", function() {
                             const newCtx = document.getElementById('newAttendanceChart').getContext('2d');
-                    
-                            const attendanceData = {
-                                'April': { on_time: 20, late: 5, absent: 2 },
-                                'May': { on_time: 22, late: 3, absent: 1 },
-                                'June': { on_time: 18, late: 7, absent: 3 }
-                            };
-                    
-                            const months = ['April', 'May', 'June'];
-                            const onTimeData = months.map(month => attendanceData[month]?.on_time || 0);
-                            const lateData = months.map(month => attendanceData[month]?.late || 0);
-                            const absentData = months.map(month => attendanceData[month]?.absent || 0);
-                    
+
+                            // Fetch the attendance data from the Blade variable
+                            const attendanceData = @json($attendanceOverview);
+
+                            // Extract month labels
+                            const months = Object.keys(attendanceData).map(month => {
+                                return new Date(2025, month - 1, 1).toLocaleString('en-US', { month: 'long' });
+                            });
+
+                            // Extract on-time, late, and absent data
+                            const onTimeData = Object.values(attendanceData).map(data => data.on_time || 0);
+                            const lateData = Object.values(attendanceData).map(data => data.late || 0);
+                            const absentData = Object.values(attendanceData).map(data => data.absent || 0);
+
+                            // Determine the max y-axis value for better scaling
                             const maxDays = Math.max(...Object.values(attendanceData).flatMap(obj =>
                                 [obj.on_time || 0, obj.late || 0, obj.absent || 0]
                             ));
-                    
+
                             new Chart(newCtx, {
                                 type: 'bar',
                                 data: {
@@ -265,6 +268,17 @@
                                 },
                                 options: {
                                     responsive: true,
+                                    plugins: {
+                                        tooltip: {
+                                            callbacks: {
+                                                label: function(tooltipItem) {
+                                                    let datasetLabel = tooltipItem.dataset.label || '';
+                                                    let value = tooltipItem.raw;
+                                                    return `${datasetLabel}: ${value} days`;
+                                                }
+                                            }
+                                        }
+                                    },
                                     scales: {
                                         x: { stacked: true },
                                         y: { stacked: true, beginAtZero: true, suggestedMax: maxDays }
@@ -273,83 +287,107 @@
                             });
                         });
                     </script>
+
                 </div>
             </div>
 
             <div class="three">
-                <h1>Absenteeism Rate</h1>
-                <div class="container-absent">
-                    <div class="controls">
-                        <select id="yearSelect">
-                            <option value="2023-24">2023-24</option>
-                            <option value="2022-23">2022-23</option>
-                            <option value="2021-22">2021-22</option>
-                        </select>
-                        <select id="periodSelect">
-                            <option value="yearly">Yearly</option>
-                            <option value="monthly">Monthly</option>
-                            <option value="weekly">Weekly</option>
-                        </select>
-                    </div>
-                    <canvas id="absenteeismChart1" style="width: 800px; height: 250px;"></canvas>
-                    <script>
-                        const absenteeismData = {
-                            days: ['Monday', 'Tuesday', 'Wednesday'],
-                            waveData: [0.1, 0.2, 0.15]
-                        };
+            <h1>Absenteeism Rate</h1>
+<div class="container-absent">
+    <div class="controls">
+        <select id="yearSelect"></select>
+        <!-- <select id="periodSelect">
+            <option value="yearly" selected>Yearly</option>
+            <option value="monthly">Monthly</option>
+            <option value="weekly">Weekly</option>
+        </select> -->
+    </div>
+    <canvas id="absenteeismChart1" style="width: 800px; height: 250px;"></canvas>
 
-                        const absenteeismCtx = document.getElementById('absenteeismChart1').getContext('2d');
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const absenteeismCtx = document.getElementById('absenteeismChart1').getContext('2d');
 
-                        const gradient1 = absenteeismCtx.createLinearGradient(0, 0, 0, 400);
-                        gradient1.addColorStop(0, 'rgba(0, 119, 190, 0.8)');
-                        gradient1.addColorStop(1, 'rgba(0, 70, 130, 0)');
+            // Dynamically populate the year dropdown (Last 5 years)
+            const yearSelect = document.getElementById("yearSelect");
+            const currentYear = new Date().getFullYear();
+            for (let i = 0; i < 5; i++) {
+                let startYear = currentYear - i - 1;
+                let endYear = currentYear - i;
+                let option = document.createElement("option");
+                option.value = `${startYear}-${endYear}`;
+                option.textContent = `${startYear}-${endYear}`;
+                yearSelect.appendChild(option);
+            }
 
-                        new Chart(absenteeismCtx, {
-                            type: 'line',
-                            data: {
-                                labels: absenteeismData.days,
-                                datasets: [{
-                                    label: 'Absenteeism Rate (%)',
-                                    data: absenteeismData.waveData,
-                                    borderColor: '#0077be',
-                                    backgroundColor: gradient1,
-                                    borderWidth: 4,
-                                    fill: true,
-                                    pointBackgroundColor: '#006699',
-                                    pointBorderColor: '#006699',
-                                    pointRadius: 5,
-                                    pointHoverRadius: 7,
-                                    tension: 0.5,
-                                }]
-                            },
-                            options: {
-                                responsive: true,
-                                plugins: {
-                                    title: { display: true, text: 'Absenteeism Rate' },
-                                    legend: { display: false },
-                                    tooltip: {
-                                        callbacks: {
-                                            label: function (context) {
-                                                return (context.raw * 100).toFixed(2) + '%';
-                                            }
-                                        }
-                                    }
-                                },
-                                scales: {
-                                    x: { grid: { display: false } },
-                                    y: {
-                                        beginAtZero: true,
-                                        max: 1,
-                                        ticks: {
-                                            callback: function (value) {
-                                                return (value * 100).toFixed(2) + '%';
-                                            }
-                                        }
-                                    }
+            // Fetch absenteeism data from Laravel
+            const attendanceData = @json($attendanceOverview);
+
+            // Extract months and absenteeism rate (absent days / total working days)
+            const months = Object.keys(attendanceData).map(month => {
+                return new Date(2025, month - 1, 1).toLocaleString('en-US', { month: 'long' });
+            });
+
+            const absenteeismRates = Object.values(attendanceData).map(data => {
+                let totalDays = (data.on_time || 0) + (data.late || 0) + (data.absent || 0);
+                return totalDays > 0 ? (data.absent / totalDays) : 0;
+            });
+
+            const gradient1 = absenteeismCtx.createLinearGradient(0, 0, 0, 400);
+            gradient1.addColorStop(0, 'rgba(0, 119, 190, 0.8)');
+            gradient1.addColorStop(1, 'rgba(0, 70, 130, 0)');
+
+            new Chart(absenteeismCtx, {
+                type: 'line',
+                data: {
+                    labels: months,
+                    datasets: [{
+                        label: 'Absenteeism Rate (%)',
+                        data: absenteeismRates,
+                        borderColor: '#0077be',
+                        backgroundColor: gradient1,
+                        borderWidth: 4,
+                        fill: true,
+                        pointBackgroundColor: '#006699',
+                        pointBorderColor: '#006699',
+                        pointRadius: 5,
+                        pointHoverRadius: 7,
+                        tension: 0.5,
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        title: { display: true, text: 'Absenteeism Rate' },
+                        legend: { display: false },
+                        tooltip: {
+                            callbacks: {
+                                label: function (context) {
+                                    return (context.raw * 100).toFixed(2) + '%';
                                 }
                             }
-                        });
-                    </script>
+                        }
+                    },
+                    scales: {
+                        x: { grid: { display: false } },
+                        y: {
+                            beginAtZero: true,
+                            max: Math.max(...absenteeismRates) + 0.05,  // Adjust max dynamically
+                            ticks: {
+                                callback: function (value) {
+                                    return (value * 100).toFixed(2) + '%';
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        });
+    </script>
+
+
+
                 </div>
             </div>
         </div>
