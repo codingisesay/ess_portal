@@ -160,6 +160,8 @@ Route::middleware(['auth'])->group(function () {
     Route::get('user/hr-policy/category/{id}', [hrPolicyViewController::class, 'getPoliciesByCategory'])->name('user.hr.policy.category');
     Route::get('user/setting', [settingController::class, 'showsetting'])->name('user.setting');
     Route::get('user/organisation', [organisationController::class, 'showOrganisation'])->name('user.view_organisation');
+    Route::get('user/horizontal_organisation', [OrganisationController::class, 'showHorizontalOrganisation'])->name('user.view.horizontal.organisation');
+
     //Insert data
 
     Route::post('user/detail_insert',[empDetailFormController::class,'insertDetail'])->name('detail_insert');
