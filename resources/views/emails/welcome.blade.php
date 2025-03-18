@@ -6,10 +6,15 @@
     <title>{{ $subject }}</title>
 </head>
 <body>
-    <h1>Welcome to Our Platform</h1>
-    <p>Your registration was successful!</p>
-    <p><strong>Your Email:</strong> {{ $data['username'] }}</p>
-    <p><strong>Your Password:</strong> {{ $data['password'] }}</p>
-    <p>Please make sure to change your password after logging in.</p>
+    <p>Dear <b>{{$data['name']}}</b>,</p>
+    <p>Welcome to <b>EmployeeXpert</b>, your HRMS portal for managing attendance, leaves, payroll, and more.</p>
+    <ul>
+        <li><p><strong>Your Email:</strong> {{ $data['username'] }}</p></li>
+        <li><p><strong>Your Password:</strong> {{ $data['password'] }}</p></li>
+        <li><p><strong>Login URL:</strong> <a href="http://13.60.206.138/">Click Me!!</a></p></li>
+    </ul>
+    
+    {{-- <p><strong>Your Password:</strong> {{ $data['password'] }}</p> --}}
+    <p>Please log in and update your profile at your earliest convenience. For any assistance, contact <b>info@siltech.co.in</b>.</p>
 </body>
 </html>
