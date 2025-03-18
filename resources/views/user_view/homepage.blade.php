@@ -347,21 +347,40 @@ error_reporting(0);
                         <td>{{ $leave->leave_resion }}</td>
             
                         <!-- Approve Form -->
+                        <!-- <td>
+                            <form action="{{ route('leave_update_status', ['id' => $leave->leave_appliy_id, 'status' => 'Approved']) }}" method="POST">
+                                @csrf
+                                @method('PUT')
+                                <button type="submit" class="btn btn-success">Approve</button>
+                            </form>
+                        </td> -->
                         <td>
-    <form action="{{ route('leave_update_status', ['id' => $leave->leave_appliy_id]) }}" method="POST">
+    <form action="{{ route('leave_update_status', ['id' => $leave->leave_appliy_id, 'status' => 'Approved']) }}" method="POST" style="display: inline;">
         @csrf
         @method('PUT')
-
-        <input type="radio" name="status" value="Approved" id="approve_{{ $leave->leave_appliy_id }}">
-        <label for="approve_{{ $leave->leave_appliy_id }}">Approve</label>
-
-        <input type="radio" name="status" value="Reject" id="reject_{{ $leave->leave_appliy_id }}">
-        <label for="reject_{{ $leave->leave_appliy_id }}">Reject</label>
-
-        <button type="submit" class="btn btn-primary">Submit</button>
+        <button type="submit" style="font-size: 24px;  border: none; background: none; cursor: pointer;">
+            ✅
+        </button>
+    </form>
+    </td>
+    <td>
+    <form action="{{ route('leave_update_status', ['id' => $leave->leave_appliy_id, 'status' => 'Reject']) }}" method="POST" style="display: inline;">
+        @csrf
+        @method('PUT')
+        <button type="submit" style="font-size: 24px; border: none; background: none; cursor: pointer;">
+            ❌
+        </button>
     </form>
 </td>
-
+            
+                        <!-- Reject Form -->
+                        <!-- <td>
+                            <form action="{{ route('leave_update_status', ['id' => $leave->leave_appliy_id, 'status' => 'Reject']) }}" method="POST">
+                                @csrf
+                                @method('PUT')
+                                <button type="submit" class="btn btn-danger">Reject</button>
+                            </form>
+                        </td> -->
                     </tr>
                 @endforeach
             @endforeach
