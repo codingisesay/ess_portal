@@ -239,7 +239,21 @@ for ($teamMamber = 0; $teamMamber < $dataOfteamMambers->count(); $teamMamber++) 
     array_push($leaveLists, $leaveApply);
 }
 
-     
+$currentDate = Carbon::now();
+$currentMonth = $currentDate->month;
+$currentDay = $currentDate->day;
+
+$holidays_upcoming = DB::table('calendra_masters')
+    ->select('date', 'holiday_name', 'day')
+    ->where('holiday', '=', 'Yes')
+    ->whereMonth('date', '=', $currentMonth)
+    ->whereDay('date', '>=', $currentDay)
+    ->get();
+
+$holidays_upcoming = $holidays_upcoming->map(function ($holiday) {
+    $holiday->formatted_date = Carbon::parse($holiday->date)->format('d F');
+    return $holiday;
+});
        
 
        
@@ -249,7 +263,7 @@ for ($teamMamber = 0; $teamMamber < $dataOfteamMambers->count(); $teamMamber++) 
         // dd($anniversaries);
 
     // Return a view with the logs and additional data
-    return view('user_view.homepage', compact('title','logs', 'thoughtOfTheDay', 'newsAndEvents', 'upcomingBirthdays','todayBirthdays', 'anniversaries', 'toDoList', 'currentMonth', 'currentDay', 'leaveUsage','leaveLists'));
+    return view('user_view.homepage', compact('title','logs', 'thoughtOfTheDay', 'newsAndEvents', 'upcomingBirthdays','todayBirthdays', 'anniversaries', 'toDoList', 'currentMonth', 'currentDay', 'leaveUsage','leaveLists', 'holidays_upcoming'));
 }
 
     
