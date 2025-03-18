@@ -330,6 +330,7 @@ error_reporting(0);
                     <th>Leave Type</th>
                     <th>Start Date</th>
                     <th>End Date</th>
+                    <th>Days Count</th>
                     <th>Reason</th>
                     <th>Approve</th>
                     <th>Reject</th>
@@ -344,6 +345,7 @@ error_reporting(0);
                         <td>{{ $leave->leave_name }}</td>
                         <td>{{ \Carbon\Carbon::parse($leave->leave_start_date)->format('d-m-Y') }}</td>
                         <td>{{ \Carbon\Carbon::parse($leave->leave_end_date)->format('d-m-Y') }}</td>
+                        <td>{{ $leave->days_count }}</td>
                         <td>{{ $leave->leave_resion }}</td>
             
                         <!-- Approve Form -->
