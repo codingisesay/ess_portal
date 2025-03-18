@@ -8,7 +8,7 @@ function renderEmployeeTree($employees) {
         echo '<li class="employee" data-emp-id="' . $employee->user_id . '" data-manager-id="' . ($employee->reporting_manager ?? '') . '">';
         echo '<div class="employee-box">';
         echo '<div class="department" style="background-color: ' . ($employee->department_color ?? '#8A3366') . ';">' . $employee->department . '</div>';
-        echo '<div class="profile-container"><img src="' . ($employee->profile_image ?? 'default-profile.jpg') . '" alt="Profile Image" class="profile-img"></div>';
+        echo '<div class="profile-container"><img src="' . (isset($employee->profile_image) && !empty($employee->profile_image) ? asset('storage/' . $employee->profile_image) : 'default-profile.jpg') . '" alt="Profile Image" class="profile-img"></div>';
         echo '<div class="emp-info"><div class="emp-name">' . $employee->employee_name . '</div>';
         echo '<div class="emp-designation">' . $employee->designation . '</div></div>';
         echo '</div>';
@@ -183,13 +183,14 @@ function renderEmployeeTree($employees) {
             align-items: center;
             margin-bottom: 5px;
         
-            border: 1px solid #ccc;
+            /* border: 1px solid #ccc; */
         }
 
         .tree li .profile-container img {
             width: 100%;
             height: 100%;
             object-fit: cover;
+            border-radius: 50%;
         }
 
         .tree li .employee-box {
