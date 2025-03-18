@@ -127,13 +127,25 @@ error_reporting(0);
 
                 <!-- Upcoming Holiday Card -->
                 <div class="card holiday1">
-                    <h4>Upcoming Holidays</h4>
+    <h4>Upcoming Holidays</h4>
+    
+    @if($holidays_upcoming->isNotEmpty())
+        <ul>
+            @foreach($holidays_upcoming as $holiday)
+                <li>
+                    <strong>{{ $holiday->formatted_date }}</strong> - {{ $holiday->holiday_name }} ({{ $holiday->day }})
+                </li>
+            @endforeach
+        </ul>
+    @else
+        <p>No upcoming holidays this month.</p>
+    @endif
+</div>
 
-                   
-                </div>
             </div>
 
         </section>
+        
        
         <!-- Floating Check-Out Button -->
         <!-- <form action="{{route('user.logout')}}" method="POST"><div id="floating-btn">
@@ -337,22 +349,40 @@ error_reporting(0);
                         <td>{{ $leave->leave_resion }}</td>
             
                         <!-- Approve Form -->
-                        <td>
+                        <!-- <td>
                             <form action="{{ route('leave_update_status', ['id' => $leave->leave_appliy_id, 'status' => 'Approved']) }}" method="POST">
                                 @csrf
                                 @method('PUT')
                                 <button type="submit" class="btn btn-success">Approve</button>
                             </form>
-                        </td>
+                        </td> -->
+                        <td>
+    <form action="{{ route('leave_update_status', ['id' => $leave->leave_appliy_id, 'status' => 'Approved']) }}" method="POST" style="display: inline;">
+        @csrf
+        @method('PUT')
+        <button type="submit" style="font-size: 24px;  border: none; background: none; cursor: pointer;">
+            ✅
+        </button>
+    </form>
+    </td>
+    <td>
+    <form action="{{ route('leave_update_status', ['id' => $leave->leave_appliy_id, 'status' => 'Reject']) }}" method="POST" style="display: inline;">
+        @csrf
+        @method('PUT')
+        <button type="submit" style="font-size: 24px; border: none; background: none; cursor: pointer;">
+            ❌
+        </button>
+    </form>
+</td>
             
                         <!-- Reject Form -->
-                        <td>
+                        <!-- <td>
                             <form action="{{ route('leave_update_status', ['id' => $leave->leave_appliy_id, 'status' => 'Reject']) }}" method="POST">
                                 @csrf
                                 @method('PUT')
                                 <button type="submit" class="btn btn-danger">Reject</button>
                             </form>
-                        </td>
+                        </td> -->
                     </tr>
                 @endforeach
             @endforeach
