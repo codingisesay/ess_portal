@@ -1,7 +1,8 @@
 @extends('user_view.header')
 @section('content')
 <?php
-
+// $user = Auth::user();
+// dd($user);
 function renderEmployeeNode($employee) {
     $hasSubordinates = !empty($employee->subordinates);
     ob_start();
@@ -19,7 +20,8 @@ function renderEmployeeNode($employee) {
             '<?= $employee->department ?>',
             '<?= $employee->per_city ?>',
             '<?= $employee->offical_phone_number ?>',
-            '<?= $employee->offical_email_address ?>'
+            '<?= $employee->offical_email_address ?>',
+            '<?= asset('storage/' . $employee->profile_image) ?>'  // Pass the profile image URL
         )">
             <?= $employee->employee_name ?>
         </span>
@@ -113,16 +115,21 @@ error_reporting(0);
         }
     }
 
-    function displayEmployeeDetails(userId, name, designation, empNo, manager, department, city, phone, email) {  
-        document.getElementById('emp-name').textContent = name;  
-        document.getElementById('emp-designation').textContent = designation;  
-        document.getElementById('emp-no').textContent = empNo;  
-        document.getElementById('emp-manager').textContent = manager;  
-        document.getElementById('emp-department').textContent = department;  
-        document.getElementById('emp-city').textContent = city;  
-        document.getElementById('emp-phone').textContent = phone;  
-        document.getElementById('emp-email').textContent = email;  
-    }  
+    function displayEmployeeDetails(userId, name, designation, empNo, manager, department, city, phone, email, profileImage) {  
+    document.getElementById('emp-name').textContent = name;  
+    document.getElementById('emp-designation').textContent = designation;  
+    document.getElementById('emp-no').textContent = empNo;  
+    document.getElementById('emp-manager').textContent = manager;  
+    document.getElementById('emp-department').textContent = department;  
+    document.getElementById('emp-city').textContent = city;  
+    document.getElementById('emp-phone').textContent = phone;  
+    document.getElementById('emp-email').textContent = email;
+
+    // Update the profile image
+    // document.getElementById('profile-image').src = profileImage;
+    document.getElementById('profile-image').src = profileImage || '{{ asset('storage/' .user_profile_image/Oqr4VRqo7RpQxnmiZCh12zybbcdsyUin2FhAKD3O.jpg) }}';
+
+}
 
     function highlightEmployee() {  
         const searchQuery = document.getElementById('search-bar').value.toLowerCase();  
@@ -150,22 +157,41 @@ error_reporting(0);
     }  
 
     // Set default selected option to "Vertical" and display employee details on load  
-    window.onload = function() {  
-        document.getElementById('display-option').value = 'vertical'; // Set default to Vertical chart  
+    // window.onload = function() {  
+    //     document.getElementById('display-option').value = 'vertical'; // Set default to Vertical chart  
 
-        // Get the employee details from Laravel session
-        const empNo = "{{ Auth::user()->employee_no }}";
-        const empName = "{{ Auth::user()->employee_name }}";
-        const empDesignation = "{{ Auth::user()->designation }}";
-        const empManager = "{{ Auth::user()->reporting_manager_name }}"; // Ensure this is the manager's name
-        const empDepartment = "{{ Auth::user()->department }}";
-        const empCity = "{{ Auth::user()->per_city }}";
-        const empPhone = "{{ Auth::user()->offical_phone_number }}";
-        const empEmail = "{{ Auth::user()->offical_email_address }}";
+    //     // Get the employee details from Laravel session
+    //     const empNo = "{{ Auth::user()->employee_no }}";
+    //     const empName = "{{ Auth::user()->employee_name }}";
+    //     const empDesignation = "{{ Auth::user()->designation }}";
+    //     const empManager = "{{ Auth::user()->reporting_manager_name }}"; // Ensure this is the manager's name
+    //     const empDepartment = "{{ Auth::user()->department }}";
+    //     const empCity = "{{ Auth::user()->per_city }}";
+    //     const empPhone = "{{ Auth::user()->offical_phone_number }}";
+    //     const empEmail = "{{ Auth::user()->offical_email_address }}";
 
-        // Call the function to display the employee details  
-        displayEmployeeDetails(empNo, empName, empDesignation, empNo, empManager, empDepartment, empCity, empPhone, empEmail);  
-    };  
+    //     // Call the function to display the employee details  
+    //     displayEmployeeDetails(empNo, empName, empDesignation, empNo, empManager, empDepartment, empCity, empPhone, empEmail);  
+    // };  
+
+    // Set default selected option to "Vertical" and display employee details on load
+window.onload = function() {  
+    document.getElementById('display-option').value = 'vertical'; // Set default to Vertical chart  
+
+    // Get the employee details from Laravel session
+    const empName = "{{ $employees_login->employee_name }}";
+    const empDesignation = "{{ $employees_login->designation }}";
+    const empNo = "{{ $employees_login->employee_no }}";
+    const empManager = "{{ $employees_login->reporting_manager_name }}"; // Ensure this is the manager's name
+    const empDepartment = "{{ $employees_login->department }}";
+    const empCity = "{{ $employees_login->per_city }}";
+    const empPhone = "{{ $employees_login->offical_phone_number }}";
+    const empEmail = "{{ $employees_login->offical_email_address }}";
+    const profileImage = "{{ asset('storage/' .$profileimahe) }}"; // Get the profile image from session
+
+    // Call the function to display the logged-in employee details
+    displayEmployeeDetails(empNo, empName, empDesignation, empNo, empManager, empDepartment, empCity, empPhone, empEmail, profileImage);
+};
 </script>
 
 <style>
