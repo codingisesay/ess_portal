@@ -51,12 +51,13 @@ class userController extends Controller
           
           if($user_create){
 
-      $subject = 'Registration Successful';
+      $subject = 'Welcome to EmployeeXpert';
       $org_id = $data['organisation_id'];
       $mail_flag = "registration_mail";
       $data = [
           'username' => $user_create->email,
           'password' => $request->userpassword,
+          'name' => $data['username'],
       ];
 
       // Send the registration email
