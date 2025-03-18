@@ -144,7 +144,8 @@ error_reporting(0);
 
         if (displayOption === 'horizontal') {  
             // Redirect to org.php when horizontal chart is selected  
-            window.location.href = '../orgnizationchart/org.php';  
+            window.location.href = "{{ route('user.view.horizontal.organisation') }}"; 
+             
         }  
         // Default behavior for vertical chart can be handled without alert  
     }  
