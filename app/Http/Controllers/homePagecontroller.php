@@ -264,15 +264,25 @@ $holidays_upcoming = $holidays_upcoming->map(function ($holiday) {
     return $holiday;
 });
        
+// Fetch week-offs
+$week_offs = DB::table('calendra_masters')
+    ->select('date', 'day')
+    ->where('week_off', '=', 'YES')
+    ->whereMonth('date', '=', $currentMonth)
+    ->get();
 
-       
+// Format week-off dates
+$week_offs = $week_offs->map(function ($week_off) {
+    $week_off->formatted_date = Carbon::parse($week_off->date)->format('d F');
+    return $week_off;
+});
        
 
 
         // dd($anniversaries);
 
     // Return a view with the logs and additional data
-    return view('user_view.homepage', compact('title','logs', 'thoughtOfTheDay', 'newsAndEvents', 'upcomingBirthdays','todayBirthdays', 'anniversaries', 'toDoList', 'currentMonth', 'currentDay', 'leaveUsage','leaveLists', 'holidays_upcoming'));
+    return view('user_view.homepage', compact('title','logs', 'thoughtOfTheDay', 'newsAndEvents', 'upcomingBirthdays','todayBirthdays', 'anniversaries', 'toDoList', 'currentMonth', 'currentDay', 'leaveUsage','leaveLists', 'holidays_upcoming', 'week_offs'));
 }
 
     
