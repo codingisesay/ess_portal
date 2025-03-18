@@ -127,13 +127,25 @@ error_reporting(0);
 
                 <!-- Upcoming Holiday Card -->
                 <div class="card holiday1">
-                    <h4>Upcoming Holidays</h4>
+    <h4>Upcoming Holidays</h4>
+    
+    @if($holidays_upcoming->isNotEmpty())
+        <ul>
+            @foreach($holidays_upcoming as $holiday)
+                <li>
+                    <strong>{{ $holiday->formatted_date }}</strong> - {{ $holiday->holiday_name }} ({{ $holiday->day }})
+                </li>
+            @endforeach
+        </ul>
+    @else
+        <p>No upcoming holidays this month.</p>
+    @endif
+</div>
 
-                   
-                </div>
             </div>
 
         </section>
+        
        
         <!-- Floating Check-Out Button -->
         <!-- <form action="{{route('user.logout')}}" method="POST"><div id="floating-btn">
@@ -336,21 +348,20 @@ error_reporting(0);
             
                         <!-- Approve Form -->
                         <td>
-                            <form action="{{ route('leave_update_status', ['id' => $leave->leave_appliy_id, 'status' => 'Approved']) }}" method="POST">
-                                @csrf
-                                @method('PUT')
-                                <button type="submit" class="btn btn-success">Approve</button>
-                            </form>
-                        </td>
-            
-                        <!-- Reject Form -->
-                        <td>
-                            <form action="{{ route('leave_update_status', ['id' => $leave->leave_appliy_id, 'status' => 'Reject']) }}" method="POST">
-                                @csrf
-                                @method('PUT')
-                                <button type="submit" class="btn btn-danger">Reject</button>
-                            </form>
-                        </td>
+    <form action="{{ route('leave_update_status', ['id' => $leave->leave_appliy_id]) }}" method="POST">
+        @csrf
+        @method('PUT')
+
+        <input type="radio" name="status" value="Approved" id="approve_{{ $leave->leave_appliy_id }}">
+        <label for="approve_{{ $leave->leave_appliy_id }}">Approve</label>
+
+        <input type="radio" name="status" value="Reject" id="reject_{{ $leave->leave_appliy_id }}">
+        <label for="reject_{{ $leave->leave_appliy_id }}">Reject</label>
+
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+</td>
+
                     </tr>
                 @endforeach
             @endforeach

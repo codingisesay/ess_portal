@@ -471,6 +471,36 @@ body {
     margin-left: -3px;
 }
 
+.holiday1 ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.holiday1 ul li {
+    background: rgba(255, 255, 255, 0.2);
+    padding: 10px;
+    border-radius: 8px;
+    margin-bottom: 8px;
+    font-size: 12px;
+    font-weight: normal;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.holiday1 ul li strong {
+    color: black;
+    /* Highlighted date */
+    font-weight: bold;
+}
+
+.holiday1 p {
+    font-size: 14px;
+    color: #f8f8f8;
+    opacity: 0.8;
+}
+
 /* ===========================
    BUTTONS
 =========================== */
