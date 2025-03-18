@@ -228,27 +228,76 @@ if($emp_details->employee_type == 1){
 $dataOfteamMambers = DB::table('emp_details')->where('reporting_manager', '=', $user->id)->get();
 
 // Initialize the leave lists array
+// $leaveLists = array();
+
+// for ($teamMamber = 0; $teamMamber < $dataOfteamMambers->count(); $teamMamber++) {
+//     $leaveApply = DB::table('leave_applies')
+//         ->join('leave_types', 'leave_applies.leave_type_id', '=', 'leave_types.id')
+//         ->join('emp_details', 'leave_applies.user_id', '=', 'emp_details.user_id')
+//         ->select(
+//             'leave_applies.start_date as leave_start_date', 'leave_applies.end_date as leave_end_date', 
+//             'leave_applies.description as leave_resion', 'leave_applies.id as leave_appliy_id',
+//             'leave_types.name as leave_name', 'emp_details.employee_no as employee_no', 
+//             'emp_details.employee_name as employee_name','leave_applies.half_day as status_half_day'
+//         )
+//         ->where('leave_applies.user_id', '=', $dataOfteamMambers[$teamMamber]->user_id)
+//         ->whereIn('leave_applies.leave_approve_status', ['Pending', 'Rejected'])
+//         ->get();
+
+//     // Add the retrieved leave apply data to the leaveLists array
+//     array_push($leaveLists, $leaveApply);
+// }
+
+//     dd($leaveLists); 
+
 $leaveLists = array();
 
 for ($teamMamber = 0; $teamMamber < $dataOfteamMambers->count(); $teamMamber++) {
+    // Fetch leave apply data for each team member
     $leaveApply = DB::table('leave_applies')
         ->join('leave_types', 'leave_applies.leave_type_id', '=', 'leave_types.id')
         ->join('emp_details', 'leave_applies.user_id', '=', 'emp_details.user_id')
         ->select(
-            'leave_applies.start_date as leave_start_date', 'leave_applies.end_date as leave_end_date', 
-            'leave_applies.description as leave_resion', 'leave_applies.id as leave_appliy_id',
-            'leave_types.name as leave_name', 'emp_details.employee_no as employee_no', 
-            'emp_details.employee_name as employee_name'
+            'leave_applies.start_date as leave_start_date', 
+            'leave_applies.end_date as leave_end_date', 
+            'leave_applies.description as leave_resion', 
+            'leave_applies.id as leave_appliy_id',
+            'leave_types.name as leave_name', 
+            'emp_details.employee_no as employee_no', 
+            'emp_details.employee_name as employee_name',
+            'leave_applies.half_day as status_half_day'
         )
         ->where('leave_applies.user_id', '=', $dataOfteamMambers[$teamMamber]->user_id)
         ->whereIn('leave_applies.leave_approve_status', ['Pending', 'Rejected'])
-        ->get();
+        ->get()
+        ->map(function ($leave) {
+            // Calculate number of days
+            $startDate = \Carbon\Carbon::parse($leave->leave_start_date);
+            $endDate = \Carbon\Carbon::parse($leave->leave_end_date);
 
-    // Add the retrieved leave apply data to the leaveLists array
+            // Calculate the base number of days between start and end date
+            $daysCount = $startDate->diffInDays($endDate) + 1; // Including both start and end dates
+
+            // Adjust based on status_half_day
+            if ($leave->status_half_day == 'First Half' || $leave->status_half_day == 'Second Half') {
+                $daysCount = 0.5; // Half day
+            } elseif ($leave->status_half_day == 'Full day') {
+                $daysCount = 1; // Full day
+            }
+
+            // Add the calculated number of days to the leave object
+            $leave->days_count = $daysCount;
+
+            return $leave;
+        });
+
+    // Add the retrieved and modified leave apply data to the leaveLists array
     array_push($leaveLists, $leaveApply);
 }
 
-     
+// Dump the result for debugging
+// dd($leaveLists);
+
        
 
        
@@ -435,7 +484,7 @@ if($leave_apply->half_day == 'First Half' || $leave_apply->half_day == 'Second H
         'days_count' => $daysBetween,
     ];
 
-    // dd($subject);
+   
 
 //    Mail::to($user_create->email)->send(new UserRegistrationMail($user_create->email, $request->userpassword));
    $this->emailService->sendEmailWithOrgConfig($org_id,$subject,$mail_flag,$data);
