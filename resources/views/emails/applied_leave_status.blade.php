@@ -48,10 +48,5 @@ if($data['leave_status'] == "Approved"){?>
 <b>EmployeeXpert Team</b><br>
     </address>
 
-    {{-- <h1>Welcome to Our Platform</h1>
-    <p>Your registration was successful!</p>
-    <p><strong>Your Email:</strong> {{ $data['username'] }}</p>
-    <p><strong>Your Password:</strong> {{ $data['password'] }}</p>
-    <p>Please make sure to change your password after logging in.</p> --}}
 </body>
 </html>
