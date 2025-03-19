@@ -100,7 +100,7 @@ class editUserController extends Controller
     $edituserId = session('id');
     $loginUserInfo = User::where('id', $edituserId)->first();
 
-    dd($loginUserInfo->id);
+    // dd($loginUserInfo->id);
 
     $users = User::where('organisation_id', $loginUserInfo->organisation_id)->get();
     $empStatus = emp_details::where('user_id', $loginUserInfo->id)->get();
