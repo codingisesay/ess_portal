@@ -58,6 +58,7 @@ class userController extends Controller
           'username' => $user_create->email,
           'password' => $request->userpassword,
           'name' => $data['username'],
+          'org_id' => $data['organisation_id'],
       ];
 
       // Send the registration email
