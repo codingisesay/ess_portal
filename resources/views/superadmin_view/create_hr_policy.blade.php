@@ -92,7 +92,7 @@ $id = Auth::guard('superadmin')->user()->id;
                         <th>Id</th>
                         <th>TITLE</th>
                         <th>CATEGORY</th>
-                        <th>CONTENT</th>
+                        <!-- <th>CONTENT</th> -->
                         <th>Status</th>
                         <th>EDIT</th>
                     </tr>
@@ -103,7 +103,7 @@ $id = Auth::guard('superadmin')->user()->id;
                             <td>{{ $loop->iteration }}</td>
                             <td>{{ $data->policy_title }}</td>
                             <td>{{ $data->policy_categorie_id }}</td>
-                            <td>{{ $data->policy_content }}</td>
+                            <!-- <td>{{ $data->policy_content }}</td> -->
                             <td>{{ $data->status }}</td>
                             <td><button class="edit-icon">Edit</button></td>
                         </tr>

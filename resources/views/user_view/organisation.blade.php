@@ -26,11 +26,11 @@ function renderEmployeeNode($employee) {
             <?php 
             // Gender-specific image display
             if ($employee->gender == 'Male') {
-                echo '<img src="' . asset('user_end/images/men.png') . '" alt="Male" style="width:20px; height:20px; margin-right: 5px;">';
+                echo '<img src="' . asset('user_end/images/man2.png') . '" alt="Male" style="width:20px; height:20px; margin-right: 5px;">';
             } elseif ($employee->gender == 'Female') {
-                echo '<img src="' . asset('user_end/images/women.png') . '" alt="Female" style="width:20px; height:20px; margin-right: 5px;">';
+                echo '<img src="' . asset('user_end/images/woman.png') . '" alt="Female" style="width:20px; height:20px; margin-right: 5px;">';
             } else {
-                echo '<img src="' . asset('user_end/images/gender-neutral.png') . '" alt="Gender Neutral" style="width:20px; height:20px; margin-right: 5px;">'; // You can use a gender-neutral icon here if needed
+                echo '<img src="' . asset('user_end/images/male-and-female.png') . '" alt="Gender Neutral" style="width:20px; height:20px; margin-right: 5px;">'; // You can use a gender-neutral icon here if needed
             }
             ?>
             <?= $employee->employee_name ?>
