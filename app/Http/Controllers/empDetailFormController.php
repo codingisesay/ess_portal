@@ -219,6 +219,39 @@ class empDetailFormController extends Controller
 
     }
 
+// public function loadpreempuser()
+// {
+//     $loginUserInfo = Auth::user();
+//     $countrys = countrie::get();
+
+//     $emp_preEmp_details = emp_previous_employment::where('user_id', $loginUserInfo->id)->get()->map(function ($item) {
+//         $item->last_drawn_annual_salary = $this->formatIndianCurrency($item->last_drawn_annual_salary);
+//         return $item;
+//     });
+
+//     return view('user_view.emp_pre_empl_det', compact('emp_preEmp_details', 'countrys'));
+// }
+
+
+// private function formatIndianCurrency($number) {
+//     $number = (float)$number; // Ensure it's a float
+//     $number = number_format($number, 2, '.', ''); // Format with 2 decimal places
+
+//     if (strpos($number, '.00') !== false) {
+//         $number = str_replace('.00', '', $number); // Remove .00 if present
+//     }
+
+//     $number = (string)$number;
+//     $lastThree = substr($number, -3);
+//     $restUnits = substr($number, 0, -3);
+
+//     if ($restUnits != '') {
+//         $lastThree = ',' . $lastThree;
+//     }
+
+//     return preg_replace("/\B(?=(\d{2})+(?!\d))/", ",", $restUnits) . $lastThree;
+// }
+
     public function insertPreEmp(Request $request){
 
         $data = $request->validate([

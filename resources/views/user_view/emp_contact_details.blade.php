@@ -4,6 +4,8 @@
 <link rel="stylesheet" href="{{ asset('errors/error.css') }}">
 
 <link rel="stylesheet" href="{{ asset('user_end/css/onboarding_form.css') }}">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
 <?php 
 error_reporting(0);
 $id = Auth::guard('web')->user()->id;
@@ -12,6 +14,10 @@ $id = Auth::guard('web')->user()->id;
 // exit();
 // dd($emp_contact_datas); 
 // dd($countrys);
+
+$name = Auth::guard('web')->user()->name;
+$employeeID = Auth::guard('web')->user()->employeeID;
+$email = Auth::guard('web')->user()->email;
 
 ?>
 @if(session('success'))
@@ -56,6 +62,7 @@ $id = Auth::guard('web')->user()->id;
 
               <div class="address-section">
                   <h3>Permanent Address</h3>
+                
                   <button type="button" class="clear-btn" onclick="clearForm()">Clear Adderess</button>
 
 
@@ -269,7 +276,7 @@ $id = Auth::guard('web')->user()->id;
                   
                   <input type="email" id="email" name="email" class="form-control"
                       placeholder=""
-                      pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}" required value="{{ old('email', $emp_contact_datas[0]->offical_email_address) }}">
+                      pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}" required value="{{ $email }}" readonly>
                       <label for="emailID">Offical Email Address<span style="color: red;">*</span></label>
                   <span class="error" id="emailIDError"></span>
               </div>

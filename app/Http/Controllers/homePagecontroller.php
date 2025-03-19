@@ -181,6 +181,7 @@ if($emp_details->employee_type == 1){
         ->select('emp_details.employee_name as employee_nme', 'date_of_birth', 'organisation_designations.name as designation_name','user_status_imgs.*')
         ->whereMonth('date_of_birth', '=', $currentMonth)
         ->whereDay('date_of_birth', '>=', $currentDay)
+        ->orderByRaw("DATE_FORMAT(date_of_birth, '%m-%d') >= ? DESC, DATE_FORMAT(date_of_birth, '%m-%d') ASC", [$currentDate->format('m-d')]) 
         ->get()
         ->map(function ($employee) use ($currentDay, $currentDate) {
             $birthDate = new Carbon($employee->date_of_birth);
@@ -215,6 +216,7 @@ if($emp_details->employee_type == 1){
         ->select('Employee_Name', 'Joining_Date')
         ->whereMonth('Joining_Date', '=', $currentMonth)
         ->whereDay('Joining_Date', '>=', $currentDay)
+        ->orderByRaw("DATE_FORMAT(Joining_Date, '%m-%d') >= ? DESC, DATE_FORMAT(Joining_Date, '%m-%d') ASC", [$currentDate->format('m-d')]) 
         ->get()
         ->map(function ($employee) use ($currentDay, $currentDate) {
             $joiningDate = new Carbon($employee->Joining_Date);
