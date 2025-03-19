@@ -21,7 +21,8 @@ function renderEmployeeNode($employee) {
             '<?= $employee->per_city ?>',
             '<?= $employee->offical_phone_number ?>',
             '<?= $employee->offical_email_address ?>',
-            '<?= asset('storage/' . $employee->profile_image) ?>'
+
+            '<?= !empty($employee->profile_image) ? asset('storage/' . $employee->profile_image) : asset('storage/user_profile_image/Oqr4VRqo7RpQxnmiZCh12zybbcdsyUin2FhAKD3O.jpg') ?>',
         )">
             <?php 
             // Gender-specific image display
