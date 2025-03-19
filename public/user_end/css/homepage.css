@@ -24,6 +24,12 @@ body {
     box-sizing: border-box;
 }
 
+.main-group1 {
+    padding: 20px;
+    margin: 0 auto;
+    box-sizing: border-box;
+}
+
 /* Flexbox for the first .main-group */
 .main-group:first-of-type {
     display: flex;
