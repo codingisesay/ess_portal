@@ -20,7 +20,7 @@ error_reporting(0);
     <div class="header">
         <h1>Human Resource Policy</h1>
         <div class="search-bar">
-            <input type="text" placeholder="Search here..." id="searchInput">
+            <input type="text" placeholder="Search Category..." id="searchInput">
             <div class="search-icon-circle">
                 <img src="{{ asset('user_end/images/search (2) 3.png') }}" alt="Search Icon">
             </div>
@@ -72,97 +72,87 @@ error_reporting(0);
     </div>
 
     <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            const categoryItems = document.querySelectorAll('.category-item');
-            const contentAreas = document.querySelectorAll('.content-area');
-            const searchInput = document.getElementById('searchInput');
+    document.addEventListener("DOMContentLoaded", function () {
+        const categoryItems = document.querySelectorAll('.category-item');
+        const contentAreas = document.querySelectorAll('.content-area');
 
-            // Function to reset all content areas
-            const resetContentAreas = () => {
-                contentAreas.forEach(area => {
-                    area.style.display = 'none'; // Hide all content areas
-                    area.classList.remove('active'); // Remove active class
-                });
-            };
-
-            // Function to show content frames for the selected category
-            const showCategoryContent = (categoryId) => {
-                contentAreas.forEach(area => {
-                    if (area.getAttribute('data-category') === categoryId) {
-                        area.style.display = 'block'; // Show the content area
-                        area.classList.add('active'); // Mark it as active
-                    }
-                });
-            };
-
-            // Event listener for category selection
-            categoryItems.forEach(item => {
-                item.addEventListener('click', function () {
-                    const categoryId = item.getAttribute('data-category');
-
-                    // Remove 'active' class from all categories
-                    categoryItems.forEach(it => it.classList.remove('active'));
-                    // Add 'active' class to the selected category
-                    item.classList.add('active');
-
-                    // Reset all content areas
-                    resetContentAreas();
-
-                    // Show content for the selected category
-                    showCategoryContent(categoryId);
-
-                    // Clear the search bar and reset its state
-                    searchInput.value = "";
-                });
+        // Function to reset all content areas
+        const resetContentAreas = () => {
+            contentAreas.forEach(area => {
+                area.style.display = 'none'; // Hide all content areas
+                area.classList.remove('active'); // Remove active class
             });
+        };
 
-            // Search functionality
-            searchInput.addEventListener('input', function () {
-                const query = searchInput.value.toLowerCase().trim();
-
-                if (query === "") {
-                    // Restore initial state when search input is cleared
-                    resetContentAreas();
-
-                    // Activate the first category and its content area by default
-                    if (categoryItems.length > 0) {
-                        const firstCategory = categoryItems[0];
-                        const firstCategoryId = firstCategory.getAttribute('data-category');
-                        firstCategory.classList.add('active'); // Mark the first category as active
-                        showCategoryContent(firstCategoryId);
-                    }
-                } else {
-                    // Filter content frames based on the search query
-                    resetContentAreas();
-                    contentAreas.forEach(area => {
-                        const titles = area.querySelectorAll('.content-item h3');
-                        let matchFound = false;
-
-                        titles.forEach(title => {
-                            const titleText = title.textContent.toLowerCase();
-                            if (titleText.includes(query)) {
-                                matchFound = true;
-                            }
-                        });
-
-                        // Show content areas with matching titles
-                        if (matchFound) {
-                            area.style.display = 'block';
-                        }
-                    });
-
-                    // Remove 'active' class from all categories
-                    categoryItems.forEach(item => item.classList.remove('active'));
+        // Function to show content frames for the selected category
+        const showCategoryContent = (categoryId) => {
+            contentAreas.forEach(area => {
+                if (area.getAttribute('data-category') === categoryId) {
+                    area.style.display = 'block'; // Show the content area
+                    area.classList.add('active'); // Mark it as active
                 }
             });
+        };
 
-            // Activate the first category and its content area by default
-            if (categoryItems.length > 0) {
-                const firstCategory = categoryItems[0];
-                const firstCategoryId = firstCategory.getAttribute('data-category');
-                firstCategory.classList.add('active'); // Mark the first category as active
-                showCategoryContent(firstCategoryId);
+        // Event listener for category selection
+        categoryItems.forEach(item => {
+            item.addEventListener('click', function () {
+                const categoryId = item.getAttribute('data-category');
+
+                // Remove 'active' class from all categories
+                categoryItems.forEach(it => it.classList.remove('active'));
+                // Add 'active' class to the selected category
+                item.classList.add('active');
+
+                // Reset all content areas
+                resetContentAreas();
+
+                // Show content for the selected category
+                showCategoryContent(categoryId);
+            });
+        });
+
+        // Activate the first category and its content area by default
+        if (categoryItems.length > 0) {
+            const firstCategory = categoryItems[0];
+            const firstCategoryId = firstCategory.getAttribute('data-category');
+            firstCategory.classList.add('active'); // Mark the first category as active
+            showCategoryContent(firstCategoryId);
+        }
+    });
+</script>
+
+
+<script>
+    // Get references to the search input and category items
+    const searchInput = document.getElementById('searchInput');
+    const categoryItems = document.querySelectorAll('.category-item');
+
+    // Event listener for input changes
+    searchInput.addEventListener('input', function() {
+        // Get the search term and convert to lowercase for case-insensitive matching
+        const searchTerm = searchInput.value.toLowerCase();
+
+        // Loop through each category item
+        categoryItems.forEach(function(item) {
+            // Check if the category item contains the search term
+            if (item.textContent.toLowerCase().includes(searchTerm)) {
+                // Highlight the item by adding a 'highlight' class (you can define the style for this class)
+                item.classList.add('highlight');
+            } else {
+                // Remove the highlight if the item doesn't match
+                item.classList.remove('highlight');
             }
         });
-    </script>
+    });
+</script>
+<style>
+    /* Define the highlight class for styling */
+    .highlight {
+        background-color: #FFC107;  /* You can customize this style */
+        font-weight: bold;         /* Add other styles for highlighting */
+    }
+</style>
+
+
     @endsection

@@ -20,18 +20,18 @@
                     ?>
                     <img src="{{ asset('storage/'.$profileimahe) }}" class="profile-image" alt="Profile Picture">
                 </div>
-                <h2>{{ ucfirst($userDetails->name ?? 'N/A') }}</h2>
+                <h2>{{ ucfirst($userDetails->name ?? '-') }}</h2>
                 <div class="job-title">
-                    <p><strong>Designation</strong> <weak>{{ ucfirst($userDetails->designation_name ?? 'N/A') }}</weak></p>
-                    <p><strong>Department</strong> <weak>{{ ucfirst($userDetails->department_name ?? 'N/A') }}</weak></p>
-                    <p><strong>Office</strong> <weak>{{ ucfirst($userDetails->branch_name ?? 'N/A') }}</weak></p>
-                    <p><strong>Reporting Manager</strong> <weak>{{ ucfirst($userDetails->reporting_manager_name ?? 'N/A') }}</weak></p>
+                    <p><strong>Designation</strong> <weak>{{ ucfirst($userDetails->designation_name ?? '-') }}</weak></p>
+                    <p><strong>Department</strong> <weak>{{ ucfirst($userDetails->department_name ?? '-') }}</weak></p>
+                    <p><strong>Office</strong> <weak>{{ ucfirst($userDetails->branch_name ?? '-') }}</weak></p>
+                    <p><strong>Reporting Manager</strong> <weak>{{ ucfirst($userDetails->reporting_manager_name ?? '-') }}</weak></p>
                 </div>
                 <div class="contact-details">
                     <h3>Contact Details</h3>
-                    <p><strong>Phone Number</strong> <weak>{{ ucfirst($userDetails->offical_phone_number ?? 'N/A') }}</weak></p>
-                    <p><strong>Alternate Number</strong> <weak>{{ ucfirst($userDetails->alternate_phone_number ?? 'N/A') }}</weak></p>
-                    <p><strong>Email Address</strong> <weak><a href="mailto:{{ $userDetails->email ?? 'N/A' }}">{{ ucfirst($userDetails->email ?? 'N/A') }}</a></weak></p>
+                    <p><strong>Phone Number</strong> <weak>{{ ucfirst($userDetails->offical_phone_number ?? '-') }}</weak></p>
+                    <p><strong>Alternate Number</strong> <weak>{{ ucfirst($userDetails->alternate_phone_number ?? '-') }}</weak></p>
+                    <p><strong>Email Address</strong> <weak><a href="mailto:{{ $userDetails->email ?? '-' }}">{{ ucfirst($userDetails->email ?? '-') }}</a></weak></p>
                     <h3>Address</h3>
                     <p><strong>Permanent</strong> <weak>
                         {{ ucfirst($userDetails->per_building_no ?? '') }},
@@ -59,52 +59,52 @@
             </div>
             <div class="emergency-contact">
                 <h2>Emergency Contact Details</h2>
-                <p><strong>Name</strong> <weak>{{ ucfirst($userDetails->emergency_contact_person ?? 'N/A') }}</weak></p>
-                <p><strong>Contact Number</strong> <weak>{{ ucfirst($userDetails->emergency_contact_number ?? 'N/A') }}</weak></p>              
+                <p><strong>Name</strong> <weak>{{ ucfirst($userDetails->emergency_contact_person ?? '-') }}</weak></p>
+                <p><strong>Contact Number</strong> <weak>{{ ucfirst($userDetails->emergency_contact_number ?? '-') }}</weak></p>              
             </div>
         </div>
 
         <div class="right-section">
             <!-- <div class="section">
                 <h2>Personal Information</h2>
-                <div class="left1"><p>Date of Birth</p> <b>{{ $userDetails->date_of_birth ? \Carbon\Carbon::parse($userDetails->date_of_birth)->format('d-m-Y') : 'N/A' }}</b></div>
-                <div class="left1"><p>Gender</p> <b>{{ ucfirst($userDetails->gender ?? 'N/A') }}</b></div>
-                <div class="left1"><p>Nationality</p> <b>{{ ucfirst($userDetails->nationality ?? 'N/A') }}</b></div>
-                <div class="left1"><p>Marital Status</p> <b>{{ ucfirst($userDetails->marital_status ?? 'N/A') }}</b></div>
-                <div class="left1"><p>Blood Group</p> <b>{{ ucfirst($userDetails->blood_group ?? 'N/A') }}</b></div>
-                <div class="left1"><p>Religion</p> <b>{{ ucfirst($userDetails->religion ?? 'N/A') }}</b></div>
-                <div class="left1"><p>Anniversary Date</p> <b>{{ $userDetails->anniversary_date ? \Carbon\Carbon::parse($userDetails->anniversary_date)->format('d-m-Y') : 'N/A' }}</b></div>
+                <div class="left1"><p>Date of Birth</p> <b>{{ $userDetails->date_of_birth ? \Carbon\Carbon::parse($userDetails->date_of_birth)->format('d-m-Y') : '-' }}</b></div>
+                <div class="left1"><p>Gender</p> <b>{{ ucfirst($userDetails->gender ?? '-') }}</b></div>
+                <div class="left1"><p>Nationality</p> <b>{{ ucfirst($userDetails->nationality ?? '-') }}</b></div>
+                <div class="left1"><p>Marital Status</p> <b>{{ ucfirst($userDetails->marital_status ?? '-') }}</b></div>
+                <div class="left1"><p>Blood Group</p> <b>{{ ucfirst($userDetails->blood_group ?? '-') }}</b></div>
+                <div class="left1"><p>Religion</p> <b>{{ ucfirst($userDetails->religion ?? '-') }}</b></div>
+                <div class="left1"><p>Anniversary Date</p> <b>{{ $userDetails->anniversary_date ? \Carbon\Carbon::parse($userDetails->anniversary_date)->format('d-m-Y') : '-' }}</b></div>
             </div> -->
             <div class="section custom-table">
     <h2>Personal Information</h2>
     <table>
         <tr>
             <th>Date of Birth</th>
-            <td><b>{{ $userDetails->date_of_birth ? \Carbon\Carbon::parse($userDetails->date_of_birth)->format('d-m-Y') : 'N/A' }}</b></td>
+            <td><b>{{ $userDetails->date_of_birth ? \Carbon\Carbon::parse($userDetails->date_of_birth)->format('d-m-Y') : '-' }}</b></td>
         </tr>
         <tr>
             <th>Gender</th>
-            <td><b>{{ ucfirst($userDetails->gender ?? 'N/A') }}</b></td>
+            <td><b>{{ ucfirst($userDetails->gender ?? '-') }}</b></td>
         </tr>
         <tr>
             <th>Nationality</th>
-            <td><b>{{ ucfirst($userDetails->nationality ?? 'N/A') }}</b></td>
+            <td><b>{{ ucfirst($userDetails->nationality ?? '-') }}</b></td>
         </tr>
         <tr>
             <th>Marital Status</th>
-            <td><b>{{ ucfirst($userDetails->marital_status ?? 'N/A') }}</b></td>
+            <td><b>{{ ucfirst($userDetails->marital_status ?? '-') }}</b></td>
         </tr>
         <tr>
             <th>Blood Group</th>
-            <td><b>{{ ucfirst($userDetails->blood_group ?? 'N/A') }}</b></td>
+            <td><b>{{ ucfirst($userDetails->blood_group ?? '-') }}</b></td>
         </tr>
         <tr>
             <th>Religion</th>
-            <td><b>{{ ucfirst($userDetails->religion ?? 'N/A') }}</b></td>
+            <td><b>{{ ucfirst($userDetails->religion ?? '-') }}</b></td>
         </tr>
         <tr>
             <th>Anniversary Date</th>
-            <td><b>{{ $userDetails->anniversary_date ? \Carbon\Carbon::parse($userDetails->anniversary_date)->format('d-m-Y') : 'N/A' }}</b></td>
+            <td><b>{{ $userDetails->anniversary_date ? \Carbon\Carbon::parse($userDetails->anniversary_date)->format('d-m-Y') : '-' }}</b></td>
         </tr>
     </table>
 </div>
@@ -114,26 +114,22 @@
     <table>
         <!-- Header row with h2 centered across the table -->
         <h2> Employee Details</h2>
-        <tr>
-            <!-- <th colspan="2" style="text-align: center; font-size: 1.5em; padding: 15px; background-color: #f2f2f2;">
-                Employee Details
-            </th> -->
-        </tr>
+        
         <tr>
             <th>Employment Status</th>
             <td><b>{{ ucfirst($userDetails->employment_status ?? 'Active') }}</b></td>
         </tr>
         <tr>
             <th>Employment Type</th>
-            <td><b>{{ ucfirst($userDetails->employee_type_name ?? 'N/A') }}</b></td>
+            <td><b>{{ ucfirst($userDetails->employee_type_name ?? '-') }}</b></td>
         </tr>
         <tr>
             <th>Start Date</th>
-            <td><b>{{ $userDetails->Joining_date ? \Carbon\Carbon::parse($userDetails->Joining_date)->format('d-m-Y') : 'N/A' }}</b></td>
+            <td><b>{{ $userDetails->Joining_date ? \Carbon\Carbon::parse($userDetails->Joining_date)->format('d-m-Y') : '-' }}</b></td>
         </tr>
         <tr>
             <th>Total Experience</th>
-            <td><b>{{ ucfirst($userDetails->total_experience ?? 'N/A') }}</b></td>
+            <td><b>{{ ucfirst($userDetails->total_experience ?? '-') }}</b></td>
         </tr>
     </table>
 </div>
@@ -142,26 +138,22 @@
     <table>
         <!-- Header row with h2 centered across the table -->
          <h2>Salary Bank Details</h2>
-        <tr>
-            <!-- <th colspan="2" style="text-align: center; font-size: 1.5em; padding: 15px; background-color: #f2f2f2;">
-                Salary Bank Details
-            </th> -->
-        </tr>
+       
         <tr>
             <th>Bank Name</th>
-            <td><b>{{ ucfirst($userDetails->bank_name ?? 'N/A') }}</b></td>
+            <td><b>{{ ucfirst($userDetails->bank_name ?? '-') }}</b></td>
         </tr>
         <tr>
             <th>Branch Name</th>
-            <td><b>{{ ucfirst($userDetails->sal_branch_name ?? 'N/A') }}</b></td>
+            <td><b>{{ ucfirst($userDetails->sal_branch_name ?? '-') }}</b></td>
         </tr>
         <tr>
             <th>Account Number</th>
-            <td><b>{{ ucfirst($userDetails->sal_account_number ?? 'N/A') }}</b></td>
+            <td><b>{{ ucfirst($userDetails->sal_account_number ?? '-') }}</b></td>
         </tr>
         <tr>
             <th>IFSC Code</th>
-            <td><b>{{ ucfirst($userDetails->sal_ifsc_code ?? 'N/A') }}</b></td>
+            <td><b>{{ ucfirst($userDetails->sal_ifsc_code ?? '-') }}</b></td>
         </tr>
     </table>
 </div>
@@ -170,34 +162,30 @@
     <table class="custom-table">
         <!-- Header row with h2 centered across the table -->
          <h2>Passport & Visa</h2>
-        <tr>
-            <!-- <th colspan="2" style="text-align: center; font-size: 1.5em; padding: 15px; background-color: #f2f2f2;">
-                Passport & Visa
-            </th> -->
-        </tr>
+       
         <tr>
             <th>Passport Number</th>
-            <td><b>{{ ucfirst($userDetails->passport_number ?? 'N/A') }}</b></td>
+            <td><b>{{ ucfirst($userDetails->passport_number ?? '-') }}</b></td>
         </tr>
         <tr>
             <th>Issuing Country</th>
-            <td><b>{{ ucfirst($userDetails->issuing_country ?? 'N/A') }}</b></td>
+            <td><b>{{ ucfirst($userDetails->issuing_country ?? '-') }}</b></td>
         </tr>
         <tr>
             <th>Issue Date</th>
-            <td><b>{{ $userDetails->passport_issue_date ? \Carbon\Carbon::parse($userDetails->passport_issue_date)->format('d-m-Y') : 'N/A' }}</b></td>
+            <td><b>{{ $userDetails->passport_issue_date ? \Carbon\Carbon::parse($userDetails->passport_issue_date)->format('d-m-Y') : '-' }}</b></td>
         </tr>
         <tr>
             <th>Expiry Date</th>
-            <td><b>{{ $userDetails->passport_expiry_date ? \Carbon\Carbon::parse($userDetails->passport_expiry_date)->format('d-m-Y') : 'N/A' }}</b></td>
+            <td><b>{{ $userDetails->passport_expiry_date ? \Carbon\Carbon::parse($userDetails->passport_expiry_date)->format('d-m-Y') : '-' }}</b></td>
         </tr>
         <tr>
-            <th>USA Visa</th>
-            <td><b>{{ ucfirst($userDetails->active_visa ?? 'N/A') }}</b></td>
+            <th>Visa</th>
+            <td><b>{{ ucfirst($userDetails->active_visa ?? '-') }}</b></td>
         </tr>
         <tr>
             <th>Visa Expiry Date</th>
-            <td><b>{{ $userDetails->visa_expiry_date ? \Carbon\Carbon::parse($userDetails->visa_expiry_date)->format('d-m-Y') : 'N/A' }}</b></td>
+            <td><b>{{ $userDetails->visa_expiry_date ? \Carbon\Carbon::parse($userDetails->visa_expiry_date)->format('d-m-Y') : '-' }}</b></td>
         </tr>
     </table>
 </div>
@@ -206,22 +194,18 @@
     <table>
         <!-- Header row with h2 centered across the table -->
          <h2>Welfare Benefits</h2>
-        <tr>
-            <!-- <th colspan="2" style="text-align: center; font-size: 1.5em; padding: 15px; background-color: #f2f2f2;">
-                Welfare Benefits
-            </th> -->
-        </tr>
+        
         <tr>
             <th>UAN</th>
-            <td><b>{{ ucfirst($userDetails->universal_account_number ?? 'N/A') }}</b></td>
+            <td><b>{{ ucfirst($userDetails->universal_account_number ?? '-') }}</b></td>
         </tr>
         <tr>
             <th>Provident Fund</th>
-            <td><b>{{ ucfirst($userDetails->provident_fund ?? 'N/A') }}</b></td>
+            <td><b>{{ ucfirst($userDetails->provident_fund ?? '-') }}</b></td>
         </tr>
         <tr>
             <th>ESIC NO</th>
-            <td><b>{{ ucfirst($userDetails->esic_no ?? 'N/A') }}</b></td>
+            <td><b>{{ ucfirst($userDetails->esic_no ?? '-') }}</b></td>
         </tr>
     </table>
 </div>
@@ -234,15 +218,15 @@
     </tr>
     <tr>
         <td><p>UAN</p></td>
-        <td><b>{{ ucfirst($userDetails->universal_account_number ?? 'N/A') }}</b></td>
+        <td><b>{{ ucfirst($userDetails->universal_account_number ?? '-') }}</b></td>
     </tr>
     <tr>
         <td><p>Provident Fund</p></td>
-        <td><b>{{ ucfirst($userDetails->provident_fund ?? 'N/A') }}</b></td>
+        <td><b>{{ ucfirst($userDetails->provident_fund ?? '-') }}</b></td>
     </tr>
     <tr>
         <td><p>ESIC NO</p></td>
-        <td><b>{{ ucfirst($userDetails->esic_no ?? 'N/A') }}</b></td>
+        <td><b>{{ ucfirst($userDetails->esic_no ?? '-') }}</b></td>
     </tr>
 </table>
 
@@ -301,9 +285,9 @@
                         <p class="left2">
                             <div style="width: 200px">
                                 @if($education->course_type == 'degree')
-                                    {{ ucfirst($education->degree ?? 'N/A') }}
+                                    {{ ucfirst($education->degree ?? '-') }}
                                 @elseif($education->course_type == 'certification')
-                                    {{ ucfirst($education->certification_name ?? 'N/A') }}
+                                    {{ ucfirst($education->certification_name ?? '-') }}
                                 @endif
                             </div>
                             @if($education->course_type == 'degree')
@@ -357,13 +341,13 @@
                         @foreach($empFamilyDetails as $index => $family)
                             <tr>
                                 <td class="tableh-one">{{ $index + 1 }}</td>
-                                <td class="tableh-two">{{ ucfirst($family->name  ?? 'N/A') }}</td>
-                                <td class="tableh-three">{{ ucfirst($family->relation ?? 'N/A') }}</td>
-                                <td class="tableh-four">{{ $family->birth_date ? \Carbon\Carbon::parse($family->birth_date)->format('d-m-Y') : 'N/A' }}</td>
-                                <td class="tableh-five">{{ ucfirst($family->gender ?? 'N/A') }}</td>
-                                <td class="tableh-six">{{ ucfirst($family->age ?? 'N/A') }}</td>
-                                <td class="tableh-seven">{{ ucfirst($family->dependent ?? 'N/A') }}</td>
-                                <td class="tableh-eight">{{ ucfirst($family->phone_number ?? 'N/A') }}</td>
+                                <td class="tableh-two">{{ ucfirst($family->name  ?? '-') }}</td>
+                                <td class="tableh-three">{{ ucfirst($family->relation ?? '-') }}</td>
+                                <td class="tableh-four">{{ $family->birth_date ? \Carbon\Carbon::parse($family->birth_date)->format('d-m-Y') : '-' }}</td>
+                                <td class="tableh-five">{{ ucfirst($family->gender ?? '-') }}</td>
+                                <td class="tableh-six">{{ ucfirst($family->age ?? '-') }}</td>
+                                <td class="tableh-seven">{{ ucfirst($family->dependent ?? '-') }}</td>
+                                <td class="tableh-eight">{{ ucfirst($family->phone_number ?? '-') }}</td>
                             </tr>
                         @endforeach
                     </tbody>
@@ -371,7 +355,7 @@
             </div>
         </div>
 
-        <div class="sectionp">
+        <div class="section table-section">
             <h2>Previous Employment</h2>
             <div class="table-scroll-containerp">
                 <table>
@@ -394,16 +378,16 @@
                         @foreach($empPreviousEmployments as $index => $employment)
                             <tr>
                                 <td>{{ $index + 1 }}</td>
-                                <td>{{ ucfirst($employment->employer_name  ?? 'N/A') }}</td>
-                                <td>{{ ucfirst($employment->country ?? 'N/A') }}</td>
-                                <td>{{ ucfirst($employment->city ?? 'N/A') }}</td>
-                                <td>{{ $employment->from_date ? \Carbon\Carbon::parse($employment->from_date)->format('d-m-Y') : 'N/A' }}</td>
-                                <td>{{ $employment->to_date ? \Carbon\Carbon::parse($employment->to_date)->format('d-m-Y') : 'N/A' }}</td>
-                                <td>{{ ucfirst($employment->designation ?? 'N/A') }}</td>
-                                <td>{{ ucfirst($employment->last_drawn_annual_salary ?? 'N/A') }}</td>
-                                <td>{{ ucfirst($employment->relevant_experience ?? 'N/A') }}</td>
-                                <td>{{ ucfirst($employment->reason_for_leaving ?? 'N/A') }}</td>
-                                <td>{{ ucfirst($employment->major_responsibilities ?? 'N/A') }}</td>
+                                <td>{{ ucfirst($employment->employer_name  ?? '-') }}</td>
+                                <td>{{ ucfirst($employment->country ?? '-') }}</td>
+                                <td>{{ ucfirst($employment->city ?? '-') }}</td>
+                                <td>{{ $employment->from_date ? \Carbon\Carbon::parse($employment->from_date)->format('d-m-Y') : '-' }}</td>
+                                <td>{{ $employment->to_date ? \Carbon\Carbon::parse($employment->to_date)->format('d-m-Y') : '-' }}</td>
+                                <td>{{ ucfirst($employment->designation ?? '-') }}</td>
+                                <td>{{ number_format($employment->last_drawn_annual_salary ?? 0) }}</td>
+                                <td>{{ ucfirst($employment->relevant_experience ?? '-') }}</td>
+                                <td>{{ ucfirst($employment->reason_for_leaving ?? '-') }}</td>
+                                <td>{{ ucfirst($employment->major_responsibilities ?? '-') }}</td>
                             </tr>
                         @endforeach
                     </tbody>
@@ -429,8 +413,8 @@
                     @foreach($documents as $index => $document)
                         <tr>
                             <td class="tableh-one">{{ $index + 1 }}</td>
-                            <td class="tableh-two">{{ ucfirst($document->document_type ?? 'N/A') }}</td>
-                            <!-- <td class="tableh-three">{{ ucfirst($document->file_path ?? 'N/A') }}</td> -->
+                            <td class="tableh-two">{{ ucfirst($document->document_type ?? '-') }}</td>
+                            <!-- <td class="tableh-three">{{ ucfirst($document->file_path ?? '-') }}</td> -->
                             <td class="tableh-four">
                                 @if($document->file_path)
                                     <a href="{{ asset('storage/' . $document->file_path) }}" download>
@@ -481,27 +465,27 @@
             @foreach($empEducation as $index => $education)
                 if (serialNo === {{ $index }}) {
                     modalContent.innerHTML += `
-                        <table class="details-table">
+                        <table class="custom-table">
                             <tr>
                                 <th>Degree</th>
-                                <td>{{ ucfirst($education->degree ?? 'N/A') }}</td>
+                                <td>{{ ucfirst($education->degree ?? '-') }}</td>
                             </tr>
                             <tr>
                                 <th>University</th>
-                                <td>{{ ucfirst($education->university_board  ?? 'N/A') }}</td>
+                                <td>{{ ucfirst($education->university_board  ?? '-') }}</td>
                             </tr>
                             <tr>
                                 <th>Institution</th>
-                                <td>{{ ucfirst($education->institution ?? 'N/A') }}</td>
+                                <td>{{ ucfirst($education->institution ?? '-') }}</td>
                             </tr>
                             <tr>
                                 <th>Passing Year</th>
-                              <td>{{ $education->passing_year ? $education->passing_year : 'N/A' }}</td>
+                              <td>{{ $education->passing_year ? $education->passing_year : '-' }}</td>
                             </tr>
                            
                             <tr>
                                 <th>Percentage</th>
-                                <td>{{ ucfirst($education->percentage_cgpa ?? 'N/A') }}</td>
+                                <td>{{ ucfirst($education->percentage_cgpa ?? '-') }}</td>
                             </tr>
                         </table>
                     `;
@@ -518,22 +502,22 @@
             @foreach($empEducation as $index => $education)
                 if (serialNo === {{ $index }}) {
                     modalContent.innerHTML += `
-                        <table class="details-table">
+                        <table class="custom-table">
                             <tr>
                                 <th>Certification Name</th>
-                                <td>{{ ucfirst($education->certification_name ?? 'N/A') }}</td>
+                                <td>{{ ucfirst($education->certification_name ?? '-') }}</td>
                             </tr>
                             <tr>
                                 <th>Marks Obtained</th>
-                                <td>{{ ucfirst($education->marks_obtained ?? 'N/A') }}</td>
+                                <td>{{ ucfirst($education->marks_obtained ?? '-') }}</td>
                             </tr>
                             <tr>
                                 <th>Total Marks</th>
-                                <td>{{ ucfirst($education->out_of_marks_total_marks ?? 'N/A') }}</td>
+                                <td>{{ ucfirst($education->out_of_marks_total_marks ?? '-') }}</td>
                             </tr>
                             <tr>
                                 <th>Certificate Date</th>
-                                <td>{{ $education->date_of_certificate ? \Carbon\Carbon::parse($education->date_of_certificate)->format('d-m-Y') : 'N/A' }}</td>
+                                <td>{{ $education->date_of_certificate ? \Carbon\Carbon::parse($education->date_of_certificate)->format('d-m-Y') : '-' }}</td>
                             </tr>
                         </table>
                     `;
@@ -567,7 +551,8 @@
 .modal-content {
     background-color: #fff;
     margin: 5% auto; /* Center the modal */
-    padding: 20px;
+    /* padding: 20px; */
+    padding: 40px;
     border: 1px solid #888;
     width: 80%; /* Width can be adjusted */
     max-width: 900px; /* Set a max width to prevent it from stretching too much */
@@ -584,6 +569,8 @@
     font-size: 28px;
     font-weight: bold;
     cursor: pointer;
+    top: 0px;
+    right: 15px;
 }
 
 /* Close button on hover */

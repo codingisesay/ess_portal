@@ -98,12 +98,12 @@ error_reporting(0);
                 <div class="birthday">
                     <img src="{{ asset('user_end/images/Group303.png') }}" height="40" width="40" alt="Avatar">
                     <h6>Wish To {{ $birthday->employee_nme }}</h6>
-                    <p>Happy Birthday <span class="count-circle">{{ $birthday->age }}</span></p>
+                    <p>Happy Birthday</p>
                 </div>
             @endforeach
         @endif
     </div>
-
+    <!-- <span class="count-circle">{{ $birthday->age }}</span> -->
     <!-- Navigation buttons -->
     <!-- <button class="prev" id="prevSlide">❮</button>
     <button class="next" id="nextSlide">❯</button> -->
@@ -111,6 +111,27 @@ error_reporting(0);
 
 
             </div>
+            <!-- Include the auto-scrolling JavaScript -->
+<script>
+    window.onload = function() {
+        const carousel = document.getElementById("birthdayCarousel");
+        let scrollAmount = 0;
+        const scrollStep = 1;  // How much to scroll per interval (adjust for speed)
+        const maxScroll = carousel.scrollWidth - carousel.clientWidth;  // Maximum scroll width
+
+        function autoScroll() {
+            if (scrollAmount >= maxScroll) {
+                scrollAmount = 0;  // Reset to the beginning once we reach the end
+            } else {
+                scrollAmount += scrollStep;  // Scroll by the defined step
+            }
+            carousel.scrollLeft = scrollAmount;  // Apply the scroll amount to the carousel
+        }
+
+        // Start the auto-scroll function every 40ms (this can be adjusted)
+        setInterval(autoScroll, 60); 
+    }
+</script>
 
             <div class="bottom-cards">
                 <!-- Thought of the Day Card -->
