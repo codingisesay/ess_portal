@@ -73,6 +73,7 @@ class ForgotPasswordController extends Controller
           $data = [
               'username' => $user[0]->email,
               'reset_password_link' => $resetUrl,
+              'org_id' => $org_id,
           ];
 
          // Send the reset email

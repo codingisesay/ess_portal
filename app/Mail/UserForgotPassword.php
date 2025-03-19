@@ -8,6 +8,11 @@ use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\DB;
+use App\Models\organisation;
+use App\Models\organisation_config_mail;
+use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Mail;
 
 class UserForgotPassword extends Mailable implements ShouldQueue
 {
@@ -45,42 +50,39 @@ class UserForgotPassword extends Mailable implements ShouldQueue
      *
      * @return $this
      */
-    public function build()
-    {
-        return $this->subject($this->subject)
-                    ->view('emails.forgot_password_email')
-                    ->with($this->data);
+//     public function build()
+//     {
+//         return $this->subject($this->subject)
+//                     ->view('emails.forgot_password_email')
+//                     ->with($this->data);
                 
+// }
 
 
-    // /**
-    //  * Get the message envelope.
-    //  */
-    // public function envelope(): Envelope
-    // {
-    //     return new Envelope(
-    //         subject: 'User Forgot Password',
-    //     );
-    // }
+public function build()
+{
+    // Assuming the org_id is passed in $this->data, extract it
+    $orgId = $this->data['org_id'];
 
-    // /**
-    //  * Get the message content definition.
-    //  */
-    // public function content(): Content
-    // {
-    //     return new Content(
-    //         view: 'view.name',
-    //     );
-    // }
+    // Fetch mail configuration for the given organization
+    $mailConfig = DB::table('organisation_config_mails')
+        ->where('organisation_id', $orgId)
+        ->first();
 
-    // /**
-    //  * Get the attachments for the message.
-    //  *
-    //  * @return array<int, \Illuminate\Mail\Mailables\Attachment>
-    //  */
-    // public function attachments(): array
-    // {
-    //     return [];
-    // }
+    if ($mailConfig) {
+        // Dynamically set the mail configuration for the organization
+        Config::set('mail.mailers.smtp.host', $mailConfig->MAIL_HOST);
+        Config::set('mail.mailers.smtp.port', $mailConfig->MAIL_PORT);
+        Config::set('mail.mailers.smtp.username', $mailConfig->MAIL_USERNAME);
+        Config::set('mail.mailers.smtp.password', $mailConfig->MAIL_PASSWORD);
+        Config::set('mail.mailers.smtp.encryption', $mailConfig->MAIL_ENCRYPTION);
+        Config::set('mail.from.address', $mailConfig->MAIL_FROM_ADDRESS);
+        Config::set('mail.from.name', $mailConfig->MAIL_FROM_NAME);
+    }
+
+    return $this->from(Config::get('mail.from.address'), Config::get('mail.from.name'))
+                ->subject($this->subject)
+                ->view('emails.forgot_password_email')
+                ->with(['data' => $this->data]);
 }
 }

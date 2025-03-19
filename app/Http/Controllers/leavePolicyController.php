@@ -789,6 +789,7 @@ if($data['leave_slot'] == 'First Half' || $data['leave_slot'] == 'Second Half'){
                     'leave_type' => $leave_type->name,
                     'start_date' => $data['start_date'],
                     'end_date' => $data['end_date'],
+                    'org_id' => $loginUserInfo->organisation_id,
                 ];
 
                 // dd($data);
