@@ -1,3 +1,4 @@
+@include('user_view.header')
 @extends('user_view/edit_user/employee_form_layout')
 @section('content') 
 <link rel="stylesheet" href="{{ asset('errors/error.css') }}">

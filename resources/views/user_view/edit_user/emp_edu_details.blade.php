@@ -1,3 +1,4 @@
+@include('user_view.header')
 @extends('user_view/edit_user/employee_form_layout')<!-- Extending the layout file -->
 @section('content') <!-- Defining the content section -->
 <!-- <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css"> -->

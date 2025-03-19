@@ -1,3 +1,4 @@
+
 <html>
 <head>
     <meta charset="UTF-8">
@@ -12,11 +13,11 @@
 </head>
 
 <body>
-    <header>
+    {{-- <header>
         <div class="logo">
             <img src="{{asset('user_end/images/STPL Logo with TagLine HD Transparent.png')}}">
         </div>
-    </header>
+    </header> --}}
 
     <style>
         .logo img {
