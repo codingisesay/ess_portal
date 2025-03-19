@@ -182,7 +182,7 @@ $editUser = $_REQUEST['id'];
                             <option value="{{ old('maritalStatus',$results[0]->marital_status) }}">{{ old('maritalStatus',$results[0]->marital_status) }}</option>
                             <option value="Single">Single</option>
                             <option value="Married">Married</option>
-                            <option value="Divorced">Divorced</option>
+                            
                         </select>
                         <label for="maritalStatus">Marital Status <span style="color: red;">*</span></label>
                         <span class="error" id="maritalStatusError"></span>
