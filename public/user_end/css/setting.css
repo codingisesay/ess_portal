@@ -201,7 +201,7 @@ input[type="radio"] {
 }
 
 .form-group {
-    margin-bottom: 20px;
+    margin-bottom: 0px;
     position: relative;
 }
 
@@ -239,7 +239,7 @@ input[type="radio"] {
     position: relative;
     display: flex;
     align-items: center;
-    margin-bottom: 10px;
+
 }
 
 .input-with-icon input {
@@ -389,4 +389,33 @@ select:focus {
 .dropdown-toggle:hover {
     background-color: #9b4bab;
     /* Change background on hover */
+}
+
+
+.custom-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 0px 0;
+    table-layout: auto;
+}
+
+.custom-table th,
+.custom-table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+    white-space: nowrap;
+}
+
+.custom-table th {
+    background-color: #E0AFA0;
+    font-weight: normal;
+}
+
+.custom-table tr:nth-child(even) {
+    background-color: white;
+}
+
+.custom-table tr:nth-child(odd) {
+    background-color: #f9f9f9;
 }

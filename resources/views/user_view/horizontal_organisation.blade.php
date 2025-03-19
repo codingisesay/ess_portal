@@ -255,7 +255,7 @@ function renderEmployeeTree($employees) {
         </select>
     </div>
     <div class="search-box">
-        <input type="text" id="search" placeholder="Search here..." />
+        <input type="text" id="search-bar" placeholder="Search Employee Name..."  onkeyup="highlightEmployee()" />
         <button type="button">
             <!-- <img src="../resource/image/common/search (1).png" alt="Search" /> -->
             <span class="search-icon"> <img src="{{ asset('user_end/images/search (2) 3.png') }}" alt="Search Icon"></span>
@@ -316,12 +316,28 @@ function renderEmployeeTree($employees) {
         // Default behavior for vertical chart can be handled without alert  
     }  
 
+    function highlightEmployee() {  
+        const searchQuery = document.getElementById('search-bar').value.toLowerCase();  
+        const employees = document.querySelectorAll('.emp-name');  
+        
+
+        employees.forEach(employee => {  
+            // Highlight matching names or remove highlight  
+            if (searchQuery && employee.textContent.toLowerCase().includes(searchQuery)) {  
+                employee.classList.add('highlight');  
+            } else {  
+                employee.classList.remove('highlight');  
+            }  
+        });  
+    }  
+
+
 </script>
 
 
 <style>
     .highlight {
-    background-color: #8A3366;
+    background-color: yellow;
     font-weight: bold;
     padding: 2px 4px;
     border-radius: 3px;

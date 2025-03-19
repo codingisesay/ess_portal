@@ -21,12 +21,22 @@ function renderEmployeeNode($employee) {
             '<?= $employee->per_city ?>',
             '<?= $employee->offical_phone_number ?>',
             '<?= $employee->offical_email_address ?>',
-            '<?= asset('storage/' . $employee->profile_image) ?>'  // Pass the profile image URL
+            '<?= asset('storage/' . $employee->profile_image) ?>'
         )">
+            <?php 
+            // Gender-specific image display
+            if ($employee->gender == 'Male') {
+                echo '<img src="' . asset('user_end/images/men.png') . '" alt="Male" style="width:20px; height:20px; margin-right: 5px;">';
+            } elseif ($employee->gender == 'Female') {
+                echo '<img src="' . asset('user_end/images/women.png') . '" alt="Female" style="width:20px; height:20px; margin-right: 5px;">';
+            } else {
+                echo '<img src="' . asset('user_end/images/gender-neutral.png') . '" alt="Gender Neutral" style="width:20px; height:20px; margin-right: 5px;">'; // You can use a gender-neutral icon here if needed
+            }
+            ?>
             <?= $employee->employee_name ?>
         </span>
         <?php if ($hasSubordinates): ?>
-            <ul data-manager-id="<?= $employee->user_id ?>" style="display: none;">
+            <ul data-manager-id="<?= $employee->user_id ?>" style="display: block;">
                 <?php foreach ($employee->subordinates as $subordinate) {
                     echo renderEmployeeNode($subordinate);
                 } ?>
@@ -36,7 +46,6 @@ function renderEmployeeNode($employee) {
     <?php
     return ob_get_clean();
 }
-
 ?>
 <?php 
 error_reporting(0);
@@ -50,6 +59,8 @@ error_reporting(0);
     {{-- <title>Organisation Chart</title> --}}
     <link rel="icon" href= "../resource/image/common/STPLLogo butterfly.png" />
     <link rel="stylesheet" href="{{ asset('/user_end/css/organisation.css') }}">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+
     
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
@@ -66,7 +77,7 @@ error_reporting(0);
         </select>
     </div>
     <div class="search-bar-container">
-        <input type="text" id="search-bar" placeholder="Search here..." onkeyup="highlightEmployee()">
+        <input type="text" id="search-bar" placeholder="Search Employee Name..." onkeyup="highlightEmployee()">
         <span class="search-icon"> <img src="{{ asset('user_end/images/search (2) 3.png') }}" alt="Search Icon"></span>
     </div>
 </div>
@@ -92,28 +103,76 @@ error_reporting(0);
             <div class="emp-name" id="emp-name">Name</div>  
             <div class="emp-designation" id="emp-designation">Designation</div>  
         </div>  
-        <div class="right">  
-            <div class="detail-item"><span>Employee No:</span> <span id="emp-no">12345</span></div>  
-            <div class="detail-item"><span>Reporting Manager:</span> <span id="emp-manager">Manager</span></div>  
-            <div class="detail-item"><span>Department:</span> <span id="emp-department">HR</span></div>  
-            <div class="detail-item"><span>City:</span> <span id="emp-city">New York</span></div>  
-            <div class="detail-item"><span>Phone:</span> <span id="emp-phone">123-456-7890</span></div>  
-            <div class="detail-item"><span>Email:</span> <span id="emp-email">employee@example.com</span></div>  
-        </div>  
+        <div class="right">
+    <table class="custom-table">
+        <tr>
+            <th>Employee No</th>
+            <td id="emp-no">12345</td>
+        </tr>
+        <tr>
+            <th>Reporting Manager</th>
+            <td id="emp-manager">Manager</td>
+        </tr>
+        <tr>
+            <th>Department</th>
+            <td id="emp-department">HR</td>
+        </tr>
+        <tr>
+            <th>City</th>
+            <td id="emp-city">New York</td>
+        </tr>
+        <tr>
+            <th>Phone</th>
+            <td id="emp-phone">123-456-7890</td>
+        </tr>
+        <tr>
+            <th>Email</th>
+            <td id="emp-email">employee@example.com</td>
+        </tr>
+    </table>
+</div>
+
     </div>  
 </div>  
 
 <script>  
     // Function to toggle visibility of employee children  
-    function toggleChildren(button) {
+    // function toggleChildren(button) {
+    //     const userId = button.getAttribute('data-user-id');
+    //     const childrenContainer = document.querySelector(`ul[data-manager-id="${userId}"]`);
+    //     if (childrenContainer) {
+    //         const isVisible = childrenContainer.style.display === "block";
+    //         childrenContainer.style.display = isVisible ? "none" : "block";
+    //         button.textContent = isVisible ? "+" : "-";
+    //     }
+    // }
+    document.addEventListener('DOMContentLoaded', function() {
+    // Find all buttons that control subordinates visibility
+    const buttons = document.querySelectorAll('[data-user-id]');
+    
+    buttons.forEach(button => {
         const userId = button.getAttribute('data-user-id');
         const childrenContainer = document.querySelector(`ul[data-manager-id="${userId}"]`);
-        if (childrenContainer) {
-            const isVisible = childrenContainer.style.display === "block";
-            childrenContainer.style.display = isVisible ? "none" : "block";
-            button.textContent = isVisible ? "+" : "-";
+        
+        // Check the initial visibility of the ul (subordinates list)
+        if (childrenContainer && childrenContainer.style.display === "block") {
+            // If it's visible, set the button text to "-"
+            button.textContent = "-";
         }
+    });
+});
+
+function toggleChildren(button) {
+    const userId = button.getAttribute('data-user-id');
+    const childrenContainer = document.querySelector(`ul[data-manager-id="${userId}"]`);
+    if (childrenContainer) {
+        const isVisible = childrenContainer.style.display === "block";
+        childrenContainer.style.display = isVisible ? "none" : "block"; // Toggle visibility
+        button.textContent = isVisible ? "+" : "-"; // Change button text
     }
+}
+
+
 
     function displayEmployeeDetails(userId, name, designation, empNo, manager, department, city, phone, email, profileImage) {  
     document.getElementById('emp-name').textContent = name;  
@@ -194,6 +253,35 @@ window.onload = function() {
     displayEmployeeDetails(empNo, empName, empDesignation, empNo, empManager, empDepartment, empCity, empPhone, empEmail, profileImage);
 };
 </script>
+<style>
+    .custom-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 0px 0;
+    table-layout: auto;
+}
+
+.custom-table th,
+.custom-table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+    white-space: nowrap;
+}
+
+.custom-table th {
+    background-color: unset;
+    font-weight: normal;
+}
+
+.custom-table tr:nth-child(even) {
+    background-color: white;
+}
+
+.custom-table tr:nth-child(odd) {
+    background-color: #f9f9f9;
+}
+</style>
 
 <style>
     /* CSS code omitted for brevity. Retain your original CSS here. */
@@ -425,7 +513,7 @@ window.onload = function() {
     }
 
     .highlight {
-        background-color: #8A3366;
+        background-color: yellow;
         font-weight: bold;
         color: white;
     }
@@ -495,6 +583,8 @@ window.onload = function() {
     padding-left: 10px;
     position: relative;
 }
+
+
 
 /* .tree li::before {
     content: "";

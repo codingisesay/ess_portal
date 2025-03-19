@@ -13,26 +13,7 @@
             overflow-y: auto;
             background-color: #ffffff;
         }
-
-        /* Style for the table */
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-
-        table, th, td {
-            border: 1px solid black;
-            background-color: beige;
-        }
-
-        th, td {
-            padding: 10px;
-            text-align: left;
-        }
-
-
- 
-    </style>
+</style>
 </head>
     <!-- Main Content -->
     <main class="settings-container">
@@ -202,8 +183,8 @@ if(in_array(11, $permission_array)){
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label for="thoughtDescription">Description :</label>
-                                <textarea id="thoughtDescription" name="description" placeholder="Detailed thoughts or reflections"></textarea>
+                                <label for="thoughtDescription">Thought of the day :</label>
+                                <textarea id="thoughtDescription" name="description" placeholder="Thought of the day"></textarea>
                             </div>
                             <button type="submit" class="submit-btn" id="submitThought" disabled>Submit</button>
                         </form>
@@ -223,7 +204,7 @@ if(in_array(11, $permission_array)){
                             </div>
                             <div class="form-group">
                                 <label for="title">Title :</label>
-                                <input type="text" id="title" name="title" placeholder="Title">
+                                <input type="text" id="title" name="title" placeholder="News or event title">
                             </div>
                             <div class="form-group">
                                 <label for="description">Description :</label>
@@ -272,7 +253,7 @@ if(in_array(12, $permission_array)){
         <div id="employeeDetailsDropdown" class="dropdown-content" style="display: none;">
             <!-- Collapsible Content (Table) -->
             <div class="content">
-                <table>
+                <table class="custom-table">
                     <thead>
                         <tr>
                             <th>S.No</th>

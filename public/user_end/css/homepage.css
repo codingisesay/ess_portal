@@ -43,8 +43,9 @@ body {
 .main-group:first-of-type {
     flex: 1 1 250px;
     /* Flex items will take at least 250px of space */
-    margin-bottom: 20px;
+    /* margin-bottom: 20px; */
     /* Margin between rows */
+    margin-bottom: -55px;
 }
 
 /* Large Devices (min-width: 1600px) */
@@ -220,6 +221,7 @@ body {
     margin-top: 13px;
     flex-basis: auto;
     width: 100%;
+    margin-right: -13px;
     /* margin: auto; */
     /* width: 495px; */
     /* Ensure it spans full width */
@@ -540,6 +542,7 @@ button {
     margin: 10px;
     width: 100%;
     flex-basis: auto;
+    margin-right: -17px;
 }
 
 .container-events {
@@ -815,7 +818,8 @@ button {
     margin: unset;
     /* max-width: 400px; */
     margin-top: -3px;
-    margin-right: -80px;
+    /* margin-right: -80px; */
+    margin-right: -105px;
     width: 100%;
     flex-basis: auto;
 }
@@ -1046,6 +1050,7 @@ select {
     width: 100%;
     max-width: 600px;
     margin: 20px 10px;
+    margin-right: -34px;
 }
 
 .approval-pending h3 {

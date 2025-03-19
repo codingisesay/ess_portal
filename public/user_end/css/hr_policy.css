@@ -19,7 +19,7 @@ body {
     background-color: #F6F5F7;
     color: black;
     padding: 20px;
-    border-bottom: 2px solid #ddd;
+    /*  */
 }
 
 .header h1 {
@@ -76,7 +76,7 @@ body {
 .main-container {
     display: flex;
     width: 100%;
-    /* max-width: 1200px; */
+
     margin-top: 20px;
     height: 100vh;
     margin: 25px;
@@ -164,6 +164,8 @@ body {
 .content-area.active {
     display: block;
 }
+
+
 
 .download-btn {
     background-color: #8A3366;
