@@ -66,7 +66,7 @@
                             <td>
                                 <select name="relation[]" class="relation-type" required>
                                     <option value="{{$detail->relation}}">{{$detail->relation}}</option>
-                                    <option value="Spouce">Spouse</option>
+                                    <option value="Spouse">Spouse</option>
                                     <option value="Child">Child</option>
                                     <option value="Parent">Parent</option>
                                     <option value="Sibiling">Sibling</option>
@@ -140,7 +140,7 @@
 <td>
     <select name="relation[]" class="relation-type" required>
         <option value="" disabled selected>Select Relation</option>
-        <option value="Spouce">Spouse</option>
+        <option value="Spouse">Spouse</option>
         <option value="Child">Child</option>
         <option value="Parent">Parent</option>
         <option value="Sibiling">Sibling</option>

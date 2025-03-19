@@ -1,3 +1,4 @@
+@include('user_view.header')
 @extends('user_view/edit_user/employee_form_layout')  <!-- Extending the layout file -->
 @section('content')  <!-- Defining the content section -->
 <!-- <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css"> -->
@@ -66,7 +67,7 @@
                             <td>
                                 <select name="relation[]" class="relation-type" required>
                                     <option value="{{$detail->relation}}">{{$detail->relation}}</option>
-                                    <option value="Spouce">Spouse</option>
+                                    <option value="Spouse">Spouse</option>
                                     <option value="Child">Child</option>
                                     <option value="Parent">Parent</option>
                                     <option value="Sibiling">Sibling</option>
@@ -140,7 +141,7 @@
 <td>
     <select name="relation[]" class="relation-type" required>
         <option value="" disabled selected>Select Relation</option>
-        <option value="Spouce">Spouse</option>
+        <option value="Spouse">Spouse</option>
         <option value="Child">Child</option>
         <option value="Parent">Parent</option>
         <option value="Sibiling">Sibling</option>

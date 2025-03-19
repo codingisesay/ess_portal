@@ -1,4 +1,6 @@
+@include('user_view.header')
 @extends('user_view/edit_user/employee_form_layout')  <!-- Extending the layout file -->
+
 @section('content')  <!-- Defining the content section -->
 <!-- <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css"> -->
 <link rel="stylesheet" href="{{ asset('errors/error.css') }}">
@@ -43,6 +45,7 @@ $editUser = $_REQUEST['id'];
 
 
 <div class="tab-content active" id="tab1">
+
     <form action="{{ route('edit_detail_insert') }}" method="POST">
         @csrf
         <input type="hidden" name="form_step" value="form_step">
