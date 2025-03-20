@@ -157,7 +157,7 @@ $id = Auth::guard('web')->user()->id;
                   </div>
                   <div class="form-group">
                       <input type="date" id="passportIssueDate" class="form-control" name="passportIssueDate"
-                          max="<?php echo date('Y-m-d'); ?>" oninput="calculateExpiry()"
+                          max="<?php echo date('Y-m-d'); ?>" oninput="calculateExpiryDate()"
                           style="pointer-events: none; opacity: 0.6;" value="{{ old('passportIssueDate', $emp_bank_datas[0]->passport_issue_date) }}">
                       <label for="passportIssueDate">Passport Issue Date<span class="passport-required"
                           style="display: none; color: red;">*</span></label>

@@ -832,6 +832,9 @@ function calculateExpiryDate() {
         const expiryDate = new Date(issueDate);
         expiryDate.setFullYear(expiryDate.getFullYear() + 10);
 
+        // Subtract one day from the expiry date
+        expiryDate.setDate(expiryDate.getDate() - 1);
+
         // Format the date to YYYY-MM-DD for the input field
         const year = expiryDate.getFullYear();
         const month = String(expiryDate.getMonth() + 1).padStart(2, '0');

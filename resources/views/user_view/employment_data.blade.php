@@ -161,7 +161,7 @@
 <div class="section custom-table">
     <table class="custom-table">
         <!-- Header row with h2 centered across the table -->
-         <h2>Passport & Visa</h2>
+         <h2>Passport & Visa Details</h2>
        
         <tr>
             <th>Passport Number</th>
@@ -328,7 +328,7 @@
                     <thead>
                         <tr>
                             <th class="tableh-one">Sr. No.</th>
-                            <th class="tableh-two">Dependent Name</th>
+                            <th class="tableh-two">Name</th>
                             <th class="tableh-three">Relation</th>
                             <th class="tableh-four">Birth Date</th>
                             <th class="tableh-five">Gender</th>
