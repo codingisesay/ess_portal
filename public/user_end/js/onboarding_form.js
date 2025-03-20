@@ -169,32 +169,63 @@ function checkCountryAndTogglePincode() {
 // Initialize on page load to handle pre-filled values
 document.addEventListener("DOMContentLoaded", checkCountryAndTogglePincode);
 
-function clearForm() {
+// function clearForm() {
+//     // Permanent Address fields
+//     document.getElementById('permanent_building_no').value = '';
+//     document.getElementById('permanent_premises_name').value = '';
+//     document.getElementById('permanent_landmark').value = '';
+//     document.getElementById('permanent_road_street').value = '';
+//     document.getElementById('permanent_pincode').value = '';
+//     document.getElementById('permanent_city').value = '';
+//     document.getElementById('permanent_district').value = '';
+//     document.getElementById('permanent_state').value = '';
+//     document.getElementById('permanent_country').value = 'India';  // Default value
+
+//     // Correspondence Address fields
+//     document.getElementById('correspondence_building_no').value = '';
+//     document.getElementById('correspondence_premises_name').value = '';
+//     document.getElementById('correspondence_landmark').value = '';
+//     document.getElementById('correspondence_road_street').value = '';
+//     document.getElementById('correspondence_pincode').value = '';
+//     document.getElementById('correspondence_city').value = '';
+//     document.getElementById('correspondence_district').value = '';
+//     document.getElementById('correspondence_state').value = '';
+//     document.getElementById('correspondence_country').value = 'India';  // Default value
+
+//     // Uncheck the "Same as Permanent Address" checkbox
+//     document.getElementById('same_as_permanent').checked = false;
+// }
+
+
+// function clearPermanentAddress() {
+function clearPermanentAddress() {
     // Permanent Address fields
     document.getElementById('permanent_building_no').value = '';
     document.getElementById('permanent_premises_name').value = '';
     document.getElementById('permanent_landmark').value = '';
     document.getElementById('permanent_road_street').value = '';
-    document.getElementById('permanent_pincode').value = '';
-    document.getElementById('permanent_city').value = '';
-    document.getElementById('permanent_district').value = '';
-    document.getElementById('permanent_state').value = '';
-    document.getElementById('permanent_country').value = 'India';  // Default value
-
+    document.getElementById('pincode_permanent').value = '';
+    document.getElementById('city_permanent').value = '';
+    document.getElementById('district_permanent').value = '';
+    document.getElementById('state_permanent').value = '';
+    document.getElementById('nationality_permanent').value = 'India';  // Default value
+}
+// function clearCorrespondenceAddress() {
+function clearCorrespondenceAddress() {
     // Correspondence Address fields
     document.getElementById('correspondence_building_no').value = '';
     document.getElementById('correspondence_premises_name').value = '';
     document.getElementById('correspondence_landmark').value = '';
     document.getElementById('correspondence_road_street').value = '';
-    document.getElementById('correspondence_pincode').value = '';
-    document.getElementById('correspondence_city').value = '';
-    document.getElementById('correspondence_district').value = '';
-    document.getElementById('correspondence_state').value = '';
-    document.getElementById('correspondence_country').value = 'India';  // Default value
-
+    document.getElementById('pincode_correspondence').value = '';
+    document.getElementById('city_correspondence').value = '';
+    document.getElementById('district_correspondence').value = '';
+    document.getElementById('state_correspondence').value = '';
+    document.getElementById('nationality_correspondence').value = 'India';  // Default value
     // Uncheck the "Same as Permanent Address" checkbox
     document.getElementById('same_as_permanent').checked = false;
 }
+
 
 
 function validateEmergencyContactName() {
@@ -1886,4 +1917,17 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 });
 
+window.onload = function () {
+    const dropdowns = document.querySelectorAll('.dropdown');
 
+    dropdowns.forEach(dropdown => {
+        const selectedValue = dropdown.value;
+
+        for (let option of dropdown.options) {
+            if (option.value === selectedValue) {
+                option.style.display = 'none';
+                break;
+            }
+        }
+    });
+};

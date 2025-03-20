@@ -64,7 +64,7 @@
                                    oninput="this.value = this.value.replace(/[^a-zA-Z ]/g, '').();"  onkeydown="return blockNumbers(event);">
                             </td>
                             <td>
-                                <select name="relation[]" class="relation-type" required>
+                                <select name="relation[]" class="relation-type dropdown" required>
                                     <option value="{{$detail->relation}}">{{$detail->relation}}</option>
                                     <option value="Spouse">Spouse</option>
                                     <option value="Child">Child</option>
@@ -78,7 +78,7 @@
                                     max="<?php echo date('Y-m-d'); ?>">
                             </td>
                             <td>
-                                <select name="gender[]" class="gender-type" required>
+                                <select name="gender[]" class="gender-type dropdown" required>
                                     <option value="{{$detail->gender}}">{{$detail->gender}}</option>
                                     <option value="Male">Male</option>
                                     <option value="Female">Female</option>
@@ -270,6 +270,22 @@ oninput="this.value = this.value.replace(/[^0-9]/g, '')"></td>
         event.stopPropagation(); // Stop the form submission from being triggered
     });
 
+    </script>
+    <script>
+        window.onload = function () {
+    const dropdowns = document.querySelectorAll('.dropdown');
+
+    dropdowns.forEach(dropdown => {
+        const selectedValue = dropdown.value;
+
+        for (let option of dropdown.options) {
+            if (option.value === selectedValue) {
+                option.style.display = 'none';
+                break;
+            }
+        }
+    });
+};
     </script>
 
 @endsection

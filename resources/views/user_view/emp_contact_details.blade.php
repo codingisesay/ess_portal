@@ -2,6 +2,7 @@
 @section('content')  <!-- Defining the content section -->
 <!-- <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css"> -->
 <link rel="stylesheet" href="{{ asset('errors/error.css') }}">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 
 <link rel="stylesheet" href="{{ asset('user_end/css/onboarding_form.css') }}">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
@@ -63,7 +64,12 @@ $email = Auth::guard('web')->user()->email;
               <div class="address-section">
                   <h3>Permanent Address</h3>
                 
-                  <button type="button" class="clear-btn" onclick="clearForm()">Clear Adderess</button>
+                  <!-- <button type="button" class="clear-btn" onclick="clearForm()">Clear Adderess</button> -->
+                  <!-- Clear Button with Dropdown -->
+                  <button type="button" class="clear-btn" onclick="clearPermanentAddress()"><i class="fas fa-undo"></i> <!-- Undo Icon --></button>
+                  <button type="button" class="clear-btn1" onclick="clearCorrespondenceAddress()"><i class="fas fa-undo"></i> <!-- Undo Icon --></button>
+
+
 
 
                   <div class="form-row">
@@ -150,6 +156,7 @@ $email = Auth::guard('web')->user()->email;
               <div class="address-section">
                   <div class="correspondence-header">
                       <h3 class="address-title">Correspondence Address</h3>
+                      
                       <div class="same-address-container">
                         
                           <input type="checkbox" id="copy_address_checkbox" class="styled-checkbox"
@@ -199,6 +206,7 @@ $email = Auth::guard('web')->user()->email;
                         </select>
                         <label for="nationality">Country</label>
                     </div>
+                    
                       <div class="form-group">
                           
                           <input type="text" id="pincode_correspondence" name="correspondence_pincode" onkeyup="fetchLocationDetails('correspondence')"
@@ -255,6 +263,15 @@ $email = Auth::guard('web')->user()->email;
               </div>
              
               <div class="form-group">
+                  
+                  <input type="email" id="email" name="email" class="form-control"
+                      placeholder=""
+                      pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}" required value="{{ $email }}" readonly>
+                      <label for="emailID">Offical Email Address<span style="color: red;">*</span></label>
+                  <span class="error" id="emailIDError"></span>
+              </div>
+
+              <div class="form-group">
               
                   <input id="alternate_phone_number" class="form-control" name="alternate_phone_number"
                       placeholder="" type="tel" pattern="\d{10}"
@@ -269,17 +286,10 @@ $email = Auth::guard('web')->user()->email;
                   <input type="email" id="emailID" name="emailID" class="form-control"
                       placeholder=""
                       pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}" required value="{{ old('emailID', $emp_contact_datas[0]->email_address) }}">
-                      <label for="emailID">Email Address<span style="color: red;">*</span></label>
+                      <label for="emailID">Personal Email Address<span style="color: red;">*</span></label>
                   <span class="error" id="emailIDError"></span> <!-- Ensure this element exists -->
               </div>
-              <div class="form-group">
-                  
-                  <input type="email" id="email" name="email" class="form-control"
-                      placeholder=""
-                      pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}" required value="{{ $email }}" readonly>
-                      <label for="emailID">Offical Email Address<span style="color: red;">*</span></label>
-                  <span class="error" id="emailIDError"></span>
-              </div>
+              
                         </div>
       </div>
       <div class="column" style="flex: 1; border: 1px solid #ba184e; padding: 20px; border-radius: 8px;">
@@ -474,33 +484,7 @@ document.getElementById('nationality_correspondence').addEventListener('change',
 
 <script src="{{ asset('user_end/js/onboarding_form.js') }}"></script>
 
-<style>
-          .clear-btn {
-              position: absolute;
-              top: 10px;
-              right: 20px;
-              background-color: #ff0000;
-              color: #fff;
-              padding: 8px 16px;
-              border: none;
-              border-radius: 4px;
-              cursor: pointer;
-              font-size: 14px;
-              font-weight: bold;
-          }
 
-          .clear-btn:hover {
-              background-color: #e60000;
-          }
-
-          .clear-btn:focus {
-              outline: none;
-          }
-
-          .clear-btn:active {
-              background-color: #d40000;
-          }
-      </style>
 
 @endsection
 </body>

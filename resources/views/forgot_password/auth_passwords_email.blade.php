@@ -70,7 +70,7 @@
             <div class="logo">
                 <img src="{{ asset('user_end/images/STPL Logo with TagLine HD Transparent.png') }}" alt="SIL Logo">
             </div>
-            <form action="{{ route('password.email') }}" method="POST">
+            <form class="signup-form"  action="{{ route('password.email') }}" method="POST">
                 @csrf
                 <div class="form-group">
                     <input type="email" name="email" id="username" placeholder=" " oninput="this.value = this.value.toUpperCase(); validateUsername()" required>

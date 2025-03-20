@@ -45,6 +45,7 @@ $id = Auth::guard('web')->user()->id;
       <div class="column" style="flex: 1; border: 1px solid #ba184e; padding: 20px; border-radius: 8px;">
           <div class="address-form">
               <h3>Personal A/C Details</h3>
+              <button type="button" class="clear-btn" onclick="clearPermanentBankDetails()"><i class="fas fa-undo"></i></button>
               <!-- Personal Account Details -->
               <div class="form-row">
                   <div class="form-group">
@@ -85,6 +86,7 @@ $id = Auth::guard('web')->user()->id;
           <div class="address-form">
               <div class="correspondence-header1">
                   <h3>Salary Bank Details</h3>
+                  <button type="button" class="clear-btn2" onclick="clearSalaryBankDetails()"><i class="fas fa-undo"></i></button>
                   <div class="same-address-container">
                     
                       <input type="checkbox" id="copyBankDetails1" class="styled-checkbox2"
@@ -95,7 +97,7 @@ $id = Auth::guard('web')->user()->id;
               <!-- Checkbox to copy Bank 1 details -->
               <div class="form-row">
                   <div class="form-group">
-                      <select id="bankName2" class="form-control" placeholder="" name="bankName2">
+                      <select id="bankName2" class="form-control dropdown" placeholder="" name="bankName2">
                           <option value="{{ old('bankName2', $emp_bank_datas[0]->sal_bank_id) }}">{{ old('bankName2', $emp_bank_datas[0]->sal_bank_name) }}</option>
                           @foreach($banks as $bank)
                           <option value="{{ $bank->id }}">{{ $bank->name }}</option>
@@ -141,7 +143,7 @@ $id = Auth::guard('web')->user()->id;
                   </div>
                   <div class="form-group">
                       <span class="error" id="nationalityError"></span>
-                      <select class="form-control" name="country">
+                      <select class="form-control dropdown" name="country">
                           <option value="{{ old('issuingCountry', $emp_bank_datas[0]->issuing_country) }}">{{ old('issuingCountry', $emp_bank_datas[0]->issuing_country) }}</option>
                           <!-- Add your country options here -->
                           @foreach ($countrys as $country)
@@ -150,7 +152,7 @@ $id = Auth::guard('web')->user()->id;
                               
                           @endforeach
                       </select>
-                      <label for="nationality">Issuing Country<span class="passport-required"
+                      <label for="nationality">Issuing Country<span class="passport-required "
                               style="display: none; color: red;">*</span></label>
                   </div>
                   <div class="form-group">
@@ -199,7 +201,7 @@ $id = Auth::guard('web')->user()->id;
               <h3>Vehicle Details</h3>
               <div class="form-row">
                   <div class="form-group">
-                      <select id="vehicleType" class="form-control" placeholder="" name="vehicleType">
+                      <select id="vehicleType" class="form-control dropdown" placeholder="" name="vehicleType">
                           <option value="{{ old('vehicleType', $emp_bank_datas[0]->vehicle_type) }}">{{ old('vehicleType', $emp_bank_datas[0]->vehicle_type) }}</option>
                           <option value="Car">Car</option>
                           <option value="Bike">Bike</option>
@@ -373,5 +375,28 @@ $id = Auth::guard('web')->user()->id;
 
     // ...existing code...
 </script>
+<script>
+    // Function to clear the Permanent Bank Details fields
+    function clearPermanentBankDetails() {
+        document.getElementById('bankName1').value = '';
+        document.getElementById('branchName1').value = '';
+        document.getElementById('accountNumber1').value = '';
+        document.getElementById('ifscCode1').value = '';
+        document.getElementById('bankNameError1').textContent = '';
+        document.getElementById('branchName1Error').textContent = '';
+        document.getElementById('accountNumber1Error').textContent = '';
+        document.getElementById('ifscCode1Error').textContent = '';
+    }
 
+    // Function to clear the Salary Bank Details fields
+    function clearSalaryBankDetails() {
+        document.getElementById('bankName2').value = '';
+        document.getElementById('branchName2').value = '';
+        document.getElementById('accountNumber2').value = '';
+        document.getElementById('ifscCode2').value = '';
+        document.getElementById('accountNumber2Error').textContent = '';
+        document.getElementById('ifscCode2Error').textContent = '';
+        document.getElementById('branchName2Error').textContent = '';
+    }
+</script>
 @endsection
