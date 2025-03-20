@@ -170,6 +170,7 @@
     left: 10px;
     font-size: 13px;
     color: #2a1e1e;
+    font-weight: bold;
 }
 
 /* Input Styles */
@@ -181,7 +182,7 @@
     border: 2px solid #ccc;
     border-radius: 5px;
     font-size: 14px;
-    background-color: #f9f9f9;
+    /* background-color: #f9f9f9; */
     transition: all 0.3s ease-in-out;
 }
 
@@ -907,7 +908,7 @@ h4 {
 .correspondence-header {
     display: flex;
     /* Align elements in a row */
-    align-items: center;
+    align-items: baseline;
     /* Vertically align content */
     gap: 20px;
     /* Spacing between the title and checkbox */
@@ -918,7 +919,7 @@ h4 {
 .correspondence-header1 {
     display: flex;
     /* Align elements in a row */
-    align-items: center;
+    align-items: baseline;
     /* Vertically align content */
     gap: 20px;
     /* Spacing between the title and checkbox */
@@ -1125,4 +1126,148 @@ input[type="custom-major"] {
     margin-top: 5px;
     display: block;
     /* Ensure the error message is displayed below the input */
+}
+
+/* clear button of address and bank  */
+.clear-btn {
+    position: absolute;
+    top: 24px;
+    right: 20px;
+    background-color: white;
+    color: #8A3366;
+    padding: 4px 11px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 10px;
+    font-weight: bold;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.clear-btn:hover {
+    background-color: #E0AFA0;
+}
+
+.clear-btn:focus {
+    outline: none;
+}
+
+.clear-btn:active {
+    background-color: #E0AFA0;
+}
+
+.clear-btn select {
+    background-color: #E0AFA0;
+    color: #fff;
+    border: none;
+    padding: 4px;
+    font-size: 13px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.clear-btn select:hover {
+    background-color: #E0AFA0;
+}
+
+.clear-btn select:focus {
+    outline: none;
+}
+
+
+.clear-btn1 {
+    position: absolute;
+    top: 310px;
+    right: 20px;
+    background-color: white;
+    color: #8A3366;
+    padding: 4px 11px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 10px;
+    font-weight: bold;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.clear-btn1:hover {
+    background-color: #E0AFA0;
+}
+
+.clear-btn1:focus {
+    outline: none;
+}
+
+.clear-btn1:active {
+    background-color: #E0AFA0;
+}
+
+.clear-btn1 select {
+    background-color: #E0AFA0;
+    color: #fff;
+    border: none;
+    padding: 4px;
+    font-size: 13px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.clear-btn1 select:hover {
+    background-color: #E0AFA0;
+}
+
+.clear-btn1 select:focus {
+    outline: none;
+}
+
+
+.clear-btn2 {
+    position: absolute;
+    top: 223px;
+    right: 20px;
+    background-color: white;
+    color: #8A3366;
+    padding: 4px 11px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 10px;
+    font-weight: bold;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.clear-btn2:hover {
+    background-color: #E0AFA0;
+}
+
+.clear-btn2:focus {
+    outline: none;
+}
+
+.clear-btn2:active {
+    background-color: #E0AFA0;
+}
+
+.clear-btn2 select {
+    background-color: #E0AFA0;
+    color: #fff;
+    border: none;
+    padding: 4px;
+    font-size: 13px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.clear-btn2 select:hover {
+    background-color: #E0AFA0;
+}
+
+.clear-btn2 select:focus {
+    outline: none;
 }

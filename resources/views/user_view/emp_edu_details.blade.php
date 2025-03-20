@@ -47,8 +47,8 @@
                         <th>Passing Year</th>
                         <th>Percentage/CGPA</th>
                         <th>Certification Name</th>
-                        <th>Marks Obtained</th>
                         <th>Total Marks</th>
+                        <th>Marks Obtained</th>
                         <th>Date of Certificate</th>
                         {{-- <th>Edit</th> --}}
                         <th>Remove</th>
@@ -82,8 +82,8 @@
                             </td>
                             <td><input type="text" name="percentage[]" class="percentage-input" required value="{{ $detail->percentage_cgpa }}" maxlength="5" pattern="\d+(\.\d{1,2})?" title="Only numbers and up to two decimal places are allowed"></td>
                             <td><input type="text" name="certification_name[]" class="certification-name-input" required value="{{ $detail->certification_name }}" maxlength="50"></td>
-                            <td><input type="text" name="marks_obtained[]" class="marks-input" required value="{{ $detail->marks_obtained }}" maxlength="3"></td>
-                            <td><input type="text" name="total_marks[]" class="total-marks-input" required value="{{ $detail->out_of_marks_total_marks }}" maxlength="3"></td>
+                            <td><input type="text" name="total_marks[]" class="total-marks-input" required value="{{ $detail->out_of_marks_total_marks }}" oninput="validateMarks(this)" maxlength="3"></td>
+                            <td><input type="text" name="marks_obtained[]" class="marks-input" required value="{{ $detail->marks_obtained }}" oninput="validateMarks(this)" maxlength="3"></td>
                             <td><input type="date" name="date_of_certificate[]" class="date-input" value="{{ $detail->date_of_certificate }}" max="{{ date('Y-m-d') }}"></td>
                             {{-- <td><button type="button" onclick="editEducationRow(this)">✏️</button></td> --}}
                             <td>
@@ -147,8 +147,8 @@
             </td>
             <td><input type="text" name="percentage[]" class="percentage-input" required placeholder="Enter Percentage" maxlength="5" title="Only numbers and up to two decimal places are allowed"></td>
             <td><input type="text" name="certification_name[]" class="certification-name-input" required placeholder="Enter Certification Name" maxlength="50"></td>
-            <td><input type="text" name="marks_obtained[]" class="marks-input" required placeholder="Enter Marks Obtained" maxlength="3"></td>
-            <td><input type="text" name="total_marks[]" class="total-marks-input" required placeholder="Enter Total Marks" maxlength="3"></td>
+             <td><input type="text" name="total_marks[]" class="total-marks-input" required placeholder="Enter Total Marks" oninput="validateMarks(this)" maxlength="3"></td>
+            <td><input type="text" name="marks_obtained[]" class="marks-input" required placeholder="Enter Marks Obtained" oninput="validateMarks(this)" maxlength="3"></td>
             <td><input type="date" name="date_of_certificate[]" class="date-input" max="<?php echo date('Y-m-d'); ?>"></td>
             <td><button type="button" onclick="removeEducationRow(this)">❌</button></td>
         `;
@@ -353,6 +353,20 @@
     });
 
 </script>
+  <script>
+        // Function to validate that marks obtained is less than or equal to total marks
+        function validateMarks(input) {
+            // Get the current row's marks obtained and total marks
+            var marksObtained = parseInt(input.closest('tr').querySelector('.marks-input').value);
+            var totalMarks = parseInt(input.closest('tr').querySelector('.total-marks-input').value);
+
+            // Check if marks obtained is greater than total marks
+            if (marksObtained > totalMarks) {
+                alert('Marks obtained cannot be greater than total marks!');
+                input.closest('tr').querySelector('.marks-input').value = ''; // Clear marks obtained field
+            }
+        }
+    </script>
 
 {{-- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> --}}
 

@@ -46,6 +46,7 @@ $id = Auth::guard('web')->user()->id;
       <div class="column" style="flex: 1; border: 1px solid #ba184e; padding: 20px; border-radius: 8px;">
           <div class="address-form">
               <h3>Personal A/C Details</h3>
+              <button type="button" class="clear-btn" onclick="clearPermanentBankDetails()"><i class="fas fa-undo"></i></button>
               <!-- Personal Account Details -->
               <div class="form-row">
                   <div class="form-group">
@@ -86,6 +87,7 @@ $id = Auth::guard('web')->user()->id;
           <div class="address-form">
               <div class="correspondence-header1">
                   <h3>Salary Bank Details</h3>
+                  <button type="button" class="clear-btn2" onclick="clearSalaryBankDetails()"><i class="fas fa-undo"></i></button>
                   <div class="same-address-container">
                     
                       <input type="checkbox" id="copyBankDetails1" class="styled-checkbox2"
@@ -373,6 +375,31 @@ $id = Auth::guard('web')->user()->id;
       };
 
     // ...existing code...
+</script>
+
+<script>
+    // Function to clear the Permanent Bank Details fields
+    function clearPermanentBankDetails() {
+        document.getElementById('bankName1').value = '';
+        document.getElementById('branchName1').value = '';
+        document.getElementById('accountNumber1').value = '';
+        document.getElementById('ifscCode1').value = '';
+        document.getElementById('bankNameError1').textContent = '';
+        document.getElementById('branchName1Error').textContent = '';
+        document.getElementById('accountNumber1Error').textContent = '';
+        document.getElementById('ifscCode1Error').textContent = '';
+    }
+
+    // Function to clear the Salary Bank Details fields
+    function clearSalaryBankDetails() {
+        document.getElementById('bankName2').value = '';
+        document.getElementById('branchName2').value = '';
+        document.getElementById('accountNumber2').value = '';
+        document.getElementById('ifscCode2').value = '';
+        document.getElementById('accountNumber2Error').textContent = '';
+        document.getElementById('ifscCode2Error').textContent = '';
+        document.getElementById('branchName2Error').textContent = '';
+    }
 </script>
 
 @endsection

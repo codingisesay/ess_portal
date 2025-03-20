@@ -57,7 +57,8 @@ $id = Auth::guard('web')->user()->id;
 
               <div class="address-section">
                   <h3>Permanent Address</h3>
-                  <button type="button" class="clear-btn" onclick="clearForm()">Clear Adderess</button>
+                  <button type="button" class="clear-btn" onclick="clearPermanentAddress()"><i class="fas fa-undo"></i> <!-- Undo Icon --></button>
+                  <button type="button" class="clear-btn1" onclick="clearCorrespondenceAddress()"><i class="fas fa-undo"></i> <!-- Undo Icon --></button>
 
 
                   <div class="form-row">
@@ -249,6 +250,15 @@ $id = Auth::guard('web')->user()->id;
               </div>
              
               <div class="form-group">
+                  
+                  <input type="email" id="email" name="email" class="form-control"
+                      placeholder=""
+                      pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}" required value="{{ old('email', $emp_contact_datas[0]->offical_email_address) }}">
+                      <label for="emailID">Offical Email Address<span style="color: red;">*</span></label>
+                  <span class="error" id="emailIDError"></span>
+              </div>
+
+              <div class="form-group">
               
                   <input id="alternate_phone_number" class="form-control" name="alternate_phone_number"
                       placeholder="" type="tel" pattern="\d{10}"
@@ -263,17 +273,10 @@ $id = Auth::guard('web')->user()->id;
                   <input type="email" id="emailID" name="emailID" class="form-control"
                       placeholder=""
                       pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}" required value="{{ old('emailID', $emp_contact_datas[0]->email_address) }}">
-                      <label for="emailID">Email Address<span style="color: red;">*</span></label>
+                      <label for="emailID">Personal Email Address<span style="color: red;">*</span></label>
                   <span class="error" id="emailIDError"></span> <!-- Ensure this element exists -->
               </div>
-              <div class="form-group">
-                  
-                  <input type="email" id="email" name="email" class="form-control"
-                      placeholder=""
-                      pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}" required value="{{ old('email', $emp_contact_datas[0]->offical_email_address) }}">
-                      <label for="emailID">Offical Email Address<span style="color: red;">*</span></label>
-                  <span class="error" id="emailIDError"></span>
-              </div>
+              
                         </div>
       </div>
       <div class="column" style="flex: 1; border: 1px solid #ba184e; padding: 20px; border-radius: 8px;">
@@ -468,33 +471,7 @@ document.getElementById('nationality_correspondence').addEventListener('change',
 
 <script src="{{ asset('user_end/js/onboarding_form.js') }}"></script>
 
-<style>
-          .clear-btn {
-              position: absolute;
-              top: 10px;
-              right: 20px;
-              background-color: #ff0000;
-              color: #fff;
-              padding: 8px 16px;
-              border: none;
-              border-radius: 4px;
-              cursor: pointer;
-              font-size: 14px;
-              font-weight: bold;
-          }
 
-          .clear-btn:hover {
-              background-color: #e60000;
-          }
-
-          .clear-btn:focus {
-              outline: none;
-          }
-
-          .clear-btn:active {
-              background-color: #d40000;
-          }
-      </style>
 
 @endsection
 </body>
