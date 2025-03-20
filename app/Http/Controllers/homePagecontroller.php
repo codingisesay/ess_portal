@@ -319,25 +319,26 @@ for ($teamMamber = 0; $teamMamber < $dataOfteamMambers->count(); $teamMamber++) 
 
 $currentDate = Carbon::now();
 $currentMonth = $currentDate->month;
-$currentDay = $currentDate->day;
+$currentYear = $currentDate->year;  // Get the current year
 
+// Fetch upcoming holidays for the full year
 $holidays_upcoming = DB::table('calendra_masters')
     ->select('date', 'holiday_name', 'day')
     ->where('holiday', '=', 'Yes')
-    ->whereMonth('date', '=', $currentMonth)
-    ->whereDay('date', '>=', $currentDay)
+    ->whereYear('date', '=', $currentYear)  // Filter by the current year
     ->get();
 
+// Format holiday dates
 $holidays_upcoming = $holidays_upcoming->map(function ($holiday) {
     $holiday->formatted_date = Carbon::parse($holiday->date)->format('d F');
     return $holiday;
 });
        
-// Fetch week-offs
+// Fetch week-offs for the full year
 $week_offs = DB::table('calendra_masters')
     ->select('date', 'day')
     ->where('week_off', '=', 'YES')
-    ->whereMonth('date', '=', $currentMonth)
+    ->whereYear('date', '=', $currentYear)  // Filter by the current year
     ->get();
 
 // Format week-off dates
@@ -345,7 +346,7 @@ $week_offs = $week_offs->map(function ($week_off) {
     $week_off->formatted_date = Carbon::parse($week_off->date)->format('d F');
     return $week_off;
 });
-       
+
 
 
         // dd($anniversaries);

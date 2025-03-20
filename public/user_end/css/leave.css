@@ -90,7 +90,7 @@ body {
 .leave-summary-container {
     display: grid;
     /* Use grid layout */
-    grid-template-columns: repeat(2, 1fr);
+    /* grid-template-columns: repeat(2, 1fr); */
     /* Create two columns */
     gap: 30px;
     /* Space between items */
@@ -103,8 +103,8 @@ body {
 
 /* Styling for individual leave cards */
 .leave-card {
-    width: 300px;
-    /* display: flex; */
+    width: 100%;
+    display: flex;
     flex-direction: row;
     justify-content: space-between;
     align-items: center;

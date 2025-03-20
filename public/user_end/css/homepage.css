@@ -664,6 +664,10 @@ button {
     margin-top: 20px;
 }
 
+.birthday-cards:hover {
+    transform: translateY(-5px);
+}
+
 .card-birth {
     display: flex;
     align-items: center;

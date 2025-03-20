@@ -384,7 +384,7 @@
                                 <td>{{ $employment->from_date ? \Carbon\Carbon::parse($employment->from_date)->format('d-m-Y') : '-' }}</td>
                                 <td>{{ $employment->to_date ? \Carbon\Carbon::parse($employment->to_date)->format('d-m-Y') : '-' }}</td>
                                 <td>{{ ucfirst($employment->designation ?? '-') }}</td>
-                                <td>{{ number_format($employment->last_drawn_annual_salary ?? 0) }}</td>
+                                <td class="right-align">{{ number_format($employment->last_drawn_annual_salary ?? 0, 2) }}</td>
                                 <td>{{ ucfirst($employment->relevant_experience ?? '-') }}</td>
                                 <td>{{ ucfirst($employment->reason_for_leaving ?? '-') }}</td>
                                 <td>{{ ucfirst($employment->major_responsibilities ?? '-') }}</td>
