@@ -212,18 +212,38 @@ if($emp_details->employee_type == 1){
         //Fetch Today Birthday
 
         $todayBirthdays = DB::table('emp_details')
-        ->join('organisation_designations','emp_details.designation','=','organisation_designations.id')
-        ->leftjoin('user_status_imgs','emp_details.user_id','=','user_status_imgs.user_id')
-        ->select('emp_details.employee_name as employee_nme', 'date_of_birth', 'organisation_designations.name as designation_name','user_status_imgs.*')
-        ->whereDay('date_of_birth', '=', $currentDay)
+        ->join('organisation_designations', 'emp_details.designation', '=', 'organisation_designations.id')
+        ->leftJoin('user_status_imgs', 'emp_details.user_id', '=', 'user_status_imgs.user_id')
+        ->select('emp_details.employee_name as employee_nme', 'date_of_birth', 'organisation_designations.name as designation_name', 'user_status_imgs.*')
+        ->whereMonth('date_of_birth', '=', now()->month)  // Match the current month
+        ->whereDay('date_of_birth', '=', now()->day)    // Match the current day
         ->get()
-        ->map(function ($employee) use ($currentDay, $currentDate) {
+        ->map(function ($employee) {
             $birthDate = new Carbon($employee->date_of_birth);
-            $birthDay = $birthDate->day;
             $employee->age = $birthDate->age;
-            $employee->badgeText = $birthDay === $currentDay ? "Today" : "Upcoming in " . ($birthDay - $currentDay) . " days";
+            
+            // Check if today's the employee's birthday or upcoming
+            $currentDay = now()->day;
+            $currentMonth = now()->month;
+            $birthDay = $birthDate->day;
+            $birthMonth = $birthDate->month;
+    
+            // If the birthday is today
+            if ($birthDay === $currentDay && $birthMonth === $currentMonth) {
+                $employee->badgeText = "Today";
+            } else {
+                // If it's not today, calculate how many days are left for the birthday
+                $nextBirthday = $birthDate->copy()->year(now()->year); // Set the birthday to this year
+                if ($nextBirthday->isPast()) {
+                    $nextBirthday->addYear(); // If the birthday already passed this year, set it to the next year
+                }
+                $daysRemaining = $nextBirthday->diffInDays(now());
+                $employee->badgeText = "Upcoming in " . $daysRemaining . " days";
+            }
+    
             return $employee;
         });
+    
 
         // dd($todayBirthdays);
 

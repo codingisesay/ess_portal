@@ -660,6 +660,10 @@ error_reporting(0);
     </script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
+    // PHP data passed to JavaScript
+    const holidays = <?php echo json_encode($holidays_upcoming); ?>;
+    const weekOffs = <?php echo json_encode($week_offs); ?>;
+
     // Initialize global variables
     const calendarContainer = document.getElementById("calendar");
     const yearSelect = document.getElementById("year-select");
@@ -721,11 +725,32 @@ error_reporting(0);
             calendarContainer.appendChild(emptyDay);
         }
 
-        // Add actual days
+        // Highlight days based on holidays and week-offs
         for (let day = 1; day <= numDays; day++) {
             const dayElement = document.createElement('div');
             dayElement.classList.add('day');
             dayElement.textContent = day;
+
+            // Check if the day is a holiday
+            const isHoliday = holidays.some(holiday => {
+                const holidayDate = new Date(holiday.date);
+                return holidayDate.getDate() === day && holidayDate.getMonth() === month && holidayDate.getFullYear() === year;
+            });
+
+            // Check if the day is a week-off
+            const isWeekOff = weekOffs.some(weekOff => {
+                const weekOffDate = new Date(weekOff.date);
+                return weekOffDate.getDate() === day && weekOffDate.getMonth() === month && weekOffDate.getFullYear() === year;
+            });
+
+            // Add holiday and week-off styling
+            if (isHoliday) {
+                dayElement.classList.add('holiday');
+            }
+            if (isWeekOff) {
+                dayElement.classList.add('week-off');
+            }
+
             calendarContainer.appendChild(dayElement);
         }
     }
@@ -771,6 +796,20 @@ error_reporting(0);
     generateCalendar(currentYear, currentMonth);
 </script>
 
+<style>
+     .day.holiday {
+        background-color: #f3e39f;
+        color: black;
+        border-radius: 50%;
+    }
+
+    .day.week-off {
+        background-color: #8A3366;
+        color: white;
+        border-radius: 50%;
+    }
+
+</style>
 
 
     <script>
