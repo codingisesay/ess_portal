@@ -120,6 +120,9 @@ Route::middleware(['auth'])->group(function () {
     Route::get('user/family',[empDetailFormController::class,'loadfamilyuser'])->name('user.family');
     Route::get('user/preemp',[empDetailFormController::class,'loadpreempuser'])->name('user.preemp');
     Route::get('user/docupload',[empDetailFormController::class,'loaddocuploaduser'])->name('user.docupload');
+//load department according to branch_id
+    Route::get('user/fetch_department/{branch_id}',[empDetailFormController::class,'fetchDepartmentBrach'])->name('fetch_department_branch');
+    Route::get('user/fetch_designation/{department_id}',[empDetailFormController::class,'fetchDesignationBrach'])->name('fetch_department_branch');
    
     //Edit user Controller routes
 
@@ -130,6 +133,11 @@ Route::middleware(['auth'])->group(function () {
     Route::get('user/edit/family/{id?}',[editUserController::class,'loadfamilyuser'])->name('user.editfamily');
     Route::get('user/edit/preemp/{id?}',[editUserController::class,'loadpreempuser'])->name('user.editpreemp');
     Route::get('user/edit/docupload/{id?}',[editUserController::class,'loaddocuploaduser'])->name('user.editdocupload');
+
+    //load department according to branch_id
+    Route::get('user/edit/fetch_department/{branch_id}',[empDetailFormController::class,'fetchDepartmentBrach'])->name('fetch_editdepartment_branch');
+    Route::get('user/edit/fetch_designation/{department_id}',[empDetailFormController::class,'fetchDesignationBrach'])->name('fetch_editdepartment_branch');
+
     //Update edit users Routes
     Route::post('user/edit/detail_insert',[editUserController::class,'insertDetail'])->name('edit_detail_insert');
     Route::post('user/edit/contact_insert',[editUserController::class,'insertcontact'])->name('edit_contact_insert');

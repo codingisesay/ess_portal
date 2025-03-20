@@ -327,17 +327,24 @@ class editUserController extends Controller
         // Store Education Data
             // Validate the input fields as arrays
             $data = $request->validate([
-                'course_type' => 'required|array',
-                'degree' => 'required|array',
-                'university' => 'required|array',
-                'institution' => 'required|array',
-                'passing_year' => 'required|array',
-                'percentage' => 'required|array',
-                'certification_name' => 'nullable|array',
-                'marks_obtained' => 'nullable|array',
-                'total_marks' => 'nullable|array',
-                'date_of_certificate' => 'nullable|array',
+                'course_type' => 'array',
+                'degree' => 'array',
+                'university' => 'array',
+                'institution' => 'array',
+                'passing_year' => 'array',
+                'percentage' => 'array',
+                'certification_name' => 'array',
+                'marks_obtained' => 'array',
+                'total_marks' => 'array',
+                'date_of_certificate' => 'array',
             ]);
+        
+            if($data == []){
+        
+                return redirect()->route('user.editbank')->with('success', 'Education details has been skiped!');
+        
+            }
+            
             
             $edituserId = session('id');
             $loginUserInfo = User::where('id', $edituserId)->first();
@@ -594,14 +601,20 @@ class editUserController extends Controller
     public function insertfamity(Request $request){
 
         $data = $request->validate([
-            'name' => 'required|array',
-            'relation' => 'required|array',
-            'birth_date' => 'required|array',
-            'gender' => 'required|array',
-            'age' => 'required',
-            'dependent' => 'required|array',
-            'phone_number' => 'nullable|array',
+            'name' => 'array',
+            'relation' => 'array',
+            'birth_date' => 'array',
+            'gender' => 'array',
+            'age' => '',
+            'dependent' => 'array',
+            'phone_number' => 'array',
         ]);
+
+        if($data == []){
+
+            return redirect()->route('user.editpreemp')->with('success', 'Family details has been skiped!');
+
+        }
         
         $edituserId = session('id');
         $loginUserInfo = User::where('id', $edituserId)->first();
@@ -697,20 +710,26 @@ class editUserController extends Controller
     public function insertPreEmp(Request $request){
 
         $data = $request->validate([
-            'employer_name' => 'required|array',
-            'country' => 'required|array',
-            'city' => 'required|array',
-            'from_date' => 'required|array',
-            'to_date' => 'required',
-            'designation' => 'required|array',
-            'last_drawn_salary' => 'nullable|array',
-            'relevant_experience' => 'required',
-            'reason_for_leaving' => 'required|array',
-            'major_responsibilities' => 'nullable|array',
+            'employer_name' => 'array',
+            'country' => 'array',
+            'city' => 'array',
+            'from_date' => 'array',
+            'to_date' => '',
+            'designation' => 'array',
+            'last_drawn_salary' => 'array',
+            'relevant_experience' => '',
+            'reason_for_leaving' => 'array',
+            'major_responsibilities' => 'array',
             
             
             
         ]);
+
+        if($data == []){
+
+            return redirect()->route('user.editdocupload')->with('success','Previous employment has been skiped!');
+
+        }
         
         $edituserId = session('id');
         $loginUserInfo = User::where('id', $edituserId)->first();
@@ -826,5 +845,42 @@ public function DeletePreViousEmpy($id){
 
     public function loaddocuploaduser(){
         return view('user_view.edit_user.emp_doc_upload');
+    }
+
+    public function fetchDepartmentBrach($branch_id){
+
+        $loginUserInfo = Auth::user();
+    
+        $dataofDepartment = DB::table('organisation_designations')
+        ->join('organisation_departments', 'organisation_designations.department_id', '=', 'organisation_departments.id')
+        ->select('organisation_departments.name as department_name','organisation_departments.id as department_id')
+        ->where('organisation_designations.organisation_id', '=', $loginUserInfo->organisation_id)
+        ->where('organisation_designations.branch_id', '=', $branch_id)
+        ->distinct()
+        ->get();
+    
+        // dd($dataofDepartment);
+    
+        // Return the data as JSON
+        return response()->json($dataofDepartment);
+        
+    }
+    
+    public function fetchDesignationBrach($department_id){
+    
+        $loginUserInfo = Auth::user();
+    
+        $dataofDesignation = DB::table('organisation_designations')
+        ->select('organisation_designations.id as id','organisation_designations.name as name')
+        ->where('organisation_designations.organisation_id', '=', $loginUserInfo->organisation_id)
+        ->where('organisation_designations.department_id', '=', $department_id)
+        ->distinct()
+        ->get();
+    
+        // dd($dataofDesignation);
+    
+        // Return the data as JSON
+        return response()->json($dataofDesignation);
+    
     }
 }
