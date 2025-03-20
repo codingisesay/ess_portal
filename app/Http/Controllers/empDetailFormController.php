@@ -925,5 +925,42 @@ public function insertBank(Request $request){
 
 
 }
+
+public function fetchDepartmentBrach($branch_id){
+
+    $loginUserInfo = Auth::user();
+
+    $dataofDepartment = DB::table('organisation_designations')
+    ->join('organisation_departments', 'organisation_designations.department_id', '=', 'organisation_departments.id')
+    ->select('organisation_departments.name as department_name','organisation_departments.id as department_id')
+    ->where('organisation_designations.organisation_id', '=', $loginUserInfo->organisation_id)
+    ->where('organisation_designations.branch_id', '=', $branch_id)
+    ->distinct()
+    ->get();
+
+    // dd($dataofDepartment);
+
+    // Return the data as JSON
+    return response()->json($dataofDepartment);
+    
+}
+
+public function fetchDesignationBrach($department_id){
+
+    $loginUserInfo = Auth::user();
+
+    $dataofDesignation = DB::table('organisation_designations')
+    ->select('organisation_designations.id as id','organisation_designations.name as name')
+    ->where('organisation_designations.organisation_id', '=', $loginUserInfo->organisation_id)
+    ->where('organisation_designations.department_id', '=', $department_id)
+    ->distinct()
+    ->get();
+
+    // dd($dataofDesignation);
+
+    // Return the data as JSON
+    return response()->json($dataofDesignation);
+
+}
 }
 
