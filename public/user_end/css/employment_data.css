@@ -314,6 +314,11 @@ th {
     font-weight: bold;
 }
 
+.right-align {
+    text-align: right;
+}
+
+
 tr:nth-child(even) {
     background-color: #f9f9f9;
 }

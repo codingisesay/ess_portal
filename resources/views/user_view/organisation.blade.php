@@ -378,7 +378,7 @@ window.onload = function() {
         gap: 20px;
         box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
         margin-top: 20px;
-        height: 550px;
+        /* height: 550px; */
         overflow: hidden;
         margin-bottom: 50px;
     }

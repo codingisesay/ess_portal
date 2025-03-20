@@ -88,14 +88,14 @@ error_reporting(0);
         @endphp
 
         @if ($todaysBirthdays->isEmpty())  <!-- Check if no birthdays today -->
-            <div class="birthday">
+            <div class="birthday card">
                 <img src="{{ asset('user_end/images/Group303.png') }}" height="40" width="40" alt="Avatar">
                 <h6>No birthdays today</h6>
                 <p>Check back later!</p>
             </div>
         @else  <!-- If there are birthdays, loop through them -->
             @foreach ($todaysBirthdays as $birthday)
-                <div class="birthday">
+                <div class="birthday card">
                     <img src="{{ asset('user_end/images/Group303.png') }}" height="40" width="40" alt="Avatar">
                     <h6>Wish To {{ $birthday->employee_nme }}</h6>
                     <p>Happy Birthday</p>
@@ -259,7 +259,7 @@ error_reporting(0);
 
 
 <section class="upcoming-anniversary">
-    <h3>Anniversary</h3>
+    <h3>Work Anniversary</h3>
     <div class="anniversary">
         @forelse ($anniversaries as $anniversary)
         <div class="employee-card">
@@ -795,6 +795,7 @@ error_reporting(0);
     populateDropdowns();
     generateCalendar(currentYear, currentMonth);
 </script>
+
 
 <style>
      .day.holiday {

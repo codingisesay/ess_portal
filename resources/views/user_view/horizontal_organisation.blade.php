@@ -99,7 +99,7 @@ function renderEmployeeTree($employees) {
 
         /* Scroll container styling */
         .scroll-container {
-            max-height: 500px; /* Set desired height */
+            /* max-height: 500px; Set desired height */
         overflow-y: auto;  /* Enable vertical scrolling */
         overflow-x: auto; /* Disable horizontal scrolling if needed */
         border: 1px solid #ccc; /* Optional: Add a border for visibility */
