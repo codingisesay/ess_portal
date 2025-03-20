@@ -138,11 +138,11 @@ error_reporting(0);
                 <div class="card thought">
                     <img src="{{ asset('user_end/images/Group326.png'); }}" alt="">
                     <h4>Thought Of The Day</h4>
-                    @foreach ($thoughtOfTheDay as $item)
-
-                    <p>{{ $item->thought }}</p>
-                        
-                    @endforeach
+                    @if($thoughtOfTheDay)
+                    <p>{{ $thoughtOfTheDay->thought }}</p>
+                @else
+                    <p>No thought for today.</p>
+                @endif
                     
                 </div>
 

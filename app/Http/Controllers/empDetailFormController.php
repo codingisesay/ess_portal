@@ -742,7 +742,7 @@ public function insertBank(Request $request){
         'insuranceExpiry' => '',
     ]);
 
-    // dd($data);
+
 
     $loginUserInfo = Auth::user();
 

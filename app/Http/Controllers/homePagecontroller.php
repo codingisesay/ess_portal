@@ -32,24 +32,24 @@ class homePagecontroller extends Controller
               ->get();
 
     // Fetch additional data
+    // $thoughtOfTheDay = DB::table('thought_of_the_days')
+    //                      ->where('organisation_id', $user->organisation_id)
+    //                      ->where('creationDate',today())
+    //                      ->get();
+
     $thoughtOfTheDay = DB::table('thought_of_the_days')
-                         ->where('organisation_id', $user->organisation_id)
-                         ->where('creationDate',today())
-                         ->get();
+    ->where('organisation_id', $user->organisation_id)
+    ->whereDate('creationDate', today())
+    ->first(); // Fetch today's record
 
-//     $thoughtOfTheDay = DB::table('thought_of_the_days')
-//     ->where('organisation_id', $user->organisation_id)
-//     ->whereDate('creationDate', today())
-//     ->first(); // Fetch today's record
-
-// if (!$thoughtOfTheDay) {
-//     // If no record for today, get the latest before today
-//     $thoughtOfTheDay = DB::table('thought_of_the_days')
-//         ->where('organisation_id', $user->organisation_id)
-//         ->whereDate('creationDate', '<', today())
-//         ->orderBy('creationDate', 'desc')
-//         ->first();
-// }
+if (!$thoughtOfTheDay) {
+    // If no record for today, get the latest before today
+    $thoughtOfTheDay = DB::table('thought_of_the_days')
+        ->where('organisation_id', $user->organisation_id)
+        ->whereDate('creationDate', '<', today())
+        ->orderBy('creationDate', 'desc')
+        ->first();
+}
 
 // dd($thoughtOfTheDay);
 
