@@ -211,6 +211,23 @@ function renderEmployeeTree($employees) {
             text-align: center;
         }
 
+        /* Add vertical lines for nested 'ul' */
+.tree ul ul {
+    position: relative;
+    margin-top: 20px;
+}
+
+.tree ul ul::before {
+    content: '';
+    position: absolute;
+    top: -22px;
+    left: 50%;
+    border-left: 2px solid #8A3366; /* Vertical connector line */
+    height: 25px;
+    width: 0;
+}
+
+
         .department {
             font-weight: bold;
             font-size: 12px;

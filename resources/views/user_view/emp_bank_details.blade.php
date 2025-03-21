@@ -103,27 +103,24 @@ $id = Auth::guard('web')->user()->id;
                           <option value="{{ $bank->id }}">{{ $bank->name }}</option>
                           @endforeach
                       </select>
-                      <label for="bankName2">Bank Name</label>
+                      <label for="bankName2">Bank Name<span style="color: red;">*</span></label>
                   </div>
                   <div class="form-group">
                       <input type="text" class="form-control" id="branchName2" name="branchName2"
                           placeholder="" value="{{ old('branchName2', $emp_bank_datas[0]->sal_branch_name) }}">
-                      <label for="branchName2">Branch Name <span class="branch-name-required"
-                          style="display: none; color: red;">*</span></label>
+                      <label for="branchName2">Branch Name <span style="color: red;">*</span></label>
                   </div>
                   <div class="form-group">
                       <input type="text" id="accountNumber2" class="form-control" name="accountNumber2"
                           placeholder="" maxlength="18" pattern="\d{9,18}"
                           oninput="validateAccountNumber(this)" value="{{ old('accountNumber2', $emp_bank_datas[0]->sal_account_number) }}" onkeypress="return isNumberKey(event)">
-                      <label for="accountNumber2">Account Number<span class="account-number-required"
-                              style="display: none; color: red;">*</span></label>
+                      <label for="accountNumber2">Account Number<span style="color: red;">*</span></label>
                       <span class="error" id="accountNumber2Error"></span>
                   </div>
                   <div class="form-group">
                       <input type="text" id="ifscCode2" class="form-control" name="ifscCode2" maxlength="11"
                           placeholder="Enter IFSC Code" oninput="validateIFSC(this)" value="{{ old('ifscCode2', $emp_bank_datas[0]->sal_ifsc_code) }}">
-                      <label for="ifscCode2">IFSC Code<span class="ifsc-code-required"
-                              style="display: none; color: red;">*</span></label>
+                      <label for="ifscCode2">IFSC Code<span style="color: red;">*</span></label>
                       <span class="error" id="ifscCode2Error"></span>
                   </div>
               </div>
@@ -137,10 +134,13 @@ $id = Auth::guard('web')->user()->id;
                   <div class="form-group">
                       <input type="text" class="form-control" id="passportNumber" name="passportNumber"
                           placeholder="" maxlength="9"
+                          onInput="togglePassportFields();"
                           title="Passport Number must be alphanumeric and up to 9 characters long."
-                          oninput="togglePassportFields()" value="{{ old('passportNumber', $emp_bank_datas[0]->passport_number) }}">
+                           value="{{ old('passportNumber', $emp_bank_datas[0]->passport_number) }}">
                       <label for="passportNumber">Passport Number</label>
                   </div>
+   
+
                   <div class="form-group">
                       <span class="error" id="nationalityError"></span>
                       <select class="form-control dropdown" name="country">
@@ -157,7 +157,7 @@ $id = Auth::guard('web')->user()->id;
                   </div>
                   <div class="form-group">
                       <input type="date" id="passportIssueDate" class="form-control" name="passportIssueDate"
-                          max="<?php echo date('Y-m-d'); ?>" oninput="calculateExpiry()"
+                          max="<?php echo date('Y-m-d'); ?>" oninput="calculateExpiryDate()"
                           style="pointer-events: none; opacity: 0.6;" value="{{ old('passportIssueDate', $emp_bank_datas[0]->passport_issue_date) }}">
                       <label for="passportIssueDate">Passport Issue Date<span class="passport-required"
                           style="display: none; color: red;">*</span></label>
@@ -195,6 +195,8 @@ $id = Auth::guard('web')->user()->id;
               </div>
           </div>
       </div>
+
+
 
       <div class="column" style="flex: 1; border: 1px solid #ba184e; padding: 20px; border-radius: 8px;">
           <div class="address-form">
@@ -265,6 +267,29 @@ $id = Auth::guard('web')->user()->id;
   </form>
 </div>
 <script src="{{ asset('user_end/js/onboarding_form.js') }}"></script>
+
+<script>
+    // Function that will be called on page load and on input change
+    document.addEventListener('DOMContentLoaded', function () {
+        const passportNumberInput = document.getElementById('passportNumber');
+        
+        // Call togglePassportFields on page load if the passport number is not empty
+        const passportNumber = passportNumberInput.value.trim();
+        if (passportNumber !== "") {
+            togglePassportFields();
+        }
+
+        // Add event listener to the passportNumber input field to call togglePassportFields
+        passportNumberInput.addEventListener('input', function() {
+            const passportNumber = passportNumberInput.value.trim();
+            
+            // Call the togglePassportFields function only if the input is not empty
+            if (passportNumber !== "") {
+                togglePassportFields();
+            }
+        });
+    });
+</script>
 
 <script>
     // ...existing code...

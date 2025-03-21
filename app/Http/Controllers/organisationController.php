@@ -40,6 +40,8 @@ class OrganisationController extends Controller
             'emp_contact_details.per_city',
             'emp_contact_details.offical_phone_number',
             'emp_contact_details.offical_email_address',
+            'emp_contact_details.emergency_contact_person',
+            'emp_contact_details.emergency_contact_number',
             'emp_details.gender',
             'user_status_imgs.imagelink as profile_image' // Fetch profile image
         )
@@ -62,10 +64,13 @@ class OrganisationController extends Controller
                 'emp_details.designation',
                 'emp_details.employee_no',
                 'emp_details.reporting_manager',
+                'employee_types.name as employee_type_name',
                 'managers.name as reporting_manager_name',
                 'organisation_departments.name as department',
                 'organisation_designations.name as designation',
                 'emp_contact_details.per_city',
+                'emp_contact_details.emergency_contact_person',
+                'emp_contact_details.emergency_contact_number',
                 'emp_contact_details.offical_phone_number',
                 'emp_contact_details.offical_email_address',
                 'emp_details.gender',

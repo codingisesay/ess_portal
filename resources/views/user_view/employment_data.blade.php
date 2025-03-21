@@ -161,7 +161,7 @@
 <div class="section custom-table">
     <table class="custom-table">
         <!-- Header row with h2 centered across the table -->
-         <h2>Passport & Visa</h2>
+         <h2>Passport & Visa Details</h2>
        
         <tr>
             <th>Passport Number</th>
@@ -210,74 +210,7 @@
     </table>
 </div>
 
-            <!-- <table class="section-table">
-    <tr>
-        <td colspan="2">
-            <h2>Welfare Benefits</h2>
-        </td>
-    </tr>
-    <tr>
-        <td><p>UAN</p></td>
-        <td><b>{{ ucfirst($userDetails->universal_account_number ?? '-') }}</b></td>
-    </tr>
-    <tr>
-        <td><p>Provident Fund</p></td>
-        <td><b>{{ ucfirst($userDetails->provident_fund ?? '-') }}</b></td>
-    </tr>
-    <tr>
-        <td><p>ESIC NO</p></td>
-        <td><b>{{ ucfirst($userDetails->esic_no ?? '-') }}</b></td>
-    </tr>
-</table>
-
-<style>
-    /* Table container */
-.section-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin: 10px auto;
-}
-
-/* Table cell for section content */
-.section-table td {
-    padding: 15px;
-    text-align: left;
-    vertical-align: middle;
-}
-
-/* Table header for title */
-.section-table h2 {
-    text-align: center;
-    margin: 0;
-}
-
-/* Adding background color and box shadow to the table cells */
-.section-table td {
-    background-color: #ffffff;
-    border-radius: 25px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-}
-
-/* Optional: Styling for <p> inside table */
-.section-table td p {
-    margin: 0;
-    font-weight: bold;
-}
-
-/* Optional: Styling for <b> inside table */
-.section-table td b {
-    font-weight: bold;
-}
-
-/* Media Query for smaller screens */
-@media screen and (max-width: 768px) {
-    .section-table td {
-        padding: 10px;
-        font-size: 14px;
-    }
-}
-
-</style> -->
+      
             <div class="section educational-details-section">
                 <h2>Educational Details</h2>
                 @foreach($empEducation as $education)
@@ -328,7 +261,7 @@
                     <thead>
                         <tr>
                             <th class="tableh-one">Sr. No.</th>
-                            <th class="tableh-two">Dependent Name</th>
+                            <th class="tableh-two">Name</th>
                             <th class="tableh-three">Relation</th>
                             <th class="tableh-four">Birth Date</th>
                             <th class="tableh-five">Gender</th>
@@ -356,7 +289,7 @@
         </div>
 
         <div class="section table-section">
-            <h2>Previous Employment</h2>
+            <h3>Previous Employment</h3>
             <div class="table-scroll-containerp">
                 <table>
                     <thead>

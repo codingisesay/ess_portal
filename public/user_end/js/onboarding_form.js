@@ -663,21 +663,30 @@ function togglePassportFields() {
     const passportIssueDate = document.getElementById('passportIssueDate');
     const passportExpiryDate = document.getElementById('passportExpiryDate');
     const usaVisa = document.getElementById('usaVisa');
+    const visaExpiryDate = document.getElementById('visaExpiryDate'); // Added visaExpiryDate
     const requiredSpans = document.querySelectorAll('.passport-required');
+
+    // Ensure usaVisa has a value before submitting
+    if (usaVisa.value === "") {
+        usaVisa.value = "No";  // Default value
+    }
 
     if (passportNumber !== "") {
         // Enable and make all related fields required
         passportIssueDate.style.pointerEvents = 'auto';
         passportExpiryDate.style.pointerEvents = 'auto';
         usaVisa.style.pointerEvents = 'auto';
+        // visaExpiryDate.style.pointerEvents = 'auto'; // Enable visaExpiryDate
 
         passportIssueDate.style.opacity = '1';
         passportExpiryDate.style.opacity = '1';
         usaVisa.style.opacity = '1';
+        visaExpiryDate.style.opacity = '1'; // Set opacity for visaExpiryDate
 
         passportIssueDate.setAttribute('required', 'true');
         passportExpiryDate.setAttribute('required', 'true');
         usaVisa.setAttribute('required', 'true');
+        // visaExpiryDate.setAttribute('required', 'true'); // Add required for visaExpiryDate
 
         // Show asterisks for related fields
         requiredSpans.forEach(span => span.style.display = 'inline');
@@ -686,23 +695,28 @@ function togglePassportFields() {
         passportIssueDate.style.pointerEvents = 'none';
         passportExpiryDate.style.pointerEvents = 'none';
         usaVisa.style.pointerEvents = 'none';
+        visaExpiryDate.style.pointerEvents = 'none'; // Disable visaExpiryDate
 
         passportIssueDate.style.opacity = '0.6';
         passportExpiryDate.style.opacity = '0.6';
         usaVisa.style.opacity = '0.6';
+        visaExpiryDate.style.opacity = '0.6'; // Set opacity for visaExpiryDate
 
         passportIssueDate.value = "";
         passportExpiryDate.value = "";
-        usaVisa.value = "";
+        usaVisa.value = "No"; // Default value
+        visaExpiryDate.value = ""; // Clear visaExpiryDate value
 
         passportIssueDate.removeAttribute('required');
         passportExpiryDate.removeAttribute('required');
         usaVisa.removeAttribute('required');
+        // visaExpiryDate.removeAttribute('required'); // Remove required from visaExpiryDate
 
         // Hide asterisks if the passport number is empty
         requiredSpans.forEach(span => span.style.display = 'none');
     }
 }
+
 
 
 document.getElementById('vehicleType').addEventListener('change', function () {
@@ -831,6 +845,9 @@ function calculateExpiryDate() {
         // Set the expiry date to 10 years from the issue date
         const expiryDate = new Date(issueDate);
         expiryDate.setFullYear(expiryDate.getFullYear() + 10);
+
+        // Subtract one day from the expiry date
+        expiryDate.setDate(expiryDate.getDate() - 1);
 
         // Format the date to YYYY-MM-DD for the input field
         const year = expiryDate.getFullYear();
