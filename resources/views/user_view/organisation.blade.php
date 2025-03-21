@@ -97,7 +97,7 @@ error_reporting(0);
     </div>
     <div class="employee-details">  
         <div class="left">  
-            <div class="heading">Employee Profile</div>  
+            <!-- <div class="heading">Employee Profile</div>   -->
             <?php 
             $profileimahe = session('profile_image');
             
@@ -440,7 +440,7 @@ window.onload = function() {
         border-radius: 10px;
         box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
         text-align: center;
-        height: 300px;
+        height: 450px;
         font-weight: bold;
     }
 
@@ -458,12 +458,13 @@ window.onload = function() {
     }
 
     .employee-details .left .profile-circle {
-        width: 120px;
-        height: 120px;
+        width: 200px;
+        height: 200px;
         border-radius: 50%;
         background-color: #ddd;
         margin: 0 auto 15px;
         overflow: hidden;
+        margin-top: 50px;
     }
 
     .employee-details .left img {
