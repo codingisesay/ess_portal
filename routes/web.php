@@ -202,6 +202,7 @@ Route::middleware(['auth'])->group(function () {
        Route::get('user/remaning_leave/{leave_id}',[leavePolicyController::class,'fetchRemainingLeave'])->name('remaing_leave');
        Route::get('user/half_days_status/{leave_id}/{start_date}/{end_date}',[leavePolicyController::class,'fetchStatusHalfDay'])->name('half_day_status');
        Route::post('user/insert_leave',[leavePolicyController::class,'insertLeave'])->name('insert_leave');
+       Route::put('user/update_leave_status/{id}',[leavePolicyController::class,'updateLeaveStatusByUser'])->name('update_leave_status_by_user');
      
 
    

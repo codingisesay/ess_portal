@@ -38,6 +38,13 @@ if($data['leave_status'] == "Approved"){?>
 
 <?php
 
+}elseif($data['leave_status'] == "Cancelled"){?>
+
+<p>Your leave request for <b>{{ $data['leave_type'] }}</b> from <b>{{ $startformattedDate }}</b> to <b>{{ $endformattedDate }}</b> has been <b>Cancelled</b> by <b>Yourself</b>.</p>
+
+
+<?php
+
 }
 
 
