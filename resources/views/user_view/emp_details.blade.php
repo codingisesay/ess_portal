@@ -89,33 +89,36 @@ $employeeID = Auth::guard('web')->user()->employeeID;
                         <label for="totalExperience">Total Experience(Years.Month)<span style="color: red;">*</span></label>
                         <span class="error" id="totalExperienceError" style="color: red;"></span>
                     </div>
+                    
                     <div class="form-group">
-                        <select id="designation" class="form-control dropdown" name="branch" placeholder="" required>
-                            <option value="{{ old('branch',$results[0]->branch_id) }}">{{ old('designation',$results[0]->branch_name) }}</option>
+                        <select id="branch" class="form-control dropdown" name="branch" placeholder="" required>
+                            <option value="{{ old('branch',$results[0]->branch_id) }}">{{ old('branch',$results[0]->branch_name) }}</option>
                             @foreach($branches as $branche)
                             <option value="{{$branche->id}}">{{$branche->name}}</option>
                             @endforeach
                         </select>
                         <label for="designation">Branch <span style="color: red;">*</span></label>
                     </div>
+                    
                     <div class="form-group">
                         <select id="department" class="form-control dropdown" name="department" placeholder="" required>
                             <option value="{{ old('department',$results[0]->department_id) }}">{{ old('department',$results[0]->department_name ) }}</option>
-                            @foreach($departments as $department)
-                            <option value="{{$department->id}}">{{$department->name}}</option>
-                            @endforeach
+                            
                         </select>
                         <label for="department">Department <span style="color: red;">*</span></label>
                     </div>
+                  
+
+
                     <div class="form-group">
                         <select id="designation" class="form-control dropdown" name="designation" placeholder="" required>
                             <option value="{{ old('designation',$results[0]->designation_id) }}">{{ old('designation',$results[0]->role_name) }}</option>
-                            @foreach($designations as $designation)
-                            <option value="{{$designation->id}}">{{$designation->name}}</option>
-                            @endforeach
+                        
                         </select>
                         <label for="designation">Designation <span style="color: red;">*</span></label>
                     </div>      
+
+
                 </div>
                 
             </div>
@@ -223,6 +226,85 @@ $employeeID = Auth::guard('web')->user()->employeeID;
 </div>
 
 <script>
+
+$(document).ready(function () {
+    //For load leave according to the leave policy and taken leaves
+            $('#branch').on('change',function () {
+                // Create data to send with the request
+             var branch_id = $(this).val();
+        
+    $.ajax({
+    url: '/user/fetch_department/' + branch_id, // Send branch_id in the URL
+    type: 'get',
+    success: function (response) {
+        // On success, update the department dropdown
+        var $departmentSelect = $('#department');
+        $departmentSelect.empty(); // Clear existing options
+
+        // Add the default option (if needed)
+        $departmentSelect.append('<option value="" disabled>Select Department</option>');
+
+        // Iterate over the response to add options dynamically
+        $.each(response, function (index, department) {
+            $departmentSelect.append('<option value="' + department.department_id + '">' + department.department_name + '</option>');
+        });
+    },
+    error: function (xhr, status, error) {
+        // Handle error
+        $('#response').html('Error: ' + error);
+    },
+    dataType: 'json', // Expect a JSON response
+    headers: {
+        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+    }
+});
+});
+
+           $('#department').on('change',function () {
+                // Create data to send with the request
+             
+             var department_id = $(this).val();
+              
+            //  console.log(designation_id);
+
+         var url = '/user/fetch_designation/' + department_id;
+
+         console.log(url);
+
+                     // Perform the AJAX request
+                     $.ajax({
+                  
+                  url: url,
+                  type: 'get',
+                  success: function (response) {
+        
+        var $designationSelect = $('#designation');
+        $designationSelect.empty(); // Clear existing options
+
+        // Add the default option (if needed)
+        $designationSelect.append('<option value="" disabled>Select Designation</option>');
+
+        // Iterate over the response to add options dynamically
+        $.each(response, function (index, designation) {
+            $designationSelect.append('<option value="' + designation.id + '">' + designation.name + '</option>');
+        });
+    },
+    error: function (xhr, status, error) {
+        // Handle error
+        $('#response').html('Error: ' + error);
+    },
+    dataType: 'json', // Expect a JSON response
+    headers: {
+        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+    }
+              });
+
+
+        
+            });
+
+        });
+
     const maritalStatusSelect = document.getElementById("maritalStatus");
     const anniversaryDateInput = document.getElementById("anniversaryDate");
     const anniversaryRequiredMark = document.getElementById("anniversaryRequiredMark");

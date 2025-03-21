@@ -51,6 +51,10 @@ class EmailService
                 Mail::to($data['username'])->cc($data['cc'])->queue(new UserAppliedLeaveStatus($subject, $data));
                 break;
 
+            case 'leave_cancel_status':
+                    Mail::to($data['username'])->cc($data['cc'])->queue(new UserAppliedLeaveStatus($subject, $data));
+                    break;
+
             default:
                 return response()->json(['error' => 'Mail flag not recognized.'], 404);
         }

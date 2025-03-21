@@ -32,10 +32,26 @@ class homePagecontroller extends Controller
               ->get();
 
     // Fetch additional data
+    // $thoughtOfTheDay = DB::table('thought_of_the_days')
+    //                      ->where('organisation_id', $user->organisation_id)
+    //                      ->where('creationDate',today())
+    //                      ->get();
+
     $thoughtOfTheDay = DB::table('thought_of_the_days')
-                         ->where('organisation_id', $user->organisation_id)
-                         ->where('creationDate',today())
-                         ->get();
+    ->where('organisation_id', $user->organisation_id)
+    ->whereDate('creationDate', today())
+    ->first(); // Fetch today's record
+
+if (!$thoughtOfTheDay) {
+    // If no record for today, get the latest before today
+    $thoughtOfTheDay = DB::table('thought_of_the_days')
+        ->where('organisation_id', $user->organisation_id)
+        ->whereDate('creationDate', '<', today())
+        ->orderBy('creationDate', 'desc')
+        ->first();
+}
+
+// dd($thoughtOfTheDay);
 
 $newsAndEvents = DB::table('news_and_events')
                    ->where('organisation_id', $user->organisation_id)
@@ -486,8 +502,6 @@ if($leave_apply->half_day == 'First Half' || $leave_apply->half_day == 'Second H
 
 }else{
 
-    // $subject = 'Leave Application Submitted - '.$leave_type->name.' - '.$daysBetween.' days';
-
     if($status == 'Approved'){
 
         $subject = 'Leave Approved - '.$leave_type->name.' - '.$daysBetween.' Days';
@@ -500,19 +514,6 @@ if($leave_apply->half_day == 'First Half' || $leave_apply->half_day == 'Second H
 
 }
 
-
-    // if($status == 'Approved'){
-
-    //     $subject = 'Leave Approved - '.$leave_type->name.' - '.$daysBetween.' Days';
-
-    // }elseif($status == 'Reject'){
-
-    //     $subject = 'Leave Rejected - '.$leave_type->name.' - '.$daysBetween.' Days';;
-
-    // }
-
-    // dd($subject);
-    // $subject = 'Leave Application Submitted '.$leave_type->name;
     $org_id = $user->organisation_id;
     $mail_flag = "leave_approve_status";
 
@@ -527,6 +528,7 @@ if($leave_apply->half_day == 'First Half' || $leave_apply->half_day == 'Second H
         'leave_status' => $status,
         'approved_by' => $user->name,
         'days_count' => $daysBetween,
+        'org_id' => $user->organisation_id,
     ];
 
    

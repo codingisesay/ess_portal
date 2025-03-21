@@ -138,11 +138,11 @@ error_reporting(0);
                 <div class="card thought">
                     <img src="{{ asset('user_end/images/Group326.png'); }}" alt="">
                     <h4>Thought Of The Day</h4>
-                    @foreach ($thoughtOfTheDay as $item)
-
-                    <p>{{ $item->thought }}</p>
-                        
-                    @endforeach
+                    @if($thoughtOfTheDay)
+                    <p>{{ $thoughtOfTheDay->thought }}</p>
+                @else
+                    <p>No thought for today.</p>
+                @endif
                     
                 </div>
 
@@ -369,14 +369,7 @@ error_reporting(0);
                         <td>{{ $leave->days_count }}</td>
                         <td>{{ $leave->leave_resion }}</td>
             
-                        <!-- Approve Form -->
-                        <!-- <td>
-                            <form action="{{ route('leave_update_status', ['id' => $leave->leave_appliy_id, 'status' => 'Approved']) }}" method="POST">
-                                @csrf
-                                @method('PUT')
-                                <button type="submit" class="btn btn-success">Approve</button>
-                            </form>
-                        </td> -->
+                     
                         <td>
     <form action="{{ route('leave_update_status', ['id' => $leave->leave_appliy_id, 'status' => 'Approved']) }}" method="POST" style="display: inline;">
         @csrf

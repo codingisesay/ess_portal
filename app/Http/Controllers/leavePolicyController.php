@@ -813,5 +813,113 @@ if($data['leave_slot'] == 'First Half' || $data['leave_slot'] == 'Second Half'){
 
         // dd($data);
 
+
+    }
+
+    
+    public function updateLeaveStatusByUser($id)
+    {
+
+        $loginUserInfo = Auth::user();
+        
+        $leave_apply = DB::table('leave_applies')->where('id', $id)->first();
+
+     
+
+        $leave_type = DB::table('leave_types')
+        ->select('name')
+        ->where('id','=',$leave_apply->leave_type_id)
+        ->first();
+
+        // dd($leave_type);
+    
+        
+        if (!$leave_apply) {
+            return redirect()->route('leave_dashboard')->with('error', 'Leave record not found.');
+        }
+    
+       
+        if ($leave_apply->leave_approve_status == 'Pending' || $leave_apply->leave_approve_status == 'Approved') {
+            
+            
+            $status = DB::table('leave_applies')
+                ->where('id', $id)
+                ->update([
+                    'leave_approve_status' => 'Cancelled',
+                ]);
+
+                if($status){
+
+                    $fetchManager = DB::table('emp_details')
+                    ->join('users','emp_details.reporting_manager','=','users.id')
+                    ->select('users.email as manager_mail_id','users.name as manager_name')
+                    ->where('emp_details.user_id','=',$loginUserInfo->id)
+                    ->first();
+                    // dd($fetchManager);
+                    $mail_to = [];
+                    $mail_cc = [];
+    
+                            // Convert start and end dates to DateTime objects
+    $startDate = new DateTime($leave_apply->start_date);
+    $endDate = new DateTime($leave_apply->end_date);
+    
+    // Calculate the difference between the two dates
+    $interval = $startDate->diff($endDate);
+    
+    // Get the number of days from the difference
+    $daysBetween = $interval->days+1;
+    
+    if($leave_apply->half_day == 'First Half' || $leave_apply->half_day == 'Second Half'){
+    
+        $halfDay = 0.5;
+        
+        $subject = $leave_apply->half_day.' Leave Cancelled - '.$leave_type->name.' - '.$halfDay.' day';
+    
+    }elseif($leave_apply->half_day == 'Full Day'){
+    
+        $fullday = 1;
+    
+        $subject = $leave_apply->half_day.' Leave Cancelled - '.$leave_type->name.' - '.$fullday.' day';
+    
+    }else{
+    
+        $subject = 'Leave Cancelled - '.$leave_type->name.' - '.$daysBetween.' days';
+    
+    }
+
+                    $org_id = $loginUserInfo->organisation_id;
+                    $mail_flag = "leave_cancel_status";
+
+                    array_push($mail_to,$loginUserInfo->email);
+                    array_push($mail_cc,$fetchManager->manager_mail_id);
+
+                    $data = [
+                        'username' => $mail_to, //mail to
+                        'cc' => $mail_cc, 
+                        'approved_by' => $fetchManager->manager_name,
+                        'name' => $loginUserInfo->name,
+                        'leave_type' => $leave_type->name,
+                        'start_date' => $leave_apply->start_date,
+                        'end_date' => $leave_apply->end_date,
+                        'leave_status' => 'Cancelled',
+                        'days_count' => $daysBetween,
+                        'org_id' => $loginUserInfo->organisation_id,
+                    ];
+
+                  
+
+                    // dd($data);
+
+                //    Mail::to($user_create->email)->send(new UserRegistrationMail($user_create->email, $request->userpassword));
+               $this->emailService->sendEmailWithOrgConfig($org_id,$subject,$mail_flag,$data);
+    
+               return redirect()->route('leave_dashboard')->with('success', 'Your leave has been cancelled successfully.');
+
+                }
+
+        }
+    
+        // If the leave status is neither "Pending" nor "Approved"
+        return redirect()->route('leave_dashboard')->with('error', 'Leave cannot be cancelled because it is not in a pending or approved status.');
     }
 }

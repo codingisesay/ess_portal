@@ -24,8 +24,6 @@ function renderEmployeeNode($employee) {
             '<?= $employee->per_city ?>',
             '<?= $employee->offical_phone_number ?>',
             '<?= $employee->offical_email_address ?>',
-            '<?= $employee->emergency_contact_person ?>',
-            '<?= $employee->emergency_contact_number ?>',
             '<?= asset('storage/' . $employee->profile_image) ?>'
         )">
             <?php 
