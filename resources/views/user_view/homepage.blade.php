@@ -369,14 +369,7 @@ error_reporting(0);
                         <td>{{ $leave->days_count }}</td>
                         <td>{{ $leave->leave_resion }}</td>
             
-                        <!-- Approve Form -->
-                        <!-- <td>
-                            <form action="{{ route('leave_update_status', ['id' => $leave->leave_appliy_id, 'status' => 'Approved']) }}" method="POST">
-                                @csrf
-                                @method('PUT')
-                                <button type="submit" class="btn btn-success">Approve</button>
-                            </form>
-                        </td> -->
+                     
                         <td>
     <form action="{{ route('leave_update_status', ['id' => $leave->leave_appliy_id, 'status' => 'Approved']) }}" method="POST" style="display: inline;">
         @csrf

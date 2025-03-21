@@ -209,22 +209,29 @@
 
             <div class="two">
                 <div class="applied-leaves">
-                <h1>Applied Leave</h1>
-        <div class="container">
-            @foreach($appliedLeaves as $leave)
-                <div class='status-item'>
-                    <div>
-                        <span class='date'>
-                            {{ \Carbon\Carbon::parse($leave->start_date)->format('d F, Y') }} - 
-                            {{ \Carbon\Carbon::parse($leave->end_date)->format('d F, Y') }}
-                        </span><br>
-                        <span class='note'>{{ $leave->description }}</span>
-                        </div>
-                        @if(isset($leave->leave_approve_status))
-                            <p>Status: {{ $leave->leave_approve_status }}</p>
-                        @endif
-                </div>
-            @endforeach
+                    <h1>Applied Leave</h1>
+                    <div class="container">
+                        @foreach($appliedLeaves as $leave)
+                            <div class="status-item">
+                                <div>
+                                    <span class="date">
+                                        {{ \Carbon\Carbon::parse($leave->start_date)->format('d F, Y') }} - 
+                                        {{ \Carbon\Carbon::parse($leave->end_date)->format('d F, Y') }}
+                                    </span><br>
+                                    <span class="note">{{ $leave->description }}</span>
+                                </div>
+                                <p>Status: {{ $leave->leave_approve_status }}</p>
+                
+                                @if(($leave->leave_approve_status == 'Pending' || $leave->leave_approve_status == 'Approved') && \Carbon\Carbon::parse($leave->start_date) > today())
+                                    <!-- Form to cancel the leave -->
+                                    <form action="{{ route('update_leave_status_by_user',['id' => $leave->id]) }}" method="POST">
+                                        @csrf
+                                        @method('PUT')  <!-- Use DELETE HTTP method for cancellation -->
+                                        <button type="submit">Cancel</button>
+                                    </form>
+                                @endif
+                            </div>
+                        @endforeach
                     </div>
                 </div>
                
