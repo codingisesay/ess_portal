@@ -26,7 +26,8 @@ function renderEmployeeNode($employee) {
             '<?= $employee->offical_email_address ?>',
             '<?= $employee->emergency_contact_person ?>',
             '<?= $employee->emergency_contact_number ?>',
-            '<?= asset('storage/' . $employee->profile_image) ?>'
+            
+            '<?= !empty($employee->profile_image) ? asset('storage/' . $employee->profile_image) : asset('storage/user_profile_image/Oqr4VRqo7RpQxnmiZCh12zybbcdsyUin2FhAKD3O.jpg') ?>',
         )">
             <?php 
             // Gender-specific image display
