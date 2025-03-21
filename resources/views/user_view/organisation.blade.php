@@ -3,6 +3,9 @@
 <?php
 // $user = Auth::user();
 // dd($user);
+// dd($employees_login);
+
+// exit();
 function renderEmployeeNode($employee) {
     $hasSubordinates = !empty($employee->subordinates);
     ob_start();
@@ -13,7 +16,7 @@ function renderEmployeeNode($employee) {
         <?php endif; ?>
         <span onclick="displayEmployeeDetails(
             '<?= $employee->user_id ?>',
-            '<?= $employee->employee_name ?>',
+            '<?= $employee->employee_name ?>', 
             '<?= $employee->designation ?>',
             '<?= $employee->employee_no ?>',
             '<?= $employee->reporting_manager_name ?>',
@@ -21,6 +24,8 @@ function renderEmployeeNode($employee) {
             '<?= $employee->per_city ?>',
             '<?= $employee->offical_phone_number ?>',
             '<?= $employee->offical_email_address ?>',
+            '<?= $employee->emergency_contact_person ?>',
+            '<?= $employee->emergency_contact_number ?>',
             '<?= asset('storage/' . $employee->profile_image) ?>'
         )">
             <?php 
@@ -129,6 +134,14 @@ error_reporting(0);
             <th>Email</th>
             <td id="emp-email">employee@example.com</td>
         </tr>
+        <tr>
+            <th>Emergency Contact Person</th>
+            <td id="emp-contactperson"></td>
+        </tr>
+        <tr>
+            <th>Emergency Contact Number</th>
+            <td id="emp-contactnumber"></td>
+        </tr>
     </table>
 </div>
 
@@ -174,7 +187,7 @@ function toggleChildren(button) {
 
 
 
-    function displayEmployeeDetails(userId, name, designation, empNo, manager, department, city, phone, email, profileImage) {  
+    function displayEmployeeDetails(userId, name, designation, empNo, manager, department, city, phone, email, contactperson, contactnumber, profileImage) {  
     document.getElementById('emp-name').textContent = name;  
     document.getElementById('emp-designation').textContent = designation;  
     document.getElementById('emp-no').textContent = empNo;  
@@ -183,6 +196,9 @@ function toggleChildren(button) {
     document.getElementById('emp-city').textContent = city;  
     document.getElementById('emp-phone').textContent = phone;  
     document.getElementById('emp-email').textContent = email;
+    document.getElementById('emp-contactperson').textContent = contactperson;
+    document.getElementById('emp-contactnumber').textContent = contactnumber;
+    
 
     // Update the profile image
     // document.getElementById('profile-image').src = profileImage;
@@ -247,10 +263,12 @@ window.onload = function() {
     const empCity = "{{ $employees_login->per_city }}";
     const empPhone = "{{ $employees_login->offical_phone_number }}";
     const empEmail = "{{ $employees_login->offical_email_address }}";
+    const empContactperson = "{{ $employees_login->emergency_contact_person }}";
+    const empContactnumber = "{{ $employees_login->emergency_contact_number }}";
     const profileImage = "{{ asset('storage/' .$profileimahe) }}"; // Get the profile image from session
 
     // Call the function to display the logged-in employee details
-    displayEmployeeDetails(empNo, empName, empDesignation, empNo, empManager, empDepartment, empCity, empPhone, empEmail, profileImage);
+    displayEmployeeDetails(empNo, empName, empDesignation, empNo, empManager, empDepartment, empCity, empPhone, empEmail, empContactperson, empContactnumber, profileImage);
 };
 </script>
 <style>
@@ -460,7 +478,7 @@ window.onload = function() {
         padding: 20px;
         border-radius: 10px;
         box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-        height: 300px;
+        height: auto;
         display: flex;
         flex-direction: column;
         justify-content: center;

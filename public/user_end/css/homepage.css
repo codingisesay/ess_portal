@@ -306,6 +306,7 @@ body {
     padding: 20px;
     background-color: rgba(48, 134, 255, 0.5);
     text-align: left;
+    overflow: auto;
 }
 
 /* Birthday & Upcoming Holiday Cards */
