@@ -832,35 +832,7 @@ function toggleInsuranceFields() {
 
 
 
-function calculateExpiryDate() {
-    // Get the issue date input value
-    const issueDateInput = document.getElementById('passportIssueDate');
-    const expiryDateInput = document.getElementById('passportExpiryDate');
 
-    // Parse the issue date
-    const issueDate = new Date(issueDateInput.value);
-
-    // Check if the issue date is valid
-    if (issueDate && !isNaN(issueDate)) {
-        // Set the expiry date to 10 years from the issue date
-        const expiryDate = new Date(issueDate);
-        expiryDate.setFullYear(expiryDate.getFullYear() + 10);
-
-        // Subtract one day from the expiry date
-        expiryDate.setDate(expiryDate.getDate() - 1);
-
-        // Format the date to YYYY-MM-DD for the input field
-        const year = expiryDate.getFullYear();
-        const month = String(expiryDate.getMonth() + 1).padStart(2, '0');
-        const day = String(expiryDate.getDate()).padStart(2, '0');
-
-        // Update the expiry date input
-        expiryDateInput.value = `${year}-${month}-${day}`;
-    } else {
-        // If the issue date is invalid, clear the expiry date
-        expiryDateInput.value = '';
-    }
-}
 
 
 // function convertToUppercase(inputFieldId) {
@@ -1205,40 +1177,6 @@ document.addEventListener('DOMContentLoaded', populateCountries);
 
 
 
-function calculateExpiryDate() {
-    // Get the issue date input value
-    const issueDateInput = document.getElementById('passportIssueDate');
-    const expiryDateInput = document.getElementById('passportExpiryDate');
-
-    // Parse the issue date
-    const issueDate = new Date(issueDateInput.value);
-
-    // Check if the issue date is valid
-    if (issueDate && !isNaN(issueDate)) {
-        // Set the expiry date to 10 years from the issue date
-        const expiryDate = new Date(issueDate);
-        expiryDate.setFullYear(expiryDate.getFullYear() + 10);
-
-        // Subtract one day
-        expiryDate.setDate(expiryDate.getDate() - 1);
-
-        // Format the date to YYYY-MM-DD for the input field
-        const year = expiryDate.getFullYear();
-        const month = String(expiryDate.getMonth() + 1).padStart(2, '0');
-        const day = String(expiryDate.getDate()).padStart(2, '0');
-
-        // Update the expiry date input
-        expiryDateInput.value = `${year}-${month}-${day}`;
-
-        // Display output in the console
-        console.log(`Issue Date: ${issueDateInput.value}`);
-        console.log(`Expiry Date (10 years - 1 day): ${expiryDateInput.value}`);
-    } else {
-        // If the issue date is invalid, clear the expiry date
-        expiryDateInput.value = '';
-    }
-}
-
 
 
 
@@ -1448,27 +1386,7 @@ async function fetchCountries() {
 // Call the function to fetch countries when the page loads
 document.addEventListener('DOMContentLoaded', fetchCountries);
 
-function calculateExpiryDate() {
-    const issueDateInput = document.getElementById("passportIssueDate");
-    const expiryDateInput = document.getElementById("passportExpiryDate");
-    const issueDateError = document.getElementById("passportIssueDateError");
-    const expiryDateError = document.getElementById("passportExpiryDateError");
 
-    // Clear previous error messages
-    issueDateError.textContent = '';
-    expiryDateError.textContent = '';
-
-    const issueDate = new Date(issueDateInput.value);
-
-    if (issueDate) {
-        // Calculate expiry date (10 years later)
-        const expiryDate = new Date(issueDate);
-        expiryDate.setFullYear(issueDate.getFullYear() + 10);
-
-        // Set the calculated expiry date to the input
-        expiryDateInput.value = expiryDate.toISOString().split('T')[0]; // Format to YYYY-MM-DD
-    }
-}
 
 let currentTab = 0; // Index of the current tab
 const tabs = document.querySelectorAll('.tab-button');

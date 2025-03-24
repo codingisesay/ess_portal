@@ -14,6 +14,9 @@
     
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.6.6/dist/sweetalert2.all.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11.6.6/dist/sweetalert2.min.css" rel="stylesheet">
+
    
 </head>
 
@@ -224,17 +227,45 @@
                 
                                 @if(($leave->leave_approve_status == 'Pending' || $leave->leave_approve_status == 'Approved') && \Carbon\Carbon::parse($leave->start_date) > today())
                                     <!-- Form to cancel the leave -->
-                                    <form action="{{ route('update_leave_status_by_user',['id' => $leave->id]) }}" method="POST">
+                                    <form id="cancelForm" action="{{ route('update_leave_status_by_user',['id' => $leave->id]) }}" method="POST">
                                         @csrf
                                         @method('PUT')  <!-- Use DELETE HTTP method for cancellation -->
-                                        <button type="submit">Cancel</button>
+                                        <!-- <button class="cancel-btn" type="submit">Cancel</button> -->
+                                        <button class="cancel-btn" type="button" onclick="showConfirmPopup()">
+                                        <i class="fas fa-times"></i> <!-- fa-times is the cancel icon -->
+                                        </button>
                                     </form>
                                 @endif
                             </div>
                         @endforeach
                     </div>
                 </div>
-               
+                <script>
+    function showConfirmPopup() {
+        Swal.fire({
+            title: 'Are you sure?',
+            text: 'Do you really want to cancel the operation?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Yes, Cancel it!',
+            cancelButtonText: 'No, Keep it',
+            reverseButtons: true
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // Submit the form if the user confirms the cancel action
+                document.getElementById('cancelForm').submit();
+            } else if (result.dismiss === Swal.DismissReason.cancel) {
+                // If the user clicks 'No', do nothing and keep the form intact
+                Swal.fire(
+                    'Cancelled',
+                    'Your operation is safe.',
+                    'info'
+                );
+            }
+        });
+    }
+</script>
+
                 
                 <div class="attendance">
                 <h1>Attendance Overview</h1>

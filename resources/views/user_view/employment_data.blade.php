@@ -211,27 +211,43 @@
 </div>
 
       
-            <div class="section educational-details-section">
-                <h2>Educational Details</h2>
-                @foreach($empEducation as $education)
-                    <div style="display: flex;">
-                        <p class="left2">
-                            <div style="width: 200px">
-                                @if($education->course_type == 'degree')
-                                    {{ ucfirst($education->degree ?? '-') }}
-                                @elseif($education->course_type == 'certification')
-                                    {{ ucfirst($education->certification_name ?? '-') }}
-                                @endif
-                            </div>
-                            @if($education->course_type == 'degree')
-                                <button class="view-btn" onclick="openDegreeModal({{ $loop->index }})">View</button>
-                            @elseif($education->course_type == 'certification')
-                                <button class="view-btn" onclick="openCertificationModal({{ $loop->index }})">View</button>
-                            @endif
-                        </p>
-                    </div>
-                @endforeach
-            </div>
+<div class="section">
+    <h2>Educational Details</h2>
+    <table class="custom-table">
+        <thead>
+            <tr>
+                <th>Course Name</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach($empEducation as $education)
+                <tr>
+                    <td class="course-name">
+                        @if($education->course_type == 'degree')
+                            {{ ucfirst($education->degree ?? '-') }}
+                        @elseif($education->course_type == 'certification')
+                            {{ ucfirst($education->certification_name ?? '-') }}
+                        @endif
+                    </td>
+                    <td>
+                        @if($education->course_type == 'degree')
+                            <button class="view-btn" onclick="openDegreeModal({{ $loop->index }})">View</button>
+                        @elseif($education->course_type == 'certification')
+                            <button class="view-btn" onclick="openCertificationModal({{ $loop->index }})">View</button>
+                        @endif
+                    </td>
+                </tr>
+            @endforeach
+        </tbody>
+    </table>
+</div>
+<style>
+    .course-name {
+        word-wrap: break-word !important; /* Allow long words to break and wrap onto the next line */
+        white-space: normal;   /* Ensure text wraps instead of staying on one line */
+    }
+</style>
 
             <div id="degreeModal" class="modal">
                 <div class="modal-content">
