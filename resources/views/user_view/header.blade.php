@@ -12,11 +12,14 @@ $profileimahe = session('profile_image');
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" href="{{ asset('user_end/images/STPLLogo.png') }}" type="image/png">
-  
     <title>@isset($title){{ $title }}@else{{ 'ESS Portal' }}@endisset</title>
-    
-  
     <link rel="stylesheet" href="{{ asset('/user_end/css/header.css') }}">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+
+    <script src="{{ asset('user_end/js/toastify-notifications.js') }}"></script>
+    
     
     <style>
         /* Add your custom CSS here */
@@ -147,6 +150,11 @@ button:hover {
     </style>
 </head>
 <body>
+
+    <script>
+        var successMessage = @json(session('success'));
+        var errorMessage = @json(session('error'));
+    </script>
     <header>
         <div class="logo">
             <img src="{{ asset('user_end/images/STPL Logo with TagLine HD Transparent.png') }}" alt="STPL Logo">

@@ -18,7 +18,7 @@ $editUser = $_REQUEST['id'];
 // dd($results);
 
 ?>
-
+{{-- 
         @if(session('success'))
         <div class="alert custom-alert-success">
             <strong>{{ session('success') }}</strong> 
@@ -32,7 +32,7 @@ $editUser = $_REQUEST['id'];
         <strong> {{ session('error') }}</strong>
         <button class="close-btn" onclick="this.parentElement.style.display='none';">&times;</button>
         </div>
-    @endif
+    @endif --}}
 
     @if($errors->any())
     <div class="alert custom-alert-warning">

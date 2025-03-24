@@ -4,7 +4,7 @@
 <!-- <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css"> -->
 
 <link rel="stylesheet" href="{{ asset('errors/error.css') }}">
-@if(session('success'))
+{{-- @if(session('success'))
 <div class="alert custom-alert-success">
     <strong>{{ session('success') }}</strong> 
     <button class="close-btn" onclick="this.parentElement.style.display='none';">&times;</button>
@@ -17,7 +17,7 @@
 <strong> {{ session('error') }}</strong>
 <button class="close-btn" onclick="this.parentElement.style.display='none';">&times;</button>
 </div>
-@endif
+@endif --}}
 
 @if($errors->any())
 <div class="alert custom-alert-warning">

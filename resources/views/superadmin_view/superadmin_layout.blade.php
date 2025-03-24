@@ -12,6 +12,10 @@ $name = Auth::guard('superadmin')->user()->name;
 <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+
+    <script src="{{ asset('user_end/js/toastify-notifications.js') }}"></script>
 <style>
 
 body {
@@ -131,7 +135,10 @@ nav ul li a:hover {
 <!-- Top container -->
 <a href="{{ route('superadmin.logout') }}" class="logout-button">Logout</a>
 
-
+<script>
+    var successMessage = @json(session('success'));
+    var errorMessage = @json(session('error'));
+</script>
 <!-- Sidebar/menu -->
 <nav class="sidebar" id="mySidebar"><br>
   <div class="sidebar-header">

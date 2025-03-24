@@ -21,7 +21,7 @@
 </head>
 
 <body>
-    @if(session('success'))
+    {{-- @if(session('success'))
 <div class="alert custom-alert-success">
     <strong>{{ session('success') }}</strong> 
     <button class="close-btn" onclick="this.parentElement.style.display='none';">&times;</button>
@@ -34,7 +34,7 @@
 <strong> {{ session('error') }}</strong>
 <button class="close-btn" onclick="this.parentElement.style.display='none';">&times;</button>
 </div>
-@endif
+@endif --}}
 
 @if($errors->any())
 <div class="alert custom-alert-warning">

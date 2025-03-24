@@ -13,35 +13,29 @@ error_reporting(0);
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    {{-- <title>Dashboard</title> --}}
-   
-   
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="stylesheet" href="{{ asset('/user_end/css/homepage.css') }}">
     <link rel="stylesheet" href="{{ asset('/user_end/css/header.css') }}">
     <link rel="stylesheet" href="{{ asset('errors/error.css') }}">
-  
-
-    <!-- Add Flatpickr CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 </head>
 
 <body>
 
-@if(session('success'))
-<div class="alert custom-alert-success">
-    <strong>{{ session('success') }}</strong> 
-    <button class="close-btn" onclick="this.parentElement.style.display='none';">&times;</button>
-    
-</div>
-@endif
-
-@if(session('error'))
-<div class="alert custom-alert-error">
-<strong> {{ session('error') }}</strong>
-<button class="close-btn" onclick="this.parentElement.style.display='none';">&times;</button>
-</div>
-@endif
+    {{-- @if(session('success'))
+            <div class="alert custom-alert-success">
+                <strong>{{ session('success') }}</strong> 
+                <button class="close-btn" onclick="this.parentElement.style.display='none';">&times;</button>
+                
+            </div>
+            @endif
+            
+            @if(session('error'))
+            <div class="alert custom-alert-error">
+            <strong> {{ session('error') }}</strong>
+            <button class="close-btn" onclick="this.parentElement.style.display='none';">&times;</button>
+            </div>
+            @endif --}}
 
 @if($errors->any())
 <div class="alert custom-alert-warning">
@@ -166,15 +160,7 @@ error_reporting(0);
             </div>
 
         </section>
-        
-       
-        <!-- Floating Check-Out Button -->
-        <!-- <form action="{{route('user.logout')}}" method="POST"><div id="floating-btn">
-            @csrf
-            <button type="submit" class="fas fa-power-off" style="color: #ffffff; font-size: 30px;"></button> -->
-            <!-- Power off icon with custom color -->
-        <!-- </div></form> -->
-        <!-- <div id="floating-btn">Check Out</div> -->
+     
 
         <script>
             const btn = document.getElementById('floating-btn');
@@ -194,21 +180,6 @@ error_reporting(0);
                     }
                 }
 
-                // function mouseUpHandler() {
-                //     if (!isDragging && mouseDown) {
-                //         // If no drag occurred, execute check-out logic
-                //         alert("Check-Out Process Initiated");
-                //         window.location.href = 'logout.php';
-                //     }
-
-                //     mouseDown = false; // Reset the mouseDown state
-                //     isDragging = false;
-                //     document.removeEventListener('mousemove', mouseMoveHandler);
-                //     document.removeEventListener('mouseup', mouseUpHandler);
-                // }
-
-                // document.addEventListener('mousemove', mouseMoveHandler);
-                // document.addEventListener('mouseup', mouseUpHandler);
             });
         </script>
       
@@ -388,15 +359,7 @@ error_reporting(0);
         </button>
     </form>
 </td>
-            
-                        <!-- Reject Form -->
-                        <!-- <td>
-                            <form action="{{ route('leave_update_status', ['id' => $leave->leave_appliy_id, 'status' => 'Reject']) }}" method="POST">
-                                @csrf
-                                @method('PUT')
-                                <button type="submit" class="btn btn-danger">Reject</button>
-                            </form>
-                        </td> -->
+
                     </tr>
                 @endforeach
             @endforeach
@@ -492,38 +455,7 @@ error_reporting(0);
 </script>
 
 
-        <!-- <section class="news-events"> 
-            <h3>News & Events</h3>
-            <div class="container-events">
-                <ul>
-                    <li>
-                        <span class="date">18 NOV</span>
-                        <span class="event"><strong>Board Meeting</strong>
-                            <p><small>Meet all project managers</small></p>
-                        </span>
 
-                    </li>
-                    <li>
-                        <span class="date">18 NOV</span>
-                        <span class="event"><strong>Updated Company Policy</strong>
-                            <p><small>Meet all project managers</small></p>
-                        </span>
-                    </li>
-                    <li>
-                        <span class="date">18 NOV</span>
-                        <span class="event"><strong>Board Meeting</strong>
-                            <p><small>Meet all project managers</small></p>
-                        </span>
-                    </li>
-                    <li>
-                        <span class="date">18 NOV</span>
-                        <span class="event"><strong>Board Meeting</strong>
-                            <p><small>Meet all project managers</small> </p>
-                        </span>
-                    </li>
-                </ul>
-            </div>
-        </section>-->
         <section class="news-events">
     <h3>News & Events</h3>
     <div class="container-events">
@@ -541,30 +473,14 @@ error_reporting(0);
 </section>
 
 
-
-
-
-      
-        <!-- <section class="leaves">
-            <h3>Leaves</h3>
-            <ul>
-              
-            </ul>
-        </section> -->
-        {{-- 0 => array:4 [▼
-        0 => "General Leave Policy"
-        1 => "24"
-        2 => 10.5
-        3 => 43.75
-      ] --}}
         <section class="leaves">
             <h3>Leave Types</h3>
             <ul>
                 @foreach($leaveUsage as $leave)
                     <li>
                         <strong>{{ $leave[0] }}</strong> <!-- The first item is the leave type name -->
-                        <div class="progress-bar-container">
-                            <div class="progress-bar" style="width: {{ $leave[3] }}%; background-color: 
+                        <div class="progress-bar-containerr">
+                            <div class="progress-barr" style="width: {{ $leave[3] }}%; background-color: 
                                 @if($leave[3] <= 50) #4caf50
                                 @elseif($leave[3] <= 75) #ff9800
                                 @else #f44336
@@ -580,7 +496,7 @@ error_reporting(0);
 
 
 <style>
-    .progress-bar-container {
+    .progress-bar-containerr {
         width: 100%;
         height: 20px;
         background-color: #f3f3f3;
@@ -588,7 +504,7 @@ error_reporting(0);
         margin-top: 5px;
     }
 
-    .progress-bar {
+    .progress-barr {
         height: 100%;
         border-radius: 10px;
     }
