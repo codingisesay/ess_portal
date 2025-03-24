@@ -149,7 +149,7 @@ error_reporting(0);
 <style>
     /* Define the highlight class for styling */
     .highlight {
-        background-color: #FFC107;  /* You can customize this style */
+        background-color: #E0AFA0;  /* You can customize this style */
         font-weight: bold;         /* Add other styles for highlighting */
     }
 </style>

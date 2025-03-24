@@ -65,7 +65,7 @@ body {
     display: flex;
     flex-direction: row;
     gap: 30px;
-    margin-top: 20px;
+    margin-top: 30px;
     /* justify-content: flex-start; */
 }
 
@@ -78,8 +78,8 @@ body {
 .attendance-header {
     text-align: left;
 
-    /* width: 100%; */
-    height: 460px;
+    /* width: 100%;
+    height: 460px; */
     background-color: white;
     border-radius: 30px;
     padding: 10px;
@@ -198,7 +198,8 @@ body {
     /* Enables vertical scrolling */
     padding-right: 10px;
     /* Prevents scroll bar overlap with content */
-    width: 460px;
+    /* width: 460px; */
+    width: 100%;
 }
 
 /* Style for each leave request */
@@ -647,7 +648,8 @@ tr:hover {
     height: 550px; */
     background-color: white;
     border-radius: 30px;
-    width: 1193px;
+    /* width: 1193px; */
+    width: 100%;
 
 }
 

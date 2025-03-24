@@ -111,6 +111,7 @@ error_reporting(0);
             <div class="emp-designation" id="emp-designation">Designation</div>  
         </div>  
         <div class="right">
+        <div class="heading">Employee Profile</div> 
     <table class="custom-table">
         <tr>
             <th>Employee No</th>
@@ -307,6 +308,55 @@ window.onload = function() {
 .custom-table tr:nth-child(odd) {
     background-color: #f9f9f9;
 }
+
+.tree {
+    list-style-type: none;
+    padding-left: 20px;
+    position: relative;
+}
+
+.tree li {
+    margin: 5px 0;
+    padding-left: 20px;
+    position: relative;
+}
+
+/* Add vertical line */
+.tree li::before {
+    content: "";
+    position: absolute;
+    top: -33px;
+    left: 0;
+    width: 1px;
+    height: 100%;
+    border-left: 1px solid #ccc;
+}
+
+/* Add horizontal line */
+.tree li::after {
+    content: "";
+    position: absolute;
+    top: 12px;
+    left: 1px;
+    width: 8px;
+    height: 1px;
+    border-top: 1px solid #ccc;
+}
+
+/* Remove lines for root element */
+.tree > li::before {
+    display: none;
+}
+/* 
+.tree li span {
+    cursor: pointer;
+    padding: 5px 10px;
+    background-color: #f5f5f5;
+    border-radius: 5px;
+    display: inline-block;
+    border: 1px solid #ccc;
+} */
+
 </style>
 
 <style>
@@ -540,9 +590,9 @@ window.onload = function() {
     }
 
     .highlight {
-        background-color: yellow;
+        background-color: #E0AFA0;
         font-weight: bold;
-        color: white;
+        /* color: white; */
     }
 
     .gender-icon {
