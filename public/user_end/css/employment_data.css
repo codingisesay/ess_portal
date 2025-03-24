@@ -357,7 +357,12 @@ tr:nth-child(even) {
     border: 1px solid #ddd;
     padding: 8px;
     text-align: left;
-    white-space: nowrap;
+    white-space: normal;
+    /* Allow text to wrap */
+    word-wrap: break-word;
+    /* Break long words onto the next line */
+    word-break: break-word;
+    /* Ensure long words are properly broken */
 }
 
 .custom-table th {

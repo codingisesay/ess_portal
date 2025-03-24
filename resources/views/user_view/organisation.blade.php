@@ -21,7 +21,8 @@ function renderEmployeeNode($employee) {
             '<?= $employee->employee_no ?>',
             '<?= $employee->reporting_manager_name ?>',
             '<?= $employee->department ?>',
-            '<?= $employee->per_city ?>',
+            '<?= $employee->branch_name ?>',
+            '<?= $employee->employee_type_name ?>',
             '<?= $employee->offical_phone_number ?>',
             '<?= $employee->offical_email_address ?>',
             '<?= $employee->emergency_contact_person ?>',
@@ -124,8 +125,12 @@ error_reporting(0);
             <td id="emp-department">HR</td>
         </tr>
         <tr>
-            <th>City</th>
+            <th>Office</th>
             <td id="emp-city">New York</td>
+        </tr>
+        <tr>
+            <th>Employment Type</th>  <!-- New field for Employment Type -->
+            <td id="emp-employment-type">Full-Time</td>  <!-- New field for Employment Type -->
         </tr>
         <tr>
             <th>Phone</th>
@@ -188,13 +193,14 @@ function toggleChildren(button) {
 
 
 
-    function displayEmployeeDetails(userId, name, designation, empNo, manager, department, city, phone, email, contactperson, contactnumber, profileImage) {  
+    function displayEmployeeDetails(userId, name, designation, empNo, manager, department, city, employmentType, phone, email, contactperson, contactnumber, profileImage) {  
     document.getElementById('emp-name').textContent = name;  
     document.getElementById('emp-designation').textContent = designation;  
     document.getElementById('emp-no').textContent = empNo;  
     document.getElementById('emp-manager').textContent = manager;  
     document.getElementById('emp-department').textContent = department;  
     document.getElementById('emp-city').textContent = city;  
+    document.getElementById('emp-employment-type').textContent = employmentType;  // New field for Employment Type
     document.getElementById('emp-phone').textContent = phone;  
     document.getElementById('emp-email').textContent = email;
     document.getElementById('emp-contactperson').textContent = contactperson;
@@ -261,7 +267,8 @@ window.onload = function() {
     const empNo = "{{ $employees_login->employee_no }}";
     const empManager = "{{ $employees_login->reporting_manager_name }}"; // Ensure this is the manager's name
     const empDepartment = "{{ $employees_login->department }}";
-    const empCity = "{{ $employees_login->per_city }}";
+    const empCity = "{{ $employees_login->branch_name }}";  
+    const empEmploymenttype = "{{ $employees_login->employee_type_name }}";  // Get employment type
     const empPhone = "{{ $employees_login->offical_phone_number }}";
     const empEmail = "{{ $employees_login->offical_email_address }}";
     const empContactperson = "{{ $employees_login->emergency_contact_person }}";
@@ -269,7 +276,7 @@ window.onload = function() {
     const profileImage = "{{ asset('storage/' .$profileimahe) }}"; // Get the profile image from session
 
     // Call the function to display the logged-in employee details
-    displayEmployeeDetails(empNo, empName, empDesignation, empNo, empManager, empDepartment, empCity, empPhone, empEmail, empContactperson, empContactnumber, profileImage);
+    displayEmployeeDetails(empNo, empName, empDesignation, empNo, empManager, empDepartment, empCity, empPhone, empEmail, empEmploymenttype, empContactperson, empContactnumber, profileImage);
 };
 </script>
 <style>
