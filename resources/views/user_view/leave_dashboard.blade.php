@@ -61,10 +61,10 @@
     <div class="main">
         <div class="left-sec">
             <div class="one">
-                <div class="attendance-header">
+                
                 <div class="attendance-header">
     <h1>Average Working Hours</h1>
-    <canvas id="attendanceChart" style="width: 500px; height: 400px;"></canvas>
+    <canvas id="attendanceChart" style="width: 600px; height: 450px;"></canvas>
     <script>
         // Passing PHP variables into JavaScript using Blade
         const attendanceData = {
@@ -114,7 +114,7 @@
     </script>
 </div>
 
-                </div>
+                
 
                 <div class="summary">
                         <h1>Leave Summary</h1>

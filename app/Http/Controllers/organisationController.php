@@ -27,6 +27,7 @@ class OrganisationController extends Controller
         ->leftJoin('organisation_designations', 'emp_details.designation', '=', 'organisation_designations.id')
         ->leftJoin('employee_types', 'emp_details.employee_type', '=', 'employee_types.id')
         ->leftJoin('users as managers', 'emp_details.reporting_manager', '=', 'managers.id')
+        ->leftJoin('branches', 'emp_details.branch_id', '=', 'branches.id') 
         ->leftJoin('user_status_imgs', 'emp_details.user_id', '=', 'user_status_imgs.user_id') // Join profile image
         ->select(
             'emp_details.user_id',
@@ -34,6 +35,7 @@ class OrganisationController extends Controller
             'emp_details.designation',
             'emp_details.employee_no',
             'emp_details.reporting_manager',
+            'employee_types.name as employee_type_name',
             'managers.name as reporting_manager_name',
             'organisation_departments.name as department',
             'organisation_designations.name as designation',
@@ -43,6 +45,7 @@ class OrganisationController extends Controller
             'emp_contact_details.emergency_contact_person',
             'emp_contact_details.emergency_contact_number',
             'emp_details.gender',
+            'branches.name as branch_name', 
             'user_status_imgs.imagelink as profile_image' // Fetch profile image
         )
         ->where('emp_details.user_id', '=', $user->id) // Add the session user_id condition
