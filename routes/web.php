@@ -38,6 +38,10 @@ Route::get('superadmin/login', [SuperAdminAuthController::class, 'showLoginForm'
 Route::post('superadmin/login', [SuperAdminAuthController::class, 'login']);
 Route::get('superadmin/logout', [SuperAdminAuthController::class, 'logout'])->name('superadmin.logout');
 //super admin routes
+Route::get('superadmin/account_suspended',function(){
+    return view('superadmin_view.account_suspended');
+})->name('account_suspended');
+
 Route::middleware(['auth.superadmin'])->group(function () {
 
     Route::get('superadmin/dashboard', function () {
@@ -110,6 +114,10 @@ Route::get('password/reset', [ForgotPasswordController::class, 'showLinkRequestF
 Route::post('password/email', [ForgotPasswordController::class, 'sendResetLinkEmail'])->name('password.email');
 Route::get('password/reset/{token}', [ForgotPasswordController::class, 'showResetForm'])->name('password.reset');
 Route::post('password/reset', [ForgotPasswordController::class, 'reset'])->name('password.update');
+
+Route::get('user/account_suspended',function(){
+    return view('user_view.account_suspended');
+})->name('user_account_suspended');
 
 
 Route::middleware(['auth'])->group(function () {
