@@ -14,7 +14,7 @@ array_push($permis, $per->feature_id);
 }
 ?>
 
-@if(session('success'))
+{{-- @if(session('success'))
     <div class="alert alert-success">
         {{ session('success') }}
     </div>
@@ -24,7 +24,7 @@ array_push($permis, $per->feature_id);
     <div class="alert alert-danger">
         {{ session('error') }}
     </div>
-@endif
+@endif --}}
 
 @if($errors->any())
 <div class="alert custom-alert-warning">
