@@ -21,11 +21,16 @@ class UserAuthController extends Controller
             'email' => 'required|email',
             'password' => 'required',
         ]);
-        // $credentials = $request->only('email', 'password');
-// Attempt to log the user in
+
         if (Auth::guard('web')->attempt($credentials)) {
 
             $loginUserInfo = Auth::user();
+
+            if($loginUserInfo->user_status == 'Inactive'){
+
+                return redirect()->route('user_account_suspended')->with('error','You Account Is Suspended, Please Contact To Your organization');
+
+            }
 
             $desDepBran = DB::table('emp_details')
             ->where('user_id',$loginUserInfo->id)
@@ -144,8 +149,7 @@ class UserAuthController extends Controller
 
             
         }
- // If login fails, redirect back with an error
-        // return back()->withErrors(['error' => 'Invalid credentials']);
+
         return redirect()->route('user.login')->with('error','Invalid credentials');
     }
 
