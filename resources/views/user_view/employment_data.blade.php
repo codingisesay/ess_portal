@@ -95,16 +95,16 @@
             <td><b>{{ ucfirst($userDetails->marital_status ?? '-') }}</b></td>
         </tr>
         <tr>
+            <th>Anniversary Date</th>
+            <td><b>{{ $userDetails->anniversary_date ? \Carbon\Carbon::parse($userDetails->anniversary_date)->format('d-m-Y') : '-' }}</b></td>
+        </tr>
+        <tr>
             <th>Blood Group</th>
             <td><b>{{ ucfirst($userDetails->blood_group ?? '-') }}</b></td>
         </tr>
         <tr>
             <th>Religion</th>
             <td><b>{{ ucfirst($userDetails->religion ?? '-') }}</b></td>
-        </tr>
-        <tr>
-            <th>Anniversary Date</th>
-            <td><b>{{ $userDetails->anniversary_date ? \Carbon\Carbon::parse($userDetails->anniversary_date)->format('d-m-Y') : '-' }}</b></td>
         </tr>
     </table>
 </div>
