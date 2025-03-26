@@ -344,27 +344,32 @@
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            const absenteeismCtx = document.getElementById('absenteeismChart1').getContext('2d');
+    document.addEventListener("DOMContentLoaded", function () {
+        const absenteeismCtx = document.getElementById('absenteeismChart1').getContext('2d');
 
-            // Dynamically populate the year dropdown (Last 5 years)
-            const yearSelect = document.getElementById("yearSelect");
-            const currentYear = new Date().getFullYear();
-            for (let i = 0; i < 5; i++) {
-                let startYear = currentYear - i - 1;
-                let endYear = currentYear - i;
-                let option = document.createElement("option");
-                option.value = `${startYear}-${endYear}`;
-                option.textContent = `${startYear}-${endYear}`;
-                yearSelect.appendChild(option);
-            }
+        // Dynamically populate the year dropdown (Last 5 years)
+        const yearSelect = document.getElementById("yearSelect");
+        const currentYear = new Date().getFullYear();
+        for (let i = 0; i < 5; i++) {
+            let startYear = currentYear - i - 1;
+            let endYear = currentYear - i;
+            let option = document.createElement("option");
+            option.value = `${startYear}-${endYear}`;
+            option.textContent = `${startYear}-${endYear}`;
+            yearSelect.appendChild(option);
+        }
 
-            // Fetch absenteeism data from Laravel
-            const attendanceData = @json($attendanceOverview);
+        // Fetch absenteeism data from Laravel
+        const attendanceData = @json($attendanceOverview);
 
-            // Extract months and absenteeism rate (absent days / total working days)
+        // Function to filter data for a selected year and update the chart
+        function updateChartData(yearRange) {
+            // Extract start and end years from the selected year range
+            const [startYear, endYear] = yearRange.split('-').map(Number);
+            
+            // Filter months and absenteeism rates based on the selected year
             const months = Object.keys(attendanceData).map(month => {
-                return new Date(2025, month - 1, 1).toLocaleString('en-US', { month: 'long' });
+                return new Date(startYear, month - 1, 1).toLocaleString('en-US', { month: 'long' });
             });
 
             const absenteeismRates = Object.values(attendanceData).map(data => {
@@ -372,10 +377,12 @@
                 return totalDays > 0 ? (data.absent / totalDays) : 0;
             });
 
+            // Create chart gradient
             const gradient1 = absenteeismCtx.createLinearGradient(0, 0, 0, 400);
             gradient1.addColorStop(0, 'rgba(0, 119, 190, 0.8)');
             gradient1.addColorStop(1, 'rgba(0, 70, 130, 0)');
 
+            // Create the chart
             new Chart(absenteeismCtx, {
                 type: 'line',
                 data: {
@@ -421,9 +428,18 @@
                     }
                 }
             });
-        });
-    </script>
+        }
 
+        // Update chart on year selection change
+        yearSelect.addEventListener('change', function () {
+            const selectedYear = yearSelect.value;
+            updateChartData(selectedYear);
+        });
+
+        // Initialize with the first option (default)
+        updateChartData(yearSelect.value);
+    });
+</script>
 
 
                 </div>
