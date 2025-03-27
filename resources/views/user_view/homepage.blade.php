@@ -142,23 +142,21 @@ error_reporting(0);
 
                 <!-- Upcoming Holiday Card -->
                 <div class="card holiday1">
-    <h4>Upcoming Holidays</h4>
-    
-    @if($holidays_upcoming->isNotEmpty())
-        <ul>
-            @foreach($holidays_upcoming as $holiday)
-                <li>
-                    <strong>{{ $holiday->formatted_date }}</strong> - {{ $holiday->holiday_name }} ({{ $holiday->day }})
-                </li>
-            @endforeach
-        </ul>
-    @else
-        <p>No upcoming holidays this month.</p>
-    @endif
-</div>
-
+                    <h4>Upcoming Holidays</h4>
+                    
+                    @if($upcomingHolidays->isNotEmpty())
+                        <ul>
+                            @foreach($upcomingHolidays as $holiday)
+                                <li>
+                                    <strong>{{ $holiday->formatted_date }}</strong> - {{ $holiday->holiday_name }} ({{ $holiday->day }})
+                                </li>
+                            @endforeach
+                        </ul>
+                    @else
+                        <p>No upcoming holidays this year.</p>
+                    @endif
+                </div>
             </div>
-
         </section>
      
 
@@ -194,7 +192,7 @@ error_reporting(0);
 
                     <div class="form-group">
                         <label for="project">Project</label>
-                        <input type="text" maxlength="200" id="project" name="project_name" placeholder="Project Name"
+                        <input type="text" id="project" maxlength="200" name="project_name" placeholder="Project Name"
                             class="input-field" required>
                     </div>
 
@@ -216,12 +214,7 @@ error_reporting(0);
         </section>
 
         <!-- Success Modal -->
-        <div id="success-modal" style="display: none;">
-            <div class="modal-content">
-                <p>Task saved successfully!</p>
-                <button onclick="closeSuccessModal()">Close</button>
-            </div>
-        </div>
+       
 
 
 
@@ -277,7 +270,7 @@ error_reporting(0);
             <h3>Approval Pending</h3>
             <div class="approval-cards">
                 <!-- Leave Card -->
-                <div class="approval-card" onclick="openLeaveModal()">
+                <div class="approval-card " id="leave-card" onclick="openLeaveModal()">
                     <div class="card-left">
                         <img src="{{ asset('user_end/images/Leave.png'); }}" alt="Leave Icon" class="icon">
                         <div class="details">
@@ -291,23 +284,56 @@ error_reporting(0);
                 </div>
 
                 <!-- Task Card -->
-                <div class="approval-card" onclick="openTaskModal()">
-    <div class="card-left">
-        <img src="{{ asset('user_end/images/Task.png'); }}" alt="Task Icon" class="icon">
-        <div class="details">
-            <h4>Task</h4>
-        </div>
-    </div>
-    <div class="card-right">
-        <img src="{{ asset('user_end/images/cake 5.png'); }}" alt="Alert Icon" class="alert-icon">
-    </div>
-</div>
-
-
+                <div class="approval-card {{ $toDoList->isNotEmpty() ? 'glow-effect' : '' }}" id="task-card"  onclick="openTaskModal()" >
+                <div class="card-left">
+                    <img src="{{ asset('user_end/images/Task.png'); }}" alt="Task Icon" class="icon">
+                    <div class="details">
+                        <h4>Task</h4>
+                    </div>
+                </div>
+                <div class="card-right">
+                    <img src="{{ asset('user_end/images/cake 5.png'); }}" alt="Alert Icon" class="alert-icon">
+                </div>
+            </div>
             </div>
         </section>
+        <style>
+.glow-effect {
+    position: relative;
+    animation: alertGlow 1.5s ease-in-out infinite;
+    transition: box-shadow 0.3s ease, transform 0.3s ease;
+}
 
-       
+/* Flashing alert animation */
+@keyframes alertGlow {
+    0% {
+        box-shadow: 0 0 10px rgba(255, 69, 0, 0.5); /* Soft red/orange glow */
+        transform: scale(1);
+    }
+    50% {
+        box-shadow: 0 0 25px rgba(255, 69, 0, 0.8); /* Stronger red/orange glow */
+        transform: scale(1.05);
+    }
+    100% {
+        box-shadow: 0 0 10px rgba(255, 69, 0, 0.5); /* Soft red/orange glow */
+        transform: scale(1);
+    }
+}
+
+/* Optional: Subtle alert glow without animation */
+.glow-effect.alert-static {
+    box-shadow: 0 0 15px rgba(255, 69, 0, 0.5);
+}
+
+/* Hover effect to emphasize urgency */
+.glow-effect:hover {
+    box-shadow: 0 0 30px rgba(255, 69, 0, 1); /* More intense glow */
+    transform: scale(1.05);
+    transition: box-shadow 0.3s ease, transform 0.3s ease;
+}
+
+        </style>
+
 
         <!-- Popup Modal -->
         <div id="leaveModal" class="modal">
@@ -329,6 +355,7 @@ error_reporting(0);
                 </tr>
             </thead>
             <tbody>
+            
                 @foreach ($leaveLists as $leaveApply)
                 @foreach ($leaveApply as $leave)
                     <tr>
@@ -342,28 +369,28 @@ error_reporting(0);
             
                      
                         <td>
-    <form action="{{ route('leave_update_status', ['id' => $leave->leave_appliy_id, 'status' => 'Approved']) }}" method="POST" style="display: inline;">
-        @csrf
-        @method('PUT')
-        <button type="submit" style="font-size: 24px;  border: none; background: none; cursor: pointer;">
-            ✅
-        </button>
-    </form>
-    </td>
-    <td>
-    <form action="{{ route('leave_update_status', ['id' => $leave->leave_appliy_id, 'status' => 'Reject']) }}" method="POST" style="display: inline;">
-        @csrf
-        @method('PUT')
-        <button type="submit" style="font-size: 24px; border: none; background: none; cursor: pointer;">
-            ❌
-        </button>
-    </form>
-</td>
+                        <form action="{{ route('leave_update_status', ['id' => $leave->leave_appliy_id, 'status' => 'Approved']) }}" method="POST" style="display: inline;">
+                            @csrf
+                            @method('PUT')
+                            <button type="submit" style="font-size: 24px;  border: none; background: none; cursor: pointer;">
+                                ✅
+                            </button>
+                        </form>
+                        </td>
+                        <td>
+                        <form action="{{ route('leave_update_status', ['id' => $leave->leave_appliy_id, 'status' => 'Reject']) }}" method="POST" style="display: inline;">
+                            @csrf
+                            @method('PUT')
+                            <button type="submit" style="font-size: 24px; border: none; background: none; cursor: pointer;">
+                                ❌
+                            </button>
+                        </form>
+                    </td>
 
                     </tr>
                 @endforeach
             @endforeach
-
+         
             </tbody>
         </table>
     </div>
@@ -385,7 +412,7 @@ error_reporting(0);
                 </tr>
             </thead>
             <tbody>
-                
+            @if ($toDoList->isNotEmpty())
                 @foreach($toDoList as $task)
                     <tr>
                         <td>{{ date('d-m-Y', strtotime($task->date)) }}</td>
@@ -410,6 +437,8 @@ error_reporting(0);
                     </form>
                     </tr>
                 @endforeach
+                @endif
+
                 </form>
             </tbody>
         </table>

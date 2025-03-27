@@ -1,50 +1,31 @@
+<!DOCTYPE html>
 @extends('user_view.header')
 @section('content')
 
 <head>
     <link rel="stylesheet" href="{{ asset('/user_end/css/setting.css') }}">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-<link rel="stylesheet" href="{{ asset('errors/error.css') }}">
-    <style>
-  
-        .content {
-            padding: 0 18px;
-            display: block;
-            overflow-y: auto;
-            background-color: #ffffff;
-        }
-</style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="{{ asset('errors/error.css') }}">
+    
 </head>
-    <!-- Main Content -->
-    <main class="settings-container">
-        <?php 
-            
-            $permission_array = session('permission_array');
 
-            // dd($permission_array);
-            
-            ?>
-            {{-- @if(session('success'))
-            <div class="alert custom-alert-success">
-                <strong>{{ session('success') }}</strong> 
-                <button class="close-btn" onclick="this.parentElement.style.display='none';">&times;</button>
-                
-            </div>
-            @endif
-            
-            @if(session('error'))
-            <div class="alert custom-alert-error">
-            <strong> {{ session('error') }}</strong>
-            <button class="close-btn" onclick="this.parentElement.style.display='none';">&times;</button>
-            </div>
-            @endif --}}
-            
-            @if($errors->any())
-            <div class="alert custom-alert-warning">
-            <ul>
+<style>
+  .content {
+      padding: 0 18px;
+      display: block;
+      overflow-y: auto;
+      background-color: #ffffff;
+  }
+</style>
+
+<main class="settings-container">
+    <?php $permission_array = session('permission_array'); ?>
+
+    @if($errors->any())
+    <div class="alert custom-alert-warning">
+        <ul>
             @foreach($errors->all() as $error)
             <li style="color: red;">{{ $error }}</li>
-            
             @endforeach
             </ul>
             </div>
@@ -269,63 +250,36 @@ if(in_array(12, $permission_array)){
                                 <td>{{ $loop->iteration }}</td>
                                 <td>{{$user->name}}</td>
                                 <td>{{$user->email}}</td>
-                                <!-- <td><a type="button" href="{{ route('user.editdashboard',['id' => $user->id]) }}" type="">Edit</a></td> -->
                                 <td>
                                     <a type="button" href="{{ route('user.editdashboard',['id' => $user->id]) }}">
                                         <img src="{{ asset('user_end/images/edit 1.png') }}" alt="Edit" style="width: 20px; height: 20px;"/>
                                     </a>
                                 </td>
                             </tr>
-                        @endforeach
-                    </tbody>
-                </table>
-
-                <div class="d-flex justify-content-center">
-                    {{ $users->links() }} <!-- Pagination links -->
+                            @endforeach
+                        </tbody>
+                    </table>
+                    <div class="d-flex justify-content-center">
+                        {{ $users->links() }}
+                    </div>
                 </div>
             </div>
         </div>
+        <?php } ?>
     </div>
-<?php 
-}
-?>
-            
+</main>
 
-            <!-- PMS-->
-            {{-- <div class="accordion-item">
-                <div class="accordion-header" onclick="window.location.href='{{ url('pms') }}'">
-                    PMS-Performance Management System
-                </div>
-            </div> --}}
-        </div>
-    </main>
-
-    <!-- JavaScript for toggling dropdown -->
 <script>
     function toggleEmployeeDetailsDropdown() {
         var dropdown = document.getElementById("employeeDetailsDropdown");
-        if (dropdown.style.display === "none" || dropdown.style.display === "") {
-            dropdown.style.display = "block";
-        } else {
-            dropdown.style.display = "none";
-        }
-    }
-</script>
-    <!-- calender script  -->
-     
-<script>
-    // Function to toggle the visibility of the Calendar Master dropdown
-    function toggleCalendarMasterDropdown() {
-        var dropdown = document.getElementById("calendarMasterDropdown");
-        // Check the current display style, and toggle between 'none' and 'block'
-        if (dropdown.style.display === "none") {
-            dropdown.style.display = "block"; // Show the dropdown
-        } else {
-            dropdown.style.display = "none"; // Hide the dropdown
-        }
+        dropdown.style.display = dropdown.style.display === "none" || dropdown.style.display === "" ? "block" : "none";
     }
 
-    // Wait for the DOM to be fully loaded before running the JavaScript
+    function toggleCalendarMasterDropdown() {
+        var dropdown = document.getElementById("calendarMasterDropdown");
+        dropdown.style.display = dropdown.style.display === "none" ? "block" : "none";
+    }
+
     document.addEventListener("DOMContentLoaded", function () {
         const yearSelect = document.getElementById("year");
         const weekOffHolidaySelect = document.getElementById("weekOffHolidaySelect");
@@ -333,68 +287,54 @@ if(in_array(12, $permission_array)){
         const holidayUpdate = document.getElementById("holidayUpdate");
         const workingHoursContainer = document.getElementById("workingHoursContainer");
 
-        // Initially hide the sections related to Week Off, Holiday, and Working Hours
         weekOffSelection.style.display = "none";
         holidayUpdate.style.display = "none";
-        workingHoursContainer.style.display = "none"; // Hide working hours section initially
+        workingHoursContainer.style.display = "none";
 
-        // Show the appropriate sections based on the selected type (Week Off or Holiday)
         weekOffHolidaySelect.addEventListener("change", function () {
             const selectedOption = weekOffHolidaySelect.value;
-
-            // If 'Week Off' is selected, show week-off selection and working hours section
             if (selectedOption === "weekoff") {
                 weekOffSelection.style.display = "block";
                 holidayUpdate.style.display = "none";
-                workingHoursContainer.style.display = "block"; // Show working hours input fields
-            } 
-            // If 'Holiday' is selected, show the holiday details section
-            else if (selectedOption === "holiday") {
+                workingHoursContainer.style.display = "block";
+            } else if (selectedOption === "holiday") {
                 weekOffSelection.style.display = "none";
                 holidayUpdate.style.display = "block";
-                workingHoursContainer.style.display = "none"; // Hide working hours section
+                workingHoursContainer.style.display = "none";
             }
         });
 
-        // Function to populate the year dropdown dynamically (current year + next 50 years)
         function populateYearDropdown() {
-            const currentYear = new Date().getFullYear(); // Get the current year
-            // Populate the dropdown with years from the current year to the next 50 years
+            const currentYear = new Date().getFullYear();
             for (let year = currentYear; year <= currentYear + 50; year++) {
                 const option = document.createElement('option');
                 option.value = year;
-                option.textContent = year; // Display the year in the dropdown
-                yearSelect.appendChild(option); // Append the option to the dropdown
+                option.textContent = year;
+                yearSelect.appendChild(option);
             }
         }
 
-        // Call populateYearDropdown when DOM is ready to populate the year dropdown
         populateYearDropdown();
 
-        // Event listener to update the working hours dynamically based on week-off days
         const weekOffCheckboxes = document.querySelectorAll('input[name="weekoff[]"]');
         weekOffCheckboxes.forEach(checkbox => {
             checkbox.addEventListener('change', function () {
-                updateWorkingHoursFields(); // Update working hours based on the checked week-off days
+                updateWorkingHoursFields();
             });
         });
 
-        // Function to update working hours based on selected week-off days
         function updateWorkingHoursFields() {
             const weekOffDays = [];
-            workingHoursContainer.innerHTML = "";  // Clear any existing working hours fields
-
-            // Loop through the checkboxes and collect the selected (checked) week-off days
+            workingHoursContainer.innerHTML = "";
             weekOffCheckboxes.forEach(checkbox => {
                 if (checkbox.checked) {
-                    weekOffDays.push(checkbox.value); // Add the checked day to the weekOffDays array
+                    weekOffDays.push(checkbox.value);
                 }
             });
 
             const allDays = ["sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday"];
-            const workingDays = allDays.filter(day => !weekOffDays.includes(day)); // Filter out week-off days from the working days
+            const workingDays = allDays.filter(day => !weekOffDays.includes(day));
 
-            // If there are working days left, show the working hours input fields
             if (workingDays.length > 0) {
                 workingHoursContainer.innerHTML = `
                     <label>Set Working Hours for All Working Days:</label><br>
@@ -404,142 +344,58 @@ if(in_array(12, $permission_array)){
                     <input type="time" id="end_time" name="working_end_time"><br>
                 `;
             } else {
-                // If no working days are left (all days selected as week off), show a message
                 workingHoursContainer.innerHTML = "<p>No working days left. Please select week off days first.</p>";
             }
         }
     });
+
+    function toggleDropdown() {
+        const dropdownContent = document.getElementById("dropdownContent");
+        dropdownContent.style.display = dropdownContent.style.display === "block" ? "none" : "block";
+    }
+
+    document.getElementById("thoughtDate").addEventListener("input", validateThoughtForm);
+    document.getElementById("thoughtDescription").addEventListener("input", validateThoughtForm);
+
+    function validateThoughtForm() {
+        const thoughtDate = document.getElementById("thoughtDate").value;
+        const thoughtDescription = document.getElementById("thoughtDescription").value;
+        const submitButton = document.getElementById("submitThought");
+
+        submitButton.disabled = !(thoughtDate && thoughtDescription);
+    }
+
+    document.getElementById("date").addEventListener("input", validateNewsForm);
+    document.getElementById("title").addEventListener("input", validateNewsForm);
+    document.getElementById("description").addEventListener("input", validateNewsForm);
+    document.getElementById("event-start-date").addEventListener("input", validateNewsForm);
+    document.getElementById("event-end-date").addEventListener("input", validateNewsForm);
+    document.getElementById("location").addEventListener("input", validateNewsForm);
+
+    function validateNewsForm() {
+        const date = document.getElementById("date").value;
+        const title = document.getElementById("title").value;
+        const description = document.getElementById("description").value;
+        const eventStartDate = document.getElementById("event-start-date").value;
+        const eventEndDate = document.getElementById("event-end-date").value;
+        const location = document.getElementById("location").value;
+        const submitButton = document.getElementById("submitNews");
+
+        submitButton.disabled = !(date && title && description && eventStartDate && eventEndDate && location);
+    }
+
+    function switchForm(formType) {
+        const thoughtForm = document.getElementById("thoughtForm");
+        const newsForm = document.getElementById("newsForm");
+
+        if (formType === "thought") {
+            thoughtForm.style.display = "block";
+            newsForm.style.display = "none";
+        } else if (formType === "news") {
+            thoughtForm.style.display = "none";
+            newsForm.style.display = "block";
+        }
+    }
 </script>
-    <script>
 
-      // Get all collapsible buttons
-      var coll = document.getElementsByClassName("collapsible");
-
-// Loop through the buttons and add an event listener for the click event
-for (var i = 0; i < coll.length; i++) {
-    coll[i].addEventListener("click", function() {
-        // Toggle the "active" class for the button
-        this.classList.toggle("active");
-
-        // Get the next element (the content div)
-        var content = this.nextElementSibling;
-
-        // Toggle the display of the content (show or hide it)
-        if (content.style.display === "block") {
-            content.style.display = "none";
-        } else {
-            content.style.display = "block";
-        }
-    });
-}
-
-        function toggleDropdown() {
-            const dropdownContent = document.getElementById("dropdownContent");
-            dropdownContent.style.display = dropdownContent.style.display === "block" ? "none" : "block";
-        }
-
-        // Enable submit button for Thought of the Day form
-        document.getElementById("thoughtDate").addEventListener("input", validateThoughtForm);
-        document.getElementById("thoughtDescription").addEventListener("input", validateThoughtForm);
-
-        function validateThoughtForm() {
-            const thoughtDate = document.getElementById("thoughtDate").value;
-            const thoughtDescription = document.getElementById("thoughtDescription").value;
-            const submitButton = document.getElementById("submitThought");
-
-            if (thoughtDate && thoughtDescription) {
-                submitButton.disabled = false;
-            } else {
-                submitButton.disabled = true;
-            }
-        }
-
-        // Enable submit button for News & Events form
-        document.getElementById("date").addEventListener("input", validateNewsForm);
-        document.getElementById("title").addEventListener("input", validateNewsForm);
-        document.getElementById("description").addEventListener("input", validateNewsForm);
-        document.getElementById("event-start-date").addEventListener("input", validateNewsForm);
-        document.getElementById("event-end-date").addEventListener("input", validateNewsForm);
-        document.getElementById("location").addEventListener("input", validateNewsForm);
-
-        function validateNewsForm() {
-            const date = document.getElementById("date").value;
-            const title = document.getElementById("title").value;
-            const description = document.getElementById("description").value;
-            const eventStartDate = document.getElementById("event-start-date").value;
-            const eventEndDate = document.getElementById("event-end-date").value;
-            const location = document.getElementById("location").value;
-            const submitButton = document.getElementById("submitNews");
-
-            if (date && title && description && eventStartDate && eventEndDate && location) {
-                submitButton.disabled = false;
-            } else {
-                submitButton.disabled = true;
-            }
-        }
-
-        function switchForm(formType) {
-            const thoughtForm = document.getElementById("thoughtForm");
-            const newsForm = document.getElementById("newsForm");
-
-            if (formType === "thought") {
-                thoughtForm.style.display = "block";
-                newsForm.style.display = "none";
-            } else if (formType === "news") {
-                thoughtForm.style.display = "none";
-                newsForm.style.display = "block";
-            }
-        }
-
-        document.addEventListener('DOMContentLoaded', function () {
-            const calendarInput = document.querySelector("#thoughtDate");
-            const calendarIcon = document.querySelector(".calendar-icon");
-
-            // Initialize Flatpickr on the input
-            const calendar = flatpickr(calendarInput, {
-                dateFormat: "d/m/Y", // DD/MM/YYYY format
-                allowInput: true
-            });
-
-            // Open the calendar when clicking on the image
-            calendarIcon.addEventListener("click", () => {
-                calendar.open();
-            });
-        });
-
-        document.addEventListener("DOMContentLoaded", function () {
-            // Initialize Flatpickr for single date field
-            const singleDatePicker = flatpickr("#date", {
-                dateFormat: "d/m/Y", // Format: DD/MM/YYYY
-                allowInput: true, // Allows manual input
-            });
-
-            // Initialize Flatpickr for the start date field
-            const startDatePicker = flatpickr("#event-start-date", {
-                dateFormat: "d/m/Y", // Format: DD/MM/YYYY
-                allowInput: true, // Allows manual input
-            });
-
-            // Initialize Flatpickr for the end date field
-            const endDatePicker = flatpickr("#event-end-date", {
-                dateFormat: "d/m/Y", // Format: DD/MM/YYYY
-                allowInput: true, // Allows manual input
-            });
-
-            // Add click event to calendar icons
-            document.querySelectorAll(".calendar-icon").forEach((icon) => {
-                icon.addEventListener("click", function () {
-                    // Open the corresponding date picker
-                    const inputField = this.nextElementSibling; // Target the input next to the icon
-                    if (inputField.id === "date") {
-                        singleDatePicker.open(); // Open single date picker
-                    } else if (inputField.id === "event-start-date") {
-                        startDatePicker.open(); // Open start date picker
-                    } else if (inputField.id === "event-end-date") {
-                        endDatePicker.open(); // Open end date picker
-                    }
-                });
-            });
-        });
-    </script>
 @endsection

@@ -362,13 +362,25 @@ $week_offs = $week_offs->map(function ($week_off) {
     $week_off->formatted_date = Carbon::parse($week_off->date)->format('d F');
     return $week_off;
 });
+// Fetch upcoming holidays for the full year (excluding expired holidays)
+$upcomingHolidays = DB::table('calendra_masters')
+    ->select('date', 'holiday_name', 'day')
+    ->where('holiday', '=', 'Yes')
+    ->whereYear('date', '=', $currentYear)  // Filter by the current year
+    ->where('date', '>=', now())  // Exclude expired holidays
+    ->get();
 
+// Format holiday dates
+$upcomingHolidays = $upcomingHolidays->map(function ($holiday) {
+    $holiday->formatted_date = Carbon::parse($holiday->date)->format('d F');
+    return $holiday;
+});
 
 
         // dd($anniversaries);
 
     // Return a view with the logs and additional data
-    return view('user_view.homepage', compact('title','logs', 'thoughtOfTheDay', 'newsAndEvents', 'upcomingBirthdays','todayBirthdays', 'anniversaries', 'toDoList', 'currentMonth', 'currentDay', 'leaveUsage','leaveLists', 'holidays_upcoming', 'week_offs'));
+    return view('user_view.homepage', compact('title','logs', 'thoughtOfTheDay', 'newsAndEvents', 'upcomingBirthdays','todayBirthdays', 'anniversaries', 'toDoList', 'currentMonth', 'currentDay', 'leaveUsage','leaveLists', 'holidays_upcoming', 'week_offs', 'upcomingHolidays'));
 }
 
     

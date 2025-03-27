@@ -14,11 +14,11 @@ style.innerHTML = `
         from { width: 100%; }
         to { width: 0%; }
     }
-    .toast-container {
+    .toast-container1 {
         position: relative;
         padding-bottom: 6px;
     }
-    .progress-bar {
+    .progress-bar1 {
         height: 6px;
         width: 100%;
         background: rgba(255, 255, 255, 0.8);
@@ -36,14 +36,14 @@ function showToast(message, bgColor, duration = 3000) {
     if (!message) return; // Prevent empty messages
 
     const toastContent = document.createElement("div");
-    toastContent.classList.add("toast-container");
+    toastContent.classList.add("toast-container1");
     toastContent.innerText = message;
     toastContent.style.padding = "12px";
 
     const progressBar = document.createElement("div");
-    progressBar.classList.add("progress-bar");
+    progressBar.classList.add("progress-bar1");
     progressBar.style.animationDuration = duration + "ms";
-    
+
     toastContent.appendChild(progressBar);
 
     Toastify({
