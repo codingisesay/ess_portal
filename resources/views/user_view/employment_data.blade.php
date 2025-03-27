@@ -11,57 +11,10 @@
 </head>
 <body>
     <div class="container">
-        <div class="employment-details">
-            <h1>Employment Details</h1>
-            <div class="employee-info">
-                <div class="profile-image1">
-                    <?php 
-                    $profileimahe = session('profile_image');
-                    ?>
-                    <img src="{{ asset('storage/'.$profileimahe) }}" class="profile-image" alt="Profile Picture">
-                </div>
-                <h2>{{ ucfirst($userDetails->name ?? '-') }}</h2>
-                <div class="job-title">
-                    <p><strong>Designation</strong> <weak>{{ ucfirst($userDetails->designation_name ?? '-') }}</weak></p>
-                    <p><strong>Department</strong> <weak>{{ ucfirst($userDetails->department_name ?? '-') }}</weak></p>
-                    <p><strong>Office</strong> <weak>{{ ucfirst($userDetails->branch_name ?? '-') }}</weak></p>
-                    <p><strong>Reporting Manager</strong> <weak>{{ ucfirst($userDetails->reporting_manager_name ?? '-') }}</weak></p>
-                </div>
-                <div class="contact-details">
-                    <h3>Contact Details</h3>
-                    <p><strong>Phone Number</strong> <weak>{{ ucfirst($userDetails->offical_phone_number ?? '-') }}</weak></p>
-                    <p><strong>Alternate Number</strong> <weak>{{ ucfirst($userDetails->alternate_phone_number ?? '-') }}</weak></p>
-                    <p><strong>Email Address</strong> <weak><a href="mailto:{{ $userDetails->email ?? '-' }}">{{ ucfirst($userDetails->email ?? '-') }}</a></weak></p>
-                    <h3>Address</h3>
-                    <p><strong>Permanent</strong> <weak>
-                        {{ ucfirst($userDetails->per_building_no ?? '') }},
-                        {{ ucfirst($userDetails->per_name_of_premises ?? '') }},
-                        {{ ucfirst($userDetails->per_nearby_landmark ?? '') }},
-                        {{ ucfirst($userDetails->per_road_street ?? '') }},
-                        {{ ucfirst($userDetails->per_city ?? '') }},
-                        {{ ucfirst($userDetails->per_district ?? '') }},
-                        {{ ucfirst($userDetails->per_state ?? '') }},
-                        {{ ucfirst($userDetails->per_country ?? '') }},
-                        {{ ucfirst($userDetails->per_pincode ?? '') }}
-                    </weak></p>
-                    <p><strong>Correspondance</strong> <weak>
-                        {{ ucfirst($userDetails->cor_building_no ?? '') }},
-                        {{ ucfirst($userDetails->cor_name_of_premises ?? '') }},
-                        {{ ucfirst($userDetails->cor_nearby_landmark ?? '') }},
-                        {{ ucfirst($userDetails->cor_road_street ?? '') }},
-                        {{ ucfirst($userDetails->cor_city ?? '') }},
-                        {{ ucfirst($userDetails->cor_district ?? '') }},
-                        {{ ucfirst($userDetails->cor_state ?? '') }},
-                        {{ ucfirst($userDetails->cor_country ?? '') }},
-                        {{ ucfirst($userDetails->cor_pincode ?? '') }}
-                    </weak></p>
-                </div>
-            </div>
-            <div class="emergency-contact">
-                <h2>Emergency Contact Details</h2>
-                <p><strong>Name</strong> <weak>{{ ucfirst($userDetails->emergency_contact_person ?? '-') }}</weak></p>
-                <p><strong>Contact Number</strong> <weak>{{ ucfirst($userDetails->emergency_contact_number ?? '-') }}</weak></p>              
-            </div>
+    
+        <div class="employment-details1">
+            
+            @include('user_view.employment_details_section')
         </div>
 
         <div class="right-section">

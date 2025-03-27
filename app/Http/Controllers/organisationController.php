@@ -46,7 +46,29 @@ class OrganisationController extends Controller
             'emp_contact_details.emergency_contact_number',
             'emp_details.gender',
             'branches.name as branch_name', 
-            'user_status_imgs.imagelink as profile_image' // Fetch profile image
+            'user_status_imgs.imagelink as profile_image', // Fetch profile image
+            DB::raw("CONCAT(
+                COALESCE(emp_contact_details.per_building_no, ''), ', ',
+                COALESCE(emp_contact_details.per_name_of_premises, ''), ', ',
+                COALESCE(emp_contact_details.per_nearby_landmark, ''), ', ',
+                COALESCE(emp_contact_details.per_road_street, ''), ', ',
+                COALESCE(emp_contact_details.per_city, ''), ', ',
+                COALESCE(emp_contact_details.per_district, ''), ', ',
+                COALESCE(emp_contact_details.per_state, ''), ', ',
+                COALESCE(emp_contact_details.per_country, ''), ', ',
+                COALESCE(emp_contact_details.per_pincode, '')
+            ) as permanent_address"),
+            DB::raw("CONCAT(
+                COALESCE(emp_contact_details.cor_building_no, ''), ', ',
+                COALESCE(emp_contact_details.cor_name_of_premises, ''), ', ',
+                COALESCE(emp_contact_details.cor_nearby_landmark, ''), ', ',
+                COALESCE(emp_contact_details.cor_road_street, ''), ', ',
+                COALESCE(emp_contact_details.cor_city, ''), ', ',
+                COALESCE(emp_contact_details.cor_district, ''), ', ',
+                COALESCE(emp_contact_details.cor_state, ''), ', ',
+                COALESCE(emp_contact_details.cor_country, ''), ', ',
+                COALESCE(emp_contact_details.cor_pincode, '')
+            ) as correspondance_address")
         )
         ->where('emp_details.user_id', '=', $user->id) // Add the session user_id condition
         ->first();
@@ -79,7 +101,29 @@ class OrganisationController extends Controller
                 'emp_contact_details.offical_email_address',
                 'emp_details.gender',
                 'branches.name as branch_name',  // Select branch name
-                'user_status_imgs.imagelink as profile_image' // Fetch profile image
+                'user_status_imgs.imagelink as profile_image', // Fetch profile image
+                DB::raw("CONCAT(
+                    COALESCE(emp_contact_details.per_building_no, ''), ', ',
+                    COALESCE(emp_contact_details.per_name_of_premises, ''), ', ',
+                    COALESCE(emp_contact_details.per_nearby_landmark, ''), ', ',
+                    COALESCE(emp_contact_details.per_road_street, ''), ', ',
+                    COALESCE(emp_contact_details.per_city, ''), ', ',
+                    COALESCE(emp_contact_details.per_district, ''), ', ',
+                    COALESCE(emp_contact_details.per_state, ''), ', ',
+                    COALESCE(emp_contact_details.per_country, ''), ', ',
+                    COALESCE(emp_contact_details.per_pincode, '')
+                ) as permanent_address"),
+                DB::raw("CONCAT(
+                    COALESCE(emp_contact_details.cor_building_no, ''), ', ',
+                    COALESCE(emp_contact_details.cor_name_of_premises, ''), ', ',
+                    COALESCE(emp_contact_details.cor_nearby_landmark, ''), ', ',
+                    COALESCE(emp_contact_details.cor_road_street, ''), ', ',
+                    COALESCE(emp_contact_details.cor_city, ''), ', ',
+                    COALESCE(emp_contact_details.cor_district, ''), ', ',
+                    COALESCE(emp_contact_details.cor_state, ''), ', ',
+                    COALESCE(emp_contact_details.cor_country, ''), ', ',
+                    COALESCE(emp_contact_details.cor_pincode, '')
+                ) as correspondance_address")
             )
             ->get();
 // dd($employees);
@@ -148,4 +192,4 @@ class OrganisationController extends Controller
 
 
 }
-  
+
