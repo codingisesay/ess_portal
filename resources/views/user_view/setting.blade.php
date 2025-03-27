@@ -112,13 +112,13 @@ if(in_array(11, $permission_array)){
 
                     <div class="form-group">
                         <label for="holiday_name">Holiday Name:</label>
-                        <input type="text" id="holiday_name" name="holiday_name">
+                        <input type="text" maxlength="200" id="holiday_name" name="holiday_name">
                         <span class="error" id="holidayNameError"></span><br><br>
                     </div>
 
                     <div class="form-group">
                         <label for="holiday_desc">Holiday Description:</label>
-                        <textarea id="holiday_desc" name="holiday_desc"></textarea>
+                        <textarea id="holiday_desc" maxlength="200" name="holiday_desc"></textarea>
                         <span class="error" id="holidayDescError"></span>
                     </div>
                 </div>
@@ -184,7 +184,7 @@ if(in_array(11, $permission_array)){
                             </div>
                             <div class="form-group">
                                 <label for="thoughtDescription">Thought of the day :</label>
-                                <textarea id="thoughtDescription" name="description" placeholder="Thought of the day"></textarea>
+                                <textarea id="thoughtDescription" maxlength="200" name="description" placeholder="Thought of the day"></textarea>
                             </div>
                             <button type="submit" class="submit-btn" id="submitThought" disabled>Submit</button>
                         </form>
@@ -204,11 +204,11 @@ if(in_array(11, $permission_array)){
                             </div>
                             <div class="form-group">
                                 <label for="title">Title :</label>
-                                <input type="text" id="title" name="title" placeholder="News or event title">
+                                <input type="text" id="title" maxlength="200" name="title" placeholder="News or event title">
                             </div>
                             <div class="form-group">
                                 <label for="description">Description :</label>
-                                <textarea id="description" name="description" placeholder="Detailed information about the news or event"></textarea>
+                                <textarea id="description" maxlength="200" name="description" placeholder="Detailed information about the news or event"></textarea>
                             </div>
                             <div class="form-group">
                                 <label for="event-start-date">Event Start Date:</label>
@@ -224,7 +224,7 @@ if(in_array(11, $permission_array)){
                             </div>
                             <div class="form-group">
                                 <label for="location">Location :</label>
-                                <input type="text" id="location" name="location" placeholder="Optional, e.g., 'City Hall'">
+                                <input type="text" id="location" maxlength="200" name="location" placeholder="Optional, e.g., 'City Hall'">
                             </div>
                             <button type="submit" class="submit-btn" id="submitNews" disabled>Submit</button>
                         </form>

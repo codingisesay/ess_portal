@@ -194,13 +194,13 @@ error_reporting(0);
 
                     <div class="form-group">
                         <label for="project">Project</label>
-                        <input type="text" id="project" name="project_name" placeholder="Project Name"
+                        <input type="text" maxlength="200" id="project" name="project_name" placeholder="Project Name"
                             class="input-field" required>
                     </div>
 
                     <div class="form-group">
                         <label for="task">Task</label>
-                        <input type="text" id="task" name="task_name" placeholder="Task Name" class="input-field"
+                        <input type="text" maxlength="200" id="task" name="task_name" placeholder="Task Name" class="input-field"
                             required>
                     </div>
 

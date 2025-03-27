@@ -65,16 +65,6 @@
         </div>
 
         <div class="right-section">
-            <!-- <div class="section">
-                <h2>Personal Information</h2>
-                <div class="left1"><p>Date of Birth</p> <b>{{ $userDetails->date_of_birth ? \Carbon\Carbon::parse($userDetails->date_of_birth)->format('d-m-Y') : '-' }}</b></div>
-                <div class="left1"><p>Gender</p> <b>{{ ucfirst($userDetails->gender ?? '-') }}</b></div>
-                <div class="left1"><p>Nationality</p> <b>{{ ucfirst($userDetails->nationality ?? '-') }}</b></div>
-                <div class="left1"><p>Marital Status</p> <b>{{ ucfirst($userDetails->marital_status ?? '-') }}</b></div>
-                <div class="left1"><p>Blood Group</p> <b>{{ ucfirst($userDetails->blood_group ?? '-') }}</b></div>
-                <div class="left1"><p>Religion</p> <b>{{ ucfirst($userDetails->religion ?? '-') }}</b></div>
-                <div class="left1"><p>Anniversary Date</p> <b>{{ $userDetails->anniversary_date ? \Carbon\Carbon::parse($userDetails->anniversary_date)->format('d-m-Y') : '-' }}</b></div>
-            </div> -->
             <div class="section custom-table">
     <h2>Personal Information</h2>
     <table>

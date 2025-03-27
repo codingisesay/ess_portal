@@ -100,7 +100,7 @@
                 const route = step.getAttribute('data-route');
 
                 // If the current route matches the step's route, mark it as active
-                if (currentRoute === route) {
+                if (currentRoute === new URL(route, window.location.origin).pathname) {
                     step.classList.add('active');
                 }
 
@@ -143,13 +143,21 @@
                     window.location.href = route;
                 });
             });
+
+            // Ensure the next step is marked as completed when navigating programmatically
+            const activeStepIndex = Array.from(steps).findIndex(step => step.classList.contains('active'));
+            if (activeStepIndex > 0) {
+                for (let i = 0; i < activeStepIndex; i++) {
+                    steps[i].classList.add('completed');
+                }
+            }
         });
     </script>
 
     <style>
         /* Style for active step */
         .step.active .circle {
-            background-color: #007bff; /* Blue color for active step */
+            background-color: #8A3366; /* Blue color for active step */
         }
 
         /* Style for completed step */

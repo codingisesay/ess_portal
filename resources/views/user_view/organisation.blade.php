@@ -111,7 +111,7 @@ error_reporting(0);
             <div class="emp-designation" id="emp-designation">Designation</div>  
         </div>  
         <div class="right">
-        <div class="heading">Employee Profile</div> 
+        <div class="title">Employee Profile</div> 
     <table class="custom-table">
         <tr>
             <th>Employee No</th>
@@ -201,7 +201,7 @@ function toggleChildren(button) {
     document.getElementById('emp-manager').textContent = manager;  
     document.getElementById('emp-department').textContent = department;  
     document.getElementById('emp-city').textContent = city;  
-    document.getElementById('emp-employment-type').textContent = employmentType;  // New field for Employment Type
+    document.getElementById('emp-employment-type').textContent = employmentType;  
     document.getElementById('emp-phone').textContent = phone;  
     document.getElementById('emp-email').textContent = email;
     document.getElementById('emp-contactperson').textContent = contactperson;
@@ -286,6 +286,7 @@ window.onload = function() {
     border-collapse: collapse;
     margin: 0px 0;
     table-layout: auto;
+    margin-bottom: 70px;
 }
 
 .custom-table th,
@@ -294,6 +295,7 @@ window.onload = function() {
     padding: 8px;
     text-align: left;
     white-space: nowrap;
+    font-weight: bold;
 }
 
 .custom-table th {
@@ -443,8 +445,8 @@ window.onload = function() {
     }
 
     .container {
-        width: 95%;
-        max-width: 1500px;
+        width: 100%;
+        /* max-width: 1500px; */
         background-color: #f5f5f5;
         border-radius: 15px;
         padding: 20px;
@@ -513,6 +515,12 @@ window.onload = function() {
         border-radius: 7px;
         padding: 2px;
         margin-left: 25px;
+    }
+     
+    .employee-details .right .title {
+        font-weight: bold;
+        font-size: 30px;
+        margin-bottom: 10px;    
     }
 
     .employee-details .left .profile-circle {

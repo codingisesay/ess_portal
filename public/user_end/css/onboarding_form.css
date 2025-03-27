@@ -80,6 +80,7 @@
     /* Line color for active sections */
 }
 
+
 .circle {
     width: 40px;
     height: 40px;
@@ -197,6 +198,7 @@
     border-color: #2a1e1e;
     box-shadow: 0 4px 12px rgba(52, 152, 219, 0.2);
     outline: none;
+
 }
 
 /* Placeholder visibility */
