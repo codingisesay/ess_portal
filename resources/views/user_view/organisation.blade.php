@@ -18,17 +18,18 @@ function renderEmployeeNode($employee) {
             '<?= $employee->user_id ?>',
             '<?= $employee->employee_name ?>', 
             '<?= $employee->designation ?>',
-            '<?= $employee->employee_no ?>',
             '<?= $employee->reporting_manager_name ?>',
             '<?= $employee->department ?>',
             '<?= $employee->branch_name ?>',
-            '<?= $employee->employee_type_name ?>',
+            
             '<?= $employee->offical_phone_number ?>',
             '<?= $employee->offical_email_address ?>',
             '<?= $employee->emergency_contact_person ?>',
             '<?= $employee->emergency_contact_number ?>',
             
             '<?= !empty($employee->profile_image) ? asset('storage/' . $employee->profile_image) : asset('storage/user_profile_image/Oqr4VRqo7RpQxnmiZCh12zybbcdsyUin2FhAKD3O.jpg') ?>',
+            '<?= $employee->permanent_address ?>',
+            '<?= $employee->correspondance_address ?>'
         )">
             <?php 
             // Gender-specific image display
@@ -98,64 +99,20 @@ error_reporting(0);
         </ul>
     </div>
     <div class="employee-details">  
-        <div class="left">  
-            <!-- <div class="heading">Employee Profile</div>   -->
-            <?php 
-            $profileimahe = session('profile_image');
-            
-            ?>
-            <div class="profile-circle">  
-                <img id="profile-image" src="{{ asset('storage/'.$profileimahe) }}" alt="Profile">   
-            </div>  
-            <div class="emp-name" id="emp-name">Name</div>  
-            <div class="emp-designation" id="emp-designation">Designation</div>  
-        </div>  
+    <!-- <div class="left">  
+           
+        </div>  -->
         <div class="right">
-    <table class="custom-table">
-        <tr>
-            <th>Employee No</th>
-            <td id="emp-no">12345</td>
-        </tr>
-        <tr>
-            <th>Reporting Manager</th>
-            <td id="emp-manager">Manager</td>
-        </tr>
-        <tr>
-            <th>Department</th>
-            <td id="emp-department">HR</td>
-        </tr>
-        <tr>
-            <th>Office</th>
-            <td id="emp-city">New York</td>
-        </tr>
-        <tr>
-            <th>Employment Type</th>  <!-- New field for Employment Type -->
-            <td id="emp-employment-type">Full-Time</td>  <!-- New field for Employment Type -->
-        </tr>
-        <tr>
-            <th>Phone</th>
-            <td id="emp-phone">123-456-7890</td>
-        </tr>
-        <tr>
-            <th>Email</th>
-            <td id="emp-email">employee@example.com</td>
-        </tr>
-        <tr>
-            <th>Emergency Contact Person</th>
-            <td id="emp-contactperson"></td>
-        </tr>
-        <tr>
-            <th>Emergency Contact Number</th>
-            <td id="emp-contactnumber"></td>
-        </tr>
-    </table>
+        
+     <!-- Include employment details section -->
+     @include('user_view.employment_details_section')
 </div>
 
     </div>  
 </div>  
 
 <script>  
-    // Function to toggle visibility of employee children  
+    // Function to toggle s of employee children  
     // function toggleChildren(button) {
     //     const userId = button.getAttribute('data-user-id');
     //     const childrenContainer = document.querySelector(`ul[data-manager-id="${userId}"]`);
@@ -193,23 +150,29 @@ function toggleChildren(button) {
 
 
 
-    function displayEmployeeDetails(userId, name, designation, empNo, manager, department, city, employmentType, phone, email, contactperson, contactnumber, profileImage) {  
+    function displayEmployeeDetails(userId, name, designation, manager, department, city, phone, email, contactperson, contactnumber, profileImage, permanentAddress, correspondanceAddress) {  
     document.getElementById('emp-name').textContent = name;  
     document.getElementById('emp-designation').textContent = designation;  
-    document.getElementById('emp-no').textContent = empNo;  
+    // document.getElementById('emp-no').textContent = empNo;  
     document.getElementById('emp-manager').textContent = manager;  
     document.getElementById('emp-department').textContent = department;  
     document.getElementById('emp-city').textContent = city;  
-    document.getElementById('emp-employment-type').textContent = employmentType;  // New field for Employment Type
     document.getElementById('emp-phone').textContent = phone;  
     document.getElementById('emp-email').textContent = email;
+    document.getElementById('emp-permanent-address').textContent = permanentAddress;
+    document.getElementById('emp-correspondance-address').textContent = correspondanceAddress;
     document.getElementById('emp-contactperson').textContent = contactperson;
     document.getElementById('emp-contactnumber').textContent = contactnumber;
+    document.getElementById('emp-employment-type').textContent = employmentType;  // New field for Employment Type
+    
+   
+
     
 
     // Update the profile image
     // document.getElementById('profile-image').src = profileImage;
     document.getElementById('profile-image').src = profileImage || '{{ asset('storage/' .$profileimahe) }}';
+
 
 }
 
@@ -239,24 +202,6 @@ function toggleChildren(button) {
         // Default behavior for vertical chart can be handled without alert  
     }  
 
-    // Set default selected option to "Vertical" and display employee details on load  
-    // window.onload = function() {  
-    //     document.getElementById('display-option').value = 'vertical'; // Set default to Vertical chart  
-
-    //     // Get the employee details from Laravel session
-    //     const empNo = "{{ Auth::user()->employee_no }}";
-    //     const empName = "{{ Auth::user()->employee_name }}";
-    //     const empDesignation = "{{ Auth::user()->designation }}";
-    //     const empManager = "{{ Auth::user()->reporting_manager_name }}"; // Ensure this is the manager's name
-    //     const empDepartment = "{{ Auth::user()->department }}";
-    //     const empCity = "{{ Auth::user()->per_city }}";
-    //     const empPhone = "{{ Auth::user()->offical_phone_number }}";
-    //     const empEmail = "{{ Auth::user()->offical_email_address }}";
-
-    //     // Call the function to display the employee details  
-    //     displayEmployeeDetails(empNo, empName, empDesignation, empNo, empManager, empDepartment, empCity, empPhone, empEmail);  
-    // };  
-
     // Set default selected option to "Vertical" and display employee details on load
 window.onload = function() {  
     document.getElementById('display-option').value = 'vertical'; // Set default to Vertical chart  
@@ -271,14 +216,17 @@ window.onload = function() {
     const empEmploymenttype = "{{ $employees_login->employee_type_name }}";  // Get employment type
     const empPhone = "{{ $employees_login->offical_phone_number }}";
     const empEmail = "{{ $employees_login->offical_email_address }}";
+    const permanentAddress = "{{ $employees_login->permanent_address }}";
+    const correspondanceAddress = "{{ $employees_login->correspondance_address }}";
     const empContactperson = "{{ $employees_login->emergency_contact_person }}";
     const empContactnumber = "{{ $employees_login->emergency_contact_number }}";
     const profileImage = "{{ asset('storage/' .$profileimahe) }}"; // Get the profile image from session
 
     // Call the function to display the logged-in employee details
-    displayEmployeeDetails(empNo, empName, empDesignation, empNo, empManager, empDepartment, empCity, empPhone, empEmail, empEmploymenttype, empContactperson, empContactnumber, profileImage);
+    displayEmployeeDetails(empNo, empName, empDesignation, empManager, empDepartment, empCity, empPhone, empEmail, empContactperson, empContactnumber, profileImage, permanentAddress, correspondanceAddress);
 };
 </script>
+
 <style>
     .custom-table {
     width: 100%;
@@ -307,6 +255,55 @@ window.onload = function() {
 .custom-table tr:nth-child(odd) {
     background-color: #f9f9f9;
 }
+
+.tree {
+    list-style-type: none;
+    padding-left: 20px;
+    position: relative;
+}
+
+.tree li {
+    margin: 5px 0;
+    padding-left: 20px;
+    position: relative;
+}
+
+/* Add vertical line */
+.tree li::before {
+    content: "";
+    position: absolute;
+    top: -33px;
+    left: 0;
+    width: 1px;
+    height: 100%;
+    border-left: 1px solid #ccc;
+}
+
+/* Add horizontal line */
+.tree li::after {
+    content: "";
+    position: absolute;
+    top: 12px;
+    left: 1px;
+    width: 8px;
+    height: 1px;
+    border-top: 1px solid #ccc;
+}
+
+/* Remove lines for root element */
+.tree > li::before {
+    display: none;
+}
+/* 
+.tree li span {
+    cursor: pointer;
+    padding: 5px 10px;
+    background-color: #f5f5f5;
+    border-radius: 5px;
+    display: inline-block;
+    border: 1px solid #ccc;
+} */
+
 </style>
 
 <style>
@@ -482,7 +479,7 @@ window.onload = function() {
     }
 
     .employee-details .right {
-        width: 70%;
+        width: 100%;
         background-color: #fff;
         padding: 20px;
         border-radius: 10px;
@@ -540,9 +537,9 @@ window.onload = function() {
     }
 
     .highlight {
-        background-color: yellow;
+        background-color: #E0AFA0;
         font-weight: bold;
-        color: white;
+        /* color: white; */
     }
 
     .gender-icon {

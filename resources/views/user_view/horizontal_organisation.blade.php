@@ -354,7 +354,7 @@ function renderEmployeeTree($employees) {
 
 <style>
     .highlight {
-    background-color: yellow;
+    background-color: #E0AFA0;
     font-weight: bold;
     padding: 2px 4px;
     border-radius: 3px;
