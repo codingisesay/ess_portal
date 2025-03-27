@@ -8,6 +8,7 @@
 <?php 
 error_reporting(0);
 $id = Auth::guard('web')->user()->id;
+$permission_array = session('id');
 // {{ old('employmentType', $emp_contact_datas[0]->per_building_no) }}
 // echo $emp_contact_datas[0]->per_building_no;
 // exit();
@@ -316,7 +317,7 @@ $id = Auth::guard('web')->user()->id;
 
     
       <div class="button-container">
-        <a href="{{ route('user.dashboard') }}" style="text-decoration:none;">
+        <a href="{{ route('user.editdashboard',['id' => $permission_array]) }}" style="text-decoration:none;">
             <button type="button" class="previous-btn">
                 <span>&#8249;</span>
             </button>

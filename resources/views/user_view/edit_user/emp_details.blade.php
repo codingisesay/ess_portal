@@ -6,6 +6,7 @@
 <link rel="stylesheet" href="{{ asset('errors/error.css') }}">
 <?php 
 error_reporting(0);
+$permission_array = session('id');
 // $id = Auth::guard('web')->user()->id;
 // $name = Auth::guard('web')->user()->name;
 // $employeeID = Auth::guard('web')->user()->employeeID;

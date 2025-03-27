@@ -8,6 +8,7 @@
 <?php 
 error_reporting(0);
 $id = Auth::guard('web')->user()->id;
+$permission_array = session('id');
 // dd($emp_bank_datas);
 
 ?>
@@ -250,7 +251,7 @@ $id = Auth::guard('web')->user()->id;
       </div>
 
       <div class="button-container">
-        <a href="{{ route('user.edu') }}" style="text-decoration:none;">
+        <a href="{{ route('user.editedu',['id' => $permission_array]) }}" style="text-decoration:none;">
             <button type="button" class="previous-btn">
                 <span>&#8249;</span>
             </button>

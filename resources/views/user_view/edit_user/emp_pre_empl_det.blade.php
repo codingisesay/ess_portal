@@ -19,6 +19,11 @@
 </div>
 @endif --}}
 
+<?php 
+
+$permission_array = session('id');
+?>
+
 @if($errors->any())
 <div class="alert custom-alert-warning">
 <ul>
@@ -108,7 +113,7 @@
             <button type="submit" class="next-btn">Next</button>
         </div> -->
         <div class="button-container">
-            <a href="{{ route('user.family') }}" style="text-decoration:none;">
+            <a href="{{ route('user.editfamily',['id' => $permission_array]) }}" style="text-decoration:none;">
                 <button type="button" class="previous-btn">
                     <span>&#8249;</span>
                 </button>
