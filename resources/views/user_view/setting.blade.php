@@ -27,173 +27,225 @@
             @foreach($errors->all() as $error)
             <li style="color: red;">{{ $error }}</li>
             @endforeach
-        </ul>
-    </div>
-    @endif
-
-    <h1>Settings</h1>
-    <div class="accordion">
-        <!-- Upcoming Holidays -->
-        <?php if(in_array(11, $permission_array)){ ?>
-        <div class="accordion-item">
-            <div class="accordion-header" onclick="toggleCalendarMasterDropdown()">
-                Calendar Master
+            </ul>
             </div>
-            <div id="calendarMasterDropdown" class="dropdown-content" style="display: none;">
-                <form id="calendarMasterForm" method="POST" action="{{ route('create_calendra_master') }}">
-                    @csrf
-                    <div class="form-group">
-                        <label for="year">Select Year:</label>
-                        <select id="year" name="year">
-                            <option value="">--Select Year--</option>
-                        </select>
-                        <span class="error" id="yearError"></span>
-                    </div>
-                    <div class="form-group">
-                        <label for="weekOffHolidaySelect">Select Type:</label>
-                        <select id="weekOffHolidaySelect" name="weekOffHolidaySelect">
-                            <option value="">--Select--</option>
-                            <option value="weekoff">Week Off</option>
-                            <option value="holiday">Holiday</option>
-                        </select>
-                        <span class="error" id="typeError"></span>
-                    </div>
-                    <div id="weekOffSelection" style="display:none;">
-                        <div class="form-group">
-                            <div class="checkbox-grid">
-                                <div><input type="checkbox" id="sunday" name="weekoff[]" value="0"> Sunday</div>
-                                <div><input type="checkbox" id="monday" name="weekoff[]" value="1"> Monday</div>
-                                <div><input type="checkbox" id="tuesday" name="weekoff[]" value="2"> Tuesday</div>
-                                <div><input type="checkbox" id="wednesday" name="weekoff[]" value="3"> Wednesday</div>
-                                <div><input type="checkbox" id="thursday" name="weekoff[]" value="4"> Thursday</div>
-                                <div><input type="checkbox" id="friday" name="weekoff[]" value="5"> Friday</div>
-                                <div><input type="checkbox" id="saturday" name="weekoff[]" value="6"> Saturday</div>
-                            </div>
-                        </div>
-                        <span class="error" id="weekOffError"></span>
-                    </div>
-                    <div id="holidayUpdate" style="display:none;">
-                        <div class="form-group">
-                            <label for="holiday_date">Holiday Date:</label>
-                            <input type="date" id="holiday_date" name="holiday_date">
-                            <span class="error" id="holidayDateError"></span><br><br>
-                        </div>
-                        <div class="form-group">
-                            <label for="holiday_name">Holiday Name:</label>
-                            <input type="text" id="holiday_name" name="holiday_name">
-                            <span class="error" id="holidayNameError"></span><br><br>
-                        </div>
-                        <div class="form-group">
-                            <label for="holiday_desc">Holiday Description:</label>
-                            <textarea id="holiday_desc" name="holiday_desc"></textarea>
-                            <span class="error" id="holidayDescError"></span>
-                        </div>
-                    </div>
-                    <div id="workingHoursContainer" style="display:none;">
-                        <!-- Working hours will be dynamically inserted here -->
-                    </div>
-                    <button type="submit" class="submit-btn">Submit</button>
-                </form>
-            </div>
+            @endif
+        <h1>Settings</h1>
+        <div class="accordion">
+            <!-- Upcoming Holidays -->
+            <?php 
+if(in_array(11, $permission_array)){ 
+?>
+    <div class="accordion-item">
+        <!-- Accordion Header with a toggle dropdown -->
+        <div class="accordion-header" onclick="toggleCalendarMasterDropdown()">
+            Calendar Master
         </div>
-        <?php } ?>
 
-        <!-- Thought of the Day -->
-        <?php if(in_array(13, $permission_array)){ ?>
-        <div class="accordion-item">
-            <div class="accordion-header" onclick="toggleDropdown()">Thought of the Day/News & Events</div>
-            <div class="dropdown-content" id="dropdownContent">
-                <form action="{{ route('save_thought') }}" method="POST">
-                    @csrf
+        <!-- Dropdown content (initially hidden) -->
+        <div id="calendarMasterDropdown" class="dropdown-content" style="display: none;">
+            <form id="calendarMasterForm" method="POST" action="{{ route('create_calendra_master') }}">
+                @csrf
+                <!-- Year Selection -->
+                <div class="form-group">
+                    <label for="year">Select Year:</label>
+                    <select id="year" name="year">
+                        <option value="">--Select Year--</option>
+                    </select>
+                    <span class="error" id="yearError"></span>
+                </div>
+
+                <!-- Type of Selection (Week Off / Holiday) -->
+                <div class="form-group">
+                    <label for="weekOffHolidaySelect">Select Type:</label>
+                    <select id="weekOffHolidaySelect" name="weekOffHolidaySelect">
+                        <option value="">--Select--</option>
+                        <option value="weekoff">Week Off</option>
+                        <option value="holiday">Holiday</option>
+                    </select>
+                    <span class="error" id="typeError"></span>
+                </div>
+
+                <!-- Week Off Selection (checkboxes) -->
+                <div id="weekOffSelection" style="display:none;">
                     <div class="form-group">
-                        <label>Entry Type :</label>
-                        <div class="radio-group">
-                            <label>
-                                <input type="radio" name="entryType" value="thought" checked onclick="switchForm('thought')"> Thought of the Day
-                            </label>
-                            <label>
-                                <input type="radio" name="entryType" value="news" onclick="switchForm('news')"> News & Events
-                            </label>
+                        <!-- <label></label><br> -->
+                        <div class="checkbox-grid">
+                            <div><input type="checkbox" id="sunday" name="weekoff[]" value="0"> Sunday</div>
+                            <div><input type="checkbox" id="monday" name="weekoff[]" value="1"> Monday</div>
+                            <div><input type="checkbox" id="tuesday" name="weekoff[]" value="2"> Tuesday</div>
+                            <div><input type="checkbox" id="wednesday" name="weekoff[]" value="3"> Wednesday</div>
+                            <div><input type="checkbox" id="thursday" name="weekoff[]" value="4"> Thursday</div>
+                            <div><input type="checkbox" id="friday" name="weekoff[]" value="5"> Friday</div>
+                            <div><input type="checkbox" id="saturday" name="weekoff[]" value="6"> Saturday</div>
                         </div>
                     </div>
-                </form>
-                <div id="thoughtForm" class="dynamic-form active">
+                    <span class="error" id="weekOffError"></span>
+                </div>
+
+                <!-- Holiday Selection (Date, Name, and Description) -->
+                <div id="holidayUpdate" style="display:none;">
+                    <div class="form-group">
+                        <label for="holiday_date">Holiday Date:</label>
+                        <input type="date" id="holiday_date" name="holiday_date">
+                        <span class="error" id="holidayDateError"></span><br><br>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="holiday_name">Holiday Name:</label>
+                        <input type="text" maxlength="200" id="holiday_name" name="holiday_name">
+                        <span class="error" id="holidayNameError"></span><br><br>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="holiday_desc">Holiday Description:</label>
+                        <textarea id="holiday_desc" maxlength="200" name="holiday_desc"></textarea>
+                        <span class="error" id="holidayDescError"></span>
+                    </div>
+                </div>
+
+                <!-- Working Hours Container (Dynamically populated) -->
+                <div id="workingHoursContainer" style="display:none;">
+                    <!-- Working hours will be dynamically inserted here -->
+                </div>
+
+                <!-- Submit Button -->
+                <button type="submit" class="submit-btn">Submit</button>
+            </form>
+        </div>
+    </div>
+<?php 
+}
+?>
+
+
+            <!-- Leave Section (With Link to hr_universal.php) -->
+            {{-- <div class="accordion-item">
+                <div class="accordion-header" onclick="window.location.href='{{ url('hr_universal') }}'">
+                    Global Leaves
+                </div>
+            </div> --}}
+
+            <!-- Thought of the Day -->
+            <?php 
+            if(in_array(13,$permission_array)){?>
+            
+            
+            
+            <div class="accordion-item">
+                <div class="accordion-header" onclick="toggleDropdown()">Thought of the Day/News & Events</div>
+                <div class="dropdown-content" id="dropdownContent">
                     <form action="{{ route('save_thought') }}" method="POST">
                         @csrf
-                        <input type="hidden" name="entryType" value="thought">
+                        <!-- Entry Type -->
                         <div class="form-group">
-                            <label for="entryDate">Date:</label>
-                            <div class="input-with-icon">
-                                <input type="date" id="thoughtDate" name="date" placeholder="DD/MM/YYYY">
+                            <label>Entry Type :</label>
+                            <div class="radio-group">
+                                <label>
+                                    <input type="radio" name="entryType" value="thought" checked onclick="switchForm('thought')"> Thought of the Day
+                                </label>
+                                <label>
+                                    <input type="radio" name="entryType" value="news" onclick="switchForm('news')"> News & Events
+                                </label>
                             </div>
                         </div>
-                        <div class="form-group">
-                            <label for="thoughtDescription">Thought of the day :</label>
-                            <textarea id="thoughtDescription" name="description" placeholder="Thought of the day"></textarea>
-                        </div>
-                        <button type="submit" class="submit-btn" id="submitThought" disabled>Submit</button>
                     </form>
-                </div>
-                <div id="newsForm" class="dynamic-form">
-                    <form action="{{ route('save_news_events') }}" method="POST">
-                        @csrf
-                        <input type="hidden" name="entryType" value="news">
-                        <div class="form-group">
-                            <label for="entryDate">Date:</label>
-                            <div class="input-with-icon">
-                                <input type="date" id="date" name="date" placeholder="DD/MM/YYYY">
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label for="title">Title :</label>
-                            <input type="text" id="title" name="title" placeholder="News or event title">
-                        </div>
-                        <div class="form-group">
-                            <label for="description">Description :</label>
-                            <textarea id="description" name="description" placeholder="Detailed information about the news or event"></textarea>
-                        </div>
-                        <div class="form-group">
-                            <label for="event-start-date">Event Start Date:</label>
-                            <div class="input-with-icon">
-                                <input type="date" id="event-start-date" name="startdate" placeholder="Select Start Date">
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label for="event-end-date">Event End Date:</label>
-                            <div class="input-with-icon">
-                                <input type="date" id="event-end-date" name="enddate" placeholder="Select End Date">
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label for="location">Location :</label>
-                            <input type="text" id="location" name="location" placeholder="Optional, e.g., 'City Hall'">
-                        </div>
-                        <button type="submit" class="submit-btn" id="submitNews" disabled>Submit</button>
-                    </form>
-                </div>
-            </div>
-        </div>
-        <?php } ?>
 
-        <!-- Employee Edit -->
-        <?php if(in_array(12, $permission_array)){ ?>
-        <div class="accordion-item">
-            <div class="accordion-header" onclick="toggleEmployeeDetailsDropdown()">
-                Employee Details Edit
+                    <!-- Thought of the Day Form -->
+                    <div id="thoughtForm" class="dynamic-form active">
+                        <form action="{{ route('save_thought') }}" method="POST">
+                            @csrf
+                            <input type="hidden" name="entryType" value="thought">
+                            <div class="form-group">
+                                <label for="entryDate">Date:</label>
+                                <div class="input-with-icon">
+                                    <input type="date" id="thoughtDate" name="date" placeholder="DD/MM/YYYY">
+                                    <!-- <img src="{{ asset('resource/image/setting/calendar (4) 1.png') }}" alt="Calendar" class="calendar-icon" /> -->
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="thoughtDescription">Thought of the day :</label>
+                                <textarea id="thoughtDescription" maxlength="200" name="description" placeholder="Thought of the day"></textarea>
+                            </div>
+                            <button type="submit" class="submit-btn" id="submitThought" disabled>Submit</button>
+                        </form>
+                    </div>
+
+                    <!-- News & Events Form -->
+                    <div id="newsForm" class="dynamic-form">
+                        <form action="{{ route('save_news_events') }}" method="POST">
+                            @csrf
+                            <input type="hidden" name="entryType" value="news">
+                            <div class="form-group">
+                                <label for="entryDate">Date:</label>
+                                <div class="input-with-icon">
+                                    <!-- <img src="{{ asset('resource/image/setting/calendar (4) 1.png') }}" alt="Calendar" class="calendar-icon" /> -->
+                                    <input type="date" id="date" name="date" placeholder="DD/MM/YYYY">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="title">Title :</label>
+                                <input type="text" id="title" maxlength="200" name="title" placeholder="News or event title">
+                            </div>
+                            <div class="form-group">
+                                <label for="description">Description :</label>
+                                <textarea id="description" maxlength="200" name="description" placeholder="Detailed information about the news or event"></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label for="event-start-date">Event Start Date:</label>
+                                <div class="input-with-icon">
+                                    <input type="date" id="event-start-date" name="startdate" placeholder="Select Start Date">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="event-end-date">Event End Date:</label>
+                                <div class="input-with-icon">
+                                    <input type="date" id="event-end-date" name="enddate" placeholder="Select End Date">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="location">Location :</label>
+                                <input type="text" id="location" maxlength="200" name="location" placeholder="Optional, e.g., 'City Hall'">
+                            </div>
+                            <button type="submit" class="submit-btn" id="submitNews" disabled>Submit</button>
+                        </form>
+                    </div>
+                </div>
             </div>
-            <div id="employeeDetailsDropdown" class="dropdown-content" style="display: none;">
-                <div class="content">
-                    <table class="custom-table">
-                        <thead>
-                            <tr>
-                                <th>S.No</th>
-                                <th>Name</th>
-                                <th>Email ID</th>
-                                <th>Edit</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach ($users as $user)
+            
+            <?php
+            }
+            
+            
+            
+            ?>
+         
+            <!-- Employee Edit -->
+            <?php 
+if(in_array(12, $permission_array)){ 
+?>
+    <div class="accordion-item">
+        <!-- Accordion Header with a toggle dropdown -->
+        <div class="accordion-header" onclick="toggleEmployeeDetailsDropdown()">
+            Employee Details Edit
+        </div>
+
+        <!-- Dropdown content (initially hidden) -->
+        <div id="employeeDetailsDropdown" class="dropdown-content" style="display: none;">
+            <!-- Collapsible Content (Table) -->
+            <div class="content">
+                <table class="custom-table">
+                    <thead>
+                        <tr>
+                            <th>S.No</th>
+                            <th>Name</th>
+                            <th>Email ID</th>
+                            <th>Edit</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        @foreach ($users as $user)
                             <tr>
                                 <td>{{ $loop->iteration }}</td>
                                 <td>{{$user->name}}</td>

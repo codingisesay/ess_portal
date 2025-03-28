@@ -165,7 +165,7 @@ class OrganisationController extends Controller
             ->leftJoin('organisation_designations', 'emp_details.designation', '=', 'organisation_designations.id')
             ->leftJoin('employee_types', 'emp_details.employee_type', '=', 'employee_types.id')
             ->leftJoin('users as managers', 'emp_details.reporting_manager', '=', 'managers.id')
-            ->leftJoin('user_status_imgs', 'emp_details.user_id', '=', 'user_status_imgs.user_id') // Join profile image
+            ->leftJoin('user_status_imgs', 'emp_details.user_id', '=', 'user_status_imgs.user_id') 
             ->select(
                 'emp_details.user_id',
                 'emp_details.employee_name',
@@ -179,7 +179,7 @@ class OrganisationController extends Controller
                 'emp_contact_details.offical_phone_number',
                 'emp_contact_details.offical_email_address',
                 'emp_details.gender',
-                'user_status_imgs.imagelink as profile_image' // Fetch profile image
+                'user_status_imgs.imagelink as profile_image' 
             )
             ->get();
     

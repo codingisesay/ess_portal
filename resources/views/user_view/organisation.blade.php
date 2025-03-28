@@ -233,6 +233,7 @@ window.onload = function() {
     border-collapse: collapse;
     margin: 0px 0;
     table-layout: auto;
+    margin-bottom: 70px;
 }
 
 .custom-table th,
@@ -241,6 +242,7 @@ window.onload = function() {
     padding: 8px;
     text-align: left;
     white-space: nowrap;
+    font-weight: bold;
 }
 
 .custom-table th {
@@ -390,8 +392,8 @@ window.onload = function() {
     }
 
     .container {
-        width: 95%;
-        max-width: 1500px;
+        width: 100%;
+        /* max-width: 1500px; */
         background-color: #f5f5f5;
         border-radius: 15px;
         padding: 20px;
@@ -460,6 +462,12 @@ window.onload = function() {
         border-radius: 7px;
         padding: 2px;
         margin-left: 25px;
+    }
+     
+    .employee-details .right .title {
+        font-weight: bold;
+        font-size: 30px;
+        margin-bottom: 10px;    
     }
 
     .employee-details .left .profile-circle {
