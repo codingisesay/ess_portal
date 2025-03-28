@@ -91,14 +91,15 @@ $profileimahe = session('profile_image');
     background-color: rgba(0, 0, 0, 0.4);
 }
 
-.modal-content {
+.modal-content8 {
     background-color: #fefefe;
     margin: 15% auto;
     padding: 20px;
     border: 1px solid #888;
-    width: 50%;
+    width: 25%;
     text-align: center;
     position: relative;
+    border-radius: 15px;
 }
 
 .close {
@@ -119,7 +120,7 @@ $profileimahe = session('profile_image');
 }
 
 /* Image Container (Circle view) */
-.image-container {
+.image-container8 {
     width: 150px;
     height: 150px;
     border-radius: 50%;
@@ -225,12 +226,13 @@ button:hover {
      <div id="myModall" class="modall">
         <form id="profile-upload-form" action="{{ route('user.uploadProfilePhoto') }}" method="POST" enctype="multipart/form-data">
             @csrf
-        <div class="modal-content">
+        <div class="modal-content8">
             <span class="close" onclick="closeModall()">&times;</span>
             <h2>Upload your image</h2>
-            <div class="image-container">
-                <img id="imagePreview" class="image-preview" src="" alt="No Image" />
+            <div class="image-container8">
+                <img id="imagePreview" class="image-preview" src="/storage/user_profile_image/Oqr4VRqo7RpQxnmiZCh12zybbcdsyUin2FhAKD3O.jpg" alt="User Profile Image" />
             </div>
+
             <input type="file" id="fileInput" name="profile_image" accept="image/*" onchange="previewImage()" />
             <button id="uploadButton" onclick="uploadImage()">Upload</button>
         </div>

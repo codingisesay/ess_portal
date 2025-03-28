@@ -154,9 +154,9 @@
 </div>
 
       
-<div class="section">
+<div class="section custom-table">
     <h2>Educational Details</h2>
-    <table class="custom-table">
+    <table class="">
         <thead>
             <tr>
                 <th>Course Name</th>

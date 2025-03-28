@@ -665,6 +665,7 @@ function togglePassportFields() {
     const usaVisa = document.getElementById('usaVisa');
     const visaExpiryDate = document.getElementById('visaExpiryDate'); // Added visaExpiryDate
     const requiredSpans = document.querySelectorAll('.passport-required');
+    const issuingCountry = document.getElementById('issuingcountry'); // Issuing country dropdown
 
     // Ensure usaVisa has a value before submitting
     if (usaVisa.value === "") {
@@ -711,6 +712,9 @@ function togglePassportFields() {
         passportExpiryDate.removeAttribute('required');
         usaVisa.removeAttribute('required');
         // visaExpiryDate.removeAttribute('required'); // Remove required from visaExpiryDate
+
+        // Set Issuing Country to India if passport number is empty
+        issuingCountry.value = "India";
 
         // Hide asterisks if the passport number is empty
         requiredSpans.forEach(span => span.style.display = 'none');
