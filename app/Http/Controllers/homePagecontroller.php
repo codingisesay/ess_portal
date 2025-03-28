@@ -94,88 +94,165 @@ $approvedleave = DB::table('leave_applies')
 // Calculate total taken leaves for each leave type
 $leaveUsage = [];
 
-for($leave_type = 0; $leave_type < $total_leaves_of_org->count(); $leave_type++){
+    foreach ($total_leaves_of_org as $leaveType) {
 
     $leave_single_data = [];
+    // $leave_single_data['leave_type'] = $leaveType->leave_type;
+    array_push($leave_single_data,$leaveType->leave_type);
 
-    array_push($leave_single_data,$total_leaves_of_org[$leave_type]->leave_type);
+    $emp_details = DB::table('emp_details')->where('user_id',$user->id)->get();
+    // dd($emp_details);
 
-    if($emp_details->employee_type == 1){
+    $leave_restriction = DB::table('leave_type_restrictions')->where('leave_type_id',$leaveType->leave_type_id)->get();
+    // dd($leave_restriction);
 
-        $leave_restriction = DB::table('leave_type_restrictions')
-        ->select('max_leave')
-        ->where('leave_type_id','=',$total_leaves_of_org[$leave_type]->leave_type_id)->first();
-        array_push($leave_single_data,$leave_restriction->max_leave);
-        // $percentage = $takenLeave*100/$leave_restriction->max_leave;
+    $leaveCycyle = DB::table('leave_cycles')
+    ->where('organisation_id' ,'=', $user->organisation_id)
+    ->where('status', '=', 'Active')
+    ->first();
 
-    }elseif($emp_details->employee_type == 2){
-
-        $leave_res = DB::table('leave_type_restrictions')
-        ->select('id')
-        ->where('leave_type_id','=',$total_leaves_of_org[$leave_type]->leave_type_id)->first();
-
-        $leave_restrictionforemp = DB::table('leave_type_emp_categories')
-        ->select('leave_count')
-        ->where('leave_restriction_id',$leave_res->id)->first();
-        array_push($leave_single_data,$leave_restrictionforemp->leave_count);
-        // $percentage = $takenLeave*100/$leave_restrictionforemp->leave_count;
-
-    }
+    // dd($leaveCycyle);
+    $leaceCycleStartDate = $leaveCycyle->start_date;
+    $leaceCycleEndtDate = $leaveCycyle->end_date;
+    $provision_period = $emp_details[0]->provision_period;
+    $Joining_date = $emp_details[0]->Joining_date;
+    $JDC = Carbon::create($Joining_date); 
+    $calendra_start = $leave_restriction[0]->calendra_start_for_PP;
+    $date = Carbon::create($Joining_date);
+    $provision_period_till = $date->addMonths($provision_period);  
+    $PPdate = $provision_period_till->toDateString();  
+    
+    $today = Carbon::today();
 
     $leaveCountArray = DB::table('leave_applies')
-    ->where('leave_type_id',$total_leaves_of_org[$leave_type]->leave_type_id)
+    ->where('leave_type_id',$leaveType->leave_type_id)
     ->where('user_id',$user->id)
     ->where('leave_approve_status','Approved')
     ->get();
 
-    $takenLeave = 0;
+
+$leaceCycleEndtDate = Carbon::create($leaceCycleEndtDate);  // Cycle End date: 2026-03-31 10:52:00
+$leaceCycleStartDate = Carbon::create($leaceCycleStartDate);
+
+$takenLeave = 0;
 
 for ($i = 0; $i < $leaveCountArray->count(); $i++) {
 
-    if ($leaveCountArray[$i]->half_day == 'First Half' || $leaveCountArray[$i]->half_day == 'Second Half') {
+if ($leaveCountArray[$i]->half_day == 'First Half' || $leaveCountArray[$i]->half_day == 'Second Half') {
 
-        $leaveCount = 0.5; // Half-day leave
+    $leaveCount = 0.5; // Half-day leave
 
-    } elseif($leaveCountArray[$i]->half_day == 'Full Day') {
+} elseif($leaveCountArray[$i]->half_day == 'Full Day') {
 
-        $leaveCount = 1;
-    
-    }else{
+    $leaveCount = 1;
 
-            // Calculate the difference in days
-            $startDate = new \DateTime($leaveCountArray[$i]->start_date);
-            $endDate = new \DateTime($leaveCountArray[$i]->end_date);
-    
-            $dateDiff = $startDate->diff($endDate);
-    
-    
-            // Extract the total days from the DateInterval object and add 1 (if end_date is the same day)
-            $leaveCount = $dateDiff->days;
+}else{
 
-    }
+        // Calculate the difference in days
+        $startDate = new \DateTime($leaveCountArray[$i]->start_date);
+        $endDate = new \DateTime($leaveCountArray[$i]->end_date);
 
-    // Add the leave count to the total taken leave
-    $takenLeave += $leaveCount;
+        $dateDiff = $startDate->diff($endDate);
+
+        // Extract the total days from the DateInterval object and add 1 (if end_date is the same day)
+        $leaveCount = $dateDiff->days + 1;
+
 }
 
-//calculate percentage
+$takenLeave += $leaveCount;
+}
+$currentYear = Carbon::now()->year; 
 
-// $leave_restriction->max_leave*x/100=$takenLeave;
+if($emp_details[0]->provision_period_year == 1){
 
-if($emp_details->employee_type == 1){
+//code for year cycle date of joining [joining year]
 
-    $percentage = $takenLeave*100/$leave_restriction->max_leave;
+// Calculate the difference in months
+$months = $JDC->diffInMonths($leaceCycleEndtDate);
+
+// Check if there's any partial month remaining after full months
+if ($JDC->copy()->addMonths($months)->isBefore($leaceCycleEndtDate)) {
+ $months++;  // If there is a partial month, add it
+}
+
+$total_leave = 0;
+
+$leavemonthwithoutPP = $months - $provision_period;
+
+$total_leave = $leavemonthwithoutPP*$leave_restriction[0]->leave_count_per_month;
+
+$total_leave = $total_leave + ($provision_period*$leave_restriction[0]->provision_period_per_month);
+
+if ($JDC->day > $calendra_start) {
+
+    $total_leave = $total_leave - $leave_restriction[0]->provision_period_per_month;
+ 
+ }
+
+ array_push($leave_single_data,$total_leave);
+
+ $percentage = $takenLeave*100/$total_leave;
 
     $roundPer = round($percentage, 2);
 
-}elseif($emp_details->employee_type == 2){
+
+}else if($emp_details[0]->provision_period_year == 2){
+
+//if provision period extent to next cycyle
+
+$months = $leaceCycleStartDate->diffInMonths($leaceCycleEndtDate);
 
 
-    $percentage = $takenLeave*100/$leave_restrictionforemp->leave_count;
+if ($leaceCycleStartDate->copy()->addMonths($months)->isBefore($leaceCycleEndtDate)) {
+ $months++;  
+}
 
-    $roundPer = round($percentage, 2);
+$remaning_pp_months = $leaceCycleStartDate->diffInMonths($provision_period_till);
+
+if ($leaceCycleStartDate->copy()->addMonths($remaning_pp_months)->isBefore($provision_period_till)) {
+$remaning_pp_months++; 
+}
+
+$leavemonthwithoutPP = $months - $remaning_pp_months;
+
+$total_leave = $leavemonthwithoutPP*$leave_restriction[0]->leave_count_per_month;
+
+$total_leave = $total_leave + ($remaning_pp_months*$leave_restriction[0]->provision_period_per_month);
+
+$user_leave_encash_carries = DB::table('user_leave_encash_carries')
+->where('user_id',$user->id)
+->where('leave_type_map_with',$leaveType->leave_type_id)
+->first();
+
+$total_leave = $total_leave + $user_leave_encash_carries->carry_forward;
+
+array_push($leave_single_data,$total_leave);
+
+$percentage = $takenLeave*100/$total_leave;
+
+$roundPer = round($percentage, 2);
+
+
+}else{
+
+//without provision period
+
+$user_leave_encash_carries = DB::table('user_leave_encash_carries')
+                             ->where('user_id',$user->id)
+                             ->where('leave_type_map_with',$leaveType->leave_type_id)
+                             ->first();
+
+$total_leave = $leave_restriction[0]->max_leave + $user_leave_encash_carries->carry_forward;
+
+array_push($leave_single_data,$total_leave);
+
+$percentage = $takenLeave*100/$total_leave;
+
+$roundPer = round($percentage, 2);
 
 }
+
+// $remaning_leave = $total_leave - $takenLeave;
 
 //pushing taken leave of this leave type
     array_push($leave_single_data,$takenLeave);
@@ -185,6 +262,8 @@ if($emp_details->employee_type == 1){
     array_push($leaveUsage,$leave_single_data);
 
 }
+
+// dd($leaveUsage);
 
     // Fetch upcoming and today's birthdays
     $currentDate = Carbon::now();
