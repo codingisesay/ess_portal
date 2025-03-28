@@ -314,86 +314,158 @@ class leavePolicyController extends Controller
 
             $leave_single_data['leave_type'] = $leaveType->leave_type;
 
-            $restriction = DB::table('leave_type_restrictions')
-                ->where('leave_type_id', $leaveType->leave_type_id)
-                ->first();
+            $emp_details = DB::table('emp_details')->where('user_id',$user->id)->get();
+            // dd($emp_details);
+    
+            $leave_restriction = DB::table('leave_type_restrictions')->where('leave_type_id',$leaveType->leave_type_id)->get();
+            // dd($leave_restriction);
+
+            $leaveCycyle = DB::table('leave_cycles')
+            ->where('organisation_id' ,'=', $user->organisation_id)
+            ->where('status', '=', 'Active')
+            ->first();
+    
+            // dd($leaveCycyle);
+            $leaceCycleStartDate = $leaveCycyle->start_date;
+            $leaceCycleEndtDate = $leaveCycyle->end_date;
+            $provision_period = $emp_details[0]->provision_period;
+            $Joining_date = $emp_details[0]->Joining_date;
+            $JDC = Carbon::create($Joining_date); 
+            $calendra_start = $leave_restriction[0]->calendra_start_for_PP;
+            $date = Carbon::create($Joining_date);
+            $provision_period_till = $date->addMonths($provision_period);  
+            $PPdate = $provision_period_till->toDateString();  
             
-            if($emp_details->employee_type == 1){
-
-                $maxLeave = $restriction->max_leave;
-
-                $leave_single_data['leave_type'] = $maxLeave;
-
-            }elseif($emp_details->employee_type == 2){
-
-                $leave_res = DB::table('leave_type_restrictions')
-                ->select('id')
-                ->where('leave_type_id','=',$leaveType->leave_type_id)->first();
-        
-                $leave_restrictionforemp = DB::table('leave_type_emp_categories')
-                ->select('leave_count')
-                ->where('leave_restriction_id',$leave_res->id)->first();
-
-                $maxLeave = $leave_restrictionforemp->leave_count;
-
-                $leave_single_data['leave_type'] = $maxLeave;
-
-
-            }
-            //carry Forward
-            $no_carry_forward = $restriction->no_carry_forward;
-            $leave_single_data['no_carry_forward'] = $no_carry_forward;
-
-            //Leave Encash
-            $no_leave_encash = $restriction->no_leave_encash;
-            $leave_single_data['no_leave_encash'] = $no_leave_encash;
-
-
+            $today = Carbon::today();
+    
             $leaveCountArray = DB::table('leave_applies')
             ->where('leave_type_id',$leaveType->leave_type_id)
             ->where('user_id',$user->id)
             ->where('leave_approve_status','Approved')
             ->get();
+    
+    
+    $leaceCycleEndtDate = Carbon::create($leaceCycleEndtDate);  // Cycle End date: 2026-03-31 10:52:00
+    $leaceCycleStartDate = Carbon::create($leaceCycleStartDate);
+    
+    $takenLeave = 0;
+    
+    for ($i = 0; $i < $leaveCountArray->count(); $i++) {
+    
+        if ($leaveCountArray[$i]->half_day == 'First Half' || $leaveCountArray[$i]->half_day == 'Second Half') {
+    
+            $leaveCount = 0.5; // Half-day leave
+    
+        } elseif($leaveCountArray[$i]->half_day == 'Full Day') {
+    
+            $leaveCount = 1;
         
-            $takenLeave = 0;
+        }else{
+    
+                // Calculate the difference in days
+                $startDate = new \DateTime($leaveCountArray[$i]->start_date);
+                $endDate = new \DateTime($leaveCountArray[$i]->end_date);
         
-        for ($i = 0; $i < $leaveCountArray->count(); $i++) {
-        
-            if ($leaveCountArray[$i]->half_day == 'First Half' || $leaveCountArray[$i]->half_day == 'Second Half') {
-        
-                $leaveCount = 0.5; // Half-day leave
-        
-            } elseif($leaveCountArray[$i]->half_day == 'Full Day') {
-        
-                $leaveCount = 1;
-            
-            }else{
-        
-                    // Calculate the difference in days
-                    $startDate = new \DateTime($leaveCountArray[$i]->start_date);
-                    $endDate = new \DateTime($leaveCountArray[$i]->end_date);
-            
-                    $dateDiff = $startDate->diff($endDate);
-                    // Extract the total days from the DateInterval object and add 1 (if end_date is the same day)
-                    $leaveCount = $dateDiff->days;
-        
-            }
-        
-            // Add the leave count to the total taken leave
-            $takenLeave += $leaveCount;
+                $dateDiff = $startDate->diff($endDate);
+    
+                // Extract the total days from the DateInterval object and add 1 (if end_date is the same day)
+                $leaveCount = $dateDiff->days + 1;
+    
         }
+    
+        $takenLeave += $leaveCount;
+    }
+    $currentYear = Carbon::now()->year; 
+    
+    if($emp_details[0]->provision_period_year == 1){
+    
+        //code for year cycle date of joining [joining year]
+    
+        // Calculate the difference in months
+     $months = $JDC->diffInMonths($leaceCycleEndtDate);
+    
+     // Check if there's any partial month remaining after full months
+     if ($JDC->copy()->addMonths($months)->isBefore($leaceCycleEndtDate)) {
+         $months++;  // If there is a partial month, add it
+     }
+    
+        $total_leave = 0;
+        
+        $leavemonthwithoutPP = $months - $provision_period;
+    
+        $total_leave = $leavemonthwithoutPP*$leave_restriction[0]->leave_count_per_month;
+    
+        $total_leave = $total_leave + ($provision_period*$leave_restriction[0]->provision_period_per_month);
+    
+        if ($JDC->day > $calendra_start) {
+    
+            $total_leave = $total_leave - $leave_restriction[0]->provision_period_per_month;
+         
+         }
 
-        $leave_single_data['consumed_leaves'] = $takenLeave;
+         $carry_forward = $leave_single_data['no_carry_forward'] = 0;
+        $leave_encash = $leave_single_data['no_leave_encash'] = 0;
+    
+    }else if($emp_details[0]->provision_period_year == 2){
+    
+        //if provision period extent to next cycyle
+    
+        $months = $leaceCycleStartDate->diffInMonths($leaceCycleEndtDate);
+    
+     
+     if ($leaceCycleStartDate->copy()->addMonths($months)->isBefore($leaceCycleEndtDate)) {
+         $months++;  
+     }
+    
+     $remaning_pp_months = $leaceCycleStartDate->diffInMonths($provision_period_till);
+    
+     if ($leaceCycleStartDate->copy()->addMonths($remaning_pp_months)->isBefore($provision_period_till)) {
+        $remaning_pp_months++; 
+    }
+    
+    $leavemonthwithoutPP = $months - $remaning_pp_months;
+    
+    $total_leave = $leavemonthwithoutPP*$leave_restriction[0]->leave_count_per_month;
+    
+    $total_leave = $total_leave + ($remaning_pp_months*$leave_restriction[0]->provision_period_per_month);
+    
+    $user_leave_encash_carries = DB::table('user_leave_encash_carries')
+    ->where('user_id',$user->id)
+    ->where('leave_type_map_with',$leaveType->leave_type_id)
+    ->first();
+    
+    $total_leave = $total_leave + $user_leave_encash_carries->carry_forward;
+    $carry_forward = $user_leave_encash_carries->carry_forward;
+    $leave_encash = $user_leave_encash_carries->leave_encash;
+    
+    
+    }else{
+    
+        //without provision period
+    
+        $user_leave_encash_carries = DB::table('user_leave_encash_carries')
+                                     ->where('user_id',$user->id)
+                                     ->where('leave_type_map_with',$leaveType->leave_type_id)
+                                     ->first();
+    
+        $total_leave = $leave_restriction[0]->max_leave + $user_leave_encash_carries->carry_forward;
 
-        $remainingLeaves = $maxLeave - $takenLeave;
+        $carry_forward = $user_leave_encash_carries->carry_forward;
+        $leave_encash = $user_leave_encash_carries->leave_encash;
+    
+    }
+    
+    $remaning_leave = $total_leave - $takenLeave;
+    
+// dd($remaning_leave);
           
             $leave_single_data = [
                 'leave_type' => $leaveType->leave_type,
-                'total_leaves' => $maxLeave,
-                'no_carry_forward' => $no_carry_forward,
-                'no_leave_encash' => $no_leave_encash,
+                'total_leaves' => $total_leave,
+                'no_carry_forward' => $carry_forward,
+                'no_leave_encash' => $leave_encash,
                 'consumed_leaves' => $takenLeave,
-                'remaining_leaves' => $remainingLeaves,
+                'remaining_leaves' => $remaning_leave,
             ];
 
           
@@ -618,9 +690,26 @@ private function calculateWorkingHours($userId)
     public function fetchRemainingLeave($leave_id){
         $loginUserInfo = Auth::user();
         $emp_details = DB::table('emp_details')->where('user_id',$loginUserInfo->id)->get();
+        // dd($emp_details);
 
         $leave_restriction = DB::table('leave_type_restrictions')->where('leave_type_id',$leave_id)->get();
-        $leave_restrictionforemp = DB::table('leave_type_emp_categories')->where('leave_restriction_id',$leave_restriction[0]->id)->get();
+        $leaveCycyle = DB::table('leave_cycles')
+        ->where('organisation_id' ,'=', $loginUserInfo->organisation_id)
+        ->where('status', '=', 'Active')
+        ->first();
+
+        // dd($leaveCycyle);
+        $leaceCycleStartDate = $leaveCycyle->start_date;
+        $leaceCycleEndtDate = $leaveCycyle->end_date;
+        $provision_period = $emp_details[0]->provision_period;
+        $Joining_date = $emp_details[0]->Joining_date;
+        $JDC = Carbon::create($Joining_date); 
+        $calendra_start = $leave_restriction[0]->calendra_start_for_PP;
+        $date = Carbon::create($Joining_date);
+        $provision_period_till = $date->addMonths($provision_period);  
+        $PPdate = $provision_period_till->toDateString();  
+        
+        $today = Carbon::today();
 
         $leaveCountArray = DB::table('leave_applies')
         ->where('leave_type_id',$leave_id)
@@ -629,14 +718,13 @@ private function calculateWorkingHours($userId)
         ->get();
 
 
+$leaceCycleEndtDate = Carbon::create($leaceCycleEndtDate);  // Cycle End date: 2026-03-31 10:52:00
+$leaceCycleStartDate = Carbon::create($leaceCycleStartDate);
 
 $takenLeave = 0;
 
 for ($i = 0; $i < $leaveCountArray->count(); $i++) {
-    // Convert the start_date and end_date to DateTime objects
-    
 
-    // Check if the leave is a full day or half day
     if ($leaveCountArray[$i]->half_day == 'First Half' || $leaveCountArray[$i]->half_day == 'Second Half') {
 
         $leaveCount = 0.5; // Half-day leave
@@ -652,31 +740,87 @@ for ($i = 0; $i < $leaveCountArray->count(); $i++) {
             $endDate = new \DateTime($leaveCountArray[$i]->end_date);
     
             $dateDiff = $startDate->diff($endDate);
-    
-    
+
             // Extract the total days from the DateInterval object and add 1 (if end_date is the same day)
             $leaveCount = $dateDiff->days + 1;
 
     }
 
-    // Add the leave count to the total taken leave
     $takenLeave += $leaveCount;
 }
+$currentYear = Carbon::now()->year; 
 
-// dd($takenLeave);
+if($emp_details[0]->provision_period_year == 1){
 
-        if($emp_details[0]->employee_type == 1){
+    //code for year cycle date of joining [joining year]
 
-            $remaning_leave = $leave_restriction[0]->max_leave - $takenLeave;
+    // Calculate the difference in months
+ $months = $JDC->diffInMonths($leaceCycleEndtDate);
 
-        }elseif($emp_details[0]->employee_type == 2){
+ // Check if there's any partial month remaining after full months
+ if ($JDC->copy()->addMonths($months)->isBefore($leaceCycleEndtDate)) {
+     $months++;  // If there is a partial month, add it
+ }
 
-            $remaning_leave = $leave_restrictionforemp[0]->leave_count - $takenLeave;
+    $total_leave = 0;
+    
+    $leavemonthwithoutPP = $months - $provision_period;
 
-        }
+    $total_leave = $leavemonthwithoutPP*$leave_restriction[0]->leave_count_per_month;
 
-        // dd($emp_details[0]->employee_type);
-  
+    $total_leave = $total_leave + ($provision_period*$leave_restriction[0]->provision_period_per_month);
+
+    if ($JDC->day > $calendra_start) {
+
+        $total_leave = $total_leave - $leave_restriction[0]->provision_period_per_month;
+     
+     }
+
+}else if($emp_details[0]->provision_period_year == 2){
+
+    //if provision period extent to next cycyle
+
+    $months = $leaceCycleStartDate->diffInMonths($leaceCycleEndtDate);
+
+ 
+ if ($leaceCycleStartDate->copy()->addMonths($months)->isBefore($leaceCycleEndtDate)) {
+     $months++;  
+ }
+
+ $remaning_pp_months = $leaceCycleStartDate->diffInMonths($provision_period_till);
+
+ if ($leaceCycleStartDate->copy()->addMonths($remaning_pp_months)->isBefore($provision_period_till)) {
+    $remaning_pp_months++; 
+}
+
+$leavemonthwithoutPP = $months - $remaning_pp_months;
+
+$total_leave = $leavemonthwithoutPP*$leave_restriction[0]->leave_count_per_month;
+
+$total_leave = $total_leave + ($remaning_pp_months*$leave_restriction[0]->provision_period_per_month);
+
+$user_leave_encash_carries = DB::table('user_leave_encash_carries')
+->where('user_id',$loginUserInfo->id)
+->where('leave_type_map_with',$leave_id)
+->first();
+
+$total_leave = $total_leave + $user_leave_encash_carries->carry_forward;
+
+
+}else{
+
+    //without provision period
+
+    $user_leave_encash_carries = DB::table('user_leave_encash_carries')
+                                 ->where('user_id',$loginUserInfo->id)
+                                 ->where('leave_type_map_with',$leave_id)
+                                 ->first();
+
+    $total_leave = $leave_restriction[0]->max_leave + $user_leave_encash_carries->carry_forward;
+
+}
+
+$remaning_leave = $total_leave - $takenLeave;
 
     return response()->json([
         'remaining_leave' => $remaning_leave,  // This is the data you will send back to the front-end
@@ -921,5 +1065,22 @@ if($data['leave_slot'] == 'First Half' || $data['leave_slot'] == 'Second Half'){
     
         // If the leave status is neither "Pending" nor "Approved"
         return redirect()->route('leave_dashboard')->with('error', 'Leave cannot be cancelled because it is not in a pending or approved status.');
+    }
+
+    public function loadProcessLeavePolicy(){
+
+        $id = Auth::guard('superadmin')->user()->id;
+        $leaveCycleDatas = leaveCycle::where('organisation_id', $id)
+        ->where('status', 'Active')
+        ->first();
+        // dd($leaveCycleDatas);
+        return view('superadmin_view.leave_process',compact('leaveCycleDatas'));
+        
+    }
+
+    public function loadAllLeaveActive($id){
+
+        dd($id);
+
     }
 }

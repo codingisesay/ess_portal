@@ -16,7 +16,10 @@
 <button class="close-btn" onclick="this.parentElement.style.display='none';">&times;</button>
 </div>
 @endif --}}
+<?php 
 
+$permission_array = session('id');
+?>
 @if($errors->any())
 <div class="alert custom-alert-warning">
 <ul>
@@ -128,7 +131,7 @@
         </div>
     </form>
         <div class="button-container">
-            <a href="{{ route('user.preemp') }}" style="text-decoration:none;">
+            <a href="{{ route('user.editpreemp',['id' => $permission_array]) }}" style="text-decoration:none;">
                 <button type="button" class="previous-btn">
                     <span>&#8249;</span>
                 </button>

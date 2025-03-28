@@ -163,26 +163,16 @@ nav ul li a:hover {
             <li><a href="{{ route('create_policy_type') }}"><img src="{{ asset('admin_end/images/createdesignation.png') }}" width="30" height="30" alt="">  Leave Policy Type</a></li>
             <li><a href="{{ route('create_policy') }}"><img src="{{ asset('admin_end/images/createdesignation.png') }}" width="30" height="30" alt="">  Leave policy Creation</a></li>
             <li><a href="{{ route('employee_policy') }}"><img src="{{ asset('admin_end/images/createdesignation.png') }}" width="30" height="30" alt="">  Leave Emp policy</a></li>
+            <li><a href="{{ route('process_leave_policy') }}"><img src="{{ asset('admin_end/images/createdesignation.png') }}" width="30" height="30" alt="">  Process Leave Cycle</a></li>
             
           </ul>
   </div>
 </nav>
 
 
-<!-- Overlay effect when opening sidebar on small screens -->
-<!-- <div class="w3-overlay w3-hide-large w3-animate-opacity" onclick="w3_close()" style="cursor:pointer" title="close side menu" id="myOverlay"></div> -->
-
-<!-- !PAGE CONTENT! -->
-
   @yield('content')
   
-  <!-- Footer -->
-  <!-- <footer class="w3-container w3-padding-16 w3-light-grey">
-    <h4>FOOTER</h4>
-    <p>Powered by <a href="https://www.w3schools.com/w3css/default.asp" target="_blank">w3.css</a></p>
-  </footer> -->
 
-  <!-- End page content -->
 </div>
 
 <script>
