@@ -72,7 +72,7 @@
                                 <select name="passing_year[]" class="year-input" required>
                                     <option value="{{ $detail->passing_year }}" >{{ $detail->passing_year }}</option>
                                     <?php
-                                    $startYear = 1900;
+                                    $startYear = 1950;
                                     $endYear = date("Y"); // Current year only
                                     for ($year = $startYear; $year <= $endYear; $year++) {
                                         echo "<option value=\"$year\" ".($detail->passing_year == $year ? 'selected' : '').">$year</option>";

@@ -86,72 +86,109 @@ $permission_array = session('id');
      <!-- Include the section for the current step -->
      @stack('step')  <!-- Push the current step to be used in JavaScript -->
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const steps = document.querySelectorAll('.step');
-            
-            // Retrieve saved progress from localStorage
-            const savedProgress = localStorage.getItem('progress');
-            const progress = savedProgress ? JSON.parse(savedProgress) : [];
-            
-            // Get the current route
-            const currentRoute = window.location.pathname;
+     <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const steps = document.querySelectorAll('.step');
+        
+        // Get the current route (current page URL)
+        const currentRoute = window.location.pathname;
 
-            // Loop through the steps and update based on the current route
-            steps.forEach((step, index) => {
+        // Track the index of the active step
+        let activeStepIndex = -1;
+
+        // Loop through the steps to initialize them based on the current route
+        steps.forEach((step, index) => {
+            const route = step.getAttribute('data-route');
+
+            // If the current route matches the step's route, mark it as active
+            if (currentRoute === new URL(route, window.location.origin).pathname) {
+                step.classList.add('active');
+                activeStepIndex = index; // Track the index of the active step
+            } else if (index < activeStepIndex) {
+                // If the step is before the active one, mark it as completed
+                step.classList.add('completed');
+            }
+        });
+
+        // Update the progress when a step is clicked
+        steps.forEach((step, index) => {
+            step.addEventListener('click', function() {
                 const route = step.getAttribute('data-route');
 
-                // If the current route matches the step's route, mark it as active
-                if (currentRoute === route) {
-                    step.classList.add('active');
-                }
-
-                // Mark all previous steps as completed
-                if (progress.includes(index) || index < progress.length) {
-                    step.classList.add('completed');
-                }
-            });
-
-            // Update the progress and store it in localStorage when a step is clicked
-            steps.forEach((step, index) => {
-                step.addEventListener('click', function() {
-                    const route = step.getAttribute('data-route');
-
-                    // Remove 'active' class from all steps
-                    steps.forEach(s => s.classList.remove('active'));
-
-                    // Add 'active' class to the clicked step
-                    step.classList.add('active');
-
-                    // Mark the clicked step as completed and all previous steps
-                    steps.forEach((s, i) => {
-                        if (i <= index) {
-                            s.classList.add('completed');
-                        } else {
-                            s.classList.remove('completed');
-                        }
-                    });
-
-                    // Save progress to localStorage
-                    const updatedProgress = [];
-                    steps.forEach((s, i) => {
-                        if (s.classList.contains('completed')) {
-                            updatedProgress.push(i);
-                        }
-                    });
-                    localStorage.setItem('progress', JSON.stringify(updatedProgress));
-
-                    // Redirect to the route
-                    window.location.href = route;
+                // Remove 'active' class from all steps
+                steps.forEach(s => {
+                    s.classList.remove('active');
+                    s.classList.remove('completed');
                 });
+
+                // Add 'active' class to the clicked step
+                step.classList.add('active');
+
+                // Mark the clicked step and all previous steps as completed
+                steps.forEach((s, i) => {
+                    if (i <= index) {
+                        s.classList.add('completed');
+                    }
+                });
+
+                // Update the activeStepIndex to the clicked step's index
+                activeStepIndex = index;
+
+                // Redirect to the corresponding route (page)
+                window.location.href = route;
             });
         });
-    </script>
+
+        // Handle programmatic next step navigation when the next button is clicked
+        const nextButton = document.querySelector('.next-btn'); // Your "next" button
+
+        if (nextButton) {
+            nextButton.addEventListener('click', function(event) {
+                event.preventDefault(); // Prevent form submission (if it's inside a form)
+
+                // Move to the next step if possible
+                if (activeStepIndex >= 0 && activeStepIndex < steps.length - 1) {
+                    const nextStep = steps[activeStepIndex + 1];
+                    const nextStepRoute = nextStep.getAttribute('data-route');
+
+                    // Remove the 'active' class from all steps
+                    steps.forEach(s => s.classList.remove('active'));
+
+                    // Add the 'active' class to the next step
+                    nextStep.classList.add('active');
+
+                    // Mark the previous steps as completed
+                    steps.forEach((s, i) => {
+                        if (i <= activeStepIndex + 1) {
+                            s.classList.add('completed');
+                        }
+                    });
+
+                    // Update the activeStepIndex
+                    activeStepIndex++;
+
+                    // Redirect to the next step route
+                    window.location.href = nextStepRoute;
+                }
+            });
+        }
+
+        // Ensure the previous steps are marked as completed when navigating programmatically
+        if (activeStepIndex > -1) {
+            for (let i = 0; i < activeStepIndex; i++) {
+                steps[i].classList.add('completed');
+            }
+        }
+    });
+</script>
+
+
+
 
     <style>
         /* Style for active step */
         .step.active .circle {
-            background-color: #007bff; /* Blue color for active step */
+            background-color: #8A3366; /* Blue color for active step */
         }
 
         /* Style for completed step */
