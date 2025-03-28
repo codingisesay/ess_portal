@@ -213,15 +213,6 @@ error_reporting(0);
             </form>
         </section>
 
-        <!-- Success Modal -->
-       
-
-
-
-
-
-
-
 <section class="upcoming-anniversary">
     <h3>Work Anniversary</h3>
     <div class="anniversary">
