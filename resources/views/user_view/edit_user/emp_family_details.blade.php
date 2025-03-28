@@ -18,6 +18,11 @@
 </div>
 @endif --}}
 
+<?php 
+
+$permission_array = session('id');
+?>
+
 @if($errors->any())
 <div class="alert custom-alert-warning">
 <ul>
@@ -111,7 +116,7 @@
             <button type="submit" class="next-btn">Next</button>
         </div> -->
         <div class="button-container">
-            <a href="{{ route('user.bank') }}" style="text-decoration:none;">
+            <a href="{{ route('user.editbank',['id' => $permission_array]) }}" style="text-decoration:none;">
                 <button type="button" class="previous-btn">
                     <span>&#8249;</span>
                 </button>

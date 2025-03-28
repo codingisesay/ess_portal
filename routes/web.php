@@ -87,6 +87,8 @@ Route::middleware(['auth.superadmin'])->group(function () {
     Route::get('superadmin/create_leave_policy_type',[leavePolicyController::class,'loadPolicyType'])->name('create_policy_type');
     Route::get('superadmin/create_leave_policy',[leavePolicyController::class,'loadPolicy'])->name('create_policy');
     Route::get('superadmin/employee_policy',[leavePolicyController::class,'loadEmpPolicy'])->name('employee_policy');
+    Route::get('superadmin/process_leave_policy',[leavePolicyController::class,'loadProcessLeavePolicy'])->name('process_leave_policy');
+    Route::get('superadmin/load_leaves_active/{id}',[leavePolicyController::class,'loadAllLeaveActive'])->name('load_all_leave_active');
 
     //Insert routess leavePolicyController superadmin
      
