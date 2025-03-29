@@ -147,6 +147,11 @@ body {
     }
 }
 
+.employee-info {
+    width: 100%;
+    height: fit-content;
+}
+
 h1 {
     font-size: 18px;
     /* margin-bottom: 10px; */

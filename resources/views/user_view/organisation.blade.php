@@ -99,9 +99,9 @@ error_reporting(0);
         </ul>
     </div>
     <div class="employee-details">  
-    <!-- <div class="left">  
-           
-        </div>  -->
+    <div class="left">  
+           @include('user_view.employment_details_top')
+        </div> 
         <div class="right">
         
      <!-- Include employment details section -->

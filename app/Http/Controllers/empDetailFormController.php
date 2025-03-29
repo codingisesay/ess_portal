@@ -478,9 +478,9 @@ public function insertcontact(Request $request)
         'permanent_road_street' => 'required',
         'permanent_country' => 'required',
         'permanent_pincode' => 'sometimes|required_if:permanent_country,India',
-        'permanent_district' => 'required',
-        'permanent_city' => 'required',
-        'permanent_state' => 'required',
+        'permanent_district' => '',
+        'permanent_city' => '',
+        'permanent_state' => '',
 
         'correspondence_building_no' => '',
         'correspondence_premises_name' => '',

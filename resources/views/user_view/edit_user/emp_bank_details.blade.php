@@ -142,7 +142,7 @@ $permission_array = session('id');
                   </div>
                   <div class="form-group">
                       <span class="error" id="nationalityError"></span>
-                      <select class="form-control" name="country">
+                      <select id="issuingcountry"  class="form-control" name="country">
                           <option value="{{ old('issuingCountry', $emp_bank_datas[0]->issuing_country) }}">{{ old('issuingCountry', $emp_bank_datas[0]->issuing_country) }}</option>
                           <!-- Add your country options here -->
                           @foreach ($countrys as $country)
@@ -156,7 +156,7 @@ $permission_array = session('id');
                   </div>
                   <div class="form-group">
                       <input type="date" id="passportIssueDate" class="form-control" name="passportIssueDate"
-                          max="<?php echo date('Y-m-d'); ?>" oninput="calculateExpiry()"
+                          max="<?php echo date('Y-m-d'); ?>" 
                           style="pointer-events: none; opacity: 0.6;" value="{{ old('passportIssueDate', $emp_bank_datas[0]->passport_issue_date) }}">
                       <label for="passportIssueDate">Passport Issue Date<span class="passport-required"
                           style="display: none; color: red;">*</span></label>
@@ -367,10 +367,11 @@ $permission_array = session('id');
     });
 
     document.getElementById('passportIssueDate').addEventListener('input', function() {
-        const issueDate = new Date(this.value);
-        const expiryDate = new Date(issueDate.setFullYear(issueDate.getFullYear() + 10));
-        document.getElementById('passportExpiryDate').value = expiryDate.toISOString().split('T')[0];
-    });
+    const issueDate = new Date(this.value);
+    const expiryDate = new Date(issueDate.setFullYear(issueDate.getFullYear() + 10));
+    expiryDate.setDate(expiryDate.getDate() - 1); // Subtract one day from the expiry date
+    document.getElementById('passportExpiryDate').value = expiryDate.toISOString().split('T')[0];
+});
 
     function isNumberKey(evt) {
         var charCode = (evt.which) ? evt.which : evt.keyCode;
