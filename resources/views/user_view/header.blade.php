@@ -102,7 +102,7 @@ $profileimahe = session('profile_image');
     border-radius: 15px;
 }
 
-.close {
+.close1 {
     color: #aaa;
     font-size: 28px;
     font-weight: bold;
@@ -112,8 +112,8 @@ $profileimahe = session('profile_image');
     cursor: pointer;
 }
 
-.close:hover,
-.close:focus {
+.close1:hover,
+.close1:focus {
     color: black;
     text-decoration: none;
     cursor: pointer;
@@ -227,7 +227,7 @@ button:hover {
         <form id="profile-upload-form" action="{{ route('user.uploadProfilePhoto') }}" method="POST" enctype="multipart/form-data">
             @csrf
         <div class="modal-content8">
-            <span class="close" onclick="closeModall()">&times;</span>
+            <span class="close1" onclick="closeModall()">&times;</span>
             <h2>Upload your image</h2>
             <div class="image-container8">
                 <img id="imagePreview" class="image-preview" src="/storage/user_profile_image/Oqr4VRqo7RpQxnmiZCh12zybbcdsyUin2FhAKD3O.jpg" alt="User Profile Image" />
