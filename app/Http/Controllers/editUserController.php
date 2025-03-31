@@ -488,7 +488,7 @@ class editUserController extends Controller
         // dd($data);
     
         $edituserId = session('id');
- $loginUserInfo = User::where('id', $edituserId)->first();
+        $loginUserInfo = User::where('id', $edituserId)->first();
     
         $empBankStatus = emp_bank_details::where('user_id', $loginUserInfo->id)->get();
     
