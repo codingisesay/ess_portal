@@ -10,10 +10,10 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
     
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-    {{-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
     <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
 
-    <script src="{{ asset('user_end/js/toastify-notifications.js') }}"></script> --}}
+    <script src="{{ asset('user_end/js/toastify-notifications.js') }}"></script>
 </head>
 
 <body>
@@ -139,39 +139,39 @@ $permission_array = session('id');
             });
         });
 
-        // Handle programmatic next step navigation when the next button is clicked
-        const nextButton = document.querySelector('.next-btn'); // Your "next" button
+        // // Handle programmatic next step navigation when the next button is clicked
+        // const nextButton = document.querySelector('.next-btn'); // Your "next" button
 
-        if (nextButton) {
-            nextButton.addEventListener('click', function(event) {
-                event.preventDefault(); // Prevent form submission (if it's inside a form)
+        // if (nextButton) {
+        //     nextButton.addEventListener('click', function(event) {
+        //         event.preventDefault(); // Prevent form submission (if it's inside a form)
 
-                // Move to the next step if possible
-                if (activeStepIndex >= 0 && activeStepIndex < steps.length - 1) {
-                    const nextStep = steps[activeStepIndex + 1];
-                    const nextStepRoute = nextStep.getAttribute('data-route');
+        //         // Move to the next step if possible
+        //         if (activeStepIndex >= 0 && activeStepIndex < steps.length - 1) {
+        //             const nextStep = steps[activeStepIndex + 1];
+        //             const nextStepRoute = nextStep.getAttribute('data-route');
 
-                    // Remove the 'active' class from all steps
-                    steps.forEach(s => s.classList.remove('active'));
+        //             // Remove the 'active' class from all steps
+        //             steps.forEach(s => s.classList.remove('active'));
 
-                    // Add the 'active' class to the next step
-                    nextStep.classList.add('active');
+        //             // Add the 'active' class to the next step
+        //             nextStep.classList.add('active');
 
-                    // Mark the previous steps as completed
-                    steps.forEach((s, i) => {
-                        if (i <= activeStepIndex + 1) {
-                            s.classList.add('completed');
-                        }
-                    });
+        //             // Mark the previous steps as completed
+        //             steps.forEach((s, i) => {
+        //                 if (i <= activeStepIndex + 1) {
+        //                     s.classList.add('completed');
+        //                 }
+        //             });
 
-                    // Update the activeStepIndex
-                    activeStepIndex++;
+        //             // Update the activeStepIndex
+        //             activeStepIndex++;
 
-                    // Redirect to the next step route
-                    window.location.href = nextStepRoute;
-                }
-            });
-        }
+        //             // Redirect to the next step route
+        //             window.location.href = nextStepRoute;
+        //         }
+        //     });
+        // }
 
         // Ensure the previous steps are marked as completed when navigating programmatically
         if (activeStepIndex > -1) {

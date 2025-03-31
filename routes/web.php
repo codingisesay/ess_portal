@@ -106,6 +106,8 @@ Route::middleware(['auth.superadmin'])->group(function () {
     //routes for insert salary box data
 
     Route::post('superadmin/insert_salary_template',[salaryBoxController::class,'insertSalaryTemplate'])->name('insert_salary_template');
+    Route::post('superadmin/insert_salary_Components',[salaryBoxController::class,'insertSalaryComponents'])->name('insert_salary_Components');
+    
 
  
 

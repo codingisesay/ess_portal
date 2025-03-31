@@ -485,7 +485,7 @@ class editUserController extends Controller
             'insuranceExpiry' => '',
         ]);
     
-        dd($data);
+        // dd($data);
     
         $edituserId = session('id');
         $loginUserInfo = User::where('id', $edituserId)->first();
