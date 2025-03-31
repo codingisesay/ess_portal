@@ -118,14 +118,14 @@ $permission_array = session('id');
                          
                           <input type="text" id="district_permanent" name="permanent_district" required maxlength="35"
                               class="form-control" placeholder="" value="{{ old('district_permanent', $emp_contact_datas[0]->per_district) }}">
-                              <label for="permanent_district">District<span style="color: red;">*</span></label>
+                              <label for="permanent_district">District<span style="color: red;" id="district-required" >*</span></label>
                       </div>
                       <div class="form-group">
                           
                           <input type="text" id="city_permanent" name="permanent_city" required maxlength="35"
                               class="form-control" placeholder="" value="{{ old('permanent_city', $emp_contact_datas[0]->per_city) }}">
                               <label for="permanent_city">City/Town/Village<span
-                                  style="color: red;">*</span></label>
+                                  style="color: red;" id="city-required" >*</span></label>
                       </div>
 
                       <div class="form-group">
@@ -133,7 +133,7 @@ $permission_array = session('id');
                           <input type="text" id="state_permanent" name="permanent_state" required maxlength="35"
                               class="form-control" placeholder="" value="{{ old('permanent_state', $emp_contact_datas[0]->per_state) }}">
                               <label for="permanent_state">State/Province<span
-                                  style="color: red;">*</span></label>
+                                  style="color: red;" id="state-required" >*</span></label>
                       </div>
 
 
@@ -329,6 +329,40 @@ $permission_array = session('id');
 
   </form>
 </div>
+<script>
+    // Function to handle dynamic field validation based on selected country
+    document.getElementById('nationality_permanent').addEventListener('change', function() {
+        var country = this.value;
+
+        // Check if the selected country is India
+        if (country === 'India') {
+            // Make the fields required and show the asterisk
+            document.getElementById('pincode_permanent').required = true;
+            document.getElementById('district_permanent').required = true;
+            document.getElementById('city_permanent').required = true;
+            document.getElementById('state_permanent').required = true;
+
+            document.getElementById('pincode-required').style.display = 'inline';
+            document.getElementById('district-required').style.display = 'inline';
+            document.getElementById('city-required').style.display = 'inline';
+            document.getElementById('state-required').style.display = 'inline';
+        } else {
+            // Remove the required attribute and hide the asterisk
+            document.getElementById('pincode_permanent').required = false;
+            document.getElementById('district_permanent').required = false;
+            document.getElementById('city_permanent').required = false;
+            document.getElementById('state_permanent').required = false;
+
+            document.getElementById('pincode-required').style.display = 'none';
+            document.getElementById('district-required').style.display = 'none';
+            document.getElementById('city-required').style.display = 'none';
+            document.getElementById('state-required').style.display = 'none';
+        }
+    });
+
+    // Trigger the event on page load to set initial state based on the default selected country
+    document.getElementById('nationality_permanent').dispatchEvent(new Event('change'));
+</script>  
 
 <script>
 
@@ -362,28 +396,7 @@ window.onload = function() {
     getSelectedCountryValue();
 };
 
-function togglePincodeAsterisk() {
-    const permanentCountryInput = document.getElementById('nationality_permanent').value;
-    const correspondenceCountryInput = document.getElementById('nationality_correspondence').value;
-    const permanentPincodeAsterisk = document.getElementById('pincode-required');
-    const correspondencePincodeAsterisk = document.getElementById('pincode-asterisk');
 
-    if (permanentCountryInput.trim().toLowerCase() === 'india') {
-        permanentPincodeAsterisk.style.display = 'inline'; // Show the asterisk
-    } else {
-        permanentPincodeAsterisk.style.display = 'none'; // Hide the asterisk
-    }
-
-    if (correspondenceCountryInput.trim().toLowerCase() === 'india') {
-        correspondencePincodeAsterisk.style.display = 'inline'; // Show the asterisk
-    } else {
-        correspondencePincodeAsterisk.style.display = 'none'; // Hide the asterisk
-    }
-}
-
-// Add event listeners to country dropdowns to toggle the asterisk
-document.getElementById('nationality_permanent').addEventListener('change', togglePincodeAsterisk);
-document.getElementById('nationality_correspondence').addEventListener('change', togglePincodeAsterisk);
 
     
     //fetch by pin code

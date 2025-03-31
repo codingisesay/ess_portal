@@ -12,8 +12,8 @@
 <body>
     <div class="container">
     
-        <div class="employment-details1">
-            
+        <div class="employment-details">
+        @include('user_view.employment_details_top')
             @include('user_view.employment_details_section')
         </div>
 
