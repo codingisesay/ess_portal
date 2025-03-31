@@ -19,6 +19,7 @@ use App\Http\Controllers\settingController;
 use App\Http\Controllers\organisationController;
 use App\Http\Controllers\leavePolicyController;
 use App\Http\Controllers\editUserController;
+use App\Http\Controllers\salaryBoxController;
 
 
 
@@ -96,6 +97,15 @@ Route::middleware(['auth.superadmin'])->group(function () {
     Route::post('superadmin/insert_policy_type',[leavePolicyController::class,'insertPolicyType'])->name('insert_policy_type');
     Route::post('superadmin/insert_policy_restriction',[leavePolicyController::class,'insertPolicyConf'])->name('insertPolicyConf');
     Route::post('superadmin/insert_emp_restriction',[leavePolicyController::class,'insertEmpRestriction'])->name('insert_emp_restriction');
+
+   //Load pages routes loadforms superadmin
+
+    Route::get('superadmin/create_salary_templates',[salaryBoxController::class,'loadInsertForm'])->name('salary_template_form');
+    Route::get('superadmin/create_salary_components',[salaryBoxController::class,'loadcomponentsForm'])->name('create_salary_components');
+
+    //routes for insert salary box data
+
+    Route::post('superadmin/insert_salary_template',[salaryBoxController::class,'insertSalaryTemplate'])->name('insert_salary_template');
 
  
 
