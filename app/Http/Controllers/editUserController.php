@@ -598,7 +598,8 @@ class editUserController extends Controller
     ]);
      // Get the original file name
     //  $originalFileName = $file->getClientOriginalName();
-
+    $edituserId = session('id');
+    // dd($edituserId);
     foreach ($request->file('photo') as $file) {
         $path = $file->store('employee_enroll_files', 'public');
         $originalFileName = $file->getClientOriginalName();
