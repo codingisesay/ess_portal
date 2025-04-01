@@ -49,7 +49,7 @@ $id = Auth::guard('web')->user()->id;
               <!-- Personal Account Details -->
               <div class="form-row">
                   <div class="form-group">
-                      <select id="bankName1" class="form-control" name="bankName1" placeholder="" required>
+                      <select id="bankName1" class="form-control dropdown drop" name="bankName1" placeholder="" required>
                           <option value="{{ old('bankName1', $emp_bank_datas[0]->per_bank_id) }}">{{ old('bankName1', $emp_bank_datas[0]->per_bank_name) }}</option>
                           @foreach($banks as $bank)
                           <option value="{{ $bank->id }}">{{ $bank->name }}</option>
@@ -97,7 +97,7 @@ $id = Auth::guard('web')->user()->id;
               <!-- Checkbox to copy Bank 1 details -->
               <div class="form-row">
                   <div class="form-group">
-                      <select id="bankName2" class="form-control dropdown" placeholder="" name="bankName2">
+                      <select id="bankName2" class="form-control dropdown drop" placeholder="" name="bankName2">
                           <option value="{{ old('bankName2', $emp_bank_datas[0]->sal_bank_id) }}">{{ old('bankName2', $emp_bank_datas[0]->sal_bank_name) }}</option>
                           @foreach($banks as $bank)
                           <option value="{{ $bank->id }}">{{ $bank->name }}</option>
@@ -143,7 +143,7 @@ $id = Auth::guard('web')->user()->id;
 
                   <div class="form-group">
                       <span class="error" id="nationalityError"></span>
-                      <select id="issuingcountry"  class="form-control dropdown" name="country">
+                      <select id="issuingcountry"  class="form-control dropdown drop" name="country">
                           <option value="{{ old('issuingCountry', $emp_bank_datas[0]->issuing_country) }}">{{ old('issuingCountry', $emp_bank_datas[0]->issuing_country) }}</option>
                           <!-- Add your country options here -->
                           @foreach ($countrys as $country)
@@ -173,7 +173,7 @@ $id = Auth::guard('web')->user()->id;
               </div>
               <div class="form-row">
                   <div class="form-group">
-                      <select id="usaVisa" class="form-control dropdown" name="usaVisa"
+                      <select id="usaVisa" class="form-control dropdown drop" name="usaVisa"
                           onchange="toggleVisaExpiryDate()" placeholder="" style="pointer-events: none; opacity: 0.6;">
                           <option value="{{ old('usaVisa', $emp_bank_datas[0]->active_visa) }}">{{ old('usaVisa', $emp_bank_datas[0]->active_visa) }}</option>
                           <option value="Yes">Yes</option>
@@ -203,7 +203,7 @@ $id = Auth::guard('web')->user()->id;
               <h3>Vehicle Details</h3>
               <div class="form-row">
                   <div class="form-group">
-                      <select id="vehicleType" class="form-control dropdown" placeholder="" name="vehicleType">
+                      <select id="vehicleType" class="form-control dropdown drop" placeholder="" name="vehicleType">
                           <option value="{{ old('vehicleType', $emp_bank_datas[0]->vehicle_type) }}">{{ old('vehicleType', $emp_bank_datas[0]->vehicle_type) }}</option>
                           <option value="Car">Car</option>
                           <option value="Bike">Bike</option>
@@ -267,7 +267,48 @@ $id = Auth::guard('web')->user()->id;
   </form>
 </div>
 <script src="{{ asset('user_end/js/onboarding_form.js') }}"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    // Function to highlight the preselected option for a dropdown
+    function highlightSelectedOption(dropdown, selectedValue) {
+        // Loop through all options in the dropdown
+        const options = dropdown.querySelectorAll('option');
+        options.forEach(option => {
+            // Remove the highlighted class from all options
+            option.classList.remove('highlighted-option');
+            // Add the highlighted class to the selected option
+            if (option.value === selectedValue) {
+                option.classList.add('highlighted-option');
+            }
+        });
+    }
 
+    // Get all dropdowns with the class 'dropdown'
+    const dropdowns = document.querySelectorAll('.drop');
+
+    dropdowns.forEach(dropdown => {
+        // Get the old value from a custom data attribute or fallback to the value from $results
+        const oldValue = dropdown.dataset.oldValue || dropdown.value;
+
+        // Highlight the preselected option on page load
+        highlightSelectedOption(dropdown, oldValue);
+
+        // Add event listener for change event to handle updates
+        dropdown.addEventListener('change', function () {
+            // Highlight the newly selected option
+            highlightSelectedOption(dropdown, dropdown.value);
+        });
+    });
+});
+</script>
+<style>
+    .highlighted-option {
+    background-color: #d99b8a;  /* Light blue background for selected option */
+    color: black;
+}
+
+
+</style>
 <script>
     // Function that will be called on page load and on input change
     document.addEventListener('DOMContentLoaded', function () {

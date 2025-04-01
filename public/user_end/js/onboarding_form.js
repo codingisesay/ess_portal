@@ -1,5 +1,9 @@
 
 
+
+
+
+
 document.getElementById("totalExperience").addEventListener("input", function (e) {
     let input = e.target.value;
 

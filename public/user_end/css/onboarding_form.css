@@ -170,7 +170,7 @@
     top: 0px;
     left: 10px;
     font-size: 13px;
-    color: #2a1e1e;
+    color: #8A3366;
     font-weight: bold;
 }
 
@@ -195,7 +195,7 @@
 
 /* Focus Effects */
 .form-control:focus {
-    border-color: #2a1e1e;
+    border-color: #8A3366;
     box-shadow: 0 4px 12px rgba(52, 152, 219, 0.2);
     outline: none;
 
@@ -355,7 +355,7 @@ form {
 /* Container for table */
 .table-container {
     max-width: 100%;
-    margin: 20px;
+    margin: 0px;
     overflow-x: auto;
     /* Allow horizontal scrolling if needed */
     padding: 10px;
