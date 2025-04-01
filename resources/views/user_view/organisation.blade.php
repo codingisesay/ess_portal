@@ -163,17 +163,8 @@ function toggleChildren(button) {
     document.getElementById('emp-correspondance-address').textContent = correspondanceAddress;
     document.getElementById('emp-contactperson').textContent = contactperson;
     document.getElementById('emp-contactnumber').textContent = contactnumber;
-    document.getElementById('emp-employment-type').textContent = employmentType;  // New field for Employment Type
-    
-   
-
-    
-
     // Update the profile image
-    // document.getElementById('profile-image').src = profileImage;
     document.getElementById('profile-image').src = profileImage || '{{ asset('storage/' .$profileimahe) }}';
-
-
 }
 
     function highlightEmployee() {  
@@ -213,15 +204,15 @@ window.onload = function() {
     const empManager = "{{ $employees_login->reporting_manager_name }}"; // Ensure this is the manager's name
     const empDepartment = "{{ $employees_login->department }}";
     const empCity = "{{ $employees_login->branch_name }}";  
-    const empEmploymenttype = "{{ $employees_login->employee_type_name }}";  // Get employment type
     const empPhone = "{{ $employees_login->offical_phone_number }}";
     const empEmail = "{{ $employees_login->offical_email_address }}";
     const permanentAddress = "{{ $employees_login->permanent_address }}";
     const correspondanceAddress = "{{ $employees_login->correspondance_address }}";
     const empContactperson = "{{ $employees_login->emergency_contact_person }}";
     const empContactnumber = "{{ $employees_login->emergency_contact_number }}";
-    const profileImage = "{{ asset('storage/' .$profileimahe) }}"; // Get the profile image from session
-
+    // const profileImage = "{{ asset('storage/' .$profileimahe) }}"; // Get the profile image from session
+// const profileImage = "{{ !empty($employees_login->profile_image) ? asset('storage/' . $employees_login->profile_image) : asset('storage/user_profile_image/default.jpg') }}";
+    const profileImage = "{{ !empty($employees_login->profile_image) ? asset('storage/' . $employees_login->profile_image) : '' }}";
     // Call the function to display the logged-in employee details
     displayEmployeeDetails(empNo, empName, empDesignation, empManager, empDepartment, empCity, empPhone, empEmail, empContactperson, empContactnumber, profileImage, permanentAddress, correspondanceAddress);
 };
@@ -398,7 +389,7 @@ window.onload = function() {
         border-radius: 15px;
         padding: 20px;
         display: grid;
-        grid-template-columns: 1fr 2fr;
+        grid-template-columns: 1fr 4fr;
         gap: 20px;
         box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
         margin-top: 20px;
@@ -415,6 +406,7 @@ window.onload = function() {
         box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
         overflow-y: auto;
         height: 100%;
+        width: 350px;
     }
 
     .employee-list ul {
@@ -441,7 +433,8 @@ window.onload = function() {
     }
 
     .employee-details .left {
-        width: 30%;
+        /* width: 30%; */
+        width: 50%;
         background-color: #fff;
         padding: 20px;
         border-radius: 10px;
@@ -481,8 +474,8 @@ window.onload = function() {
     }
 
     .employee-details .left img {
-        width: 100%;
-        height: 100%;
+        width: 50%;
+        height: 50%;
         object-fit: cover;
     }
 
