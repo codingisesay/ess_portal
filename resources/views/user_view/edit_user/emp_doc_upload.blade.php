@@ -136,7 +136,7 @@ $permission_array = session('id');
                     <span>&#8249;</span>
                 </button>
             </a>
-            <form action="{{ route('homePage') }}" method="POST">
+            <form action="{{ route('user.homepage') }}" method="get">
                 @csrf
             <button type="submit" class="next-btn">Submit</button>
             </form>
@@ -149,7 +149,7 @@ $permission_array = session('id');
     var csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 
     var myDropZone = new Dropzone('#previous-employment-documents',{
-            url: "{{ route('documents.upload') }}",
+            url: "{{ route('edit_documents.upload') }}",
             paramName: "photo",
             maxFilesize: 10,
             acceptedFiles: ".pdf,.jpg,.jpeg,.png",
@@ -176,7 +176,7 @@ $permission_array = session('id');
 
     // Initialize Dropzone for each section
     var myDropZone = new Dropzone('#academic-documents',{
-            url: "{{ route('documents.upload') }}",
+            url: "{{ route('edit_documents.upload') }}",
             paramName: "photo",
             maxFilesize: 10,
             acceptedFiles: ".pdf,.jpg,.jpeg,.png",
@@ -202,7 +202,7 @@ $permission_array = session('id');
     });
 
     var myDropZone = new Dropzone('#pan-card',{
-            url: "{{ route('documents.upload') }}",
+            url: "{{ route('edit_documents.upload') }}",
             paramName: "photo",
             maxFilesize: 10,
             acceptedFiles: ".pdf,.jpg,.jpeg,.png",
@@ -228,7 +228,7 @@ $permission_array = session('id');
     });
 
     var myDropZone = new Dropzone('#address-proof',{
-            url: "{{ route('documents.upload') }}",
+            url: "{{ route('edit_documents.upload') }}",
             paramName: "photo",
             maxFilesize: 10,
             acceptedFiles: ".pdf,.jpg,.jpeg,.png",
@@ -254,7 +254,7 @@ $permission_array = session('id');
     });
 
     var myDropZone = new Dropzone('#passport-size-self',{
-            url: "{{ route('documents.upload') }}",
+            url: "{{ route('edit_documents.upload') }}",
             paramName: "photo",
             maxFilesize: 10,
             acceptedFiles: ".pdf,.jpg,.jpeg,.png",
@@ -280,7 +280,7 @@ $permission_array = session('id');
     });
 
     var myDropZone = new Dropzone('#passport-size-dependents',{
-            url: "{{ route('documents.upload') }}",
+            url: "{{ route('edit_documents.upload') }}",
             paramName: "photo",
             maxFilesize: 10,
             acceptedFiles: ".pdf,.jpg,.jpeg,.png",
@@ -306,7 +306,7 @@ $permission_array = session('id');
     });
 
     var myDropZone = new Dropzone('#passport-copy',{
-            url: "{{ route('documents.upload') }}",
+            url: "{{ route('edit_documents.upload') }}",
             paramName: "photo",
             maxFilesize: 10,
             acceptedFiles: ".pdf,.jpg,.jpeg,.png",
@@ -332,7 +332,7 @@ $permission_array = session('id');
     });
 
     var myDropZone = new Dropzone('#additional-id-proof',{
-            url: "{{ route('documents.upload') }}",
+            url: "{{ route('edit_documents.upload') }}",
             paramName: "photo",
             maxFilesize: 10,
             acceptedFiles: ".pdf,.jpg,.jpeg,.png",

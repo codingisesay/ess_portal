@@ -19,6 +19,7 @@ use App\Http\Controllers\settingController;
 use App\Http\Controllers\organisationController;
 use App\Http\Controllers\leavePolicyController;
 use App\Http\Controllers\editUserController;
+use App\Http\Controllers\salaryBoxController;
 
 
 
@@ -96,6 +97,17 @@ Route::middleware(['auth.superadmin'])->group(function () {
     Route::post('superadmin/insert_policy_type',[leavePolicyController::class,'insertPolicyType'])->name('insert_policy_type');
     Route::post('superadmin/insert_policy_restriction',[leavePolicyController::class,'insertPolicyConf'])->name('insertPolicyConf');
     Route::post('superadmin/insert_emp_restriction',[leavePolicyController::class,'insertEmpRestriction'])->name('insert_emp_restriction');
+
+   //Load pages routes loadforms superadmin
+
+    Route::get('superadmin/create_salary_templates',[salaryBoxController::class,'loadInsertForm'])->name('salary_template_form');
+    Route::get('superadmin/create_salary_components',[salaryBoxController::class,'loadcomponentsForm'])->name('create_salary_components');
+
+    //routes for insert salary box data
+
+    Route::post('superadmin/insert_salary_template',[salaryBoxController::class,'insertSalaryTemplate'])->name('insert_salary_template');
+    Route::post('superadmin/insert_salary_Components',[salaryBoxController::class,'insertSalaryComponents'])->name('insert_salary_Components');
+    
 
  
 
@@ -204,6 +216,7 @@ Route::middleware(['auth'])->group(function () {
     Route::post('user/save_thought', [settingController::class, 'saveThought'])->name('save_thought');
     Route::post('user/save_news_events', [settingController::class, 'saveNewsEvents'])->name('save_news_events');
     Route::post('user/save_calendra_master', [settingController::class, 'createCalendraMaster'])->name('create_calendra_master');
+    Route::post('user/salaryTemCTC',[settingController::class, 'insertSalaryTempCTC'])->name('user.salaryTemCTC');
 
        //userend
 
