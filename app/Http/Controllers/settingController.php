@@ -20,7 +20,24 @@ class settingController extends Controller
         $loginUserInfo = Auth::user();
        
         $users = User::where('organisation_id', $loginUserInfo->organisation_id)->paginate(10);
-        return view('user_view.setting',compact('users','title'));
+
+        // $users_for_salary = User::where('organisation_id', $loginUserInfo->organisation_id)->get();
+        $users_for_salary = DB::table('users')
+        ->leftjoin('employee_salaries','users.id','=','employee_salaries.user_id')
+        ->leftjoin('org_salary_templates','employee_salaries.salary_template_id','=','org_salary_templates.id')
+        ->select('users.employeeID as emp_employeeID',
+        'users.id as user_id',
+        'org_salary_templates.name as org_salary_templates_name',
+        'org_salary_templates.id as org_salary_templates_id',
+        'employee_salaries.user_ctc as user_ctc'
+        )
+        ->get();
+        // dd($sal);
+        $salary_templates = DB::table('org_salary_templates')
+        ->where('organisation_id',$loginUserInfo->organisation_id)
+        ->where('status','Active')
+        ->get();
+        return view('user_view.setting',compact('users','title','salary_templates','users_for_salary'));
     }
 
     public function saveThought(Request $request)
@@ -213,6 +230,69 @@ return redirect()->route('user.setting')->with('error','Calendra Is Not Created 
 
 // echo $loopcount;
 // exit();
+
+
+    }
+
+    public function insertSalaryTempCTC(Request $request){
+
+        $data = $request->validate([
+            'user_id' => 'required',
+            'trmplate_id' => 'required',
+            'ctc' => 'required',
+        ]);
+
+        $insertStatus = DB::table('employee_salaries')
+        ->where('user_id',$data['user_id'])
+        ->get();
+
+        // dd($insertStatus);
+
+        if($insertStatus->isNotEmpty()){
+
+            $status = DB::table('employee_salaries')
+            ->where('user_id',$data['user_id'])
+            ->update([
+                'user_id' => $data['user_id'],
+                'salary_template_id' => $data['trmplate_id'],
+                'user_ctc' => $data['ctc'],
+                'created_at' => NOW(),
+                'updated_at' => NOW(),
+    
+            ]);
+    
+            if($status){
+    
+                return redirect()->route('user.setting')->with('success','Salary Updated!!');
+    
+            }
+
+            return redirect()->route('user.setting')->with('error','Salary Not Updated!!');
+
+
+
+        }else{
+
+            $status = DB::table('employee_salaries')->insert([
+
+                'user_id' => $data['user_id'],
+                'salary_template_id' => $data['trmplate_id'],
+                'user_ctc' => $data['ctc'],
+                'created_at' => NOW(),
+                'updated_at' => NOW(),
+    
+            ]);
+    
+            if($status){
+    
+                return redirect()->route('user.setting')->with('success','Salary Inserted!!');
+    
+            }
+            return redirect()->route('user.setting')->with('error','Salary Not Updated!!');
+
+
+
+        }
 
 
     }

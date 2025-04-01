@@ -266,6 +266,69 @@ if(in_array(12, $permission_array)){
             </div>
         </div>
         <?php } ?>
+
+        <?php 
+        //user salary functions
+        if(in_array(14, $permission_array)){ 
+        ?>
+            <div class="accordion-item">
+                <!-- Accordion Header with a toggle dropdown -->
+                <div class="accordion-header" onclick="#">
+                    Employee Salary
+                </div>
+        
+                <!-- Dropdown content (initially hidden) -->
+                <div id="employeeDetailsDropdown" class="dropdown-content" style="display: block;">
+                    <!-- Collapsible Content (Table) -->
+                    <div class="content">
+                        <table class="custom-table">
+                            <thead>
+                                <tr>
+                                    <th>S.No</th>
+                                    <th>Employee ID</th>
+                                    <th>Salary Template</th>
+                                    <th>Employee CTC</th>
+                                    <th>Edit</th>
+                                </tr>
+                            </thead>
+        
+                            <tbody>
+                                @foreach ($users_for_salary as $us)
+                                <form action="{{ route('user.salaryTemCTC') }}" method="POST">
+                                    @csrf
+                                    <tr>
+                                        <input type="hidden" name="user_id" value="{{ $us->user_id }}">
+                                        <td>{{ $loop->iteration }}</td>
+                                        <td>{{ $us->emp_employeeID }}</td>
+                                        <td>
+                                            <select name="trmplate_id" required>
+                                                <option value="{{ $us->org_salary_templates_id }}">{{ $us->org_salary_templates_name }}</option>
+                                                @foreach ($salary_templates as $st)
+                                                <option value="{{$st->id}}">{{$st->name}}</option>
+                                                @endforeach
+                                               
+                                            </select>
+                                        </td>
+                                        <td>
+                                            <input type="number" name="ctc" value="{{$us->user_ctc}}">
+                                        </td>
+                                        <td>
+    
+                                                <input type="submit" value="submit">
+                                            
+                                        </td>
+                                    </tr>
+                                </form>
+                                   @endforeach
+                                </tbody>
+                            </table>
+                            <div class="d-flex justify-content-center">
+                                {{-- {{ $users_for_salary->links() }} --}}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <?php } ?>
     </div>
 </main>
 
