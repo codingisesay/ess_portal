@@ -588,6 +588,44 @@ class editUserController extends Controller
     }
     }
 
+    // Handle file upload request
+  public function upload(Request $request)
+  {
+    
+    $request->validate([
+        'photo' => 'required', // ensure it's an array of files
+        'photo.*' => 'file', // ensure each element is a valid file
+    ]);
+     // Get the original file name
+    //  $originalFileName = $file->getClientOriginalName();
+
+    foreach ($request->file('photo') as $file) {
+        $path = $file->store('employee_enroll_files', 'public');
+        $originalFileName = $file->getClientOriginalName();
+       
+    }
+    // dd($path); // This will dump the path for the first file
+    // $loginUserInfo = Auth::user();
+    $edituserId = session('id');
+    if($path){
+
+        DB::table('document_uploads')->insert([
+            'user_id' => $edituserId,
+            'document_type' => $originalFileName,
+            'file_path' => $path,
+            'created_at' => NOW(),
+            'updated_at' => NOW(),
+        ]);
+
+        return true;
+
+    }else{
+
+        return false;
+
+    }
+   }
+
     public function loadfamilyuser(){
         $edituserId = session('id');
         $loginUserInfo = User::where('id', $edituserId)->first();

@@ -136,7 +136,7 @@ $permission_array = session('id');
                     <span>&#8249;</span>
                 </button>
             </a>
-            <form action="{{ route('homePage') }}" method="POST">
+            <form action="{{ route('user.homepage') }}" method="get">
                 @csrf
             <button type="submit" class="next-btn">Submit</button>
             </form>
@@ -149,7 +149,7 @@ $permission_array = session('id');
     var csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 
     var myDropZone = new Dropzone('#previous-employment-documents',{
-            url: "{{ route('documents.upload') }}",
+            url: "{{ route('edit_documents.upload') }}",
             paramName: "photo",
             maxFilesize: 10,
             acceptedFiles: ".pdf,.jpg,.jpeg,.png",
