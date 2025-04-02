@@ -548,6 +548,21 @@ if ($update) {
     array_push($mail_to,$apply_leaveuser_data->email);
     array_push($mail_cc,$user->email);
 
+    $additional_email = DB::table('org_global_prams')
+    ->where('organisation_id','=',$loginUserInfo->organisation_id)
+    ->where('pram_id','=',1)
+    ->first();
+    if($additional_email){
+      //converting string to aaray with seprate from comma
+        $strToArray = explode(",",$additional_email->values);
+        foreach($strToArray as $ccAdditionalEmails){
+
+            array_push($mail_cc,$ccAdditionalEmails);
+
+        }
+
+    }
+
         // Convert start and end dates to DateTime objects
 $startDate = new DateTime($leave_apply->start_date);
 $endDate = new DateTime($leave_apply->end_date);
