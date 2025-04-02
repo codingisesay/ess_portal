@@ -70,7 +70,7 @@ $permission_array = session('id');
                                    oninput="this.value = this.value.replace(/[^a-zA-Z ]/g, '').();"  onkeydown="return blockNumbers(event);">
                             </td>
                             <td>
-                                <select name="relation[]" class="relation-type dropdown" required>
+                                <select name="relation[]" class="relation-type dropdown drop" required>
                                     <option value="{{$detail->relation}}">{{$detail->relation}}</option>
                                     <option value="Spouse">Spouse</option>
                                     <option value="Child">Child</option>
@@ -84,7 +84,7 @@ $permission_array = session('id');
                                     max="<?php echo date('Y-m-d'); ?>">
                             </td>
                             <td>
-                                <select name="gender[]" class="gender-type dropdown" required>
+                                <select name="gender[]" class="gender-type dropdown drop" required>
                                     <option value="{{$detail->gender}}">{{$detail->gender}}</option>
                                     <option value="Male">Male</option>
                                     <option value="Female">Female</option>
@@ -93,7 +93,7 @@ $permission_array = session('id');
                             </td>
                             <td><input type="custom-age" name="age[]" value="{{$detail->age}}" placeholder="Age" required readonly></td>
                             <td>
-                                <select name="dependent[]" class="dependent-type dropdown" required>
+                                <select name="dependent[]" class="dependent-type dropdown drop" required>
                                     <option value="{{$detail->dependent}}" >{{$detail->dependent}}</option>
                                     <option value="Yes">Yes</option>
                                     <option value="No">No</option>
@@ -128,6 +128,47 @@ $permission_array = session('id');
 
     </form>
 </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    // Function to highlight the preselected option for a dropdown
+    function highlightSelectedOption(dropdown, selectedValue) {
+        // Loop through all options in the dropdown
+        const options = dropdown.querySelectorAll('option');
+        options.forEach(option => {
+            // Remove the highlighted class from all options
+            option.classList.remove('highlighted-option');
+            // Add the highlighted class to the selected option
+            if (option.value === selectedValue) {
+                option.classList.add('highlighted-option');
+            }
+        });
+    }
+
+    // Get all dropdowns with the class 'dropdown'
+    const dropdowns = document.querySelectorAll('.drop');
+
+    dropdowns.forEach(dropdown => {
+        // Get the old value from a custom data attribute or fallback to the value from $results
+        const oldValue = dropdown.dataset.oldValue || dropdown.value;
+
+        // Highlight the preselected option on page load
+        highlightSelectedOption(dropdown, oldValue);
+
+        // Add event listener for change event to handle updates
+        dropdown.addEventListener('change', function () {
+            // Highlight the newly selected option
+            highlightSelectedOption(dropdown, dropdown.value);
+        });
+    });
+});
+</script>
+<style>
+    .highlighted-option {
+    background-color: #d99b8a;  /* Light blue background for selected option */
+    color: black;
+}
+</style>
 <!-- uppercase bug -->
 <script>
      let familyCounter = @json(count($familyDetails)) + 1;

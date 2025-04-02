@@ -23,6 +23,7 @@ function renderEmployeeNode($employee) {
             '<?= $employee->branch_name ?>',
             
             '<?= $employee->offical_phone_number ?>',
+            '<?= $employee->alternate_phone_number ?>',
             '<?= $employee->offical_email_address ?>',
             '<?= $employee->emergency_contact_person ?>',
             '<?= $employee->emergency_contact_number ?>',
@@ -150,7 +151,7 @@ function toggleChildren(button) {
 
 
 
-    function displayEmployeeDetails(userId, name, designation, manager, department, city, phone, email, contactperson, contactnumber, profileImage, permanentAddress, correspondanceAddress) {  
+    function displayEmployeeDetails(userId, name, designation, manager, department, city, phone, alternatephone, email, contactperson, contactnumber, profileImage, permanentAddress, correspondanceAddress) {  
     document.getElementById('emp-name').textContent = name;  
     document.getElementById('emp-designation').textContent = designation;  
     // document.getElementById('emp-no').textContent = empNo;  
@@ -158,6 +159,7 @@ function toggleChildren(button) {
     document.getElementById('emp-department').textContent = department;  
     document.getElementById('emp-city').textContent = city;  
     document.getElementById('emp-phone').textContent = phone;  
+    document.getElementById('emp-alternate-phone').textContent = alternatephone;
     document.getElementById('emp-email').textContent = email;
     document.getElementById('emp-permanent-address').textContent = permanentAddress;
     document.getElementById('emp-correspondance-address').textContent = correspondanceAddress;
@@ -205,6 +207,7 @@ window.onload = function() {
     const empDepartment = "{{ $employees_login->department }}";
     const empCity = "{{ $employees_login->branch_name }}";  
     const empPhone = "{{ $employees_login->offical_phone_number }}";
+    const empAlternatephone = "{{ $employees_login->alternate_phone_number }}";
     const empEmail = "{{ $employees_login->offical_email_address }}";
     const permanentAddress = "{{ $employees_login->permanent_address }}";
     const correspondanceAddress = "{{ $employees_login->correspondance_address }}";
@@ -214,7 +217,7 @@ window.onload = function() {
 // const profileImage = "{{ !empty($employees_login->profile_image) ? asset('storage/' . $employees_login->profile_image) : asset('storage/user_profile_image/default.jpg') }}";
     const profileImage = "{{ !empty($employees_login->profile_image) ? asset('storage/' . $employees_login->profile_image) : '' }}";
     // Call the function to display the logged-in employee details
-    displayEmployeeDetails(empNo, empName, empDesignation, empManager, empDepartment, empCity, empPhone, empEmail, empContactperson, empContactnumber, profileImage, permanentAddress, correspondanceAddress);
+    displayEmployeeDetails(empNo, empName, empDesignation, empManager, empDepartment, empCity, empPhone, empAlternatephone, empEmail, empContactperson, empContactnumber, profileImage, permanentAddress, correspondanceAddress);
 };
 </script>
 

@@ -41,6 +41,7 @@ class OrganisationController extends Controller
             'organisation_designations.name as designation',
             'emp_contact_details.per_city',
             'emp_contact_details.offical_phone_number',
+            'emp_contact_details.alternate_phone_number',
             'emp_contact_details.offical_email_address',
             'emp_contact_details.emergency_contact_person',
             'emp_contact_details.emergency_contact_number',
@@ -98,6 +99,7 @@ class OrganisationController extends Controller
                 'emp_contact_details.emergency_contact_person',
                 'emp_contact_details.emergency_contact_number',
                 'emp_contact_details.offical_phone_number',
+                'emp_contact_details.alternate_phone_number',
                 'emp_contact_details.offical_email_address',
                 'emp_details.gender',
                 'branches.name as branch_name',  // Select branch name

@@ -56,7 +56,7 @@ $editUser = $_REQUEST['id'];
                 <h3>Employee Details</h3>
                 <div class="form-row">
                     <div class="form-group">
-                        <select id="employmentType" class="form-control dropdown" name="employmentType" placeholder="" required>
+                        <select id="employmentType" class="form-control dropdown drop" name="employmentType" placeholder="" required>
                             <option value="{{ old('employmentType', $results[0]->employee_type) }}">{{ old('employmentType', $results[0]->employee_type_name) }}</option>
                             @foreach($emp_types as $emp_type)
                             <option value="{{$emp_type->id}}">{{$emp_type->name}}</option>
@@ -79,7 +79,7 @@ $editUser = $_REQUEST['id'];
                 </div>
                 <div class="form-row">
                     <div class="form-group">
-                        <select id="reportingManager" class="form-control dropdown" name="reportingManager" placeholder="" required>
+                        <select id="reportingManager" class="form-control dropdown drop" name="reportingManager" placeholder="" required>
                             <option value="{{ old('reportingManager',$results[0]->reporting_manager_id) }}">{{old('reportingManager',$results[0]->reporting_manager_name) }}</option>
                             <!-- <option value="None"></option> -->
                             @foreach($users as $user)
@@ -94,7 +94,7 @@ $editUser = $_REQUEST['id'];
                         <span class="error" id="totalExperienceError" style="color: red;"></span>
                     </div>
                     <div class="form-group">
-                        <select id="branch" class="form-control dropdown" name="branch" placeholder="" required>
+                        <select id="branch" class="form-control dropdown drop" name="branch" placeholder="" required>
                             <option value="{{ old('branch',$results[0]->branch_id) }}">{{ old('branch',$results[0]->branch_name) }}</option>
                             @foreach($branches as $branche)
                             <option value="{{$branche->id}}">{{$branche->name}}</option>
@@ -104,7 +104,7 @@ $editUser = $_REQUEST['id'];
                     </div>
                     
                     <div class="form-group">
-                        <select id="department" class="form-control dropdown" name="department" placeholder="" required>
+                        <select id="department" class="form-control dropdown drop" name="department" placeholder="" required>
                             <option value="{{ old('department',$results[0]->department_id) }}">{{ old('department',$results[0]->department_name ) }}</option>
                             
                         </select>
@@ -114,7 +114,7 @@ $editUser = $_REQUEST['id'];
 
 
                     <div class="form-group">
-                        <select id="designation" class="form-control dropdown" name="designation" placeholder="" required>
+                        <select id="designation" class="form-control dropdown drop" name="designation" placeholder="" required>
                             <option value="{{ old('designation',$results[0]->designation_id) }}">{{ old('designation',$results[0]->role_name) }}</option>
                         
                         </select>
@@ -129,7 +129,7 @@ $editUser = $_REQUEST['id'];
                 <h3>Basic Details</h3>
                 <div class="form-row">
                     <div class="form-group">
-                        <select id="gender" class="form-control dropdown" name="gender" placeholder="" required>
+                        <select id="gender" class="form-control dropdown drop" name="gender" placeholder="" required>
                             <option value="{{ old('gender',$results[0]->gender) }}">{{ old('gender',$results[0]->gender) }}</option>
                             <option value="Male">Male</option>
                             <option value="Female">Female</option>
@@ -142,7 +142,7 @@ $editUser = $_REQUEST['id'];
                         <label for="dateOfBirth">Date of Birth <span style="color: red;">*</span></label>
                     </div>
                     <div class="form-group">
-                        <select id="bloodGroup" class="form-control dropdown" name="bloodGroup">
+                        <select id="bloodGroup" class="form-control dropdown drop" name="bloodGroup">
                             <option value="{{ old('bloodGroup',$results[0]->blood_group) }}">{{ old('bloodGroup',$results[0]->blood_group) }}</option>
                             <option value="A+">A+</option>
                             <option value="A-">A-</option>
@@ -164,7 +164,7 @@ $editUser = $_REQUEST['id'];
                 </div>
                 <div class="form-row">
                     <div class="form-group">
-                        <select id="religion" class="form-control dropdown" name="religion" placeholder="" required>
+                        <select id="religion" class="form-control dropdown drop" name="religion" placeholder="" required>
                             <option value="{{ old('religion',$results[0]->religion) }}" disable Select> {{ old('religion', $results[0]->religion) }}</option>
                             <option value="Hinduism">Hinduism</option>
                             <option value="Islam">Islam</option>
@@ -179,7 +179,7 @@ $editUser = $_REQUEST['id'];
                         <label for="religion">Religion <span style="color: red;">*</span></label>
                     </div>
                     <div class="form-group">
-                        <select id="maritalStatus" class="form-control dropdown" name="maritalStatus" required placeholder="">
+                        <select id="maritalStatus" class="form-control dropdown drop" name="maritalStatus" required placeholder="">
                             <option value="{{ old('maritalStatus',$results[0]->marital_status) }}">{{ old('maritalStatus',$results[0]->marital_status) }}</option>
                             <option value="Single">Single</option>
                             <option value="Married">Married</option>
@@ -225,6 +225,47 @@ $editUser = $_REQUEST['id'];
         </div>
     </form>
 </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    // Function to highlight the preselected option for a dropdown
+    function highlightSelectedOption(dropdown, selectedValue) {
+        // Loop through all options in the dropdown
+        const options = dropdown.querySelectorAll('option');
+        options.forEach(option => {
+            // Remove the highlighted class from all options
+            option.classList.remove('highlighted-option');
+            // Add the highlighted class to the selected option
+            if (option.value === selectedValue) {
+                option.classList.add('highlighted-option');
+            }
+        });
+    }
+
+    // Get all dropdowns with the class 'dropdown'
+    const dropdowns = document.querySelectorAll('.drop');
+
+    dropdowns.forEach(dropdown => {
+        // Get the old value from a custom data attribute or fallback to the value from $results
+        const oldValue = dropdown.dataset.oldValue || dropdown.value;
+
+        // Highlight the preselected option on page load
+        highlightSelectedOption(dropdown, oldValue);
+
+        // Add event listener for change event to handle updates
+        dropdown.addEventListener('change', function () {
+            // Highlight the newly selected option
+            highlightSelectedOption(dropdown, dropdown.value);
+        });
+    });
+});
+</script>
+<style>
+    .highlighted-option {
+    background-color: #d99b8a;  /* Light blue background for selected option */
+    color: black;
+}
+</style>
 
 <script>
     
