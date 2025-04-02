@@ -1053,6 +1053,21 @@ if($data['leave_slot'] == 'First Half' || $data['leave_slot'] == 'Second Half'){
                     array_push($mail_to,$loginUserInfo->email);
                     array_push($mail_cc,$fetchManager->manager_mail_id);
 
+                    $additional_email = DB::table('org_global_prams')
+                    ->where('organisation_id','=',$loginUserInfo->organisation_id)
+                    ->where('pram_id','=',1)
+                    ->first();
+                    if($additional_email){
+                      //converting string to aaray with seprate from comma
+                        $strToArray = explode(",",$additional_email->values);
+                        foreach($strToArray as $ccAdditionalEmails){
+                
+                            array_push($mail_cc,$ccAdditionalEmails);
+                
+                        }
+                
+                    }
+
                     $data = [
                         'username' => $mail_to, //mail to
                         'cc' => $mail_cc, 
