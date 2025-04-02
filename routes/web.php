@@ -103,17 +103,17 @@ Route::middleware(['auth.superadmin'])->group(function () {
     Route::get('superadmin/create_salary_templates',[salaryBoxController::class,'loadInsertForm'])->name('salary_template_form');
     Route::get('superadmin/create_salary_components',[salaryBoxController::class,'loadcomponentsForm'])->name('create_salary_components');
 
+    Route::get('superadmin/create_tax_cycle',[salaryBoxController::class,'loadTaxCycleForm'])->name('tax_cycle');
+    Route::get('superadmin/create_taxes',[salaryBoxController::class,'loadTaxForm'])->name('taxes');
+
     //routes for insert salary box data
 
     Route::post('superadmin/insert_salary_template',[salaryBoxController::class,'insertSalaryTemplate'])->name('insert_salary_template');
     Route::post('superadmin/insert_salary_Components',[salaryBoxController::class,'insertSalaryComponents'])->name('insert_salary_Components');
-    
 
- 
-
-    
-    
-    
+    Route::post('superadmin/insert_tax_cycle',[salaryBoxController::class,'insertTaxCycle'])->name('insert_tax_cycle');
+    Route::post('superadmin/insert_taxes',[salaryBoxController::class,'insertTax'])->name('insert_taxes');
+        
     
 });
 
