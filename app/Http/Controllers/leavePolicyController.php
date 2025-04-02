@@ -856,6 +856,7 @@ $remaning_leave = $total_leave - $takenLeave;
         // dd($data);
         $loginUserInfo = Auth::user();
 
+
         try {
 
             $leave_type = DB::table('leave_types')
@@ -923,7 +924,22 @@ if($data['leave_slot'] == 'First Half' || $data['leave_slot'] == 'Second Half'){
                 array_push($mail_to,$fetchManager->manager_mail_id);
                 array_push($mail_cc,$loginUserInfo->email);
 
+                
+                $additional_email = DB::table('org_global_prams')
+                ->where('organisation_id','=',$loginUserInfo->organisation_id)
+                ->where('pram_id','=',1)
+                ->first();
+                if($additional_email){
+                  //converting string to aaray with seprate from comma
+                    $strToArray = explode(",",$additional_email->values);
+                    foreach($strToArray as $ccAdditionalEmails){
 
+                        array_push($mail_cc,$ccAdditionalEmails);
+
+                    }
+
+                }
+             
 
                 $data = [
                     'username' => $mail_to, //mail to
