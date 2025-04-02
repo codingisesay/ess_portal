@@ -166,6 +166,8 @@ nav ul li a:hover {
             <li><a href="{{ route('process_leave_policy') }}"><img src="{{ asset('admin_end/images/createdesignation.png') }}" width="30" height="30" alt="">  Process Leave Cycle</a></li>
             <li><a href="{{ route('salary_template_form') }}"><img src="{{ asset('admin_end/images/createdesignation.png') }}" width="30" height="30" alt="">  Create Salary Templates</a></li>
             <li><a href="{{ route('create_salary_components') }}"><img src="{{ asset('admin_end/images/createdesignation.png') }}" width="30" height="30" alt="">  Salary Template Components</a></li>
+            <li><a href="{{ route('tax_cycle') }}"><img src="{{ asset('admin_end/images/createdesignation.png') }}" width="30" height="30" alt="">  Tax Cycle</a></li>
+            <li><a href="{{ route('taxes') }}"><img src="{{ asset('admin_end/images/createdesignation.png') }}" width="30" height="30" alt="">  Taxes</a></li>
             
           </ul>
   </div>

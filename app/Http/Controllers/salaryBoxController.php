@@ -93,4 +93,111 @@ class salaryBoxController extends Controller
 
         return redirect()->route('create_salary_components')->with('error','Components Not Created Successfully!!');
     }
+
+
+
+    public function loadTaxCycleForm(){
+        $org_data = Auth::guard('superadmin')->user();
+        $orgTaxRegim = DB::table('org_tax_regime_years')
+        ->where('organisation_id','=',$org_data->id)
+        ->get();
+
+        return view('superadmin_view.create_tax_cycle',compact('orgTaxRegim'));
+
+    }
+
+
+
+    public function insertTaxCycle(Request $request){
+
+        $data = $request->validate([
+            'template_name' => 'required',
+            'from' => 'required',
+            'to' => '',
+            'status' => 'required',
+        ]);
+        $org_data = Auth::guard('superadmin')->user();
+
+       $status = DB::table('org_tax_regime_years')->insert([
+            'organisation_id' => $org_data->id,
+            'name' => $data['template_name'],
+            'applicable_from' => $data['from'],
+            'applicable_to' => $data['to'],
+            'status' => $data['status'],
+            'created_at' => NOW(),
+            'updated_at' => NOW(),
+
+        ]);
+
+        if($status){
+
+            return redirect()->route('tax_cycle')->with('success','Tax Cycyle Created Successfully!!');
+
+        }
+
+        return redirect()->route('tax_cycle')->with('error','Tax Cycyle Created Successfully!!');
+
+    }
+
+    public function loadTaxForm(){
+        $org_data = Auth::guard('superadmin')->user();
+
+        $taxregim = DB::table('org_tax_regime_years')
+        ->where('organisation_id','=',$org_data->id)
+        ->where('status','=','Active')
+        ->get();
+
+        $datafortaxes = DB::table('org_tax_slabs')
+        ->join('org_tax_regime_years','org_tax_slabs.org_tax_regime_id','=','org_tax_regime_years.id')
+        ->select('org_tax_regime_years.name as org_tax_regime_years_name',
+        'org_tax_slabs.tax_type as tax_type',
+        'org_tax_slabs.min_income as min_income',
+        'org_tax_slabs.max_income as max_income',
+        'org_tax_slabs.tax as tax_per',
+        'org_tax_slabs.fixed_amount as fixed_amount',
+        )
+        ->get();
+
+        return view('superadmin_view.create_tax',compact('taxregim','datafortaxes'));
+
+    }
+
+    public function insertTax(Request $request)
+    {
+
+        $data = $request->validate([
+            'tax_cycle_type' => 'required',
+            'tax_type' => 'required',
+            'min_income' => 'required',
+            'max_income' => 'required',
+            'tax_per' => 'required',
+            'fixed_amount' => 'required',
+            
+        ]);
+        $org_data = Auth::guard('superadmin')->user();
+
+       $status = DB::table('org_tax_slabs')->insert([
+            'organisation_id' => $org_data->id,
+            'org_tax_regime_id' => $data['tax_cycle_type'],
+            'tax_type' => $data['tax_type'],
+            'min_income' => $data['min_income'],
+            'max_income' => $data['max_income'],
+            'tax' => $data['tax_per'],
+            'fixed_amount' => $data['fixed_amount'],
+            'created_at' => NOW(),
+            'updated_at' => NOW(),
+
+        ]);
+
+        if($status){
+
+            return redirect()->route('taxes')->with('success','Tax Cycyle Created Successfully!!');
+
+        }
+
+        return redirect()->route('taxes')->with('error','Tax Cycyle Created Successfully!!');
+
+    }
+
+
 }
