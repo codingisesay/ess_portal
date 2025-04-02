@@ -186,9 +186,7 @@ error_reporting(0);
             <form id="todo-form" class="to-do-list-container" method="POST" action="{{ route('user.save_todo') }}">
                 @csrf
                 <div class="to-do-list-container">
-                    <div class="date-picker-container">
-                        <input type="date" name="task_date" id="task_date" class="input-field" required>
-                    </div>
+                    
 
                     <div class="form-group">
                         <label for="project">Project</label>
@@ -203,6 +201,11 @@ error_reporting(0);
                     </div>
 
                     <div class="form-group">
+                    <label for="date">Date</label>
+                        <input type="date" name="task_date" id="task_date" class="input-field" required>
+                    </div>
+
+                    <div class="form-group">
                         <label for="hours">Hours</label>
                         <input type="time" id="hours" name="hours" class="input-field" value="00:00:00"
                             placeholder="HH:MM:SS" required>
@@ -213,44 +216,44 @@ error_reporting(0);
             </form>
         </section>
 
-<section class="upcoming-anniversary">
-    <h3>Work Anniversary</h3>
-    <div class="anniversary">
-        @forelse ($anniversaries as $anniversary)
-        <div class="employee-card">
-            <div class="employee-info">
-                <h3><strong>{{ $anniversary->Employee_Name }}</strong></h3>
-                <div class="details">
-                    <p>{{ $anniversary->yearsCompleted }} Years Completed</p>
-                    <div class="badge">{{ $anniversary->badgeText }}</div>
+        <section class="upcoming-anniversary">
+            <h3>Work Anniversary</h3>
+            <div class="anniversary">
+                @forelse ($anniversaries as $anniversary)
+                <div class="employee-card">
+                    <div class="employee-info">
+                        <h3><strong>{{ $anniversary->Employee_Name }}</strong></h3>
+                        <div class="details">
+                            <p>{{ $anniversary->yearsCompleted }} Years Completed</p>
+                            <div class="badge">{{ $anniversary->badgeText }}</div>
+                        </div>
+                    </div>
                 </div>
+                @empty
+                <p>No anniversaries for the current month.</p>
+                @endforelse
             </div>
-        </div>
-        @empty
-        <p>No anniversaries for the current month.</p>
-        @endforelse
-    </div>
-</section>
+        </section>
 
 
        
-<section class="calendar-container">
-    <h3 class="calendar-header">Calendar</h3>
-    <div class="main-cal">
-        <div id="calendar-controls">
-            <button id="prev-month" class="slider-btn">&lt;</button>
+        <section class="calendar-container">
+            <h3 class="calendar-header">Calendar</h3>
+            <div class="main-cal">
+                <div id="calendar-controls">
+                    <button id="prev-month" class="slider-btn">&lt;</button>
 
-            <div id="dropdown-container">
-                <select id="year-select" class="slider-btn"></select>
-                <select id="month-select" class="slider-btn"></select>
+                    <div id="dropdown-container">
+                        <select id="year-select" class="slider-btn"></select>
+                        <select id="month-select" class="slider-btn"></select>
+                    </div>
+
+                    <button id="next-month" class="slider-btn">&gt;</button>
+                </div>
+
+                <div id="calendar"></div>
             </div>
-
-            <button id="next-month" class="slider-btn">&gt;</button>
-        </div>
-
-        <div id="calendar"></div>
-    </div>
-</section>
+        </section>
 
 
     </main>
@@ -288,42 +291,42 @@ error_reporting(0);
             </div>
             </div>
         </section>
-        <style>
-.glow-effect {
-    position: relative;
-    animation: alertGlow 1.5s ease-in-out infinite;
-    transition: box-shadow 0.3s ease, transform 0.3s ease;
-}
+                    <style>
+            .glow-effect {
+                position: relative;
+                animation: alertGlow 1.5s ease-in-out infinite;
+                transition: box-shadow 0.3s ease, transform 0.3s ease;
+            }
 
-/* Flashing alert animation */
-@keyframes alertGlow {
-    0% {
-        box-shadow: 0 0 10px rgba(255, 69, 0, 0.5); /* Soft red/orange glow */
-        transform: scale(1);
-    }
-    50% {
-        box-shadow: 0 0 25px rgba(255, 69, 0, 0.8); /* Stronger red/orange glow */
-        transform: scale(1.05);
-    }
-    100% {
-        box-shadow: 0 0 10px rgba(255, 69, 0, 0.5); /* Soft red/orange glow */
-        transform: scale(1);
-    }
-}
+            /* Flashing alert animation */
+            @keyframes alertGlow {
+                0% {
+                    box-shadow: 0 0 10px rgba(255, 69, 0, 0.5); /* Soft red/orange glow */
+                    transform: scale(1);
+                }
+                50% {
+                    box-shadow: 0 0 25px rgba(255, 69, 0, 0.8); /* Stronger red/orange glow */
+                    transform: scale(1.05);
+                }
+                100% {
+                    box-shadow: 0 0 10px rgba(255, 69, 0, 0.5); /* Soft red/orange glow */
+                    transform: scale(1);
+                }
+            }
 
-/* Optional: Subtle alert glow without animation */
-.glow-effect.alert-static {
-    box-shadow: 0 0 15px rgba(255, 69, 0, 0.5);
-}
+            /* Optional: Subtle alert glow without animation */
+            .glow-effect.alert-static {
+                box-shadow: 0 0 15px rgba(255, 69, 0, 0.5);
+            }
 
-/* Hover effect to emphasize urgency */
-.glow-effect:hover {
-    box-shadow: 0 0 30px rgba(255, 69, 0, 1); /* More intense glow */
-    transform: scale(1.05);
-    transition: box-shadow 0.3s ease, transform 0.3s ease;
-}
+            /* Hover effect to emphasize urgency */
+            .glow-effect:hover {
+                box-shadow: 0 0 30px rgba(255, 69, 0, 1); /* More intense glow */
+                transform: scale(1.05);
+                transition: box-shadow 0.3s ease, transform 0.3s ease;
+            }
 
-        </style>
+                    </style>
 
 
         <!-- Popup Modal -->
@@ -661,7 +664,7 @@ error_reporting(0);
             dayElement.textContent = day;
 
             // Check if the day is a holiday
-            const isHoliday = holidays.some(holiday => {
+            const holiday = holidays.find(holiday => {
                 const holidayDate = new Date(holiday.date);
                 return holidayDate.getDate() === day && holidayDate.getMonth() === month && holidayDate.getFullYear() === year;
             });
@@ -673,11 +676,13 @@ error_reporting(0);
             });
 
             // Add holiday and week-off styling
-            if (isHoliday) {
+            if (holiday) {
                 dayElement.classList.add('holiday');
+                dayElement.setAttribute('title', holiday.holiday_name); // Add tooltip for holiday name
             }
             if (isWeekOff) {
                 dayElement.classList.add('week-off');
+                dayElement.setAttribute('title', 'Week Off'); // Add tooltip for week-off
             }
 
             calendarContainer.appendChild(dayElement);
@@ -725,7 +730,6 @@ error_reporting(0);
     generateCalendar(currentYear, currentMonth);
 </script>
 
-
 <style>
      .day.holiday {
         background-color: #f3e39f;
@@ -738,6 +742,26 @@ error_reporting(0);
         color: white;
         border-radius: 50%;
     }
+
+    .day[title] {
+    position: relative;
+    cursor: pointer;
+}
+
+.day[title]:hover::after {
+    content: attr(title);
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #333;
+    color: #fff;
+    padding: 5px;
+    border-radius: 5px;
+    white-space: nowrap;
+    z-index: 10;
+    font-size: 12px;
+}
 
 </style>
 

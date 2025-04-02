@@ -74,7 +74,7 @@ $permission_array = session('id');
                             <td><input type="text" name="university[]" class="university-input" required value="{{ $detail->university_board }}" maxlength="100" pattern="[A-Za-z\s]*" title="Only alphabets and spaces are allowed"></td>
                             <td><input type="text" name="institution[]" class="institution-input" required value="{{ $detail->institution }}" maxlength="100" pattern="[A-Za-z\s]*" title="Only alphabets and spaces are allowed"></td>
                             <td>
-                                <select name="passing_year[]" class="year-input" required>
+                                <select name="passing_year[]" class="year-input drop" required>
                                     <option value="{{ $detail->passing_year }}" >{{ $detail->passing_year }}</option>
                                     <?php
                                     $startYear = 1950; // Starting year for the dropdown
@@ -118,6 +118,47 @@ $permission_array = session('id');
         </div>
     </form>
 </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    // Function to highlight the preselected option for a dropdown
+    function highlightSelectedOption(dropdown, selectedValue) {
+        // Loop through all options in the dropdown
+        const options = dropdown.querySelectorAll('option');
+        options.forEach(option => {
+            // Remove the highlighted class from all options
+            option.classList.remove('highlighted-option');
+            // Add the highlighted class to the selected option
+            if (option.value === selectedValue) {
+                option.classList.add('highlighted-option');
+            }
+        });
+    }
+
+    // Get all dropdowns with the class 'dropdown'
+    const dropdowns = document.querySelectorAll('.drop');
+
+    dropdowns.forEach(dropdown => {
+        // Get the old value from a custom data attribute or fallback to the value from $results
+        const oldValue = dropdown.dataset.oldValue || dropdown.value;
+
+        // Highlight the preselected option on page load
+        highlightSelectedOption(dropdown, oldValue);
+
+        // Add event listener for change event to handle updates
+        dropdown.addEventListener('change', function () {
+            // Highlight the newly selected option
+            highlightSelectedOption(dropdown, dropdown.value);
+        });
+    });
+});
+</script>
+<style>
+    .highlighted-option {
+    background-color: #d99b8a;  /* Light blue background for selected option */
+    color: black;
+}
+</style>
 
 <script>
     // Your existing JavaScript functions (addRow, editRow, removeRow, etc.)

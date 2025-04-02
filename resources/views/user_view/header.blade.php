@@ -129,25 +129,36 @@ $profileimahe = session('profile_image');
 }
 
 .image-preview {
-    width: 100%;
-    height: 100%;
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
     object-fit: cover;
     display: block;
 }
 
+.camera-ico {
+    position: absolute;
+    bottom: 80px;
+    right: 190px;
+    font-size: 24px;
+    color: white;
+    background: rgba(0, 0, 0, 0.5);
+    padding: 8px;
+    border-radius: 50%;
+}
 /* Button Styles */
-/* button {
+.buttonn {
     padding: 10px 20px;
     margin-top: 20px;
-    background-color: #4CAF50;
+    background-color: #8A3366;
     color: white;
     border: none;
     cursor: pointer;
 }
 
-button:hover {
-    background-color: #45a049;
-} */
+.buttonn:hover {
+    background-color: #8A3366;
+}
     </style>
 </head>
 <body>
@@ -205,18 +216,18 @@ button:hover {
                 </a>
                 <div class="profile-dropdown-content">
     <!-- Logout Form -->
-    <form action="{{ route('user.logout') }}" method="POST">
-        @csrf
-        <button type="submit" class="logout-icon">
-            <i class="fas fa-power-off"></i>
-        </button>
-    </form>
+                <form action="{{ route('user.logout') }}" method="POST">
+                    @csrf
+                    <button type="submit" class="logout-icon">
+                        <i class="fas fa-power-off"></i>
+                    </button>
+                </form>
 
-    <!-- Camera Icon to Trigger File Upload -->
-    <button class="camera-icon" onclick="openModall()">
-        <i class="fas fa-camera" ></i>
-    </button>
-</div>
+                <!-- Camera Icon to Trigger File Upload -->
+                <button class="camera-icon" onclick="openModall()">
+                    <i class="fas fa-camera" ></i>
+                </button>
+            </div>
 
 
             </div>
@@ -224,20 +235,28 @@ button:hover {
     </header>
      <!-- Modal -->
      <div id="myModall" class="modall">
-        <form id="profile-upload-form" action="{{ route('user.uploadProfilePhoto') }}" method="POST" enctype="multipart/form-data">
-            @csrf
+    <form id="profile-upload-form" action="{{ route('user.uploadProfilePhoto') }}" method="POST" enctype="multipart/form-data">
+        @csrf
         <div class="modal-content8">
             <span class="close1" onclick="closeModall()">&times;</span>
             <h2>Upload your image</h2>
-            <div class="image-container8">
-                <img id="imagePreview" class="image-preview" src="/storage/user_profile_image/Oqr4VRqo7RpQxnmiZCh12zybbcdsyUin2FhAKD3O.jpg" alt="User Profile Image" />
+
+            <!-- Image Container with Camera Icon -->
+            <div class="image-container8" onclick="document.getElementById('fileInput').click();">
+                <img id="imagePreview" class="image-preview" 
+                     src="/storage/user_profile_image/Oqr4VRqo7RpQxnmiZCh12zybbcdsyUin2FhAKD3O.jpg" 
+                     alt="User Profile Image" />
+                <i class="camera-ico fas fa-camera"></i>  <!-- Camera Icon -->
             </div>
 
-            <input type="file" id="fileInput" name="profile_image" accept="image/*" onchange="previewImage()" />
-            <button id="uploadButton" onclick="uploadImage()">Upload</button>
+            <!-- Hidden File Input -->
+            <input type="file" id="fileInput" name="profile_image" accept="image/*" onchange="previewImage()" style="display: none;" />
+
+            <button class="buttonn" id="uploadButton" onclick="uploadImage()">Upload</button>
         </div>
     </form>
-    </div>
+</div>  
+
 
     @yield('content')
 
