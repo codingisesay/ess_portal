@@ -78,15 +78,18 @@ $editUser = $_REQUEST['id'];
                     </div>
                 </div>
                 <div class="form-row">
-                    <div class="form-group">
-                        <select id="reportingManager" class="form-control dropdown drop" name="reportingManager" placeholder="" required>
-                            <option value="{{ old('reportingManager',$results[0]->reporting_manager_id) }}">{{old('reportingManager',$results[0]->reporting_manager_name) }}</option>
-                            <!-- <option value="None"></option> -->
-                            @foreach($users as $user)
-                            <option value="{{$user->id}}">{{$user->name}}</option>
-                            @endforeach
-                        </select>
-                        <label for="reportingManager">Reporting Manager<span style="color: red;">*</span></label>
+                <div class="form-group">
+                    <select id="reportingManager" class="form-control dropdown drop" name="reportingManager" placeholder="" required>
+                        <option value="{{ old('reportingManager', $results[0]->reporting_manager_id) }}">
+                            {{ old('reportingManager', $results[0]->reporting_manager_name) }}
+                        </option>
+                        @foreach($users->sortBy('name') as $user)
+                            @if($user->id != Auth::guard('web')->user()->id) <!-- Exclude the logged-in user -->
+                                <option value="{{ $user->id }}">{{ $user->name }} ({{ $user->employeeID }})</option>
+                            @endif
+                        @endforeach
+                    </select>
+                    <label for="reportingManager">Reporting Manager<span style="color: red;">*</span></label>
                     </div>
                     <div class="form-group">
                         <input type="number" id="totalExperience" class="form-control" name="totalExperience" placeholder="e.g., 6.2" value="{{ old('totalExperience', $results[0]->total_experience) }}" title="Enter experience in the format Years.Months (e.g., 6.2), where months must be between 0 and 11." required step="any" maxlength="5" pattern="^\d+(\.\d{1,2})?$" oninput="validateExperience()">
