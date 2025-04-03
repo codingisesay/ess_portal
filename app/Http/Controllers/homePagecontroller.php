@@ -549,7 +549,7 @@ if ($update) {
     array_push($mail_cc,$user->email);
 
     $additional_email = DB::table('org_global_prams')
-    ->where('organisation_id','=',$loginUserInfo->organisation_id)
+    ->where('organisation_id','=',$user->organisation_id)
     ->where('pram_id','=',1)
     ->first();
     if($additional_email){
