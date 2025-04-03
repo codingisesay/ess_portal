@@ -11,9 +11,11 @@ function renderEmployeeNode($employee) {
     ob_start();
     ?>
     <li>
-        <?php if ($hasSubordinates): ?>
-            <button class="toggle-button" data-user-id="<?= $employee->user_id ?>" onclick="toggleChildren(this)">+</button>
-        <?php endif; ?>
+           <!-- Display the toggle button for all employees -->
+    <button class="toggle-button" data-user-id="<?= $employee->user_id ?>" onclick="toggleChildren(this)">
+        +
+    </button>
+
         <span onclick="displayEmployeeDetails(
             '<?= $employee->user_id ?>',
             '<?= $employee->employee_name ?>', 
@@ -268,9 +270,9 @@ window.onload = function() {
 .tree li::before {
     content: "";
     position: absolute;
-    top: -33px;
+    top: -21px;
     left: 0;
-    width: 1px;
+    width: 10px;
     height: 100%;
     border-left: 1px solid #ccc;
 }
@@ -279,9 +281,9 @@ window.onload = function() {
 .tree li::after {
     content: "";
     position: absolute;
-    top: 12px;
+    top: 24px;
     left: 1px;
-    width: 8px;
+    width: 12px;
     height: 1px;
     border-top: 1px solid #ccc;
 }
@@ -409,7 +411,7 @@ window.onload = function() {
         box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
         overflow-y: auto;
         height: 100%;
-        width: 350px;
+        width: 420px;
     }
 
     .employee-list ul {

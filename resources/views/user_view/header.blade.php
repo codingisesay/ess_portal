@@ -138,11 +138,12 @@ $profileimahe = session('profile_image');
 
 .camera-ico {
     position: absolute;
-    bottom: 80px;
-    right: 190px;
+    bottom: 105px;
+    right: 166px;
     font-size: 24px;
-    color: white;
-    background: rgba(0, 0, 0, 0.5);
+    color: black;
+    /* color: white; */
+    /* background: rgba(0, 0, 0, 0.5); */
     padding: 8px;
     border-radius: 50%;
 }
