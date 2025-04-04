@@ -52,7 +52,7 @@
                         <th>Relevant Experience</th>
                         <th>Reason For Leaving</th>
                         <th>Major Responsibilities Held</th>
-                        <th>Remove</th>
+                        <th>Action</th>
                     </tr>
                 </thead>
                 <tbody id="employmentTableBody">
@@ -233,7 +233,7 @@
                 success: function (response) {
                     // On success, remove the row from the table
                     $('button[data-id="' + preEmolyee + '"]').closest('tr').remove();
-                    alert('Education record deleted successfully!');
+                    alert('Previous Employment record deleted successfully!');
                 },
                 error: function (response) {
                     alert('Error deleting record. Please try again.');
