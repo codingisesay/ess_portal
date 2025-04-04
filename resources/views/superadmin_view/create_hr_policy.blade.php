@@ -16,102 +16,116 @@ $id = Auth::guard('superadmin')->user()->id;
 <body>
     <div class="container">
         <h1>Create HR Policy</h1>
-        {{-- @if(session('success'))
-        <div class="alert custom-alert-success">
-            <strong>{{ session('success') }}</strong> 
-            <button class="close-btn" onclick="this.parentElement.style.display='none';">&times;</button>
-            
-        </div>
-    @endif
-    
-    @if(session('error'))
-    <div class="alert custom-alert-error">
-        <strong> {{ session('error') }}</strong>
-        <button class="close-btn" onclick="this.parentElement.style.display='none';">&times;</button>
-        </div>
-    @endif --}}
 
-    @if($errors->any())
-    <div class="alert custom-alert-warning">
-<ul>
-@foreach($errors->all() as $error)
-    <li style="color: red;">{{ $error }}</li>
-    
-@endforeach
-</ul>
-    </div>
-@endif
+        <!-- Toggle Buttons -->
+        <div class="toggle-buttons">
+            <button class="but" onclick="showHRPolicyForm()">Show Form</button>
+            <button class="but" onclick="showHRPolicyTable()">Show Table</button>
+        </div>
 
-        <form action="{{ route('save_hr_policy') }}" method="POST" enctype="multipart/form-data" class="form-container">
-            @csrf
-            <div class="form-group">
-                <input type="text" id="policy_title" name="policy_title" class="form-control" required>
-                <label for="policy_title">Policy Title</label>
-            </div>
-            <div class="form-group">
-                <select id="category_id" name="category_id" class="form-control" required>
-                    <option value="" disabled selected></option>
-                    @foreach($categories as $category)
-                        <option value="{{ $category->id }}">{{ $category->name }}</option>
+        <!-- Form Section -->
+        <div id="formSection" style="display: none;">
+            @if($errors->any())
+            <div class="alert custom-alert-warning">
+                <ul>
+                    @foreach($errors->all() as $error)
+                        <li style="color: red;">{{ $error }}</li>
                     @endforeach
-                </select>
-                <label for="category_id">Select Category</label>
+                </ul>
             </div>
-            <div class="form-group">
-                <input type="text" id="policy_content" name="policy_content" class="form-control" required></textarea>
-                <label for="policy_content">Policy Content</label>
-            </div>
-            <div class="form-group">
-                <input type="file" id="document" name="document" class="form-control">
-                <label for="document">Upload Document</label>
-            </div>
-            <div class="form-group">
-                <input type="file" id="icon" name="icon" class="form-control">
-                <label for="icon">Upload Icon</label>
-            </div>
-            <div class="form-group">
-                <input type="file" id="content_image" name="content_image" class="form-control">
-                <label for="content_image">Upload Content Image</label>
-            </div>
-            <div class="form-group">
-                <select id="category_id" name="status" class="form-control" required>
-                    <option value="" disabled selected></option>
-                    <option value="Active">Active</option>
-                    <option value="Inactive">Inactive</option>
-                </select>
-                <label for="category_id">Status</label>
-            </div>
-            <button type="submit" class="create-btn" style="position: relative; bottom:8px;">Save Policy</button>
-        </form>
-        <h3>Policy Category</h3>
-        <div class="table-container">
-            <table>
-                <thead>
-                    <tr>
-                        
-                        <th>Id</th>
-                        <th>TITLE</th>
-                        <th>CATEGORY</th>
-                        <!-- <th>CONTENT</th> -->
-                        <th>Status</th>
-                        <th>EDIT</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach ($datas as $data)
-                        <tr>
-                            <td>{{ $loop->iteration }}</td>
-                            <td>{{ $data->policy_title }}</td>
-                            <td>{{ $data->policy_categorie_id }}</td>
-                            <!-- <td>{{ $data->policy_content }}</td> -->
-                            <td>{{ $data->status }}</td>
-                            <td><button class="edit-icon">Edit</button></td>
-                        </tr>
+            @endif
+
+            <form action="{{ route('save_hr_policy') }}" method="POST" enctype="multipart/form-data" class="form-container">
+                @csrf
+                <div class="form-group">
+                    <input type="text" id="policy_title" name="policy_title" class="form-control" required>
+                    <label for="policy_title">Policy Title</label>
+                </div>
+                <div class="form-group">
+                    <select id="category_id" name="category_id" class="form-control" required>
+                        <option value="" disabled selected></option>
+                        @foreach($categories as $category)
+                            <option value="{{ $category->id }}">{{ $category->name }}</option>
                         @endforeach
-                </tbody>
-            </table>
+                    </select>
+                    <label for="category_id">Select Category</label>
+                </div>
+                <div class="form-group">
+                    <input type="text" id="policy_content" name="policy_content" class="form-control" required>
+                    <label for="policy_content">Policy Content</label>
+                </div>
+                <div class="form-group">
+                    <input type="file" id="document" name="document" class="form-control">
+                    <label for="document">Upload Document</label>
+                </div>
+                <div class="form-group">
+                    <input type="file" id="icon" name="icon" class="form-control">
+                    <label for="icon">Upload Icon</label>
+                </div>
+                <div class="form-group">
+                    <input type="file" id="content_image" name="content_image" class="form-control">
+                    <label for="content_image">Upload Content Image</label>
+                </div>
+                <div class="form-group">
+                    <select id="category_id" name="status" class="form-control" required>
+                        <option value="" disabled selected></option>
+                        <option value="Active">Active</option>
+                        <option value="Inactive">Inactive</option>
+                    </select>
+                    <label for="category_id">Status</label>
+                </div>
+                <button type="submit" class="create-btn" style="position: relative; bottom:8px;">Save Policy</button>
+            </form>
+        </div>
+
+        <!-- Table Section -->
+        <div id="tableSection" style="display: none;">
+            <h3>Policy Category</h3>
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Id</th>
+                            <th>TITLE</th>
+                            <th>CATEGORY</th>
+                            <!-- <th>CONTENT</th> -->
+                            <th>Status</th>
+                            <th>EDIT</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach ($datas as $data)
+                            <tr>
+                                <td>{{ $loop->iteration }}</td>
+                                <td>{{ $data->policy_title }}</td>
+                                <td>{{ $data->policy_categorie_id }}</td>
+                                <!-- <td>{{ $data->policy_content }}</td> -->
+                                <td>{{ $data->status }}</td>
+                                <td><button class="edit-icon">Edit</button></td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
+
+    <script>
+        function showHRPolicyForm() {
+            document.getElementById('formSection').style.display = 'block';
+            document.getElementById('tableSection').style.display = 'none';
+        }
+
+        function showHRPolicyTable() {
+            document.getElementById('formSection').style.display = 'none';
+            document.getElementById('tableSection').style.display = 'block';
+        }
+
+        // Ensure the form is visible by default on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            showHRPolicyForm();
+        });
+    </script>
 @endsection
 </body>
 </html>

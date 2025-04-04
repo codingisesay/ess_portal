@@ -22,145 +22,90 @@ $id = Auth::guard('superadmin')->user()->id;
 <div class="container">
     <h2>Create User Of Your Organisation</h2>
 
-    {{-- <div class="alert custom-alert-success">
-        <strong>Success! This alert box could indicate a successful or positive action.</strong> 
-        <button class="close-btn" onclick="this.parentElement.style.display='none';">&times;</button>
+    <!-- Toggle Buttons -->
+    <div class="toggle-buttons">
+        <button class="but" onclick="showUserForm()">Show Form</button>
+        <button class="but" onclick="showUserTable()">Show Table</button>
     </div>
-    
-    <div class="alert custom-alert-error">
-        <strong>Error! Something went wrong. Please try again later.</strong> 
-        <button class="close-btn" onclick="this.parentElement.style.display='none';">&times;</button>
+
+    <!-- Form Section -->
+    <div id="formSection" style="display: none;">
+        <form action="{{ route('register_save') }}" method="POST">
+            @csrf
+            <div class="form-container">
+                <div class="form-group">
+                    <input type="hidden" name="organisation_id" value="{{$id}}">
+                    <input type="text" name="username" required>
+                    <label>Name</label>
+                </div>
+                <div class="form-group">
+                    <input type="text" name="empid" required>
+                    <label>Company Emp ID</label>
+                </div>
+                <div class="form-group">
+                    <input type="email" name="usermailid" required>
+                    <label>Email</label>
+                </div>
+                <div class="form-group">
+                    <input type="text" id="passwordField" name="userpassword" readonly>
+                    <label>Password</label>
+                </div>
+                <div class="form-group">
+                    <a href="#" onclick="generateAndDisplayPassword()">Generate Password</a>
+                </div>
+                <div class="form-group">
+                    <button class="create-btn" type="submit">Create User</button>
+                </div>
+            </div>
+        </form>
     </div>
-    
-    <div class="alert custom-alert-warning">
-        <strong>Warning! Be cautious when making changes. Please double-check your input.</strong> 
-        <button class="close-btn" onclick="this.parentElement.style.display='none';">&times;</button>
-    </div> --}}
 
-    {{-- @if(session('success'))
-    <div class="alert custom-alert-success">
-        <strong> {{ session('success') }}</strong> 
-        <button class="close-btn" onclick="this.parentElement.style.display='none';">&times;</button>
-    </div>
-@endif
-
-@if(session('error'))
-<div class="alert custom-alert-error">
-    <strong>{{ session('error') }}</strong> 
-    <button class="close-btn" onclick="this.parentElement.style.display='none';">&times;</button>
-    </div>
-@endif --}}
-
-@if($errors->any())
-<div class="alert custom-alert-warning">
-<ul>
-@foreach($errors->all() as $error)
-<li style="color: red;">{{ $error }}</li>
-
-@endforeach
-</ul>
-</div>
-@endif
-    <form action="{{ route('register_save') }}" method="POST">
-        @csrf
-        <div class="form-container">
-            <div class="form-group">
-                <input type="hidden" name="organisation_id" value="{{$id}}">
-                <input type="text" name="username" required>
-                <label>Name</label>
-            </div>
-            <div class="form-group">
-                <input type="text" name="empid" required>
-                <label>Company Emp ID</label>
-            </div>
-            <div class="form-group">
-                <input type="email" name="usermailid" required>
-                <label>Email</label>
-            </div>
-            <div class="form-group">
-                <input type="text" id="passwordField" name="userpassword" readonly>
-                <label>Password</label>
-            </div>
-        </div>
-        <div class="form-container">
-            
-            <div class="form-group">
-                <a href="#" onclick="generateAndDisplayPassword()">Generate Password</a>
-            </div>
-            <div class="form-group">
-                <button class="create-btn" type="submit">Create User</button>
-            </div>
-        </div>
-    </form>
-
-    @if($errors->any())
-        <ul>
-            @foreach ($errors->all() as $error)
-                <li>{{ $error }}</li>
-            @endforeach
-        </ul>
-    @endif
-
-    <h3>Users</h3>
-    <div class="table-container">
-        <table>
-            <thead>
-                <tr>
-                    <th>Serial No</th>
-                    <th>ID</th>
-                    <th>Name</th>
-                    <th>Email</th>
-                    <th>Action</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach($users as $index => $user)
+    <!-- Table Section -->
+    <div id="tableSection" style="display: none;">
+        <h3>Users</h3>
+        <div class="table-container">
+            <table>
+                <thead>
                     <tr>
-                        <td>{{ $index + 1 }}</td>
-                        <td>{{ $user->id }}</td>
-                        <td>{{ $user->name }}</td>
-                        <td>{{ $user->email }}</td>
-                        <td><button class="edit-icon" onclick="openEditModal({{ $user }})">Edit</button></td>
+                        <th>Serial No</th>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Action</th>
                     </tr>
-                @endforeach
-            </tbody>
-        </table>
-    </div>
-</div>
-
-<!-- Edit User Modal -->
-<div id="editUserModal" class="w3-modal">
-    <div class="w3-modal-content w3-animate-top w3-card-4">
-        <header class="w3-container w3-teal"> 
-            <span onclick="document.getElementById('editUserModal').style.display='none'" 
-            class="w3-button w3-display-topright">&times;</span>
-            <h2>Edit User</h2>
-        </header>
-        <div class="w3-container">
-            <form id="editUserForm" action="{{ route('update_user') }}" method="POST">
-                @csrf
-                <input type="hidden" name="user_id" id="editUserId">
-                <div class="popup-form-group">
-                    <label for="editUsername">Name</label>
-                    <input type="text" name="username" id="editUsername" required>
-                </div>
-                <div class="popup-form-group">
-                    <label for="editEmpid">Company Emp ID</label>
-                    <input type="text" name="empid" id="editEmpid" required>
-                </div>
-                <div class="popup-form-group">
-                    <label for="editUsermailid">Email</label>
-                    <input type="email" name="usermailid" id="editUsermailid" required>
-                </div>
-                <div class="popup-form-group">
-                    <button class="create-btn1" type="submit">Save Changes</button>
-                </div>
-            </form>
+                </thead>
+                <tbody>
+                    @foreach($users as $index => $user)
+                        <tr>
+                            <td>{{ $index + 1 }}</td>
+                            <td>{{ $user->id }}</td>
+                            <td>{{ $user->name }}</td>
+                            <td>{{ $user->email }}</td>
+                            <td><button class="edit-icon" onclick="openEditUserModal({{ $user }})">Edit</button></td>
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
         </div>
     </div>
 </div>
 
 <script>
+    function showUserForm() {
+        document.getElementById('formSection').style.display = 'block';
+        document.getElementById('tableSection').style.display = 'none';
+    }
+
+    function showUserTable() {
+        document.getElementById('formSection').style.display = 'none';
+        document.getElementById('tableSection').style.display = 'block';
+    }
+
+    // Ensure the form is visible by default on page load
+    document.addEventListener('DOMContentLoaded', () => {
+        showUserForm();
+    });
+
     function generateSecurePassword(length = 12) {
         const chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()";
         const array = new Uint32Array(length);
@@ -173,7 +118,7 @@ $id = Auth::guard('superadmin')->user()->id;
         document.getElementById('passwordField').value = password;
     }
 
-    function openEditModal(user) {
+    function openEditUserModal(user) {
         document.getElementById('editUserId').value = user.id;
         document.getElementById('editUsername').value = user.name;
         document.getElementById('editEmpid').value = user.employeeID;
