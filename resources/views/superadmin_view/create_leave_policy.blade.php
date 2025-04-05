@@ -95,6 +95,31 @@ $id = Auth::guard('superadmin')->user()->id;
                 <input type="number" id="category_name" name="leave_encash_count" class="form-control" required>
                 <label for="category_name">No. Of Leave Encash</label>
             </div>
+
+            <div class="form-group">
+                <select id="category_id" name="leave_encash" class="form-control" required>
+                    <option value="" disabled selected></option>
+                    <option value="Active">Active</option>
+                    <option value="Inactive">Inactive</option> 
+                </select>
+                <label for="category_name">Provision Status</label>
+            </div>
+
+            <div class="form-group">
+                <input type="number" id="category_name" name="leave_encash_count" class="form-control" required>
+                <label for="category_name">Max Leave Probation Period</label>
+            </div>
+            <div class="form-group">
+                <input type="number" id="category_name" name="leave_encash_count" class="form-control" required>
+                <label for="category_name">Probation Period Per Month</label>
+            </div>
+
+            <div class="form-group">
+                <input type="number" id="category_name" name="leave_encash_count" class="form-control" required>
+                <label for="category_name">Calendra Start For PP</label>
+            </div>
+
+            
             {{-- <div class="form-group">
                 <select id="category_id" name="category_id" class="form-control" required>
                     <option value=""></option>
@@ -123,6 +148,11 @@ $id = Auth::guard('superadmin')->user()->id;
                         <th>No. of Carry Forward</th>
                         <th>Encash</th>
                         <th>No. of Encash</th>
+
+                        <th>Provision Status</th>
+                        <th>Max Leave Probation Period</th>
+                        <th>Probation Period Per Month</th>
+                        <th>Calendra Start For PP</th>
                         <th>Edit</th>
                       
                     </tr>
@@ -140,6 +170,11 @@ $id = Auth::guard('superadmin')->user()->id;
                 <td>{{ $dataFromLeaveRestction->no_carry_forward }}</td>
                 <td>{{ $dataFromLeaveRestction->leave_encash }}</td>
                 <td>{{ $dataFromLeaveRestction->no_leave_encash }}</td>
+
+                <th>Provision Status</th>
+                <th>Max Leave Probation Period</th>
+                <th>Probation Period Per Month</th>
+                <th>Calendra Start For PP</th>
                 <td><button class="edit-icon">Edit</button></td>
             </tr>
                   
