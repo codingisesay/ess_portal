@@ -479,8 +479,8 @@ window.onload = function() {
     }
 
     .employee-details .left img {
-        width: 50%;
-        height: 50%;
+        /* width: 50%;
+        height: 50%; */
         object-fit: cover;
     }
 
@@ -495,6 +495,7 @@ window.onload = function() {
         flex-direction: column;
         justify-content: center;
         gap: 15px;
+        overflow-y: auto;
     }
 
     .detail-item {

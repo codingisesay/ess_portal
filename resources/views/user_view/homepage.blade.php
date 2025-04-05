@@ -264,7 +264,7 @@ error_reporting(0);
             <h3>Approval Pending</h3>
             <div class="approval-cards">
                 <!-- Leave Card -->
-                <div class="approval-card " id="leave-card" onclick="openLeaveModal()">
+                <div class="approval-card {{ !empty($leaveLists) ? 'glow-effect' : '' }} " id="leave-card" onclick="openLeaveModal()">
                     <div class="card-left">
                         <img src="{{ asset('user_end/images/Leave.png'); }}" alt="Leave Icon" class="icon">
                         <div class="details">
@@ -291,42 +291,7 @@ error_reporting(0);
             </div>
             </div>
         </section>
-                    <style>
-            .glow-effect {
-                position: relative;
-                animation: alertGlow 1.5s ease-in-out infinite;
-                transition: box-shadow 0.3s ease, transform 0.3s ease;
-            }
-
-            /* Flashing alert animation */
-            @keyframes alertGlow {
-                0% {
-                    box-shadow: 0 0 10px rgba(255, 69, 0, 0.5); /* Soft red/orange glow */
-                    transform: scale(1);
-                }
-                50% {
-                    box-shadow: 0 0 25px rgba(255, 69, 0, 0.8); /* Stronger red/orange glow */
-                    transform: scale(1.05);
-                }
-                100% {
-                    box-shadow: 0 0 10px rgba(255, 69, 0, 0.5); /* Soft red/orange glow */
-                    transform: scale(1);
-                }
-            }
-
-            /* Optional: Subtle alert glow without animation */
-            .glow-effect.alert-static {
-                box-shadow: 0 0 15px rgba(255, 69, 0, 0.5);
-            }
-
-            /* Hover effect to emphasize urgency */
-            .glow-effect:hover {
-                box-shadow: 0 0 30px rgba(255, 69, 0, 1); /* More intense glow */
-                transform: scale(1.05);
-                transition: box-shadow 0.3s ease, transform 0.3s ease;
-            }
-
-                    </style>
+             
 
 
         <!-- Popup Modal -->
@@ -349,7 +314,7 @@ error_reporting(0);
                 </tr>
             </thead>
             <tbody>
-            
+            @if (!empty($leaveLists))
                 @foreach ($leaveLists as $leaveApply)
                 @foreach ($leaveApply as $leave)
                     <tr>
@@ -384,7 +349,7 @@ error_reporting(0);
                     </tr>
                 @endforeach
             @endforeach
-         
+            @endif
             </tbody>
         </table>
     </div>
@@ -477,6 +442,42 @@ error_reporting(0);
     }
 </script>
 
+<style>
+            .glow-effect {
+                position: relative;
+                animation: alertGlow 1.5s ease-in-out infinite;
+                transition: box-shadow 0.3s ease, transform 0.3s ease;
+            }
+
+            /* Flashing alert animation */
+            @keyframes alertGlow {
+                0% {
+                    box-shadow: 0 0 10px rgba(255, 69, 0, 0.5); /* Soft red/orange glow */
+                    transform: scale(1);
+                }
+                50% {
+                    box-shadow: 0 0 25px rgba(255, 69, 0, 0.8); /* Stronger red/orange glow */
+                    transform: scale(1.05);
+                }
+                100% {
+                    box-shadow: 0 0 10px rgba(255, 69, 0, 0.5); /* Soft red/orange glow */
+                    transform: scale(1);
+                }
+            }
+
+            /* Optional: Subtle alert glow without animation */
+            .glow-effect.alert-static {
+                box-shadow: 0 0 15px rgba(255, 69, 0, 0.5);
+            }
+
+            /* Hover effect to emphasize urgency */
+            .glow-effect:hover {
+                box-shadow: 0 0 30px rgba(255, 69, 0, 1); /* More intense glow */
+                transform: scale(1.05);
+                transition: box-shadow 0.3s ease, transform 0.3s ease;
+            }
+
+                    </style>
 
 
         <section class="news-events">

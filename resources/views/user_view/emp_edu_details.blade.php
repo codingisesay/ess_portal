@@ -51,7 +51,7 @@
                         <th>Marks Obtained</th>
                         <th>Date of Certificate</th>
                         {{-- <th>Edit</th> --}}
-                        <th>Remove</th>
+                        <th>Action</th>
                     </tr>
                 </thead>
                 <tbody id="educationTableBody">
@@ -178,7 +178,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 <select name="passing_year[]" class="year-input" required>
                     <option value="" disabled selected>Select Passing Year</option>
                     <?php
-                    $startYear = 1900;
+                    $startYear = 1950;
                     $endYear = date("Y");
                     for ($year = $startYear; $year <= $endYear; $year++) {
                         echo "<option value=\"$year\">$year</option>";
