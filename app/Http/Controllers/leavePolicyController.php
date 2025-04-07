@@ -157,11 +157,17 @@ class leavePolicyController extends Controller
             'max_leave_count' => 'required',
             'max_leave_at_time' => 'required',
             'min_leave_at_time' => 'required',
-
+            'leave_count_per_month' => 'required',
+            'no_of_leaves_per_month' => 'required',
             'is_carry_forward' => 'required',
             'no_of_carry_forward' => 'required',
             'leave_encash' => 'required',
             'leave_encash_count' => 'required',
+
+            'provision_status' => 'required',
+            'max_leave_pp' => 'required',
+            'probation_period_per_month' => 'required',
+            'calendra_start_for_PP' => 'required',
         ]);
 
         $id = Auth::guard('superadmin')->user()->id;
@@ -179,10 +185,21 @@ class leavePolicyController extends Controller
                 'max_leave' => $data['max_leave_count'],
                 'max_leave_at_time'=> $data['max_leave_at_time'],
                 'min_leave_at_time'=> $data['min_leave_at_time'],
+
+                'leave_count_per_month' =>$data['leave_count_per_month'],
+                'no_of_time_per_month' =>$data['no_of_leaves_per_month'],
+
                 'carry_forward'=> $data['is_carry_forward'],
                 'no_carry_forward' => $data['no_of_carry_forward'],
                 'leave_encash' => $data['leave_encash'],
                 'no_leave_encash' => $data['leave_encash_count'],
+
+
+                'provision_status'=> $data['provision_status'],
+                'max_leave_PP' => $data['max_leave_pp'],
+                'provision_period_per_month' => $data['probation_period_per_month'],
+                'calendra_start_for_PP' => $data['calendra_start_for_PP'],
+
                 'created_at'=> NOW(),
                 'updated_at'=> NOW(),
             ]);
@@ -191,11 +208,10 @@ class leavePolicyController extends Controller
     
                 return redirect()->route('create_policy')->with('success', 'Record Inserted successfully!');
     
-            }else{
+            }
     
                 return redirect()->route('create_policy')->with('error', 'Record Not Inserted successfully!');
-    
-            }
+
     
 
         }
@@ -314,11 +330,16 @@ class leavePolicyController extends Controller
 
             $leave_single_data['leave_type'] = $leaveType->leave_type;
 
-            $emp_details = DB::table('emp_details')->where('user_id',$user->id)->get();
+            // $emp_details = DB::table('emp_details')->where('user_id',$user->id)->get();
             // dd($emp_details);
     
-            $leave_restriction = DB::table('leave_type_restrictions')->where('leave_type_id',$leaveType->leave_type_id)->get();
+            $leave_restriction = DB::table('leave_type_restrictions')->where('leave_type_id',$leaveType->leave_type_id)->first();
             // dd($leave_restriction);
+
+            if (!$leave_restriction) {
+                // Skip the current leave type or set defaults
+                continue; // This will skip the current iteration in the loop
+            }
 
             $leaveCycyle = DB::table('leave_cycles')
             ->where('organisation_id' ,'=', $user->organisation_id)
@@ -328,10 +349,10 @@ class leavePolicyController extends Controller
             // dd($leaveCycyle);
             $leaceCycleStartDate = $leaveCycyle->start_date;
             $leaceCycleEndtDate = $leaveCycyle->end_date;
-            $provision_period = $emp_details[0]->provision_period;
-            $Joining_date = $emp_details[0]->Joining_date;
+            $provision_period = $emp_details->provision_period;
+            $Joining_date = $emp_details->Joining_date;
             $JDC = Carbon::create($Joining_date); 
-            $calendra_start = $leave_restriction[0]->calendra_start_for_PP;
+            $calendra_start = $leave_restriction->calendra_start_for_PP;
             $date = Carbon::create($Joining_date);
             $provision_period_till = $date->addMonths($provision_period);  
             $PPdate = $provision_period_till->toDateString();  
@@ -376,8 +397,25 @@ class leavePolicyController extends Controller
         $takenLeave += $leaveCount;
     }
     $currentYear = Carbon::now()->year; 
+
+
+    if($leave_restriction->provision_status == 'Not Applicable'){
+        $remaning_leave = $leave_restriction->max_leave - $takenLeave;
+        $leave_single_data = [
+            'leave_type' => $leaveType->leave_type,
+            'total_leaves' => $leave_restriction->max_leave,
+            'no_carry_forward' => $leave_restriction->no_carry_forward,
+            'no_leave_encash' => $leave_restriction->no_leave_encash,
+            'consumed_leaves' => $takenLeave,
+            'remaining_leaves' => $remaning_leave,
+        ];
+
+      
+
+      array_push($leaveSummary,$leave_single_data); 
+    }else{
     
-    if($emp_details[0]->provision_period_year == 1){
+    if($emp_details->provision_period_year == 1){
     
         //code for year cycle date of joining [joining year]
     
@@ -406,7 +444,7 @@ class leavePolicyController extends Controller
          $carry_forward = $leave_single_data['no_carry_forward'] = 0;
         $leave_encash = $leave_single_data['no_leave_encash'] = 0;
     
-    }else if($emp_details[0]->provision_period_year == 2){
+    }else if($emp_details->provision_period_year == 2){
     
         //if provision period extent to next cycyle
     
@@ -425,18 +463,34 @@ class leavePolicyController extends Controller
     
     $leavemonthwithoutPP = $months - $remaning_pp_months;
     
-    $total_leave = $leavemonthwithoutPP*$leave_restriction[0]->leave_count_per_month;
+    $total_leave = $leavemonthwithoutPP*$leave_restriction->leave_count_per_month;
     
-    $total_leave = $total_leave + ($remaning_pp_months*$leave_restriction[0]->provision_period_per_month);
+    $total_leave = $total_leave + ($remaning_pp_months*$leave_restriction->provision_period_per_month);
     
     $user_leave_encash_carries = DB::table('user_leave_encash_carries')
     ->where('user_id',$user->id)
     ->where('leave_type_map_with',$leaveType->leave_type_id)
     ->first();
     
-    $total_leave = $total_leave + $user_leave_encash_carries->carry_forward;
-    $carry_forward = $user_leave_encash_carries->carry_forward;
-    $leave_encash = $user_leave_encash_carries->leave_encash;
+    if (!$user_leave_encash_carries) {
+
+        $total_leave = $total_leave + 0;
+    
+        $carry_forward = 0;
+        $leave_encash = 0;
+    
+       
+       
+    }else{
+    
+        $total_leave = $total_leave + $user_leave_encash_carries->carry_forward;
+    
+        $carry_forward = $user_leave_encash_carries->carry_forward;
+        $leave_encash = $user_leave_encash_carries->leave_encash;
+    
+    
+    }
+  
     
     
     }else{
@@ -448,10 +502,24 @@ class leavePolicyController extends Controller
                                      ->where('leave_type_map_with',$leaveType->leave_type_id)
                                      ->first();
     
-        $total_leave = $leave_restriction[0]->max_leave + $user_leave_encash_carries->carry_forward;
+                                     if (!$user_leave_encash_carries) {
 
-        $carry_forward = $user_leave_encash_carries->carry_forward;
-        $leave_encash = $user_leave_encash_carries->leave_encash;
+                                        $total_leave = $total_leave + 0;
+                                    
+                                        $carry_forward = 0;
+                                        $leave_encash = 0;
+                                    
+                                       
+                                       
+                                    }else{
+                                    
+                                        $total_leave = $total_leave + $user_leave_encash_carries->carry_forward;
+                                    
+                                        $carry_forward = $user_leave_encash_carries->carry_forward;
+                                        $leave_encash = $user_leave_encash_carries->leave_encash;
+                                    
+                                    
+                                    }
     
     }
     
@@ -472,6 +540,7 @@ class leavePolicyController extends Controller
     
           array_push($leaveSummary,$leave_single_data); 
         }
+    }
 
         // dd($leaveSummary);
 
@@ -689,10 +758,17 @@ private function calculateWorkingHours($userId)
 
     public function fetchRemainingLeave($leave_id){
         $loginUserInfo = Auth::user();
-        $emp_details = DB::table('emp_details')->where('user_id',$loginUserInfo->id)->get();
+        $emp_details = DB::table('emp_details')->where('user_id',$loginUserInfo->id)->first();
         // dd($emp_details);
 
-        $leave_restriction = DB::table('leave_type_restrictions')->where('leave_type_id',$leave_id)->get();
+        $leave_restriction = DB::table('leave_type_restrictions')->where('leave_type_id',$leave_id)->first();
+        if(!$leave_restriction){
+
+            return response()->json([
+                'remaining_leave' => 0,  // This is the data you will send back to the front-end
+            ]);
+
+        }
         $leaveCycyle = DB::table('leave_cycles')
         ->where('organisation_id' ,'=', $loginUserInfo->organisation_id)
         ->where('status', '=', 'Active')
@@ -701,10 +777,10 @@ private function calculateWorkingHours($userId)
         // dd($leaveCycyle);
         $leaceCycleStartDate = $leaveCycyle->start_date;
         $leaceCycleEndtDate = $leaveCycyle->end_date;
-        $provision_period = $emp_details[0]->provision_period;
-        $Joining_date = $emp_details[0]->Joining_date;
+        $provision_period = $emp_details->provision_period;
+        $Joining_date = $emp_details->Joining_date;
         $JDC = Carbon::create($Joining_date); 
-        $calendra_start = $leave_restriction[0]->calendra_start_for_PP;
+        $calendra_start = $leave_restriction->calendra_start_for_PP;
         $date = Carbon::create($Joining_date);
         $provision_period_till = $date->addMonths($provision_period);  
         $PPdate = $provision_period_till->toDateString();  
@@ -750,7 +826,20 @@ for ($i = 0; $i < $leaveCountArray->count(); $i++) {
 }
 $currentYear = Carbon::now()->year; 
 
-if($emp_details[0]->provision_period_year == 1){
+if($leave_restriction->provision_status == 'Not Applicable'){
+
+    // $leave_restriction->max_leave - $takenLeave;
+
+
+    $remaning_leave = $leave_restriction->max_leave - $takenLeave;
+
+    return response()->json([
+        'remaining_leave' => $remaning_leave,  // This is the data you will send back to the front-end
+    ]);
+
+}else{
+
+if($emp_details->provision_period_year == 1){
 
     //code for year cycle date of joining [joining year]
 
@@ -766,17 +855,17 @@ if($emp_details[0]->provision_period_year == 1){
     
     $leavemonthwithoutPP = $months - $provision_period;
 
-    $total_leave = $leavemonthwithoutPP*$leave_restriction[0]->leave_count_per_month;
+    $total_leave = $leavemonthwithoutPP*$leave_restriction->leave_count_per_month;
 
-    $total_leave = $total_leave + ($provision_period*$leave_restriction[0]->provision_period_per_month);
+    $total_leave = $total_leave + ($provision_period*$leave_restriction->provision_period_per_month);
 
     if ($JDC->day > $calendra_start) {
 
-        $total_leave = $total_leave - $leave_restriction[0]->provision_period_per_month;
+        $total_leave = $total_leave - $leave_restriction->provision_period_per_month;
      
      }
 
-}else if($emp_details[0]->provision_period_year == 2){
+}else if($emp_details->provision_period_year == 2){
 
     //if provision period extent to next cycyle
 
@@ -795,28 +884,52 @@ if($emp_details[0]->provision_period_year == 1){
 
 $leavemonthwithoutPP = $months - $remaning_pp_months;
 
-$total_leave = $leavemonthwithoutPP*$leave_restriction[0]->leave_count_per_month;
+$total_leave = $leavemonthwithoutPP*$leave_restriction->leave_count_per_month;
 
-$total_leave = $total_leave + ($remaning_pp_months*$leave_restriction[0]->provision_period_per_month);
+$total_leave = $total_leave + ($remaning_pp_months*$leave_restriction->provision_period_per_month);
 
 $user_leave_encash_carries = DB::table('user_leave_encash_carries')
 ->where('user_id',$loginUserInfo->id)
 ->where('leave_type_map_with',$leave_id)
 ->first();
 
-$total_leave = $total_leave + $user_leave_encash_carries->carry_forward;
+if (!$user_leave_encash_carries) {
+
+    $total_leave = $total_leave + 0;
+
+   
+   
+}else{
+
+    $total_leave = $total_leave + $user_leave_encash_carries->carry_forward;
+
+
+}
+
+
 
 
 }else{
 
     //without provision period
 
+    // $total_leave = $leave_restriction[0]->max_leave + $user_leave_encash_carries->carry_forward;
+
     $user_leave_encash_carries = DB::table('user_leave_encash_carries')
                                  ->where('user_id',$loginUserInfo->id)
                                  ->where('leave_type_map_with',$leave_id)
                                  ->first();
 
-    $total_leave = $leave_restriction[0]->max_leave + $user_leave_encash_carries->carry_forward;
+                                 if (!$user_leave_encash_carries) {
+
+                                    $total_leave = $leave_restriction->max_leave + 0;
+                                 
+                                }else{
+                                
+                                    $total_leave = $leave_restriction->max_leave + $user_leave_encash_carries->carry_forward;
+                                
+                                
+                                }
 
 }
 
@@ -826,6 +939,7 @@ $remaning_leave = $total_leave - $takenLeave;
         'remaining_leave' => $remaning_leave,  // This is the data you will send back to the front-end
     ]);
     }
+}
 
     public function fetchStatusHalfDay($leave_id,$start_date,$end_date){
       if($start_date == $end_date){

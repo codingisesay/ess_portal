@@ -22,19 +22,28 @@ $id = Auth::guard('superadmin')->user()->id;
             <button class="but" onclick="showLeavePolicyForm()">Show Form</button>
             <button class="but" onclick="showLeavePolicyTable()">Show Table</button>
         </div>
+    {{-- @endif --}}
+    
+    {{-- @if(session('error'))
+    <div class="alert custom-alert-error">
+        <strong> {{ session('error') }}</strong>
+        <button class="close-btn" onclick="this.parentElement.style.display='none';">&times;</button>
+        </div>
+    @endif  --}}
 
-        <!-- Form Section -->
-        <div id="formSection" style="display: none;">
-            @if($errors->any())
-            <div class="alert custom-alert-warning">
-                <ul>
-                    @foreach($errors->all() as $error)
-                        <li style="color: red;">{{ $error }}</li>
-                    @endforeach
-                </ul>
-            </div>
-            @endif
+    @if($errors->any())
+    <div class="alert custom-alert-warning">
+<ul>
+@foreach($errors->all() as $error)
+    <li style="color: red;">{{ $error }}</li>
+    
+@endforeach
+</ul>
+    </div>
+@endif
 
+  <!-- Form Section -->
+  <div id="formSection" style="display: none;">
             <form action="{{ route('insertPolicyConf') }}" method="POST" enctype="multipart/form-data" class="form-container">
                 @csrf
                 <div class="form-group">
@@ -58,6 +67,17 @@ $id = Auth::guard('superadmin')->user()->id;
                     <input type="number" id="category_name" name="min_leave_at_time" class="form-control" required step="0.5">
                     <label for="category_name">Min Leave At Time</label>
                 </div>
+
+                <div class="form-group">
+                    <input type="number" id="category_name" name="leave_count_per_month" class="form-control" required step="0.5">
+                    <label for="category_name">Leave Count Per Month</label>
+                </div>
+
+                <div class="form-group">
+                    <input type="number" id="category_name" name="no_of_leaves_per_month" class="form-control" required step="0.5">
+                    <label for="category_name">No of Times Per Months</label>
+                </div>
+
                 <div class="form-group">
                     <select id="category_id" name="is_carry_forward" class="form-control" required>
                         <option value="" disabled selected></option>
@@ -82,6 +102,29 @@ $id = Auth::guard('superadmin')->user()->id;
                     <input type="number" id="category_name" name="leave_encash_count" class="form-control" required>
                     <label for="category_name">No. Of Leave Encash</label>
                 </div>
+
+                <div class="form-group">
+                    <select id="category_id" name="provision_status" class="form-control" required>
+                        <option value="" disabled selected></option>
+                        <option value="Applicable">Applicable</option>
+                        <option value="Not Applicable">Not Applicable</option> 
+                    </select>
+                    <label for="category_name">Provision Status</label>
+                </div>
+    
+                <div class="form-group">
+                    <input type="number" id="category_name" name="max_leave_pp" class="form-control" required>
+                    <label for="category_name">Max Leave Probation Period</label>
+                </div>
+                <div class="form-group">
+                    <input type="number" id="category_name" name="probation_period_per_month" class="form-control" required>
+                    <label for="category_name">Probation Period Per Month</label>
+                </div>
+    
+                <div class="form-group">
+                    <input type="number" id="category_name" name="calendra_start_for_PP" class="form-control" required>
+                    <label for="category_name">Calendra Start For PP</label>
+                </div>
                 <button type="submit" class="create-btn" style="position: relative; bottom:8px;">Save Type</button>
             </form>
         </div>
@@ -98,11 +141,19 @@ $id = Auth::guard('superadmin')->user()->id;
                             <th>Max Leave</th>
                             <th>Max Leave At Time</th>
                             <th>Min Leave At Time</th>
+                            <th>Leave Count Per Month</th>
+                            <th>No of Times Per Month</th>
                             <th>Carry Forward</th>
                             <th>No. of Carry Forward</th>
                             <th>Encash</th>
                             <th>No. of Encash</th>
+
+                            <th>Provision Status</th>
+                            <th>Max Leave Probation Period</th>
+                            <th>Probation Period Per Month</th>
+                            <th>Calendra Start For PP</th>
                             <th>Edit</th>
+                            
                         </tr>
                     </thead>
                     <tbody>
@@ -113,10 +164,20 @@ $id = Auth::guard('superadmin')->user()->id;
                                 <td>{{ $dataFromLeaveRestction->max_leave }}</td>
                                 <td>{{ $dataFromLeaveRestction->max_leave_at_time }}</td>
                                 <td>{{ $dataFromLeaveRestction->min_leave_at_time }}</td>
+
+                                <td>{{ $dataFromLeaveRestction->leave_count_per_month }}</td>
+                                <td>{{ $dataFromLeaveRestction->no_of_time_per_month }}</td>   
+
+
                                 <td>{{ $dataFromLeaveRestction->carry_forward }}</td>
                                 <td>{{ $dataFromLeaveRestction->no_carry_forward }}</td>
                                 <td>{{ $dataFromLeaveRestction->leave_encash }}</td>
                                 <td>{{ $dataFromLeaveRestction->no_leave_encash }}</td>
+
+                                <td>{{ $dataFromLeaveRestction->provision_status }}</td>
+                                <td>{{ $dataFromLeaveRestction->max_leave_PP }}</td>
+                                <td>{{ $dataFromLeaveRestction->provision_period_per_month }}</td>
+                                <td>{{ $dataFromLeaveRestction->calendra_start_for_PP }}</td>
                                 <td><button class="edit-icon">Edit</button></td>
                             </tr>
                         @endforeach
@@ -143,5 +204,4 @@ $id = Auth::guard('superadmin')->user()->id;
         });
     </script>
 @endsection
-</body>
-</html>
+

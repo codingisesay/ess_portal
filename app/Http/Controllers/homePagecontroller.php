@@ -100,24 +100,24 @@ $leaveUsage = [];
     // $leave_single_data['leave_type'] = $leaveType->leave_type;
     array_push($leave_single_data,$leaveType->leave_type);
 
-    $emp_details = DB::table('emp_details')->where('user_id',$user->id)->get();
-    // dd($emp_details);
-
-    $leave_restriction = DB::table('leave_type_restrictions')->where('leave_type_id',$leaveType->leave_type_id)->get();
-    // dd($leave_restriction);
-
     $leaveCycyle = DB::table('leave_cycles')
     ->where('organisation_id' ,'=', $user->organisation_id)
     ->where('status', '=', 'Active')
     ->first();
+    
+    $leave_restriction = DB::table('leave_type_restrictions')->where('leave_type_id',$leaveType->leave_type_id)->first();
 
-    // dd($leaveCycyle);
+    if (!$leave_restriction) {
+        // Skip the current leave type or set defaults
+        continue; // This will skip the current iteration in the loop
+    }
+
     $leaceCycleStartDate = $leaveCycyle->start_date;
     $leaceCycleEndtDate = $leaveCycyle->end_date;
-    $provision_period = $emp_details[0]->provision_period;
-    $Joining_date = $emp_details[0]->Joining_date;
+    $provision_period = $emp_details->provision_period;
+    $Joining_date = $emp_details->Joining_date;
     $JDC = Carbon::create($Joining_date); 
-    $calendra_start = $leave_restriction[0]->calendra_start_for_PP;
+    // $calendra_start = $leave_restriction->calendra_start_for_PP;
     $date = Carbon::create($Joining_date);
     $provision_period_till = $date->addMonths($provision_period);  
     $PPdate = $provision_period_till->toDateString();  
@@ -163,7 +163,26 @@ $takenLeave += $leaveCount;
 }
 $currentYear = Carbon::now()->year; 
 
-if($emp_details[0]->provision_period_year == 1){
+if($leave_restriction->provision_status == 'Not Applicable'){
+
+    // $leave_restriction->max_leave - $takenLeave;
+
+    array_push($leave_single_data,$leave_restriction->max_leave);
+
+    $percentage = $takenLeave*100/$leave_restriction->max_leave;
+                            
+    $roundPer = round($percentage, 2);
+
+    //pushing taken leave of this leave type
+    array_push($leave_single_data,$takenLeave);
+//pushing percentage
+    array_push($leave_single_data,$roundPer);
+//pushing sub array to main array
+    array_push($leaveUsage,$leave_single_data);
+
+}else{
+
+if($emp_details->provision_period_year == 1){
 
 //code for year cycle date of joining [joining year]
 
@@ -175,17 +194,19 @@ if ($JDC->copy()->addMonths($months)->isBefore($leaceCycleEndtDate)) {
  $months++;  // If there is a partial month, add it
 }
 
+$calendra_start = $leave_restriction->calendra_start_for_PP;
+
 $total_leave = 0;
 
 $leavemonthwithoutPP = $months - $provision_period;
 
-$total_leave = $leavemonthwithoutPP*$leave_restriction[0]->leave_count_per_month;
+$total_leave = $leavemonthwithoutPP*$leave_restriction->leave_count_per_month;
 
-$total_leave = $total_leave + ($provision_period*$leave_restriction[0]->provision_period_per_month);
+$total_leave = $total_leave + ($provision_period*$leave_restriction->provision_period_per_month);
 
 if ($JDC->day > $calendra_start) {
 
-    $total_leave = $total_leave - $leave_restriction[0]->provision_period_per_month;
+    $total_leave = $total_leave - $leave_restriction->provision_period_per_month;
  
  }
 
@@ -196,7 +217,7 @@ if ($JDC->day > $calendra_start) {
     $roundPer = round($percentage, 2);
 
 
-}else if($emp_details[0]->provision_period_year == 2){
+}else if($emp_details->provision_period_year == 2){
 
 //if provision period extent to next cycyle
 
@@ -215,16 +236,30 @@ $remaning_pp_months++;
 
 $leavemonthwithoutPP = $months - $remaning_pp_months;
 
-$total_leave = $leavemonthwithoutPP*$leave_restriction[0]->leave_count_per_month;
+$total_leave = $leavemonthwithoutPP*$leave_restriction->leave_count_per_month;
 
-$total_leave = $total_leave + ($remaning_pp_months*$leave_restriction[0]->provision_period_per_month);
+$total_leave = $total_leave + ($remaning_pp_months*$leave_restriction->provision_period_per_month);
 
 $user_leave_encash_carries = DB::table('user_leave_encash_carries')
 ->where('user_id',$user->id)
 ->where('leave_type_map_with',$leaveType->leave_type_id)
 ->first();
 
-$total_leave = $total_leave + $user_leave_encash_carries->carry_forward;
+if (!$user_leave_encash_carries) {
+
+    $total_leave = $total_leave + 0;
+
+array_push($leave_single_data,$total_leave);
+
+$percentage = $takenLeave*100/$total_leave;
+
+$roundPer = round($percentage, 2);
+
+   
+   
+}else{
+
+    $total_leave = $total_leave + $user_leave_encash_carries->carry_forward;
 
 array_push($leave_single_data,$total_leave);
 
@@ -233,22 +268,42 @@ $percentage = $takenLeave*100/$total_leave;
 $roundPer = round($percentage, 2);
 
 
+}
+
 }else{
 
 //without provision period
+$total_leave = 0;
 
 $user_leave_encash_carries = DB::table('user_leave_encash_carries')
                              ->where('user_id',$user->id)
                              ->where('leave_type_map_with',$leaveType->leave_type_id)
                              ->first();
 
-$total_leave = $leave_restriction[0]->max_leave + $user_leave_encash_carries->carry_forward;
+                             if (!$user_leave_encash_carries) {
 
-array_push($leave_single_data,$total_leave);
-
-$percentage = $takenLeave*100/$total_leave;
-
-$roundPer = round($percentage, 2);
+                                $total_leave = $leave_restriction->max_leave + 0;
+                            
+                            array_push($leave_single_data,$total_leave);
+                            
+                            $percentage = $takenLeave*100/$total_leave;
+                            
+                            $roundPer = round($percentage, 2);
+                            
+                               
+                               
+                            }else{
+                            
+                                $total_leave = $total_leave + $user_leave_encash_carries->carry_forward;
+                            
+                            array_push($leave_single_data,$total_leave);
+                            
+                            $percentage = $takenLeave*100/$total_leave;
+                            
+                            $roundPer = round($percentage, 2);
+                            
+                            
+                            }
 
 }
 
@@ -261,6 +316,7 @@ $roundPer = round($percentage, 2);
 //pushing sub array to main array
     array_push($leaveUsage,$leave_single_data);
 
+}
 }
 
 // dd($leaveUsage);
