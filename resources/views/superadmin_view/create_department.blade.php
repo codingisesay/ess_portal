@@ -19,69 +19,79 @@ $id = Auth::guard('superadmin')->user()->id;
 <div class="container">
     <h2>Create Department For Your Organisation</h2>
 
-    {{-- @if(session('success'))
-    <div class="alert custom-alert-success">
-        <strong>{{ session('success') }}</strong> 
-        <button class="close-btn" onclick="this.parentElement.style.display='none';">&times;</button>
+    <!-- Toggle Buttons -->
+    <div class="toggle-buttons">
+        <button class="but" onclick="showDepartmentForm()">Show Form</button>
+        <button class="but" onclick="showDepartmentTable()">Show Table</button>
     </div>
-    @endif
 
-    @if(session('error'))
-    <div class="alert custom-alert-error">
-        <strong> {{ session('error') }}</strong>
-        <button class="close-btn" onclick="this.parentElement.style.display='none';">&times;</button>
-    </div>
-    @endif --}}
-
-    @if($errors->any())
-    <div class="alert custom-alert-warning">
-<ul>
-@foreach($errors->all() as $error)
-    <li style="color: red;">{{ $error }}</li>
-    
-@endforeach
-</ul>
-    </div>
-@endif
-
-    <form method="POST" action="{{ route('insert_department') }}">
-        @csrf
-        <div class="form-container">
-            <div class="form-group">
-                <input type="hidden" name="organisation_id" value="{{$id}}">
-                <input type="text" name="department_name" required>
-                <label>Department Name</label>
+    <!-- Form Section -->
+    <div id="formSection" style="display: none;">
+        <form method="POST" action="{{ route('insert_department') }}">
+            @csrf
+            <div class="form-container">
+                <div class="form-group">
+                    <input type="hidden" name="organisation_id" value="{{$id}}">
+                    <input type="text" name="department_name" required>
+                    <label>Department Name</label>
+                </div>
+                <div class="form-group" style="position: relative; bottom:8px;">
+                    <button class="create-btn" type="submit">Create Department</button>
+                </div>
             </div>
-            <div class="form-group" style="position: relative; bottom:8px;">
-                <button class="create-btn" type="submit">Create Department</button>
-            </div>
-        </div>
-    </form>
+        </form>
+    </div>
 
-    <h3>Organisation Departments</h3>
-    <div class="table-container">
-        <table>
-            <thead>
-                <tr>
-                    <th>Serial No</th>
-                    <th>ID</th>
-                    <th>Name</th>
-                    <th>Action</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach($departments as $index => $department)
+    <!-- Table Section -->
+    <div id="tableSection" style="display: none;">
+        <h3>Organisation Departments</h3>
+        <div class="table-container">
+            <table>
+                <thead>
                     <tr>
-                        <td>{{ $index + 1 }}</td>
-                        <td>{{ $department->id }}</td>
-                        <td>{{ $department->name }}</td>
-                        <td><button class="edit-icon" onclick="openEditDepartmentModal({{ $department }})">Edit</button></td>
+                        <th>Serial No</th>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Action</th>
                     </tr>
-                @endforeach
-            </tbody>
-        </table>
+                </thead>
+                <tbody>
+                    @foreach($departments as $index => $department)
+                        <tr>
+                            <td>{{ $index + 1 }}</td>
+                            <td>{{ $department->id }}</td>
+                            <td>{{ $department->name }}</td>
+                            <td><button class="edit-icon" onclick="openEditDepartmentModal({{ $department }})">Edit</button></td>
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
     </div>
 </div>
+
+<script>
+    function showDepartmentForm() {
+        document.getElementById('formSection').style.display = 'block';
+        document.getElementById('tableSection').style.display = 'none';
+    }
+
+    function showDepartmentTable() {
+        document.getElementById('formSection').style.display = 'none';
+        document.getElementById('tableSection').style.display = 'block';
+    }
+
+    // Ensure the form is visible by default on page load
+    document.addEventListener('DOMContentLoaded', () => {
+        showDepartmentForm();
+    });
+
+    function openEditDepartmentModal(department) {
+        document.getElementById('editDepartmentId').value = department.id;
+        document.getElementById('editDepartmentName').value = department.name;
+        document.getElementById('editDepartmentModal').style.display = 'block';
+    }
+</script>
 
 <!-- Edit Department Modal -->
 <div id="editDepartmentModal" class="w3-modal">
@@ -106,14 +116,6 @@ $id = Auth::guard('superadmin')->user()->id;
         </div>
     </div>
 </div>
-
-<script>
-    function openEditDepartmentModal(department) {
-        document.getElementById('editDepartmentId').value = department.id;
-        document.getElementById('editDepartmentName').value = department.name;
-        document.getElementById('editDepartmentModal').style.display = 'block';
-    }
-</script>
 
 @endsection
 

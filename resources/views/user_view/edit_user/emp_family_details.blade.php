@@ -56,7 +56,7 @@ $permission_array = session('id');
                             <th>Dependent</th>
                             <th>Phone Number</th>
                             {{-- <th>Edit</th> --}}
-                            <th>Remove</th>
+                            <th>Action</th>
                         </tr>
                     </thead>
                     <tbody id="familyTableBody">

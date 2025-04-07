@@ -21,11 +21,65 @@ body {
     margin-bottom: 2%;
 } */
 
+/* Basic Button Style */
+.but {
+    position: relative;
+    display: inline-block;
+    padding: 15px 30px;
+    font-size: 18px;
+    text-align: center;
+    text-transform: uppercase;
+    cursor: pointer;
+    color: #fff;
+    background-color: #8A3366;
+    /* Your color */
+    border: 2px solid #8A3366;
+    /* Your color */
+    border-radius: 50px;
+    transition: all 0.3s ease-in-out;
+    overflow: hidden;
+}
+
+.but:before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: linear-gradient(45deg, rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.2));
+    transition: all 0.5s ease-in-out;
+    transform: rotate(45deg);
+}
+
+.but:hover {
+    background-color: #6b2353;
+    /* Darker shade of #8A3366 */
+    color: #fff;
+    transform: scale(1.1);
+}
+
+.but:hover:before {
+    top: 0;
+    left: 0;
+}
+
+.but:active {
+    transform: scale(1);
+}
+
+
+
 .form-container {
     display: flex;
     flex-wrap: wrap;
     gap: 40px;
     margin-bottom: 15px;
+    background-color: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    margin-top: 65px;
 }
 
 .form-group {

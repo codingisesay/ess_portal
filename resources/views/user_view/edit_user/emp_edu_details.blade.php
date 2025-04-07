@@ -56,7 +56,7 @@ $permission_array = session('id');
                         <th>Marks Obtained</th>
                         <th>Date of Certificate</th>
                         {{-- <th>Edit</th> --}}
-                        <th>Remove</th>
+                        <th>Action</th>
                     </tr>
                 </thead>
                 <tbody id="educationTableBody">
