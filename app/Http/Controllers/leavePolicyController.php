@@ -496,6 +496,8 @@ class leavePolicyController extends Controller
     }else{
     
         //without provision period
+
+        $total_leave = $leave_restriction->max_leave;
     
         $user_leave_encash_carries = DB::table('user_leave_encash_carries')
                                      ->where('user_id',$user->id)
