@@ -28,7 +28,7 @@ body {
 }
 
 .sidebar {
-    width: 250px;
+    width: 315px;
     background-color: #F6F5F7;
     display: flex;
     flex-direction: column;
@@ -36,7 +36,9 @@ body {
     padding: 20px;
     box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
     border-radius: 15px;
-    margin-left: -10px; /* Move sidebar slightly to the left */
+    margin-left: -50px; /* Move sidebar slightly to the left */
+    height: 100vh;
+    margin-top: -50px;
     overflow: auto
 
 }
@@ -149,30 +151,84 @@ nav ul li a:hover {
   </div>
   <hr>
   <div class="sidebar-content">
-    
-    <ul> 
-        <li><a href="{{ route('create_user') }}" class="active"><img src="{{ asset('admin_end/images/man.png') }}" width="30" height="30" alt=""> Create User</a></li>
-            <li><a href="{{ route('create_branch_form') }}"><img src="{{ asset('admin_end/images/createbranch.png') }}" width="30" height="30" alt=""> Create Branch</a></li>
-            <li><a href="{{ route('create_department_form') }}"><img src="{{ asset('admin_end/images/corporation.png') }}" width="30" height="30" alt=""> Create Department</a></li>
-            <li><a href="{{ route('create_designation_form') }}"><img src="{{ asset('admin_end/images/createdesignation.png') }}" width="30" height="30" alt="">  Create Designation</a></li>
-            <li><a href="{{ route('load_mail_config_form') }}"><img src="{{ asset('admin_end/images/createdesignation.png') }}" width="30" height="30" alt="">  Mail Settings</a></li>
-            <li><a href="{{ route('create_policy_category') }}"><img src="{{ asset('admin_end/images/createdesignation.png') }}" width="30" height="30" alt="">  Create Policy Category</a></li>
-            <li><a href="{{ route('create_hr_policy') }}"><img src="{{ asset('admin_end/images/createdesignation.png') }}" width="30" height="30" alt="">  Create HR Policy</a></li>
+    <ul>
+        <!-- Organisation Configuration -->
+        <li>
+            <strong onclick="toggleDropdown('orgConfigDropdown', this)">
+                Organisation Configuration <span class="dropdown-arrow">&#9660;</span>
+            </strong>
+            <ul id="orgConfigDropdown" style="display: none;">
+			    <li><a href="{{ route('create_user') }}" class="active"><img src="{{ asset('admin_end/images/man.png') }}" width="30" height="30" alt=""> Create User</a></li>
+                <li><a href="{{ route('create_branch_form') }}"><img src="{{ asset('admin_end/images/createbranch.png') }}" width="30" height="30" alt=""> Create Branch</a></li>
+                <li><a href="{{ route('create_department_form') }}"><img src="{{ asset('admin_end/images/corporation.png') }}" width="30" height="30" alt=""> Create Department</a></li>
+                <li><a href="{{ route('create_designation_form') }}"><img src="{{ asset('admin_end/images/createdesignation.png') }}" width="30" height="30" alt=""> Create Designation</a></li>
+            </ul>
+        </li>
 
-            <li><a href="{{ route('create_policy_time_slot') }}"><img src="{{ asset('admin_end/images/createdesignation.png') }}" width="30" height="30" alt="">  Leave Policy Slot</a></li>
-            <li><a href="{{ route('create_policy_type') }}"><img src="{{ asset('admin_end/images/createdesignation.png') }}" width="30" height="30" alt="">  Leave Policy Type</a></li>
-            <li><a href="{{ route('create_policy') }}"><img src="{{ asset('admin_end/images/createdesignation.png') }}" width="30" height="30" alt="">  Leave policy Creation</a></li>
-            <li><a href="{{ route('employee_policy') }}"><img src="{{ asset('admin_end/images/createdesignation.png') }}" width="30" height="30" alt="">  Leave Emp policy</a></li>
-            <li><a href="{{ route('process_leave_policy') }}"><img src="{{ asset('admin_end/images/createdesignation.png') }}" width="30" height="30" alt="">  Process Leave Cycle</a></li>
-            <li><a href="{{ route('salary_template_form') }}"><img src="{{ asset('admin_end/images/createdesignation.png') }}" width="30" height="30" alt="">  Create Salary Templates</a></li>
-            <li><a href="{{ route('create_salary_components') }}"><img src="{{ asset('admin_end/images/createdesignation.png') }}" width="30" height="30" alt="">  Salary Template Components</a></li>
-            <li><a href="{{ route('tax_cycle') }}"><img src="{{ asset('admin_end/images/createdesignation.png') }}" width="30" height="30" alt="">  Tax Cycle</a></li>
-            <li><a href="{{ route('taxes') }}"><img src="{{ asset('admin_end/images/createdesignation.png') }}" width="30" height="30" alt="">  Taxes</a></li>
-            
-          </ul>
+        <!-- Policy Management -->
+        <li>
+            <strong onclick="toggleDropdown('policyManagementDropdown', this)">
+                Policy Management <span class="dropdown-arrow">&#9660;</span>
+            </strong>
+            <ul id="policyManagementDropdown" style="display: none;">
+                <li><a href="{{ route('create_policy_category') }}"><img src="{{ asset('admin_end/images/createdesignation.png') }}" width="30" height="30" alt=""> Create Policy Category</a></li>
+                <li><a href="{{ route('create_hr_policy') }}"><img src="{{ asset('admin_end/images/createdesignation.png') }}" width="30" height="30" alt=""> Create HR Policy</a></li>
+                <li><a href="{{ route('create_policy_time_slot') }}"><img src="{{ asset('admin_end/images/createdesignation.png') }}" width="30" height="30" alt=""> Leave Policy Slot</a></li>
+                <li><a href="{{ route('create_policy_type') }}"><img src="{{ asset('admin_end/images/createdesignation.png') }}" width="30" height="30" alt=""> Leave Policy Type</a></li>
+                <li><a href="{{ route('create_policy') }}"><img src="{{ asset('admin_end/images/createdesignation.png') }}" width="30" height="30" alt=""> Leave Policy Creation</a></li>
+                <li><a href="{{ route('employee_policy') }}"><img src="{{ asset('admin_end/images/createdesignation.png') }}" width="30" height="30" alt=""> Leave Emp Policy</a></li>
+                <li><a href="{{ route('process_leave_policy') }}"><img src="{{ asset('admin_end/images/createdesignation.png') }}" width="30" height="30" alt=""> Process Leave Cycle</a></li>
+            </ul>
+        </li>
+
+        <!-- Salary Management -->
+        <li>
+            <strong onclick="toggleDropdown('salaryManagementDropdown', this)">
+                Salary Management <span class="dropdown-arrow">&#9660;</span>
+            </strong>
+            <ul id="salaryManagementDropdown" style="display: none;">
+                <li><a href="{{ route('salary_template_form') }}"><img src="{{ asset('admin_end/images/createdesignation.png') }}" width="30" height="30" alt=""> Create Salary Templates</a></li>
+                <li><a href="{{ route('create_salary_components') }}"><img src="{{ asset('admin_end/images/createdesignation.png') }}" width="30" height="30" alt=""> Salary Template Components</a></li>
+            </ul>
+        </li>
+
+        <!-- Tax Management -->
+        <li>
+            <strong onclick="toggleDropdown('taxManagementDropdown', this)">
+                Tax Management <span class="dropdown-arrow">&#9660;</span>
+            </strong>
+            <ul id="taxManagementDropdown" style="display: none;">
+                <li><a href="{{ route('tax_cycle') }}"><img src="{{ asset('admin_end/images/createdesignation.png') }}" width="30" height="30" alt=""> Tax Cycle</a></li>
+                <li><a href="{{ route('taxes') }}"><img src="{{ asset('admin_end/images/createdesignation.png') }}" width="30" height="30" alt=""> Taxes</a></li>
+            </ul>
+        </li>
+
+        <!-- Settings -->
+        <li>
+            <strong onclick="toggleDropdown('settingsDropdown', this)">
+                Settings <span class="dropdown-arrow">&#9660;</span>
+            </strong>
+            <ul id="settingsDropdown" style="display: none;">
+                <li><a href="{{ route('load_mail_config_form') }}"><img src="{{ asset('admin_end/images/createdesignation.png') }}" width="30" height="30" alt=""> Mail Settings</a></li>
+            </ul>
+        </li>
+    </ul>
   </div>
 </nav>
 
+<script>
+    function toggleDropdown(id, element) {
+        const dropdown = document.getElementById(id);
+        const arrow = element.querySelector('.dropdown-arrow');
+        if (dropdown.style.display === 'none') {
+            dropdown.style.display = 'block';
+            arrow.innerHTML = '&#9650;'; // Up arrow
+        } else {
+            dropdown.style.display = 'none';
+            arrow.innerHTML = '&#9660;'; // Down arrow
+        }
+    }
+</script>
 
   @yield('content')
   
