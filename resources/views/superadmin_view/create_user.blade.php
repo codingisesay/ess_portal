@@ -18,14 +18,13 @@ $id = Auth::guard('superadmin')->user()->id;
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <link rel="stylesheet" href="{{ asset('admin_end/css/admin_form.css') }}">
 <link rel="stylesheet" href="{{ asset('admin_end/css/popup_form.css') }}">
-
+ 
 <div class="container">
-    <h2>Create User Of Your Organisation</h2>
-
+<h2>Create User Of Your Organisation</h2>
     <!-- Toggle Buttons -->
     <div class="toggle-buttons">
-        <button class="but" onclick="showUserForm()">Show Form</button>
-        <button class="but" onclick="showUserTable()">Show Table</button>
+        <button class="active" onclick="showUserForm(this)">Show Form</button>
+        <button class="but" onclick="showUserTable(this)">Show Table</button>
     </div>
 
     <!-- Form Section -->
@@ -91,19 +90,31 @@ $id = Auth::guard('superadmin')->user()->id;
 </div>
 
 <script>
-    function showUserForm() {
-        document.getElementById('formSection').style.display = 'block';
-        document.getElementById('tableSection').style.display = 'none';
-    }
+function showUserForm(clickedElement) {
+    // Show form section and hide table section
+    document.getElementById('formSection').style.display = 'block';
+    document.getElementById('tableSection').style.display = 'none'; 
+    const siblings = clickedElement.parentElement.children;
+    for (let sibling of siblings) {
+        sibling.classList.remove('active');
+    } 
+    clickedElement.classList.add('active');
+}
 
-    function showUserTable() {
+    function showUserTable(clickedElement) {
         document.getElementById('formSection').style.display = 'none';
         document.getElementById('tableSection').style.display = 'block';
+        
+        const siblings = clickedElement.parentElement.children;
+        for (let sibling of siblings) {
+            sibling.classList.remove('active');
+        } 
+        clickedElement.classList.add('active');
     }
 
     // Ensure the form is visible by default on page load
     document.addEventListener('DOMContentLoaded', () => {
-        showUserForm();
+        showUserForm(this);
     });
 
     function generateSecurePassword(length = 12) {

@@ -1,7 +1,7 @@
 @extends('superadmin_view/superadmin_layout')  <!-- Extending the layout file -->
 
 @section('content')  <!-- Defining the content section -->
-<div class="w3-main" style="margin-left:500px;margin-top:43px;">
+<div class="w3-main" style="margin-inline: auto;">
 
 <div class="w3-twothird">
   <h5>Feeds</h5>
