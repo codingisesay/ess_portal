@@ -462,7 +462,8 @@ class leavePolicyController extends Controller
     
             // dd($leaveCycyle);
             $leaceCycleStartDate = $leaveCycyle->start_date;
-            $leaceCycleEndtDate = $leaceCycle->end_date;
+            $leaceCycleEndtDate = $leaveCycyle->end_date;
+
             $provision_period = $emp_details->provision_period;
             $Joining_date = $emp_details->Joining_date;
             $JDC = Carbon::create($Joining_date); 
