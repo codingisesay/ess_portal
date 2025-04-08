@@ -199,5 +199,70 @@ class salaryBoxController extends Controller
 
     }
 
+    public function updateSalaryTemplate(Request $request, $id)
+    {
+        $request->validate([
+            'template_name' => 'required|string|max:255',
+            'min_ctc' => 'required|numeric',
+            'max_ctc' => 'required|numeric',
+            'status' => 'required|in:Active,Inactive',
+        ]);
+
+        $template = DB::table('org_salary_templates')->where('id', $id)->first();
+
+        if (!$template) {
+            return redirect()->route('salary_template_form')->with('error', 'Salary Template not found.');
+        }
+
+        $status = DB::table('org_salary_templates')
+            ->where('id', $id)
+            ->update([
+                'name' => $request->template_name,
+                'min_ctc' => $request->min_ctc,
+                'max_ctc' => $request->max_ctc,
+                'status' => $request->status,
+                'updated_at' => now(),
+            ]);
+
+        if ($status) {
+            return redirect()->route('salary_template_form')->with('success', 'Salary Template updated successfully.');
+        } else {
+            return redirect()->route('salary_template_form')->with('error', 'Failed to update Salary Template.');
+        }
+    }
+
+    public function updateSalaryComponent(Request $request, $id)
+    {
+        $request->validate([
+            'template_id' => 'required|exists:org_salary_templates,id',
+            'component_name' => 'required|string|max:255',
+            'component_type' => 'required|in:Earning,Deduction',
+            'calculation_type' => 'required|in:Percentage,Fixed',
+            'value' => 'required|numeric',
+        ]);
+
+        $component = DB::table('org_salary_template_components')->where('id', $id)->first();
+
+        if (!$component) {
+            return redirect()->route('create_salary_components')->with('error', 'Salary Component not found.');
+        }
+
+        $status = DB::table('org_salary_template_components')
+            ->where('id', $id)
+            ->update([
+                'salary_template_id' => $request->template_id,
+                'name' => $request->component_name,
+                'type' => $request->component_type,
+                'calculation_type' => $request->calculation_type,
+                'value' => $request->value,
+                'updated_at' => now(),
+            ]);
+
+        if ($status) {
+            return redirect()->route('create_salary_components')->with('success', 'Salary Component updated successfully.');
+        } else {
+            return redirect()->route('create_salary_components')->with('error', 'Failed to update Salary Component.');
+        }
+    }
 
 }

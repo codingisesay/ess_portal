@@ -107,11 +107,63 @@ $id = Auth::guard('superadmin')->user()->id;
                             <td>{{ $items->type }}</td>
                             <td>{{ $items->calculation_type }}</td>
                             <td>{{ $items->value }}</td>
-                            <td><button class="edit-icon" onclick="openEditBranchModal()">Edit</button></td>
+                            <td>
+                                <button class="edit-icon" onclick="openEditSalaryComponentModal({{ $items->id }}, '{{ $items->template_name }}', '{{ $items->name }}', '{{ $items->type }}', '{{ $items->calculation_type }}', '{{ $items->value }}')">Edit</button>
+                            </td>
                         </tr>
                     @endforeach
                 </tbody>
             </table>
+        </div>
+    </div>
+</div>
+
+<div id="editSalaryComponentModal" class="w3-modal" style="display: none;">
+    <div class="w3-modal-content w3-animate-top w3-card-4">
+        <header class="w3-container w3-teal"> 
+            <span onclick="document.getElementById('editSalaryComponentModal').style.display='none'" 
+            class="w3-button w3-display-topright">&times;</span>
+            <h2>Edit Salary Component</h2>
+        </header>
+        <div class="w3-container">
+            <form id="editSalaryComponentForm" method="POST">
+                @csrf
+                @method('POST')
+                <input type="hidden" name="component_id" id="editSalaryComponentId">
+                <div class="popup-form-group">
+                    <label for="editSalaryComponentTemplate">Salary Template</label>
+                    <select name="template_id" id="editSalaryComponentTemplate" required>
+                        @foreach ($templates as $item)
+                            <option value="{{ $item->id }}">{{ $item->name }}</option>
+                        @endforeach
+                    </select>
+                </div>
+                <div class="popup-form-group">
+                    <label for="editSalaryComponentName">Component Name</label>
+                    <input type="text" name="component_name" id="editSalaryComponentName" required>
+                </div>
+                <div class="popup-form-group">
+                    <label for="editSalaryComponentType">Type</label>
+                    <select name="component_type" id="editSalaryComponentType" required>
+                        <option value="Earning">Earning</option>
+                        <option value="Deduction">Deduction</option>
+                    </select>
+                </div>
+                <div class="popup-form-group">
+                    <label for="editSalaryComponentCalculationType">Calculation Type</label>
+                    <select name="calculation_type" id="editSalaryComponentCalculationType" required>
+                        <option value="Percentage">Percentage</option>
+                        <option value="Fixed">Fixed</option>
+                    </select>
+                </div>
+                <div class="popup-form-group">
+                    <label for="editSalaryComponentValue">Value</label>
+                    <input type="number" name="value" id="editSalaryComponentValue" required>
+                </div>
+                <div class="popup-form-group">
+                    <button class="create-btn1" type="submit">Save Changes</button>
+                </div>
+            </form>
         </div>
     </div>
 </div>
@@ -131,6 +183,20 @@ $id = Auth::guard('superadmin')->user()->id;
     document.addEventListener('DOMContentLoaded', () => {
         showSalaryComponentForm();
     });
+
+    function openEditSalaryComponentModal(id, templateName, componentName, type, calculationType, value) {
+        document.getElementById('editSalaryComponentId').value = id;
+        document.getElementById('editSalaryComponentTemplate').value = templateName;
+        document.getElementById('editSalaryComponentName').value = componentName;
+        document.getElementById('editSalaryComponentType').value = type;
+        document.getElementById('editSalaryComponentCalculationType').value = calculationType;
+        document.getElementById('editSalaryComponentValue').value = value;
+
+        const formAction = "{{ route('update_salary_component', ['id' => ':id']) }}".replace(':id', id);
+        document.getElementById('editSalaryComponentForm').action = formAction;
+
+        document.getElementById('editSalaryComponentModal').style.display = 'block';
+    }
 </script>
 
 @endsection

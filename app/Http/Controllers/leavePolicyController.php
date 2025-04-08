@@ -70,6 +70,38 @@ class leavePolicyController extends Controller
 
     }
 
+    public function updatePolicyTimeSlot(Request $request, $id)
+    {
+        $request->validate([
+            'cycle_name' => 'required|string|max:255',
+            'start_date_time' => 'required|date',
+            'end_date_time' => 'required|date|after:start_date_time',
+            'year_slot' => 'required|string|max:10',
+        ]);
+
+        $leaveCycle = DB::table('leave_cycles')->where('id', $id)->first();
+
+        if (!$leaveCycle) {
+            return redirect()->route('create_policy_time_slot')->with('error', 'Leave Policy Cycle not found.');
+        }
+
+        $status = DB::table('leave_cycles')
+            ->where('id', $id)
+            ->update([
+                'name' => $request->cycle_name,
+                'start_date' => $request->start_date_time,
+                'end_date' => $request->end_date_time,
+                'year' => $request->year_slot,
+                'updated_at' => now(),
+            ]);
+
+        if ($status) {
+            return redirect()->route('create_policy_time_slot')->with('success', 'Leave Policy Cycle updated successfully.');
+        } else {
+            return redirect()->route('create_policy_time_slot')->with('error', 'Failed to update Leave Policy Cycle.');
+        }
+    }
+
     public function loadPolicyType(){
         $id = Auth::guard('superadmin')->user()->id;
 
@@ -126,6 +158,38 @@ class leavePolicyController extends Controller
 
 
 
+    }
+
+    public function updatePolicyType(Request $request, $id)
+    {
+        $request->validate([
+            'cycle_slot_id' => 'required|exists:leave_cycles,id',
+            'leave_category' => 'required|string|max:255',
+            'half_day_status' => 'required|in:Yes,No',
+            'status' => 'required|in:Active,Inactive',
+        ]);
+
+        $leaveType = DB::table('leave_types')->where('id', $id)->first();
+
+        if (!$leaveType) {
+            return redirect()->route('create_policy_type')->with('error', 'Leave Type not found.');
+        }
+
+        $status = DB::table('leave_types')
+            ->where('id', $id)
+            ->update([
+                'name' => $request->leave_category,
+                'half_day' => $request->half_day_status,
+                'status' => $request->status,
+                'leave_cycle_id' => $request->cycle_slot_id,
+                'updated_at' => now(),
+            ]);
+
+        if ($status) {
+            return redirect()->route('create_policy_type')->with('success', 'Leave Type updated successfully.');
+        } else {
+            return redirect()->route('create_policy_type')->with('error', 'Failed to update Leave Type.');
+        }
     }
 
     public function loadPolicy(){
@@ -221,6 +285,56 @@ class leavePolicyController extends Controller
      
 
 
+    }
+
+    public function updatePolicyConf(Request $request, $id)
+    {
+        $request->validate([
+            'max_leave_count' => 'required|numeric',
+            'max_leave_at_time' => 'required|numeric',
+            'min_leave_at_time' => 'required|numeric',
+            'leave_count_per_month' => 'required|numeric',
+            'no_of_leaves_per_month' => 'required|numeric',
+            'is_carry_forward' => 'required|in:Yes,No',
+            'no_of_carry_forward' => 'required|numeric',
+            'leave_encash' => 'required|in:Yes,No',
+            'leave_encash_count' => 'required|numeric',
+            'provision_status' => 'required|in:Applicable,Not Applicable',
+            'max_leave_pp' => 'required|numeric',
+            'probation_period_per_month' => 'required|numeric',
+            'calendra_start_for_PP' => 'required|numeric',
+        ]);
+
+        $policy = DB::table('leave_type_restrictions')->where('id', $id)->first();
+
+        if (!$policy) {
+            return redirect()->route('create_policy')->with('error', 'Leave Policy not found.');
+        }
+
+        $status = DB::table('leave_type_restrictions')
+            ->where('id', $id)
+            ->update([
+                'max_leave' => $request->max_leave_count,
+                'max_leave_at_time' => $request->max_leave_at_time,
+                'min_leave_at_time' => $request->min_leave_at_time,
+                'leave_count_per_month' => $request->leave_count_per_month,
+                'no_of_time_per_month' => $request->no_of_leaves_per_month,
+                'carry_forward' => $request->is_carry_forward,
+                'no_carry_forward' => $request->no_of_carry_forward,
+                'leave_encash' => $request->leave_encash,
+                'no_leave_encash' => $request->leave_encash_count,
+                'provision_status' => $request->provision_status,
+                'max_leave_PP' => $request->max_leave_pp,
+                'provision_period_per_month' => $request->probation_period_per_month,
+                'calendra_start_for_PP' => $request->calendra_start_for_PP,
+                'updated_at' => now(),
+            ]);
+
+        if ($status) {
+            return redirect()->route('create_policy')->with('success', 'Leave Policy updated successfully.');
+        } else {
+            return redirect()->route('create_policy')->with('error', 'Failed to update Leave Policy.');
+        }
     }
 
     public function loadEmpPolicy(){

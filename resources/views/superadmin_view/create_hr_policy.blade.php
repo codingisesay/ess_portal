@@ -10,6 +10,7 @@ $id = Auth::guard('superadmin')->user()->id;
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{{ asset('admin_end/css/admin_form.css') }}">
+    <link rel="stylesheet" href="{{ asset('admin_end/css/popup_form.css') }}">
     <title>Create HR Policy</title>
     
 </head>
@@ -101,11 +102,53 @@ $id = Auth::guard('superadmin')->user()->id;
                                 <td>{{ $data->policy_categorie_id }}</td>
                                 <!-- <td>{{ $data->policy_content }}</td> -->
                                 <td>{{ $data->status }}</td>
-                                <td><button class="edit-icon">Edit</button></td>
+                                <td>
+                                    <button class="edit-icon" onclick="openEditHRPolicyModal({{ $data->id }}, '{{ $data->policy_title }}', '{{ $data->policy_categorie_id }}', '{{ $data->status }}')">Edit</button>
+                                </td>
                             </tr>
                         @endforeach
                     </tbody>
                 </table>
+            </div>
+        </div>
+    </div>
+
+    <div id="editHRPolicyModal" class="w3-modal" style="display: none;">
+        <div class="w3-modal-content w3-animate-top w3-card-4">
+            <header class="w3-container w3-teal"> 
+                <span onclick="document.getElementById('editHRPolicyModal').style.display='none'" 
+                class="w3-button w3-display-topright">&times;</span>
+                <h2>Edit HR Policy</h2>
+            </header>
+            <div class="w3-container">
+            <!--use id to save data as post method -->
+                 <form id="editHRPolicyForm" method="POST">  
+                    @csrf
+                    @method('POST')
+                    <input type="hidden" name="policy_id" id="editHRPolicyId">
+                    <div class="popup-form-group">
+                        <label for="editHRPolicyTitle">Policy Title</label>
+                        <input type="text" name="policy_title" id="editHRPolicyTitle" required>
+                    </div>
+                    <div class="popup-form-group">
+                        <label for="editHRPolicyCategory">Select Category</label>
+                        <select name="category_id" id="editHRPolicyCategory" required>
+                            @foreach($categories as $category)
+                                <option value="{{ $category->id }}">{{ $category->name }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="popup-form-group">
+                        <label for="editHRPolicyStatus">Status</label>
+                        <select name="status" id="editHRPolicyStatus" required>
+                            <option value="Active">Active</option>
+                            <option value="Inactive">Inactive</option>
+                        </select>
+                    </div>
+                    <div class="popup-form-group">
+                        <button class="create-btn1" type="submit">Save Changes</button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
@@ -125,6 +168,18 @@ $id = Auth::guard('superadmin')->user()->id;
         document.addEventListener('DOMContentLoaded', () => {
             showHRPolicyForm();
         });
+
+        function openEditHRPolicyModal(id, title, categoryId, status) {
+            document.getElementById('editHRPolicyId').value = id;
+            document.getElementById('editHRPolicyTitle').value = title;
+            document.getElementById('editHRPolicyCategory').value = categoryId;
+            document.getElementById('editHRPolicyStatus').value = status;
+
+            const formAction = "{{ route('update_hr_policy', ['id' => ':id']) }}".replace(':id', id);
+            document.getElementById('editHRPolicyForm').action = formAction;
+
+            document.getElementById('editHRPolicyModal').style.display = 'block';
+        }
     </script>
 @endsection
 </body>
