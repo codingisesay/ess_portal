@@ -9,7 +9,10 @@ $id = Auth::guard('superadmin')->user()->id;
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="{{ asset('admin_end/css/admin_form.css') }}"> 
+    <link rel="stylesheet" href="{{ asset('admin_end/css/admin_form.css') }}">
+    <link rel="stylesheet" href="{{ asset('admin_end/css/popup_form.css') }}">
+    <title>Create Policy Category</title>
+    
 </head>
 <body>
     <div class="container">
@@ -67,11 +70,49 @@ $id = Auth::guard('superadmin')->user()->id;
                                 <td>{{ $leaveCycleData->start_date }}</td>
                                 <td>{{ $leaveCycleData->end_date }}</td>
                                 <td>{{ $leaveCycleData->year }}</td>
-                                <td><button class="edit-icon">Edit</button></td>
+                                <td>
+                                    <button class="edit-icon" onclick="openEditLeaveSlotModal({{ $leaveCycleData->id }}, '{{ $leaveCycleData->name }}', '{{ $leaveCycleData->start_date }}', '{{ $leaveCycleData->end_date }}', '{{ $leaveCycleData->year }}')">Edit</button>
+                                </td>
                             </tr>
                         @endforeach
                     </tbody>
                 </table>
+            </div>
+        </div>
+    </div>
+
+    <div id="editLeaveSlotModal" class="w3-modal" style="display: none;">
+        <div class="w3-modal-content w3-animate-top w3-card-4">
+            <header class="w3-container w3-teal"> 
+                <span onclick="document.getElementById('editLeaveSlotModal').style.display='none'" 
+                class="w3-button w3-display-topright">&times;</span>
+                <h2>Edit Leave Policy Cycle</h2>
+            </header>
+            <div class="w3-container">
+                <form id="editLeaveSlotForm" method="POST">
+                    @csrf
+                    @method('POST')
+                    <input type="hidden" name="cycle_id" id="editLeaveSlotId">
+                    <div class="popup-form-group">
+                        <label for="editLeaveSlotName">Cycle Name</label>
+                        <input type="text" name="cycle_name" id="editLeaveSlotName" required>
+                    </div>
+                    <div class="popup-form-group">
+                        <label for="editLeaveSlotStartDate">Start Date Time</label>
+                        <input type="datetime-local" name="start_date_time" id="editLeaveSlotStartDate" required>
+                    </div>
+                    <div class="popup-form-group">
+                        <label for="editLeaveSlotEndDate">End Date Time</label>
+                        <input type="datetime-local" name="end_date_time" id="editLeaveSlotEndDate" required>
+                    </div>
+                    <div class="popup-form-group">
+                        <label for="editLeaveSlotYear">Year</label>
+                        <input type="text" name="year_slot" id="editLeaveSlotYear" required>
+                    </div>
+                    <div class="popup-form-group">
+                        <button class="create-btn1" type="submit">Save Changes</button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
@@ -97,13 +138,27 @@ $id = Auth::guard('superadmin')->user()->id;
             clickedElement.classList.add('active');
         }
 
-        
-    // Ensure the first button (Show Form) is active by default on page load
-    document.addEventListener('DOMContentLoaded', () => {
-        const firstButton = document.querySelector('.toggle-buttons button:first-child');
-        showLeaveSlotTable(firstButton);
-    });
- 
+        // Ensure the form is visible by default on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            showLeaveSlotForm();
+        });
+
+        function openEditLeaveSlotModal(id, name, startDate, endDate, year) {
+            if (!id) {
+                alert('Invalid leave slot data. Please try again.');
+                return;
+            }
+            document.getElementById('editLeaveSlotId').value = id;
+            document.getElementById('editLeaveSlotName').value = name || '';
+            document.getElementById('editLeaveSlotStartDate').value = startDate || '';
+            document.getElementById('editLeaveSlotEndDate').value = endDate || '';
+            document.getElementById('editLeaveSlotYear').value = year || '';
+
+            const formAction = "{{ route('update_policy_slot', ['id' => ':id']) }}".replace(':id', id);
+            document.getElementById('editLeaveSlotForm').action = formAction;
+
+            document.getElementById('editLeaveSlotModal').style.display = 'block';
+        }
     </script>
 @endsection
 </body>

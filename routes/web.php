@@ -68,6 +68,7 @@ Route::middleware(['auth.superadmin'])->group(function () {
     Route::post('superadmin/save_permission/{org_id}/{desig_id}/{b_id}',[permissionController::class,'insertPermission'])->name('insert_permission');
     Route::get('superadmin/create_mail_config',[ororganisationMailConController::class,'index'])->name('load_mail_config_form');
     Route::post('superadmin/insert_config',[ororganisationMailConController::class,'insertMailConfig'])->name('insert_configuration');
+    Route::post('superadmin/update_mail_config', [ororganisationMailConController::class, 'updateMailConfig'])->name('update_configuration');
     //hr policy controller routes
     Route::get('superadmin/create_policy_category', [hrPolicyViewController::class, 'createPolicyCategory'])->name('create_policy_category');
     Route::post('superadmin/save_policy_category', [hrPolicyViewController::class, 'savePolicyCategory'])->name('save_policy_category');
@@ -76,6 +77,7 @@ Route::middleware(['auth.superadmin'])->group(function () {
     Route::post('superadmin/save_hr_policy', [hrPolicyViewController::class, 'saveHrPolicy'])->name('save_hr_policy');
     
     Route::post('superadmin/update_policy_category/{id}', [hrPolicyViewController::class, 'updatePolicyCategory'])->name('update_policy_category');
+    Route::post('superadmin/update_hr_policy/{id}', [hrPolicyViewController::class, 'updateHrPolicy'])->name('update_hr_policy');
 
     Route::get('superadmin/create_organisation', [organisationController::class, 'index'])->name('create_organisation_form');
     Route::post('superadmin/insert_organisation', [organisationController::class, 'insert'])->name('insert_organisation');
@@ -97,6 +99,9 @@ Route::middleware(['auth.superadmin'])->group(function () {
     Route::post('superadmin/insert_policy_type',[leavePolicyController::class,'insertPolicyType'])->name('insert_policy_type');
     Route::post('superadmin/insert_policy_restriction',[leavePolicyController::class,'insertPolicyConf'])->name('insertPolicyConf');
     Route::post('superadmin/insert_emp_restriction',[leavePolicyController::class,'insertEmpRestriction'])->name('insert_emp_restriction');
+    Route::post('superadmin/update_policy_slot/{id}', [leavePolicyController::class, 'updatePolicyTimeSlot'])->name('update_policy_slot');
+    Route::post('superadmin/update_policy_type/{id}', [leavePolicyController::class, 'updatePolicyType'])->name('update_policy_type');
+    Route::post('superadmin/update_policy_conf/{id}', [leavePolicyController::class, 'updatePolicyConf'])->name('update_policy_conf');
 
    //Load pages routes loadforms superadmin
 
@@ -114,6 +119,10 @@ Route::middleware(['auth.superadmin'])->group(function () {
     Route::post('superadmin/insert_tax_cycle',[salaryBoxController::class,'insertTaxCycle'])->name('insert_tax_cycle');
     Route::post('superadmin/insert_taxes',[salaryBoxController::class,'insertTax'])->name('insert_taxes');
         
+    Route::post('superadmin/update_salary_template/{id}', [salaryBoxController::class, 'updateSalaryTemplate'])->name('update_salary_template');
+    Route::post('superadmin/update_salary_component/{id}', [salaryBoxController::class, 'updateSalaryComponent'])->name('update_salary_component');
+    Route::post('superadmin/update_tax_cycle/{id}', [salaryBoxController::class, 'updateTaxCycle'])->name('update_tax_cycle');
+    Route::post('superadmin/update_tax_slab/{id}', [salaryBoxController::class, 'updateTaxSlab'])->name('update_tax_slab');
     
 });
 

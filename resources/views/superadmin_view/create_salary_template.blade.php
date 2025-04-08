@@ -91,11 +91,52 @@ $id = Auth::guard('superadmin')->user()->id;
                             <td>{{ $template->min_ctc }}</td>
                             <td>{{ $template->max_ctc }}</td>
                             <td>{{ $template->status }}</td>
-                            <td><button class="edit-icon" onclick="openEditBranchModal()">Edit</button></td>
+                            <td>
+                                <button class="edit-icon" onclick="openEditSalaryTemplateModal({{ $template->id }}, '{{ $template->name }}', '{{ $template->min_ctc }}', '{{ $template->max_ctc }}', '{{ $template->status }}')">Edit</button>
+                            </td>
                         </tr>
                     @endforeach
                 </tbody>
             </table>
+        </div>
+    </div>
+</div>
+
+<div id="editSalaryTemplateModal" class="w3-modal" style="display: none;">
+    <div class="w3-modal-content w3-animate-top w3-card-4">
+        <header class="w3-container w3-teal"> 
+            <span onclick="document.getElementById('editSalaryTemplateModal').style.display='none'" 
+            class="w3-button w3-display-topright">&times;</span>
+            <h2>Edit Salary Template</h2>
+        </header>
+        <div class="w3-container">
+            <form id="editSalaryTemplateForm" method="POST">
+                @csrf
+                @method('POST')
+                <input type="hidden" name="template_id" id="editSalaryTemplateId">
+                <div class="popup-form-group">
+                    <label for="editSalaryTemplateName">Name</label>
+                    <input type="text" name="template_name" id="editSalaryTemplateName" required>
+                </div>
+                <div class="popup-form-group">
+                    <label for="editSalaryTemplateMinCTC">Min CTC</label>
+                    <input type="number" name="min_ctc" id="editSalaryTemplateMinCTC" required>
+                </div>
+                <div class="popup-form-group">
+                    <label for="editSalaryTemplateMaxCTC">Max CTC</label>
+                    <input type="number" name="max_ctc" id="editSalaryTemplateMaxCTC" required>
+                </div>
+                <div class="popup-form-group">
+                    <label for="editSalaryTemplateStatus">Status</label>
+                    <select name="status" id="editSalaryTemplateStatus" required>
+                        <option value="Active">Active</option>
+                        <option value="Inactive">Inactive</option>
+                    </select>
+                </div>
+                <div class="popup-form-group">
+                    <button class="create-btn1" type="submit">Save Changes</button>
+                </div>
+            </form>
         </div>
     </div>
 </div>
@@ -123,10 +164,25 @@ $id = Auth::guard('superadmin')->user()->id;
 
     // Ensure the first button (Show Form) is active by default on page load
     document.addEventListener('DOMContentLoaded', () => {
-        const firstButton = document.querySelector('.toggle-buttons button:first-child');
-        showSalaryTemplateTable(firstButton);
+        showSalaryTemplateForm();
     });
-  
+
+    function openEditSalaryTemplateModal(id, name, minCTC, maxCTC, status) {
+        if (!id) {
+            alert('Invalid template data. Please try again.');
+            return;
+        }
+        document.getElementById('editSalaryTemplateId').value = id;
+        document.getElementById('editSalaryTemplateName').value = name || '';
+        document.getElementById('editSalaryTemplateMinCTC').value = minCTC || '';
+        document.getElementById('editSalaryTemplateMaxCTC').value = maxCTC || '';
+        document.getElementById('editSalaryTemplateStatus').value = status || '';
+
+        const formAction = "{{ route('update_salary_template', ['id' => ':id']) }}".replace(':id', id);
+        document.getElementById('editSalaryTemplateForm').action = formAction;
+
+        document.getElementById('editSalaryTemplateModal').style.display = 'block';
+    }
 </script>
 
 @endsection

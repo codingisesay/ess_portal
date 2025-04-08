@@ -40,6 +40,34 @@ class hrPolicyViewController extends Controller
         }
     }
 
+    public function updatePolicyCategory(Request $request, $id)
+    {
+        $request->validate([
+            'category_name' => 'required|string|max:255',
+            'status' => 'required|in:Active,Inactive',
+        ]);
+
+        $policyCategory = DB::table('hr_policy_categories')->where('id', $id)->first();
+
+        if (!$policyCategory) {
+            return redirect()->route('create_policy_category')->with('error', 'Policy Category not found.');
+        }
+
+        $status = DB::table('hr_policy_categories')
+            ->where('id', $id)
+            ->update([
+                'name' => $request->category_name,
+                'status' => $request->status,
+                'updated_at' => now(),
+            ]);
+
+        if ($status) {
+            return redirect()->route('create_policy_category')->with('success', 'Policy Category updated successfully.');
+        } else {
+            return redirect()->route('create_policy_category')->with('error', 'Failed to update Policy Category.');
+        }
+    }
+
     public function createHrPolicy()
     {
         $id = Auth::guard('superadmin')->user()->id;
@@ -88,6 +116,36 @@ class hrPolicyViewController extends Controller
             return redirect()->route('create_hr_policy')->with('success', 'HR Policy saved successfully.');
         } else {
             return redirect()->route('create_hr_policy')->with('error', 'HR Policy not saved successfully.');
+        }
+    }
+
+    public function updateHrPolicy(Request $request, $id)
+    {
+        $request->validate([
+            'policy_title' => 'required|string|max:255',
+            'category_id' => 'required|exists:hr_policy_categories,id',
+            'status' => 'required|in:Active,Inactive',
+        ]);
+
+        $policy = DB::table('hr_policies')->where('id', $id)->first();
+
+        if (!$policy) {
+            return redirect()->route('create_hr_policy')->with('error', 'HR Policy not found.');
+        }
+
+        $status = DB::table('hr_policies')
+            ->where('id', $id)
+            ->update([
+                'policy_title' => $request->policy_title,
+                'policy_categorie_id' => $request->category_id,
+                'status' => $request->status,
+                'updated_at' => now(),
+            ]);
+
+        if ($status) {
+            return redirect()->route('create_hr_policy')->with('success', 'HR Policy updated successfully.');
+        } else {
+            return redirect()->route('create_hr_policy')->with('error', 'Failed to update HR Policy.');
         }
     }
 

@@ -97,7 +97,9 @@ $id = Auth::guard('superadmin')->user()->id;
                         <td>{{ $orgTax->applicable_from }}</td>
                         <td>{{ $orgTax->applicable_to }}</td>
                         <td>{{ $orgTax->status }}</td>
-                        <td><button class="edit-icon" onclick="openEditBranchModal()">Edit</button></td>
+                        <td>
+                            <button class="edit-icon" onclick="openEditTaxCycleModal({{ $orgTax->id }}, '{{ $orgTax->name }}', '{{ $orgTax->applicable_from }}', '{{ $orgTax->applicable_to }}', '{{ $orgTax->status }}')">Edit</button>
+                        </td>
                     </tr>
                     @endforeach
             </tbody>
@@ -106,6 +108,44 @@ $id = Auth::guard('superadmin')->user()->id;
 </div>
 </div>
 
+<div id="editTaxCycleModal" class="w3-modal" style="display: none;">
+    <div class="w3-modal-content w3-animate-top w3-card-4">
+        <header class="w3-container w3-teal"> 
+            <span onclick="document.getElementById('editTaxCycleModal').style.display='none'" 
+            class="w3-button w3-display-topright">&times;</span>
+            <h2>Edit Tax Cycle</h2>
+        </header>
+        <div class="w3-container">
+            <form id="editTaxCycleForm" method="POST">
+                @csrf
+                @method('POST')
+                <input type="hidden" name="tax_cycle_id" id="editTaxCycleId">
+                <div class="popup-form-group">
+                    <label for="editTaxCycleName">Name</label>
+                    <input type="text" name="template_name" id="editTaxCycleName" required>
+                </div>
+                <div class="popup-form-group">
+                    <label for="editTaxCycleFrom">From</label>
+                    <input type="datetime-local" name="from" id="editTaxCycleFrom" required>
+                </div>
+                <div class="popup-form-group">
+                    <label for="editTaxCycleTo">To</label>
+                    <input type="datetime-local" name="to" id="editTaxCycleTo" required>
+                </div>
+                <div class="popup-form-group">
+                    <label for="editTaxCycleStatus">Status</label>
+                    <select name="status" id="editTaxCycleStatus" required>
+                        <option value="Active">Active</option>
+                        <option value="Inactive">Inactive</option>
+                    </select>
+                </div>
+                <div class="popup-form-group">
+                    <button class="create-btn1" type="submit">Save Changes</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 
 <script>
 function showUserForm(clickedElement) {
@@ -137,6 +177,20 @@ document.addEventListener('DOMContentLoaded', () => {
   
 </script>
 
+<script>
+    function openEditTaxCycleModal(id, name, from, to, status) {
+        document.getElementById('editTaxCycleId').value = id;
+        document.getElementById('editTaxCycleName').value = name;
+        document.getElementById('editTaxCycleFrom').value = from;
+        document.getElementById('editTaxCycleTo').value = to;
+        document.getElementById('editTaxCycleStatus').value = status;
+
+        const formAction = "{{ route('update_tax_cycle', ['id' => ':id']) }}".replace(':id', id);
+        document.getElementById('editTaxCycleForm').action = formAction;
+
+        document.getElementById('editTaxCycleModal').style.display = 'block';
+    }
+</script>
 
 @endsection
 

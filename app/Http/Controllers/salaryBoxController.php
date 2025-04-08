@@ -149,12 +149,14 @@ class salaryBoxController extends Controller
 
         $datafortaxes = DB::table('org_tax_slabs')
         ->join('org_tax_regime_years','org_tax_slabs.org_tax_regime_id','=','org_tax_regime_years.id')
-        ->select('org_tax_regime_years.name as org_tax_regime_years_name',
-        'org_tax_slabs.tax_type as tax_type',
-        'org_tax_slabs.min_income as min_income',
-        'org_tax_slabs.max_income as max_income',
-        'org_tax_slabs.tax as tax_per',
-        'org_tax_slabs.fixed_amount as fixed_amount',
+        ->select(
+            'org_tax_slabs.id', // Ensure the ID is included in the query
+            'org_tax_regime_years.name as org_tax_regime_years_name',
+            'org_tax_slabs.tax_type as tax_type',
+            'org_tax_slabs.min_income as min_income',
+            'org_tax_slabs.max_income as max_income',
+            'org_tax_slabs.tax as tax_per',
+            'org_tax_slabs.fixed_amount as fixed_amount'
         )
         ->get();
 
@@ -199,5 +201,138 @@ class salaryBoxController extends Controller
 
     }
 
+    public function updateSalaryTemplate(Request $request, $id)
+    {
+        $request->validate([
+            'template_name' => 'required|string|max:255',
+            'min_ctc' => 'required|numeric',
+            'max_ctc' => 'required|numeric',
+            'status' => 'required|in:Active,Inactive',
+        ]);
+
+        $template = DB::table('org_salary_templates')->where('id', $id)->first();
+
+        if (!$template) {
+            return redirect()->route('salary_template_form')->with('error', 'Salary Template not found.');
+        }
+
+        $status = DB::table('org_salary_templates')
+            ->where('id', $id)
+            ->update([
+                'name' => $request->template_name,
+                'min_ctc' => $request->min_ctc,
+                'max_ctc' => $request->max_ctc,
+                'status' => $request->status,
+                'updated_at' => now(),
+            ]);
+
+        if ($status) {
+            return redirect()->route('salary_template_form')->with('success', 'Salary Template updated successfully.');
+        } else {
+            return redirect()->route('salary_template_form')->with('error', 'Failed to update Salary Template.');
+        }
+    }
+
+    public function updateSalaryComponent(Request $request, $id)
+    {
+        $request->validate([
+            'template_id' => 'required|exists:org_salary_templates,id',
+            'component_name' => 'required|string|max:255',
+            'component_type' => 'required|in:Earning,Deduction',
+            'calculation_type' => 'required|in:Percentage,Fixed',
+            'value' => 'required|numeric',
+        ]);
+
+        $component = DB::table('org_salary_template_components')->where('id', $id)->first();
+
+        if (!$component) {
+            return redirect()->route('create_salary_components')->with('error', 'Salary Component not found.');
+        }
+
+        $status = DB::table('org_salary_template_components')
+            ->where('id', $id)
+            ->update([
+                'salary_template_id' => $request->template_id,
+                'name' => $request->component_name,
+                'type' => $request->component_type,
+                'calculation_type' => $request->calculation_type,
+                'value' => $request->value,
+                'updated_at' => now(),
+            ]);
+
+        if ($status) {
+            return redirect()->route('create_salary_components')->with('success', 'Salary Component updated successfully.');
+        } else {
+            return redirect()->route('create_salary_components')->with('error', 'Failed to update Salary Component.');
+        }
+    }
+
+    public function updateTaxCycle(Request $request, $id)
+    {
+        $request->validate([
+            'template_name' => 'required|string|max:255',
+            'from' => 'required|date',
+            'to' => 'required|date|after:from',
+            'status' => 'required|in:Active,Inactive',
+        ]);
+
+        $taxCycle = DB::table('org_tax_regime_years')->where('id', $id)->first();
+
+        if (!$taxCycle) {
+            return redirect()->route('tax_cycle')->with('error', 'Tax Cycle not found.');
+        }
+
+        $status = DB::table('org_tax_regime_years')
+            ->where('id', $id)
+            ->update([
+                'name' => $request->template_name,
+                'applicable_from' => $request->from,
+                'applicable_to' => $request->to,
+                'status' => $request->status,
+                'updated_at' => now(),
+            ]);
+
+        if ($status) {
+            return redirect()->route('tax_cycle')->with('success', 'Tax Cycle updated successfully.');
+        } else {
+            return redirect()->route('tax_cycle')->with('error', 'Failed to update Tax Cycle.');
+        }
+    }
+
+    public function updateTaxSlab(Request $request, $id)
+    {
+        $request->validate([
+            'tax_cycle_type' => 'required|exists:org_tax_regime_years,id',
+            'tax_type' => 'required|string|max:255',
+            'min_income' => 'required|numeric',
+            'max_income' => 'required|numeric',
+            'tax_per' => 'required|numeric',
+            'fixed_amount' => 'required|numeric',
+        ]);
+
+        $taxSlab = DB::table('org_tax_slabs')->where('id', $id)->first();
+
+        if (!$taxSlab) {
+            return redirect()->route('taxes')->with('error', 'Tax Slab not found.');
+        }
+
+        $status = DB::table('org_tax_slabs')
+            ->where('id', $id)
+            ->update([
+                'org_tax_regime_id' => $request->tax_cycle_type,
+                'tax_type' => $request->tax_type,
+                'min_income' => $request->min_income,
+                'max_income' => $request->max_income,
+                'tax' => $request->tax_per,
+                'fixed_amount' => $request->fixed_amount,
+                'updated_at' => now(),
+            ]);
+
+        if ($status) {
+            return redirect()->route('taxes')->with('success', 'Tax Slab updated successfully.');
+        } else {
+            return redirect()->route('taxes')->with('error', 'Failed to update Tax Slab.');
+        }
+    }
 
 }
