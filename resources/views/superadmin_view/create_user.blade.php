@@ -24,12 +24,12 @@ $id = Auth::guard('superadmin')->user()->id;
 <h3>Create User Of Your Organisation</h2>
     <!-- Toggle Buttons -->
     <div class="toggle-buttons">
+    <button onclick="showUserTable(this)">Show Table</button>
         <button onclick="showUserForm(this)">Show Form</button>
-        <button onclick="showUserTable(this)">Show Table</button>
     </div>
 
     <!-- Form Section -->
-    <div id="formSection" style="display: none;">
+    <div id="formSection" >
         <form action="{{ route('register_save') }}" method="POST">
             @csrf
             <div class="form-container">
@@ -62,7 +62,7 @@ $id = Auth::guard('superadmin')->user()->id;
     </div>
 
     <!-- Table Section -->
-    <div id="tableSection" style="display: none;"> 
+    <div id="tableSection" > 
         <div class="table-container">
             <table>
                 <thead>
@@ -94,16 +94,16 @@ $id = Auth::guard('superadmin')->user()->id;
 </div>
 
 <script>
-function showUserForm(clickedElement) {
-    // Show form section and hide table section
-    document.getElementById('formSection').style.display = 'block';
-    document.getElementById('tableSection').style.display = 'none'; 
-    const siblings = clickedElement.parentElement.children;
-    for (let sibling of siblings) {
-        sibling.classList.remove('active');
-    } 
-    clickedElement.classList.add('active');
-}
+    function showUserForm(clickedElement) {
+        // Show form section and hide table section
+        document.getElementById('formSection').style.display = 'block';
+        document.getElementById('tableSection').style.display = 'none'; 
+        const siblings = clickedElement.parentElement.children;
+        for (let sibling of siblings) {
+            sibling.classList.remove('active');
+        } 
+        clickedElement.classList.add('active');
+    }
 
     function showUserTable(clickedElement) {
         document.getElementById('formSection').style.display = 'none';
@@ -115,12 +115,12 @@ function showUserForm(clickedElement) {
         clickedElement.classList.add('active');
     }
 
-// Ensure the first button (Show Form) is active by default on page load
-document.addEventListener('DOMContentLoaded', () => {
-    const firstButton = document.querySelector('.toggle-buttons button:first-child');
-    showUserForm(firstButton);
-});
- 
+    // Ensure the first button (Show Form) is active by default on page load
+    document.addEventListener('DOMContentLoaded', () => {
+        const firstButton = document.querySelector('.toggle-buttons button:first-child');
+        showUserTable(firstButton);
+    });
+    
     function generateSecurePassword(length = 12) {
         const chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()";
         const array = new Uint32Array(length);

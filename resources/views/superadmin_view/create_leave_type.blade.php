@@ -18,17 +18,17 @@ $id = Auth::guard('superadmin')->user()->id;
 
         <!-- Toggle Buttons -->
         <div class="toggle-buttons">
+        <button onclick="showLeaveTypeTable(this)">Show Table</button>
             <button onclick="showLeaveTypeForm(this)">Show Form</button>
-            <button onclick="showLeaveTypeTable(this)">Show Table</button>
         </div>
 
         <!-- Form Section -->
-        <div id="formSection" style="display: none;">
+        <div id="formSection" class="text-danger">
             @if($errors->any())
             <div class="alert custom-alert-warning">
                 <ul>
                     @foreach($errors->all() as $error)
-                        <li style="color: red;">{{ $error }}</li>
+                        <li class="text-danger">{{ $error }}</li>
                     @endforeach
                 </ul>
             </div>
@@ -65,12 +65,12 @@ $id = Auth::guard('superadmin')->user()->id;
                     </select>
                     <label for="category_id">Status</label>
                 </div>
-                <button type="submit" class="create-btn" style="position: relative; bottom:8px;">Save Type</button>
+                <button type="submit" class="create-btn" >Save Type</button>
             </form>
         </div>
 
         <!-- Table Section -->
-        <div id="tableSection" style="display: none;">
+        <div id="tableSection" >
     
             <div class="table-container">
                 <table>
@@ -125,7 +125,7 @@ $id = Auth::guard('superadmin')->user()->id;
     // Ensure the first button (Show Form) is active by default on page load
     document.addEventListener('DOMContentLoaded', () => {
         const firstButton = document.querySelector('.toggle-buttons button:first-child');
-        showLeaveTypeForm(firstButton);
+        showLeaveTypeTable(firstButton);
     });
    
     </script>

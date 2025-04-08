@@ -21,12 +21,12 @@ $id = Auth::guard('superadmin')->user()->id;
 
     <!-- Toggle Buttons -->
     <div class="toggle-buttons">
+    <button onclick="showDepartmentTable(this)">Show Table</button>
         <button onclick="showDepartmentForm(this)">Show Form</button>
-        <button onclick="showDepartmentTable(this)">Show Table</button>
     </div>
 
     <!-- Form Section -->
-    <div id="formSection" style="display: none;">
+    <div id="formSection" >
         <form method="POST" action="{{ route('insert_department') }}">
             @csrf
             <div class="form-container">
@@ -35,7 +35,7 @@ $id = Auth::guard('superadmin')->user()->id;
                     <input type="text" name="department_name" required>
                     <label>Department Name</label>
                 </div>
-                <div class="form-group" style="position: relative; bottom:8px;">
+                <div class="form-group" >
                     <button class="create-btn" type="submit">Create Department</button>
                 </div>
             </div>
@@ -43,7 +43,7 @@ $id = Auth::guard('superadmin')->user()->id;
     </div>
 
     <!-- Table Section -->
-    <div id="tableSection" style="display: none;"> 
+    <div id="tableSection" > 
         <div class="table-container">
             <table>
                 <thead>
@@ -94,7 +94,7 @@ $id = Auth::guard('superadmin')->user()->id;
     // Ensure the first button (Show Form) is active by default on page load
     document.addEventListener('DOMContentLoaded', () => {
         const firstButton = document.querySelector('.toggle-buttons button:first-child');
-        showDepartmentForm(firstButton);
+        showDepartmentTable(firstButton);
     });
     function openEditDepartmentModal(department) {
         document.getElementById('editDepartmentId').value = department.id;
