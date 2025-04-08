@@ -9,7 +9,7 @@ $id = Auth::guard('superadmin')->user()->id;
 <!DOCTYPE html>
 <html>
 <head>
-<title>Template</title>
+ 
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
@@ -17,20 +17,28 @@ $id = Auth::guard('superadmin')->user()->id;
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <link rel="stylesheet" href="{{ asset('admin_end/css/admin_form.css') }}">
 <link rel="stylesheet" href="{{ asset('admin_end/css/popup_form.css') }}">
+<link rel="stylesheet" href="{{ asset('admin_end/css/popup_form.css') }}">
 <div class="container">
-    <h2>Create Salary Taxes</h2>
+    <h3>Create Salary Taxes   </h3>
 
+ <!-- Toggle Buttons -->
+ <div class="toggle-buttons">
+ <button onclick="showUserTable(this)">Show Table</button>
+        <button onclick="showUserForm(this)">Show Form</button>
+    </div>
     @if($errors->any())
     <div class="alert custom-alert-warning">
 <ul>
 @foreach($errors->all() as $error)
-    <li style="color: red;">{{ $error }}</li>
+    <li class="text-danger">{{ $error }}</li>
     
 @endforeach
 </ul>
     </div>
 @endif
 
+    <!-- Form Section -->
+    <div id="formSection" > 
     <form method="POST" action="{{ route('insert_taxes') }}">
         @csrf
         <div class="form-container">
@@ -76,16 +84,16 @@ $id = Auth::guard('superadmin')->user()->id;
                 </select>
                 <label>Status</label>
             </div> --}}
+            <button class="create-btn" type="submit">Create</button>
         </div>
 
-        <div class="form-container">
-            <div class="form-group">
-                <button class="create-btn" type="submit">Create</button>
-            </div>
-        </div>
+      
+        
     </form>
-
-    <h3>Templates Name</h3>
+            </div>
+ 
+    <!-- Table Section -->
+    <div id="tableSection" > 
     <div class="table-container">
         <table>
             <thead>
@@ -124,6 +132,7 @@ $id = Auth::guard('superadmin')->user()->id;
             </tbody>
         </table>
     </div>
+            </div>
 </div>
 
 <div id="editTaxSlabModal" class="w3-modal" style="display: none;">
@@ -191,6 +200,36 @@ $id = Auth::guard('superadmin')->user()->id;
 
         document.getElementById('editTaxSlabModal').style.display = 'block';
     }
+</script>
+
+<script>
+function showUserForm(clickedElement) {
+    // Show form section and hide table section
+    document.getElementById('formSection').style.display = 'block';
+    document.getElementById('tableSection').style.display = 'none'; 
+    const siblings = clickedElement.parentElement.children;
+    for (let sibling of siblings) {
+        sibling.classList.remove('active');
+    } 
+    clickedElement.classList.add('active');
+}
+
+    function showUserTable(clickedElement) {
+        document.getElementById('formSection').style.display = 'none';
+        document.getElementById('tableSection').style.display = 'block';
+        const siblings = clickedElement.parentElement.children;
+        for (let sibling of siblings) {
+            sibling.classList.remove('active');
+        } 
+        clickedElement.classList.add('active');
+    }
+
+// Ensure the first button (Show Form) is active by default on page load
+document.addEventListener('DOMContentLoaded', () => {
+    const firstButton = document.querySelector('.toggle-buttons button:first-child');
+    showUserTable(firstButton);
+});
+  
 </script>
 
 @endsection

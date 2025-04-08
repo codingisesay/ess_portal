@@ -1066,9 +1066,6 @@ $remaning_leave = $total_leave - $takenLeave;
 
       }
 
-        
-    
-
     }
 
     public function insertLeave(Request $request){

@@ -15,16 +15,16 @@ $id = Auth::guard('superadmin')->user()->id;
 </head>
 <body>
     <div class="container">
-        <h1>Create Policy Category</h1>
+        <h3>Create Policy Category</h3>
 
         <!-- Toggle Buttons -->
         <div class="toggle-buttons">
-            <button class="but" onclick="showPolicyCategoryForm()">Show Form</button>
-            <button class="but" onclick="showPolicyCategoryTable()">Show Table</button>
+        <button onclick="showPolicyCategoryTable(this)">Show Table</button>
+            <button onclick="showPolicyCategoryForm(this)">Show Form</button>
         </div>
 
         <!-- Form Section -->
-        <div id="formSection" style="display: none;">
+        <div id="formSection" >
             <form action="{{ route('save_policy_category') }}" method="POST" enctype="multipart/form-data" class="form-container">
                 @csrf
                 <div class="form-group">
@@ -39,13 +39,12 @@ $id = Auth::guard('superadmin')->user()->id;
                     </select>
                     <label for="category_id">Status</label>
                 </div>
-                <button type="submit" class="create-btn" style="position: relative; bottom:8px;">Save Category</button>
+                <button type="submit" class="create-btn"  >Save Category</button>
             </form>
         </div>
 
         <!-- Table Section -->
-        <div id="tableSection" style="display: none;">
-            <h3>Policy Category</h3>
+        <div id="tableSection" > 
             <div class="table-container">
                 <table>
                     <thead>
@@ -105,14 +104,24 @@ $id = Auth::guard('superadmin')->user()->id;
     </div>
 
     <script>
-        function showPolicyCategoryForm() {
+        function showPolicyCategoryForm(clickedElement) {
             document.getElementById('formSection').style.display = 'block';
             document.getElementById('tableSection').style.display = 'none';
+            const siblings = clickedElement.parentElement.children;
+            for (let sibling of siblings) {
+                sibling.classList.remove('active');
+            } 
+            clickedElement.classList.add('active');
         }
 
-        function showPolicyCategoryTable() {
+        function showPolicyCategoryTable(clickedElement) {
             document.getElementById('formSection').style.display = 'none';
             document.getElementById('tableSection').style.display = 'block';
+            const siblings = clickedElement.parentElement.children;
+            for (let sibling of siblings) {
+                sibling.classList.remove('active');
+            } 
+            clickedElement.classList.add('active');
         }
 
         // Ensure the form is visible by default on page load

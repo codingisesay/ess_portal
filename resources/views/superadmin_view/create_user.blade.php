@@ -18,17 +18,18 @@ $id = Auth::guard('superadmin')->user()->id;
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <link rel="stylesheet" href="{{ asset('admin_end/css/admin_form.css') }}">
 <link rel="stylesheet" href="{{ asset('admin_end/css/popup_form.css') }}">
- 
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
 <div class="container">
-<h2>Create User Of Your Organisation</h2>
+<h3>Create User Of Your Organisation</h2>
     <!-- Toggle Buttons -->
     <div class="toggle-buttons">
-        <button class="active" onclick="showUserForm(this)">Show Form</button>
-        <button class="but" onclick="showUserTable(this)">Show Table</button>
+    <button onclick="showUserTable(this)">Show Table</button>
+        <button onclick="showUserForm(this)">Show Form</button>
     </div>
 
     <!-- Form Section -->
-    <div id="formSection" style="display: none;">
+    <div id="formSection" >
         <form action="{{ route('register_save') }}" method="POST">
             @csrf
             <div class="form-container">
@@ -53,15 +54,15 @@ $id = Auth::guard('superadmin')->user()->id;
                     <a href="#" onclick="generateAndDisplayPassword()">Generate Password</a>
                 </div>
                 <div class="form-group">
-                    <button class="create-btn" type="submit">Create User</button>
+               
                 </div>
+                <button class="create-btn" type="submit">Create User</button>
             </div>
         </form>
     </div>
 
     <!-- Table Section -->
-    <div id="tableSection" style="display: none;">
-        <h3>Users</h3>
+    <div id="tableSection" > 
         <div class="table-container">
             <table>
                 <thead>
@@ -80,7 +81,10 @@ $id = Auth::guard('superadmin')->user()->id;
                             <td>{{ $user->id }}</td>
                             <td>{{ $user->name }}</td>
                             <td>{{ $user->email }}</td>
-                            <td><button class="edit-icon" onclick="openEditUserModal({{ $user }})">Edit</button></td>
+                            <td>
+                                <!-- <button class="edit-icon" onclick="openEditUserModal({{ $user }})">Edit</button> -->
+                            <i class="bi bi-pencil-square" onclick="openEditUserModal({{ $user }})"></i>
+                        </td>
                         </tr>
                     @endforeach
                 </tbody>
@@ -90,21 +94,10 @@ $id = Auth::guard('superadmin')->user()->id;
 </div>
 
 <script>
-function showUserForm(clickedElement) {
-    // Show form section and hide table section
-    document.getElementById('formSection').style.display = 'block';
-    document.getElementById('tableSection').style.display = 'none'; 
-    const siblings = clickedElement.parentElement.children;
-    for (let sibling of siblings) {
-        sibling.classList.remove('active');
-    } 
-    clickedElement.classList.add('active');
-}
-
-    function showUserTable(clickedElement) {
-        document.getElementById('formSection').style.display = 'none';
-        document.getElementById('tableSection').style.display = 'block';
-        
+    function showUserForm(clickedElement) {
+        // Show form section and hide table section
+        document.getElementById('formSection').style.display = 'block';
+        document.getElementById('tableSection').style.display = 'none'; 
         const siblings = clickedElement.parentElement.children;
         for (let sibling of siblings) {
             sibling.classList.remove('active');
@@ -112,11 +105,22 @@ function showUserForm(clickedElement) {
         clickedElement.classList.add('active');
     }
 
-    // Ensure the form is visible by default on page load
-    document.addEventListener('DOMContentLoaded', () => {
-        showUserForm(this);
-    });
+    function showUserTable(clickedElement) {
+        document.getElementById('formSection').style.display = 'none';
+        document.getElementById('tableSection').style.display = 'block';
+        const siblings = clickedElement.parentElement.children;
+        for (let sibling of siblings) {
+            sibling.classList.remove('active');
+        } 
+        clickedElement.classList.add('active');
+    }
 
+    // Ensure the first button (Show Form) is active by default on page load
+    document.addEventListener('DOMContentLoaded', () => {
+        const firstButton = document.querySelector('.toggle-buttons button:first-child');
+        showUserTable(firstButton);
+    });
+    
     function generateSecurePassword(length = 12) {
         const chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()";
         const array = new Uint32Array(length);

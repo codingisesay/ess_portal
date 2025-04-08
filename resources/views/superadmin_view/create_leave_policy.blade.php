@@ -16,12 +16,12 @@ $id = Auth::guard('superadmin')->user()->id;
 </head>
 <body>
     <div class="container">
-        <h1>Create Leave Policy</h1>
+        <h3>Create Leave Policy</h3>
 
         <!-- Toggle Buttons -->
         <div class="toggle-buttons">
-            <button class="but" onclick="showLeavePolicyForm()">Show Form</button>
-            <button class="but" onclick="showLeavePolicyTable()">Show Table</button>
+        <button onclick="showLeavePolicyTable(this)">Show Table</button>
+            <button onclick="showLeavePolicyForm(this)">Show Form</button>
         </div>
     {{-- @endif --}}
     
@@ -126,13 +126,13 @@ $id = Auth::guard('superadmin')->user()->id;
                     <input type="number" id="category_name" name="calendra_start_for_PP" class="form-control" required>
                     <label for="category_name">Calendra Start For PP</label>
                 </div>
-                <button type="submit" class="create-btn" style="position: relative; bottom:8px;">Save Type</button>
+                <button type="submit" class="create-btn" >Save Type</button>
             </form>
         </div>
 
         <!-- Table Section -->
-        <div id="tableSection" style="display: none;">
-            <h3>Leave Type</h3>
+        <div id="tableSection" >
+    
             <div class="table-container">
                 <table>
                     <thead>
@@ -276,14 +276,24 @@ $id = Auth::guard('superadmin')->user()->id;
     </div>
 
     <script>
-        function showLeavePolicyForm() {
+        function showLeavePolicyForm(clickedElement) {
             document.getElementById('formSection').style.display = 'block';
             document.getElementById('tableSection').style.display = 'none';
+            const siblings = clickedElement.parentElement.children;
+            for (let sibling of siblings) {
+                sibling.classList.remove('active');
+            } 
+            clickedElement.classList.add('active');
         }
 
-        function showLeavePolicyTable() {
+        function showLeavePolicyTable(clickedElement) {
             document.getElementById('formSection').style.display = 'none';
             document.getElementById('tableSection').style.display = 'block';
+            const siblings = clickedElement.parentElement.children;
+            for (let sibling of siblings) {
+                sibling.classList.remove('active');
+            } 
+            clickedElement.classList.add('active');
         }
 
         // Ensure the form is visible by default on page load

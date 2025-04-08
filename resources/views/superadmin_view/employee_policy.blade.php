@@ -9,22 +9,20 @@ $id = Auth::guard('superadmin')->user()->id;
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="{{ asset('admin_end/css/admin_form.css') }}">
-    <title>Create Policy Category</title>
-    
+    <link rel="stylesheet" href="{{ asset('admin_end/css/admin_form.css') }}"> 
 </head>
 <body>
     <div class="container">
-        <h1>Employee Type Policy</h1>
+        <h3>Employee Type Policy</h3>
 
         <!-- Toggle Buttons -->
         <div class="toggle-buttons">
-            <button class="but" onclick="showEmployeePolicyForm()">Show Form</button>
-            <button class="but" onclick="showEmployeePolicyTable()">Show Table</button>
+        <button onclick="showEmployeePolicyTable(this)">Show Table</button>
+            <button onclick="showEmployeePolicyForm(this)">Show Form</button>
         </div>
 
         <!-- Form Section -->
-        <div id="formSection" style="display: none;">
+        <div id="formSection" >
             <form action="{{route('insert_emp_restriction')}}" method="POST" class="form-container">
                 @csrf
                 <div class="form-group">
@@ -53,13 +51,13 @@ $id = Auth::guard('superadmin')->user()->id;
                     <input type="number" id="date" name="month_start" class="form-control" required max="30" oninput="validateInput(this)">
                     <label for="year">Month Start</label>
                 </div>
-                <button type="submit" class="create-btn" style="position: relative; bottom:8px;">Save Cycle</button>
+                <button type="submit" class="create-btn" >Save Cycle</button>
             </form>
         </div>
 
         <!-- Table Section -->
-        <div id="tableSection" style="display: none;">
-            <h3>Leave Cycle</h3>
+        <div id="tableSection" >
+  
             <div class="table-container">
                 <table>
                     <thead>
@@ -90,14 +88,24 @@ $id = Auth::guard('superadmin')->user()->id;
     </div>
 
     <script>
-        function showEmployeePolicyForm() {
+        function showEmployeePolicyForm(clickedElement) {
             document.getElementById('formSection').style.display = 'block';
             document.getElementById('tableSection').style.display = 'none';
+            const siblings = clickedElement.parentElement.children;
+            for (let sibling of siblings) {
+                sibling.classList.remove('active');
+            } 
+            clickedElement.classList.add('active');
         }
 
-        function showEmployeePolicyTable() {
+        function showEmployeePolicyTable(clickedElement) {
             document.getElementById('formSection').style.display = 'none';
             document.getElementById('tableSection').style.display = 'block';
+            const siblings = clickedElement.parentElement.children;
+            for (let sibling of siblings) {
+                sibling.classList.remove('active');
+            } 
+            clickedElement.classList.add('active');
         }
 
         function validateInput(input) {
@@ -107,10 +115,13 @@ $id = Auth::guard('superadmin')->user()->id;
             }
         }
 
-        // Ensure the form is visible by default on page load
-        document.addEventListener('DOMContentLoaded', () => {
-            showEmployeePolicyForm();
-        });
+        
+    // Ensure the first button (Show Form) is active by default on page load
+    document.addEventListener('DOMContentLoaded', () => {
+        const firstButton = document.querySelector('.toggle-buttons button:first-child');
+        showEmployeePolicyTable(firstButton);
+    });
+    
     </script>
 @endsection
 </body>

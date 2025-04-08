@@ -17,16 +17,16 @@ $id = Auth::guard('superadmin')->user()->id;
 <link rel="stylesheet" href="{{ asset('admin_end/css/popup_form.css') }}">
 
 <div class="container">
-    <h2>Create Department For Your Organisation</h2>
+    <h3>Create Department For Your Organisation</h3>
 
     <!-- Toggle Buttons -->
     <div class="toggle-buttons">
-        <button class="but" onclick="showDepartmentForm()">Show Form</button>
-        <button class="but" onclick="showDepartmentTable()">Show Table</button>
+    <button onclick="showDepartmentTable(this)">Show Table</button>
+        <button onclick="showDepartmentForm(this)">Show Form</button>
     </div>
 
     <!-- Form Section -->
-    <div id="formSection" style="display: none;">
+    <div id="formSection" >
         <form method="POST" action="{{ route('insert_department') }}">
             @csrf
             <div class="form-container">
@@ -35,7 +35,7 @@ $id = Auth::guard('superadmin')->user()->id;
                     <input type="text" name="department_name" required>
                     <label>Department Name</label>
                 </div>
-                <div class="form-group" style="position: relative; bottom:8px;">
+                <div class="form-group" >
                     <button class="create-btn" type="submit">Create Department</button>
                 </div>
             </div>
@@ -43,8 +43,7 @@ $id = Auth::guard('superadmin')->user()->id;
     </div>
 
     <!-- Table Section -->
-    <div id="tableSection" style="display: none;">
-        <h3>Organisation Departments</h3>
+    <div id="tableSection" > 
         <div class="table-container">
             <table>
                 <thead>
@@ -71,21 +70,32 @@ $id = Auth::guard('superadmin')->user()->id;
 </div>
 
 <script>
-    function showDepartmentForm() {
+    function showDepartmentForm(clickedElement) {
         document.getElementById('formSection').style.display = 'block';
-        document.getElementById('tableSection').style.display = 'none';
+        document.getElementById('tableSection').style.display = 'none'; 
+        const siblings = clickedElement.parentElement.children;
+        for (let sibling of siblings) {
+            sibling.classList.remove('active');
+        } 
+        clickedElement.classList.add('active');
     }
 
-    function showDepartmentTable() {
+    function showDepartmentTable(clickedElement) {
         document.getElementById('formSection').style.display = 'none';
-        document.getElementById('tableSection').style.display = 'block';
+        document.getElementById('tableSection').style.display = 'block'; 
+        const siblings = clickedElement.parentElement.children;
+        for (let sibling of siblings) {
+            sibling.classList.remove('active');
+        } 
+        clickedElement.classList.add('active');
     }
-
-    // Ensure the form is visible by default on page load
+    
+    
+    // Ensure the first button (Show Form) is active by default on page load
     document.addEventListener('DOMContentLoaded', () => {
-        showDepartmentForm();
+        const firstButton = document.querySelector('.toggle-buttons button:first-child');
+        showDepartmentTable(firstButton);
     });
-
     function openEditDepartmentModal(department) {
         document.getElementById('editDepartmentId').value = department.id;
         document.getElementById('editDepartmentName').value = department.name;

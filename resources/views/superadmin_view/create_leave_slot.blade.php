@@ -16,16 +16,16 @@ $id = Auth::guard('superadmin')->user()->id;
 </head>
 <body>
     <div class="container">
-        <h1>Create Leave Policy Cycle</h1>
+        <h3>Create Leave Policy Cycle</h3>
 
         <!-- Toggle Buttons -->
         <div class="toggle-buttons">
-            <button class="but" onclick="showLeaveSlotForm()">Show Form</button>
-            <button class="but" onclick="showLeaveSlotTable()">Show Table</button>
+        <button onclick="showLeaveSlotTable(this)">Show Table</button>
+            <button onclick="showLeaveSlotForm(this)">Show Form</button>
         </div>
 
         <!-- Form Section -->
-        <div id="formSection" style="display: none;">
+        <div id="formSection" >
             <form action="{{ route('insert_policy_slot') }}" method="POST" class="form-container">
                 @csrf
                 <div class="form-group">
@@ -44,13 +44,12 @@ $id = Auth::guard('superadmin')->user()->id;
                     <input id="text" id="category_name" name="year_slot" class="form-control" required>
                     <label for="year">Input Year: (EX: 2025-26)</label>
                 </div>
-                <button type="submit" class="create-btn" style="position: relative; bottom:8px;">Save Cycle</button>
+                <button type="submit" class="create-btn" >Save Cycle</button>
             </form>
         </div>
 
         <!-- Table Section -->
-        <div id="tableSection" style="display: none;">
-            <h3>Leave Cycle</h3>
+        <div id="tableSection" > 
             <div class="table-container">
                 <table>
                     <thead>
@@ -119,14 +118,24 @@ $id = Auth::guard('superadmin')->user()->id;
     </div>
 
     <script>
-        function showLeaveSlotForm() {
+        function showLeaveSlotForm(clickedElement) {
             document.getElementById('formSection').style.display = 'block';
             document.getElementById('tableSection').style.display = 'none';
+            const siblings = clickedElement.parentElement.children;
+            for (let sibling of siblings) {
+                sibling.classList.remove('active');
+            } 
+            clickedElement.classList.add('active');
         }
 
-        function showLeaveSlotTable() {
+        function showLeaveSlotTable(clickedElement) {
             document.getElementById('formSection').style.display = 'none';
             document.getElementById('tableSection').style.display = 'block';
+            const siblings = clickedElement.parentElement.children;
+            for (let sibling of siblings) {
+                sibling.classList.remove('active');
+            } 
+            clickedElement.classList.add('active');
         }
 
         // Ensure the form is visible by default on page load

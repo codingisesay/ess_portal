@@ -15,21 +15,21 @@ $id = Auth::guard('superadmin')->user()->id;
 </head>
 <body>
     <div class="container">
-        <h1>Create Leave Type</h1>
+        <h3>Create Leave Type</h3>
 
         <!-- Toggle Buttons -->
         <div class="toggle-buttons">
-            <button class="but" onclick="showLeaveTypeForm()">Show Form</button>
-            <button class="but" onclick="showLeaveTypeTable()">Show Table</button>
+        <button onclick="showLeaveTypeTable(this)">Show Table</button>
+            <button onclick="showLeaveTypeForm(this)">Show Form</button>
         </div>
 
         <!-- Form Section -->
-        <div id="formSection" style="display: none;">
+        <div id="formSection" class="text-danger">
             @if($errors->any())
             <div class="alert custom-alert-warning">
                 <ul>
                     @foreach($errors->all() as $error)
-                        <li style="color: red;">{{ $error }}</li>
+                        <li class="text-danger">{{ $error }}</li>
                     @endforeach
                 </ul>
             </div>
@@ -66,13 +66,13 @@ $id = Auth::guard('superadmin')->user()->id;
                     </select>
                     <label for="category_id">Status</label>
                 </div>
-                <button type="submit" class="create-btn" style="position: relative; bottom:8px;">Save Type</button>
+                <button type="submit" class="create-btn" >Save Type</button>
             </form>
         </div>
 
         <!-- Table Section -->
-        <div id="tableSection" style="display: none;">
-            <h3>Leave Type</h3>
+        <div id="tableSection" >
+    
             <div class="table-container">
                 <table>
                     <thead>
@@ -151,20 +151,31 @@ $id = Auth::guard('superadmin')->user()->id;
     </div>
 
     <script>
-        function showLeaveTypeForm() {
+        function showLeaveTypeForm(clickedElement) {
             document.getElementById('formSection').style.display = 'block';
             document.getElementById('tableSection').style.display = 'none';
+            const siblings = clickedElement.parentElement.children;
+            for (let sibling of siblings) {
+                sibling.classList.remove('active');
+            } 
+            clickedElement.classList.add('active');
         }
 
-        function showLeaveTypeTable() {
+        function showLeaveTypeTable(clickedElement) {
             document.getElementById('formSection').style.display = 'none';
             document.getElementById('tableSection').style.display = 'block';
+            const siblings = clickedElement.parentElement.children;
+            for (let sibling of siblings) {
+                sibling.classList.remove('active');
+            } 
+            clickedElement.classList.add('active');
         }
 
-        // Ensure the form is visible by default on page load
-        document.addEventListener('DOMContentLoaded', () => {
-            showLeaveTypeForm();
-        });
+        // Ensure the first button (Show Form) is active by default on page load
+    document.addEventListener('DOMContentLoaded', () => {
+        const firstButton = document.querySelector('.toggle-buttons button:first-child');
+        showLeaveTypeTable(firstButton);
+    });
 
         function openEditLeaveTypeModal(id, cycleId, name, halfDayStatus, status) {
             document.getElementById('editLeaveTypeId').value = id;
