@@ -64,7 +64,7 @@ $id = Auth::guard('superadmin')->user()->id;
 </head>
 <body>
     <div class="container">
-        <h1>Process Leave Cycle</h1>
+        <h3>Process Leave Cycle</h3>
 
     @if($errors->any())
     <div class="alert custom-alert-warning">

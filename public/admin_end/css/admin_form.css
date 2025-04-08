@@ -33,16 +33,20 @@ h2 {
 .container {
     width: calc(100% - 250px);
     /* Adjust width to account for sidebar */
-    margin-left: 30px;
+    /* margin-left: 30px; */
     /* Add left margin to make space for sidebar */
-    padding: 0px;
+    padding: 0 30px;
 }
 
 /* Form Styling */
-h2 {
-    font-weight: bold;
-    margin-bottom: 2%;
-
+h3 {
+    font-weight: 500;
+    margin: 0 -30px 30px -30px !important;
+    background-color: #FFF;
+    padding: 20px 30px;
+    z-index: -1;
+    position: sticky;
+    border-bottom: 1px solid rgba(211, 211, 211, 0.505);
 }
 
 /* Basic Button Style */
@@ -118,17 +122,16 @@ transform: scale(1.1);
     display: flex;
     flex-wrap: wrap;
     gap: 40px;
-    margin-bottom: 15px;
+    margin: 30px 0;
     background-color: white;
     padding: 20px;
     border-radius: 10px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    margin-top: 65px;
+    box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
 }
 
 .form-group {
     position: relative;
-    width: calc(33.33% - 15%);
+    width: calc(45.75% - 15%);
 }
 
 .form-group input,
@@ -149,7 +152,9 @@ transform: scale(1.1);
     left: 10px;
     transform: translateY(-50%);
     color: #aaa;
+    background-color: #FFF;
     font-size: 14px;
+    padding: 0 5px;
     pointer-events: none;
     transition: all 0.3s ease;
 }
@@ -176,6 +181,7 @@ transform: scale(1.1);
     cursor: pointer;
     display: block;
     margin-top: 10px;
+    margin-left: auto;
 }
 
 .create-btn:hover {
@@ -192,9 +198,10 @@ h3 {
     background: white;
     border-radius: 10px;
     padding: 20px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
     overflow: auto;
     height: auto;
+    margin: 30px 0;
+    box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
     /* Enable horizontal scrolling */
 }
 

@@ -15,12 +15,12 @@ $id = Auth::guard('superadmin')->user()->id;
 </head>
 <body>
     <div class="container">
-        <h1>Create Leave Policy Cycle</h1>
+        <h3>Create Leave Policy Cycle</h3>
 
         <!-- Toggle Buttons -->
         <div class="toggle-buttons">
-            <button class="but" onclick="showLeaveSlotForm()">Show Form</button>
-            <button class="but" onclick="showLeaveSlotTable()">Show Table</button>
+            <button onclick="showLeaveSlotForm(this)">Show Form</button>
+            <button onclick="showLeaveSlotTable(this)">Show Table</button>
         </div>
 
         <!-- Form Section -->
@@ -80,20 +80,33 @@ $id = Auth::guard('superadmin')->user()->id;
     </div>
 
     <script>
-        function showLeaveSlotForm() {
+        function showLeaveSlotForm(clickedElement) {
             document.getElementById('formSection').style.display = 'block';
             document.getElementById('tableSection').style.display = 'none';
+            const siblings = clickedElement.parentElement.children;
+            for (let sibling of siblings) {
+                sibling.classList.remove('active');
+            } 
+            clickedElement.classList.add('active');
         }
 
-        function showLeaveSlotTable() {
+        function showLeaveSlotTable(clickedElement) {
             document.getElementById('formSection').style.display = 'none';
             document.getElementById('tableSection').style.display = 'block';
+            const siblings = clickedElement.parentElement.children;
+            for (let sibling of siblings) {
+                sibling.classList.remove('active');
+            } 
+            clickedElement.classList.add('active');
         }
 
-        // Ensure the form is visible by default on page load
-        document.addEventListener('DOMContentLoaded', () => {
-            showLeaveSlotForm();
-        });
+        
+    // Ensure the first button (Show Form) is active by default on page load
+    document.addEventListener('DOMContentLoaded', () => {
+        const firstButton = document.querySelector('.toggle-buttons button:first-child');
+        showLeaveSlotForm(firstButton);
+    });
+ 
     </script>
 @endsection
 </body>

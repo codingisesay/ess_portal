@@ -18,12 +18,12 @@ $id = Auth::guard('superadmin')->user()->id;
 <link rel="stylesheet" href="{{ asset('admin_end/css/admin_form.css') }}">
 <link rel="stylesheet" href="{{ asset('admin_end/css/popup_form.css') }}">
 <div class="container">
-    <h2>Creates Salary Templates</h2>
+    <h3>Creates Salary Templates</h3>
 
     <!-- Toggle Buttons -->
     <div class="toggle-buttons">
-        <button class="but" onclick="showSalaryTemplateForm()">Show Form</button>
-        <button class="but" onclick="showSalaryTemplateTable()">Show Table</button>
+        <button onclick="showSalaryTemplateForm(this)">Show Form</button>
+        <button onclick="showSalaryTemplateTable(this)">Show Table</button>
     </div>
 
     <!-- Form Section -->
@@ -70,7 +70,7 @@ $id = Auth::guard('superadmin')->user()->id;
 
     <!-- Table Section -->
     <div id="tableSection" style="display: none;">
-        <h3>Templates Name</h3>
+        
         <div class="table-container">
             <table>
                 <thead>
@@ -101,20 +101,32 @@ $id = Auth::guard('superadmin')->user()->id;
 </div>
 
 <script>
-    function showSalaryTemplateForm() {
+    function showSalaryTemplateForm(clickedElement) {
         document.getElementById('formSection').style.display = 'block';
         document.getElementById('tableSection').style.display = 'none';
+            const siblings = clickedElement.parentElement.children;
+            for (let sibling of siblings) {
+                sibling.classList.remove('active');
+            } 
+            clickedElement.classList.add('active');
     }
 
-    function showSalaryTemplateTable() {
+    function showSalaryTemplateTable(clickedElement) {
         document.getElementById('formSection').style.display = 'none';
         document.getElementById('tableSection').style.display = 'block';
+            const siblings = clickedElement.parentElement.children;
+            for (let sibling of siblings) {
+                sibling.classList.remove('active');
+            } 
+            clickedElement.classList.add('active');
     }
 
-    // Ensure the form is visible by default on page load
+    // Ensure the first button (Show Form) is active by default on page load
     document.addEventListener('DOMContentLoaded', () => {
-        showSalaryTemplateForm();
+        const firstButton = document.querySelector('.toggle-buttons button:first-child');
+        showSalaryTemplateForm(firstButton);
     });
+  
 </script>
 
 @endsection
