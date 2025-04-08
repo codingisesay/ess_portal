@@ -455,14 +455,14 @@ class leavePolicyController extends Controller
                 continue; // This will skip the current iteration in the loop
             }
 
-            $leaveCycyle = DB::table('leave_cycles')
+            $leaveCycle = DB::table('leave_cycles')
             ->where('organisation_id' ,'=', $user->organisation_id)
             ->where('status', '=', 'Active')
             ->first();
     
-            // dd($leaveCycyle);
-            $leaceCycleStartDate = $leaveCycyle->start_date;
-            $leaceCycleEndtDate = $leaceCycle->end_date;
+            // dd($leaveCycle);
+            $leaveCycleStartDate = $leaveCycle->start_date;
+            $leaveCycleEndDate = $leaveCycle->end_date;
             $provision_period = $emp_details->provision_period;
             $Joining_date = $emp_details->Joining_date;
             $JDC = Carbon::create($Joining_date); 
@@ -480,8 +480,8 @@ class leavePolicyController extends Controller
             ->get();
     
     
-    $leaceCycleEndtDate = Carbon::create($leaceCycleEndtDate);  // Cycle End date: 2026-03-31 10:52:00
-    $leaceCycleStartDate = Carbon::create($leaceCycleStartDate);
+    $leaveCycleEndDate = Carbon::create($leaveCycleEndDate);  // Cycle End date: 2026-03-31 10:52:00
+    $leaveCycleStartDate = Carbon::create($leaveCycleStartDate);
     
     $takenLeave = 0;
     
@@ -534,10 +534,10 @@ class leavePolicyController extends Controller
         //code for year cycle date of joining [joining year]
     
         // Calculate the difference in months
-     $months = $JDC->diffInMonths($leaceCycleEndtDate);
+     $months = $JDC->diffInMonths($leaveCycleEndDate);
     
      // Check if there's any partial month remaining after full months
-     if ($JDC->copy()->addMonths($months)->isBefore($leaceCycleEndtDate)) {
+     if ($JDC->copy()->addMonths($months)->isBefore($leaveCycleEndDate)) {
          $months++;  // If there is a partial month, add it
      }
     
@@ -562,16 +562,16 @@ class leavePolicyController extends Controller
     
         //if provision period extent to next cycyle
     
-        $months = $leaceCycleStartDate->diffInMonths($leaceCycleEndtDate);
+        $months = $leaveCycleStartDate->diffInMonths($leaveCycleEndDate);
     
      
-     if ($leaceCycleStartDate->copy()->addMonths($months)->isBefore($leaceCycleEndtDate)) {
+     if ($leaveCycleStartDate->copy()->addMonths($months)->isBefore($leaveCycleEndDate)) {
          $months++;  
      }
     
-     $remaning_pp_months = $leaceCycleStartDate->diffInMonths($provision_period_till);
+     $remaning_pp_months = $leaveCycleStartDate->diffInMonths($provision_period_till);
     
-     if ($leaceCycleStartDate->copy()->addMonths($remaning_pp_months)->isBefore($provision_period_till)) {
+     if ($leaveCycleStartDate->copy()->addMonths($remaning_pp_months)->isBefore($provision_period_till)) {
         $remaning_pp_months++; 
     }
     
@@ -885,14 +885,14 @@ private function calculateWorkingHours($userId)
             ]);
 
         }
-        $leaveCycyle = DB::table('leave_cycles')
+        $leaveCycle = DB::table('leave_cycles')
         ->where('organisation_id' ,'=', $loginUserInfo->organisation_id)
         ->where('status', '=', 'Active')
         ->first();
 
-        // dd($leaveCycyle);
-        $leaceCycleStartDate = $leaveCycyle->start_date;
-        $leaceCycleEndtDate = $leaveCycyle->end_date;
+        // dd($leaveCycle);
+        $leaveCycleStartDate = $leaveCycle->start_date;
+        $leaveCycleEndDate = $leaveCycle->end_date;
         $provision_period = $emp_details->provision_period;
         $Joining_date = $emp_details->Joining_date;
         $JDC = Carbon::create($Joining_date); 
@@ -910,8 +910,8 @@ private function calculateWorkingHours($userId)
         ->get();
 
 
-$leaceCycleEndtDate = Carbon::create($leaceCycleEndtDate);  // Cycle End date: 2026-03-31 10:52:00
-$leaceCycleStartDate = Carbon::create($leaceCycleStartDate);
+$leaveCycleEndDate = Carbon::create($leaveCycleEndDate);  // Cycle End date: 2026-03-31 10:52:00
+$leaveCycleStartDate = Carbon::create($leaveCycleStartDate);
 
 $takenLeave = 0;
 
@@ -960,10 +960,10 @@ if($emp_details->provision_period_year == 1){
     //code for year cycle date of joining [joining year]
 
     // Calculate the difference in months
- $months = $JDC->diffInMonths($leaceCycleEndtDate);
+ $months = $JDC->diffInMonths($leaveCycleEndDate);
 
  // Check if there's any partial month remaining after full months
- if ($JDC->copy()->addMonths($months)->isBefore($leaceCycleEndtDate)) {
+ if ($JDC->copy()->addMonths($months)->isBefore($leaveCycleEndDate)) {
      $months++;  // If there is a partial month, add it
  }
 
@@ -985,16 +985,16 @@ if($emp_details->provision_period_year == 1){
 
     //if provision period extent to next cycyle
 
-    $months = $leaceCycleStartDate->diffInMonths($leaceCycleEndtDate);
+    $months = $leaveCycleStartDate->diffInMonths($leaveCycleEndDate);
 
  
- if ($leaceCycleStartDate->copy()->addMonths($months)->isBefore($leaceCycleEndtDate)) {
+ if ($leaveCycleStartDate->copy()->addMonths($months)->isBefore($leaveCycleEndDate)) {
      $months++;  
  }
 
- $remaning_pp_months = $leaceCycleStartDate->diffInMonths($provision_period_till);
+ $remaning_pp_months = $leaveCycleStartDate->diffInMonths($provision_period_till);
 
- if ($leaceCycleStartDate->copy()->addMonths($remaning_pp_months)->isBefore($provision_period_till)) {
+ if ($leaveCycleStartDate->copy()->addMonths($remaning_pp_months)->isBefore($provision_period_till)) {
     $remaning_pp_months++; 
 }
 

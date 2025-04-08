@@ -264,12 +264,11 @@ error_reporting(0);
             <h3>Approval Pending</h3>
             <div class="approval-cards">
                 <!-- Leave Card -->
-                <div class="approval-card {{ !empty($leaveLists) ? 'glow-effect' : '' }} " id="leave-card" onclick="openLeaveModal()">
+                <div class="approval-card {{ (!empty($leaveLists) && collect($leaveLists)->flatten()->isNotEmpty()) ? 'glow-effect' : '' }}" id="leave-card" onclick="openLeaveModal()">
                     <div class="card-left">
                         <img src="{{ asset('user_end/images/Leave.png'); }}" alt="Leave Icon" class="icon">
                         <div class="details">
                             <h4>Leave</h4>
-                           
                         </div>
                     </div>
                     <div class="card-right">
