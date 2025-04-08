@@ -9,9 +9,7 @@ $id = Auth::guard('superadmin')->user()->id;
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="{{ asset('admin_end/css/admin_form.css') }}">
-    <title>Create Leave Policy</title>
-    
+    <link rel="stylesheet" href="{{ asset('admin_end/css/admin_form.css') }}"> 
 </head>
 <body>
     <div class="container">
@@ -19,8 +17,8 @@ $id = Auth::guard('superadmin')->user()->id;
 
         <!-- Toggle Buttons -->
         <div class="toggle-buttons">
+        <button onclick="showLeavePolicyTable(this)">Show Table</button>
             <button onclick="showLeavePolicyForm(this)">Show Form</button>
-            <button onclick="showLeavePolicyTable(this)">Show Table</button>
         </div>
     {{-- @endif --}}
     
@@ -125,12 +123,12 @@ $id = Auth::guard('superadmin')->user()->id;
                     <input type="number" id="category_name" name="calendra_start_for_PP" class="form-control" required>
                     <label for="category_name">Calendra Start For PP</label>
                 </div>
-                <button type="submit" class="create-btn" style="position: relative; bottom:8px;">Save Type</button>
+                <button type="submit" class="create-btn" >Save Type</button>
             </form>
         </div>
 
         <!-- Table Section -->
-        <div id="tableSection" style="display: none;">
+        <div id="tableSection" >
     
             <div class="table-container">
                 <table>
@@ -211,7 +209,7 @@ $id = Auth::guard('superadmin')->user()->id;
     // Ensure the first button (Show Form) is active by default on page load
     document.addEventListener('DOMContentLoaded', () => {
         const firstButton = document.querySelector('.toggle-buttons button:first-child');
-        showLeavePolicyForm(firstButton);
+        showLeavePolicyTable(firstButton);
     });
    
     </script>

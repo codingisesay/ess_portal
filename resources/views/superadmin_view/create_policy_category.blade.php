@@ -8,9 +8,7 @@ $id = Auth::guard('superadmin')->user()->id;
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="{{ asset('admin_end/css/admin_form.css') }}">
-    <title>Create Policy Category</title>
-    
+    <link rel="stylesheet" href="{{ asset('admin_end/css/admin_form.css') }}"> 
 </head>
 <body>
     <div class="container">
@@ -18,12 +16,12 @@ $id = Auth::guard('superadmin')->user()->id;
 
         <!-- Toggle Buttons -->
         <div class="toggle-buttons">
+        <button onclick="showPolicyCategoryTable(this)">Show Table</button>
             <button onclick="showPolicyCategoryForm(this)">Show Form</button>
-            <button onclick="showPolicyCategoryTable(this)">Show Table</button>
         </div>
 
         <!-- Form Section -->
-        <div id="formSection" style="display: none;">
+        <div id="formSection" >
             <form action="{{ route('save_policy_category') }}" method="POST" enctype="multipart/form-data" class="form-container">
                 @csrf
                 <div class="form-group">
@@ -38,12 +36,12 @@ $id = Auth::guard('superadmin')->user()->id;
                     </select>
                     <label for="category_id">Status</label>
                 </div>
-                <button type="submit" class="create-btn" style="position: relative; bottom:8px;">Save Category</button>
+                <button type="submit" class="create-btn"  >Save Category</button>
             </form>
         </div>
 
         <!-- Table Section -->
-        <div id="tableSection" style="display: none;"> 
+        <div id="tableSection" > 
             <div class="table-container">
                 <table>
                     <thead>
@@ -94,7 +92,7 @@ $id = Auth::guard('superadmin')->user()->id;
     // Ensure the first button (Show Form) is active by default on page load
     document.addEventListener('DOMContentLoaded', () => {
         const firstButton = document.querySelector('.toggle-buttons button:first-child');
-        showPolicyCategoryForm(firstButton);
+        showPolicyCategoryTable(firstButton);
     });
       
     </script>

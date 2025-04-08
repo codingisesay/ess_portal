@@ -22,17 +22,17 @@ $id = Auth::guard('superadmin')->user()->id;
 
     <!-- Toggle Buttons -->
     <div class="toggle-buttons">
+    <button onclick="showBranchTable(this)">Show Table</button>
         <button onclick="showBranchForm(this)">Show Form</button>
-        <button onclick="showBranchTable(this)">Show Table</button>
     </div>
 
     <!-- Form Section -->
-    <div id="formSection" style="display: none;">
+    <div id="formSection" >
         @if($errors->any())
         <div class="alert custom-alert-warning">
             <ul>
                 @foreach($errors->all() as $error)
-                    <li style="color: red;">{{ $error }}</li>
+                    <li class="text-danger">{{ $error }}</li>
                 @endforeach
             </ul>
         </div>
@@ -93,7 +93,7 @@ $id = Auth::guard('superadmin')->user()->id;
     </div>
 
     <!-- Table Section -->
-    <div id="tableSection" style="display: none;"> 
+    <div id="tableSection" > 
         <div class="table-container">
             <table>
                 <thead>
@@ -211,7 +211,7 @@ $id = Auth::guard('superadmin')->user()->id;
 // Ensure the first button (Show Form) is active by default on page load
 document.addEventListener('DOMContentLoaded', () => {
     const firstButton = document.querySelector('.toggle-buttons button:first-child');
-    showBranchForm(firstButton);
+    showBranchTable(firstButton);
 });
      
 

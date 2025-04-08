@@ -9,9 +9,7 @@ $id = Auth::guard('superadmin')->user()->id;
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="{{ asset('admin_end/css/admin_form.css') }}">
-    <title>Create HR Policy</title>
-    
+    <link rel="stylesheet" href="{{ asset('admin_end/css/admin_form.css') }}"> 
 </head>
 <body>
     <div class="container">
@@ -19,17 +17,17 @@ $id = Auth::guard('superadmin')->user()->id;
 
         <!-- Toggle Buttons -->
         <div class="toggle-buttons">
+        <button onclick="showHRPolicyTable(this)">Show Table</button>
             <button onclick="showHRPolicyForm(this)">Show Form</button>
-            <button onclick="showHRPolicyTable(this)">Show Table</button>
         </div>
 
         <!-- Form Section -->
-        <div id="formSection" style="display: none;">
+        <div id="formSection">
             @if($errors->any())
             <div class="alert custom-alert-warning">
                 <ul>
                     @foreach($errors->all() as $error)
-                        <li style="color: red;">{{ $error }}</li>
+                        <li class="text-danger">{{ $error }}</li>
                     @endforeach
                 </ul>
             </div>
@@ -74,12 +72,12 @@ $id = Auth::guard('superadmin')->user()->id;
                     </select>
                     <label for="category_id">Status</label>
                 </div>
-                <button type="submit" class="create-btn" style="position: relative; bottom:8px;">Save Policy</button>
+                <button type="submit" class="create-btn" >Save Policy</button>
             </form>
         </div>
 
         <!-- Table Section -->
-        <div id="tableSection" style="display: none;">
+        <div id="tableSection" >
   
             <div class="table-container">
                 <table>
@@ -134,7 +132,7 @@ $id = Auth::guard('superadmin')->user()->id;
     // Ensure the first button (Show Form) is active by default on page load
     document.addEventListener('DOMContentLoaded', () => {
         const firstButton = document.querySelector('.toggle-buttons button:first-child');
-        showHRPolicyForm(firstButton);
+        showHRPolicyTable(firstButton);
     });
    
     </script>

@@ -9,7 +9,7 @@ $id = Auth::guard('superadmin')->user()->id;
 <!DOCTYPE html>
 <html>
 <head>
-<title>Template</title>
+ 
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
@@ -17,19 +17,20 @@ $id = Auth::guard('superadmin')->user()->id;
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <link rel="stylesheet" href="{{ asset('admin_end/css/admin_form.css') }}">
 <link rel="stylesheet" href="{{ asset('admin_end/css/popup_form.css') }}">
+<link rel="stylesheet" href="{{ asset('admin_end/css/popup_form.css') }}">
 <div class="container">
-    <h3>Create Salary Taxes</h3>
+    <h3>Create Salary Taxes   </h3>
 
  <!-- Toggle Buttons -->
  <div class="toggle-buttons">
+ <button onclick="showUserTable(this)">Show Table</button>
         <button onclick="showUserForm(this)">Show Form</button>
-        <button onclick="showUserTable(this)">Show Table</button>
     </div>
     @if($errors->any())
     <div class="alert custom-alert-warning">
 <ul>
 @foreach($errors->all() as $error)
-    <li style="color: red;">{{ $error }}</li>
+    <li class="text-danger">{{ $error }}</li>
     
 @endforeach
 </ul>
@@ -37,7 +38,7 @@ $id = Auth::guard('superadmin')->user()->id;
 @endif
 
     <!-- Form Section -->
-    <div id="formSection" style="display: none;">
+    <div id="formSection" > 
     <form method="POST" action="{{ route('insert_taxes') }}">
         @csrf
         <div class="form-container">
@@ -92,7 +93,7 @@ $id = Auth::guard('superadmin')->user()->id;
             </div>
  
     <!-- Table Section -->
-    <div id="tableSection" style="display: none;"> 
+    <div id="tableSection" > 
     <div class="table-container">
         <table>
             <thead>
@@ -159,7 +160,7 @@ function showUserForm(clickedElement) {
 // Ensure the first button (Show Form) is active by default on page load
 document.addEventListener('DOMContentLoaded', () => {
     const firstButton = document.querySelector('.toggle-buttons button:first-child');
-    showUserForm(firstButton);
+    showUserTable(firstButton);
 });
   
 </script>
