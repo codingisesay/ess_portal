@@ -187,13 +187,18 @@ $id = Auth::guard('superadmin')->user()->id;
 
 <script>
     function openEditTaxSlabModal(id, taxCycleName, taxType, minIncome, maxIncome, taxPercentage, fixedAmount) {
+        if (!id) {
+            alert('Invalid Tax Slab data. Please try again.');
+            return;
+        }
+        console.log('Editing Tax Slab ID:', id); // Debugging: Log the ID to the console
         document.getElementById('editTaxSlabId').value = id;
-        document.getElementById('editTaxCycle').value = taxCycleName;
-        document.getElementById('editTaxType').value = taxType;
-        document.getElementById('editMinIncome').value = minIncome;
-        document.getElementById('editMaxIncome').value = maxIncome;
-        document.getElementById('editTaxPercentage').value = taxPercentage;
-        document.getElementById('editFixedAmount').value = fixedAmount;
+        document.getElementById('editTaxCycle').value = taxCycleName || '';
+        document.getElementById('editTaxType').value = taxType || '';
+        document.getElementById('editMinIncome').value = minIncome || '';
+        document.getElementById('editMaxIncome').value = maxIncome || '';
+        document.getElementById('editTaxPercentage').value = taxPercentage || '';
+        document.getElementById('editFixedAmount').value = fixedAmount || '';
 
         const formAction = "{{ route('update_tax_slab', ['id' => ':id']) }}".replace(':id', id);
         document.getElementById('editTaxSlabForm').action = formAction;

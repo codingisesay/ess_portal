@@ -149,12 +149,14 @@ class salaryBoxController extends Controller
 
         $datafortaxes = DB::table('org_tax_slabs')
         ->join('org_tax_regime_years','org_tax_slabs.org_tax_regime_id','=','org_tax_regime_years.id')
-        ->select('org_tax_regime_years.name as org_tax_regime_years_name',
-        'org_tax_slabs.tax_type as tax_type',
-        'org_tax_slabs.min_income as min_income',
-        'org_tax_slabs.max_income as max_income',
-        'org_tax_slabs.tax as tax_per',
-        'org_tax_slabs.fixed_amount as fixed_amount',
+        ->select(
+            'org_tax_slabs.id', // Ensure the ID is included in the query
+            'org_tax_regime_years.name as org_tax_regime_years_name',
+            'org_tax_slabs.tax_type as tax_type',
+            'org_tax_slabs.min_income as min_income',
+            'org_tax_slabs.max_income as max_income',
+            'org_tax_slabs.tax as tax_per',
+            'org_tax_slabs.fixed_amount as fixed_amount'
         )
         ->get();
 
