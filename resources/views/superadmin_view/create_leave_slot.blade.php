@@ -135,11 +135,15 @@ $id = Auth::guard('superadmin')->user()->id;
         });
 
         function openEditLeaveSlotModal(id, name, startDate, endDate, year) {
+            if (!id) {
+                alert('Invalid leave slot data. Please try again.');
+                return;
+            }
             document.getElementById('editLeaveSlotId').value = id;
-            document.getElementById('editLeaveSlotName').value = name;
-            document.getElementById('editLeaveSlotStartDate').value = startDate;
-            document.getElementById('editLeaveSlotEndDate').value = endDate;
-            document.getElementById('editLeaveSlotYear').value = year;
+            document.getElementById('editLeaveSlotName').value = name || '';
+            document.getElementById('editLeaveSlotStartDate').value = startDate || '';
+            document.getElementById('editLeaveSlotEndDate').value = endDate || '';
+            document.getElementById('editLeaveSlotYear').value = year || '';
 
             const formAction = "{{ route('update_policy_slot', ['id' => ':id']) }}".replace(':id', id);
             document.getElementById('editLeaveSlotForm').action = formAction;

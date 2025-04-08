@@ -158,11 +158,15 @@ $id = Auth::guard('superadmin')->user()->id;
     });
 
     function openEditSalaryTemplateModal(id, name, minCTC, maxCTC, status) {
+        if (!id) {
+            alert('Invalid template data. Please try again.');
+            return;
+        }
         document.getElementById('editSalaryTemplateId').value = id;
-        document.getElementById('editSalaryTemplateName').value = name;
-        document.getElementById('editSalaryTemplateMinCTC').value = minCTC;
-        document.getElementById('editSalaryTemplateMaxCTC').value = maxCTC;
-        document.getElementById('editSalaryTemplateStatus').value = status;
+        document.getElementById('editSalaryTemplateName').value = name || '';
+        document.getElementById('editSalaryTemplateMinCTC').value = minCTC || '';
+        document.getElementById('editSalaryTemplateMaxCTC').value = maxCTC || '';
+        document.getElementById('editSalaryTemplateStatus').value = status || '';
 
         const formAction = "{{ route('update_salary_template', ['id' => ':id']) }}".replace(':id', id);
         document.getElementById('editSalaryTemplateForm').action = formAction;

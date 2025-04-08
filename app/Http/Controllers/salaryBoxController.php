@@ -265,4 +265,72 @@ class salaryBoxController extends Controller
         }
     }
 
+    public function updateTaxCycle(Request $request, $id)
+    {
+        $request->validate([
+            'template_name' => 'required|string|max:255',
+            'from' => 'required|date',
+            'to' => 'required|date|after:from',
+            'status' => 'required|in:Active,Inactive',
+        ]);
+
+        $taxCycle = DB::table('org_tax_regime_years')->where('id', $id)->first();
+
+        if (!$taxCycle) {
+            return redirect()->route('tax_cycle')->with('error', 'Tax Cycle not found.');
+        }
+
+        $status = DB::table('org_tax_regime_years')
+            ->where('id', $id)
+            ->update([
+                'name' => $request->template_name,
+                'applicable_from' => $request->from,
+                'applicable_to' => $request->to,
+                'status' => $request->status,
+                'updated_at' => now(),
+            ]);
+
+        if ($status) {
+            return redirect()->route('tax_cycle')->with('success', 'Tax Cycle updated successfully.');
+        } else {
+            return redirect()->route('tax_cycle')->with('error', 'Failed to update Tax Cycle.');
+        }
+    }
+
+    public function updateTaxSlab(Request $request, $id)
+    {
+        $request->validate([
+            'tax_cycle_type' => 'required|exists:org_tax_regime_years,id',
+            'tax_type' => 'required|string|max:255',
+            'min_income' => 'required|numeric',
+            'max_income' => 'required|numeric',
+            'tax_per' => 'required|numeric',
+            'fixed_amount' => 'required|numeric',
+        ]);
+
+        $taxSlab = DB::table('org_tax_slabs')->where('id', $id)->first();
+
+        if (!$taxSlab) {
+            return redirect()->route('taxes')->with('error', 'Tax Slab not found.');
+        }
+
+        $status = DB::table('org_tax_slabs')
+            ->where('id', $id)
+            ->update([
+                'org_tax_regime_id' => $request->tax_cycle_type,
+                'tax_type' => $request->tax_type,
+                'min_income' => $request->min_income,
+                'max_income' => $request->max_income,
+                'tax' => $request->tax_per,
+                'fixed_amount' => $request->fixed_amount,
+                'updated_at' => now(),
+            ]);
+
+        if ($status) {
+            return redirect()->route('taxes')->with('success', 'Tax Slab updated successfully.');
+        } else {
+            return redirect()->route('taxes')->with('error', 'Failed to update Tax Slab.');
+        }
+    }
+
 }
