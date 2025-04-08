@@ -163,9 +163,13 @@ $id = Auth::guard('superadmin')->user()->id;
     }
 
     // Ensure the first button (Show Form) is active by default on page load
+    
+    // Ensure the first button (Show Form) is active by default on page load
     document.addEventListener('DOMContentLoaded', () => {
-        showSalaryTemplateForm();
+        const firstButton = document.querySelector('.toggle-buttons button:first-child');
+        showSalaryTemplateTable(firstButton);
     });
+    
 
     function openEditSalaryTemplateModal(id, name, minCTC, maxCTC, status) {
         if (!id) {

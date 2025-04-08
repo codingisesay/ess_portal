@@ -41,7 +41,7 @@ $name = Auth::guard('superadmin')->user()->name;
                 <li id="orgConfigLi">
                     <strong onclick="toggleDropdown('orgConfigDropdown', this)">
                         <strong>  
-                        <x-icon name="building" class="me-2" />&nbsp; Organisation Configuration</strong>
+                        <x-icon name="building" />&nbsp; Organisation Configuration</strong>
                         <img src="{{ asset('user_end/images/arrow-right.svg') }}" alt="arrow" class="dropdown-arrow">
                     </strong>
                     <ul id="orgConfigDropdown">
@@ -56,7 +56,7 @@ $name = Auth::guard('superadmin')->user()->name;
                 <li id="policyManagementLi">
                     <strong onclick="toggleDropdown('policyManagementDropdown', this)">
                         <strong>
-                        <x-icon name="policy" class="me-2" />&nbsp; Policy Management</strong>
+                        <x-icon name="policy" />&nbsp; Policy Management</strong>
                         <img src="{{ asset('user_end/images/arrow-right.svg') }}" alt="arrow" class="dropdown-arrow">
                     </strong>
                     <ul id="policyManagementDropdown">
@@ -74,7 +74,7 @@ $name = Auth::guard('superadmin')->user()->name;
                 <li id="salaryManagementLi">
                     <strong onclick="toggleDropdown('salaryManagementDropdown', this)">
                         <strong>
-                        <x-icon name="salary" class="me-2" />&nbsp; Salary Management</strong>
+                        <x-icon name="salary" />&nbsp; Salary Management</strong>
                         <img src="{{ asset('user_end/images/arrow-right.svg') }}" alt="arrow" class="dropdown-arrow">
                     </strong>
                     <ul id="salaryManagementDropdown">
@@ -87,7 +87,7 @@ $name = Auth::guard('superadmin')->user()->name;
                 <li id="taxManagementLi">
                     <strong onclick="toggleDropdown('taxManagementDropdown', this)">
                         <strong>
-                        <x-icon name="tax" class="me-2" />&nbsp; Tax Management</strong>
+                        <x-icon name="tax" />&nbsp; Tax Management</strong>
                         <img src="{{ asset('user_end/images/arrow-right.svg') }}" alt="arrow" class="dropdown-arrow">
                     </strong>
                     <ul id="taxManagementDropdown">
@@ -100,7 +100,7 @@ $name = Auth::guard('superadmin')->user()->name;
                 <li id="settingsLi">
                     <strong onclick="toggleDropdown('settingsDropdown', this)">
                         <strong>
-                        <x-icon name="setting" class="me-2" />&nbsp; Settings</strong>
+                        <x-icon name="setting" />&nbsp; Settings</strong>
                         <img src="{{ asset('user_end/images/arrow-right.svg') }}" alt="arrow" class="dropdown-arrow">
                     </strong>
                     <ul id="settingsDropdown">

@@ -148,7 +148,7 @@ $id = Auth::guard('superadmin')->user()->id;
 </div>
 
 <script>
-function showUserForm(clickedElement) {
+function showTaxForm(clickedElement) {
     // Show form section and hide table section
     document.getElementById('formSection').style.display = 'block';
     document.getElementById('tableSection').style.display = 'none'; 

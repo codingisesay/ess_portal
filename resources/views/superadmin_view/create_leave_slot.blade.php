@@ -138,11 +138,11 @@ $id = Auth::guard('superadmin')->user()->id;
             clickedElement.classList.add('active');
         }
 
-        // Ensure the form is visible by default on page load
+        // Ensure the table is visible by default on page load 
         document.addEventListener('DOMContentLoaded', () => {
-            showLeaveSlotForm();
-        });
-
+            const firstButton = document.querySelector('.toggle-buttons button:first-child');
+            showLeaveSlotTable(firstButton);
+        }); 
         function openEditLeaveSlotModal(id, name, startDate, endDate, year) {
             if (!id) {
                 alert('Invalid leave slot data. Please try again.');

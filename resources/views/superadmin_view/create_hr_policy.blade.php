@@ -175,9 +175,13 @@ $id = Auth::guard('superadmin')->user()->id;
         }
 
         // Ensure the form is visible by default on page load
-        document.addEventListener('DOMContentLoaded', () => {
-            showHRPolicyForm();
-        });
+        
+    // Ensure the first button (Show Form) is active by default on page load
+    document.addEventListener('DOMContentLoaded', () => {
+        const firstButton = document.querySelector('.toggle-buttons button:first-child');
+        showHRPolicyTable(firstButton);
+    });
+      
 
         function openEditHRPolicyModal(id, title, categoryId, status) {
             document.getElementById('editHRPolicyId').value = id;
