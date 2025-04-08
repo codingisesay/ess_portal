@@ -18,12 +18,12 @@ $id = Auth::guard('superadmin')->user()->id;
 <link rel="stylesheet" href="{{ asset('admin_end/css/admin_form.css') }}">
 <link rel="stylesheet" href="{{ asset('admin_end/css/popup_form.css') }}">
 <div class="container">
-    <h2>Create Branches For Your Organisation</h2>
+    <h3>Create Branches For Your Organisation</h3>
 
     <!-- Toggle Buttons -->
     <div class="toggle-buttons">
-        <button class="but" onclick="showBranchForm()">Show Form</button>
-        <button class="but" onclick="showBranchTable()">Show Table</button>
+        <button onclick="showBranchForm(this)">Show Form</button>
+        <button onclick="showBranchTable(this)">Show Table</button>
     </div>
 
     <!-- Form Section -->
@@ -93,8 +93,7 @@ $id = Auth::guard('superadmin')->user()->id;
     </div>
 
     <!-- Table Section -->
-    <div id="tableSection" style="display: none;">
-        <h3>Branch</h3>
+    <div id="tableSection" style="display: none;"> 
         <div class="table-container">
             <table>
                 <thead>
@@ -187,20 +186,34 @@ $id = Auth::guard('superadmin')->user()->id;
 </div>
 
 <script>
-    function showBranchForm() {
+    function showBranchForm(clickedElement) {
         document.getElementById('formSection').style.display = 'block';
-        document.getElementById('tableSection').style.display = 'none';
+        document.getElementById('tableSection').style.display = 'none'; 
+    const siblings = clickedElement.parentElement.children;
+    for (let sibling of siblings) {
+        sibling.classList.remove('active');
+    } 
+    clickedElement.classList.add('active');
     }
 
-    function showBranchTable() {
+    function showBranchTable(clickedElement) {
         document.getElementById('formSection').style.display = 'none';
-        document.getElementById('tableSection').style.display = 'block';
+        document.getElementById('tableSection').style.display = 'block'; 
+    const siblings = clickedElement.parentElement.children;
+    for (let sibling of siblings) {
+        sibling.classList.remove('active');
+    } 
+    clickedElement.classList.add('active');
     }
 
     // Ensure the form is visible by default on page load
-    document.addEventListener('DOMContentLoaded', () => {
-        showBranchForm();
-    });
+   
+// Ensure the first button (Show Form) is active by default on page load
+document.addEventListener('DOMContentLoaded', () => {
+    const firstButton = document.querySelector('.toggle-buttons button:first-child');
+    showBranchForm(firstButton);
+});
+     
 
     function openEditBranchModal(branch) {
         document.getElementById('editBranchId').value = branch.id;

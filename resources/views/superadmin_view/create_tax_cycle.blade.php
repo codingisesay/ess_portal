@@ -18,8 +18,12 @@ $id = Auth::guard('superadmin')->user()->id;
 <link rel="stylesheet" href="{{ asset('admin_end/css/admin_form.css') }}">
 <link rel="stylesheet" href="{{ asset('admin_end/css/popup_form.css') }}">
 <div class="container">
-    <h2>Creates Salary Tax Slot</h2>
-
+    <h3>Creates Salary Tax Slot</h3>
+ <!-- Toggle Buttons -->
+ <div class="toggle-buttons">
+        <button onclick="showUserForm(this)">Show Form</button>
+        <button onclick="showUserTable(this)">Show Table</button>
+    </div>
     @if($errors->any())
     <div class="alert custom-alert-warning">
 <ul>
@@ -31,6 +35,8 @@ $id = Auth::guard('superadmin')->user()->id;
     </div>
 @endif
 
+    <!-- Form Section -->
+    <div id="formSection" style="display: none;">
     <form method="POST" action="{{ route('insert_tax_cycle') }}">
         @csrf
         <div class="form-container">
@@ -55,16 +61,18 @@ $id = Auth::guard('superadmin')->user()->id;
                 </select>
                 <label>Status</label>
             </div>
+      
+         <button class="create-btn" type="submit">Create</button> 
         </div>
 
-        <div class="form-container">
-            <div class="form-group">
-                <button class="create-btn" type="submit">Create</button>
-            </div>
-        </div>
+       
     </form>
+    </div>
 
-    <h3>Templates Name</h3>
+    
+    <!-- Table Section -->
+    <div id="tableSection" style="display: none;"> 
+    
     <div class="table-container">
         <table>
             <thead>
@@ -96,7 +104,38 @@ $id = Auth::guard('superadmin')->user()->id;
         </table>
     </div>
 </div>
+</div>
 
+
+<script>
+function showUserForm(clickedElement) {
+    // Show form section and hide table section
+    document.getElementById('formSection').style.display = 'block';
+    document.getElementById('tableSection').style.display = 'none'; 
+    const siblings = clickedElement.parentElement.children;
+    for (let sibling of siblings) {
+        sibling.classList.remove('active');
+    } 
+    clickedElement.classList.add('active');
+}
+
+    function showUserTable(clickedElement) {
+        document.getElementById('formSection').style.display = 'none';
+        document.getElementById('tableSection').style.display = 'block';
+        const siblings = clickedElement.parentElement.children;
+        for (let sibling of siblings) {
+            sibling.classList.remove('active');
+        } 
+        clickedElement.classList.add('active');
+    }
+
+// Ensure the first button (Show Form) is active by default on page load
+document.addEventListener('DOMContentLoaded', () => {
+    const firstButton = document.querySelector('.toggle-buttons button:first-child');
+    showUserForm(firstButton);
+});
+  
+</script>
 
 
 @endsection
