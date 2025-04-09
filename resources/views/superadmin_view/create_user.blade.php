@@ -61,36 +61,53 @@ $id = Auth::guard('superadmin')->user()->id;
             </div>
         </form>
     </div>
-
+ 
     <!-- Table Section -->
-    <div id="tableSection" > 
-        <div class="table-container">
-            <table>
-                <thead>
-                    <tr>
-                        <th>Serial No</th>
-                        <th>ID</th>
-                        <th>Name</th>
-                        <th>Email</th>
-                        <th>Action</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach($users as $index => $user)
-                        <tr>
-                            <td>{{ $index + 1 }}</td>
-                            <td>{{ $user->id }}</td>
-                            <td>{{ $user->name }}</td>
-                            <td>{{ $user->email }}</td>
-                            <td>
-                                <button onclick="openEditUserModal({{ $user }})" class="btn">  <x-icon name="edit" /> </button>                              
-                        </td>
-                        </tr>
-                    @endforeach
-                </tbody>
-            </table>
+    <div id="tableSection">
+        @include('partials.data_table', [
+            'items' => $users,
+            'columns' => [
+                ['header' => 'ID', 'accessor' => 'id'],
+                ['header' => 'Name', 'accessor' => 'name'],
+                ['header' => 'Email', 'accessor' => 'email'],
+            ],
+            'editModalId' => 'openEditModal',
+            'hasActions' => true,
+            'perPage' => 5
+        ])
+    </div>
+ <!-- Edit User Modal -->
+<div id="editUserModal" class="w3-modal">
+    <div class="w3-modal-content w3-animate-top w3-card-4">
+        <header class="w3-container w3-teal">
+            <span onclick="document.getElementById('editUserModal').style.display='none'" 
+            class="w3-button w3-display-topright">&times;</span>
+            <h2>Edit User</h2>
+        </header>
+        <div class="w3-container">
+            <form id="editUserForm" action="{{ route('update_user') }}" method="POST">
+                @csrf
+                <input type="hidden" name="user_id" id="editUserId">
+                <div class="popup-form-group">
+                    <label for="editUsername">Username</label>
+                    <input type="text" name="username" id="editUsername" required>
+                </div>
+                <div class="popup-form-group">
+                    <label for="editEmpid">Employee ID</label>
+                    <input type="text" name="employeeID" id="editEmpid" required>
+                </div>
+                <div class="popup-form-group">
+                    <label for="editUsermailid">User Email</label>
+                    <input type="email" name="email" id="editUsermailid" required>
+                </div>
+                <div class="popup-form-group">
+                    <button class="create-btn1" type="submit">Save Changes</button>
+                </div>
+            </form>
         </div>
     </div>
+</div>
+
 </div>
 
 <script>
@@ -133,11 +150,11 @@ $id = Auth::guard('superadmin')->user()->id;
         document.getElementById('passwordField').value = password;
     }
 
-    function openEditUserModal(user) {
-        document.getElementById('editUserId').value = user.id;
-        document.getElementById('editUsername').value = user.name;
-        document.getElementById('editEmpid').value = user.employeeID;
-        document.getElementById('editUsermailid').value = user.email;
+    function openEditModal(user, userdata) { 
+        document.getElementById('editUserId').value = user;
+        document.getElementById('editUsername').value = userdata.name;
+        document.getElementById('editEmpid').value = userdata.employeeID;
+        document.getElementById('editUsermailid').value = userdata.email;
         document.getElementById('editUserModal').style.display = 'block';
     }
 </script>

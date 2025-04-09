@@ -355,3 +355,54 @@ tbody tr:nth-child(even) {
         max-height: 300px;
     }
 }
+
+/* pagination below */
+
+.table-search {
+    max-width: 300px;
+    margin-left: auto;
+}
+
+.pagination-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 15px 5px 0 5px;
+
+}
+
+.pagination {
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    font-size: 14px
+}
+
+.pagination a {
+    padding: 3px 7px;
+    border-radius: 3px;
+    text-decoration: none;
+    color: #333;
+}
+
+.page-numbers {
+    display: flex;
+    gap: 5px;
+}
+
+.page-number {
+    padding: 5px 10px;
+    border-radius: 3px;
+    text-decoration: none;
+}
+
+.page-number.active {
+    border: none;
+    color: #FFF;
+    background: #702851;
+}
+
+.ellipsis {
+    padding: 5px 10px;
+}
