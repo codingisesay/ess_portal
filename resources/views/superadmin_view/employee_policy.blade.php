@@ -54,37 +54,24 @@ $id = Auth::guard('superadmin')->user()->id;
                 <button type="submit" class="create-btn" >Save Cycle</button>
             </form>
         </div>
+ 
+    <!-- Table Section -->
+    <div id="tableSection">
+        @include('partials.data_table', [
+            'items' => $dataFroms,
+            'columns' => [
+                ['header' => 'ID', 'accessor' => 'id'],
+                ['header' => 'Leave Type', 'accessor' => 'leave_type'],
+                ['header' => 'Employee Type', 'accessor' => 'employee_type'],
+                ['header' => 'Leave Count', 'accessor' => 'leave_count'],
+                ['header' => 'Month Start', 'accessor' => 'month_start'],
+            ],
+            'editModalId' => 'openEditModal',
+            'hasActions' => false,
+            'perPage' => 5
+        ])
+    </div>
 
-        <!-- Table Section -->
-        <div id="tableSection" >
-  
-            <div class="table-container">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Id</th>
-                            <th>Leave Type</th>
-                            <th>Employee Type</th>
-                            <th>Leave Count</th>
-                            <th>Month Start</th>
-                            <th>edit</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach ($dataFroms as $dataFrom)
-                            <tr>
-                                <td>{{ $loop->iteration }}</td>
-                                <td>{{ $dataFrom->leave_type }}</td>
-                                <td>{{ $dataFrom->employee_type }}</td>
-                                <td>{{ $dataFrom->leave_count }}</td>
-                                <td>{{ $dataFrom->month_start }}</td>
-                                <td><button class="edit-icon">Edit</button></td>
-                            </tr>
-                        @endforeach
-                    </tbody>
-                </table>
-            </div>
-        </div>
     </div>
 
     <script>

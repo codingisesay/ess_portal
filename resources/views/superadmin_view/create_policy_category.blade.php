@@ -45,7 +45,7 @@ $id = Auth::guard('superadmin')->user()->id;
 
         <!-- Table Section -->
         <div id="tableSection" > 
-            <div class="table-container">
+            <!-- <div class="table-container">
                 <table>
                     <thead>
                         <tr>
@@ -62,14 +62,31 @@ $id = Auth::guard('superadmin')->user()->id;
                                 <td>{{$data->name}}</td>
                                 <td>{{$data->status}}</td>
                                 <td>
-                                    <button class="edit-icon" onclick="openEditPolicyCategoryModal({{ $data->id }}, '{{ $data->name }}', '{{ $data->status }}')">Edit</button>
+                                    <button class="edit-icon" onclick="openEditModal({{ $data->id }}, '{{ $data->name }}', '{{ $data->status }}')">Edit</button>
                                 </td>
                             </tr>
                         @endforeach
                     </tbody>
                 </table>
-            </div>
+            </div> -->
         </div>
+
+        
+    <!-- Table Section -->
+    <div id="tableSection">
+        @include('partials.data_table', [
+            'items' => $datas,
+            'columns' => [
+                ['header' => 'ID', 'accessor' => 'id'],
+                ['header' => 'Name', 'accessor' => 'name'],
+                ['header' => 'Ststus', 'accessor' => 'status'],
+            ],
+            'editModalId' => 'editPolicyCategoryModal',
+            'hasActions' => true,
+            'perPage' => 5
+        ])
+    </div>
+
     </div>
 
     <div id="editPolicyCategoryModal" class="w3-modal" style="display: none;">
@@ -86,7 +103,7 @@ $id = Auth::guard('superadmin')->user()->id;
                     <input type="hidden" name="category_id" id="editPolicyCategoryId">
                     <div class="popup-form-group">
                         <label for="editPolicyCategoryName">Category Name</label>
-                        <input type="text" name="category_name" id="editPolicyCategoryName" required>
+                        <input type="text" name="category_name" id="editPolicyCategoryName" required> 
                     </div>
                     <div class="popup-form-group">
                         <label for="editPolicyCategoryStatus">Status</label>
@@ -130,13 +147,12 @@ $id = Auth::guard('superadmin')->user()->id;
         showPolicyCategoryTable(firstButton);
     });
       
-        function openEditPolicyCategoryModal(id, name, status) {
+        function openEditModal(id, item) {
             document.getElementById('editPolicyCategoryId').value = id;
-            document.getElementById('editPolicyCategoryName').value = name;
-            document.getElementById('editPolicyCategoryStatus').value = status;
-
+            document.getElementById('editPolicyCategoryName').value = item.name;
+            document.getElementById('editPolicyCategoryStatus').value = item.status; 
             // Dynamically set the form action with the correct ID
-            const formAction = "{{ route('update_policy_category', ['id' => ':id']) }}".replace(':id', id);
+            const formAction = "{{ route('update_policy_category', ['id' => ':id']) }}".replace(':id', item.id);
             document.getElementById('editPolicyCategoryForm').action = formAction;
 
             document.getElementById('editPolicyCategoryModal').style.display = 'block';

@@ -74,41 +74,24 @@ $id = Auth::guard('superadmin')->user()->id;
     </div>
 
     <!-- Table Section -->
-    <div id="tableSection" >
-       
-        <div class="table-container">
-            <table>
-                <thead>
-                    <tr>
-                        <th>MAILER</th>
-                        <th>HOST</th>
-                        <th>PORT</th>
-                        <th>USERNAME</th>
-                        {{-- <th>PASSWORD</th> --}}
-                        <th>ENCRYPTION</th>
-                        <th>FROM ADDRESS</th>
-                        <th>FROM NAME</th>
-                        <th>EDIT</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>{{ $mailDatas[0]->MAIL_MAILER }}</td>
-                        <td>{{ $mailDatas[0]->MAIL_HOST }}</td>
-                        <td>{{ $mailDatas[0]->MAIL_PORT }}</td>
-                        <td>{{ $mailDatas[0]->MAIL_USERNAME }}</td>
-                        {{-- <td>{{ $mailDatas[0]->MAIL_PASSWORD }}</td> --}}
-                        <td>{{ $mailDatas[0]->MAIL_ENCRYPTION }}</td>
-                        <td>{{ $mailDatas[0]->MAIL_FROM_ADDRESS }}</td>
-                        <td>{{ $mailDatas[0]->MAIL_FROM_NAME }}</td>
-                        <td>
-                            <button class="edit-icon" onclick="openEditMailConfigModal('{{ $mailDatas[0]->MAIL_MAILER }}', '{{ $mailDatas[0]->MAIL_HOST }}', '{{ $mailDatas[0]->MAIL_PORT }}', '{{ $mailDatas[0]->MAIL_USERNAME }}', '{{ $mailDatas[0]->MAIL_PASSWORD }}', '{{ $mailDatas[0]->MAIL_ENCRYPTION }}', '{{ $mailDatas[0]->MAIL_FROM_ADDRESS }}', '{{ $mailDatas[0]->MAIL_FROM_NAME }}')">Edit</button>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
+    <div id="tableSection">
+        @include('partials.data_table', [
+            'items' => $mailDatas,
+            'columns' => [
+                ['header' => 'Mailer', 'accessor' => 'MAIL_MAILER'],
+                ['header' => 'Host', 'accessor' => 'MAIL_HOST'],
+                ['header' => 'Port', 'accessor' => 'MAIL_PORT'],
+                ['header' => 'Username', 'accessor' => 'MAIL_USERNAME'],
+                ['header' => 'Encryption', 'accessor' => 'MAIL_ENCRYPTION'],
+                ['header' => 'From Address', 'accessor' => 'MAIL_FROM_ADDRESS'],
+                ['header' => 'From Name', 'accessor' => 'MAIL_FROM_NAME'],
+            ],
+            'editModalId' => 'openEditModal',
+            'hasActions' => true, 
+            'perPage' => 5
+        ])
     </div>
+
 </div>
 
 <div id="editMailConfigModal" class="w3-modal" style="display: none;">
@@ -191,16 +174,15 @@ $id = Auth::guard('superadmin')->user()->id;
         const firstButton = document.querySelector('.toggle-buttons button:first-child');
         showMailConfigTable(firstButton);
     });
-
-    function openEditMailConfigModal(mailer, host, port, username, password, encryption, fromAddress, fromName) {
-        document.getElementById('editMailMailer').value = mailer;
-        document.getElementById('editMailHost').value = host;
-        document.getElementById('editMailPort').value = port;
-        document.getElementById('editMailUsername').value = username;
-        document.getElementById('editMailPassword').value = password;
-        document.getElementById('editMailEncryption').value = encryption;
-        document.getElementById('editMailFromAddress').value = fromAddress;
-        document.getElementById('editMailFromName').value = fromName;
+ 
+    function openEditModal(mailer, datas) {
+        document.getElementById('editMailMailer').value = datas.MAIL_MAILER;
+        document.getElementById('editMailHost').value = datas.MAIL_HOST;
+        document.getElementById('editMailPort').value = datas.MAIL_PORT;
+        document.getElementById('editMailUsername').value = datas.MAIL_USERNAME; 
+        document.getElementById('editMailEncryption').value = datas.MAIL_ENCRYPTION;
+        document.getElementById('editMailFromAddress').value = datas.MAIL_FROM_ADDRESS;
+        document.getElementById('editMailFromName').value = datas.MAIL_FROM_NAME;
 
         document.getElementById('editMailConfigModal').style.display = 'block';
     }

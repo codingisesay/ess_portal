@@ -67,39 +67,25 @@ $id = Auth::guard('superadmin')->user()->id;
             </div>
         </form>
     </div>
-
+ 
     <!-- Table Section -->
-    <div id="tableSection" >
-        
-        <div class="table-container">
-            <table>
-                <thead>
-                    <tr>
-                        <th>Serial No</th>
-                        <th>Name</th>
-                        <th>Min CTC</th>
-                        <th>Max CTC</th>
-                        <th>Status</th>
-                        <th>Action</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach ($template_datas as $template)
-                        <tr>
-                            <td>{{ $loop->iteration }}</td>
-                            <td>{{ $template->name }}</td>
-                            <td>{{ $template->min_ctc }}</td>
-                            <td>{{ $template->max_ctc }}</td>
-                            <td>{{ $template->status }}</td>
-                            <td>
-                                <button class="edit-icon" onclick="openEditSalaryTemplateModal({{ $template->id }}, '{{ $template->name }}', '{{ $template->min_ctc }}', '{{ $template->max_ctc }}', '{{ $template->status }}')">Edit</button>
-                            </td>
-                        </tr>
-                    @endforeach
-                </tbody>
-            </table>
-        </div>
+    <div id="tableSection">
+        @include('partials.data_table', [
+            'items' => $template_datas,
+            'columns' => [
+                ['header' => 'ID', 'accessor' => 'id'],
+                ['header' => 'Template Name', 'accessor' => 'name'],
+                ['header' => 'Min CTC', 'accessor' => 'min_ctc'],
+                ['header' => 'Max CTC', 'accessor' => 'max_ctc'],
+                ['header' => 'Status', 'accessor' => 'status'],
+            ], 
+            'editModalId' => 'openEditModal',
+            'hasActions' => true,
+            'perPage' => 5
+        ])
     </div>
+
+
 </div>
 
 <div id="editSalaryTemplateModal" class="w3-modal" style="display: none;">
@@ -161,9 +147,7 @@ $id = Auth::guard('superadmin')->user()->id;
             } 
             clickedElement.classList.add('active');
     }
-
-    // Ensure the first button (Show Form) is active by default on page load
-    
+ 
     // Ensure the first button (Show Form) is active by default on page load
     document.addEventListener('DOMContentLoaded', () => {
         const firstButton = document.querySelector('.toggle-buttons button:first-child');
@@ -171,18 +155,18 @@ $id = Auth::guard('superadmin')->user()->id;
     });
     
 
-    function openEditSalaryTemplateModal(id, name, minCTC, maxCTC, status) {
+    function openEditModal(id, templatedata) {
         if (!id) {
             alert('Invalid template data. Please try again.');
             return;
-        }
-        document.getElementById('editSalaryTemplateId').value = id;
-        document.getElementById('editSalaryTemplateName').value = name || '';
-        document.getElementById('editSalaryTemplateMinCTC').value = minCTC || '';
-        document.getElementById('editSalaryTemplateMaxCTC').value = maxCTC || '';
-        document.getElementById('editSalaryTemplateStatus').value = status || '';
+        } 
+        document.getElementById('editSalaryTemplateId').value = templatedata.id;
+        document.getElementById('editSalaryTemplateName').value = templatedata.name || '';
+        document.getElementById('editSalaryTemplateMinCTC').value =templatedata.min_ctc || '';
+        document.getElementById('editSalaryTemplateMaxCTC').value = templatedata.max_ctc || '';
+        document.getElementById('editSalaryTemplateStatus').value = templatedata.status || '';
 
-        const formAction = "{{ route('update_salary_template', ['id' => ':id']) }}".replace(':id', id);
+        const formAction = "{{ route('update_salary_template', ['id' => ':id']) }}".replace(':id', templatedata.id);
         document.getElementById('editSalaryTemplateForm').action = formAction;
 
         document.getElementById('editSalaryTemplateModal').style.display = 'block';

@@ -79,38 +79,24 @@ $id = Auth::guard('superadmin')->user()->id;
             </form>
         </div>
 
-        <!-- Table Section -->
-        <div id="tableSection" >
-  
-            <div class="table-container">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Id</th>
-                            <th>TITLE</th>
-                            <th>CATEGORY</th>
-                            <!-- <th>CONTENT</th> -->
-                            <th>Status</th>
-                            <th>EDIT</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach ($datas as $data)
-                            <tr>
-                                <td>{{ $loop->iteration }}</td>
-                                <td>{{ $data->policy_title }}</td>
-                                <td>{{ $data->policy_categorie_id }}</td>
-                                <!-- <td>{{ $data->policy_content }}</td> -->
-                                <td>{{ $data->status }}</td>
-                                <td>
-                                    <button class="edit-icon" onclick="openEditHRPolicyModal({{ $data->id }}, '{{ $data->policy_title }}', '{{ $data->policy_categorie_id }}', '{{ $data->status }}')">Edit</button>
-                                </td>
-                            </tr>
-                        @endforeach
-                    </tbody>
-                </table>
-            </div>
-        </div>
+        <!-- Table 
+ 
+    <!-- Table Section -->
+    <div id="tableSection">
+        @include('partials.data_table', [
+            'items' => $datas,
+            'columns' => [
+                ['header' => 'ID', 'accessor' => 'id'],
+                ['header' => 'Title', 'accessor' => 'policy_title'],
+                ['header' => 'Category', 'accessor' => 'policy_categorie_id'],
+                ['header' => 'Status', 'accessor' => 'status'],
+            ],
+            'editModalId' => 'openEditModal',
+            'hasActions' => true,
+            'perPage' => 5
+        ])
+    </div>
+ 
     </div>
 
     <div id="editHRPolicyModal" class="w3-modal" style="display: none;">
@@ -183,13 +169,13 @@ $id = Auth::guard('superadmin')->user()->id;
     });
       
 
-        function openEditHRPolicyModal(id, title, categoryId, status) {
-            document.getElementById('editHRPolicyId').value = id;
-            document.getElementById('editHRPolicyTitle').value = title;
-            document.getElementById('editHRPolicyCategory').value = categoryId;
-            document.getElementById('editHRPolicyStatus').value = status;
+        function openEditModal(id, title,) { 
+            document.getElementById('editHRPolicyId').value = title.id;
+            document.getElementById('editHRPolicyTitle').value =  title.policy_title
+            document.getElementById('editHRPolicyCategory').value = title.policy_categorie_id;
+            document.getElementById('editHRPolicyStatus').value = title.status;
 
-            const formAction = "{{ route('update_hr_policy', ['id' => ':id']) }}".replace(':id', id);
+            const formAction = "{{ route('update_hr_policy', ['id' => ':id']) }}".replace(':id', title.id);
             document.getElementById('editHRPolicyForm').action = formAction;
 
             document.getElementById('editHRPolicyModal').style.display = 'block';
