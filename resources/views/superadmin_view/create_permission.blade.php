@@ -57,9 +57,9 @@ array_push($permis, $per->feature_id);
 
 <!-- Popup Overlay -->
 <div class="popup-overlay" id="popup-overlay">
-    <div class="popup-content">
+    <div class="popup-content" style="z-index:auto">
         <div class="popup-header">
-            <h3>Create Permission</h3>
+            <h4 class="fw-bold">Create Permission</h4>
             <button class="popup-close" onclick="closePopup()">&times;</button>
         </div>
         <div class="popup-body">
@@ -68,7 +68,7 @@ array_push($permis, $per->feature_id);
 
                 <?php
                 foreach($results as $result){
-                    echo '<h3>'.$result->module_name.'</h3>'."<br>";
+                    echo '<h5>'.$result->module_name.'</h5>'."<br>";
                     foreach($features as $feature){
                         if($result->module_name == $feature->module_name){?>
                             <div class="checkbox-group">

@@ -91,36 +91,23 @@ $id = Auth::guard('superadmin')->user()->id;
             </div>
         </form>
     </div>
-
+ 
     <!-- Table Section -->
-    <div id="tableSection" > 
-        <div class="table-container">
-            <table>
-                <thead>
-                    <tr>
-                        <th>Serial No</th>
-                        <th>Name</th>
-                        <th>Mobile</th>
-                        <th>E-mail</th>
-                        <th>Action</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach($branchs as $index => $branch)
-                        <tr>
-                            <td>{{ $index + 1 }}</td>
-                            <td>{{ $branch->name }}</td>
-                            <td>{{ $branch->mobile }}</td>
-                            <td>{{ $branch->branch_email }}</td>
-                            <td>
-                            <button onclick="openEditBranchModal({{ $branch }})" class="btn">  <x-icon name="edit" /> </button>  
-                        </td>
-                        </tr>
-                    @endforeach
-                </tbody>
-            </table>
-        </div>
+    <div id="tableSection">
+        @include('partials.data_table', [
+            'items' => $branchs,
+            'columns' => [
+                ['header' => 'ID', 'accessor' => 'id'],
+                ['header' => 'Name', 'accessor' => 'name'],
+                ['header' => 'Mobile', 'accessor' => 'mobile'],
+                ['header' => 'Email', 'accessor' => 'branch_email'],
+            ],
+            'editModalId' => 'openEditModal',
+            'hasActions' => true,
+            'perPage' => 5
+        ])
     </div>
+ 
 </div>
 
 <!-- Edit Branch Modal -->
@@ -217,7 +204,7 @@ $id = Auth::guard('superadmin')->user()->id;
     });
      
 
-    function openEditBranchModal(branch) {
+    function openEditModal(id ,branch) {
         document.getElementById('editBranchId').value = branch.id;
         document.getElementById('editBranchName').value = branch.name;
         document.getElementById('editMobile').value = branch.mobile;

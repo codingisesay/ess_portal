@@ -95,23 +95,36 @@ class userController extends Controller
     public function update(Request $request)
     {
         $validated = $request->validate([
+            'user_id' => 'required|exists:users,id',
             'username' => 'required',
             'empid' => 'required',
             'usermailid' => 'required|email',
         ]);
 
         $user = User::find($request->user_id);
+
+        if (!$user) {
+            return redirect()->back()->with('error', 'User not found.');
+        }
+
         $user->name = $request->username;
         $user->employeeID = $request->empid;
         $user->email = $request->usermailid;
-       $s = $user->save();
 
-       if($s){
-        return redirect()->back()->with('success', 'User updated successfully');
-       }else{
-        return redirect()->back()->with('error', 'User not updated successfully');
-       }
-       
+        try {
+            if ($user->isDirty()) { // Check if fields are dirty
+                $s = $user->save();
+                if ($s) {
+                    return redirect()->back()->with('success', 'User updated successfully');
+                } else {
+                    return redirect()->back()->with('error', 'User not updated successfully');
+                }
+            } else {
+                return redirect()->back()->with('info', 'No changes were made.');
+            }
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Error: ' . $e->getMessage());
+        }
     }
 
 }

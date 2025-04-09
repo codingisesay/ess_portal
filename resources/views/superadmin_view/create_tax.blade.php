@@ -92,47 +92,24 @@ $id = Auth::guard('superadmin')->user()->id;
     </form>
             </div>
  
-    <!-- Table Section -->
-    <div id="tableSection" > 
-    <div class="table-container">
-        <table>
-            <thead>
-                <tr>
-                    <th>Serial No</th>
-                    <th>Tax cycle Name</th>
-                    <th>Tax Type</th>
-                    <th>Min Income</th>
-                    <th>Max Income</th>
-                    <th>Percentage</th>
-                    <th>Fixed Amount</th>
-                    <th>Action</th>
-                </tr>
-            </thead>
-            <tbody>
-             
-                 
-             @foreach ($datafortaxes as $data)
-
-             <tr>
-                <td>{{ $loop->iteration }}</td>
-                <td>{{ $data->org_tax_regime_years_name }}</td>
-                <td>{{$data->tax_type}}</td>
-                <td>{{$data->min_income}}</td>
-                <td>{{$data->max_income}}</td>
-                <td>{{$data->tax_per}}</td>
-                <td>{{$data->fixed_amount}}</td>
-                <td>
-                    <button class="edit-icon" onclick="openEditTaxSlabModal({{ $data->id }}, '{{ $data->org_tax_regime_years_name }}', '{{ $data->tax_type }}', '{{ $data->min_income }}', '{{ $data->max_income }}', '{{ $data->tax_per }}', '{{ $data->fixed_amount }}')">Edit</button>
-                </td>
-            </tr>
-                 
-             @endforeach
-                 
-                    
-            </tbody>
-        </table>
+            <!-- Table Section -->
+    <div id="tableSection">
+        @include('partials.data_table', [
+            'items' => $datafortaxes,
+            'columns' => [
+                ['header' => 'ID', 'accessor' => 'id'],
+                ['header' => 'Tax Regime Year', 'accessor' => 'org_tax_regime_years_name'],
+                ['header' => 'Tax Type', 'accessor' => 'tax_type'],
+                ['header' => 'Min Income', 'accessor' => 'min_income'],
+                ['header' => 'Max Income', 'accessor' => 'max_income'],
+                ['header' => 'Tax Percentage', 'accessor' => 'tax_per'],
+                ['header' => 'Fixed Amount', 'accessor' => 'fixed_amount'],
+            ],
+            'editModalId' => 'openEditModal',
+            'hasActions' => true,
+            'perPage' => 5
+        ])
     </div>
-            </div>
 </div>
 
 <div id="editTaxSlabModal" class="w3-modal" style="display: none;">
@@ -149,6 +126,7 @@ $id = Auth::guard('superadmin')->user()->id;
                 <input type="hidden" name="tax_slab_id" id="editTaxSlabId">
                 <div class="popup-form-group">
                     <label for="editTaxCycle">Tax Regime</label>
+                    <input type="hidden" name="tax_cycle_type" id="editTaxCycle">
                     <select name="tax_cycle_type" id="editTaxCycle" required>
                         @foreach ($taxregim as $tax)
                             <option value="{{ $tax->id }}">{{ $tax->name }}</option>
@@ -186,21 +164,21 @@ $id = Auth::guard('superadmin')->user()->id;
 </div>
 
 <script>
-    function openEditTaxSlabModal(id, taxCycleName, taxType, minIncome, maxIncome, taxPercentage, fixedAmount) {
+    function openEditModal(id, datas) {
         if (!id) {
             alert('Invalid Tax Slab data. Please try again.');
             return;
         }
-        console.log('Editing Tax Slab ID:', id); // Debugging: Log the ID to the console
-        document.getElementById('editTaxSlabId').value = id;
-        document.getElementById('editTaxCycle').value = taxCycleName || '';
-        document.getElementById('editTaxType').value = taxType || '';
-        document.getElementById('editMinIncome').value = minIncome || '';
-        document.getElementById('editMaxIncome').value = maxIncome || '';
-        document.getElementById('editTaxPercentage').value = taxPercentage || '';
-        document.getElementById('editFixedAmount').value = fixedAmount || '';
+        console.log('Editing Tax Slab ID:', datas); // Debugging: Log the ID to the console
+        document.getElementById('editTaxSlabId').value = datas.id;
+        document.getElementById('editTaxCycle').value = datas.org_tax_regime_years_name || '';
+        document.getElementById('editTaxType').value = datas.tax_type || '';
+        document.getElementById('editMinIncome').value = datas.min_income || '';
+        document.getElementById('editMaxIncome').value = datas.max_income || '';
+        document.getElementById('editTaxPercentage').value = datas.tax_per || '';
+        document.getElementById('editFixedAmount').value = datas.fixed_amount || '';
 
-        const formAction = "{{ route('update_tax_slab', ['id' => ':id']) }}".replace(':id', id);
+        const formAction = "{{ route('update_tax_slab', ['id' => ':id']) }}".replace(':id', datas.id);
         document.getElementById('editTaxSlabForm').action = formAction;
 
         document.getElementById('editTaxSlabModal').style.display = 'block';

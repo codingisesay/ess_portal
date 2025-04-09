@@ -115,6 +115,27 @@ $id = Auth::guard('superadmin')->user()->id;
                 </tbody>
             </table>
         </div>
+
+
+    <!-- Table Section -->
+    <div id="tableSection">
+        @include('partials.data_table', [
+            'items' => $componentdata,
+            'columns' => [
+                ['header' => 'ID', 'accessor' => 'id'],
+                ['header' => 'Template Name', 'accessor' => 'template_name'],
+                ['header' => 'Name', 'accessor' => 'name'],
+                ['header' => 'Type', 'accessor' => 'type'],
+                ['header' => 'Calculation Type', 'accessor' => 'calculation_type'],
+                ['header' => 'Value', 'accessor' => 'value'],
+            ],
+            'editModalId' => 'openEditModal',
+            'hasActions' => true,
+            'perPage' => 5
+        ])
+    </div>
+
+
     </div>
 </div>
 
@@ -194,15 +215,16 @@ $id = Auth::guard('superadmin')->user()->id;
         showSalaryComponentTable(firstButton);
     });
 
-    function openEditSalaryComponentModal(id, templateName, componentName, type, calculationType, value) {
-        document.getElementById('editSalaryComponentId').value = id;
-        document.getElementById('editSalaryComponentTemplate').value = templateName;
-        document.getElementById('editSalaryComponentName').value = componentName;
-        document.getElementById('editSalaryComponentType').value = type;
-        document.getElementById('editSalaryComponentCalculationType').value = calculationType;
-        document.getElementById('editSalaryComponentValue').value = value;
+    function openEditModal(id, datas) {
+        console.log(datas);
+        document.getElementById('editSalaryComponentId').value = datas.id;
+        document.getElementById('editSalaryComponentTemplate').value = datas.salary_template_id;
+        document.getElementById('editSalaryComponentName').value = datas.name;
+        document.getElementById('editSalaryComponentType').value = datas.type;
+        document.getElementById('editSalaryComponentCalculationType').value = datas.calculation_type;
+        document.getElementById('editSalaryComponentValue').value = datas.value;
 
-        const formAction = "{{ route('update_salary_component', ['id' => ':id']) }}".replace(':id', id);
+        const formAction = "{{ route('update_salary_component', ['id' => ':id']) }}".replace(':id', datas.id);
         document.getElementById('editSalaryComponentForm').action = formAction;
 
         document.getElementById('editSalaryComponentModal').style.display = 'block';
