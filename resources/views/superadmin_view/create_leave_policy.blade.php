@@ -287,7 +287,7 @@ $id = Auth::guard('superadmin')->user()->id;
             document.getElementById('editProbationPeriodPerMonth').value = leavedata.provision_period_per_month;
             document.getElementById('editCalendraStartForPP').value = leavedata.calendra_start_for_PP;
 
-            const formAction = "{{ route('update_policy_conf', ['id' => ':id']) }}".replace(':id', id);
+            const formAction = "{{ route('update_policy_conf', ['id' => ':id']) }}".replace(':id', leavedata.id);
             document.getElementById('editLeavePolicyForm').action = formAction;
 
             document.getElementById('editLeavePolicyModal').style.display = 'block';
