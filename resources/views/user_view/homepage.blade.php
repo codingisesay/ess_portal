@@ -602,6 +602,7 @@ error_reporting(0);
     const monthSelect = document.getElementById("month-select");
     let currentYear = new Date().getFullYear();
     let currentMonth = new Date().getMonth();
+    const today = new Date(); // Get today's date
 
     // Function to populate year and month select dropdowns
     function populateDropdowns() {
@@ -657,11 +658,16 @@ error_reporting(0);
             calendarContainer.appendChild(emptyDay);
         }
 
-        // Highlight days based on holidays and week-offs
+        // Highlight days based on holidays, week-offs, and today's date
         for (let day = 1; day <= numDays; day++) {
             const dayElement = document.createElement('div');
             dayElement.classList.add('day');
             dayElement.textContent = day;
+
+            // Check if the day is today's date
+            if (today.getDate() === day && today.getMonth() === month && today.getFullYear() === year) {
+                dayElement.classList.add('today');
+            }
 
             // Check if the day is a holiday
             const holiday = holidays.find(holiday => {
@@ -761,6 +767,12 @@ error_reporting(0);
     white-space: nowrap;
     z-index: 10;
     font-size: 12px;
+}
+
+.today {
+    background-color: #ffcc00; /* Highlight color */
+    color: white; /* Text color */
+    font-weight: bold;
 }
 
 </style>

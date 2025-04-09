@@ -25,7 +25,7 @@
 
     <style>
         .logo img {
-            height: 50px;
+            /* height: 50px; */
             margin: 5px;
         }
 
