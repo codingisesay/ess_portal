@@ -402,7 +402,7 @@ body {
 /* ===========================
    HOLIDAY CARD
 =========================== */
-.card.holiday1 {
+/* .card.holiday1 {
     background-color: #f3e39f;
     border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
@@ -413,7 +413,33 @@ body {
     font-family: Arial, sans-serif;
     box-sizing: border-box;
     height: 280px;
+} */
+
+.card.holiday1 {
+    background-color: #f3e39f;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    padding: 20px;
+    width: 260px;
+    max-height: 400px;
+    overflow-y: scroll;
+    /* Allows scrolling */
+    font-family: Arial, sans-serif;
+    box-sizing: border-box;
+    height: 280px;
+
+    /* Hide scrollbar */
+    -ms-overflow-style: none;
+    /* For Internet Explorer and Edge */
+    scrollbar-width: none;
+    /* For Firefox */
 }
+
+.card.holiday1::-webkit-scrollbar {
+    display: none;
+    /* For Chrome, Safari, and Opera */
+}
+
 
 /* Holiday Card Inner Elements */
 .holiday-card {
@@ -547,13 +573,33 @@ button {
     margin-right: -17px;
 }
 
+/* .container-events {
+    background-color: white;
+    border-radius: 30px;
+    padding: 10px;
+    
+    overflow-y: auto;
+    height: 354px !important;
+}width: 100%; */
+
 .container-events {
     background-color: white;
     border-radius: 30px;
     padding: 10px;
-    /* width: 100%; */
-    overflow-y: auto;
+    overflow-y: scroll;
+    /* Allows scrolling */
     height: 354px !important;
+
+    /* Hide scrollbar */
+    -ms-overflow-style: none;
+    /* For Internet Explorer and Edge */
+    scrollbar-width: none;
+    /* For Firefox */
+}
+
+.container-events::-webkit-scrollbar {
+    display: none;
+    /* For Chrome, Safari, and Opera */
 }
 
 .news-events h3 {
@@ -606,15 +652,30 @@ button {
     color: #333;
 }
 
+/* .leaves ul {
+    list-style: none;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    height: 350px;
+    overflow: auto;
+} */
+
 .leaves ul {
     list-style: none;
     padding: 20px;
     background-color: #fff;
     border-radius: 20px;
-    /* box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); */
     height: 350px;
     overflow: auto;
 }
+
+/* Hide the scrollbar */
+.leaves ul::-webkit-scrollbar {
+    display: none;
+}
+
 
 .leaves ul li {
     margin-bottom: 20px;
@@ -654,6 +715,18 @@ button {
     margin: 30px auto;
 }
 
+/* .birthday-cards {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    background: #fff;
+    border-radius: 20px;
+    overflow: auto;
+    padding: 20px;
+    height: 350px;
+    margin-top: 20px;
+} */
+
 .birthday-cards {
     display: flex;
     flex-direction: column;
@@ -665,6 +738,12 @@ button {
     height: 350px;
     margin-top: 20px;
 }
+
+/* Hide the scrollbar */
+.birthday-cards::-webkit-scrollbar {
+    display: none;
+}
+
 
 .birthday-cards:hover {
     transform: translateY(-5px);
@@ -748,6 +827,18 @@ button {
     flex-basis: auto;
 }
 
+/* .anniversary {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    height: 450px;
+    overflow: auto;
+    margin-top: 15px;
+    background-color: white;
+    padding: 10px;
+    border-radius: 30px;
+} */
+
 .anniversary {
     display: flex;
     flex-direction: column;
@@ -759,6 +850,12 @@ button {
     padding: 10px;
     border-radius: 30px;
 }
+
+/* Hide the scrollbar */
+.anniversary::-webkit-scrollbar {
+    display: none;
+}
+
 
 .employee-card {
     display: flex;

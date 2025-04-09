@@ -484,7 +484,7 @@ window.onload = function() {
         object-fit: cover;
     }
 
-    .employee-details .right {
+    /* .employee-details .right {
         width: 100%;
         background-color: #fff;
         padding: 20px;
@@ -496,7 +496,27 @@ window.onload = function() {
         justify-content: center;
         gap: 15px;
         overflow-y: auto;
-    }
+    } */
+
+    .employee-details .right {
+    width: 100%;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    height: auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 15px;
+    overflow-y: auto;
+}
+
+/* Hide the scrollbar */
+.employee-details .right::-webkit-scrollbar {
+    display: none;
+}
+
 
     .detail-item {
         display: flex;

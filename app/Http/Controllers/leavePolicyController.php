@@ -460,16 +460,9 @@ class leavePolicyController extends Controller
             ->where('status', '=', 'Active')
             ->first();
     
-<<<<<<< HEAD
             // dd($leaveCycle);
             $leaveCycleStartDate = $leaveCycle->start_date;
             $leaveCycleEndDate = $leaveCycle->end_date;
-=======
-            // dd($leaveCycyle);
-            $leaceCycleStartDate = $leaveCycyle->start_date;
-            $leaceCycleEndtDate = $leaveCycyle->end_date;
-
->>>>>>> 6f45b16a2f61dafcac89641f54b4dfe3c0b68d24
             $provision_period = $emp_details->provision_period;
             $Joining_date = $emp_details->Joining_date;
             $JDC = Carbon::create($Joining_date); 
