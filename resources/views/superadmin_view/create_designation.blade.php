@@ -1,4 +1,4 @@
-@extends('superadmin_view/superadmin_layout')  <!-- Extending the layout file -->
+@extends('superadmin_view/superadmin_layout')  
 @section('content')  <!-- Defining the content section -->
 <link rel="stylesheet" href="{{ asset('errors/error.css') }}">
 <?php 
@@ -59,7 +59,20 @@ $id = Auth::guard('superadmin')->user()->id;
             </div>
         </form>
     </div>
-
+ 
+    <div id="tableSection"  >
+        @include('partials.data_table', [
+            'items' => $results,
+            'columns' => [
+                ['header' => 'Designation', 'accessor' => 'department_name'],
+                ['header' => 'Branch', 'accessor' => 'branch_name'],
+                ['header' => 'Designation', 'accessor' => 'designation_name'], 
+            ],
+            'editModalId' => 'openEditModal',
+            'hasPermision' => true,
+            'perPage' => 5
+        ])
+    </div>
     <!-- Table Section -->
     <div id="tableSection" > 
         <div class="table-container">
@@ -94,6 +107,16 @@ $id = Auth::guard('superadmin')->user()->id;
     </div>
 </div>
 
+<!-- Popup Overlay -->
+<div class="popup-overlay" id="popup">
+    <div class="popup-content" style="z-index:auto">
+        <div class="popup-header">
+            <h4 class="fw-bold">Create Permission</h4>
+            <button class="popup-close" onclick="closePopup()">&times;</button>
+        </div> 
+    </div>
+</div>
+
 <script>
     function showDesignationForm(clickedElement) {
         document.getElementById('formSection').style.display = 'block';
@@ -106,6 +129,7 @@ $id = Auth::guard('superadmin')->user()->id;
     }
 
     function showDesignationTable(clickedElement) {
+        
         document.getElementById('formSection').style.display = 'none';
         document.getElementById('tableSection').style.display = 'block';
         const siblings = clickedElement.parentElement.children;
@@ -121,6 +145,10 @@ $id = Auth::guard('superadmin')->user()->id;
         showDesignationTable(firstButton);
     });
  
+ 
+    function openEditModal() { 
+        document.getElementById('popup').style.display = 'block';
+    }
 </script>
 
 @endsection

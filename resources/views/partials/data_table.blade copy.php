@@ -1,4 +1,4 @@
-@props(['items', 'columns', 'editModalId' => null, 'perPage' => 10, 'hasActions' => false, 'hasPermision' => false])
+@props(['items', 'columns', 'editModalId' => null, 'perPage' => 10, 'hasActions' => false])
  
 <div class="table-container">
     <!-- Add search input -->
@@ -15,9 +15,6 @@
                 @endforeach
                 @if($hasActions)
                     <th>Action</th>
-                    @endif
-                @if($hasPermision)
-                    <th>Permission</th>
                 @endif
             </tr>
         </thead>
@@ -35,17 +32,6 @@
                             @elseif($editModalId)
                             <button class="btn p-0" onclick="openEditModal('{{ $editModalId }}', {{ json_encode($item) }})">
                                 <x-icon name="edit" /> 
-                                </button>
-                            @endif
-                        </td>
-                    @endif
-                    @if($hasPermision)
-                        <td>
-                            @if(isset($column['action']))
-                                {!! $column['action'] !!}
-                            @elseif($editModalId)
-                            <button class="btn p-0" onclick="openEditModal('{{ $editModalId }}', {{ json_encode($item) }})">
-                                Edit Permission
                                 </button>
                             @endif
                         </td>

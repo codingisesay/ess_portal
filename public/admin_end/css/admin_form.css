@@ -11,16 +11,16 @@ body {
 
 @font-face {
     font-family: 'Lato';
-    src: url('assets/lato/Lato-Regular.ttf') format('truetype'),
-        url('assets/lato/Lato-Regular.woff') format('woff');
+    src: url('../../Lato/Lato-Regular.ttf') format('truetype'),
+        url('../../lato/Lato-Regular.woff') format('woff');
     font-weight: normal;
     font-style: normal;
 }
 
 @font-face {
     font-family: 'Lato';
-    src: url('assets/lato/Lato-Bold.ttf') format('truetype'),
-        url('assets/lato/Lato-Bold.woff') format('woff');
+    src: url('../../lato/Lato-Bold.ttf') format('truetype'),
+        url('../../lato/Lato-Bold.woff') format('woff');
     font-weight: bold;
     font-style: normal;
 }
@@ -178,6 +178,7 @@ thead {
     color: white;
 }
 
+.table>:not(caption)>*>*,
 th,
 td {
     padding: 5px 10px;
