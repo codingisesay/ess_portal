@@ -83,41 +83,6 @@ $id = Auth::guard('superadmin')->user()->id;
     </div>
 
     <!-- Table Section -->
-    <div id="tableSection" >
- 
-        <div class="table-container">
-            <table>
-                <thead>
-                    <tr>
-                        <th>Serial No</th>
-                        <th>Template Name</th>
-                        <th>Component Name</th>
-                        <th>Type</th>
-                        <th>Calculation Type</th>
-                        <th>Value</th>
-                        <th>Action</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach ($componentdata as $items)
-                        <tr>
-                            <td>{{ $loop->iteration }}</td>
-                            <td>{{ $items->template_name }}</td>
-                            <td>{{ $items->name }}</td>
-                            <td>{{ $items->type }}</td>
-                            <td>{{ $items->calculation_type }}</td>
-                            <td>{{ $items->value }}</td>
-                            <td>
-                                <button class="edit-icon" onclick="openEditSalaryComponentModal({{ $items->id }}, '{{ $items->template_name }}', '{{ $items->name }}', '{{ $items->type }}', '{{ $items->calculation_type }}', '{{ $items->value }}')">Edit</button>
-                            </td>
-                        </tr>
-                    @endforeach
-                </tbody>
-            </table>
-        </div>
-
-
-    <!-- Table Section -->
     <div id="tableSection">
         @include('partials.data_table', [
             'items' => $componentdata,

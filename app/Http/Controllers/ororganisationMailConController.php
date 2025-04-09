@@ -76,7 +76,7 @@ class ororganisationMailConController extends Controller
             'MAIL_FROM_ADDRESS' => 'required',
             'MAIL_FROM_NAME' => 'required',
         ]);
-
+// dd($data);
         $status = DB::table('organisation_config_mails')
             ->where('organisation_id', $data['organisation_id'])
             ->update([

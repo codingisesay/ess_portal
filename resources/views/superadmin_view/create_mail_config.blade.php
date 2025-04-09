@@ -72,7 +72,7 @@ $id = Auth::guard('superadmin')->user()->id;
             </div>
         </form>
     </div>
- 
+
     <!-- Table Section -->
     <div id="tableSection">
         @include('partials.data_table', [
@@ -122,10 +122,10 @@ $id = Auth::guard('superadmin')->user()->id;
                     <label for="editMailUsername">MAIL_USERNAME</label>
                     <input type="text" name="MAIL_USERNAME" id="editMailUsername" required>
                 </div>
-                <!-- <div class="popup-form-group">
+                <div class="popup-form-group">
                     <label for="editMailPassword">MAIL_PASSWORD</label>
                     <input type="text" name="MAIL_PASSWORD" id="editMailPassword" required>
-                </div> -->
+                </div>
                 <div class="popup-form-group">
                     <label for="editMailEncryption">MAIL_ENCRYPTION</label>
                     <input type="text" name="MAIL_ENCRYPTION" id="editMailEncryption" required>
@@ -174,9 +174,9 @@ $id = Auth::guard('superadmin')->user()->id;
         const firstButton = document.querySelector('.toggle-buttons button:first-child');
         showMailConfigTable(firstButton);
     });
-
+ 
     function openEditModal(mailer, datas) {
-        document.getElementById('editMailMailer').value = mailer;
+        document.getElementById('editMailMailer').value = datas.MAIL_MAILER;
         document.getElementById('editMailHost').value = datas.MAIL_HOST;
         document.getElementById('editMailPort').value = datas.MAIL_PORT;
         document.getElementById('editMailUsername').value = datas.MAIL_USERNAME; 

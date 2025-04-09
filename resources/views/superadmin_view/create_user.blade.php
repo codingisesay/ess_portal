@@ -151,7 +151,8 @@ $id = Auth::guard('superadmin')->user()->id;
     }
 
     function openEditModal(user, userdata) { 
-        document.getElementById('editUserId').value = user;
+        console.log(userdata.id);
+        document.getElementById('editUserId').value = userdata.id;
         document.getElementById('editUsername').value = userdata.name;
         document.getElementById('editEmpid').value = userdata.employeeID;
         document.getElementById('editUsermailid').value = userdata.email;
