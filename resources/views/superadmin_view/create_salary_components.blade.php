@@ -23,8 +23,8 @@ $id = Auth::guard('superadmin')->user()->id;
 
     <!-- Toggle Buttons -->
     <div class="toggle-buttons">
-    <button onclick="showSalaryComponentTable()">Show Table</button>
-        <button onclick="showSalaryComponentForm()">Show Form</button>
+    <button onclick="showSalaryComponentTable(this)">Show Table</button>
+        <button onclick="showSalaryComponentForm(this)">Show Form</button>
     </div>
 
     <!-- Form Section -->
