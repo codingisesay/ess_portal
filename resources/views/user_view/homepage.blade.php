@@ -67,7 +67,7 @@ error_reporting(0);
                 <div class="card checkout">
                     <img src="{{ asset('user_end/images/Group491.png'); }}" alt="">
                     <h4>Check Out</h4>
-                    <p>{{ date('h:i:s A', strtotime($log->logout_time)) }}</p>
+                    <p>{{ $log->logout_time ? date('h:i:s A', strtotime($log->logout_time)) : 'First Login' }}</p>
                 </div>
                 @endforeach
 

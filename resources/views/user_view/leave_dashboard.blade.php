@@ -21,20 +21,7 @@
 </head>
 
 <body>
-    {{-- @if(session('success'))
-<div class="alert custom-alert-success">
-    <strong>{{ session('success') }}</strong> 
-    <button class="close-btn" onclick="this.parentElement.style.display='none';">&times;</button>
-    
-</div>
-@endif
 
-@if(session('error'))
-<div class="alert custom-alert-error">
-<strong> {{ session('error') }}</strong>
-<button class="close-btn" onclick="this.parentElement.style.display='none';">&times;</button>
-</div>
-@endif --}}
 
 @if($errors->any())
 <div class="alert custom-alert-warning">
@@ -71,6 +58,8 @@
             dates: @json(array_column($workingHoursData['working_hours'], 'date')),  // Extract dates array
             hours: @json(array_column($workingHoursData['working_hours'], 'worked_hours'))  // Extract hours array
         };
+
+        // console.log(attendanceData);
 
         const ctx = document.getElementById('attendanceChart').getContext('2d');
         const attendanceChart = new Chart(ctx, {
@@ -121,23 +110,14 @@
         <div class="leave-summary-container">
             <!-- Leave cards will be dynamically inserted here -->
             @foreach($leaveSummary as $index => $leave)
-            {{-- <div class="leave-card">
-                <div class="chart-container-leave">
-                    <canvas id="chart{{ $index }}" style="width: 130px; height: 200px;"></canvas>
-                </div>
-                <div class="legend">
-                    <h2>{{ $leave['leave_type'] }}</h2>
-                    <div><span class="dot" style="background-color:#8a3366"></span>{{ $leave['total_leaves'] }} Total Leaves</div>
-                    <div><span class="dot" style="background-color:#ffc107"></span>{{ $leave['consumed_leaves'] }} Consumed</div>
-                </div>
-            </div> --}}
+            
             @endforeach
         </div>
 
         <script>
             const leaveData = @json($leaveSummary);  // Pass the leave summary data to JavaScript
 
-            console.log(leaveData); // Check the data in the console to ensure no duplicates
+            // console.log(leaveData); // Check the data in the console to ensure no duplicates
 
             const colorPalette = [
                 ['#8a3366', '#ffc107'], // Two colors: Total Leaves and Consumed Leaves
