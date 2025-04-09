@@ -74,15 +74,15 @@
                 </div>
 
                 <!-- OR Separator -->
-                <div class="text-center my-3">
+                <!-- <div class="text-center my-3">
                     <span class="text-muted">OR</span>
-                </div>
+                </div> -->
 
                 <!-- Microsoft Login -->
-                <button type="button" class="btn btn-outline-secondary" onclick="window.location.href=''">
+                <!-- <button type="button" class="btn btn-outline-secondary" onclick="window.location.href=''">
                     <img src="{{ asset('user_end/images/windows.png'); }}" alt="Microsoft Icon" width="18" height="18" class="me-2">
                     Continue with Microsoft
-                </button>
+                </button> -->
 
                 <!-- Register Link -->
                 <!-- <div class="text-center mt-3">
