@@ -112,7 +112,9 @@ $id = Auth::guard('superadmin')->user()->id;
                             <td>{{ $branch->name }}</td>
                             <td>{{ $branch->mobile }}</td>
                             <td>{{ $branch->branch_email }}</td>
-                            <td><button class="edit-icon" onclick="openEditBranchModal({{ $branch }})">Edit</button></td>
+                            <td>
+                            <button onclick="openEditBranchModal({{ $branch }})" class="btn">  <x-icon name="edit" /> </button>  
+                        </td>
                         </tr>
                     @endforeach
                 </tbody>
@@ -208,11 +210,11 @@ $id = Auth::guard('superadmin')->user()->id;
 
     // Ensure the form is visible by default on page load
    
-// Ensure the first button (Show Form) is active by default on page load
-document.addEventListener('DOMContentLoaded', () => {
-    const firstButton = document.querySelector('.toggle-buttons button:first-child');
-    showBranchTable(firstButton);
-});
+    // Ensure the first button (Show Form) is active by default on page load
+    document.addEventListener('DOMContentLoaded', () => {
+        const firstButton = document.querySelector('.toggle-buttons button:first-child');
+        showBranchTable(firstButton);
+    });
      
 
     function openEditBranchModal(branch) {

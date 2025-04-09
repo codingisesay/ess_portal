@@ -844,42 +844,45 @@ public function insertBank(Request $request){
 }
 }
 
-  // Handle file upload request
-  public function upload(Request $request)
-  {
-    
+
+   public function upload(Request $request)
+{
+    // Validate the request
     $request->validate([
-        'photo' => 'required', // ensure it's an array of files
-        'photo.*' => 'file', // ensure each element is a valid file
+        'photo' => 'required|array',               // Ensure it's an array
+        'photo.*' => 'file|mimes:jpg,png,pdf|max:20480', // Validate each file
     ]);
-     // Get the original file name
-    //  $originalFileName = $file->getClientOriginalName();
 
-    foreach ($request->file('photo') as $file) {
-        $path = $file->store('employee_enroll_files', 'public');
-        $originalFileName = $file->getClientOriginalName();
-       
-    }
-    // dd($path); // This will dump the path for the first file
-    $loginUserInfo = Auth::user();
-    if($path){
+    $loginUserInfo = Auth::user(); // Get user ID from session
+    $uploadedFiles = $request->file('photo');
 
-        DB::table('document_uploads')->insert([
+    $insertData = []; // Array to hold data for batch insertion
+
+    foreach ($uploadedFiles as $file) {
+        $path = $file->store('employee_enroll_files', 'public'); // Store the file
+        $originalFileName = $file->getClientOriginalName();      // Get the original file name
+
+        $insertData[] = [
             'user_id' => $loginUserInfo->id,
             'document_type' => $originalFileName,
             'file_path' => $path,
-            'created_at' => NOW(),
-            'updated_at' => NOW(),
-        ]);
+            'created_at' => now(),
+            'updated_at' => now(),
+        ];
+    }
+
+    // Insert all records in one query
+    if (!empty($insertData)) {
+        DB::table('document_uploads')->insert($insertData);
 
         return true;
-
-    }else{
+    } else {
 
         return false;
-
     }
-   }
+
+  
+}
 
    public function homePageRedirect(){
     $loginUserInfo = Auth::user();

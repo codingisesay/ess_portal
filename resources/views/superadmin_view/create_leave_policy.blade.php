@@ -21,7 +21,7 @@ $id = Auth::guard('superadmin')->user()->id;
         <!-- Toggle Buttons -->
         <div class="toggle-buttons">
         <button onclick="showLeavePolicyTable(this)">Show Table</button>
-            <button onclick="showLeavePolicyForm(this)">Show Form</button>
+        <button onclick="showLeavePolicyForm(this)">Show Form</button>
         </div>
     {{-- @endif --}}
     
@@ -296,10 +296,12 @@ $id = Auth::guard('superadmin')->user()->id;
             clickedElement.classList.add('active');
         }
 
-        // Ensure the form is visible by default on page load
+        // Ensure the first button (Show Form) is active by default on page load
         document.addEventListener('DOMContentLoaded', () => {
-            showLeavePolicyForm();
+            const firstButton = document.querySelector('.toggle-buttons button:first-child');
+            showLeavePolicyTable(firstButton);
         });
+       
 
         function openEditLeavePolicyModal(id, leaveType, maxLeave, maxLeaveAtTime, minLeaveAtTime, leaveCountPerMonth, noOfTimesPerMonth, carryForward, noOfCarryForward, leaveEncash, noOfLeaveEncash, provisionStatus, maxLeavePP, probationPeriodPerMonth, calendraStartForPP) {
             document.getElementById('editLeavePolicyId').value = id;
