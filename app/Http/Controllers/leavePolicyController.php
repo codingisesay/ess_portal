@@ -827,12 +827,20 @@ private function calculateWorkingHours($userId)
     $totalHours = 0;
 
     foreach ($loginLogs as $log) {
-        // Calculate the difference between login and logout times
-        $loginTime = new \Carbon\Carbon($log->login_time);
-        $logoutTime = new \Carbon\Carbon($log->logout_time);
+        // Ensure login_time and logout_time are in UTC or your desired timezone
+        $loginTime = new \Carbon\Carbon($log->login_time, 'UTC');
+        $logoutTime = new \Carbon\Carbon($log->logout_time, 'UTC');
 
-        // Calculate the total working hours
-        $workedHours = $logoutTime->diffInHours($loginTime) + ($logoutTime->minute / 60 - $loginTime->minute / 60);
+        // Check if logout time is earlier than login time
+        if ($logoutTime < $loginTime) {
+            // Handle the case where logout time is earlier than login time
+            // For example, skip this log or set worked hours to 0
+            $workedHours = 0;
+        } else {
+            // Calculate the total working hours (using diffInMinutes and then converting to hours)
+            $workedMinutes = $logoutTime->diffInMinutes($loginTime);
+            $workedHours = $workedMinutes / 60;
+        }
 
         // Add to the total hours worked
         $totalHours += $workedHours;
@@ -852,6 +860,7 @@ private function calculateWorkingHours($userId)
         'average_working_hours' => number_format($averageWorkingHours, 2) // Format average to 2 decimal places
     ];
 }
+
 
 
     
