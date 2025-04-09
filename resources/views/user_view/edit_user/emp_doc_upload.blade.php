@@ -209,7 +209,7 @@ $permission_array = session('id');
             uploadMultiple: true,
             parallelUploads: 4,
             addRemoveLinks: true,
-            maxFiles: 1,
+            maxFiles: 10,
             headers: {
                     'X-CSRF-TOKEN': csrfToken // Include CSRF token in the request headers
                      },
@@ -235,7 +235,7 @@ $permission_array = session('id');
             uploadMultiple: true,
             parallelUploads: 4,
             addRemoveLinks: true,
-            maxFiles: 1,
+            maxFiles: 10,
             headers: {
                     'X-CSRF-TOKEN': csrfToken // Include CSRF token in the request headers
                      },
@@ -261,7 +261,7 @@ $permission_array = session('id');
             uploadMultiple: true,
             parallelUploads: 4,
             addRemoveLinks: true,
-            maxFiles: 1,
+            maxFiles: 10,
             headers: {
                     'X-CSRF-TOKEN': csrfToken // Include CSRF token in the request headers
                      },
@@ -313,7 +313,7 @@ $permission_array = session('id');
             uploadMultiple: true,
             parallelUploads: 4,
             addRemoveLinks: true,
-            maxFiles: 1,
+            maxFiles: 10,
             headers: {
                     'X-CSRF-TOKEN': csrfToken // Include CSRF token in the request headers
                      },
@@ -339,7 +339,7 @@ $permission_array = session('id');
             uploadMultiple: true,
             parallelUploads: 4,
             addRemoveLinks: true,
-            maxFiles: 3,
+            maxFiles: 10,
             headers: {
                     'X-CSRF-TOKEN': csrfToken // Include CSRF token in the request headers
                      },
