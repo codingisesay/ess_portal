@@ -123,12 +123,13 @@ $id = Auth::guard('superadmin')->user()->id;
             } 
             clickedElement.classList.add('active');
         }
-
-        // Ensure the form is visible by default on page load
-        document.addEventListener('DOMContentLoaded', () => {
-            showPolicyCategoryForm();
-        });
-
+ 
+    // Ensure the first button (Show table) is active by default on page load
+    document.addEventListener('DOMContentLoaded', () => {
+        const firstButton = document.querySelector('.toggle-buttons button:first-child');
+        showPolicyCategoryTable(firstButton);
+    });
+      
         function openEditPolicyCategoryModal(id, name, status) {
             document.getElementById('editPolicyCategoryId').value = id;
             document.getElementById('editPolicyCategoryName').value = name;

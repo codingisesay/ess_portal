@@ -9,6 +9,7 @@
 
  ::-webkit-scrollbar {
      width: 5px;
+     height: 5px;
  }
 
  ::-webkit-scrollbar-track {
@@ -73,7 +74,7 @@
  }
 
  nav ul li ul li a {
-     padding: 7px 15px 7px 33px
+     padding: 7px 15px 7px 25px
  }
 
  nav ul li a.active {
@@ -95,10 +96,25 @@
      transition: color 0.3s ease;
  }
 
+ nav ul li a.active:after {
+     content: '';
+     display: block;
+     width: 2px;
+     height: 20px;
+     background-color: #8A3366;
+     border-radius: 2px;
+     margin-left: auto;
+ }
+
  nav ul li a.active,
  nav ul li a:hover {
+     /* color: #8A3366;
+     font-weight: bold; */
      color: #8A3366;
      font-weight: bold;
+     position: relative;
+     border-radius: 4px;
+     background: #8A33661A;
  }
 
  .nav-list {

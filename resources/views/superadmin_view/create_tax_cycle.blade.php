@@ -148,16 +148,16 @@ $id = Auth::guard('superadmin')->user()->id;
 </div>
 
 <script>
-function showUserForm(clickedElement) {
-    // Show form section and hide table section
-    document.getElementById('formSection').style.display = 'block';
-    document.getElementById('tableSection').style.display = 'none'; 
-    const siblings = clickedElement.parentElement.children;
-    for (let sibling of siblings) {
-        sibling.classList.remove('active');
-    } 
-    clickedElement.classList.add('active');
-}
+    function showTaxForm(clickedElement) {
+        // Show form section and hide table section
+        document.getElementById('formSection').style.display = 'block';
+        document.getElementById('tableSection').style.display = 'none'; 
+        const siblings = clickedElement.parentElement.children;
+        for (let sibling of siblings) {
+            sibling.classList.remove('active');
+        } 
+        clickedElement.classList.add('active');
+    }
 
     function showUserTable(clickedElement) {
         document.getElementById('formSection').style.display = 'none';
