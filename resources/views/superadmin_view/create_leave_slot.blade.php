@@ -47,38 +47,25 @@ $id = Auth::guard('superadmin')->user()->id;
                 <button type="submit" class="create-btn" >Save Cycle</button>
             </form>
         </div>
+  
+    <!-- Table Section -->
+    <div id="tableSection">
+        @include('partials.data_table', [
+            'items' => $leaveCycleDatas,
+            'columns' => [
+                ['header' => 'ID', 'accessor' => 'id'],
+                ['header' => 'Name', 'accessor' => 'name'],
+                ['header' => 'Start', 'accessor' => 'start_date'],
+                ['header' => 'End', 'accessor' => 'end_date'],
+                ['header' => 'Year', 'accessor' => 'year'], 
+            ],
+            'editModalId' => 'openEditUserModal',
+            'hasActions' => true,
+            'perPage' => 5
+        ])
+    </div>
 
-        <!-- Table Section -->
-        <div id="tableSection" > 
-            <div class="table-container">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Id</th>
-                            <th>Name</th>
-                            <th>Start</th>
-                            <th>End</th>
-                            <th>Year</th>
-                            <th>edit</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach ($leaveCycleDatas as $leaveCycleData)
-                            <tr>
-                                <td>{{ $loop->iteration }}</td>
-                                <td>{{ $leaveCycleData->name }}</td>
-                                <td>{{ $leaveCycleData->start_date }}</td>
-                                <td>{{ $leaveCycleData->end_date }}</td>
-                                <td>{{ $leaveCycleData->year }}</td>
-                                <td>
-                                    <button class="edit-icon" onclick="openEditLeaveSlotModal({{ $leaveCycleData->id }}, '{{ $leaveCycleData->name }}', '{{ $leaveCycleData->start_date }}', '{{ $leaveCycleData->end_date }}', '{{ $leaveCycleData->year }}')">Edit</button>
-                                </td>
-                            </tr>
-                        @endforeach
-                    </tbody>
-                </table>
-            </div>
-        </div>
+
     </div>
 
     <div id="editLeaveSlotModal" class="w3-modal" style="display: none;">
@@ -143,18 +130,18 @@ $id = Auth::guard('superadmin')->user()->id;
             const firstButton = document.querySelector('.toggle-buttons button:first-child');
             showLeaveSlotTable(firstButton);
         }); 
-        function openEditLeaveSlotModal(id, name, startDate, endDate, year) {
+        function openEditModal(id, leavs) {
             if (!id) {
                 alert('Invalid leave slot data. Please try again.');
                 return;
             }
-            document.getElementById('editLeaveSlotId').value = id;
-            document.getElementById('editLeaveSlotName').value = name || '';
-            document.getElementById('editLeaveSlotStartDate').value = startDate || '';
-            document.getElementById('editLeaveSlotEndDate').value = endDate || '';
-            document.getElementById('editLeaveSlotYear').value = year || '';
+            document.getElementById('editLeaveSlotId').value = leavs.id;
+            document.getElementById('editLeaveSlotName').value = leavs.name || '';
+            document.getElementById('editLeaveSlotStartDate').value = leavs.start_date || '';
+            document.getElementById('editLeaveSlotEndDate').value = leavs.end_date || '';
+            document.getElementById('editLeaveSlotYear').value = leavs.year || '';
 
-            const formAction = "{{ route('update_policy_slot', ['id' => ':id']) }}".replace(':id', id);
+            const formAction = "{{ route('update_policy_slot', ['id' => ':id']) }}".replace(':id', leavs.id);
             document.getElementById('editLeaveSlotForm').action = formAction;
 
             document.getElementById('editLeaveSlotModal').style.display = 'block';

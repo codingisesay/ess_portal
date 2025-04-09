@@ -68,44 +68,24 @@ $id = Auth::guard('superadmin')->user()->id;
        
     </form>
     </div>
-
-    
+ 
     <!-- Table Section -->
-    <div id="tableSection" > 
-    
-    <div class="table-container">
-        <table>
-            <thead>
-                <tr>
-                    <th>Serial No</th>
-                    <th>Name</th>
-                    <th>From Date</th>
-                    <th>To Date</th>
-                    <th>Status</th>
-                    <th>Action</th>
-                </tr>
-            </thead>
-            <tbody>
-             
-                 
-             @foreach ($orgTaxRegim as $orgTax)
-                 
-            
-                    <tr>
-                        <td>{{ $loop->iteration }}</td>
-                        <td>{{ $orgTax->name }}</td>
-                        <td>{{ $orgTax->applicable_from }}</td>
-                        <td>{{ $orgTax->applicable_to }}</td>
-                        <td>{{ $orgTax->status }}</td>
-                        <td>
-                            <button class="edit-icon" onclick="openEditTaxCycleModal({{ $orgTax->id }}, '{{ $orgTax->name }}', '{{ $orgTax->applicable_from }}', '{{ $orgTax->applicable_to }}', '{{ $orgTax->status }}')">Edit</button>
-                        </td>
-                    </tr>
-                    @endforeach
-            </tbody>
-        </table>
+    <div id="tableSection">
+        @include('partials.data_table', [
+            'items' => $orgTaxRegim,
+            'columns' => [
+                ['header' => 'ID', 'accessor' => 'id'],
+                ['header' => 'Tax Name', 'accessor' => 'name'],
+                ['header' => 'Applicable From', 'accessor' => 'applicable_from'],
+                ['header' => 'Applicable To', 'accessor' => 'applicable_to'],
+                ['header' => 'Status', 'accessor' => 'status'],
+            ],
+            'editModalId' => 'openEditModal',
+            'hasActions' => true,
+            'perPage' => 5
+        ])
     </div>
-</div>
+ 
 </div>
 
 <div id="editTaxCycleModal" class="w3-modal" style="display: none;">
@@ -178,14 +158,14 @@ document.addEventListener('DOMContentLoaded', () => {
 </script>
 
 <script>
-    function openEditTaxCycleModal(id, name, from, to, status) {
-        document.getElementById('editTaxCycleId').value = id;
-        document.getElementById('editTaxCycleName').value = name;
-        document.getElementById('editTaxCycleFrom').value = from;
-        document.getElementById('editTaxCycleTo').value = to;
-        document.getElementById('editTaxCycleStatus').value = status;
+    function openEditModal(id, datas) {
+        document.getElementById('editTaxCycleId').value = datas.id;
+        document.getElementById('editTaxCycleName').value = datas.name;
+        document.getElementById('editTaxCycleFrom').value = datas.applicable_from;
+        document.getElementById('editTaxCycleTo').value = datas.applicable_to;
+        document.getElementById('editTaxCycleStatus').value = datas.status;
 
-        const formAction = "{{ route('update_tax_cycle', ['id' => ':id']) }}".replace(':id', id);
+        const formAction = "{{ route('update_tax_cycle', ['id' => ':id']) }}".replace(':id', datas.id);
         document.getElementById('editTaxCycleForm').action = formAction;
 
         document.getElementById('editTaxCycleModal').style.display = 'block';
