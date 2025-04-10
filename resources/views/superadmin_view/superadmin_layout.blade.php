@@ -24,9 +24,25 @@
 .sidebar.collapsed .stpl_logo_icon1{
     display: none;
 }
+.sidebar.collapsed .sidebar-content ul li strong {justify-content: center;}
 .sidebar.collapsed .stpl_logo_icon2{display:block; margin:auto}
-.stpl_logo_icon2{display: none;}
-.sidebar.collapsed .help_footer_icon{width: 35px;}
+.stpl_logo_icon2{display: none;} 
+/* Initial styles for the sidebar */
+#mySidebar { 
+    transition: width 0.3s ease; /* Smooth transition for the width */
+    overflow: hidden; /* To ensure no overflow happens during the transition */
+}
+ 
+/* Transition for the icon */
+#sidebar-icon {
+    transition: transform 0.3s ease; /* Smooth transition for icon rotation */
+}
+
+/* Rotate the icon when collapsed */
+#mySidebar.collapsed #sidebar-icon {
+    transform: rotate(180deg); /* Rotate the icon when collapsed */
+}
+
 </style>
 
 <?php
@@ -64,7 +80,9 @@ $name = Auth::guard('superadmin')->user()->name;
             <div class="logo">
                 <h5><strong>Company Name</strong></h5>
             </div>
-            <img src="{{ asset('user_end/images/arrow-right.svg') }}" class="header-arrow" alt="arrow" onclick="toggleSidebar()">
+            <span class="header-arrow" onclick="toggleSidebar()">
+        <x-icon id="sidebar-icon" name="rightarrow"></x-icon>
+    </span> 
         </div>
         <div class="sidebar-content">
             <ul class="nav-list">
@@ -143,7 +161,7 @@ $name = Auth::guard('superadmin')->user()->name;
         <img width='100px' src="{{ asset('user_end/images/STPL Logo with TagLine HD Transparent.png') }}" class="stpl_logo_icon1" alt="STPL Logo">
         <img width='40px' src="{{ asset('user_end/images/STPLLogo.png') }}" alt="STPL Logo" class="stpl_logo_icon2"> 
         <div class="sidebar-footer">
-        <img class="help_footer_icon" src="{{ asset('admin_end/images/support.png') }}" alt=""> 
+        <img width='35px' class="help_footer_icon" src="{{ asset('admin_end/images/support.png') }}" alt=""> 
             <div class="sidebar_footer_text">
                 <strong>Need Help?</strong> <br>
                 <small>Go to Help Center
@@ -223,11 +241,23 @@ $name = Auth::guard('superadmin')->user()->name;
             }
         }
     </script>
+
 <script>
-    function toggleSidebar() {
-        const sidebar = document.getElementById("mySidebar");
-        sidebar.classList.toggle("collapsed");
+function toggleSidebar() {
+    const sidebar = document.getElementById("mySidebar");
+    const icon = document.getElementById("sidebar-icon");
+
+    // Toggle the sidebar's collapsed state
+    sidebar.classList.toggle("collapsed");
+
+    // Toggle the icon between right arrow and left arrow
+    if (sidebar.classList.contains("collapsed")) {
+        icon.setAttribute("name", "rightarrow");
+    } else {
+        icon.setAttribute("name", "leftarrow");
     }
-</script>
+}
+
+    </script>
 </body>
 </html>

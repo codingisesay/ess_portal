@@ -73,38 +73,7 @@ $id = Auth::guard('superadmin')->user()->id;
             'perPage' => 5
         ])
     </div>
-    <!-- Table Section -->
-    <div id="tableSection" > 
-        <div class="table-container">
-            <table>
-                <thead>
-                    <tr>
-                        <th>Serial No</th>
-                        <th>Department Name</th>
-                        <th>Branch Name</th>
-                        <th>Designation Name</th>
-                        <th>Action</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach($results as $index => $result)
-                        <tr>
-                            <td>{{ $index + 1 }}</td>
-                            <td>{{ $result->department_name }}</td>
-                            <td>{{ $result->branch_name }}</td>
-                            <td>{{ $result->designation_name }}</td>
-                            <td>
-                                <form action="{{ route('create_permission_form', ['org_id' => $id, 'desig_id' => $result->designation_id, 'b_id' => $result->branch_id]) }}">
-                                    @csrf
-                                    <button class="create-btn" type="submit">Permission</button>
-                                </form>
-                            </td>
-                        </tr>
-                    @endforeach
-                </tbody>
-            </table>
-        </div>
-    </div>
+  
 </div>
 
 <!-- Popup Overlay -->
