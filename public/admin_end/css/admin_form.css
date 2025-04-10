@@ -31,12 +31,81 @@ h2 {
 }
 
 .container {
-    width: -webkit-fill-available;
-    /* width: calc(100% - 250px); */
+    width: calc(100% - 250px);
     /* Adjust width to account for sidebar */
     /* margin-left: 30px; */
     /* Add left margin to make space for sidebar */
     padding: 0 30px;
+}
+
+img,
+svg {
+    vertical-align: sub !important;
+}
+
+.sidebar-toggle {
+    position: absolute;
+    top: 15px;
+    left: 15px;
+    background: transparent;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    z-index: 999;
+}
+
+.sidebar.collapsed {
+    width: 80px;
+}
+
+.sidebar.collapsed .sidebar-content ul li strong lable,
+.sidebar.collapsed .sidebar-header h5,
+.sidebar.collapsed .dropdown-arrow,
+.sidebar.collapsed ul li a,
+.sidebar.collapsed .sidebar_footer_text,
+.sidebar.collapsed .stpl_logo_icon1 {
+    display: none;
+}
+
+.sidebar.collapsed~.container {
+    width: 100%;
+}
+
+.sidebar.collapsed .sidebar-content ul li strong {
+    justify-content: center;
+}
+
+.sidebar.collapsed .stpl_logo_icon2 {
+    display: block;
+    margin: auto
+}
+
+.stpl_logo_icon2 {
+    display: none;
+}
+
+.header-arrow {
+    padding: 0 2px;
+}
+
+/* Initial styles for the sidebar */
+#mySidebar {
+    transition: width 0.3s ease;
+    /* Smooth transition for the width */
+    overflow: hidden;
+    /* To ensure no overflow happens during the transition */
+}
+
+/* Transition for the icon */
+#sidebar-icon {
+    transition: transform 0.3s ease;
+    /* Smooth transition for icon rotation */
+}
+
+/* Rotate the icon when collapsed */
+#mySidebar.collapsed #sidebar-icon {
+    transform: rotate(180deg);
+    /* Rotate the icon when collapsed */
 }
 
 /* Form Styling */
