@@ -5,8 +5,9 @@ body {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    /* padding: 40px; */
     display: flex;
+    justify-content: center;
+    /* flex-wrap: wrap; */
 }
 
 @font-face {
@@ -30,63 +31,26 @@ h2 {
     font-family: 'Lato', sans-serif !important;
 }
 
+/* @media (min-width: 1400px) {
+
+    .container,
+    .container-lg,
+    .container-md,
+    .container-sm,
+    .container-xl,
+    .container-xxl {
+        max-width: auto;
+    }
+} */
+
 .container {
-    width: calc(100% - 250px);
-    /* Adjust width to account for sidebar */
-    /* margin-left: 30px; */
-    /* Add left margin to make space for sidebar */
+    margin: 0;
+    min-width: 1220px;
+    /* width: calc(100% - 270px) !important; */
     padding: 0 30px;
+    box-shadow: rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px;
 }
 
-img,
-svg {
-    vertical-align: sub !important;
-}
-
-.sidebar-toggle {
-    position: absolute;
-    top: 15px;
-    left: 15px;
-    background: transparent;
-    border: none;
-    font-size: 24px;
-    cursor: pointer;
-    z-index: 999;
-}
-
-.sidebar.collapsed {
-    width: 80px;
-}
-
-.sidebar.collapsed .sidebar-content ul li strong lable,
-.sidebar.collapsed .sidebar-header h5,
-.sidebar.collapsed .dropdown-arrow,
-.sidebar.collapsed ul li a,
-.sidebar.collapsed .sidebar_footer_text,
-.sidebar.collapsed .stpl_logo_icon1 {
-    display: none;
-}
-
-.sidebar.collapsed~.container {
-    width: 100%;
-}
-
-.sidebar.collapsed .sidebar-content ul li strong {
-    justify-content: center;
-}
-
-.sidebar.collapsed .stpl_logo_icon2 {
-    display: block;
-    margin: auto
-}
-
-.stpl_logo_icon2 {
-    display: none;
-}
-
-.header-arrow {
-    padding: 0 2px;
-}
 
 /* Initial styles for the sidebar */
 #mySidebar {
@@ -296,6 +260,11 @@ tbody tr:nth-child(even) {
     transition: visibility 0s, opacity 0.3s;
 }
 
+.table-bordered {
+    width: 100%;
+    overflow: auto;
+}
+
 .popup-overlay.active {
     visibility: visible;
     opacity: 1;
@@ -378,17 +347,6 @@ tbody tr:nth-child(even) {
     background-color: #702851;
 }
 
-@media (min-width: 1400px) {
-
-    .container,
-    .container-lg,
-    .container-md,
-    .container-sm,
-    .container-xl,
-    .container-xxl {
-        max-width: -webkit-fill-available;
-    }
-}
 
 /* 🔹 RESPONSIVE DESIGN */
 @media screen and (max-width: 1024px) {

@@ -47,6 +47,7 @@
      background: #F6F5F7;
      padding: 7px 20px;
      border-radius: 6px;
+     height: 55px;
      box-shadow: 0px 0px 4px 0px #00000040;
  }
 
@@ -144,7 +145,51 @@
      box-shadow: 0px 0px 4px 0px #00000040;
      background: #FFF;
      border-radius: 50%;
-     padding: 1px
+     height: 17px;
+     width: 17px;
+ }
+
+
+ .sidebar-toggle {
+     position: absolute;
+     top: 15px;
+     left: 15px;
+     background: transparent;
+     border: none;
+     font-size: 24px;
+     cursor: pointer;
+     z-index: 999;
+ }
+
+ .sidebar.collapsed {
+     width: 80px;
+ }
+
+ .sidebar.collapsed .sidebar-content ul li strong lable,
+ .sidebar.collapsed .sidebar-header h5,
+ .sidebar.collapsed .dropdown-arrow,
+ .sidebar.collapsed ul li a,
+ .sidebar.collapsed .sidebar_footer_text,
+ .sidebar.collapsed .stpl_logo_icon1 {
+     display: none;
+ }
+
+ .sidebar.collapsed~.container {
+     width: 100%;
+ }
+
+ .sidebar.collapsed .sidebar-header,
+ .sidebar.collapsed .sidebar-content ul li strong {
+     justify-content: center;
+ }
+
+ .sidebar.collapsed .stpl_logo_icon2 {
+     display: block;
+     margin: auto
+ }
+
+ .stpl_logo_icon2 {
+     display: none;
  }
 
  .sidebar-footer small {

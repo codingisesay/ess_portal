@@ -35,8 +35,8 @@ $name = Auth::guard('superadmin')->user()->name;
             <div class="logo">
                 <h5><strong>Company Name</strong></h5>
             </div>
-            <span class="header-arrow" onclick="toggleSidebar()">
-        <x-icon id="sidebar-icon" name="rightarrow"></x-icon>
+            <span onclick="toggleSidebar()">
+        <x-icon id="sidebar-icon" name="headerarrow"></x-icon>
     </span> 
         </div>
         <div class="sidebar-content">
@@ -45,7 +45,7 @@ $name = Auth::guard('superadmin')->user()->name;
                 <li id="orgConfigLi">
                     <strong onclick="toggleDropdown('orgConfigDropdown', this)">
                         <strong>  
-                        <x-icon name="building" />&nbsp;<lable> Organisation Configuration</lable></strong>
+                        <x-icon name="building" />&nbsp;<lable> Organisation&nbsp;Configuration</lable></strong>
                         <img src="{{ asset('user_end/images/arrow-right.svg') }}" alt="arrow" class="dropdown-arrow">
                     </strong>
                     <ul id="orgConfigDropdown">
