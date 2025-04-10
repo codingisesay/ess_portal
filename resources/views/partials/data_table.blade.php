@@ -5,13 +5,15 @@
     <div class="table-search mb-3">
         <input type="text" id="tableSearch" placeholder="Search..." class="form-control">
     </div>
-    
-    <table id="dataTable" class="table table-bordered">
+    <div class="table-bordered">
+    <table id="dataTable" class="table ">
         <thead>
             <tr>
                 <th>Serial No</th>
                 @foreach($columns as $column)
-                    <th>{{ $column['header'] }}</th>
+                    @if($column['accessor'] !== 'id') <!-- Skip the id column -->
+                        <th>{{ $column['header'] }}</th>
+                    @endif
                 @endforeach
                 @if($hasActions)
                     <th>Action</th>
@@ -26,7 +28,9 @@
                 <tr>
                     <td>{{ $index + 1 }}</td>
                     @foreach($columns as $column)
-                        <td>{{ $item->{$column['accessor']} }}</td>
+                        @if($column['accessor'] !== 'id') <!-- Skip the id column -->
+                            <td>{{ $item->{$column['accessor']} }}</td>
+                        @endif
                     @endforeach
                     @if($hasActions)
                         <td>
@@ -51,7 +55,7 @@
             @endforeach
         </tbody>
     </table>
-
+    </div>
     <!-- Pagination Controls -->
     <div class="pagination-container">
         <small class="page-info">Showing Page <span class="current-page">1</span> of <span class="total-pages">1</span></small>
