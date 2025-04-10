@@ -1,49 +1,4 @@
 
-<style>
-
-.sidebar-toggle {
-    position: absolute;
-    top: 15px;
-    left: 15px;
-    background: transparent;
-    border: none;
-    font-size: 24px;
-    cursor: pointer;
-    z-index: 999;
-}
-
-.sidebar.collapsed {
-    width: 80px;
-}
-
-.sidebar.collapsed .sidebar-content ul li strong lable,
-.sidebar.collapsed .sidebar-header h5,
-.sidebar.collapsed .dropdown-arrow, 
-.sidebar.collapsed ul li a ,
-.sidebar.collapsed  .sidebar_footer_text,
-.sidebar.collapsed .stpl_logo_icon1{
-    display: none;
-}
-.sidebar.collapsed .sidebar-content ul li strong {justify-content: center;}
-.sidebar.collapsed .stpl_logo_icon2{display:block; margin:auto}
-.stpl_logo_icon2{display: none;} 
-/* Initial styles for the sidebar */
-#mySidebar { 
-    transition: width 0.3s ease; /* Smooth transition for the width */
-    overflow: hidden; /* To ensure no overflow happens during the transition */
-}
- 
-/* Transition for the icon */
-#sidebar-icon {
-    transition: transform 0.3s ease; /* Smooth transition for icon rotation */
-}
-
-/* Rotate the icon when collapsed */
-#mySidebar.collapsed #sidebar-icon {
-    transform: rotate(180deg); /* Rotate the icon when collapsed */
-}
-
-</style>
 
 <?php
 $name = Auth::guard('superadmin')->user()->name;
