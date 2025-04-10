@@ -1,5 +1,5 @@
 @props(['items', 'columns', 'editModalId' => null, 'perPage' => 10, 'hasActions' => false])
- 
+
 <div class="table-container">
     <!-- Add search input -->
     <div class="table-search mb-3">
@@ -11,7 +11,9 @@
             <tr>
                 <th>Serial No</th>
                 @foreach($columns as $column)
-                    <th>{{ $column['header'] }}</th>
+                    @if($column['accessor'] !== 'id') <!-- Skip the id column -->
+                        <th>{{ $column['header'] }}</th>
+                    @endif
                 @endforeach
                 @if($hasActions)
                     <th>Action</th>
@@ -23,7 +25,9 @@
                 <tr>
                     <td>{{ $index + 1 }}</td>
                     @foreach($columns as $column)
-                        <td>{{ $item->{$column['accessor']} }}</td>
+                        @if($column['accessor'] !== 'id') <!-- Skip the id column -->
+                            <td>{{ $item->{$column['accessor']} }}</td>
+                        @endif
                     @endforeach
                     @if($hasActions)
                         <td>
@@ -209,4 +213,4 @@
             });
         }
     });
-</script> 
+</script>
