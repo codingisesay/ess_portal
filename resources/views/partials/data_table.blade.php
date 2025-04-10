@@ -1,5 +1,5 @@
-@props(['items', 'columns', 'editModalId' => null, 'perPage' => 10, 'hasActions' => false])
- 
+@props(['items', 'columns', 'editModalId' => null, 'perPage' => 10, 'hasActions' => false, 'hasPermision' => false])
+
 <div class="table-container">
     <!-- Add search input -->
     <div class="table-search mb-3">
@@ -16,6 +16,9 @@
                 @if($hasActions)
                     <th>Action</th>
                 @endif
+                @if($hasPermision)
+                    <th>Edit Permission</th>
+                @endif
             </tr>
         </thead>
         <tbody>
@@ -29,11 +32,19 @@
                         <td>
                             @if(isset($column['action']))
                                 {!! $column['action'] !!}
-                            @elseif($editModalId)
+                            @elseif($editModalId)  
                             <button class="btn p-0" onclick="openEditModal('{{ $editModalId }}', {{ json_encode($item) }})">
-                                <x-icon name="edit" /> 
+                                    <x-icon name="edit" /> 
                                 </button>
                             @endif
+                        </td>
+                    @endif
+                    @if($hasPermision)
+                        <td>
+                            <form class="m-0" action="{{ route('create_permission_form', ['org_id' => $id, 'desig_id' => $item->designation_id, 'b_id' => $item->branch_id]) }}">
+                                @csrf
+                                <button class="btn p-0" type="submit">  <x-icon name="edit" /> </button>
+                            </form>
                         </td>
                     @endif
                 </tr>
@@ -45,9 +56,9 @@
     <div class="pagination-container">
         <small class="page-info">Showing Page <span class="current-page">1</span> of <span class="total-pages">1</span></small>
         <ul class="pagination">
-            <li><a href="#" class="page-prev"><x-icon name="prev" /></a></li>        
+            <li><a href="#" class="page-prev"><x-icon name="leftarrow" /></a></li>        
             <li class="page-numbers"></li>     
-            <li><a href="#" class="page-next"><x-icon name="next" /></a></li>
+            <li><a href="#" class="page-next"><x-icon name="rightarrow" /></a></li>
         </ul>
     </div>
 </div>
@@ -209,4 +220,4 @@
             });
         }
     });
-</script> 
+</script>

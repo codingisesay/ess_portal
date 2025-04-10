@@ -14,9 +14,11 @@ style.innerHTML = `
         from { width: 100%; }
         to { width: 0%; }
     }
+     .toastify.toastify-right.toastify-top{padding:0 !important;}
     .toast-container1 {
         position: relative;
-        padding-bottom: 6px;
+        padding: 12px;
+       border-radius: 8px !important;
     }
     .progress-bar1 {
         height: 6px;
@@ -53,7 +55,7 @@ function showToast(message, bgColor, duration = 3000) {
         position: "right",
         backgroundColor: bgColor,
         stopOnFocus: true,
-        close: true,
+        close: false,
     }).showToast();
 }
 

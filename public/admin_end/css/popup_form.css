@@ -26,6 +26,7 @@
     margin-bottom: 20px;
 }
 
+.popup-form-group select,
 .popup-form-group input {
     flex: 2;
     padding: 10px;
@@ -35,6 +36,7 @@
     color: #333;
 }
 
+.popup-form-group select:focus,
 .popup-form-group input:focus {
     outline: none;
     border-color: #8A3366;
