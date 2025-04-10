@@ -163,9 +163,9 @@ $id = Auth::guard('superadmin')->user()->id;
 
         function openEditModal(id, levtyps) {
             console.log(levtyps);
-            document.getElementById('editLeaveTypeId').value = levtyps.leave_type;
+            document.getElementById('editLeaveTypeId').value = levtyps.leave_cycle_id;
             document.getElementById('editLeaveCycle').value = levtyps.leave_cycle_id;
-            document.getElementById('editLeaveTypeName').value = levtyps.leave_cycle_name;
+            document.getElementById('editLeaveTypeName').value = levtyps.leave_type;
             document.getElementById('editHalfDayStatus').value = levtyps.leave_half_status;
             document.getElementById('editLeaveStatus').value = levtyps.leave_status;
 
