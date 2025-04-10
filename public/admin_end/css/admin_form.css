@@ -2,13 +2,14 @@
 body {
     /* font-family: 'Poppins', sans-serif; */
     background-color: #f5f3f6;
-    margin: 0;
+    /* margin: 0;/ */
     padding: 0;
     box-sizing: border-box;
     display: flex;
-    justify-content: center;
+    /* justify-content: center; */
     /* flex-wrap: wrap; */
 }
+
 
 @font-face {
     font-family: 'Lato';
@@ -45,31 +46,15 @@ h2 {
 
 .container {
     margin: 0;
-    /* min-width: 1220px; */
-    width: calc(100% - 270px) !important;
+    max-width: 1320px;
+    width: calc(100% - 270px);
     padding: 0 30px;
     box-shadow: rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px;
 }
 
-
-/* Initial styles for the sidebar */
-#mySidebar {
-    transition: width 0.3s ease;
-    /* Smooth transition for the width */
-    overflow: hidden;
-    /* To ensure no overflow happens during the transition */
-}
-
-/* Transition for the icon */
-#sidebar-icon {
-    transition: transform 0.3s ease;
-    /* Smooth transition for icon rotation */
-}
-
-/* Rotate the icon when collapsed */
-#mySidebar.collapsed #sidebar-icon {
-    transform: rotate(180deg);
-    /* Rotate the icon when collapsed */
+.sidebar.collapsed~.container {
+    width: 95vw;
+    max-width: 95vw;
 }
 
 /* Form Styling */
@@ -188,9 +173,9 @@ h3 {
 .table-container {
     background: white;
     border-radius: 10px;
-    padding: 20px;
+    padding: 15px 20px 5px 20px;
     overflow: auto;
-    height: auto;
+    height: 75vh;
     margin: 30px 0;
     width: 100%;
     /* 75vw; */
@@ -447,4 +432,55 @@ tbody tr:nth-child(even) {
 
 .ellipsis {
     padding: 5px 10px;
+}
+
+.table-container {
+    position: relative;
+    /* This makes the pagination container position relative to this container */
+    padding-bottom: 40px;
+    /* Space for pagination (adjust this value based on pagination height) */
+    min-height: 200px;
+    /* Minimum height, you can adjust based on your content */
+}
+
+/* Pagination Controls */
+.pagination-container {
+    position: absolute;
+    /* This makes the pagination stay at the bottom */
+    bottom: 0;
+    /* Place it at the bottom */
+    left: 0;
+    right: 0;
+    background: #fff;
+    /* Background for the pagination */
+    padding: 10px;
+    /* Add some padding for better spacing */
+}
+
+.pagination {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    /* Center the pagination links */
+}
+
+.pagination li {
+    margin: 0 5px;
+}
+
+.pagination a {
+    text-decoration: none;
+    padding: 5px 10px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    color: #333;
+}
+
+/* If .sm-edit-td contains a table, target the last td or th in that table */
+.sm-edit-td:has(table) th:last-child,
+.sm-edit-td:has(table) td:last-child {
+    width: 100px;
+    text-align: center;
 }
