@@ -48,12 +48,12 @@ array_push($permis, $per->feature_id);
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <link rel="stylesheet" href="{{ asset('admin_end/css/admin_form.css') }}">
 
-<div class="w3-container">
+<!-- <div class="w3-container">
     <div class="create-btn">
         <br><br>
         <button class="create-btn" onclick="openPopup()">Create Permission</button>
     </div>
-</div>
+</div> -->
 
 <!-- Popup Overlay -->
 <div class="popup-overlay" id="popup-overlay">
@@ -96,6 +96,15 @@ array_push($permis, $per->feature_id);
 
     function closePopup() {
         document.getElementById('popup-overlay').classList.remove('active');
+        // Redirect to the designation page after closing the popup
+        window.location.href = "{{ route('create_designation_form') }}";
     }
+
+    // Automatically open the popup if the flag is set
+    document.addEventListener('DOMContentLoaded', function() {
+        @if(isset($openPopup) && $openPopup)
+            openPopup();
+        @endif
+    });
 </script>
 @endsection
