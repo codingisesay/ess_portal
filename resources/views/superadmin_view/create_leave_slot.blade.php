@@ -92,20 +92,20 @@ $id = Auth::guard('superadmin')->user()->id;
                     @method('POST')
                     <input type="hidden" name="cycle_id" id="editLeaveSlotId">
                     <div class="popup-form-group">
-                        <label for="editLeaveSlotName">Cycle Name</label>
                         <input type="text" name="cycle_name" id="editLeaveSlotName" required>
+                        <label for="editLeaveSlotName">Cycle Name</label>
                     </div>
                     <div class="popup-form-group">
-                        <label for="editLeaveSlotStartDate">Start Date Time</label>
                         <input type="datetime-local" name="start_date_time" id="editLeaveSlotStartDate" required>
+                        <label for="editLeaveSlotStartDate">Start Date Time</label>
                     </div>
                     <div class="popup-form-group">
-                        <label for="editLeaveSlotEndDate">End Date Time</label>
                         <input type="datetime-local" name="end_date_time" id="editLeaveSlotEndDate" required>
+                        <label for="editLeaveSlotEndDate">End Date Time</label>
                     </div>
                     <div class="popup-form-group">
-                        <label for="editLeaveSlotYear">Year</label>
                         <input type="text" name="year_slot" id="editLeaveSlotYear" required>
+                        <label for="editLeaveSlotYear">Year</label>
                     </div>
                     <div class="popup-form-group">
                         <button class="create-btn1" type="submit">Save Changes</button>

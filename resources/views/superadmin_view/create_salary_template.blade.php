@@ -110,23 +110,23 @@ $id = Auth::guard('superadmin')->user()->id;
                 @method('POST')
                 <input type="hidden" name="template_id" id="editSalaryTemplateId">
                 <div class="popup-form-group">
-                    <label for="editSalaryTemplateName">Name</label>
                     <input type="text" name="template_name" id="editSalaryTemplateName" required>
+                    <label for="editSalaryTemplateName">Name</label>
                 </div>
                 <div class="popup-form-group">
-                    <label for="editSalaryTemplateMinCTC">Min CTC</label>
                     <input type="number" name="min_ctc" id="editSalaryTemplateMinCTC" required>
+                    <label for="editSalaryTemplateMinCTC">Min CTC</label>
                 </div>
                 <div class="popup-form-group">
-                    <label for="editSalaryTemplateMaxCTC">Max CTC</label>
                     <input type="number" name="max_ctc" id="editSalaryTemplateMaxCTC" required>
+                    <label for="editSalaryTemplateMaxCTC">Max CTC</label>
                 </div>
                 <div class="popup-form-group">
-                    <label for="editSalaryTemplateStatus">Status</label>
                     <select name="status" id="editSalaryTemplateStatus" required>
                         <option value="Active">Active</option>
                         <option value="Inactive">Inactive</option>
                     </select>
+                    <label for="editSalaryTemplateStatus">Status</label>
                 </div>
                 <div class="popup-form-group">
                     <button class="create-btn1" type="submit">Save Changes</button>

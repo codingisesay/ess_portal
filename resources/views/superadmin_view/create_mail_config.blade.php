@@ -124,36 +124,36 @@ $id = Auth::guard('superadmin')->user()->id;
                 @method('POST')
                 <input type="hidden" name="organisation_id" value="{{ $id }}">
                 <div class="popup-form-group">
-                    <label for="editMailMailer">MAIL_MAILER</label>
                     <input type="text" name="MAIL_MAILER" id="editMailMailer" required>
+                    <label for="editMailMailer">MAIL_MAILER</label>
                 </div>
                 <div class="popup-form-group">
-                    <label for="editMailHost">MAIL_HOST</label>
                     <input type="text" name="MAIL_HOST" id="editMailHost" required>
+                    <label for="editMailHost">MAIL_HOST</label>
                 </div>
                 <div class="popup-form-group">
-                    <label for="editMailPort">MAIL_PORT</label>
                     <input type="text" name="MAIL_PORT" id="editMailPort" required>
+                    <label for="editMailPort">MAIL_PORT</label>
                 </div>
                 <div class="popup-form-group">
-                    <label for="editMailUsername">MAIL_USERNAME</label>
                     <input type="text" name="MAIL_USERNAME" id="editMailUsername" required>
+                    <label for="editMailUsername">MAIL_USERNAME</label>
                 </div>
                 <div class="popup-form-group">
-                    <label for="editMailPassword">MAIL_PASSWORD</label>
                     <input type="text" name="MAIL_PASSWORD" id="editMailPassword" required>
+                    <label for="editMailPassword">MAIL_PASSWORD</label>
                 </div>
                 <div class="popup-form-group">
-                    <label for="editMailEncryption">MAIL_ENCRYPTION</label>
                     <input type="text" name="MAIL_ENCRYPTION" id="editMailEncryption" required>
+                    <label for="editMailEncryption">MAIL_ENCRYPTION</label>
                 </div>
                 <div class="popup-form-group">
-                    <label for="editMailFromAddress">MAIL_FROM_ADDRESS</label>
                     <input type="text" name="MAIL_FROM_ADDRESS" id="editMailFromAddress" required>
+                    <label for="editMailFromAddress">MAIL_FROM_ADDRESS</label>
                 </div>
                 <div class="popup-form-group">
-                    <label for="editMailFromName">MAIL_FROM_NAME</label>
                     <input type="text" name="MAIL_FROM_NAME" id="editMailFromName" required>
+                    <label for="editMailFromName">MAIL_FROM_NAME</label>
                 </div>
                 <div class="popup-form-group">
                     <button class="create-btn1" type="submit">Save Changes</button>

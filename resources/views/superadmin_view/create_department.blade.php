@@ -62,8 +62,8 @@
                 @csrf
                 <input type="hidden" name="department_id" id="editDepartmentId">
                 <div class="popup-form-group">
+                    <input type="text" name="department_name" placeholder=" " id="editDepartmentName" required>
                     <label for="editDepartmentName">Department Name</label>
-                    <input type="text" name="department_name" id="editDepartmentName" required>
                 </div>
                 <div class="popup-form-group">
                     <button class="create-btn1" type="submit">Save Changes</button>

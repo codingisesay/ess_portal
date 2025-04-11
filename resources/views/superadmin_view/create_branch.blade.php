@@ -157,48 +157,48 @@ $id = Auth::guard('superadmin')->user()->id;
                 @csrf
                 <input type="hidden" name="branch_id" id="editBranchId">
                 <div class="popup-form-group">
-                    <label for="editBranchName">Branch Name</label>
                     <input type="text" name="branchname" id="editBranchName" required>
+                    <label for="editBranchName">Branch Name</label>
                 </div>
                 <div class="popup-form-group">
-                    <label for="editMobile">Mobile</label>
                     <input type="text" name="mobile" id="editMobile" required>
+                    <label for="editMobile">Mobile</label>
                 </div>
                 <div class="popup-form-group">
-                    <label for="editBranchEmail">Branch Email</label>
                     <input type="email" name="branchmailid" id="editBranchEmail" required>
+                    <label for="editBranchEmail">Branch Email</label>
                 </div>
                 <div class="popup-form-group">
-                    <label for="editBuildingNo">Building No</label>
                     <input type="text" name="Building_No" id="editBuildingNo" required>
+                    <label for="editBuildingNo">Building No</label>
                 </div>
                 <div class="popup-form-group">
-                    <label for="editPremisesName">Premises Name</label>
                     <input type="text" name="premises_name" id="editPremisesName" required>
+                    <label for="editPremisesName">Premises Name</label>
                 </div>
                 <div class="popup-form-group">
-                    <label for="editLandmark">Landmark</label>
                     <input type="text" name="landmark" id="editLandmark" required>
+                    <label for="editLandmark">Landmark</label>
                 </div>
                 <div class="popup-form-group">
-                    <label for="editRoadStreet">Road Street</label>
                     <input type="text" name="road_street" id="editRoadStreet" required>
+                    <label for="editRoadStreet">Road Street</label>
                 </div>
                 <div class="popup-form-group">
-                    <label for="editPincode">Pincode</label>
                     <input type="text" name="pincode" id="editPincode" required>
+                    <label for="editPincode">Pincode</label>
                 </div>
                 <div class="popup-form-group">
-                    <label for="editDistrict">District</label>
                     <input type="text" name="district" id="editDistrict" required>
+                    <label for="editDistrict">District</label>
                 </div>
                 <div class="popup-form-group">
-                    <label for="editState">State</label>
                     <input type="text" name="state" id="editState" required>
+                    <label for="editState">State</label>
                 </div>
                 <div class="popup-form-group">
-                    <label for="editCountry">Country</label>
                     <input type="text" name="country" id="editCountry" required>
+                    <label for="editCountry">Country</label>
                 </div>
                 <div class="popup-form-group">
                     <button class="create-btn1" type="submit">Save Changes</button>

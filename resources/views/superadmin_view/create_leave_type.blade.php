@@ -111,30 +111,30 @@ $id = Auth::guard('superadmin')->user()->id;
                         @method('POST')
                         <input type="hidden" name="leave_type_id" id="editLeaveTypeId">
                         <div class="popup-form-group">
-                            <label for="editLeaveCycle">Select Cycle</label>
                             <select name="cycle_slot_id" id="editLeaveCycle" required>
                                 @foreach ($leaveCycleDatas as $leaveCycleData)
                                     <option value="{{ $leaveCycleData->id }}">{{ $leaveCycleData->name }}</option>
                                 @endforeach
                             </select>
+                            <label for="editLeaveCycle">Select Cycle</label>
                         </div>
                         <div class="popup-form-group">
-                            <label for="editLeaveTypeName">Leave Type Name</label>
                             <input type="text" name="leave_category" id="editLeaveTypeName" required>
+                            <label for="editLeaveTypeName">Leave Type Name</label>
                         </div>
                         <div class="popup-form-group">
-                            <label for="editHalfDayStatus">Half Day Applicable?</label>
                             <select name="half_day_status" id="editHalfDayStatus" required>
                                 <option value="Yes">Yes</option>
                                 <option value="No">No</option>
                             </select>
+                            <label for="editHalfDayStatus">Half Day Applicable?</label>
                         </div>
                         <div class="popup-form-group">
-                            <label for="editLeaveStatus">Status</label>
                             <select name="status" id="editLeaveStatus" required>
                                 <option value="Active">Active</option>
                                 <option value="Inactive">Inactive</option>
                             </select>
+                            <label for="editLeaveStatus">Status</label>
                         </div>
                         <div class="popup-form-group">
                             <button class="create-btn1" type="submit">Save Changes</button>
