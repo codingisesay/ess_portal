@@ -41,41 +41,53 @@ $id = Auth::guard('superadmin')->user()->id;
     <div id="formSection" > 
     <form method="POST" action="{{ route('insert_taxes') }}">
         @csrf
-        <div class="form-container">
-            <div class="form-group">
-                <select name="tax_cycle_type" required>
-                    <option value="" disabled selected></option>
-                    @foreach ($taxregim as $tax)
-                    <option value="{{ $tax->id }}">{{ $tax->name }}</option>
-                    @endforeach
-                </select>
-             
-                <label>Tax Regime</label>
+        <div class="form-container row">
+            <div class="col-3 mb-4">
+                <div class="form-group">
+                    <select name="tax_cycle_type" required>
+                        <option value="" disabled selected></option>
+                        @foreach ($taxregim as $tax)
+                        <option value="{{ $tax->id }}">{{ $tax->name }}</option>
+                        @endforeach
+                    </select>
+                
+                    <label>Tax Regime</label>
+                </div>
             </div>
-            <div class="form-group">
-                <select name="tax_type" required>
-                    <option value="" disabled selected></option>
-                    <option value="Income Tax">Income Tax</option>
-                </select>
-                <label>Tax Type</label>
+            <div class="col-3 mb-4">
+                <div class="form-group">
+                    <select name="tax_type" required>
+                        <option value="" disabled selected></option>
+                        <option value="Income Tax">Income Tax</option>
+                    </select>
+                    <label>Tax Type</label>
+                </div>
             </div>
-            <div class="form-group">
-                <input type="number" name="min_income" required>
-                <label>Min Income</label>
+            <div class="col-3 mb-4">
+                <div class="form-group">
+                    <input type="number" name="min_income" required>
+                    <label>Min Income</label>
+                </div>
             </div>
-            <div class="form-group">
-                <input type="number" name="max_income" required>
-                <label>Max Income</label>
+            <div class="col-3 mb-4">
+                <div class="form-group">
+                    <input type="number" name="max_income" required>
+                    <label>Max Income</label>
+                </div>
             </div>
-            <div class="form-group">
-                <input type="number" name="tax_per" required>
-                <label>percentage Tax</label>
+            <div class="col-3 mb-4">
+                <div class="form-group">
+                    <input type="number" name="tax_per" required>
+                    <label>percentage Tax</label>
+                </div>
             </div>
-            <div class="form-group">
-                <input type="number" name="fixed_amount" required>
-                <label>Fixed Amount</label>
+            <div class="col-3 mb-4">
+                <div class="form-group">
+                    <input type="number" name="fixed_amount" required>
+                    <label>Fixed Amount</label>
+                </div>
             </div>
-            {{-- <div class="form-group">
+            <!-- {{-- <div class="form-group">
                 <select name="status" required>
                     <option value="" disabled selected></option>
                     <option value="Active">Active</option>
@@ -83,7 +95,7 @@ $id = Auth::guard('superadmin')->user()->id;
                    
                 </select>
                 <label>Status</label>
-            </div> --}}
+            </div> --}} -->
             <div class="col-12">
             <button class="create-btn" type="submit">Create</button></div>
         </div>

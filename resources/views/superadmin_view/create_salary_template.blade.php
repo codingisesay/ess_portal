@@ -40,26 +40,34 @@ $id = Auth::guard('superadmin')->user()->id;
 
         <form method="POST" action="{{ route('insert_salary_template') }}">
             @csrf
-            <div class="form-container">
-                <div class="form-group">
-                    <input type="text" name="template_name" required>
-                    <label>Name</label>
+            <div class="form-container row">
+                <div class="col-3 mb-4">
+                    <div class="form-group">
+                        <input type="text" name="template_name" required>
+                        <label>Name</label>
+                    </div>
                 </div>
-                <div class="form-group">
-                    <input type="number" name="min_ctc" required>
-                    <label>Min CTC</label>
+                <div class="col-3 mb-4">
+                    <div class="form-group">
+                        <input type="number" name="min_ctc" required>
+                        <label>Min CTC</label>
+                    </div>
                 </div>
-                <div class="form-group">
-                    <input type="number" name="max_ctc" required>
-                    <label>Max CTC</label>
+                <div class="col-3 mb-4">
+                    <div class="form-group">
+                        <input type="number" name="max_ctc" required>
+                        <label>Max CTC</label>
+                    </div>
                 </div>
-                <div class="form-group">
-                    <select name="status" required>
-                        <option value="" disabled selected></option>
-                        <option value="Active">Active</option>
-                        <option value="Inactive">Inactive</option>
-                    </select>
-                    <label>Status</label>
+                <div class="col-3 mb-4">
+                    <div class="form-group">
+                        <select name="status" required>
+                            <option value="" disabled selected></option>
+                            <option value="Active">Active</option>
+                            <option value="Inactive">Inactive</option>
+                        </select>
+                        <label>Status</label>
+                    </div>
                 </div>
               
                 <div class="col-12">

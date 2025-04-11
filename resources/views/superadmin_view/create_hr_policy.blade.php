@@ -36,47 +36,64 @@ $id = Auth::guard('superadmin')->user()->id;
             </div>
             @endif
 
-            <form action="{{ route('save_hr_policy') }}" method="POST" enctype="multipart/form-data" class="form-container">
+            <form action="{{ route('save_hr_policy') }}" method="POST" enctype="multipart/form-data">
                 @csrf
-                <div class="form-group">
-                    <input type="text" id="policy_title" name="policy_title" class="form-control" required>
-                    <label for="policy_title">Policy Title</label>
+                <div  class="form-container row">
+
+                <div class="col-3 mb-4">
+                    <div class="form-group">
+                        <input type="text" id="policy_title" name="policy_title" class="form-control" required>
+                        <label for="policy_title">Policy Title</label>
+                    </div>
                 </div>
-                <div class="form-group">
-                    <select id="category_id" name="category_id" class="form-control" required>
-                        <option value="" disabled selected></option>
-                        @foreach($categories as $category)
-                            <option value="{{ $category->id }}">{{ $category->name }}</option>
-                        @endforeach
-                    </select>
-                    <label for="category_id">Select Category</label>
+                    <div class="col-3 mb-4">
+                    <div class="form-group">
+                        <select id="category_id" name="category_id" class="form-control" required>
+                            <option value="" disabled selected></option>
+                            @foreach($categories as $category)
+                                <option value="{{ $category->id }}">{{ $category->name }}</option>
+                            @endforeach
+                        </select>
+                        <label for="category_id">Select Category</label>
+                    </div>
                 </div>
-                <div class="form-group">
-                    <input type="text" id="policy_content" name="policy_content" class="form-control" required>
-                    <label for="policy_content">Policy Content</label>
+                    <div class="col-3 mb-4">
+                    <div class="form-group">
+                        <input type="text" id="policy_content" name="policy_content" class="form-control" required>
+                        <label for="policy_content">Policy Content</label>
+                    </div>
                 </div>
-                <div class="form-group">
-                    <input type="file" id="document" name="document" class="form-control">
-                    <label for="document">Upload Document</label>
+                    <div class="col-3 mb-4">
+                    <div class="form-group">
+                        <input type="file" id="document" name="document" class="form-control">
+                        <label for="document">Upload Document</label>
+                    </div>
                 </div>
-                <div class="form-group">
-                    <input type="file" id="icon" name="icon" class="form-control">
-                    <label for="icon">Upload Icon</label>
+                    <div class="col-3 mb-4">
+                    <div class="form-group">
+                        <input type="file" id="icon" name="icon" class="form-control">
+                        <label for="icon">Upload Icon</label>
+                    </div>
                 </div>
-                <div class="form-group">
-                    <input type="file" id="content_image" name="content_image" class="form-control">
-                    <label for="content_image">Upload Content Image</label>
+                    <div class="col-3 mb-4">
+                    <div class="form-group">
+                        <input type="file" id="content_image" name="content_image" class="form-control">
+                        <label for="content_image">Upload Content Image</label>
+                    </div>
                 </div>
-                <div class="form-group">
-                    <select id="category_id" name="status" class="form-control" required>
-                        <option value="" disabled selected></option>
-                        <option value="Active">Active</option>
-                        <option value="Inactive">Inactive</option>
-                    </select>
-                    <label for="category_id">Status</label>
+                    <div class="col-3 mb-4">
+                    <div class="form-group">
+                        <select id="category_id" name="status" class="form-control" required>
+                            <option value="" disabled selected></option>
+                            <option value="Active">Active</option>
+                            <option value="Inactive">Inactive</option>
+                        </select>
+                        <label for="category_id">Status</label>
+                    </div>
                 </div>
-                <div class="col-12">
-                <button type="submit" class="create-btn" >Save Policy</button></div>
+                    <div class="col-12">
+                    <button type="submit" class="create-btn" >Save Policy</button></div>
+                </div>
             </form>
         </div>
 

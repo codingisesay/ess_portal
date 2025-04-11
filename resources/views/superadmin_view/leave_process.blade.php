@@ -76,20 +76,20 @@ $id = Auth::guard('superadmin')->user()->id;
     </div>
 @endif
 
-        <form action="" method="POST" enctype="multipart/form-data" class="form-container">
+        <form action="" method="POST" enctype="multipart/form-data" class="form-container row">
             @csrf
+            <div class="col-3 mb-4">
             <div class="form-group">
                 <select id="category_id" name="cycle_slot_id" class="form-control">
-                    <option value="" disabled selected></option>
-                     
-                    <option value="{{$leaveCycleDatas->id}}">{{ $leaveCycleDatas->name }}</option>
-                   
-                  
-                    
+                    <option value="" disabled selected></option> 
+                    <option value="{{$leaveCycleDatas->id}}">{{ $leaveCycleDatas->name }}</option> 
                 </select>
                 <label for="category_id">Select Cycle</label>
             </div>
+            </div>
+            <div class="col-12">
             <button type="button" id="myBtn" class="create-btn" style="position: relative; bottom:8px;">Process Cycle</button>
+            </div>
         </form>
 
       
