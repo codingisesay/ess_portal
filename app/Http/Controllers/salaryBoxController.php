@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
+// use App\Helpers\SalaryHelper;
 
 class salaryBoxController extends Controller
 {
@@ -334,5 +335,13 @@ class salaryBoxController extends Controller
             return redirect()->route('taxes')->with('error', 'Failed to update Tax Slab.');
         }
     }
+
+   
+ public function loadDashboard(){
+
+
+    return view('user_view.payrollDashboard');
+
+ }
 
 }
