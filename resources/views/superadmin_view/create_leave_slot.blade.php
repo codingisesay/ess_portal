@@ -10,8 +10,7 @@ $id = Auth::guard('superadmin')->user()->id;
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{{ asset('admin_end/css/admin_form.css') }}">
-    <link rel="stylesheet" href="{{ asset('admin_end/css/popup_form.css') }}">
-    <title>Create Policy Category</title>
+    <link rel="stylesheet" href="{{ asset('admin_end/css/popup_form.css') }}"> 
     
 </head>
 <body>
@@ -44,7 +43,9 @@ $id = Auth::guard('superadmin')->user()->id;
                     <input id="text" id="category_name" name="year_slot" class="form-control" required>
                     <label for="year">Input Year: (EX: 2025-26)</label>
                 </div>
+                <div class="col-12">
                 <button type="submit" class="create-btn" >Save Cycle</button>
+                </div>
             </form>
         </div>
   

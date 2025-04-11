@@ -18,7 +18,7 @@ $name = Auth::guard('superadmin')->user()->name;
     <!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css"> -->
     <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script> 
     <script src="{{ asset('user_end/js/toastify-notifications.js') }}"></script>
-    <link href="{{ asset('bootstrapcss/bootstrap.min.css') }}" rel="stylesheet">
+    <link href="{{ asset('bootstrapcss/bootstrap.min.css') }}" rel="stylesheet"> 
 </head>
 
 <body class="body">
@@ -36,8 +36,8 @@ $name = Auth::guard('superadmin')->user()->name;
                 <h5><strong>Company Name</strong></h5>
             </div>
             <span onclick="toggleSidebar()">
-        <x-icon id="sidebar-icon" name="headerarrow"></x-icon>
-    </span> 
+            <img id="sidebar-icon" src="{{ asset('admin_end/images/left_ht.png') }}" />
+            </span>
         </div>
         <div class="sidebar-content">
             <ul class="nav-list">
@@ -48,7 +48,7 @@ $name = Auth::guard('superadmin')->user()->name;
                         <x-icon name="building" />&nbsp;&nbsp;<lable>Organisation&nbsp;Configuration</lable>&nbsp;&nbsp;&nbsp;</strong>
                         <img src="{{ asset('user_end/images/arrow-right.svg') }}" alt="arrow" class="dropdown-arrow">
                     </strong>
-                    <ul id="orgConfigDropdown">
+                    <ul id="orgConfigDropdown" class="submenu">
                         <li><a href="{{ route('create_user') }}" class="{{ request()->routeIs('create_user') ? 'active' : '' }}">Create User</a></li>
                         <li><a href="{{ route('create_branch_form') }}" class="{{ request()->routeIs('create_branch_form') ? 'active' : '' }}">Create Branch</a></li>
                         <li><a href="{{ route('create_department_form') }}" class="{{ request()->routeIs('create_department_form') ? 'active' : '' }}">Create Department</a></li>
@@ -63,7 +63,7 @@ $name = Auth::guard('superadmin')->user()->name;
                         <x-icon name="policy" />&nbsp;<lable> Policy Management</lable></strong>
                         <img src="{{ asset('user_end/images/arrow-right.svg') }}" alt="arrow" class="dropdown-arrow">
                     </strong>
-                    <ul id="policyManagementDropdown">
+                    <ul id="policyManagementDropdown" class="submenu">
                         <li><a href="{{ route('create_policy_category') }}" class="{{ request()->routeIs('create_policy_category') ? 'active' : '' }}">Create Policy Category</a></li>
                         <li><a href="{{ route('create_hr_policy') }}" class="{{ request()->routeIs('create_hr_policy') ? 'active' : '' }}">Create HR Policy</a></li>
                         <li><a href="{{ route('create_policy_time_slot') }}" class="{{ request()->routeIs('create_policy_time_slot') ? 'active' : '' }}">Leave Policy Slot</a></li>
@@ -81,7 +81,7 @@ $name = Auth::guard('superadmin')->user()->name;
                         <x-icon name="salary" />&nbsp;<lable> Salary Management</lable></strong>
                         <img src="{{ asset('user_end/images/arrow-right.svg') }}" alt="arrow" class="dropdown-arrow">
                     </strong>
-                    <ul id="salaryManagementDropdown">
+                    <ul id="salaryManagementDropdown" class="submenu">
                         <li><a href="{{ route('salary_template_form') }}" class="{{ request()->routeIs('salary_template_form') ? 'active' : '' }}">Create Salary Templates</a></li>
                         <li><a href="{{ route('create_salary_components') }}" class="{{ request()->routeIs('create_salary_components') ? 'active' : '' }}">Salary Template Components</a></li>
                     </ul>
@@ -94,7 +94,7 @@ $name = Auth::guard('superadmin')->user()->name;
                         <x-icon name="tax" />&nbsp;<lable> Tax Management</lable></strong>
                         <img src="{{ asset('user_end/images/arrow-right.svg') }}" alt="arrow" class="dropdown-arrow">
                     </strong>
-                    <ul id="taxManagementDropdown">
+                    <ul id="taxManagementDropdown" class="submenu">
                         <li><a href="{{ route('tax_cycle') }}" class="{{ request()->routeIs('tax_cycle') ? 'active' : '' }}">Tax Cycle</a></li>
                         <li><a href="{{ route('taxes') }}" class="{{ request()->routeIs('taxes') ? 'active' : '' }}">Taxes</a></li>
                     </ul>
@@ -107,7 +107,7 @@ $name = Auth::guard('superadmin')->user()->name;
                         <x-icon name="setting" />&nbsp;<lable> Settings</lable></strong>
                         <img src="{{ asset('user_end/images/arrow-right.svg') }}" alt="arrow" class="dropdown-arrow">
                     </strong>
-                    <ul id="settingsDropdown">
+                    <ul id="settingsDropdown" class="submenu">
                         <li><a href="{{ route('load_mail_config_form') }}" class="{{ request()->routeIs('load_mail_config_form') ? 'active' : '' }}">Mail Settings</a></li>
                     </ul>
                 </li>
@@ -197,21 +197,33 @@ $name = Auth::guard('superadmin')->user()->name;
         }
     </script>
 
-<script>
-function toggleSidebar() {
+    <script>
+    function toggleSidebar() {
     const sidebar = document.getElementById("mySidebar");
     const icon = document.getElementById("sidebar-icon");
 
-    // Toggle the sidebar's collapsed state
     sidebar.classList.toggle("collapsed");
 
-    // Toggle the icon between right arrow and left arrow
+    // Change the image immediately based on whether the sidebar is collapsed or not
     if (sidebar.classList.contains("collapsed")) {
-        icon.setAttribute("name", "rightarrow");
+        icon.setAttribute("src", "{{ asset('admin_end/images/left_ht.png') }}"); // "left" image 
     } else {
-        icon.setAttribute("name", "leftarrow");
+        icon.setAttribute("src", "{{ asset('admin_end/images/right_ht.png') }}"); // "right" image 
     }
+
+    // Change the image again after a 4-second delay
+    setTimeout(() => {
+    
+    // Change the image immediately based on whether the sidebar is collapsed or not
+    if (sidebar.classList.contains("collapsed")) {
+        icon.setAttribute("src", "{{ asset('admin_end/images/left_ht.png') }}"); // "left" image 
+    } else {
+        icon.setAttribute("src", "{{ asset('admin_end/images/right_ht.png') }}"); // "right" image 
+    }
+
+    }, 4000); // 4000ms = 4 seconds
 }
+
 
     </script>
 </body>

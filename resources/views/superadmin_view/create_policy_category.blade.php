@@ -9,14 +9,12 @@ $id = Auth::guard('superadmin')->user()->id;
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{{ asset('admin_end/css/admin_form.css') }}">
-    <link rel="stylesheet" href="{{ asset('admin_end/css/popup_form.css') }}">
-    <title>Create Policy Category</title>
+    <link rel="stylesheet" href="{{ asset('admin_end/css/popup_form.css') }}"> 
     
 </head>
 <body>
     <div class="container">
         <h3>Create Policy Category</h3>
-
         <!-- Toggle Buttons -->
         <div class="toggle-buttons">
         <button onclick="showPolicyCategoryTable(this)">Show Table</button>
@@ -31,21 +29,19 @@ $id = Auth::guard('superadmin')->user()->id;
                     <input type="text" id="category_name" name="category_name" class="form-control" required>
                     <label for="category_name">Category Name</label>
                 </div>
-                <div class="form-group">
+                <div class="form-group ">
                     <select id="category_id" name="status" class="form-control" required>
                         <option value="" disabled selected></option>
                         <option value="Active">Active</option>
                         <option value="Inactive">Inactive</option>
                     </select>
                     <label for="category_id">Status</label>
-                </div>
-                <button type="submit" class="create-btn"  >Save Category</button>
+                </div> 
+                <div class="col-12">
+                <button type="submit" class="create-btn"  >Save Category</button></div>
             </form>
         </div>
-
-       
-
-        
+ 
     <!-- Table Section -->
     <div id="tableSection">
         @include('partials.data_table', [
