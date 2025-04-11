@@ -43,33 +43,7 @@ $id = Auth::guard('superadmin')->user()->id;
             </form>
         </div>
 
-        <!-- Table Section -->
-        <div id="tableSection" > 
-            <!-- <div class="table-container">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Id</th>
-                            <th>Name</th>
-                            <th>Status</th>
-                            <th>EDIT</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach ($datas as $data)
-                            <tr>
-                                <td>{{ $loop->iteration }}</td>
-                                <td>{{$data->name}}</td>
-                                <td>{{$data->status}}</td>
-                                <td>
-                                    <button class="edit-icon" onclick="openEditModal({{ $data->id }}, '{{ $data->name }}', '{{ $data->status }}')">Edit</button>
-                                </td>
-                            </tr>
-                        @endforeach
-                    </tbody>
-                </table>
-            </div> -->
-        </div>
+       
 
         
     <!-- Table Section -->
@@ -122,31 +96,44 @@ $id = Auth::guard('superadmin')->user()->id;
 
     <script>
         function showPolicyCategoryForm(clickedElement) {
+            // Show the form section and hide the table section
             document.getElementById('formSection').style.display = 'block';
             document.getElementById('tableSection').style.display = 'none';
+
+            // Update the active state of the buttons
             const siblings = clickedElement.parentElement.children;
             for (let sibling of siblings) {
                 sibling.classList.remove('active');
-            } 
+            }
             clickedElement.classList.add('active');
         }
 
         function showPolicyCategoryTable(clickedElement) {
+            // Show the table section and hide the form section
             document.getElementById('formSection').style.display = 'none';
             document.getElementById('tableSection').style.display = 'block';
+
+            // Update the active state of the buttons
             const siblings = clickedElement.parentElement.children;
             for (let sibling of siblings) {
                 sibling.classList.remove('active');
-            } 
+            }
             clickedElement.classList.add('active');
         }
- 
-    // Ensure the first button (Show table) is active by default on page load
-    document.addEventListener('DOMContentLoaded', () => {
-        const firstButton = document.querySelector('.toggle-buttons button:first-child');
-        showPolicyCategoryTable(firstButton);
-    });
-      
+
+        // Ensure only the table section is visible by default on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            const firstButton = document.querySelector('.toggle-buttons button:first-child');
+            if (firstButton) {
+                firstButton.classList.add('active');
+                showPolicyCategoryTable(firstButton); // Show only the table section by default
+            } else {
+                // Fallback: Hide both sections if no button is found
+                document.getElementById('formSection').style.display = 'none';
+                document.getElementById('tableSection').style.display = 'none';
+            }
+        });
+
         function openEditModal(id, item) {
             document.getElementById('editPolicyCategoryId').value = id;
             document.getElementById('editPolicyCategoryName').value = item.name;

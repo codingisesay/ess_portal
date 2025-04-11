@@ -139,7 +139,7 @@ $id = Auth::guard('superadmin')->user()->id;
         clickedElement.classList.add('active');
     }
 
-    function showUserTable(clickedElement) {
+    function showTaxTable(clickedElement) {
         document.getElementById('formSection').style.display = 'none';
         document.getElementById('tableSection').style.display = 'block';
         const siblings = clickedElement.parentElement.children;
@@ -152,7 +152,7 @@ $id = Auth::guard('superadmin')->user()->id;
 // Ensure the first button (Show Form) is active by default on page load
 document.addEventListener('DOMContentLoaded', () => {
     const firstButton = document.querySelector('.toggle-buttons button:first-child');
-    showUserTable(firstButton);
+    showTaxTable(firstButton);
 });
   
 </script>
