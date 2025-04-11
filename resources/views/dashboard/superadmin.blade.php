@@ -10,7 +10,7 @@ $id = Auth::guard('superadmin')->user()->id;
 <link rel="stylesheet" href="{{ asset('admin_end/css/admin_form.css') }}">  
 <div class="container">
   <h3>Dashboard</h2>
-  <div class="text-center">
+  <div class="text-center  overflow-scroll " style="height:85vh">
   <img id="sidebar-icon"  src="{{ asset('admin_end/images/dummy_dash.png') }}" />
 </div>
 </div>

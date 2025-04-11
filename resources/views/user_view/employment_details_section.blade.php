@@ -18,26 +18,28 @@
             <p><strong>Email Address</strong> <weak><a href="mailto:{{ $userDetails->email ?? '-' }}" id="emp-email">{{ ucfirst($userDetails->email ?? '-') }}</a></weak></p>
             <h3>Address</h3>
             <p><strong>Permanent</strong> <weak id="emp-permanent-address">
-                {{ ucfirst($userDetails->per_building_no ?? '') }},
-                {{ ucfirst($userDetails->per_name_of_premises ?? '') }},
-                {{ ucfirst($userDetails->per_nearby_landmark ?? '') }},
-                {{ ucfirst($userDetails->per_road_street ?? '') }},
-                {{ ucfirst($userDetails->per_city ?? '') }},
-                {{ ucfirst($userDetails->per_district ?? '') }},
-                {{ ucfirst($userDetails->per_state ?? '') }},
-                {{ ucfirst($userDetails->per_country ?? '') }},
-                {{ ucfirst($userDetails->per_pincode ?? '') }}
+            {{ ucfirst(trim($userDetails->per_building_no) ? $userDetails->per_building_no . ',' : '') }}
+            {{ ucfirst(trim($userDetails->per_name_of_premises) ? $userDetails->per_name_of_premises . ',' : '') }}
+            {{ ucfirst(trim($userDetails->per_nearby_landmark) ? $userDetails->per_nearby_landmark . ',' : '') }}
+            {{ ucfirst(trim($userDetails->per_road_street) ? $userDetails->per_road_street . ',' : '') }}
+            {{ ucfirst(trim($userDetails->per_city) ? $userDetails->per_city . ',' : '') }}
+            {{ ucfirst(trim($userDetails->per_district) ? $userDetails->per_district . ',' : '') }}
+            {{ ucfirst(trim($userDetails->per_state) ? $userDetails->per_state . ',' : '') }}
+            {{ ucfirst(trim($userDetails->per_country) ? $userDetails->per_country . ',' : '') }}
+            {{ ucfirst(trim($userDetails->per_pincode) ? $userDetails->per_pincode : '') }}
+
             </weak></p>
             <p><strong>Correspondance</strong> <weak id="emp-correspondance-address">
-                {{ ucfirst($userDetails->cor_building_no ?? '') }},
-                {{ ucfirst($userDetails->cor_name_of_premises ?? '') }},
-                {{ ucfirst($userDetails->cor_nearby_landmark ?? '') }},
-                {{ ucfirst($userDetails->cor_road_street ?? '') }},
-                {{ ucfirst($userDetails->cor_city ?? '') }},
-                {{ ucfirst($userDetails->cor_district ?? '') }},
-                {{ ucfirst($userDetails->cor_state ?? '') }},
-                {{ ucfirst($userDetails->cor_country ?? '') }},
-                {{ ucfirst($userDetails->cor_pincode ?? '') }}
+            {{ ucfirst($userDetails->cor_building_no ? $userDetails->cor_building_no . ',' : '') }}
+            {{ ucfirst(trim($userDetails->cor_name_of_premises) ? $userDetails->cor_name_of_premises . ',' : '') }}
+            {{ ucfirst(trim($userDetails->cor_nearby_landmark) ? $userDetails->cor_nearby_landmark . ',' : '') }}
+            {{ ucfirst(trim($userDetails->cor_road_street) ? $userDetails->cor_road_street . ',' : '') }}
+            {{ ucfirst(trim($userDetails->cor_city) ? $userDetails->cor_city . ',' : '') }}
+            {{ ucfirst(trim($userDetails->cor_district) ? $userDetails->cor_district . ',' : '') }}
+            {{ ucfirst(trim($userDetails->cor_state) ? $userDetails->cor_state . ',' : '') }}
+            {{ ucfirst(trim($userDetails->cor_country) ? $userDetails->cor_country . ',' : '') }}
+            {{ ucfirst(trim($userDetails->cor_pincode) ? $userDetails->cor_pincode : '') }}
+
             </weak></p>
         </div>
     </div>
