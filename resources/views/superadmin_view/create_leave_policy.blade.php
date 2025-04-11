@@ -128,67 +128,7 @@ $id = Auth::guard('superadmin')->user()->id;
                 <button type="submit" class="create-btn" >Save Type</button>
             </form>
         </div>
-
-        <!-- Table Section -->
-        <div id="tableSection" >
-    
-            <div class="table-container">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Id</th>
-                            <th>Leave Type</th>
-                            <th>Max Leave</th>
-                            <th>Max Leave At Time</th>
-                            <th>Min Leave At Time</th>
-                            <th>Leave Count Per Month</th>
-                            <th>No of Times Per Month</th>
-                            <th>Carry Forward</th>
-                            <th>No. of Carry Forward</th>
-                            <th>Encash</th>
-                            <th>No. of Encash</th>
-
-                            <th>Provision Status</th>
-                            <th>Max Leave Probation Period</th>
-                            <th>Probation Period Per Month</th>
-                            <th>Calendra Start For PP</th>
-                            <th>Edit</th>
-                            
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach ($dataFromLeaveRestctions as $dataFromLeaveRestction)
-                            <tr>
-                                <td>{{ $loop->iteration }}</td>
-                                <td>{{ $dataFromLeaveRestction->leave_type }}</td>
-                                <td>{{ $dataFromLeaveRestction->max_leave }}</td>
-                                <td>{{ $dataFromLeaveRestction->max_leave_at_time }}</td>
-                                <td>{{ $dataFromLeaveRestction->min_leave_at_time }}</td>
-
-                                <td>{{ $dataFromLeaveRestction->leave_count_per_month }}</td>
-                                <td>{{ $dataFromLeaveRestction->no_of_time_per_month }}</td>   
-
-
-                                <td>{{ $dataFromLeaveRestction->carry_forward }}</td>
-                                <td>{{ $dataFromLeaveRestction->no_carry_forward }}</td>
-                                <td>{{ $dataFromLeaveRestction->leave_encash }}</td>
-                                <td>{{ $dataFromLeaveRestction->no_leave_encash }}</td>
-
-                                <td>{{ $dataFromLeaveRestction->provision_status }}</td>
-                                <td>{{ $dataFromLeaveRestction->max_leave_PP }}</td>
-                                <td>{{ $dataFromLeaveRestction->provision_period_per_month }}</td>
-                                <td>{{ $dataFromLeaveRestction->calendra_start_for_PP }}</td>
-                                <td>
-                                    <button class="edit-icon" onclick="openEditModal({{ $dataFromLeaveRestction->id }}, '{{ $dataFromLeaveRestction->leave_type }}', '{{ $dataFromLeaveRestction->max_leave }}', '{{ $dataFromLeaveRestction->max_leave_at_time }}', '{{ $dataFromLeaveRestction->min_leave_at_time }}', '{{ $dataFromLeaveRestction->leave_count_per_month }}', '{{ $dataFromLeaveRestction->no_of_time_per_month }}', '{{ $dataFromLeaveRestction->carry_forward }}', '{{ $dataFromLeaveRestction->no_carry_forward }}', '{{ $dataFromLeaveRestction->leave_encash }}', '{{ $dataFromLeaveRestction->no_leave_encash }}', '{{ $dataFromLeaveRestction->provision_status }}', '{{ $dataFromLeaveRestction->max_leave_PP }}', '{{ $dataFromLeaveRestction->provision_period_per_month }}', '{{ $dataFromLeaveRestction->calendra_start_for_PP }}')">Edit</button>
-                                </td>
-                            </tr>
-                        @endforeach
-                    </tbody>
-                </table>
-            </div>
-        </div>
-
-        
+ 
     <!-- Table Section -->
     <div id="tableSection">
         @include('partials.data_table', [
@@ -347,7 +287,7 @@ $id = Auth::guard('superadmin')->user()->id;
             document.getElementById('editProbationPeriodPerMonth').value = leavedata.provision_period_per_month;
             document.getElementById('editCalendraStartForPP').value = leavedata.calendra_start_for_PP;
 
-            const formAction = "{{ route('update_policy_conf', ['id' => ':id']) }}".replace(':id', id);
+            const formAction = "{{ route('update_policy_conf', ['id' => ':id']) }}".replace(':id', leavedata.id);
             document.getElementById('editLeavePolicyForm').action = formAction;
 
             document.getElementById('editLeavePolicyModal').style.display = 'block';

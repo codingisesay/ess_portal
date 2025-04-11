@@ -94,11 +94,11 @@ $id = Auth::guard('superadmin')->user()->id;
                 </div>
                 <div class="popup-form-group">
                     <label for="editEmpid">Employee ID</label>
-                    <input type="text" name="employeeID" id="editEmpid" required>
+                    <input type="text" name="empid" id="editEmpid" required>
                 </div>
                 <div class="popup-form-group">
                     <label for="editUsermailid">User Email</label>
-                    <input type="email" name="email" id="editUsermailid" required>
+                    <input type="email" name="usermailid" id="editUsermailid" required>
                 </div>
                 <div class="popup-form-group">
                     <button class="create-btn1" type="submit">Save Changes</button>
@@ -151,7 +151,7 @@ $id = Auth::guard('superadmin')->user()->id;
     }
 
     function openEditModal(user, userdata) { 
-        document.getElementById('editUserId').value = user;
+        document.getElementById('editUserId').value = userdata.id;
         document.getElementById('editUsername').value = userdata.name;
         document.getElementById('editEmpid').value = userdata.employeeID;
         document.getElementById('editUsermailid').value = userdata.email;

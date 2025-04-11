@@ -1,3 +1,5 @@
+
+
 <?php
 $name = Auth::guard('superadmin')->user()->name;
 ?>
@@ -29,11 +31,13 @@ $name = Auth::guard('superadmin')->user()->name;
     
     <!-- Sidebar/menu -->
     <nav class="sidebar" id="mySidebar">
-        <div class="sidebar-header">
+        <div class="sidebar-header"> 
             <div class="logo">
                 <h5><strong>Company Name</strong></h5>
             </div>
-            <img src="{{ asset('user_end/images/arrow-right.svg') }}" class="header-arrow" alt="arrow">
+            <span onclick="toggleSidebar()">
+        <x-icon id="sidebar-icon" name="headerarrow"></x-icon>
+    </span> 
         </div>
         <div class="sidebar-content">
             <ul class="nav-list">
@@ -41,7 +45,7 @@ $name = Auth::guard('superadmin')->user()->name;
                 <li id="orgConfigLi">
                     <strong onclick="toggleDropdown('orgConfigDropdown', this)">
                         <strong>  
-                        <x-icon name="building" />&nbsp; Organisation Configuration</strong>
+                        <x-icon name="building" />&nbsp;&nbsp;<lable>Organisation&nbsp;Configuration</lable>&nbsp;&nbsp;&nbsp;</strong>
                         <img src="{{ asset('user_end/images/arrow-right.svg') }}" alt="arrow" class="dropdown-arrow">
                     </strong>
                     <ul id="orgConfigDropdown">
@@ -56,7 +60,7 @@ $name = Auth::guard('superadmin')->user()->name;
                 <li id="policyManagementLi">
                     <strong onclick="toggleDropdown('policyManagementDropdown', this)">
                         <strong>
-                        <x-icon name="policy" />&nbsp; Policy Management</strong>
+                        <x-icon name="policy" />&nbsp;<lable> Policy Management</lable></strong>
                         <img src="{{ asset('user_end/images/arrow-right.svg') }}" alt="arrow" class="dropdown-arrow">
                     </strong>
                     <ul id="policyManagementDropdown">
@@ -74,7 +78,7 @@ $name = Auth::guard('superadmin')->user()->name;
                 <li id="salaryManagementLi">
                     <strong onclick="toggleDropdown('salaryManagementDropdown', this)">
                         <strong>
-                        <x-icon name="salary" />&nbsp; Salary Management</strong>
+                        <x-icon name="salary" />&nbsp;<lable> Salary Management</lable></strong>
                         <img src="{{ asset('user_end/images/arrow-right.svg') }}" alt="arrow" class="dropdown-arrow">
                     </strong>
                     <ul id="salaryManagementDropdown">
@@ -87,7 +91,7 @@ $name = Auth::guard('superadmin')->user()->name;
                 <li id="taxManagementLi">
                     <strong onclick="toggleDropdown('taxManagementDropdown', this)">
                         <strong>
-                        <x-icon name="tax" />&nbsp; Tax Management</strong>
+                        <x-icon name="tax" />&nbsp;<lable> Tax Management</lable></strong>
                         <img src="{{ asset('user_end/images/arrow-right.svg') }}" alt="arrow" class="dropdown-arrow">
                     </strong>
                     <ul id="taxManagementDropdown">
@@ -100,7 +104,7 @@ $name = Auth::guard('superadmin')->user()->name;
                 <li id="settingsLi">
                     <strong onclick="toggleDropdown('settingsDropdown', this)">
                         <strong>
-                        <x-icon name="setting" />&nbsp; Settings</strong>
+                        <x-icon name="setting" />&nbsp;<lable> Settings</lable></strong>
                         <img src="{{ asset('user_end/images/arrow-right.svg') }}" alt="arrow" class="dropdown-arrow">
                     </strong>
                     <ul id="settingsDropdown">
@@ -109,10 +113,11 @@ $name = Auth::guard('superadmin')->user()->name;
                 </li>
             </ul>
         </div>
-        <img width='100px' src="{{ asset('user_end/images/STPL Logo with TagLine HD Transparent.png') }}" alt="STPL Logo">
+        <img width='100px' src="{{ asset('user_end/images/STPL Logo with TagLine HD Transparent.png') }}" class="stpl_logo_icon1" alt="STPL Logo">
+        <img width='40px' src="{{ asset('user_end/images/STPLLogo.png') }}" alt="STPL Logo" class="stpl_logo_icon2"> 
         <div class="sidebar-footer">
-            <img src="{{ asset('admin_end/images/support.png') }}" alt="">
-            <div>
+        <img width='35px' class="help_footer_icon" src="{{ asset('admin_end/images/support.png') }}" alt=""> 
+            <div class="sidebar_footer_text">
                 <strong>Need Help?</strong> <br>
                 <small>Go to Help Center
                     <i class="bi bi-arrow-right"></i>
@@ -190,6 +195,24 @@ $name = Auth::guard('superadmin')->user()->name;
                 localStorage.setItem(`${id}-state`, 'closed');
             }
         }
+    </script>
+
+<script>
+function toggleSidebar() {
+    const sidebar = document.getElementById("mySidebar");
+    const icon = document.getElementById("sidebar-icon");
+
+    // Toggle the sidebar's collapsed state
+    sidebar.classList.toggle("collapsed");
+
+    // Toggle the icon between right arrow and left arrow
+    if (sidebar.classList.contains("collapsed")) {
+        icon.setAttribute("name", "rightarrow");
+    } else {
+        icon.setAttribute("name", "leftarrow");
+    }
+}
+
     </script>
 </body>
 </html>

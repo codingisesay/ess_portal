@@ -41,8 +41,10 @@ class permissionController extends Controller
         ->where('organisation_id',$org_id)
         ->get();
 
+    // Pass the flag to open the popup
+    $openPopup = true;
 
-        return view('superadmin_view.create_permission',compact('results','features','org_id', 'desig_id', 'b_id','permissions'));
+    return view('superadmin_view.create_permission',compact('results','features','org_id', 'desig_id', 'b_id','permissions', 'openPopup'));
     }
 
 

@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
+use App\Helpers\SalaryHelper;
 
 class salaryBoxController extends Controller
 {
@@ -334,5 +335,17 @@ class salaryBoxController extends Controller
             return redirect()->route('taxes')->with('error', 'Failed to update Tax Slab.');
         }
     }
+
+    // $salary = SalaryHelper::calculateSalary(
+    //     60000,  // Monthly Salary
+    //     30,     // Days in Month
+    //     8,      // Working Hours Per Day
+    //     20,     // Present Days
+    //     5,      // Absent Days
+    //     5       // Leave Days
+    // );
+    
+    // echo "Calculated Salary: ₹" . $salary;
+ 
 
 }

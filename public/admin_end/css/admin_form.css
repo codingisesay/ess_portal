@@ -5,22 +5,23 @@ body {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    /* padding: 40px; */
     display: flex;
+    justify-content: center;
+    /* flex-wrap: wrap; */
 }
 
 @font-face {
     font-family: 'Lato';
-    src: url('assets/lato/Lato-Regular.ttf') format('truetype'),
-        url('assets/lato/Lato-Regular.woff') format('woff');
+    src: url('../../Lato/Lato-Regular.ttf') format('truetype'),
+        url('../../lato/Lato-Regular.woff') format('woff');
     font-weight: normal;
     font-style: normal;
 }
 
 @font-face {
     font-family: 'Lato';
-    src: url('assets/lato/Lato-Bold.ttf') format('truetype'),
-        url('assets/lato/Lato-Bold.woff') format('woff');
+    src: url('../../lato/Lato-Bold.ttf') format('truetype'),
+        url('../../lato/Lato-Bold.woff') format('woff');
     font-weight: bold;
     font-style: normal;
 }
@@ -30,12 +31,45 @@ h2 {
     font-family: 'Lato', sans-serif !important;
 }
 
+/* @media (min-width: 1400px) {
+
+    .container,
+    .container-lg,
+    .container-md,
+    .container-sm,
+    .container-xl,
+    .container-xxl {
+        max-width: auto;
+    }
+} */
+
 .container {
-    width: calc(100% - 250px);
-    /* Adjust width to account for sidebar */
-    /* margin-left: 30px; */
-    /* Add left margin to make space for sidebar */
+    margin: 0;
+    /* min-width: 1220px; */
+    width: calc(100% - 270px) !important;
     padding: 0 30px;
+    box-shadow: rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px;
+}
+
+
+/* Initial styles for the sidebar */
+#mySidebar {
+    transition: width 0.3s ease;
+    /* Smooth transition for the width */
+    overflow: hidden;
+    /* To ensure no overflow happens during the transition */
+}
+
+/* Transition for the icon */
+#sidebar-icon {
+    transition: transform 0.3s ease;
+    /* Smooth transition for icon rotation */
+}
+
+/* Rotate the icon when collapsed */
+#mySidebar.collapsed #sidebar-icon {
+    transform: rotate(180deg);
+    /* Rotate the icon when collapsed */
 }
 
 /* Form Styling */
@@ -158,7 +192,8 @@ h3 {
     overflow: auto;
     height: auto;
     margin: 30px 0;
-    width: 75vw;
+    width: 100%;
+    /* 75vw; */
     box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
     /* Enable horizontal scrolling */
 }
@@ -178,6 +213,7 @@ thead {
     color: white;
 }
 
+.table>:not(caption)>*>*,
 th,
 td {
     padding: 5px 10px;
@@ -222,6 +258,11 @@ tbody tr:nth-child(even) {
     visibility: hidden;
     opacity: 0;
     transition: visibility 0s, opacity 0.3s;
+}
+
+.table-bordered {
+    width: 100%;
+    overflow: auto;
 }
 
 .popup-overlay.active {
@@ -305,6 +346,7 @@ tbody tr:nth-child(even) {
 .popup-footer button:hover {
     background-color: #702851;
 }
+
 
 /* 🔹 RESPONSIVE DESIGN */
 @media screen and (max-width: 1024px) {
