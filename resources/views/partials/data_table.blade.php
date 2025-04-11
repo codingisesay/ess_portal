@@ -1,11 +1,11 @@
 @props(['items', 'columns', 'editModalId' => null, 'perPage' => 10, 'hasActions' => false, 'hasPermision' => false])
-
+ 
 <div class="table-container">
     <!-- Add search input -->
     <div class="table-search mb-3">
         <input type="text" id="tableSearch" placeholder="Search..." class="form-control">
     </div>
-    <div class="table-bordered">
+    <div class="table-bordered sm-edit-td">
     <table id="dataTable" class="table ">
         <thead>
             <tr>
@@ -57,13 +57,15 @@
     </table>
     </div>
     <!-- Pagination Controls -->
-    <div class="pagination-container">
-        <small class="page-info">Showing Page <span class="current-page">1</span> of <span class="total-pages">1</span></small>
-        <ul class="pagination">
-            <li><a href="#" class="page-prev"><x-icon name="leftarrow" /></a></li>        
-            <li class="page-numbers"></li>     
-            <li><a href="#" class="page-next"><x-icon name="rightarrow" /></a></li>
-        </ul>
+     <div class=" ">
+        <div class="pagination-container">
+            <small class="page-info">Showing Page <span class="current-page">1</span> of <span class="total-pages">1</span></small>
+            <ul class="pagination">
+                <li><a href="#" class="page-prev "><x-icon name="leftarrow" /></a></li>        
+                <li class="page-numbers"></li>     
+                <li><a href="#" class="page-next "><x-icon name="rightarrow" /></a></li>
+            </ul>
+        </div>
     </div>
 </div>
 

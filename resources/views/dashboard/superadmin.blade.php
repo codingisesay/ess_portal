@@ -1,34 +1,20 @@
 @extends('superadmin_view/superadmin_layout')  <!-- Extending the layout file -->
-
 @section('content')  <!-- Defining the content section -->
-<div class="w3-main" style="margin-inline: auto;">
+<link rel="stylesheet" href="{{ asset('errors/error.css') }}">
 
-<div class="w3-twothird">
-  <h5>Feeds</h5>
-  <table class="w3-table w3-bordered">
-<tr>
-<th>First Name</th>
-<th>Last Name</th>
-<th>Points</th>
-</tr>
-<tr>
-<td>Jill</td>
-<td>Smith</td>
-<td>50</td>
-</tr>
-<tr>
-<td>Eve</td>
-<td>Jackson</td>
-<td>94</td>
-</tr>
-<tr>
-<td>Adam</td>
-<td>Johnson</td>
-<td>67</td>
-</tr>
-</table>
+<?php 
+$id = Auth::guard('superadmin')->user()->id;
+?>
+
+ 
+<link rel="stylesheet" href="{{ asset('admin_end/css/admin_form.css') }}">  
+<div class="container">
+  <h3>Dashboard</h2>
+  <div class="text-center">
+  <img id="sidebar-icon"  src="{{ asset('admin_end/images/dummy_dash.png') }}" />
 </div>
 </div>
-</div>
-<hr>
+ 
 @endsection
+
+

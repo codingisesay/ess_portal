@@ -53,7 +53,8 @@ $id = Auth::guard('superadmin')->user()->id;
                     <input type="text" name="name" placeholder=" " required>
                     <label>Designation Name</label>
                 </div>
-                <div class="form-group" >
+               
+                <div class="col-12">
                     <button class="create-btn" type="submit">Create Designation</button>
                 </div>
             </div>

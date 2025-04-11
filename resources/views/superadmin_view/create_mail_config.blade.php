@@ -66,7 +66,8 @@ $id = Auth::guard('superadmin')->user()->id;
                     <input type="text" name="MAIL_FROM_NAME" required>
                     <label>MAIL_FROM_NAME</label>
                 </div>
-                <div class="form-group">
+              
+                <div class="col-12">
                     <button class="create-btn" type="submit" <?php echo $status = ($mailDatas[0]->MAIL_MAILER == "") ? ('') : ('disabled');  ?>>Configure</button>
                 </div>
             </div>

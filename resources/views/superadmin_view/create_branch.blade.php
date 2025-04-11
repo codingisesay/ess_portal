@@ -85,7 +85,8 @@ $id = Auth::guard('superadmin')->user()->id;
                     <input type="text" name="country" required>
                     <label>Country</label>
                 </div>
-                <div class="form-group">
+               
+                <div class="col-12">
                     <button class="create-btn" type="submit">Create Branch</button>
                 </div>
             </div>

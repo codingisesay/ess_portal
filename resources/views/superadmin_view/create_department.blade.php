@@ -25,7 +25,8 @@
                     <input type="text" name="department_name" required>
                     <label>Department Name</label>
                 </div>
-                <div class="form-group">
+       
+                <div class="col-12">
                     <button class="create-btn" type="submit">Create Department</button>
                 </div>
             </div>
