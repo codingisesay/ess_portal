@@ -75,7 +75,8 @@ $id = Auth::guard('superadmin')->user()->id;
                     <input type="number" name="value" required>
                     <label>Value</label>
                 </div>
-                <div class="form-group">
+           
+                <div class="col-12">
                     <button class="create-btn" type="submit">Create</button>
                 </div>
             </div>

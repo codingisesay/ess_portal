@@ -58,8 +58,7 @@ $id = Auth::guard('superadmin')->user()->id;
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="{{ asset('admin_end/css/admin_form.css') }}">
-    <title>Create Policy Category</title>
+    <link rel="stylesheet" href="{{ asset('admin_end/css/admin_form.css') }}"> 
     
 </head>
 <body>

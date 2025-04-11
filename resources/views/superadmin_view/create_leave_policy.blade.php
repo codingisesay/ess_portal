@@ -125,7 +125,9 @@ $id = Auth::guard('superadmin')->user()->id;
                     <input type="number" id="category_name" name="calendra_start_for_PP" class="form-control" required>
                     <label for="category_name">Calendra Start For PP</label>
                 </div>
-                <button type="submit" class="create-btn" >Save Type</button>
+                
+                <div class="col-12">
+                <button type="submit" class="create-btn" >Save Type</button></div> 
             </form>
         </div>
  
@@ -234,7 +236,8 @@ $id = Auth::guard('superadmin')->user()->id;
                         <label for="editCalendraStartForPP">Calendra Start For PP</label>
                         <input type="number" name="calendra_start_for_PP" id="editCalendraStartForPP" required>
                     </div>
-                    <div class="popup-form-group">
+                
+                    <div class="col-12">
                         <button class="create-btn1" type="submit">Save Changes</button>
                     </div>
                 </form>

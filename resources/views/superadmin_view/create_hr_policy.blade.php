@@ -75,12 +75,12 @@ $id = Auth::guard('superadmin')->user()->id;
                     </select>
                     <label for="category_id">Status</label>
                 </div>
-                <button type="submit" class="create-btn" >Save Policy</button>
+                <div class="col-12">
+                <button type="submit" class="create-btn" >Save Policy</button></div>
             </form>
         </div>
 
-        <!-- Table 
- 
+     
     <!-- Table Section -->
     <div id="tableSection">
         @include('partials.data_table', [

@@ -189,7 +189,7 @@
 
 /* Adjust Select Element */
 .form-group select {
-    appearance: none;
+    /* appearance: none; */
     background-color: white;
 }
 
