@@ -128,34 +128,34 @@ $id = Auth::guard('superadmin')->user()->id;
                 @method('POST')
                 <input type="hidden" name="component_id" id="editSalaryComponentId">
                 <div class="popup-form-group">
-                    <label for="editSalaryComponentTemplate">Salary Template</label>
                     <select name="template_id" id="editSalaryComponentTemplate" required>
                         @foreach ($templates as $item)
                             <option value="{{ $item->id }}">{{ $item->name }}</option>
                         @endforeach
                     </select>
+                    <label for="editSalaryComponentTemplate">Salary Template</label>
                 </div>
                 <div class="popup-form-group">
-                    <label for="editSalaryComponentName">Component Name</label>
                     <input type="text" name="component_name" id="editSalaryComponentName" required>
+                    <label for="editSalaryComponentName">Component Name</label>
                 </div>
                 <div class="popup-form-group">
-                    <label for="editSalaryComponentType">Type</label>
                     <select name="component_type" id="editSalaryComponentType" required>
                         <option value="Earning">Earning</option>
                         <option value="Deduction">Deduction</option>
                     </select>
+                    <label for="editSalaryComponentType">Type</label>
                 </div>
                 <div class="popup-form-group">
-                    <label for="editSalaryComponentCalculationType">Calculation Type</label>
                     <select name="calculation_type" id="editSalaryComponentCalculationType" required>
                         <option value="Percentage">Percentage</option>
                         <option value="Fixed">Fixed</option>
                     </select>
+                    <label for="editSalaryComponentCalculationType">Calculation Type</label>
                 </div>
                 <div class="popup-form-group">
-                    <label for="editSalaryComponentValue">Value</label>
                     <input type="number" name="value" id="editSalaryComponentValue" required>
+                    <label for="editSalaryComponentValue">Value</label>
                 </div>
                 <div class="popup-form-group">
                     <button class="create-btn1" type="submit">Save Changes</button>

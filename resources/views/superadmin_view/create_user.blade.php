@@ -95,16 +95,16 @@ $id = Auth::guard('superadmin')->user()->id;
                 @csrf
                 <input type="hidden" name="user_id" id="editUserId">
                 <div class="popup-form-group">
-                    <label for="editUsername">Username</label>
                     <input type="text" name="username" id="editUsername" required>
+                    <label for="editUsername">Username</label>
                 </div>
                 <div class="popup-form-group">
-                    <label for="editEmpid">Employee ID</label>
                     <input type="text" name="empid" id="editEmpid" required>
+                    <label for="editEmpid">Employee ID</label>
                 </div>
                 <div class="popup-form-group">
-                    <label for="editUsermailid">User Email</label>
                     <input type="email" name="usermailid" id="editUsermailid" required>
+                    <label for="editUsermailid">User Email</label>
                 </div>
                 <div class="popup-form-group">
                     <button class="create-btn1" type="submit">Save Changes</button>

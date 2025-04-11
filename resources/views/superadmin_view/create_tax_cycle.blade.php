@@ -110,23 +110,23 @@ $id = Auth::guard('superadmin')->user()->id;
                 @method('POST')
                 <input type="hidden" name="tax_cycle_id" id="editTaxCycleId">
                 <div class="popup-form-group">
-                    <label for="editTaxCycleName">Name</label>
                     <input type="text" name="template_name" id="editTaxCycleName" required>
+                    <label for="editTaxCycleName">Name</label>
                 </div>
                 <div class="popup-form-group">
-                    <label for="editTaxCycleFrom">From</label>
                     <input type="datetime-local" name="from" id="editTaxCycleFrom" required>
+                    <label for="editTaxCycleFrom">From</label>
                 </div>
                 <div class="popup-form-group">
-                    <label for="editTaxCycleTo">To</label>
                     <input type="datetime-local" name="to" id="editTaxCycleTo" required>
+                    <label for="editTaxCycleTo">To</label>
                 </div>
                 <div class="popup-form-group">
-                    <label for="editTaxCycleStatus">Status</label>
                     <select name="status" id="editTaxCycleStatus" required>
                         <option value="Active">Active</option>
                         <option value="Inactive">Inactive</option>
                     </select>
+                    <label for="editTaxCycleStatus">Status</label>
                 </div>
                 <div class="popup-form-group">
                     <button class="create-btn1" type="submit">Save Changes</button>

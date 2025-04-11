@@ -124,29 +124,28 @@ $id = Auth::guard('superadmin')->user()->id;
                 <h2>Edit HR Policy</h2>
             </header>
             <div class="w3-container">
-            <!--use id to save data as post method -->
-                 <form id="editHRPolicyForm" method="POST">  
+                <form id="editHRPolicyForm" method="POST">  
                     @csrf
                     @method('POST')
                     <input type="hidden" name="policy_id" id="editHRPolicyId">
                     <div class="popup-form-group">
-                        <label for="editHRPolicyTitle">Policy Title</label>
                         <input type="text" name="policy_title" id="editHRPolicyTitle" required>
+                        <label for="editHRPolicyTitle">Policy Title</label>
                     </div>
                     <div class="popup-form-group">
-                        <label for="editHRPolicyCategory">Select Category</label>
                         <select name="category_id" id="editHRPolicyCategory" required>
                             @foreach($categories as $category)
                                 <option value="{{ $category->id }}">{{ $category->name }}</option>
                             @endforeach
                         </select>
+                        <label for="editHRPolicyCategory">Select Category</label>
                     </div>
                     <div class="popup-form-group">
-                        <label for="editHRPolicyStatus">Status</label>
                         <select name="status" id="editHRPolicyStatus" required>
                             <option value="Active">Active</option>
                             <option value="Inactive">Inactive</option>
                         </select>
+                        <label for="editHRPolicyStatus">Status</label>
                     </div>
                     <div class="popup-form-group">
                         <button class="create-btn1" type="submit">Save Changes</button>
