@@ -40,50 +40,83 @@ $id = Auth::guard('superadmin')->user()->id;
 
         <form method="POST" action="{{ route('insert_branch') }}">
             @csrf
-            <div class="form-container">
-                <div class="form-group">
-                    <input type="text" name="branchname" required>
-                    <label>Branch Name</label>
+            <div class="form-container row">
+                <div class="col-3 mb-4">
+                    <div class="form-group">
+                        <input type="text" name="branchname" required>
+                        <label>Branch Name</label>
+                    
+                    </div>
                 </div>
-                <div class="form-group">
-                    <input type="text" name="mobile" required>
-                    <label>Mobile</label>
+                <div class="col-3 mb-4">
+                    <div class="form-group">
+                        <input type="text" name="mobile" required>
+                        <label>Mobile</label>
+                    
+                    </div>
                 </div>
-                <div class="form-group">
-                    <input type="email" name="branchmailid" required>
-                    <label>Branch Email</label>
+                <div class="col-3 mb-4">
+                    <div class="form-group">
+                        <input type="email" name="branchmailid" required>
+                        <label>Branch Email</label>
+                    
+                    </div>
                 </div>
-                <div class="form-group">
-                    <input type="text" name="Building_No" value="" required>
-                    <label>Building No</label>
+                <div class="col-3 mb-4">
+                    <div class="form-group">
+                        <input type="text" name="Building_No" value="" required>
+                        <label>Building No</label>
+                    
+                    </div>
                 </div>
-                <div class="form-group">
-                    <input type="text" name="premises_name" required>
-                    <label>Premises Name</label>
+                <div class="col-3 mb-4">
+                    <div class="form-group">
+                        <input type="text" name="premises_name" required>
+                        <label>Premises Name</label>
+                    
+                    </div>
                 </div>
-                <div class="form-group">
-                    <input type="text" name="landmark" required>
-                    <label>Landmark</label>
+                <div class="col-3 mb-4">
+                    <div class="form-group">
+                        <input type="text" name="landmark" required>
+                        <label>Landmark</label>
+                    
+                    </div>
                 </div>
-                <div class="form-group">
-                    <input type="text" name="road_street" required>
-                    <label>Road Street</label>
+                <div class="col-3 mb-4">
+                    <div class="form-group">
+                        <input type="text" name="road_street" required>
+                        <label>Road Street</label>
+                    
+                    </div>
                 </div>
-                <div class="form-group">
-                    <input type="text" name="pincode" required>
-                    <label>Pincode</label>
+                <div class="col-3 mb-4">
+                    <div class="form-group">
+                        <input type="text" name="pincode" required>
+                        <label>Pincode</label>
+                    
+                    </div>
                 </div>
-                <div class="form-group">
-                    <input type="text" name="district" required>
-                    <label>District</label>
+                <div class="col-3 mb-4">
+                    <div class="form-group">
+                        <input type="text" name="district" required>
+                        <label>District</label>
+                    
+                    </div>
                 </div>
-                <div class="form-group">
-                    <input type="text" name="state" required>
-                    <label>State</label>
+                <div class="col-3 mb-4">
+                    <div class="form-group">
+                        <input type="text" name="state" required>
+                        <label>State</label>
+                    
+                    </div>
                 </div>
-                <div class="form-group">
-                    <input type="text" name="country" required>
-                    <label>Country</label>
+                <div class="col-3 mb-4">
+                    <div class="form-group">
+                        <input type="text" name="country" required>
+                        <label>Country</label>
+                    
+                    </div>
                 </div>
                
                 <div class="col-12">
