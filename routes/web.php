@@ -123,6 +123,8 @@ Route::middleware(['auth.superadmin'])->group(function () {
     Route::post('superadmin/update_salary_component/{id}', [salaryBoxController::class, 'updateSalaryComponent'])->name('update_salary_component');
     Route::post('superadmin/update_tax_cycle/{id}', [salaryBoxController::class, 'updateTaxCycle'])->name('update_tax_cycle');
     Route::post('superadmin/update_tax_slab/{id}', [salaryBoxController::class, 'updateTaxSlab'])->name('update_tax_slab');
+
+   
     
 });
 
@@ -236,7 +238,9 @@ Route::middleware(['auth'])->group(function () {
        Route::post('user/insert_leave',[leavePolicyController::class,'insertLeave'])->name('insert_leave');
        Route::put('user/update_leave_status/{id}',[leavePolicyController::class,'updateLeaveStatusByUser'])->name('update_leave_status_by_user');
      
+ //routes for userend payroll
 
+ Route::get('user/PayRollDashboard',[salaryBoxController::class,'loadDashboard'])->name('PayRollDashboard');
    
 });
 

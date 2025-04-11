@@ -98,27 +98,30 @@ h3 {
 }
 
 .form-container {
-    display: flex;
+    /* display: flex;
     flex-wrap: wrap;
-    gap: 40px;
+    gap: 40px; */
     margin: 30px 0;
     background-color: white;
-    padding: 20px;
+    padding: 30px 20px;
     border-radius: 10px;
     box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
 }
 
 .form-group {
     position: relative;
-    width: calc(45.75% - 15%);
+    position: relative;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    padding: inherit;
+    /* width: calc(45.75% - 15%); */
 }
 
 .form-group input,
 .form-group select {
     width: 100%;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
+    padding: 7px 10px;
+    border: none;
     font-size: 16px;
     background: transparent;
     outline: none;
@@ -138,14 +141,6 @@ h3 {
     transition: all 0.3s ease;
 }
 
-.form-control:focus {
-    color: inherit;
-    border-color: none;
-    outline: 0;
-    box-shadow: 0 0 0 .25rem rgba(13, 110, 253, .25);
-
-}
-
 /* Floating Labels Effect */
 .form-group input:focus+label,
 .form-group input:valid+label,
@@ -153,7 +148,7 @@ h3 {
 .form-group select:valid+label {
     top: 0px;
     left: 10px;
-    font-size: 15px;
+    font-size: 14px;
     color: #000000;
 }
 
@@ -170,12 +165,11 @@ h3 {
     background-color: #8A3366;
     color: white;
     border: none;
-    padding: 8px 20px 10px 20px;
+    padding: 5px 20px 8px 20px;
     border-radius: 5px;
     font-size: 16px;
     cursor: pointer;
     display: block;
-    margin-top: -25px;
     margin-left: auto;
 }
 
@@ -352,13 +346,6 @@ tbody tr:nth-child(even) {
 }
 
 
-/* 🔹 RESPONSIVE DESIGN */
-@media screen and (max-width: 1024px) {
-    .form-group {
-        width: calc(50% - 10px);
-        /* 2 fields per row */
-    }
-}
 
 @media screen and (max-width: 768px) {
     body {

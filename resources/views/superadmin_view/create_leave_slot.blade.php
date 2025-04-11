@@ -25,26 +25,36 @@ $id = Auth::guard('superadmin')->user()->id;
 
         <!-- Form Section -->
         <div id="formSection" >
-            <form action="{{ route('insert_policy_slot') }}" method="POST" class="form-container">
+            <form action="{{ route('insert_policy_slot') }}" method="POST" >
                 @csrf
-                <div class="form-group">
-                    <input type="text" id="category_name" name="cycle_name" class="form-control" required>
-                    <label for="category_name">Cycle Name</label>
-                </div>
-                <div class="form-group">
-                    <input type="datetime-local" id="category_name" name="start_date_time" class="form-control" required>
-                    <label for="category_name">Start Date Time</label>
-                </div>
-                <div class="form-group">
-                    <input type="datetime-local" id="category_name" name="end_date_time" class="form-control" required>
-                    <label for="category_name">End Date Time</label>
-                </div>
-                <div class="form-group">
-                    <input id="text" id="category_name" name="year_slot" class="form-control" required>
-                    <label for="year">Input Year: (EX: 2025-26)</label>
-                </div>
-                <div class="col-12">
-                <button type="submit" class="create-btn" >Save Cycle</button>
+                <div class="form-container row">
+                    <div class="col-3 mb-4">
+                    <div class="form-group">
+                        <input type="text" id="category_name" name="cycle_name" class="form-control" required>
+                        <label for="category_name">Cycle Name</label>
+                    </div>
+</div>
+                    <div class="col-3 mb-4">
+                    <div class="form-group">
+                        <input type="datetime-local" id="category_name" name="start_date_time" class="form-control" required>
+                        <label for="category_name">Start Date Time</label>
+                    </div>
+</div>
+                    <div class="col-3 mb-4">
+                    <div class="form-group">
+                        <input type="datetime-local" id="category_name" name="end_date_time" class="form-control" required>
+                        <label for="category_name">End Date Time</label>
+                    </div>
+</div>
+                    <div class="col-3 mb-4">
+                    <div class="form-group">
+                        <input id="text" id="category_name" name="year_slot" class="form-control" required>
+                        <label for="year">Input Year: (EX: 2025-26)</label>
+                    </div>
+</div>
+                    <div class="col-12">
+                    <button type="submit" class="create-btn" >Save Cycle</button>
+                    </div>
                 </div>
             </form>
         </div>

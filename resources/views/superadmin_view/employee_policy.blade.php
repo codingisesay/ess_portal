@@ -23,36 +23,47 @@ $id = Auth::guard('superadmin')->user()->id;
 
         <!-- Form Section -->
         <div id="formSection" >
-            <form action="{{route('insert_emp_restriction')}}" method="POST" class="form-container">
+            <form action="{{route('insert_emp_restriction')}}" method="POST">
                 @csrf
-                <div class="form-group">
-                    <select id="category_id" name="restriction_id" class="form-control" required>
-                        <option value="" disabled selected></option>
-                        @foreach ($dataFromLeaveRestctions as $dataFromLeaveRestction)
-                            <option value="{{ $dataFromLeaveRestction->leave_restriction_id }}">{{ $dataFromLeaveRestction->leave_type }}</option>
-                        @endforeach
-                    </select>
-                    <label for="category_name">Leave Type</label>
+                <div  class="form-container row">
+                    <div class="col-3 mb-4">
+                        <div class="form-group">
+                            <select id="category_id" name="restriction_id" class="form-control" required>
+                                <option value="" disabled selected></option>
+                                @foreach ($dataFromLeaveRestctions as $dataFromLeaveRestction)
+                                    <option value="{{ $dataFromLeaveRestction->leave_restriction_id }}">{{ $dataFromLeaveRestction->leave_type }}</option>
+                                @endforeach
+                            </select>
+                            <label for="category_name">Leave Type</label>
+                        </div>
+                    </div>
+                    <div class="col-3 mb-4">
+                        <div class="form-group">
+                            <select id="category_id" name="emp_id" class="form-control" required>
+                                <option value="" disabled selected></option>
+                                @foreach ($empTypes as $empType)
+                                    <option value="{{ $empType->id }}">{{ $empType->name }}</option>
+                                @endforeach
+                            </select>
+                            <label for="category_name">Employee Type</label>
+                        </div>
+                    </div>
+                    <div class="col-3 mb-4">
+                        <div class="form-group">
+                            <input type="number" id="category_name" name="leave_count" class="form-control" required>
+                            <label for="category_name">Leave Count</label>
+                        </div>
+                    </div>
+                    <div class="col-3 mb-4">
+                        <div class="form-group">
+                            <input type="number" id="date" name="month_start" class="form-control" required max="30" oninput="validateInput(this)">
+                            <label for="year">Month Start</label>
+                        </div>
+                    </div>
+                    <div class="col-12">
+                    <button type="submit" class="create-btn" >Save Cycle</button>
+                    </div>
                 </div>
-                <div class="form-group">
-                    <select id="category_id" name="emp_id" class="form-control" required>
-                        <option value="" disabled selected></option>
-                        @foreach ($empTypes as $empType)
-                            <option value="{{ $empType->id }}">{{ $empType->name }}</option>
-                        @endforeach
-                    </select>
-                    <label for="category_name">Employee Type</label>
-                </div>
-                <div class="form-group">
-                    <input type="number" id="category_name" name="leave_count" class="form-control" required>
-                    <label for="category_name">Leave Count</label>
-                </div>
-                <div class="form-group">
-                    <input type="number" id="date" name="month_start" class="form-control" required max="30" oninput="validateInput(this)">
-                    <label for="year">Month Start</label>
-                </div>
-                <div class="col-12">
-                <button type="submit" class="create-btn" >Save Cycle</button></div>
             </form>
         </div>
  

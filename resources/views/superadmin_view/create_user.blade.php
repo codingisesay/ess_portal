@@ -33,31 +33,37 @@ $id = Auth::guard('superadmin')->user()->id;
     <div id="formSection" >
         <form action="{{ route('register_save') }}" method="POST">
             @csrf
-            <div class="form-container">
+            <div class="form-container row">
+                <div class="col-3 mb-2">
                 <div class="form-group">
                     <input type="hidden" name="organisation_id" value="{{$id}}">
                     <input type="text" name="username" required>
                     <label>Name</label>
                 </div>
+                </div>
+                <div class="col-3 mb-2">
                 <div class="form-group">
                     <input type="text" name="empid" required>
                     <label>Company Emp ID</label>
                 </div>
+                </div>
+                <div class="col-3 mb-2">
                 <div class="form-group">
                     <input type="email" name="usermailid" required>
                     <label>Email</label>
                 </div>
+                </div>
+                <div class="col-3 mb-2">
                 <div class="form-group">
                     <input type="text" id="passwordField" name="userpassword" readonly>
-                    <label>Password</label>
+                    <label>Password</label> 
                 </div>
-                <div class="form-group">
-                    <a href="#" onclick="generateAndDisplayPassword()">Generate Password</a>
+                <small> <a href="#" onclick="generateAndDisplayPassword()">Generate Password</a></small>
                 </div>
-                
+                 
                 <div class="col-12">
                 <button class="create-btn" type="submit">Create User</button>
-                </div>
+            </div>
             </div>
         </form>
     </div>

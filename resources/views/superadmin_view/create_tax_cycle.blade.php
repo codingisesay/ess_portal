@@ -39,27 +39,35 @@ $id = Auth::guard('superadmin')->user()->id;
     <div id="formSection" >
     <form method="POST" action="{{ route('insert_tax_cycle') }}">
         @csrf
-        <div class="form-container">
-            <div class="form-group">
-                <input type="text" name="template_name" required>
-                <label>Name</label>
+        <div class="form-container row">
+            <div class="col-3 mb-4">
+                <div class="form-group">
+                    <input type="text" name="template_name" required>
+                    <label>Name</label>
+                </div>
             </div>
-            <div class="form-group">
-                <input type="datetime-local" name="from">
-                <label>From</label>
+            <div class="col-3 mb-4">
+                <div class="form-group">
+                    <input type="datetime-local" name="from" required >
+                    <label>From Date</label>
+                </div>
             </div>
-            <div class="form-group">
-                <input type="datetime-local" name="to" required>
-                <label>To</label>
+            <div class="col-3 mb-4">
+                <div class="form-group">
+                    <input type="datetime-local" name="to" required >
+                    <label>Till Date</label>
+                </div>
             </div>
-            <div class="form-group">
-                <select name="status" required>
-                    <option value="" disabled selected></option>
-                    <option value="Active">Active</option>
-                    <option value="Inactive">Inactive</option>
-                   
-                </select>
-                <label>Status</label>
+            <div class="col-3 mb-4">
+                <div class="form-group">
+                    <select name="status" required>
+                        <option value="" disabled selected></option>
+                        <option value="Active">Active</option>
+                        <option value="Inactive">Inactive</option>
+                    
+                    </select>
+                    <label>Status</label>
+                </div>
             </div>
       
             <div class="col-12">
