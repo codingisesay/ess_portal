@@ -19,13 +19,14 @@
     <div id="formSection" style="display: none;">
         <form method="POST" action="{{ route('insert_department') }}">
             @csrf
-            <div class="form-container">
-                <div class="form-group">
-                    <input type="hidden" name="organisation_id" value="{{ Auth::guard('superadmin')->user()->id }}">
-                    <input type="text" name="department_name" required>
-                    <label>Department Name</label>
+            <div class="form-container row">
+                <div class="col-3 mb-4">
+                    <div class="form-group">
+                        <input type="hidden" name="organisation_id" value="{{ Auth::guard('superadmin')->user()->id }}">
+                        <input type="text" name="department_name" required>
+                        <label>Department Name</label>
+                    </div>
                 </div>
-       
                 <div class="col-12">
                     <button class="create-btn" type="submit">Create Department</button>
                 </div>

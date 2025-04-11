@@ -34,39 +34,49 @@ $id = Auth::guard('superadmin')->user()->id;
             </div>
             @endif
 
-            <form action="{{ route('insert_policy_type') }}" method="POST" enctype="multipart/form-data" class="form-container">
+            <form action="{{ route('insert_policy_type') }}" method="POST" enctype="multipart/form-data">
                 @csrf
-                <div class="form-group">
-                    <select id="category_id" name="cycle_slot_id" class="form-control" required>
-                        <option value="" disabled selected></option>
-                        @foreach ($leaveCycleDatas as $leaveCycleData)
-                        <option value="{{$leaveCycleData->id}}">{{ $leaveCycleData->name }}</option>
-                        @endforeach
-                    </select>
-                    <label for="category_id">Select Cycle</label>
+                <div  class="form-container row">
+                    <div class="col-3 mb-4">
+                        <div class="form-group">
+                            <select id="category_id" name="cycle_slot_id" class="form-control" required>
+                                <option value="" disabled selected></option>
+                                @foreach ($leaveCycleDatas as $leaveCycleData)
+                                <option value="{{$leaveCycleData->id}}">{{ $leaveCycleData->name }}</option>
+                                @endforeach
+                            </select>
+                            <label for="category_id">Select Cycle</label>
+                        </div>
+                    </div>
+                    <div class="col-3 mb-4">
+                        <div class="form-group">
+                            <input type="text" id="category_name" name="leave_category" class="form-control" required>
+                            <label for="category_name">Leave Type Name</label>
+                        </div>
+                    </div>
+                    <div class="col-3 mb-4">
+                        <div class="form-group">
+                            <select id="category_id" name="half_day_status" class="form-control" required>
+                                <option value="" disabled selected></option>
+                                <option value="Yes">Yes</option>
+                                <option value="No">No</option>
+                            </select>
+                            <label for="category_name">Half Day Applicable?</label>
+                        </div>
+                    </div>
+                    <div class="col-3 mb-4">
+                        <div class="form-group">
+                            <select id="category_id" name="status" class="form-control" required>
+                                <option value="" disabled selected></option>
+                                <option value="Active">Active</option>
+                                <option value="Inactive">Inactive</option>
+                            </select>
+                            <label for="category_id">Status</label>
+                        </div>
+                    </div>
+                    <div class="col-12">
+                    <button type="submit" class="create-btn" >Save Type</button></div>
                 </div>
-                <div class="form-group">
-                    <input type="text" id="category_name" name="leave_category" class="form-control" required>
-                    <label for="category_name">Leave Type Name</label>
-                </div>
-                <div class="form-group">
-                    <select id="category_id" name="half_day_status" class="form-control" required>
-                        <option value="" disabled selected></option>
-                        <option value="Yes">Yes</option>
-                        <option value="No">No</option>
-                    </select>
-                    <label for="category_name">Half Day Applicable?</label>
-                </div>
-                <div class="form-group">
-                    <select id="category_id" name="status" class="form-control" required>
-                        <option value="" disabled selected></option>
-                        <option value="Active">Active</option>
-                        <option value="Inactive">Inactive</option>
-                    </select>
-                    <label for="category_id">Status</label>
-                </div>
-                <div class="col-12">
-                <button type="submit" class="create-btn" >Save Type</button></div>
             </form>
         </div>
     

@@ -41,39 +41,49 @@ $id = Auth::guard('superadmin')->user()->id;
 
         <form method="POST" action="{{ route('insert_salary_Components') }}">
             @csrf
-            <div class="form-container">
-                <div class="form-group">
-                    <select name="template_id" required>
-                        <option value="" disabled selected></option>
-                        @foreach ($templates as $item)
-                            <option value="{{ $item->id }}">{{ $item->name }}</option>
-                        @endforeach
-                    </select>
-                    <label>Salary Template</label>
+            <div class="form-container row">
+                <div class="col-3 mb-4">
+                    <div class="form-group">
+                        <select name="template_id" required>
+                            <option value="" disabled selected></option>
+                            @foreach ($templates as $item)
+                                <option value="{{ $item->id }}">{{ $item->name }}</option>
+                            @endforeach
+                        </select>
+                        <label>Salary Template</label>
+                    </div>
                 </div>
-                <div class="form-group">
-                    <input type="component_name" name="component_name" required>
-                    <label>Component Name</label>
+                <div class="col-3 mb-4">
+                    <div class="form-group">
+                        <input type="component_name" name="component_name" required>
+                        <label>Component Name</label>
+                    </div>
                 </div>
-                <div class="form-group">
-                    <select name="component_type" required>
-                        <option value="" disabled selected></option>
-                        <option value="Earning">Earning</option>
-                        <option value="Deduction">Deduction</option>
-                    </select>
-                    <label>Type</label>
+                <div class="col-3 mb-4">
+                    <div class="form-group">
+                        <select name="component_type" required>
+                            <option value="" disabled selected></option>
+                            <option value="Earning">Earning</option>
+                            <option value="Deduction">Deduction</option>
+                        </select>
+                        <label>Type</label>
+                    </div>
                 </div>
-                <div class="form-group">
-                    <select name="calculation_type" required>
-                        <option value="" disabled selected></option>
-                        <option value="Percentage">Percentage</option>
-                        <option value="Fixed">Fixed</option>
-                    </select>
-                    <label>Calculation Type</label>
+                <div class="col-3 mb-4">
+                    <div class="form-group">
+                        <select name="calculation_type" required>
+                            <option value="" disabled selected></option>
+                            <option value="Percentage">Percentage</option>
+                            <option value="Fixed">Fixed</option>
+                        </select>
+                        <label>Calculation Type</label>
+                    </div>
                 </div>
-                <div class="form-group">
-                    <input type="number" name="value" required>
-                    <label>Value</label>
+                <div class="col-3 mb-4">
+                    <div class="form-group">
+                        <input type="number" name="value" required>
+                        <label>Value</label>
+                    </div>
                 </div>
            
                 <div class="col-12">

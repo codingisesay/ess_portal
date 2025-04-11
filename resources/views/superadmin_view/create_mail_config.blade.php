@@ -32,39 +32,55 @@ $id = Auth::guard('superadmin')->user()->id;
     <div id="formSection" >
         <form action="{{ route('insert_configuration') }}" method="POST">
             @csrf
-            <div class="form-container">
-                <div class="form-group">
-                    <input type="hidden" name="organisation_id" value="{{$id}}">
-                    <input type="text" name="MAIL_MAILER" required>
-                    <label>MAIL_MAILER</label>
+            <div class="form-container row">
+                <div class="col-3 mb-4">
+                    <div class="form-group">
+                        <input type="hidden" name="organisation_id" value="{{$id}}">
+                        <input type="text" name="MAIL_MAILER" required>
+                        <label>MAIL_MAILER</label>
+                    </div>
                 </div>
-                <div class="form-group">
-                    <input type="text" name="MAIL_HOST" required>
-                    <label>MAIL_HOST</label>
+                <div class="col-3 mb-4">
+                    <div class="form-group">
+                        <input type="text" name="MAIL_HOST" required>
+                        <label>MAIL_HOST</label>
+                    </div>
                 </div>
-                <div class="form-group">
-                    <input type="text" name="MAIL_PORT" required>
-                    <label>MAIL_PORT</label>
+                <div class="col-3 mb-4">
+                    <div class="form-group">
+                        <input type="text" name="MAIL_PORT" required>
+                        <label>MAIL_PORT</label>
+                    </div>
                 </div>
-                <div class="form-group">
-                    <input type="text" name="MAIL_USERNAME" required>
-                    <label>MAIL_USERNAME</label>
+                <div class="col-3 mb-4">
+                    <div class="form-group">
+                        <input type="text" name="MAIL_USERNAME" required>
+                        <label>MAIL_USERNAME</label>
+                    </div>
                 </div>
-                <div class="form-group">
-                    <input type="text" name="MAIL_PASSWORD" required>
-                    <label>MAIL_PASSWORD</label>
+                <div class="col-3 mb-4">
+                    <div class="form-group">
+                        <input type="text" name="MAIL_PASSWORD" required>
+                        <label>MAIL_PASSWORD</label>
+                    </div>
                 </div>
-                <div class="form-group">
-                    <input type="text" name="MAIL_ENCRYPTION" required>
-                    <label>MAIL_ENCRYPTION</label>
+                <div class="col-3 mb-4">
+                    <div class="form-group">
+                        <input type="text" name="MAIL_ENCRYPTION" required>
+                        <label>MAIL_ENCRYPTION</label>
+                    </div>
                 </div>
-                <div class="form-group">
-                    <input type="text" name="MAIL_FROM_ADDRESS" required>
-                    <label>MAIL_FROM_ADDRESS</label>
+                <div class="col-3 mb-4">
+                    <div class="form-group">
+                        <input type="text" name="MAIL_FROM_ADDRESS" required>
+                        <label>MAIL_FROM_ADDRESS</label>
+                    </div>
                 </div>
-                <div class="form-group">
-                    <input type="text" name="MAIL_FROM_NAME" required>
-                    <label>MAIL_FROM_NAME</label>
+                <div class="col-3 mb-4">
+                    <div class="form-group">
+                        <input type="text" name="MAIL_FROM_NAME" required>
+                        <label>MAIL_FROM_NAME</label>
+                    </div>
                 </div>
               
                 <div class="col-12">

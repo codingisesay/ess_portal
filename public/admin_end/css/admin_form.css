@@ -110,6 +110,10 @@ h3 {
 
 .form-group {
     position: relative;
+    position: relative;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    padding: inherit;
     /* width: calc(45.75% - 15%); */
 }
 
@@ -117,8 +121,7 @@ h3 {
 .form-group select {
     width: 100%;
     padding: 7px 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
+    border: none;
     font-size: 16px;
     background: transparent;
     outline: none;
@@ -167,7 +170,6 @@ h3 {
     font-size: 16px;
     cursor: pointer;
     display: block;
-    margin-top: 20px;
     margin-left: auto;
 }
 
@@ -344,13 +346,6 @@ tbody tr:nth-child(even) {
 }
 
 
-/* 🔹 RESPONSIVE DESIGN */
-@media screen and (max-width: 1024px) {
-    .form-group {
-        width: calc(50% - 10px);
-        /* 2 fields per row */
-    }
-}
 
 @media screen and (max-width: 768px) {
     body {
