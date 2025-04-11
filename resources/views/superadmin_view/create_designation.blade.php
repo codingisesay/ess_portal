@@ -29,29 +29,35 @@ $id = Auth::guard('superadmin')->user()->id;
     <div id="formSection" >
         <form method="POST" action="{{ route('insert_designation') }}">
             @csrf
-            <div class="form-container">
-                <div class="form-group">
-                    <input type="hidden" name="organisation_id" value="{{$id}}">
-                    <select name="department_id" required>
-                        <option value="" disabled selected></option>
-                        @foreach ($departments as $department)
-                            <option value="{{ $department->id }}">{{ $department->name }}</option>
-                        @endforeach
-                    </select>
-                    <label>Department</label>
+            <div class="form-container row">
+                <div class="col-3 mb-4">
+                    <div class="form-group">
+                        <input type="hidden" name="organisation_id" value="{{$id}}">
+                        <select name="department_id" required>
+                            <option value="" disabled selected></option>
+                            @foreach ($departments as $department)
+                                <option value="{{ $department->id }}">{{ $department->name }}</option>
+                            @endforeach
+                        </select>
+                        <label>Department</label>
+                    </div>
                 </div>
-                <div class="form-group">
-                    <select name="branch_id" required>
-                        <option value="" disabled selected></option>
-                        @foreach ($branches as $branch)
-                            <option value="{{ $branch->id }}">{{ $branch->name }}</option>
-                        @endforeach
-                    </select>
-                    <label>Location Name</label>
+                <div class="col-3 mb-4">
+                    <div class="form-group">
+                        <select name="branch_id" required>
+                            <option value="" disabled selected></option>
+                            @foreach ($branches as $branch)
+                                <option value="{{ $branch->id }}">{{ $branch->name }}</option>
+                            @endforeach
+                        </select>
+                        <label>Location Name</label>
+                    </div>
                 </div>
-                <div class="form-group">
-                    <input type="text" name="name" placeholder=" " required>
-                    <label>Designation Name</label>
+                <div class="col-3 mb-4">                    
+                    <div class="form-group">
+                        <input type="text" name="name" placeholder=" " required>
+                        <label>Designation Name</label>
+                    </div>
                 </div>
                
                 <div class="col-12">

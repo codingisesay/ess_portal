@@ -44,90 +44,115 @@ $id = Auth::guard('superadmin')->user()->id;
 
          <!-- Form Section -->
         <div id="formSection" style="display: none;">
-            <form action="{{ route('insertPolicyConf') }}" method="POST" enctype="multipart/form-data" class="form-container">
+            <form action="{{ route('insertPolicyConf') }}" method="POST" enctype="multipart/form-data" >
                 @csrf
-                <div class="form-group">
-                    <select id="category_id" name="leave_type_id" class="form-control" required>
-                        <option value="" disabled selected></option>
-                        @foreach ($results as $result)
-                            <option value="{{ $result->leave_type_id }}">{{ $result->leave_type }}</option>
-                        @endforeach
-                    </select>
-                    <label for="category_id">Select Leave Type</label>
-                </div>
-                <div class="form-group">
-                    <input type="number" id="category_name" name="max_leave_count" class="form-control" required>
-                    <label for="category_name">Max Leave</label>
-                </div>
-                <div class="form-group">
-                    <input type="number" id="category_name" name="max_leave_at_time" class="form-control" required>
-                    <label for="category_name">Max Leave At Time</label>
-                </div>
-                <div class="form-group">
-                    <input type="number" id="category_name" name="min_leave_at_time" class="form-control" required step="0.5">
-                    <label for="category_name">Min Leave At Time</label>
-                </div>
+                <div class="form-container row">
+                    <div class="col-3 mb-4">
+                        <div class="form-group">
+                            <select id="category_id" name="leave_type_id" class="form-control" required>
+                                <option value="" disabled selected></option>
+                                @foreach ($results as $result)
+                                    <option value="{{ $result->leave_type_id }}">{{ $result->leave_type }}</option>
+                                @endforeach
+                            </select>
+                            <label for="category_id">Select Leave Type</label>
+                        </div>
+                    </div>
+                    <div class="col-3 mb-4">
+                        <div class="form-group">
+                            <input type="number" id="category_name" name="max_leave_count" class="form-control" required>
+                            <label for="category_name">Max Leave</label>
+                        </div>
+                    </div>
+                    <div class="col-3 mb-4">
+                        <div class="form-group">
+                            <input type="number" id="category_name" name="max_leave_at_time" class="form-control" required>
+                            <label for="category_name">Max Leave At Time</label>
+                        </div>
+                    </div>
+                    <div class="col-3 mb-4">
+                        <div class="form-group">
+                            <input type="number" id="category_name" name="min_leave_at_time" class="form-control" required step="0.5">
+                            <label for="category_name">Min Leave At Time</label>
+                        </div> 
+                    </div>
+                    <div class="col-3 mb-4">
+                        <div class="form-group">
+                            <input type="number" id="category_name" name="leave_count_per_month" class="form-control" required step="0.5">
+                            <label for="category_name">Leave Count Per Month</label>
+                        </div> 
+                    </div>
+                    <div class="col-3 mb-4">
+                        <div class="form-group">
+                            <input type="number" id="category_name" name="no_of_leaves_per_month" class="form-control" required step="0.5">
+                            <label for="category_name">No of Times Per Months</label>
+                        </div> 
+                    </div>
+                    <div class="col-3 mb-4">
+                        <div class="form-group">
+                            <select id="category_id" name="is_carry_forward" class="form-control" required>
+                                <option value="" disabled selected></option>
+                                <option value="Yes">Yes</option>
+                                <option value="No">No</option> 
+                            </select>
+                            <label for="category_name">Is Carry Forward?</label>
+                        </div>
+                    </div>
+                    <div class="col-3 mb-4">
+                        <div class="form-group">
+                            <input type="number" id="category_name" name="no_of_carry_forward" class="form-control" required>
+                            <label for="category_name">No. Of Carry Forward</label>
+                        </div>
+                    </div>
+                    <div class="col-3 mb-4">
+                        <div class="form-group">
+                            <select id="category_id" name="leave_encash" class="form-control" required>
+                                <option value="" disabled selected></option>
+                                <option value="Yes">Yes</option>
+                                <option value="No">No</option> 
+                            </select>
+                            <label for="category_name">Is Leave Encash?</label>
+                        </div>
+                    </div>
+                    <div class="col-3 mb-4">
+                        <div class="form-group">
+                            <input type="number" id="category_name" name="leave_encash_count" class="form-control" required>
+                            <label for="category_name">No. Of Leave Encash</label>
+                        </div> 
+                    </div>
+                    <div class="col-3 mb-4">
+                        <div class="form-group">
+                            <select id="category_id" name="provision_status" class="form-control" required>
+                                <option value="" disabled selected></option>
+                                <option value="Applicable">Applicable</option>
+                                <option value="Not Applicable">Not Applicable</option> 
+                            </select>
+                            <label for="category_name">Provision Status</label>
+                        </div> 
+                    </div>
+                    <div class="col-3 mb-4">
+                        <div class="form-group">
+                            <input type="number" id="category_name" name="max_leave_pp" class="form-control" required>
+                            <label for="category_name">Max Leave Probation Period</label>
+                        </div>
+                    </div>
+                    <div class="col-3 mb-4">
+                        <div class="form-group">
+                            <input type="number" id="category_name" name="probation_period_per_month" class="form-control" required>
+                            <label for="category_name">Probation Period Per Month</label>
+                        </div> 
+                    </div>
+                    <div class="col-3 mb-4">
+                        <div class="form-group">
+                            <input type="number" id="category_name" name="calendra_start_for_PP" class="form-control" required>
+                            <label for="category_name">Calendra Start For PP</label>
+                        </div>
+                    </div>
+                    
+                    <div class="col-12">
+                    <button type="submit" class="create-btn" >Save Type</button></div> 
 
-                <div class="form-group">
-                    <input type="number" id="category_name" name="leave_count_per_month" class="form-control" required step="0.5">
-                    <label for="category_name">Leave Count Per Month</label>
                 </div>
-
-                <div class="form-group">
-                    <input type="number" id="category_name" name="no_of_leaves_per_month" class="form-control" required step="0.5">
-                    <label for="category_name">No of Times Per Months</label>
-                </div>
-
-                <div class="form-group">
-                    <select id="category_id" name="is_carry_forward" class="form-control" required>
-                        <option value="" disabled selected></option>
-                        <option value="Yes">Yes</option>
-                        <option value="No">No</option> 
-                    </select>
-                    <label for="category_name">Is Carry Forward?</label>
-                </div>
-                <div class="form-group">
-                    <input type="number" id="category_name" name="no_of_carry_forward" class="form-control" required>
-                    <label for="category_name">No. Of Carry Forward</label>
-                </div>
-                <div class="form-group">
-                    <select id="category_id" name="leave_encash" class="form-control" required>
-                        <option value="" disabled selected></option>
-                        <option value="Yes">Yes</option>
-                        <option value="No">No</option> 
-                    </select>
-                    <label for="category_name">Is Leave Encash?</label>
-                </div>
-                <div class="form-group">
-                    <input type="number" id="category_name" name="leave_encash_count" class="form-control" required>
-                    <label for="category_name">No. Of Leave Encash</label>
-                </div>
-
-                <div class="form-group">
-                    <select id="category_id" name="provision_status" class="form-control" required>
-                        <option value="" disabled selected></option>
-                        <option value="Applicable">Applicable</option>
-                        <option value="Not Applicable">Not Applicable</option> 
-                    </select>
-                    <label for="category_name">Provision Status</label>
-                </div>
-    
-                <div class="form-group">
-                    <input type="number" id="category_name" name="max_leave_pp" class="form-control" required>
-                    <label for="category_name">Max Leave Probation Period</label>
-                </div>
-                <div class="form-group">
-                    <input type="number" id="category_name" name="probation_period_per_month" class="form-control" required>
-                    <label for="category_name">Probation Period Per Month</label>
-                </div>
-    
-                <div class="form-group">
-                    <input type="number" id="category_name" name="calendra_start_for_PP" class="form-control" required>
-                    <label for="category_name">Calendra Start For PP</label>
-                </div>
-                
-                <div class="col-12">
-                <button type="submit" class="create-btn" >Save Type</button></div> 
             </form>
         </div>
  

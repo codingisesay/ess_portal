@@ -23,12 +23,16 @@ $id = Auth::guard('superadmin')->user()->id;
 
         <!-- Form Section -->
         <div id="formSection" >
-            <form action="{{ route('save_policy_category') }}" method="POST" enctype="multipart/form-data" class="form-container">
+            <form action="{{ route('save_policy_category') }}" method="POST" enctype="multipart/form-data" >
                 @csrf
+                <div class="form-container row">
+                <div class="col-3 mb-4">
                 <div class="form-group">
                     <input type="text" id="category_name" name="category_name" class="form-control" required>
                     <label for="category_name">Category Name</label>
                 </div>
+                </div>
+                <div class="col-3 mb-4">
                 <div class="form-group ">
                     <select id="category_id" name="status" class="form-control" required>
                         <option value="" disabled selected></option>
@@ -37,8 +41,10 @@ $id = Auth::guard('superadmin')->user()->id;
                     </select>
                     <label for="category_id">Status</label>
                 </div> 
-                <div class="col-12">
-                <button type="submit" class="create-btn"  >Save Category</button></div>
+                </div>
+
+                <div class="col-12"> <button type="submit" class="create-btn"  >Save Category</button></div>
+                </div>
             </form>
         </div>
  
