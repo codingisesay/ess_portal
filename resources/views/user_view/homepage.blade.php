@@ -52,8 +52,9 @@ error_reporting(0);
     <main class="main-group">
         <section class="greeting">
  
-            @foreach ($logs as $log)
-            <h2>Good Morning</h2>
+            @foreach ($logs as $log)  
+            <h2 id="greeting"></h2>
+
             <div class="top-cards">
                 <!-- Check In Card -->
                 <div class="card checkin">
@@ -825,4 +826,26 @@ error_reporting(0);
         });
     </script>
 
+<script>
+                function getGreeting() {
+                    const now = new Date();
+                    const hours = now.getHours();
+                    let greeting = "";
+
+                    if (hours >= 5 && hours < 12) {
+                        greeting = "Good Morning";
+                    } else if (hours >= 12 && hours < 17) {
+                        greeting = "Good Afternoon";
+                    } else if (hours >= 17 && hours < 21) {
+                        greeting = "Good Evening";
+                    } else {
+                        greeting = "Good Night";
+                    }
+
+                    document.getElementById("greeting").textContent = greeting;
+                }
+
+                // Call the function when the page loads
+                window.onload = getGreeting();
+            </script>
 @endsection

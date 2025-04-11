@@ -8,7 +8,8 @@ body {
 /* Container for entire page */
 .container {
     display: flex;
-    height: 100vh;
+    /* height: 100vh;    */
+    margin-top: -25px;
 }
 
 /* Header */
@@ -78,11 +79,29 @@ body {
     width: 100%;
 
     margin-top: 20px;
-    height: 100vh;
+    /* height: 100vh; */
     margin: 25px;
 }
 
 /* Sidebar */
+/* .sidebar {
+    background-color: #FFFFFF;
+    width: 316px;
+    padding: 35px;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    height: 400px;
+    border-radius: 30px;
+    Top: 243px;
+    Left: 37px;
+    border-bottom-left-radius: 30px;
+    border-bottom-right-radius: 30px;
+    border-top-left-radius: 30px;
+    border-top-right-radius: 30px;
+} */
+
 .sidebar {
     background-color: #FFFFFF;
     width: 316px;
@@ -91,15 +110,28 @@ body {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    height: fit-content;
+    height: 70vh;
     border-radius: 30px;
-    Top: 243px;
-    Left: 37px;
+    top: 243px;
+    left: 37px;
     border-bottom-left-radius: 30px;
     border-bottom-right-radius: 30px;
     border-top-left-radius: 30px;
     border-top-right-radius: 30px;
+    overflow-y: scroll;
+    /* Enables vertical scrolling */
 }
+
+/* Hide the scrollbar but keep the scrolling functionality */
+.sidebar::-webkit-scrollbar {
+    width: 0px;
+    background: transparent;
+}
+
+.sidebar::-webkit-scrollbar-thumb {
+    background: transparent;
+}
+
 
 /* Category Item (Separate Icon and Text Aligned Side-by-Side) */
 .category-item {
