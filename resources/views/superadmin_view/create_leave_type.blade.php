@@ -9,8 +9,7 @@ $id = Auth::guard('superadmin')->user()->id;
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{{ asset('admin_end/css/admin_form.css') }}">
-    <link rel="stylesheet" href="{{ asset('admin_end/css/popup_form.css') }}">
-    <title>Create Policy Category</title>
+    <link rel="stylesheet" href="{{ asset('admin_end/css/popup_form.css') }}"> 
     
 </head>
 <body>
@@ -66,7 +65,8 @@ $id = Auth::guard('superadmin')->user()->id;
                     </select>
                     <label for="category_id">Status</label>
                 </div>
-                <button type="submit" class="create-btn" >Save Type</button>
+                <div class="col-12">
+                <button type="submit" class="create-btn" >Save Type</button></div>
             </form>
         </div>
     

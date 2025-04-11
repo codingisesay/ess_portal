@@ -51,7 +51,8 @@ $id = Auth::guard('superadmin')->user()->id;
                     <input type="number" id="date" name="month_start" class="form-control" required max="30" oninput="validateInput(this)">
                     <label for="year">Month Start</label>
                 </div>
-                <button type="submit" class="create-btn" >Save Cycle</button>
+                <div class="col-12">
+                <button type="submit" class="create-btn" >Save Cycle</button></div>
             </form>
         </div>
  

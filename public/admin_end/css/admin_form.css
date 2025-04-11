@@ -46,15 +46,18 @@ h2 {
 
 .container {
     margin: 0;
+    margin-left: 330px;
     max-width: 1320px;
     width: calc(100% - 270px);
     padding: 0 30px;
+    height: 100vh;
     box-shadow: rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px;
 }
 
 .sidebar.collapsed~.container {
     width: 95vw;
     max-width: 95vw;
+    margin-left: 80px;
 }
 
 /* Form Styling */
@@ -119,12 +122,12 @@ h3 {
     font-size: 16px;
     background: transparent;
     outline: none;
-    appearance: none;
+    /* appearance: none; */
 }
 
 .form-group label {
     position: absolute;
-    top: 50%;
+    top: 47%;
     left: 10px;
     transform: translateY(-50%);
     color: #aaa;
@@ -133,6 +136,14 @@ h3 {
     padding: 0 5px;
     pointer-events: none;
     transition: all 0.3s ease;
+}
+
+.form-control:focus {
+    color: inherit;
+    border-color: none;
+    outline: 0;
+    box-shadow: 0 0 0 .25rem rgba(13, 110, 253, .25);
+
 }
 
 /* Floating Labels Effect */
@@ -146,17 +157,25 @@ h3 {
     color: #000000;
 }
 
+.form-group select {
+    -webkit-appearance: auto;
+    -moz-appearance: auto;
+    appearance: auto;
+}
+
+
+
 /* Create Button */
 .create-btn {
     background-color: #8A3366;
     color: white;
     border: none;
-    padding: 10px 20px;
+    padding: 8px 20px 10px 20px;
     border-radius: 5px;
     font-size: 16px;
     cursor: pointer;
     display: block;
-    margin-top: 10px;
+    margin-top: -25px;
     margin-left: auto;
 }
 

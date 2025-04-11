@@ -54,10 +54,10 @@ $id = Auth::guard('superadmin')->user()->id;
                 <div class="form-group">
                     <a href="#" onclick="generateAndDisplayPassword()">Generate Password</a>
                 </div>
-                <div class="form-group">
-               
-                </div>
+                
+                <div class="col-12">
                 <button class="create-btn" type="submit">Create User</button>
+                </div>
             </div>
         </form>
     </div>

@@ -61,7 +61,8 @@ $id = Auth::guard('superadmin')->user()->id;
                     </select>
                     <label>Status</label>
                 </div>
-                <div class="form-group">
+              
+                <div class="col-12">
                     <button class="create-btn" type="submit">Create</button>
                 </div>
             </div>
