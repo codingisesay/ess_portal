@@ -288,6 +288,17 @@ error_reporting(0);
                     <img src="{{ asset('user_end/images/cake 5.png'); }}" alt="Alert Icon" class="alert-icon">
                 </div>
             </div>
+            <div class="approval-card">
+                <div class="card-left">
+                    <img src="{{ asset('user_end/images/Leave.png'); }}" alt="Leave Icon" class="icon">
+                    <div class="details">
+                        <h4>Reimbursement</h4>
+                    </div>
+                </div>
+                <div class="card-right">
+                    <img src="{{ asset('user_end/images/cake 5.png'); }}" alt="Alert Icon" class="alert-icon">
+                </div>
+            </div>
             </div>
         </section>
              

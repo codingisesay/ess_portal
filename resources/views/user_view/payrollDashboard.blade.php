@@ -1,3 +1,5 @@
+@extends('user_view.header')
+@section('content')
 <?php
 use App\Helpers\SalaryHelper;
 
@@ -5,8 +7,7 @@ use App\Helpers\SalaryHelper;
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
   <title>Payroll Dashboard</title>
  <style>
     body {
@@ -81,7 +82,10 @@ table tr:hover {
 <body>
   <div class="container">
     <h1>Payroll Dashboard</h1>
-
+    
+    <a href="{{ route('claim_form') }}"><button class="w3-button w3-green">Claim</button></a>
+    <br>
+    <br>
     <div class="cards">
       <div class="card">
         <h3>Total Employees</h3>
@@ -154,5 +158,4 @@ payrollData.forEach(row => {
 });
 
   </script>
-</body>
-</html>
+@endsection
