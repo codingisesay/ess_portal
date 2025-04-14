@@ -15,12 +15,15 @@ $profileimahe = session('profile_image');
     <title>@isset($title){{ $title }}@else{{ 'ESS Portal' }}@endisset</title>
     <link rel="stylesheet" href="{{ asset('/user_end/css/header.css') }}">
 
+
+    <!-- Option 1: Include in HTML -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css">
+
+
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
     <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
 
     <script src="{{ asset('user_end/js/toastify-notifications.js') }}"></script>
-    
-    
     <style>
         /* Add your custom CSS here */
         .profile-dropdown {
@@ -29,12 +32,12 @@ $profileimahe = session('profile_image');
         }
 
         .profile-dropdown-content {
-            display: none;
+            padding: 12px 20px;
+            display: block;
             position: absolute;
             right: 0;
             background-color: #f9f9f9;
-            min-width: 77px;
-            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+            min-width: max-content;box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
             z-index: 1;
             border-radius: 10px;
             overflow: hidden;
@@ -62,22 +65,14 @@ $profileimahe = session('profile_image');
         .profile-pic {
             cursor: pointer;
         }
-
-        .logout-icon, .camera-icon {
-            background-color: transparent;
-            border: none;
-            color: #8A3366;
-            font-size: 20px;
-            cursor: pointer;
-            padding: 10px;
-            display: flex;
-            align-items: center;
+        .logout-icon:hover ,  .profile-links p:hover  {
+            background-color:rgb(219, 219, 219) !important;border-radius:6px
         }
+        .logout-icon{border:0;background:none !important;cursor:pointer;color:black;font-size:16px; padding:3px 10px;width :100%; text-align:left; }
 
-        .logout-icon:hover, .camera-icon:hover {
-            color: #6a2a52;
-        }
-
+       
+        .profile-links p{cursor:pointer;}
+ 
                 /* Modal Styles */
 .modall {
     display: none;
@@ -179,10 +174,10 @@ $profileimahe = session('profile_image');
                 <li><a href="{{ route('user.homepage') }}" class="active"><img src="{{ asset('user_end/images/dashboard icon.svg') }}" width="30" height="30" alt="">Dashboard</a></li>
                 <li><a href="{{ route('user.employment.data') }}"><img src="{{ asset('user_end/images/man.png') }}" width="30" height="30" alt="">Employee Details</a></li>
                 <li><a href="{{ route('leave_dashboard') }}"><img src="{{ asset('user_end/images/logout (1).png') }}" width="30" height="30" alt="">Leave & Attendance</a></li>
-                {{-- <li><a href="{{ route('user.homepage') }}"><img src="{{ asset('user_end/images/speedometer (1).png') }}" width="30" height="30" alt="">Orgnizations Chart</a></li>
+                <!-- {{-- <li><a href="{{ route('user.homepage') }}"><img src="{{ asset('user_end/images/speedometer (1).png') }}" width="30" height="30" alt="">Orgnizations Chart</a></li> -->
                 <li><a href="{{ route('user.homepage') }}"><img src="{{ asset('user_end/images/logout (1).png') }}" width="30" height="30" alt="">Leave & Attendance</a></li> --}}
                 <li><a href="{{ route('user.view_organisation') }}"><img src="{{ asset('user_end/images/speedometer (1).png') }}" width="30" height="30" alt="">Orgnizations Chart</a></li>
-                {{-- <li><a href="{{ route('user.homepage') }}"><img src="{{ asset('user_end/images/security.png') }}" width="30" height="30" alt="">PMS</a></li> --}}
+                <!-- {{-- <li><a href="{{ route('user.homepage') }}"><img src="{{ asset('user_end/images/security.png') }}" width="30" height="30" alt="">PMS</a></li> --}} -->
                 <li><a href="{{ route('user.hr.policy') }}"><img src="{{ asset('user_end/images/succession.png') }}" width="30" height="30" alt="">HR Policy</a></li>
                 <li><a href="{{ route('PayRollDashboard') }}"><img src="{{ asset('user_end/images/succession.png') }}" width="30" height="30" alt="">Payroll</a></li>
                 <li><a href="{{ route('user.setting') }}"><img src="{{ asset('user_end/images/settings.png') }}" width="30" height="30" alt="">Settings</a></li>
@@ -207,32 +202,45 @@ $profileimahe = session('profile_image');
             </div>
             <div class="profilecircle profile-dropdown">
                 <a href="javascript:void(0)" id="profileIcon">
-                 
-
+                  
                     <img src="{{ asset('storage/'.$profileimahe) }}" alt="Profile Picture" style="height: 50px; width: 50px; border-radius: 50%; margin-bottom: 4px; vertical-align: middle;">
-                        
-           
-                    
-                   
-                    {{-- <img src="" class="profile-pic" style="height: 50px; width: 50px; border-radius: 50%; margin-bottom: 4px; vertical-align: middle;"> --}}
+                         
+                    <!-- {{-- <img src="" class="profile-pic" style="height: 50px; width: 50px; border-radius: 50%; margin-bottom: 4px; vertical-align: middle;"> --}} -->
                 </a>
-                <div class="profile-dropdown-content">
-    <!-- Logout Form -->
-                <form action="{{ route('user.logout') }}" method="POST">
-                    @csrf
-                    <button type="submit" class="logout-icon">
-                        <i class="fas fa-power-off"></i>
-                    </button>
-                </form>
+                <div class="profile-dropdown-content"> 
+                    <div style="display:flex; "> 
+                    <img src="{{ asset('storage/'.$profileimahe) }}" alt="Profile Picture" 
+                    style="height: 30px; width: 30px; border-radius: 50%; margin: auto 8px auto 0;  vertical-align: middle;">
+                    
+                    <div >
+                    <p style="font-size:16px">Ankita Pansare</p>
+                    <small style="color:#75778A"><small> <small> Emp. Code : ST006 </small></small></small>
+                    </div>
+                    </div>
+                    <hr style="margin:7px 0 4px 0" /> 
+                        
+                    <div class="profile-links">
+                 <p style="margin-bottom:4px;font-size:16px; padding : 3px 10px"  onclick="openModall()" >   
+                    <i class="bi bi-camera-fill" style="vertical-align: middle; "></i> <small> Change Avatar  </small> 
+                </p>
+                 <!-- <p style="margin-bottom:4px;font-size:16px; padding : 3px 10px" >   <i class="bi bi-person-badge-fill" style="vertical-align: middle; "></i> <small> Update Profile  </small> </p> -->
+                 <p style="margin-bottom:4px;font-size:16px; padding : 3px 10px" >   <i class="bi bi-shield-lock-fill" style="vertical-align: middle; "></i> <small> Change Password </small> </p>
+                 
+                    <hr style="margin:7px 0 4px 0" /> 
+                    <form action="{{ route('user.logout') }}" method="POST" style="margin-bottom:4px;font-size:16px" >     @csrf
+                        <button type="submit" class="logout-icon">
+                        <i class="bi bi-box-arrow-right"  style="vertical-align: middle; "></i> <small> Logout </small> 
+                        </button>
+                     </form>
 
-                <!-- Camera Icon to Trigger File Upload -->
-                <button class="camera-icon" onclick="openModall()">
-                    <i class="fas fa-camera" ></i>
-                </button>
+                    </div>
+
+ 
+  
+                </div>
+ 
             </div>
-
-
-            </div>
+  
         </div>
     </header>
      <!-- Modal -->
