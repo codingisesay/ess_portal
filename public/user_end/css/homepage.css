@@ -132,7 +132,7 @@ body {
 .main-group:nth-of-type(2) {
     flex: 1 1 250px;
     /* Flex items will take at least 250px of space */
-    margin-bottom: 20px;
+    /* margin-bottom: 20px; */
     /* Margin between rows */
 }
 

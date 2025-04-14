@@ -505,7 +505,7 @@ error_reporting(0);
                 <tr>
                     <th>Manager ID</th>
                     <th>Manager Name</th>
-                    <th>No. Approved Claims</th>
+                    <th>Claim of Employee</th>
                     <th>Action</th>
                 </tr>
             </thead>
