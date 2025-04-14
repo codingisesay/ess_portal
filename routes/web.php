@@ -243,6 +243,7 @@ Route::middleware(['auth'])->group(function () {
  Route::get('user/PayRollDashboard',[salaryBoxController::class,'loadDashboard'])->name('PayRollDashboard');
  Route::get('user/claim_form',[salaryBoxController::class,'loadclaimform'])->name('claim_form');
  Route::get('user/clam_record',[salaryBoxController::class,'loadUserClaims'])->name('user_claims');
+ Route::get('user/manager_clam_record',[salaryBoxController::class,'loadMangerClaims'])->name('manager_claims');
    
 });
 
