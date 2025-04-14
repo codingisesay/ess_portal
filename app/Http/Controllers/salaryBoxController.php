@@ -348,4 +348,8 @@ class salaryBoxController extends Controller
     return view('user_view.claim_form');
  }
 
+ public function loadUserClaims(){
+    return view('user_view.users_claim');
+ }
+
 }
