@@ -1,3 +1,8 @@
+@extends('user_view.header')
+@section('content')
+<?php 
+error_reporting(0);
+?>
 <!DOCTYPE html>
 <html>
 <head>
@@ -76,7 +81,7 @@
 
   // Mock data for demonstration
   const approvedUsers = [
-    { name: 'Alice', bundles: [
+    { name: 'Ankita', bundles: [
       { id: 'bundle-001', name: 'Bundle 1', bills: [
         { sno: 1, date: '01/01/2020', type: 'Food', maxAmount: 250, enteredAmount: 500, bill: '', desc: 'Lunch' },
         { sno: 2, date: '02/01/2020', type: 'Travel', maxAmount: 300, enteredAmount: 400, bill: '', desc: 'Taxi' }
@@ -85,7 +90,7 @@
         { sno: 1, date: '03/01/2020', type: 'Hotel', maxAmount: 1000, enteredAmount: 1200, bill: '', desc: 'Stay' }
       ]}
     ]},
-    { name: 'Bob', bundles: [
+    { name: 'om', bundles: [
       { id: 'bundle-003', name: 'Bundle 3', bills: [
         { sno: 1, date: '04/01/2020', type: 'Food', maxAmount: 200, enteredAmount: 250, bill: '', desc: 'Dinner' }
       ]}
@@ -161,3 +166,4 @@
 </script>
 </body>
 </html>
+@endsection
