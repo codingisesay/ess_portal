@@ -8,7 +8,7 @@ body {
 /* Container for entire page */
 .container {
     display: flex;
-    height: 100vh;
+    /* height: 100vh;    */
     margin-top: -25px;
 }
 
@@ -79,7 +79,7 @@ body {
     width: 100%;
 
     margin-top: 20px;
-    height: 100vh;
+    /* height: 100vh; */
     margin: 25px;
 }
 
@@ -110,7 +110,7 @@ body {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    height: 530px;
+    height: 70vh;
     border-radius: 30px;
     top: 243px;
     left: 37px;
