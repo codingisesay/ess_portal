@@ -289,16 +289,27 @@ error_reporting(0);
                 </div>
             </div>
             <div class="approval-card" id="reimbursement-card" onclick="openReimbursementModal()">
-    <div class="card-left">
-        <img src="{{ asset('user_end/images/Leave.png'); }}" alt="Leave Icon" class="icon">
-        <div class="details">
-            <h4>Reimbursement</h4>
-        </div>
-    </div>
-    <div class="card-right">
-        <img src="{{ asset('user_end/images/cake 5.png'); }}" alt="Alert Icon" class="alert-icon">
-    </div>
-</div>
+                <div class="card-left">
+                    <img src="{{ asset('user_end/images/Leave.png'); }}" alt="Leave Icon" class="icon">
+                    <div class="details">
+                        <h4>Reimbursement</h4>
+                    </div>
+                </div>
+                <div class="card-right">
+                    <img src="{{ asset('user_end/images/cake 5.png'); }}" alt="Alert Icon" class="alert-icon">
+                </div>
+            </div>  
+            <div class="approval-card" id="reimbursement-card" onclick="openAccountModal()">
+                <div class="card-left">
+                    <img src="{{ asset('user_end/images/Leave.png'); }}" alt="Leave Icon" class="icon">
+                    <div class="details">
+                        <h4>Account</h4>
+                    </div>
+                </div>
+                <div class="card-right">
+                    <img src="{{ asset('user_end/images/cake 5.png'); }}" alt="Alert Icon" class="alert-icon">
+                </div>
+            </div>
             </div>
         </section>
              
@@ -424,7 +435,6 @@ error_reporting(0);
                 <tr>
                     <th>EMP ID</th>
                     <th>Employee Name</th>
-                    <th>Date</th>
                     <th>No. of Claim</th>
                     <th>Total Amount</th>
                     <th>Status</th>
@@ -461,7 +471,6 @@ error_reporting(0);
                     <tr>
                         <td>EMP001</td>
                         <td>John Doe</td>
-                        <td>01-10-2023</td>
                         <td>04</td>
                         <td>5000</td>
                         <td>In Review</td>
@@ -472,10 +481,62 @@ error_reporting(0);
                     <tr>
                         <td>EMP002</td>
                         <td>Om</td>
-                        <td>02-10-2023</td>
                         <td>04</td>
                         <td>5000</td>
                         <td>In Review</td>
+                        <td>
+                        <button>View</button>
+                        </td>
+                        
+                    </tr>
+                @endif
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div id="accountModal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeAccountModal()">&times;</span>
+        <h2>Account Details</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Manager ID</th>
+                    <th>Manager Name</th>
+                    <th>No. Approved Claims</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (!empty($accountList))
+                    @foreach ($accountList as $account)
+                        <tr>
+                            <td>{{ $account->manager_id }}</td>
+                            <td>{{ $account->name }}</td>
+                            <td>{{ $account->approved_claims }}</td>
+                            <td>
+                                <button onclick="viewAccountDetails({{ $account->id }})">View</button>
+                            </td>
+                        </tr>
+                    @endforeach
+                @else
+                    <tr>
+                        <!-- <td colspan="4">No account details available.</td> -->
+                    </tr>
+                     <!-- Dummy Data -->
+                     <tr>
+                        <td>EMP001</td>
+                        <td>Paresh Sir</td>
+                        <td>04</td>
+                        <td>
+                        <button>View</button>
+                        </td>
+                    </tr>
+                    <tr>
+                    <td>EMP001</td>
+                        <td>Akash Sir</td>
+                        <td>04</td>
                         <td>
                         <button>View</button>
                         </td>
@@ -543,6 +604,31 @@ error_reporting(0);
         if (event.target === reimbursementModal) {
             closeReimbursementModal();
         }
+    }
+</script>
+
+<script>
+    // Open the account modal
+    function openAccountModal() {
+        document.getElementById('accountModal').style.display = 'block'; // Show the modal
+    }
+
+    // Close the account modal
+    function closeAccountModal() {
+        document.getElementById('accountModal').style.display = 'none'; // Hide the modal
+    }
+
+    // Close the modal if the user clicks outside of it
+    window.onclick = function(event) {
+        const accountModal = document.getElementById('accountModal');
+        if (event.target === accountModal) {
+            closeAccountModal();
+        }
+    }
+
+    // Placeholder function for viewing account details
+    function viewAccountDetails(accountId) {
+        alert('View details for account ID: ' + accountId);
     }
 </script>
 
