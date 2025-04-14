@@ -78,15 +78,15 @@ $id = Auth::guard('superadmin')->user()->id;
                     @method('POST')
                     <input type="hidden" name="category_id" id="editPolicyCategoryId">
                     <div class="popup-form-group">
-                        <label for="editPolicyCategoryName">Category Name</label>
                         <input type="text" name="category_name" id="editPolicyCategoryName" required> 
+                        <label for="editPolicyCategoryName">Category Name</label>
                     </div>
                     <div class="popup-form-group">
-                        <label for="editPolicyCategoryStatus">Status</label>
                         <select name="status" id="editPolicyCategoryStatus" required>
                             <option value="Active">Active</option>
                             <option value="Inactive">Inactive</option>
                         </select>
+                        <label for="editPolicyCategoryStatus">Status</label>
                     </div>
                     <div class="popup-form-group">
                         <button class="create-btn1" type="submit">Save Changes</button>

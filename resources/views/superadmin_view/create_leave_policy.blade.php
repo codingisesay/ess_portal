@@ -197,72 +197,71 @@ $id = Auth::guard('superadmin')->user()->id;
                     @method('POST')
                     <input type="hidden" name="policy_id" id="editLeavePolicyId">
                     <div class="popup-form-group">
-                        <label for="editLeaveType">Leave Type</label>
                         <input type="text" id="editLeaveType" disabled>
+                        <label for="editLeaveType">Leave Type</label>
                     </div>
                     <div class="popup-form-group">
-                        <label for="editMaxLeave">Max Leave</label>
                         <input type="number" name="max_leave_count" id="editMaxLeave" required>
+                        <label for="editMaxLeave">Max Leave</label>
                     </div>
                     <div class="popup-form-group">
-                        <label for="editMaxLeaveAtTime">Max Leave At Time</label>
                         <input type="number" name="max_leave_at_time" id="editMaxLeaveAtTime" required>
+                        <label for="editMaxLeaveAtTime">Max Leave At Time</label>
                     </div>
                     <div class="popup-form-group">
-                        <label for="editMinLeaveAtTime">Min Leave At Time</label>
                         <input type="number" name="min_leave_at_time" id="editMinLeaveAtTime" required step="0.5">
+                        <label for="editMinLeaveAtTime">Min Leave At Time</label>
                     </div>
                     <div class="popup-form-group">
-                        <label for="editLeaveCountPerMonth">Leave Count Per Month</label>
                         <input type="number" name="leave_count_per_month" id="editLeaveCountPerMonth" required step="0.5">
+                        <label for="editLeaveCountPerMonth">Leave Count Per Month</label>
                     </div>
                     <div class="popup-form-group">
-                        <label for="editNoOfTimesPerMonth">No of Times Per Month</label>
                         <input type="number" name="no_of_leaves_per_month" id="editNoOfTimesPerMonth" required step="0.5">
+                        <label for="editNoOfTimesPerMonth">No of Times Per Month</label>
                     </div>
                     <div class="popup-form-group">
-                        <label for="editCarryForward">Carry Forward</label>
                         <select name="is_carry_forward" id="editCarryForward" required>
                             <option value="Yes">Yes</option>
                             <option value="No">No</option>
                         </select>
+                        <label for="editCarryForward">Carry Forward</label>
                     </div>
                     <div class="popup-form-group">
-                        <label for="editNoOfCarryForward">No. Of Carry Forward</label>
                         <input type="number" name="no_of_carry_forward" id="editNoOfCarryForward" required>
+                        <label for="editNoOfCarryForward">No. Of Carry Forward</label>
                     </div>
                     <div class="popup-form-group">
-                        <label for="editLeaveEncash">Leave Encash</label>
                         <select name="leave_encash" id="editLeaveEncash" required>
                             <option value="Yes">Yes</option>
                             <option value="No">No</option>
                         </select>
+                        <label for="editLeaveEncash">Leave Encash</label>
                     </div>
                     <div class="popup-form-group">
-                        <label for="editNoOfLeaveEncash">No. Of Leave Encash</label>
                         <input type="number" name="leave_encash_count" id="editNoOfLeaveEncash" required>
+                        <label for="editNoOfLeaveEncash">No. Of Leave Encash</label>
                     </div>
                     <div class="popup-form-group">
-                        <label for="editProvisionStatus">Provision Status</label>
                         <select name="provision_status" id="editProvisionStatus" required>
                             <option value="Applicable">Applicable</option>
                             <option value="Not Applicable">Not Applicable</option>
                         </select>
+                        <label for="editProvisionStatus">Provision Status</label>
                     </div>
                     <div class="popup-form-group">
-                        <label for="editMaxLeavePP">Max Leave Probation Period</label>
                         <input type="number" name="max_leave_pp" id="editMaxLeavePP" required>
+                        <label for="editMaxLeavePP">Max Leave Probation Period</label>
                     </div>
                     <div class="popup-form-group">
-                        <label for="editProbationPeriodPerMonth">Probation Period Per Month</label>
                         <input type="number" name="probation_period_per_month" id="editProbationPeriodPerMonth" required>
+                        <label for="editProbationPeriodPerMonth">Probation Period Per Month</label>
                     </div>
                     <div class="popup-form-group">
-                        <label for="editCalendraStartForPP">Calendra Start For PP</label>
                         <input type="number" name="calendra_start_for_PP" id="editCalendraStartForPP" required>
+                        <label for="editCalendraStartForPP">Calendra Start For PP</label>
                     </div>
-                
-                    <div class="col-12">
+                    <div class="popup-form-group">
                         <button class="create-btn1" type="submit">Save Changes</button>
                     </div>
                 </form>

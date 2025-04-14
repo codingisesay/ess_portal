@@ -241,6 +241,7 @@ Route::middleware(['auth'])->group(function () {
  //routes for userend payroll
 
  Route::get('user/PayRollDashboard',[salaryBoxController::class,'loadDashboard'])->name('PayRollDashboard');
+ Route::get('user/claim_form',[salaryBoxController::class,'loadclaimform'])->name('claim_form');
    
 });
 

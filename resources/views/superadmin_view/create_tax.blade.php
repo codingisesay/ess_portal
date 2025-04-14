@@ -138,35 +138,34 @@ $id = Auth::guard('superadmin')->user()->id;
                 @method('POST')
                 <input type="hidden" name="tax_slab_id" id="editTaxSlabId">
                 <div class="popup-form-group">
-                    <label for="editTaxCycle">Tax Regime</label>
-                    <input type="hidden" name="tax_cycle_type" id="editTaxCycle">
                     <select name="tax_cycle_type" id="editTaxCycle" required>
                         @foreach ($taxregim as $tax)
                             <option value="{{ $tax->id }}">{{ $tax->name }}</option>
                         @endforeach
                     </select>
+                    <label for="editTaxCycle">Tax Regime</label>
                 </div>
                 <div class="popup-form-group">
-                    <label for="editTaxType">Tax Type</label>
                     <select name="tax_type" id="editTaxType" required>
                         <option value="Income Tax">Income Tax</option>
                     </select>
+                    <label for="editTaxType">Tax Type</label>
                 </div>
                 <div class="popup-form-group">
-                    <label for="editMinIncome">Min Income</label>
                     <input type="number" name="min_income" id="editMinIncome" required>
+                    <label for="editMinIncome">Min Income</label>
                 </div>
                 <div class="popup-form-group">
-                    <label for="editMaxIncome">Max Income</label>
                     <input type="number" name="max_income" id="editMaxIncome" required>
+                    <label for="editMaxIncome">Max Income</label>
                 </div>
                 <div class="popup-form-group">
-                    <label for="editTaxPercentage">Percentage Tax</label>
                     <input type="number" name="tax_per" id="editTaxPercentage" required>
+                    <label for="editTaxPercentage">Percentage Tax</label>
                 </div>
                 <div class="popup-form-group">
-                    <label for="editFixedAmount">Fixed Amount</label>
                     <input type="number" name="fixed_amount" id="editFixedAmount" required>
+                    <label for="editFixedAmount">Fixed Amount</label>
                 </div>
                 <div class="popup-form-group">
                     <button class="create-btn1" type="submit">Save Changes</button>

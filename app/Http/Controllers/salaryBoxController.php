@@ -344,4 +344,8 @@ class salaryBoxController extends Controller
 
  }
 
+ public function loadclaimform(){
+    return view('user_view.claim_form');
+ }
+
 }
