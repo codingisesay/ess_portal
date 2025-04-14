@@ -233,10 +233,7 @@ $profileimahe = session('profile_image');
                         </button>
                      </form>
 
-                    </div>
-
- 
-  
+                    </div> 
                 </div>
  
             </div>

@@ -101,14 +101,15 @@ $name = Auth::guard('superadmin')->user()->name;
                 </li>
 
                 <!-- Payrole Management -->
-                <li id="taxManagementLi">
-                    <strong onclick="toggleDropdown('taxManagementDropdown', this)">
+                <li id="reimbursementManagementLi">
+                    <strong onclick="toggleDropdown('reimbManagementDropdown', this)">
                         <strong>
                         <x-icon name="tax" />&nbsp;<lable> Reimbursement Management</lable></strong>
                         <img src="{{ asset('user_end/images/arrow-right.svg') }}" alt="arrow" class="dropdown-arrow">
                     </strong>
-                    <ul id="taxManagementDropdown" class="submenu">
-                        <li><a href="{{ route('reimbursement') }}" class="{{ request()->routeIs('reimbursement') ? 'active' : '' }}">Reimbursement Type</a></li> 
+                    <ul id="reimbManagementDropdown" class="submenu">
+                    <li><a href="{{ route('reimbursement') }}" class="{{ request()->routeIs('reimbursement') ? 'active' : '' }}">Reimbursement Type</a></li> 
+                    <li><a href="{{ route('reimbursement_restrictions') }}" class="{{ request()->routeIs('reimbursement_restrictions') ? 'active' : '' }}">Reimbursement Validations</a></li> 
                     </ul>
                 </li>
 

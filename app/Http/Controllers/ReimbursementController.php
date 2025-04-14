@@ -29,4 +29,10 @@ class ReimbursementController extends Controller
     }
 
     // Other methods...
+
+
+    
+    public function reimbursement_restrictions_load(){ 
+        return view('superadmin_view.create_reimbursement_restrictions');
+    }
 }
