@@ -11,10 +11,15 @@ function renderEmployeeNode($employee) {
     ob_start();
     ?>
     <li>
-           <!-- Display the toggle button for all employees -->
-    <button class="toggle-button" data-user-id="<?= $employee->user_id ?>" onclick="toggleChildren(this)">
-        +
-    </button>
+        <?php if ($hasSubordinates): ?>
+            <!-- Display the toggle button for employees with subordinates -->
+            <button class="toggle-button" data-user-id="<?= $employee->user_id ?>" onclick="toggleChildren(this)">
+                +
+            </button>
+        <?php else: ?>
+            <!-- Display a dot for employees without subordinates -->
+            <span class="dot">•</span>
+        <?php endif; ?>
 
         <span onclick="displayEmployeeDetails(
             '<?= $employee->user_id ?>',
@@ -23,13 +28,11 @@ function renderEmployeeNode($employee) {
             '<?= $employee->reporting_manager_name ?>',
             '<?= $employee->department ?>',
             '<?= $employee->branch_name ?>',
-            
             '<?= $employee->offical_phone_number ?>',
             '<?= $employee->alternate_phone_number ?>',
             '<?= $employee->offical_email_address ?>',
             '<?= $employee->emergency_contact_person ?>',
             '<?= $employee->emergency_contact_number ?>',
-            
             '<?= !empty($employee->profile_image) ? asset('storage/' . $employee->profile_image) : asset('storage/user_profile_image/Oqr4VRqo7RpQxnmiZCh12zybbcdsyUin2FhAKD3O.jpg') ?>',
             '<?= $employee->permanent_address ?>',
             '<?= $employee->correspondance_address ?>'

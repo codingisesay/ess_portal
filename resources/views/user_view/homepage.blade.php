@@ -288,17 +288,17 @@ error_reporting(0);
                     <img src="{{ asset('user_end/images/cake 5.png'); }}" alt="Alert Icon" class="alert-icon">
                 </div>
             </div>
-            <div class="approval-card">
-                <div class="card-left">
-                    <img src="{{ asset('user_end/images/Leave.png'); }}" alt="Leave Icon" class="icon">
-                    <div class="details">
-                        <h4>Reimbursement</h4>
-                    </div>
-                </div>
-                <div class="card-right">
-                    <img src="{{ asset('user_end/images/cake 5.png'); }}" alt="Alert Icon" class="alert-icon">
-                </div>
-            </div>
+            <div class="approval-card" id="reimbursement-card" onclick="openReimbursementModal()">
+    <div class="card-left">
+        <img src="{{ asset('user_end/images/Leave.png'); }}" alt="Leave Icon" class="icon">
+        <div class="details">
+            <h4>Reimbursement</h4>
+        </div>
+    </div>
+    <div class="card-right">
+        <img src="{{ asset('user_end/images/cake 5.png'); }}" alt="Alert Icon" class="alert-icon">
+    </div>
+</div>
             </div>
         </section>
              
@@ -413,6 +413,80 @@ error_reporting(0);
         </table>
     </div>
 </div>
+
+<!-- Reimbursement Modal -->
+<div id="reimbursementModal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeReimbursementModal()">&times;</span>
+        <h2>Reimbursement Details</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>EMP ID</th>
+                    <th>Employee Name</th>
+                    <th>Date</th>
+                    <th>No. of Claim</th>
+                    <th>Total Amount</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (!empty($reimbursementList))
+                    @foreach ($reimbursementList as $reimbursement)
+                        <tr>
+                            <td>{{ $reimbursement->employee_id }}</td>
+                            <td>{{ $reimbursement->employee_name }}</td>
+                            <!-- <td>{{ $reimbursement->id }}</td> -->
+                            <td>{{ \Carbon\Carbon::parse($reimbursement->date)->format('d-m-Y') }}</td>
+                            <!-- <td>{{ $reimbursement->amount }}</td>
+                            <td>{{ $reimbursement->purpose }}</td> -->
+                            <td>{{ $reimbursement->status }}</td>
+                            <td>
+                                <form action="{{ route('reimbursement_update_status', ['id' => $reimbursement->id, 'status' => 'Approved']) }}" method="POST" style="display: inline;">
+                                    @csrf
+                                    @method('PUT')
+                                    <button type="submit" style="font-size: 24px; border: none; background: none; cursor: pointer;">✅</button>
+                                </form>
+                                <form action="{{ route('reimbursement_update_status', ['id' => $reimbursement->id, 'status' => 'Rejected']) }}" method="POST" style="display: inline;">
+                                    @csrf
+                                    @method('PUT')
+                                    <button type="submit" style="font-size: 24px; border: none; background: none; cursor: pointer;">❌</button>
+                                </form>
+                            </td>
+                        </tr>
+                    @endforeach
+                @else
+                    <!-- Dummy Data -->
+                    <tr>
+                        <td>EMP001</td>
+                        <td>John Doe</td>
+                        <td>01-10-2023</td>
+                        <td>04</td>
+                        <td>5000</td>
+                        <td>In Review</td>
+                        <td>
+                        <button>View</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>EMP002</td>
+                        <td>Om</td>
+                        <td>02-10-2023</td>
+                        <td>04</td>
+                        <td>5000</td>
+                        <td>In Review</td>
+                        <td>
+                        <button>View</button>
+                        </td>
+                        
+                    </tr>
+                @endif
+            </tbody>
+        </table>
+    </div>
+</div>
+
 <script>
     // Open the leave modal
     function openLeaveModal() {
@@ -449,6 +523,26 @@ error_reporting(0);
     // Close the leave modal
     function closeTaskModal() {
         document.getElementById('taskModal').style.display = 'none';  // Hide the modal
+    }
+</script>
+
+<script>
+    // Open the reimbursement modal
+    function openReimbursementModal() {
+        document.getElementById('reimbursementModal').style.display = 'block'; // Show the modal
+    }
+
+    // Close the reimbursement modal
+    function closeReimbursementModal() {
+        document.getElementById('reimbursementModal').style.display = 'none'; // Hide the modal
+    }
+
+    // Close the modal if the user clicks outside of it
+    window.onclick = function(event) {
+        const reimbursementModal = document.getElementById('reimbursementModal');
+        if (event.target === reimbursementModal) {
+            closeReimbursementModal();
+        }
     }
 </script>
 
