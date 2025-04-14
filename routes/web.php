@@ -20,6 +20,7 @@ use App\Http\Controllers\organisationController;
 use App\Http\Controllers\leavePolicyController;
 use App\Http\Controllers\editUserController;
 use App\Http\Controllers\salaryBoxController;
+use App\Http\Controllers\ReimbursementController;
 
 
 
@@ -124,7 +125,8 @@ Route::middleware(['auth.superadmin'])->group(function () {
     Route::post('superadmin/update_tax_cycle/{id}', [salaryBoxController::class, 'updateTaxCycle'])->name('update_tax_cycle');
     Route::post('superadmin/update_tax_slab/{id}', [salaryBoxController::class, 'updateTaxSlab'])->name('update_tax_slab');
 
-   
+    //Reimbursement
+    Route::get('superadmin/reimbursement',[ReimbursementController::class,'index'])->name('reimbursement');
     
 });
 
