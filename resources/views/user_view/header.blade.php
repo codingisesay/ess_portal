@@ -217,7 +217,7 @@ $profileimahe = session('profile_image');
                     <small style="color:#75778A"><small> <small> Emp. Code : ST006 </small></small></small>
                     </div>
                     </div>
-                    <hr style="margin:7px 0 4px 0" /> ]
+                    <hr style="margin:7px 0 4px 0" /> 
                         
                     <div class="profile-links">
                  <p style="margin-bottom:4px;font-size:16px; padding : 3px 10px"  onclick="openModall()" >   
