@@ -20,8 +20,7 @@ use App\Http\Controllers\organisationController;
 use App\Http\Controllers\leavePolicyController;
 use App\Http\Controllers\editUserController;
 use App\Http\Controllers\salaryBoxController;
-use App\Http\Controllers\ReimbursementController;
-
+use App\Http\Controllers\ReimbursementController; 
 
 
 
@@ -127,6 +126,7 @@ Route::middleware(['auth.superadmin'])->group(function () {
 
     //Reimbursement
     Route::get('superadmin/reimbursement',[ReimbursementController::class,'index'])->name('reimbursement');
+    Route::get('superadmin/reimbursement_restrictions',[ReimbursementController::class,'reimbursement_restrictions_load'])->name('reimbursement_restrictions');
     
 });
 

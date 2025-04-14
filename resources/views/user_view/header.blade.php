@@ -5,7 +5,7 @@
 // exit();
 
 $profileimahe = session('profile_image');
-
+$userDetails = app('App\Http\Controllers\headerController')->getUserDetails();
 
 ?>
 <head>
@@ -174,8 +174,7 @@ $profileimahe = session('profile_image');
                 <li><a href="{{ route('user.homepage') }}" class="active"><img src="{{ asset('user_end/images/dashboard icon.svg') }}" width="30" height="30" alt="">Dashboard</a></li>
                 <li><a href="{{ route('user.employment.data') }}"><img src="{{ asset('user_end/images/man.png') }}" width="30" height="30" alt="">Employee Details</a></li>
                 <li><a href="{{ route('leave_dashboard') }}"><img src="{{ asset('user_end/images/logout (1).png') }}" width="30" height="30" alt="">Leave & Attendance</a></li>
-                <!-- {{-- <li><a href="{{ route('user.homepage') }}"><img src="{{ asset('user_end/images/speedometer (1).png') }}" width="30" height="30" alt="">Orgnizations Chart</a></li> -->
-                <li><a href="{{ route('user.homepage') }}"><img src="{{ asset('user_end/images/logout (1).png') }}" width="30" height="30" alt="">Leave & Attendance</a></li> --}}
+               
                 <li><a href="{{ route('user.view_organisation') }}"><img src="{{ asset('user_end/images/speedometer (1).png') }}" width="30" height="30" alt="">Orgnizations Chart</a></li>
                 <!-- {{-- <li><a href="{{ route('user.homepage') }}"><img src="{{ asset('user_end/images/security.png') }}" width="30" height="30" alt="">PMS</a></li> --}} -->
                 <li><a href="{{ route('user.hr.policy') }}"><img src="{{ asset('user_end/images/succession.png') }}" width="30" height="30" alt="">HR Policy</a></li>
@@ -213,8 +212,8 @@ $profileimahe = session('profile_image');
                     style="height: 30px; width: 30px; border-radius: 50%; margin: auto 8px auto 0;  vertical-align: middle;">
                     
                     <div >
-                    <p style="font-size:16px">Ankita Pansare</p>
-                    <small style="color:#75778A"><small> <small> Emp. Code : ST006 </small></small></small>
+                        <p style="font-size:16px">{{ $userDetails->name }}</p>
+                        <small style="color:#75778A"><small><small>Emp. Code: {{ $userDetails->employeeID }}</small></small></small>
                     </div>
                     </div>
                     <hr style="margin:7px 0 4px 0" /> 
