@@ -476,7 +476,7 @@ error_reporting(0);
                         <td>5000</td>
                         <td>In Review</td>
                         <td>
-                        <button>View</button>
+                        <a href="{{ route('user_claims') }}"><button>View</button></a>
                         </td>
                     </tr>
                     <tr>
@@ -486,7 +486,7 @@ error_reporting(0);
                         <td>5000</td>
                         <td>In Review</td>
                         <td>
-                        <button>View</button>
+                            <a href="{{ route('user_claims') }}"><button>View</button></a>
                         </td>
                         
                     </tr>
@@ -531,7 +531,7 @@ error_reporting(0);
                         <td>Paresh Sir</td>
                         <td>04</td>
                         <td>
-                        <button>View</button>
+                        <a href="{{ route('manager_claims') }}"><button>View</button></a>
                         </td>
                     </tr>
                     <tr>
@@ -539,7 +539,7 @@ error_reporting(0);
                         <td>Akash Sir</td>
                         <td>04</td>
                         <td>
-                        <button>View</button>
+                        <a href="{{ route('manager_claims') }}"><button>View</button></a>
                         </td>
                         
                     </tr>
