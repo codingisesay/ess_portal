@@ -27,41 +27,44 @@ $id = Auth::guard('superadmin')->user()->id;
         <!-- Form Section -->
         <div id="formSection">
             
-        <form  >
+        <form action="{{ route('insert_reimbursement_validation') }}" method="POST">
                 @csrf
                 <div class="form-container row">
                 <div class="col-3 mb-4">
                     <div class="form-group ">
-                        <select id="organisation_reimbursement_type_id" name="organisation_reimbursement_type_id" class="form-control" required>
+                        <select id="organisation_reimbursement_type_id" name="reimbursement_type_id" class="form-control" required>
                             <option value="" disabled selected></option>
-                            <option value="Active">Travel</option>
-                            <option value="Inactive">Food</option>
+                            @foreach ($reim_type as $item)
+                            <option value="{{ $item->id }}">{{ $item->name }}</option> 
+                            @endforeach
+                            
+                           
                         </select>
                         <label for="category_id">Reimbusrtment Type</label>
                     </div> 
                 </div>
                 <div class="col-3 mb-4">
                     <div class="form-group">
-                        <input type="text" id="category_name" name="category_name" class="form-control" required>
+                        <input type="text" id="category_name" name="max_amount" class="form-control" required>
                         <label for="category_name">Maximum Amount</label>
                     </div>
                 </div> 
                 <div class="col-3 mb-4">
                     <div class="form-group ">
-                        <select id="category_id" name="status" class="form-control" required>
+                        <select id="category_id" name="bill_required" class="form-control" required>
                             <option value="" disabled selected></option>
-                            <option value="Active">Yes</option>
-                            <option value="Inactive">No</option>
+                            <option value="Yes">Yes</option>
+                            <option value="No">No</option>
                         </select>
                         <label for="category_id">Bill Required</label>
                     </div> 
                 </div>
                 <div class="col-3 mb-4">
                     <div class="form-group ">
-                        <select id="category_id" name="status" class="form-control" required>
+                        <select id="category_id" name="tax_required" class="form-control" required>
                             <option value="" disabled selected></option>
-                            <option value="Active">Yes</option>
-                            <option value="Inactive">No</option>
+                            <option value="Yes">Yes</option>
+                            <option value="No">No</option>
                         </select>
                         <label for="category_id">Tax Required</label>
                     </div> 
@@ -77,11 +80,11 @@ $id = Auth::guard('superadmin')->user()->id;
     <div id="tableSection">
         <!-- change table and column name for table apperance -->
     @include('partials.data_table', [
-            'items' => $datafortaxes,
+            'items' => $table_data,
             'columns' => [
                 ['header' => 'ID', 'accessor' => 'id'],
-                ['header' => 'Reimbursement Type', 'accessor' => 'organisation_reimbursement_type_id'],
-                ['header' => 'maximum Amount', 'accessor' => 'org_tax_regime_years_name'],
+                ['header' => 'Reimbursement Type', 'accessor' => 'reim_type'],
+                ['header' => 'maximum Amount', 'accessor' => 'max_amount'],
                 ['header' => 'Bill Required', 'accessor' => 'bill_required'],
                 ['header' => 'Tax Required', 'accessor' => 'tax_applicable'], 
             ],

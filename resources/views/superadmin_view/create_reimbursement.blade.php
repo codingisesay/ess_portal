@@ -27,7 +27,7 @@ $id = Auth::guard('superadmin')->user()->id;
         <!-- Form Section -->
         <div id="formSection">
             
-        <form  >
+        <form action="{{ route('insert_reimbursement_type') }}" method="POST">
                 @csrf
                 <div class="form-container row">
                 <div class="col-3 mb-4">
@@ -38,7 +38,7 @@ $id = Auth::guard('superadmin')->user()->id;
                 </div>
                 <div class="col-3 mb-4">
                     <div class="form-group">
-                        <input type="text" id="category_name" name="category_name" class="form-control" required>
+                        <input type="text" id="category_name" name="category_short_name" class="form-control" required>
                         <label for="category_name">Reimbursement Abbreviation</label>
                     </div>
                 </div>
@@ -63,12 +63,12 @@ $id = Auth::guard('superadmin')->user()->id;
     <div id="tableSection">
         <!-- change table and column name for table apperance -->
     @include('partials.data_table', [
-            'items' => $datafortaxes,
+            'items' => $reim_type,
             'columns' => [
                 ['header' => 'ID', 'accessor' => 'id'],
-                ['header' => 'Reimbursement Name', 'accessor' => 'org_tax_regime_years_name'],
-                ['header' => 'Reimbursement Abbreviation', 'accessor' => 'tax_type'],
-                ['header' => 'Status', 'accessor' => 'min_income'], 
+                ['header' => 'Reimbursement Name', 'accessor' => 'name'],
+                ['header' => 'Reimbursement Abbreviation', 'accessor' => 'short_name'],
+                ['header' => 'Status', 'accessor' => 'status'], 
             ],
             'editModalId' => 'openEditModal',
             'hasActions' => true,
