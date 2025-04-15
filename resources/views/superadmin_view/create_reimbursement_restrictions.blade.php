@@ -5,6 +5,7 @@
 error_reporting(0);
 $id = Auth::guard('superadmin')->user()->id;
 // dd($categories);
+
 ?>
 <head>
     <meta charset="UTF-8">
@@ -108,26 +109,30 @@ $id = Auth::guard('superadmin')->user()->id;
                     @csrf
                     <input type="hidden" name="id" id="editReimbursementId">
                     <div class="popup-form-group">
+                        <select name="reimbursement_type_id" id="editReimbursementType" required>
+                            @foreach ($reim_type as $item)
+                                <option value="{{ $item->id }}">{{ $item->name }}</option>
+                            @endforeach
+                        </select>
                         <label for="editReimbursementType">Reimbursement Type</label>
-                        <input type="text" name="reimbursement_type" id="editReimbursementType" required>
                     </div>
                     <div class="popup-form-group">
-                        <label for="editMaxAmount">Maximum Amount</label>
                         <input type="text" name="max_amount" id="editMaxAmount" required>
+                        <label for="editMaxAmount">Maximum Amount</label>
                     </div>
                     <div class="popup-form-group">
-                        <label for="editBillRequired">Bill Required</label>
                         <select name="bill_required" id="editBillRequired" required>
                             <option value="Yes">Yes</option>
                             <option value="No">No</option>
                         </select>
+                        <label for="editBillRequired">Bill Required</label>
                     </div>
                     <div class="popup-form-group">
-                        <label for="editTaxRequired">Tax Required</label>
                         <select name="tax_required" id="editTaxRequired" required>
                             <option value="Yes">Yes</option>
                             <option value="No">No</option>
                         </select>
+                        <label for="editTaxRequired">Tax Required</label>
                     </div>
                     <div class="popup-form-group">
                         <button class="create-btn1" type="submit">Save Changes</button>
@@ -166,7 +171,8 @@ $id = Auth::guard('superadmin')->user()->id;
         showHRPolicyTable(firstButton);
     });
 
-        function openEditModal(userdata) {
+        function openEditModal(table_data, userdata) { 
+            // console.log('to pass : ',userdata)
             document.getElementById('editReimbursementId').value = userdata.id;
             document.getElementById('editReimbursementType').value = userdata.reim_type;
             document.getElementById('editMaxAmount').value = userdata.max_amount;
