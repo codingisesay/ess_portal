@@ -549,20 +549,19 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach ($leaveSummary as $leave)
-                    <tr>
-                        <td>{{ $leave['leave_type'] }}</td>
-                        <td>{{ $leave['total_leaves'] }} days</td>
-                        <td>{{ $leave['no_carry_forward'] }} days</td>
-                        <td>{{ $leave['no_leave_encash'] }} days</td>
-                        <td>{{ $leave['consumed_leaves'] }} days</td>
-                        <td>{{ $leave['remaining_leaves'] }} days</td>
-                        <td>0 days</td> <!-- Assuming static value or you can fetch from DB if needed -->
-                    </tr>
-                @endforeach
-            </tbody>
+            @foreach ($leaveSummary as $leave)
+                <tr>
+                    <td>{{ $leave['leave_type'] }}</td>
+                    <td>{{ rtrim(rtrim(number_format($leave['total_leaves'], 2, '.', ''), '0'), '.') }} days</td>
+                    <td>{{ rtrim(rtrim(number_format($leave['no_carry_forward'], 2, '.', ''), '0'), '.') }} days</td>
+                    <td>{{ rtrim(rtrim(number_format($leave['no_leave_encash'], 2, '.', ''), '0'), '.') }} days</td>
+                    <td>{{ rtrim(rtrim(number_format($leave['consumed_leaves'], 2, '.', ''), '0'), '.') }} days</td>
+                    <td>{{ rtrim(rtrim(number_format($leave['remaining_leaves'], 2, '.', ''), '0'), '.') }} days</td>
+                    <td>0 days</td>
+                </tr>
+            @endforeach
+        </tbody>
         </table>
     </div>
 </div>
-
 @endsection

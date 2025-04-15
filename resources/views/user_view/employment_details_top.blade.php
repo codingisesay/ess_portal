@@ -7,18 +7,18 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <div class="employee-info">
-<div class="profile-image1">
+<div class="profile-image1 text-center">
             <?php 
             $profileimahe = session('profile_image');
             ?>
-            <img id="profile-image" src="{{ asset('storage/'.$profileimahe) }}" class="profile-image" alt="Profile Picture">
+            <img id="profile-image" src="{{ asset('storage/'.$profileimahe) }}" class="profile-image" alt="Profile Picture"> <br><br>
+            <h2 id="emp-name">{{ ucfirst($userDetails->name ?? '-') }}</h2>
         </div>
-        <h2 id="emp-name">{{ ucfirst($userDetails->name ?? '-') }}</h2>
-        <div class="job-title">
-            <p><strong>Designation</strong> <weak id="emp-designation">{{ ucfirst($userDetails->designation_name ?? '-') }}</weak></p>
-            <p><strong>Department</strong> <weak id="emp-department">{{ ucfirst($userDetails->department_name ?? '-') }}</weak></p>
-            <p><strong>Office</strong> <weak id="emp-city">{{ ucfirst($userDetails->branch_name ?? '-') }}</weak></p>
-            <p><strong>Reporting Manager</strong> <weak id="emp-manager">{{ ucfirst($userDetails->reporting_manager_name ?? '-') }}</weak></p>
-        </div>
+        <table class="job-title">
+            <tr><td>Designation</td> <td id="emp-designation">{{ ucfirst($userDetails->designation_name ?? '-') }}</td></tr>
+            <tr><td>Department</td> <td id="emp-department">{{ ucfirst($userDetails->department_name ?? '-') }}</td></tr>
+            <tr><td>Office</td> <td id="emp-city">{{ ucfirst($userDetails->branch_name ?? '-') }}</td></tr>
+            <tr><td>Reporting Manager</td> <td id="emp-manager">{{ ucfirst($userDetails->reporting_manager_name ?? '-') }}</td></tr>
+        </table>
         </div> 
-        
+         

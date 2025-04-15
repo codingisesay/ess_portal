@@ -49,103 +49,88 @@ error_reporting(0);
 @endif
 
     <!-- First main for three sections -->
-    <main class="main-group">
+    <main class="main-group ">
         <section class="greeting">
  
             @foreach ($logs as $log)  
-            <h2 id="greeting"></h2>
+            <h3 id="greeting"></h3>
 
             <div class="top-cards">
                 <!-- Check In Card -->
                 <div class="card checkin">
-                    <img src="{{ asset('user_end/images/Group490.png'); }}" alt="">
-                    <h4>Check In</h4>
-                    <p>{{ date('h:i:s A', strtotime($log->login_time)) }}</p>
-                   
+                    <img src="{{ asset('user_end/images/Group490.png'); }}" alt=""><br>
+                    <p class="fs-6 mb-0">Check&nbsp;In</p>
+                    <small>{{ date('h:i:s A', strtotime($log->login_time)) }}</small>                   
                 </div>
 
                 <!-- Check Out Card -->
                 <div class="card checkout">
-                    <img src="{{ asset('user_end/images/Group491.png'); }}" alt="">
-                    <h4>Check Out</h4>
-                    <p>{{ $log->logout_time ? date('h:i:s A', strtotime($log->logout_time)) : 'First Login' }}</p>
+                    <img src="{{ asset('user_end/images/Group491.png'); }}" alt=""><br>
+                    <p class="fs-6 mb-0">Check&nbsp;Out</p>
+                    <small>{{ $log->logout_time ? date('h:i:s A', strtotime($log->logout_time)) : 'First Login' }}</small>
                 </div>
                 @endforeach
 
                 
                 <!-- Birthday Card -->
                 <div class="birthday-carousel-container">
-    <div class="birthday-carousel" id="birthdayCarousel">
-        @php
-            $todaysBirthdays = $todayBirthdays->filter(function($birthday) {
-                return \Carbon\Carbon::parse($birthday->birthdate)->isToday();
-            });
-        @endphp
+                    <div class="birthday-carousel" id="birthdayCarousel">
+                        @php
+                            $todaysBirthdays = $todayBirthdays->filter(function($birthday) {
+                                return \Carbon\Carbon::parse($birthday->birthdate)->isToday();
+                            });
+                        @endphp
 
-        @if ($todaysBirthdays->isEmpty())  <!-- Check if no birthdays today -->
-            <div class="birthday card">
-                <img src="{{ asset('user_end/images/Group303.png') }}" height="40" width="40" alt="Avatar">
-                <h6>No birthdays today</h6>
-                <p>Check back later!</p>
-            </div>
-        @else  <!-- If there are birthdays, loop through them -->
-            @foreach ($todaysBirthdays as $birthday)
-                <div class="birthday card">
-                    <img src="{{ asset('user_end/images/Group303.png') }}" height="40" width="40" alt="Avatar">
-                    <h6>Wish To {{ $birthday->employee_nme }}</h6>
-                    <p>Happy Birthday</p>
-                </div>
-            @endforeach
-        @endif
-    </div>
-    <!-- <span class="count-circle">{{ $birthday->age }}</span> -->
-    <!-- Navigation buttons -->
-    <!-- <button class="prev" id="prevSlide">❮</button>
-    <button class="next" id="nextSlide">❯</button> -->
-</div>
-
-
+                        @if ($todaysBirthdays->isEmpty())  <!-- Check if no birthdays today -->
+                            <div class="birthday card">
+                                <img src="{{ asset('user_end/images/Group303.png') }}" height="40" width="40" alt="Avatar"> <br>
+                                <h6>No birthdays today</h6>
+                                <p>Check back later!</p>
+                            </div>
+                        @else  <!-- If there are birthdays, loop through them -->
+                            @foreach ($todaysBirthdays as $birthday)
+                                <div class="birthday card">
+                                    <img src="{{ asset('user_end/images/Group303.png') }}" height="40" width="40" alt="Avatar">
+                                    <h6>Wish To {{ $birthday->employee_nme }}</h6>
+                                    <p>Happy Birthday</p>
+                                </div>
+                            @endforeach
+                        @endif
+                    </div> 
+                </div> 
             </div>
             <!-- Include the auto-scrolling JavaScript -->
-<script>
-    window.onload = function() {
-        const carousel = document.getElementById("birthdayCarousel");
-        let scrollAmount = 0;
-        const scrollStep = 1;  // How much to scroll per interval (adjust for speed)
-        const maxScroll = carousel.scrollWidth - carousel.clientWidth;  // Maximum scroll width
-
-        function autoScroll() {
-            if (scrollAmount >= maxScroll) {
-                scrollAmount = 0;  // Reset to the beginning once we reach the end
-            } else {
-                scrollAmount += scrollStep;  // Scroll by the defined step
-            }
-            carousel.scrollLeft = scrollAmount;  // Apply the scroll amount to the carousel
-        }
-
-        // Start the auto-scroll function every 40ms (this can be adjusted)
-        setInterval(autoScroll, 60); 
-    }
-</script>
-
+  
             <div class="bottom-cards">
                 <!-- Thought of the Day Card -->
                 <div class="card thought">
-                    <img src="{{ asset('user_end/images/Group326.png'); }}" alt="">
-                    <h4>Thought Of The Day</h4>
+                    <img src="{{ asset('user_end/images/Group326.png'); }}" alt=""> <br>
+                    <p class="fs-6 mb-0">Thought Of The Day</p>
                     @if($thoughtOfTheDay)
-                    <p>{{ $thoughtOfTheDay->thought }}</p>
+                    <i>{{ $thoughtOfTheDay->thought }}</i>
                 @else
-                    <p>No thought for today.</p>
+                    <small class="text-secondary">No thought for today.</small>
                 @endif
                     
                 </div>
 
                 <!-- Upcoming Holiday Card -->
                 <div class="card holiday1">
-                    <h4>Upcoming Holidays</h4>
-                    
+                <img src="{{ asset('user_end/images/holiday.png'); }}" alt=""> <br>
+                    <p class="fs-6 mb-0">Upcoming Holiday</p>
+                  
                     @if($upcomingHolidays->isNotEmpty())
+                    @php
+                        $firstHoliday = $upcomingHolidays->first();
+                    @endphp 
+                        <i>
+                            {{ $firstHoliday->formatted_date }} : {{ $firstHoliday->holiday_name }} ({{ $firstHoliday->day }})
+                        </i>
+                    @else
+                        <i>No upcoming holidays this year.</i>
+                    @endif
+
+                    <!-- @if($upcomingHolidays->isNotEmpty())
                         <ul>
                             @foreach($upcomingHolidays as $holiday)
                                 <li>
@@ -155,7 +140,7 @@ error_reporting(0);
                         </ul>
                     @else
                         <p>No upcoming holidays this year.</p>
-                    @endif
+                    @endif -->
                 </div>
             </div>
         </section>
@@ -185,40 +170,48 @@ error_reporting(0);
         <section class="to-do-list">
             <h3>To-do List</h3>
             <form id="todo-form" class="to-do-list-container" method="POST" action="{{ route('user.save_todo') }}">
-                @csrf
-                <div class="to-do-list-container">
-                    
-
+                @csrf 
+                    <!-- Project Field -->
                     <div class="form-group">
-                        <label for="project">Project</label>
-                        <input type="text" id="project" maxlength="200" name="project_name" placeholder="Project Name"
-                            class="input-field" required>
+                        <div class="floating-label-wrapper">
+                            <input type="text" id="project" maxlength="200" name="project_name" Placeholder="Project Name" class="input-field" required>
+                            <label for="project">Project</label>
+                        </div>
                     </div>
 
+                    <!-- Task Field -->
                     <div class="form-group">
-                        <label for="task">Task</label>
-                        <input type="text" maxlength="200" id="task" name="task_name" placeholder="Task Name" class="input-field"
-                            required>
+                        <div class="floating-label-wrapper">
+                            <input type="text" maxlength="200" id="task" name="task_name" placeholder="Task Description" class="input-field" required>
+                            <label for="task">Task</label>
+                        </div>
                     </div>
 
+                    <!-- Date Field -->
                     <div class="form-group">
-                    <label for="date">Date</label>
-                        <input type="date" name="task_date" id="task_date" class="input-field" required>
+                        <div class="floating-label-wrapper">
+                            <input type="date" name="task_date" id="task_date" placeholder=" " class="input-field" required>
+                            <label for="task_date">Date</label>
+                        </div>
                     </div>
 
+                    <!-- Hours Field -->
                     <div class="form-group">
-                        <label for="hours">Hours</label>
-                        <input type="time" id="hours" name="hours" class="input-field" value="00:00:00"
-                            placeholder="HH:MM:SS" required>
+                        <div class="floating-label-wrapper">
+                            <input type="time" id="hours" name="hours" class="input-field" value="00:00:00" placeholder=" " required>
+                            <label for="hours">Hours</label>
+                        </div>
                     </div>
 
+                    <!-- Save Button -->
                     <button type="submit" class="save-button">Save</button>
-                </div>
+             
+
             </form>
         </section>
 
         <section class="upcoming-anniversary">
-            <h3>Work Anniversary</h3>
+            <h3>Carnivals</h3>
             <div class="anniversary">
                 @forelse ($anniversaries as $anniversary)
                 <div class="employee-card">
@@ -231,7 +224,7 @@ error_reporting(0);
                     </div>
                 </div>
                 @empty
-                <p>No anniversaries for the current month.</p>
+                <p class="text-muted text-center py-3">No Carnivals for the current month.</p>
                 @endforelse
             </div>
         </section>
@@ -320,7 +313,7 @@ error_reporting(0);
         <div id="leaveModal" class="modal">
     <div class="modal-content">
         <span class="close" onclick="closeLeaveModal()">&times;</span>
-        <h2>Leave Details</h2>
+        <h3>Leave Details</h3>
         <table>
             <thead>
                 <tr>
@@ -380,7 +373,7 @@ error_reporting(0);
 <div id="taskModal" class="modal">
     <div class="modal-content">
         <span class="close" onclick="closeTaskModal()">&times;</span>
-        <h2>Task</h2>
+        <h3>Task</h3>
         <table>
             <thead>
                 <tr>
@@ -430,7 +423,7 @@ error_reporting(0);
 <div id="reimbursementModal" class="modal">
     <div class="modal-content">
         <span class="close" onclick="closeReimbursementModal()">&times;</span>
-        <h2>Reimbursement Details</h2>
+        <h3>Reimbursement Details</h3>
         <table>
             <thead>
                 <tr>
@@ -499,7 +492,7 @@ error_reporting(0);
 <div id="accountModal" class="modal">
     <div class="modal-content">
         <span class="close" onclick="closeAccountModal()">&times;</span>
-        <h2>Account Details</h2>
+        <h3>Account Details</h3>
         <table>
             <thead>
                 <tr>

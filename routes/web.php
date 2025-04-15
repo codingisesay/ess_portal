@@ -129,6 +129,8 @@ Route::middleware(['auth.superadmin'])->group(function () {
     Route::get('superadmin/reimbursement_restrictions',[ReimbursementController::class,'reimbursement_restrictions_load'])->name('reimbursement_restrictions');
     Route::post('superadmin/insert_reimbursement_type',[ReimbursementController::class,'insertReimbursementType'])->name('insert_reimbursement_type');
     Route::post('superadmin/insert_reimbursement_validation',[ReimbursementController::class,'insertReimbursementValidation'])->name('insert_reimbursement_validation');
+    Route::post('superadmin/update_reimbursement_validation',[ReimbursementController::class,'updateReimbursementValidation'])->name('update_reimbursement_validation');
+    Route::post('superadmin/update_reimbursement_type',[ReimbursementController::class,'updateReimbursementType'])->name('update_reimbursement_type');
     
 });
 
