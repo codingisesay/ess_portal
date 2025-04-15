@@ -33,7 +33,7 @@ $userDetails = app('App\Http\Controllers\headerController')->getUserDetails();
 
         .profile-dropdown-content {
             padding: 12px 20px;
-            display: block;
+            display: none;
             position: absolute;
             right: 0;
             background-color: #f9f9f9;
