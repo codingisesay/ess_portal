@@ -1,5 +1,6 @@
-<!DOCTYPE html>
-<html>
+@extends('user_view.header')
+@section('content')
+
 <head>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
@@ -9,7 +10,8 @@
 <body>
 
 <div class="container-fluid">
-  <h2>John Doe Claims</h2>
+  <h2>Raised Clims </h2>
+  <p> Raised By :John Doe Claims</p>
   <p>No Of Claims : 3</p>
   <p>Total Amount : 6000</p>
   <div class="panel-group">
@@ -232,6 +234,9 @@
       }
     });
   });
-</script>
+</script> 
+
 </body>
-</html>
+
+
+@endsection

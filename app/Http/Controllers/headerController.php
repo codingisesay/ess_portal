@@ -86,4 +86,15 @@ class headerController extends Controller
 
 }
 }
+
+    public function getUserDetails()
+    {
+        $user = Auth::user();
+        $userDetails = DB::table('users')
+            ->select('employeeID', 'name')
+            ->where('id', $user->id)
+            ->first();
+
+        return $userDetails;
+    }
 }
