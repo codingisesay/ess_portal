@@ -1,11 +1,7 @@
 @extends('user_view.header')
 @section('content')
-<<<<<<< HEAD
 <!DOCTYPE html>
 <html lang="en">
-=======
-
->>>>>>> 9227786157a3e718be928006df4ae1b4ef70cc8e
 <head>
     <meta charset="UTF-8">
     <title>Claims Page</title>
@@ -18,34 +14,12 @@
     <p class="claim-summary">No Of Claims: 3</p>
     <p class="claim-summary">Total Amount: 6000</p>
 
-<<<<<<< HEAD
     <!-- Claim Panel -->
     <div class="claim-panel">
         <div class="claim-header" onclick="toggleBody(this)">#clm-001 | Rs. 2000</div>
         <div class="claim-body" style="display: block;">
             <table class="custom-table">
                 <thead>
-=======
-<div class="container-fluid">
-  <h2>Raised Clims </h2>
-  <p> Raised By :John Doe Claims</p>
-  <p>No Of Claims : 3</p>
-  <p>Total Amount : 6000</p>
-  <div class="panel-group">
-    <div class="panel panel-default">
-      <div class="panel-heading">
-        <h4 class="panel-title">
-          <a data-toggle="collapse" href="#collapse1">#clm-001 | Rs. 2000</a>
-        </h4>
-      </div>
-      <div id="collapse1" class="panel-collapse collapse">
-        <div class="panel-body">
-
-            <div class="container-fluid">
-          
-                <table class="table table-bordered">
-                  <thead>
->>>>>>> 9227786157a3e718be928006df4ae1b4ef70cc8e
                     <tr>
                         <th>S.No.</th>
                         <th>Date</th>
@@ -233,7 +207,6 @@
             textarea.style.display = this.checked ? 'none' : 'block';
         });
     });
-<<<<<<< HEAD
 </script>
 
 <style>
@@ -355,12 +328,3 @@ textarea {
 </html>
 @endsection
 
-=======
-  });
-</script> 
-
-</body>
-
-
-@endsection
->>>>>>> 9227786157a3e718be928006df4ae1b4ef70cc8e
