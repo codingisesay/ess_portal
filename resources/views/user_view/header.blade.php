@@ -5,6 +5,7 @@
 // exit();
 
 $profileimahe = session('profile_image');
+$userDetails = app('App\Http\Controllers\headerController')->getUserDetails();
 
 
 ?>
@@ -20,141 +21,6 @@ $profileimahe = session('profile_image');
     <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
 
     <script src="{{ asset('user_end/js/toastify-notifications.js') }}"></script>
-<<<<<<< HEAD
-=======
-    <style>
-        /* Add your custom CSS here */
-        .profile-dropdown {
-            position: relative;
-            display: inline-block;
-        }
-
-        .profile-dropdown-content {
-            padding: 12px 20px;
-            display: none;
-            position: absolute;
-            right: 0;
-            background-color: #f9f9f9;
-            min-width: max-content;box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
-            z-index: 1;
-            border-radius: 10px;
-            overflow: hidden;
-        }
-
-        .profile-dropdown-content a {
-            color: black;
-            padding: 12px 16px;
-            text-decoration: none;
-            display: block;
-        }
-
-        .profile-dropdown-content a:hover {
-            background-color: #f1f1f1;
-        }
-
-        .profile-dropdown:hover .profile-dropdown-content {
-            display: block;
-        }
-
-        .profile-dropdown:hover .profile-pic {
-            border: 2px solid #8A3366;
-        }
-
-        .profile-pic {
-            cursor: pointer;
-        }
-        .logout-icon:hover ,  .profile-links p:hover  {
-            background-color:rgb(219, 219, 219) !important;border-radius:6px
-        }
-        .logout-icon{border:0;background:none !important;cursor:pointer;color:black;font-size:16px; padding:3px 10px;width :100%; text-align:left; }
-
-       
-        .profile-links p{cursor:pointer;}
- 
-                /* Modal Styles */
-.modall {
-    display: none;
-    position: fixed;
-    z-index: 1;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    overflow: auto;
-    background-color: rgba(0, 0, 0, 0.4);
-}
-
-.modal-content8 {
-    background-color: #fefefe;
-    margin: 15% auto;
-    padding: 20px;
-    border: 1px solid #888;
-    width: 25%;
-    text-align: center;
-    position: relative;
-    border-radius: 15px;
-}
-
-.close1 {
-    color: #aaa;
-    font-size: 28px;
-    font-weight: bold;
-    position: absolute;
-    top: 10px;
-    right: 25px;
-    cursor: pointer;
-}
-
-.close1:hover,
-.close1:focus {
-    color: black;
-    text-decoration: none;
-    cursor: pointer;
-}
-
-/* Image Container (Circle view) */
-.image-container8 {
-    width: 150px;
-    height: 150px;
-    border-radius: 50%;
-    overflow: hidden;
-    margin: 10px auto;
-}
-
-.image-preview {
-    width: 150px;
-    height: 150px;
-    border-radius: 50%;
-    object-fit: cover;
-    display: block;
-}
-
-.camera-ico {
-    position: absolute;
-    bottom: 105px;
-    right: 166px;
-    font-size: 24px;
-    color: black;
-    /* color: white; */
-    /* background: rgba(0, 0, 0, 0.5); */
-    padding: 8px;
-    border-radius: 50%;
-}
-/* Button Styles */
-.buttonn {
-    padding: 10px 20px;
-    margin-top: 20px;
-    background-color: #8A3366;
-    color: white;
-    border: none;
-    cursor: pointer;
-}
-
-.buttonn:hover {
-    background-color: #8A3366;
-}
-    </style>
->>>>>>> 53b60935ff6f006b53deb0b8e198f4f33dc1a5fe
 </head>
 <body>
 
@@ -203,9 +69,12 @@ $profileimahe = session('profile_image');
                 <div class="profile-dropdown-content"> 
                     <div class="d-flex"> 
                     <img src="{{ asset('storage/'.$profileimahe) }}" alt="Profile Picture" class="profile-in-dd" >                   
-                    <div>
-                    <p class="mb-0 ">Ankita Pansare</p>
-                    <small class="text-muted "> <small> <small> Emp. Code : ST006 </small></small></small>
+                 
+                    <div >
+                        <p class="mb-0">{{ $userDetails->name }}</p>
+                        <small class="text-muted"><small>
+                            Emp. Code: {{ $userDetails->employeeID }}
+                        </small></small>
                     </div>
                     </div>
                     <hr class="my-2"/>                         
