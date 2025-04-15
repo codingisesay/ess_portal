@@ -13,9 +13,18 @@
         
         <div class="contact-details">
             <h3>Contact Details</h3>
-            <p><strong>Phone Number</strong> <weak id="emp-phone">{{ ucfirst($userDetails->offical_phone_number ?? '-') }}</weak></p>
-            <p><strong>Alternate Number</strong> <weak id="emp-alternate-phone">{{ ucfirst($userDetails->alternate_phone_number ?? '-') }}</weak></p>
-            <p><strong>Email Address</strong> <weak><a href="mailto:{{ $userDetails->email ?? '-' }}" id="emp-email">{{ ucfirst($userDetails->email ?? '-') }}</a></weak></p>
+            <div class="d-flex">
+                <div class="col-6">
+                    <p><strong>Phone Number</strong> <weak id="emp-phone">{{ ucfirst($userDetails->offical_phone_number ?? '-') }}</weak></p>
+                    <p><strong>Alternate Number</strong> <weak id="emp-alternate-phone">{{ ucfirst($userDetails->alternate_phone_number ?? '-') }}</weak></p>
+                    <p><strong>Email Address</strong> <weak><a href="mailto:{{ $userDetails->email ?? '-' }}" id="emp-email">{{ ucfirst($userDetails->email ?? '-') }}</a></weak></p>
+                </div>
+                <div class="col-6">
+                    <p><strong>Kin Relation</strong> <weak id="emp-contactperson">{{ ucfirst($userDetails->emergency_contact_person ?? '-') }}</weak></p>
+                    <p><strong>Kin Contact No.</strong> <weak id="emp-contactnumber">{{ ucfirst($userDetails->emergency_contact_number ?? '-') }}</weak></p>     
+                </div>
+            </div>
+                <hr>
             <h3>Address</h3>
             <p><strong>Permanent</strong> <weak id="emp-permanent-address">
             {{ ucfirst(trim($userDetails->per_building_no) ? $userDetails->per_building_no . ',' : '') }}
@@ -43,9 +52,5 @@
             </weak></p>
         </div>
     </div>
-    <div class="emergency-contact">
-        <h2>Emergency Contact Details</h2>
-        <p><strong>Name</strong> <weak id="emp-contactperson">{{ ucfirst($userDetails->emergency_contact_person ?? '-') }}</weak></p>
-        <p><strong>Contact Number</strong> <weak id="emp-contactnumber">{{ ucfirst($userDetails->emergency_contact_number ?? '-') }}</weak></p>              
-    </div>
+   
 <!-- </div> -->
