@@ -4,193 +4,192 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="{{ asset('/user_end/css/employment_data.css') }}">
-    {{-- <title>Employee Details</title> --}}
+    <link rel="stylesheet" href="{{ asset('/user_end/css/employment_data.css') }}"> 
     <link rel="icon" href="{{ asset('user_end/images/STPLLogo butterfly.png') }}" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
-    <div class="container">
+    <div class="">
     
-        <div class="employment-details">
-        @include('user_view.employment_details_top')
+        <div class="employment-details d-flex">
+            @include('user_view.employment_details_top')
             @include('user_view.employment_details_section')
         </div>
 
         <div class="right-section">
             <div class="section custom-table">
-    <h2>Personal Information</h2>
-    <table>
-        <tr>
-            <th>Date of Birth</th>
-            <td><b>{{ $userDetails->date_of_birth ? \Carbon\Carbon::parse($userDetails->date_of_birth)->format('d-m-Y') : '-' }}</b></td>
-        </tr>
-        <tr>
-            <th>Gender</th>
-            <td><b>{{ ucfirst($userDetails->gender ?? '-') }}</b></td>
-        </tr>
-        <tr>
-            <th>Nationality</th>
-            <td><b>{{ ucfirst($userDetails->nationality ?? '-') }}</b></td>
-        </tr>
-        <tr>
-            <th>Marital Status</th>
-            <td><b>{{ ucfirst($userDetails->marital_status ?? '-') }}</b></td>
-        </tr>
-        <tr>
-            <th>Anniversary Date</th>
-            <td><b>{{ $userDetails->anniversary_date ? \Carbon\Carbon::parse($userDetails->anniversary_date)->format('d-m-Y') : '-' }}</b></td>
-        </tr>
-        <tr>
-            <th>Blood Group</th>
-            <td><b>{{ ucfirst($userDetails->blood_group ?? '-') }}</b></td>
-        </tr>
-        <tr>
-            <th>Religion</th>
-            <td><b>{{ ucfirst($userDetails->religion ?? '-') }}</b></td>
-        </tr>
-    </table>
-</div>
-
-
-<div class="section custom-table">
-    <table>
-        <!-- Header row with h2 centered across the table -->
-        <h2> Employee Details</h2>
-        
-        <tr>
-            <th>Employment Status</th>
-            <td><b>{{ ucfirst($userDetails->employment_status ?? 'Active') }}</b></td>
-        </tr>
-        <tr>
-            <th>Employment Type</th>
-            <td><b>{{ ucfirst($userDetails->employee_type_name ?? '-') }}</b></td>
-        </tr>
-        <tr>
-            <th>Start Date</th>
-            <td><b>{{ $userDetails->Joining_date ? \Carbon\Carbon::parse($userDetails->Joining_date)->format('d-m-Y') : '-' }}</b></td>
-        </tr>
-        <tr>
-            <th>Total Experience</th>
-            <td><b>{{ ucfirst($userDetails->total_experience ?? '-') }}</b></td>
-        </tr>
-    </table>
-</div>
-
-<div class="section custom-table">
-    <table>
-        <!-- Header row with h2 centered across the table -->
-         <h2>Salary Bank Details</h2>
-       
-        <tr>
-            <th>Bank Name</th>
-            <td><b>{{ ucfirst($userDetails->bank_name ?? '-') }}</b></td>
-        </tr>
-        <tr>
-            <th>Branch Name</th>
-            <td><b>{{ ucfirst($userDetails->sal_branch_name ?? '-') }}</b></td>
-        </tr>
-        <tr>
-            <th>Account Number</th>
-            <td><b>{{ ucfirst($userDetails->sal_account_number ?? '-') }}</b></td>
-        </tr>
-        <tr>
-            <th>IFSC Code</th>
-            <td><b>{{ ucfirst($userDetails->sal_ifsc_code ?? '-') }}</b></td>
-        </tr>
-    </table>
-</div>
-
-<div class="section custom-table">
-    <table class="custom-table">
-        <!-- Header row with h2 centered across the table -->
-         <h2>Passport & Visa Details</h2>
-       
-        <tr>
-            <th>Passport Number</th>
-            <td><b>{{ ucfirst($userDetails->passport_number ?? '-') }}</b></td>
-        </tr>
-        <tr>
-            <th>Issuing Country</th>
-            <td><b>{{ ucfirst($userDetails->issuing_country ?? '-') }}</b></td>
-        </tr>
-        <tr>
-            <th>Issue Date</th>
-            <td><b>{{ $userDetails->passport_issue_date ? \Carbon\Carbon::parse($userDetails->passport_issue_date)->format('d-m-Y') : '-' }}</b></td>
-        </tr>
-        <tr>
-            <th>Expiry Date</th>
-            <td><b>{{ $userDetails->passport_expiry_date ? \Carbon\Carbon::parse($userDetails->passport_expiry_date)->format('d-m-Y') : '-' }}</b></td>
-        </tr>
-        <tr>
-            <th>Visa</th>
-            <td><b>{{ ucfirst($userDetails->active_visa ?? '-') }}</b></td>
-        </tr>
-        <tr>
-            <th>Visa Expiry Date</th>
-            <td><b>{{ $userDetails->visa_expiry_date ? \Carbon\Carbon::parse($userDetails->visa_expiry_date)->format('d-m-Y') : '-' }}</b></td>
-        </tr>
-    </table>
-</div>
-
-<div class="section custom-table">
-    <table>
-        <!-- Header row with h2 centered across the table -->
-         <h2>Welfare Benefits</h2>
-        
-        <tr>
-            <th>UAN</th>
-            <td><b>{{ ucfirst($userDetails->universal_account_number ?? '-') }}</b></td>
-        </tr>
-        <tr>
-            <th>Provident Fund</th>
-            <td><b>{{ ucfirst($userDetails->provident_fund ?? '-') }}</b></td>
-        </tr>
-        <tr>
-            <th>ESIC NO</th>
-            <td><b>{{ ucfirst($userDetails->esic_no ?? '-') }}</b></td>
-        </tr>
-    </table>
-</div>
-
-      
-<div class="section custom-table">
-    <h2>Educational Details</h2>
-    <table class="">
-        <thead>
-            <tr>
-                <th>Course Name</th>
-                <th>Action</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach($empEducation as $education)
+            <h2>Personal Information</h2>
+            <table>
                 <tr>
-                    <td class="course-name">
-                        @if($education->course_type == 'degree')
-                            {{ ucfirst($education->degree ?? '-') }}
-                        @elseif($education->course_type == 'certification')
-                            {{ ucfirst($education->certification_name ?? '-') }}
-                        @endif
-                    </td>
-                    <td>
-                        @if($education->course_type == 'degree')
-                            <button class="view-btn" onclick="openDegreeModal({{ $loop->index }})">View</button>
-                        @elseif($education->course_type == 'certification')
-                            <button class="view-btn" onclick="openCertificationModal({{ $loop->index }})">View</button>
-                        @endif
-                    </td>
+                    <th>Date of Birth</th>
+                    <td><b>{{ $userDetails->date_of_birth ? \Carbon\Carbon::parse($userDetails->date_of_birth)->format('d-m-Y') : '-' }}</b></td>
                 </tr>
-            @endforeach
-        </tbody>
-    </table>
-</div>
-<style>
-    .course-name {
-        word-wrap: break-word !important; /* Allow long words to break and wrap onto the next line */
-        white-space: normal;   /* Ensure text wraps instead of staying on one line */
-    }
-</style>
+                <tr>
+                    <th>Gender</th>
+                    <td><b>{{ ucfirst($userDetails->gender ?? '-') }}</b></td>
+                </tr>
+                <tr>
+                    <th>Nationality</th>
+                    <td><b>{{ ucfirst($userDetails->nationality ?? '-') }}</b></td>
+                </tr>
+                <tr>
+                    <th>Marital Status</th>
+                    <td><b>{{ ucfirst($userDetails->marital_status ?? '-') }}</b></td>
+                </tr>
+                <tr>
+                    <th>Anniversary Date</th>
+                    <td><b>{{ $userDetails->anniversary_date ? \Carbon\Carbon::parse($userDetails->anniversary_date)->format('d-m-Y') : '-' }}</b></td>
+                </tr>
+                <tr>
+                    <th>Blood Group</th>
+                    <td><b>{{ ucfirst($userDetails->blood_group ?? '-') }}</b></td>
+                </tr>
+                <tr>
+                    <th>Religion</th>
+                    <td><b>{{ ucfirst($userDetails->religion ?? '-') }}</b></td>
+                </tr>
+            </table>
+        </div>
+
+
+        <div class="section custom-table">
+            <table>
+                <!-- Header row with h2 centered across the table -->
+                <h2> Employee Details</h2>
+                
+                <tr>
+                    <th>Employment Status</th>
+                    <td><b>{{ ucfirst($userDetails->employment_status ?? 'Active') }}</b></td>
+                </tr>
+                <tr>
+                    <th>Employment Type</th>
+                    <td><b>{{ ucfirst($userDetails->employee_type_name ?? '-') }}</b></td>
+                </tr>
+                <tr>
+                    <th>Start Date</th>
+                    <td><b>{{ $userDetails->Joining_date ? \Carbon\Carbon::parse($userDetails->Joining_date)->format('d-m-Y') : '-' }}</b></td>
+                </tr>
+                <tr>
+                    <th>Total Experience</th>
+                    <td><b>{{ ucfirst($userDetails->total_experience ?? '-') }}</b></td>
+                </tr>
+            </table>
+        </div>
+
+        <div class="section custom-table">
+            <table>
+                <!-- Header row with h2 centered across the table -->
+                <h2>Salary Bank Details</h2>
+            
+                <tr>
+                    <th>Bank Name</th>
+                    <td><b>{{ ucfirst($userDetails->bank_name ?? '-') }}</b></td>
+                </tr>
+                <tr>
+                    <th>Branch Name</th>
+                    <td><b>{{ ucfirst($userDetails->sal_branch_name ?? '-') }}</b></td>
+                </tr>
+                <tr>
+                    <th>Account Number</th>
+                    <td><b>{{ ucfirst($userDetails->sal_account_number ?? '-') }}</b></td>
+                </tr>
+                <tr>
+                    <th>IFSC Code</th>
+                    <td><b>{{ ucfirst($userDetails->sal_ifsc_code ?? '-') }}</b></td>
+                </tr>
+            </table>
+        </div>
+
+        <div class="section custom-table">
+            <table class="custom-table">
+                <!-- Header row with h2 centered across the table -->
+                <h2>Passport & Visa Details</h2>
+            
+                <tr>
+                    <th>Passport Number</th>
+                    <td><b>{{ ucfirst($userDetails->passport_number ?? '-') }}</b></td>
+                </tr>
+                <tr>
+                    <th>Issuing Country</th>
+                    <td><b>{{ ucfirst($userDetails->issuing_country ?? '-') }}</b></td>
+                </tr>
+                <tr>
+                    <th>Issue Date</th>
+                    <td><b>{{ $userDetails->passport_issue_date ? \Carbon\Carbon::parse($userDetails->passport_issue_date)->format('d-m-Y') : '-' }}</b></td>
+                </tr>
+                <tr>
+                    <th>Expiry Date</th>
+                    <td><b>{{ $userDetails->passport_expiry_date ? \Carbon\Carbon::parse($userDetails->passport_expiry_date)->format('d-m-Y') : '-' }}</b></td>
+                </tr>
+                <tr>
+                    <th>Visa</th>
+                    <td><b>{{ ucfirst($userDetails->active_visa ?? '-') }}</b></td>
+                </tr>
+                <tr>
+                    <th>Visa Expiry Date</th>
+                    <td><b>{{ $userDetails->visa_expiry_date ? \Carbon\Carbon::parse($userDetails->visa_expiry_date)->format('d-m-Y') : '-' }}</b></td>
+                </tr>
+            </table>
+        </div>
+
+        <div class="section custom-table">
+            <table>
+                <!-- Header row with h2 centered across the table -->
+                <h2>Welfare Benefits</h2>
+                
+                <tr>
+                    <th>UAN</th>
+                    <td><b>{{ ucfirst($userDetails->universal_account_number ?? '-') }}</b></td>
+                </tr>
+                <tr>
+                    <th>Provident Fund</th>
+                    <td><b>{{ ucfirst($userDetails->provident_fund ?? '-') }}</b></td>
+                </tr>
+                <tr>
+                    <th>ESIC NO</th>
+                    <td><b>{{ ucfirst($userDetails->esic_no ?? '-') }}</b></td>
+                </tr>
+            </table>
+        </div>
+
+            
+        <div class="section custom-table">
+            <h2>Educational Details</h2>
+            <table class="">
+                <thead>
+                    <tr>
+                        <th>Course Name</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach($empEducation as $education)
+                        <tr>
+                            <td class="course-name">
+                                @if($education->course_type == 'degree')
+                                    {{ ucfirst($education->degree ?? '-') }}
+                                @elseif($education->course_type == 'certification')
+                                    {{ ucfirst($education->certification_name ?? '-') }}
+                                @endif
+                            </td>
+                            <td>
+                                @if($education->course_type == 'degree')
+                                    <button class="view-btn" onclick="openDegreeModal({{ $loop->index }})">View</button>
+                                @elseif($education->course_type == 'certification')
+                                    <button class="view-btn" onclick="openCertificationModal({{ $loop->index }})">View</button>
+                                @endif
+                            </td>
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
+        <style>
+            .course-name {
+                word-wrap: break-word !important; /* Allow long words to break and wrap onto the next line */
+                white-space: normal;   /* Ensure text wraps instead of staying on one line */
+            }
+        </style>
 
             <div id="degreeModal" class="modal">
                 <div class="modal-content">

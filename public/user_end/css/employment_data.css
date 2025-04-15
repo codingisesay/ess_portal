@@ -14,19 +14,9 @@ body {
     line-height: 1.6;
 }
 
-.container {
-    display: grid;
-    grid-template-columns: 1fr 2fr;
-    gap: 20px;
-    padding-bottom: 20px;
-    padding-left: 10px;
-    padding-right: 13px;
-}
 
 .employment-details {
     width: 100%;
-    /* max-width: 563px; */
-    height: 1040px;
     background-color: #ffffff;
     border-radius: 25px;
     padding: 50px;
@@ -82,10 +72,6 @@ body {
 }
 
 @media (max-width: 768px) {
-
-    .container {
-        grid-template-columns: 1fr;
-    }
 
     .section,
     .section1 {
@@ -347,9 +333,9 @@ tr:nth-child(even) {
     overflow: auto;
     margin-bottom: 15px;
     margin-top: -25px;
-    width: 100%;
+    width: 94%;
     padding-top: 5px;
-    margin-left: 10px;
+    margin: 10px auto;
 }
 
 .custom-table {
@@ -543,12 +529,6 @@ table tbody tr:nth-child(even) {
     color: black;
     font-weight: bold;
 }
-
-/* .container {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-} no*/
 
 .view-btn {
     background-color: #FFC107;

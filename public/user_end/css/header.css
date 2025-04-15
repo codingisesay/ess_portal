@@ -10,6 +10,7 @@
 body {
     background-color: #f6f6f6;
     color: #333;
+    font-size: 16px;
 }
 
 /* 🔹 HEADER STYLING */
@@ -17,70 +18,77 @@ header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 15px 2%;
-    /* background-color: #F6F5F7; */
-    flex-wrap: wrap;
+    padding: 12px 15px;
+    gap: 10px
+        /* flex-wrap: wrap; */
 }
 
 /* LOGO */
 .logo {
     border-radius: 60px;
     background-color: white;
-    width: 100px;
+    /* width: 100px; */
     text-align: center;
-    padding: 5px;
+    padding: 5px 5px 10px 5px;
 }
 
 .logo img {
-    height: 40px;
+    height: auto;
+    width: 130px;
 }
 
 /* 🔹 NAVBAR */
 nav {
     border-radius: 60px;
     background-color: white;
-    min-height: 60px;
     display: flex;
     align-items: center;
     width: 80%;
-    gap: 50px;
     justify-content: center;
-    padding: 10px 20px;
+    padding: 12px 0;
     flex-wrap: wrap;
 }
 
 nav ul {
     display: flex;
-    gap: 30px;
     list-style: none;
     flex-wrap: wrap;
-    justify-content: center;
+    justify-content: space-evenly;
     width: 100%;
-    padding: 0;
     margin: 0;
+    padding: 0;
 }
 
 nav ul li a {
     display: flex;
     align-items: center;
-    gap: 10px;
-    color: #b1b1b1;
+    gap: 5px;
+    color: #555;
     text-decoration: none;
     transition: color 0.3s ease;
-    font-size: 14px;
+    font-weight: 500;
     white-space: nowrap;
+    margin: 2px 5px;
 }
 
 nav ul li a.active,
 nav ul li a:hover {
     color: #8A3366;
-    font-weight: bold;
+    /* font-weight: bold; */
+}
+
+.header-profile {
+    height: 30px;
+    width: 30px;
+    border-radius: 50%;
+    margin-bottom: 4px;
+    vertical-align: middle;
 }
 
 /* 🔹 MENU BUTTON (HIDDEN BY DEFAULT) */
 .menu-btn {
+    margin-left: auto;
     display: none;
-    font-size: 24px;
     cursor: pointer;
     background: none;
     border: none;
@@ -119,14 +127,12 @@ nav ul li a:hover {
 /* 🔹 HEADER ICONS */
 .header-icons {
     display: flex;
-    gap: 15px;
-    font-size: 1.2em;
+    justify-content: space-evenly;
     align-items: center;
     border-radius: 60px;
     background-color: white;
-    height: 60px;
+    /* height: 60px; */
     padding: 10px;
-    flex-wrap: wrap;
 }
 
 /* CIRCULAR ICONS */
@@ -168,7 +174,6 @@ nav ul li a:hover {
     border-radius: 50%;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     cursor: pointer;
-    font-size: 16px;
 }
 
 /* 🔹 POPUP */
@@ -216,14 +221,7 @@ nav ul li a:hover {
 
 @media screen and (max-width: 768px) {
     header {
-        flex-direction: column;
-        align-items: center;
         gap: 10px;
-    }
-
-    .header-icons {
-        justify-content: center;
-        width: 100%;
     }
 
     .profile-pic-section {
@@ -238,7 +236,6 @@ nav ul li a:hover {
 
 @media screen and (max-width: 480px) {
     .header-icons {
-        flex-direction: column;
         height: auto;
         padding: 10px;
     }
@@ -267,7 +264,7 @@ nav ul li a:hover {
     right: 0;
     background-color: #f9f9f9;
     min-width: max-content;
-    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
     z-index: 1;
     border-radius: 10px;
     overflow: hidden;
@@ -307,7 +304,6 @@ nav ul li a:hover {
     background: none !important;
     cursor: pointer;
     color: black;
-    font-size: 16px;
     padding: 3px 10px;
     width: 100%;
     text-align: left;
@@ -316,6 +312,14 @@ nav ul li a:hover {
 
 .profile-links p {
     cursor: pointer;
+}
+
+.profile-in-dd {
+    height: 30px;
+    width: 30px;
+    border-radius: 50%;
+    margin: auto 8px auto 0;
+    vertical-align: middle;
 }
 
 /* Modal Styles */
@@ -344,7 +348,6 @@ nav ul li a:hover {
 
 .close1 {
     color: #aaa;
-    font-size: 28px;
     font-weight: bold;
     position: absolute;
     top: 10px;
@@ -380,7 +383,6 @@ nav ul li a:hover {
     position: absolute;
     bottom: 105px;
     right: 166px;
-    font-size: 24px;
     color: black;
     /* color: white; */
     /* background: rgba(0, 0, 0, 0.5); */
