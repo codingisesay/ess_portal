@@ -37,6 +37,8 @@ public function insertReimbursementType(Request $request){
         'name' => $data['category_name'],
         'short_name' => $data['category_short_name'],
         'status' => $data['status'],
+        'created_at' => NOW(),
+        'updated_at' => NOW(),
 
      ]);
 
@@ -66,6 +68,8 @@ public function insertReimbursementValidation(Request $request){
         'max_amount' => $data['max_amount'],
         'bill_required' => $data['bill_required'],
         'tax_applicable' => $data['tax_required'],
+        'created_at' => NOW(),
+        'updated_at' => NOW(),
 
      ]);
 
