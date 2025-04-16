@@ -86,7 +86,6 @@ $id = Auth::guard('superadmin')->user()->id;
                 'items' => $results,
                 'columns' => [  
                     ['header' => 'ID', 'accessor' => 'id'],
-                    ['header' => 'Id', 'accessor' => 'leave_cycle_id'],
                     ['header' => 'Cycle Name', 'accessor' => 'leave_cycle_name'],
                     ['header' => 'Leave Type', 'accessor' => 'leave_type'],
                     ['header' => 'Half Day', 'accessor' => 'leave_half_status'],
@@ -94,7 +93,10 @@ $id = Auth::guard('superadmin')->user()->id;
                 ],
                 'editModalId' => 'openEditModal',
                 'hasActions' => true,
-                'perPage' => 5
+                'perPage' => 5,
+                'actionCallback' => function($item) {
+                    return "openEditModal(" . json_encode($item) . ")";
+                }
             ])
         </div>
     
@@ -107,10 +109,9 @@ $id = Auth::guard('superadmin')->user()->id;
                     <h2>Edit Leave Type</h2>
                 </header>
                 <div class="w3-container">
-                    <form id="editLeaveTypeForm" method="POST">
+                    <form id="editLeaveTypeForm" method="POST" action="{{ route('update_policy_type') }}">
                         @csrf
-                        @method('POST')
-                        <input type="hidden" name="leave_type_id" id="editLeaveTypeId">
+                        <input type="hidden" name="leave_type_id" id="editLeaveTypeId"> <!-- Hidden input for leave_type_id -->
                         <div class="popup-form-group">
                             <select name="cycle_slot_id" id="editLeaveCycle" required>
                                 @foreach ($leaveCycleDatas as $leaveCycleData)
@@ -147,45 +148,41 @@ $id = Auth::guard('superadmin')->user()->id;
 
         <script>
             function showLeaveTypeForm(clickedElement) {
-            document.getElementById('formSection').style.display = 'block';
-            document.getElementById('tableSection').style.display = 'none';
-            const siblings = clickedElement.parentElement.children;
-            for (let sibling of siblings) {
-                sibling.classList.remove('active');
-            } 
-            clickedElement.classList.add('active');
-        }
+                document.getElementById('formSection').style.display = 'block';
+                document.getElementById('tableSection').style.display = 'none';
+                const siblings = clickedElement.parentElement.children;
+                for (let sibling of siblings) {
+                    sibling.classList.remove('active');
+                }
+                clickedElement.classList.add('active');
+            }
 
-        function showLeaveTypeTable(clickedElement) {
-            document.getElementById('formSection').style.display = 'none';
-            document.getElementById('tableSection').style.display = 'block';
-            const siblings = clickedElement.parentElement.children;
-            for (let sibling of siblings) {
-                sibling.classList.remove('active');
-            } 
-            clickedElement.classList.add('active');
-        }
+            function showLeaveTypeTable(clickedElement) {
+                document.getElementById('formSection').style.display = 'none';
+                document.getElementById('tableSection').style.display = 'block';
+                const siblings = clickedElement.parentElement.children;
+                for (let sibling of siblings) {
+                    sibling.classList.remove('active');
+                }
+                clickedElement.classList.add('active');
+            }
 
-        // Ensure the first button (Show Form) is active by default on page load
-    document.addEventListener('DOMContentLoaded', () => {
-        const firstButton = document.querySelector('.toggle-buttons button:first-child');
-        showLeaveTypeTable(firstButton);
-    });
+            // Ensure the first button (Show Table) is active by default on page load
+            document.addEventListener('DOMContentLoaded', () => {
+                const firstButton = document.querySelector('.toggle-buttons button:first-child');
+                showLeaveTypeTable(firstButton);
+            });
 
-        function openEditModal(id, levtyps) {
-            console.log(levtyps);
-            document.getElementById('editLeaveTypeId').value = id; // Use the provided ID for the hidden input
-            document.getElementById('editLeaveCycle').value = levtyps.leave_cycle_id; // Assign the cycle ID to the dropdown
-            document.getElementById('editLeaveTypeName').value = levtyps.leave_type; // Assign the leave type name
-            document.getElementById('editHalfDayStatus').value = levtyps.leave_half_status; // Assign the half-day status
-            document.getElementById('editLeaveStatus').value = levtyps.leave_status; // Assign the leave status
+            function openEditModal(results, levtyps) {
+                document.getElementById('editLeaveTypeId').value = levtyps.leave_type_id; // Set the leave_type_id
+                document.getElementById('editLeaveCycle').value = levtyps.leave_cycle_id; // Set the cycle ID
+                document.getElementById('editLeaveTypeName').value = levtyps.leave_type; // Set the leave type name
+                document.getElementById('editHalfDayStatus').value = levtyps.leave_half_status; // Set the half-day status
+                document.getElementById('editLeaveStatus').value = levtyps.leave_status; // Set the status
 
-            const formAction = "{{ route('update_policy_type', ['id' => ':id']) }}".replace(':id', id); // Use the provided ID for the form action
-            document.getElementById('editLeaveTypeForm').action = formAction;
-
-            document.getElementById('editLeaveTypeModal').style.display = 'block';
-        }
-    </script>
+                document.getElementById('editLeaveTypeModal').style.display = 'block'; // Show the modal
+            }
+        </script>
 @endsection
 </body>
 </html>

@@ -168,31 +168,37 @@ class leavePolicyController extends Controller
 
     }
 
-    public function updatePolicyType(Request $request, $id)
+    public function updatePolicyType(Request $request)
     {
         $request->validate([
+            'leave_type_id' => 'required|exists:leave_types,id',
             'cycle_slot_id' => 'required|exists:leave_cycles,id',
             'leave_category' => 'required|string|max:255',
             'half_day_status' => 'required|in:Yes,No',
             'status' => 'required|in:Active,Inactive',
         ]);
 
+        $id = $request->leave_type_id; // Retrieve the ID from the request
+
+        // Ensure the correct leave_type_id is being used
         $leaveType = DB::table('leave_types')->where('id', $id)->first();
 
         if (!$leaveType) {
             return redirect()->route('create_policy_type')->with('error', 'Leave Type not found.');
         }
 
+        // Update the leave type
         $status = DB::table('leave_types')
             ->where('id', $id)
             ->update([
-                'name' => $request->leave_category,
-                'half_day' => $request->half_day_status,
-                'status' => $request->status,
-                'leave_cycle_id' => $request->cycle_slot_id,
-                'updated_at' => now(),
+                'name' => $request->leave_category, // Update leave type name
+                'half_day' => $request->half_day_status, // Update half-day status
+                'status' => $request->status, // Update active/inactive status
+                'leave_cycle_id' => $request->cycle_slot_id, // Update associated cycle
+                'updated_at' => now(), // Update timestamp
             ]);
 
+        // Redirect based on the update status
         if ($status) {
             return redirect()->route('create_policy_type')->with('success', 'Leave Type updated successfully.');
         } else {
