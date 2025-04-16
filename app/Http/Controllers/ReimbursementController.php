@@ -108,4 +108,6 @@ public function insertReimbursementValidation(Request $request){
 
         return view('superadmin_view.create_reimbursement_restrictions',compact('reim_type','table_data'));
     }
+
+
 }

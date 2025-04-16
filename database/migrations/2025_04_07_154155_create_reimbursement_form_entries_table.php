@@ -21,7 +21,8 @@ return new class extends Migration
             $table->decimal('amount', 10,2)->nullable();
             $table->string('upload_bill')->nullable();
             $table->text('description_by_applicant')->nullable();
-            $table->text('description_by_org')->nullable();
+            $table->text('description_by_manager')->nullable();
+            $table->text('description_by_finance')->nullable();
             $table->enum('status',['Approved','Reject','Review'])->nullable();
             $table->timestamps();
         });
