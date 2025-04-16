@@ -85,6 +85,7 @@ $id = Auth::guard('superadmin')->user()->id;
             @include('partials.data_table', [
                 'items' => $results,
                 'columns' => [  
+                    ['header' => 'ID', 'accessor' => 'id'],
                     ['header' => 'Id', 'accessor' => 'leave_cycle_id'],
                     ['header' => 'Cycle Name', 'accessor' => 'leave_cycle_name'],
                     ['header' => 'Leave Type', 'accessor' => 'leave_type'],
@@ -173,13 +174,13 @@ $id = Auth::guard('superadmin')->user()->id;
 
         function openEditModal(id, levtyps) {
             console.log(levtyps);
-            document.getElementById('editLeaveTypeId').value = levtyps.leave_cycle_id;
-            document.getElementById('editLeaveCycle').value = levtyps.leave_cycle_id;
-            document.getElementById('editLeaveTypeName').value = levtyps.leave_type;
-            document.getElementById('editHalfDayStatus').value = levtyps.leave_half_status;
-            document.getElementById('editLeaveStatus').value = levtyps.leave_status;
+            document.getElementById('editLeaveTypeId').value = id; // Use the provided ID for the hidden input
+            document.getElementById('editLeaveCycle').value = levtyps.leave_cycle_id; // Assign the cycle ID to the dropdown
+            document.getElementById('editLeaveTypeName').value = levtyps.leave_type; // Assign the leave type name
+            document.getElementById('editHalfDayStatus').value = levtyps.leave_half_status; // Assign the half-day status
+            document.getElementById('editLeaveStatus').value = levtyps.leave_status; // Assign the leave status
 
-            const formAction = "{{ route('update_policy_type', ['id' => ':id']) }}".replace(':id', levtyps.leave_cycle_id);
+            const formAction = "{{ route('update_policy_type', ['id' => ':id']) }}".replace(':id', id); // Use the provided ID for the form action
             document.getElementById('editLeaveTypeForm').action = formAction;
 
             document.getElementById('editLeaveTypeModal').style.display = 'block';

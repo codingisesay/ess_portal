@@ -112,7 +112,15 @@ class leavePolicyController extends Controller
  
         $results = DB::table('leave_types')
                    ->join('leave_cycles', 'leave_types.leave_cycle_id', '=', 'leave_cycles.id')
-                   ->select('leave_types.name as leave_type','leave_types.half_day as leave_half_status','leave_types.status as leave_status','leave_types.id as leave_type_id', 'leave_cycles.name as leave_cycle_name','leave_cycles.id as leave_cycle_id','leave_cycles.organisation_id as leave_cycle_organisation_id') // Select all columns from both tables
+                   ->select(
+                    'leave_types.id as leave_type_id', // Include the ID
+                    'leave_types.name as leave_type',
+                    'leave_types.half_day as leave_half_status',
+                    'leave_types.status as leave_status',
+                    'leave_cycles.name as leave_cycle_name',
+                    'leave_cycles.id as leave_cycle_id',
+                    'leave_cycles.organisation_id as leave_cycle_organisation_id'
+                ) // Select all columns from both tables
                    ->where('leave_cycles.organisation_id', '=', $id)
                    ->get();
 
