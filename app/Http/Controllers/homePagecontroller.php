@@ -511,11 +511,22 @@ $upcomingHolidays = $upcomingHolidays->map(function ($holiday) {
     return $holiday;
 });
 
-
-        // dd($anniversaries);
+// Fetch reimbursement details with total amount and status from reimbursement_form_entries
+$reimbursementList = DB::table('reimbursement_trackings')
+    ->join('emp_details', 'reimbursement_trackings.user_id', '=', 'emp_details.user_id')
+    ->join('reimbursement_form_entries', 'reimbursement_trackings.id', '=', 'reimbursement_form_entries.reimbursement_trackings_id')
+    ->select(
+        'emp_details.employee_no',
+        'emp_details.employee_name',
+        DB::raw('COUNT(reimbursement_trackings.id) as no_of_claims'),
+        DB::raw('SUM(reimbursement_form_entries.amount) as total_amount'), // Calculate total amount
+        DB::raw('MAX(reimbursement_form_entries.status) as status') // Fetch the latest status
+    )
+    ->groupBy('emp_details.employee_no', 'emp_details.employee_name')
+    ->get();
 
     // Return a view with the logs and additional data
-    return view('user_view.homepage', compact('title','logs', 'thoughtOfTheDay', 'newsAndEvents', 'upcomingBirthdays','todayBirthdays', 'anniversaries', 'toDoList', 'currentMonth', 'currentDay', 'leaveUsage','leaveLists', 'holidays_upcoming', 'week_offs', 'upcomingHolidays'));
+    return view('user_view.homepage', compact('title','logs', 'thoughtOfTheDay', 'newsAndEvents', 'upcomingBirthdays','todayBirthdays', 'anniversaries', 'toDoList', 'currentMonth', 'currentDay', 'leaveUsage','leaveLists', 'holidays_upcoming', 'week_offs', 'upcomingHolidays', 'reimbursementList'));
 }
 
     

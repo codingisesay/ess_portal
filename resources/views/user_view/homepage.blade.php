@@ -429,7 +429,7 @@ error_reporting(0);
                 <tr>
                     <th>EMP ID</th>
                     <th>Employee Name</th>
-                    <th>No. of Claim</th>
+                    <th>No. of Claims</th>
                     <th>Total Amount</th>
                     <th>Status</th>
                     <th>Action</th>
@@ -439,49 +439,19 @@ error_reporting(0);
                 @if (!empty($reimbursementList))
                     @foreach ($reimbursementList as $reimbursement)
                         <tr>
-                            <td>{{ $reimbursement->employee_id }}</td>
+                            <td>{{ $reimbursement->employee_no }}</td>
                             <td>{{ $reimbursement->employee_name }}</td>
-                            <!-- <td>{{ $reimbursement->id }}</td> -->
-                            <td>{{ \Carbon\Carbon::parse($reimbursement->date)->format('d-m-Y') }}</td>
-                            <!-- <td>{{ $reimbursement->amount }}</td>
-                            <td>{{ $reimbursement->purpose }}</td> -->
-                            <td>{{ $reimbursement->status }}</td>
+                            <td>{{ $reimbursement->no_of_claims }}</td>
+                            <td>{{ number_format($reimbursement->total_amount, 2) }}</td> <!-- Display total amount -->
+                            <td>{{ $reimbursement->status }}</td> <!-- Display status -->
                             <td>
-                                <form action="{{ route('reimbursement_update_status', ['id' => $reimbursement->id, 'status' => 'Approved']) }}" method="POST" style="display: inline;">
-                                    @csrf
-                                    @method('PUT')
-                                    <button type="submit" style="font-size: 24px; border: none; background: none; cursor: pointer;">✅</button>
-                                </form>
-                                <form action="{{ route('reimbursement_update_status', ['id' => $reimbursement->id, 'status' => 'Rejected']) }}" method="POST" style="display: inline;">
-                                    @csrf
-                                    @method('PUT')
-                                    <button type="submit" style="font-size: 24px; border: none; background: none; cursor: pointer;">❌</button>
-                                </form>
+                                <a href="{{ route('user_claims') }}"><button>View</button></a>
                             </td>
                         </tr>
                     @endforeach
                 @else
-                    <!-- Dummy Data -->
                     <tr>
-                        <td>EMP001</td>
-                        <td>John Doe</td>
-                        <td>04</td>
-                        <td>5000</td>
-                        <td>In Review</td>
-                        <td>
-                        <a href="{{ route('user_claims') }}"><button>View</button></a>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>EMP002</td>
-                        <td>Om</td>
-                        <td>04</td>
-                        <td>5000</td>
-                        <td>In Review</td>
-                        <td>
-                            <a href="{{ route('user_claims') }}"><button>View</button></a>
-                        </td>
-                        
+                        <td colspan="6" class="text-center">No reimbursement details available.</td>
                     </tr>
                 @endif
             </tbody>

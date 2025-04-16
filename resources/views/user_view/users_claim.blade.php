@@ -10,82 +10,14 @@
 </head>
 <body>
 <div class="claim-container">
-    <h2 class="claim-summary">John Doe Claims</h2>
-    <p class="claim-summary">No Of Claims: 3</p>
-    <p class="claim-summary">Total Amount: 6000</p>
+    <h2 class="claim-summary">Reimbursement Claims</h2>
+    <p class="claim-summary">No Of Claims: {{ $reimbursementList->count() }}</p>
+    <p class="claim-summary">Total Amount: Rs. {{ number_format($reimbursementList->sum('total_amount'), 2) }}</p>
 
-    <!-- Claim Panel -->
+    <!-- Loop through each reimbursement claim -->
+    @foreach ($reimbursementList as $reimbursement)
     <div class="claim-panel">
-        <div class="claim-header" onclick="toggleBody(this)">#clm-001 | Rs. 2000</div>
-        <div class="claim-body" style="display: block;">
-            <table class="custom-table">
-                <thead>
-                    <tr>
-                        <th>S.No.</th>
-                        <th>Date</th>
-                        <th>Type</th>
-                        <th>Max Amount</th>
-                        <th>Entered Amount</th>
-                        <th>Bill</th>
-                        <th>Comment</th>
-                        <th>Claim Desc</th>
-                        <th>Action</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>1</td>
-                        <td>01/01/2020</td>
-                        <td>food</td>
-                        <td>250</td>
-                        <td>500</td>
-                        <td></td>
-                        <td>Testing</td>
-                        <td>Taking food</td>
-                        <td>
-                            <input type="checkbox" class="approval-checkbox" checked>
-                            <textarea></textarea>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>2</td>
-                        <td>01/01/2020</td>
-                        <td>movie</td>
-                        <td>250</td>
-                        <td>500</td>
-                        <td></td>
-                        <td>Testing</td>
-                        <td>Watch Movie</td>
-                        <td>
-                            <input type="checkbox" class="approval-checkbox" checked>
-                            <textarea></textarea>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>3</td>
-                        <td>01/01/2020</td>
-                        <td>club</td>
-                        <td>250</td>
-                        <td>500</td>
-                        <td></td>
-                        <td>Testing</td>
-                        <td>Drink</td>
-                        <td>
-                            <input type="checkbox" class="approval-checkbox" checked>
-                            <textarea></textarea>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-            <div class="button-group">
-                <button>Approve</button>
-                <button>Review</button>
-            </div>
-        </div>
-    </div>
-
-    <div class="claim-panel">
-        <div class="claim-header" onclick="toggleBody(this)">#clm-002 | Rs. 2500</div>
+        <div class="claim-header" onclick="toggleBody(this)">#clm-{{ $reimbursement->tracking_id }} | Rs. {{ number_format($reimbursement->total_amount, 2) }} | Status: {{ $reimbursement->status }}</div>
         <div class="claim-body">
             <table class="custom-table">
                 <thead>
@@ -93,106 +25,40 @@
                         <th>S.No.</th>
                         <th>Date</th>
                         <th>Type</th>
-                        <th>Max Amount</th>
                         <th>Entered Amount</th>
                         <th>Bill</th>
-                        <th>Comment</th>
-                        <th>Claim Desc</th>
-                        <th>Action</th>
+                        <th>Applicant Comment</th>
+                        <th>Manager Comment</th>
+                        <th>Finance Comment</th>
+                        <th>Status</th>
                     </tr>
                 </thead>
                 <tbody>
+                    @php $serial = 1; @endphp
+                    @foreach ($reimbursement->details as $detail)
                     <tr>
-                        <td>1</td>
-                        <td>02/01/2020</td>
-                        <td>travel</td>
-                        <td>500</td>
-                        <td>1000</td>
-                        <td></td>
-                        <td>Testing</td>
-                        <td>Travel Expenses</td>
+                        <td>{{ $serial++ }}</td>
+                        <td>{{ \Carbon\Carbon::parse($detail->date)->format('d/m/Y') }}</td>
+                        <td>{{ $detail->type }}</td>
+                        <td>{{ number_format($detail->amount, 2) }}</td>
                         <td>
-                            <input type="checkbox" class="approval-checkbox" checked>
-                            <textarea></textarea>
+                            @if ($detail->upload_bill)
+                                <a href="{{ asset('storage/' . $detail->upload_bill) }}" target="_blank">View Bill</a>
+                            @else
+                                N/A
+                            @endif
                         </td>
+                        <td>{{ $detail->description_by_applicant }}</td>
+                        <td>{{ $detail->description_by_manager }}</td>
+                        <td>{{ $detail->description_by_finance }}</td>
+                        <td>{{ $detail->status }}</td>
                     </tr>
-                    <tr>
-                        <td>2</td>
-                        <td>02/01/2020</td>
-                        <td>lodging</td>
-                        <td>1000</td>
-                        <td>1500</td>
-                        <td></td>
-                        <td>Testing</td>
-                        <td>Hotel Stay</td>
-                        <td>
-                            <input type="checkbox" class="approval-checkbox" checked>
-                            <textarea></textarea>
-                        </td>
-                    </tr>
+                    @endforeach
                 </tbody>
             </table>
-            <div class="button-group">
-                <button>Approve</button>
-                <button>Review</button>
-            </div>
         </div>
     </div>
-
-    <div class="claim-panel">
-        <div class="claim-header" onclick="toggleBody(this)">#clm-003 | Rs. 1500</div>
-        <div class="claim-body">
-            <table class="custom-table">
-                <thead>
-                    <tr>
-                        <th>S.No.</th>
-                        <th>Date</th>
-                        <th>Type</th>
-                        <th>Max Amount</th>
-                        <th>Entered Amount</th>
-                        <th>Bill</th>
-                        <th>Comment</th>
-                        <th>Claim Desc</th>
-                        <th>Action</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>1</td>
-                        <td>03/01/2020</td>
-                        <td>medical</td>
-                        <td>500</td>
-                        <td>700</td>
-                        <td></td>
-                        <td>Testing</td>
-                        <td>Medical Expenses</td>
-                        <td>
-                            <input type="checkbox" class="approval-checkbox" checked>
-                            <textarea></textarea>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>2</td>
-                        <td>03/01/2020</td>
-                        <td>stationery</td>
-                        <td>300</td>
-                        <td>800</td>
-                        <td></td>
-                        <td>Testing</td>
-                        <td>Office Supplies</td>
-                        <td>
-                            <input type="checkbox" class="approval-checkbox" checked>
-                            <textarea></textarea>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-            <div class="button-group">
-                <button>Approve</button>
-                <button>Review</button>
-            </div>
-        </div>
-    </div>
+    @endforeach
 </div>
 
 <script>
@@ -200,13 +66,6 @@
         const body = header.nextElementSibling;
         body.style.display = body.style.display === 'block' ? 'none' : 'block';
     }
-
-    document.querySelectorAll('.approval-checkbox').forEach(checkbox => {
-        checkbox.addEventListener('change', function () {
-            const textarea = this.nextElementSibling;
-            textarea.style.display = this.checked ? 'none' : 'block';
-        });
-    });
 </script>
 
 <style>
@@ -217,9 +76,7 @@
     box-sizing: border-box;
 }
 
-
 .claim-container {
-    /* max-width: 1000px; */
     width: 100%;
     margin: 0 auto;
     padding: 20px;
@@ -241,7 +98,6 @@
     margin-bottom: 25px;
     border-radius: 5px;
     overflow: hidden;
-    /* box-shadow: 0 2px 5px rgba(0,0,0,0.1); */
     box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
 }
 
@@ -305,7 +161,7 @@ textarea {
     margin-top: 15px;
     display: flex;
     gap: 10px;
-    margin-left: 1242px;
+    justify-content: flex-end;
 }
 
 .button-group button {
@@ -321,7 +177,6 @@ textarea {
 .button-group button:hover {
     background-color: #9b4bab;
 }
-
 </style>
 
 </body>
