@@ -518,11 +518,12 @@ $reimbursementList = DB::table('reimbursement_trackings')
     ->select(
         'emp_details.employee_no',
         'emp_details.employee_name',
+        'emp_details.user_id', // Include user_id for passing to the view
         DB::raw('COUNT(reimbursement_trackings.id) as no_of_claims'),
         DB::raw('SUM(reimbursement_form_entries.amount) as total_amount'), // Calculate total amount
         DB::raw('MAX(reimbursement_form_entries.status) as status') // Fetch the latest status
     )
-    ->groupBy('emp_details.employee_no', 'emp_details.employee_name')
+    ->groupBy('emp_details.employee_no', 'emp_details.employee_name', 'emp_details.user_id')
     ->get();
 
     // Return a view with the logs and additional data

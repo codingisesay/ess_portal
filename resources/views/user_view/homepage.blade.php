@@ -445,7 +445,9 @@ error_reporting(0);
                             <td>{{ number_format($reimbursement->total_amount, 2) }}</td> <!-- Display total amount -->
                             <td>{{ $reimbursement->status }}</td> <!-- Display status -->
                             <td>
-                                <a href="{{ route('user_claims') }}"><button>View</button></a>
+                                <a href="{{ route('user_claims') }}?userId={{ $reimbursement->user_id }}">
+                                    <button>View</button>
+                                </a>
                             </td>
                         </tr>
                     @endforeach

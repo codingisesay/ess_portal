@@ -353,20 +353,20 @@ class salaryBoxController extends Controller
     return view('user_view.claim_form',compact('reim_type'));
  }
 
- public function loadUserClaims()
+ public function loadUserClaims(Request $request)
 {
-    $loginUserInfo = Auth::user();
+    $userId = $request->query('userId'); // Get userId from query string
 
-    // Fetch reimbursement details with total amount and status
+    // Fetch reimbursement details for the specific user
     $reimbursementList = DB::table('reimbursement_trackings')
         ->join('reimbursement_form_entries', 'reimbursement_trackings.id', '=', 'reimbursement_form_entries.reimbursement_trackings_id')
         ->select(
             'reimbursement_trackings.id as tracking_id',
             DB::raw('COUNT(reimbursement_form_entries.id) as no_of_claims'),
-            DB::raw('SUM(reimbursement_form_entries.amount) as total_amount'), // Calculate total amount
-            DB::raw('MAX(reimbursement_form_entries.status) as status') // Fetch the latest status
+            DB::raw('SUM(reimbursement_form_entries.amount) as total_amount'),
+            DB::raw('MAX(reimbursement_form_entries.status) as status')
         )
-        ->where('reimbursement_trackings.user_id', '=', $loginUserInfo->id)
+        ->where('reimbursement_trackings.user_id', '=', $userId)
         ->groupBy('reimbursement_trackings.id')
         ->get();
 
