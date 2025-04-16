@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
+use App\Models\reimbursement_tracking;
 // use App\Helpers\SalaryHelper;
 
 class salaryBoxController extends Controller
@@ -345,7 +346,14 @@ class salaryBoxController extends Controller
  }
 
  public function loadclaimform(){
-    return view('user_view.claim_form');
+    $loginUserInfo = Auth::user();
+    $reim_type = DB::table('organisation_reimbursement_types')
+    ->where('organisation_id','=',$loginUserInfo->organisation_id)
+    ->where('status','=','Active')
+    ->get();
+
+    // dd($reim_type);
+    return view('user_view.claim_form',compact('reim_type'));
  }
 
  public function loadUserClaims(){
@@ -355,5 +363,101 @@ class salaryBoxController extends Controller
  public function loadMangerClaims(){
     return view('user_view.managers_claim');
  }
+
+ public function loadMaxAmoutRm($rm_id){
+
+    $data = DB::table('organisation_reimbursement_type_restrictions')
+    ->select('organisation_reimbursement_type_restrictions.max_amount as max_amount')
+    ->where('reimbursement_type_id',$rm_id)
+    ->first();
+    // $max_amount = 200;
+    // dd($max_amount);
+    return response()->json([
+        'max_amount' => $data->max_amount,  // This is the data you will send back to the front-end
+    ]);
+
+ }
+
+ 
+ 
+ public function insertReimbursementForm(Request $request)
+ {
+     // Step 1: Validate input
+     $data = $request->validate([
+         'clam_comment' => 'nullable|string',
+         'start_date' => 'required|date',
+         'end_date' => 'required|date',
+         'bill_date.*' => 'required|date',
+         'type.*' => 'required',
+         'entered_amount.*' => 'required|numeric',
+         'bills.*' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048',
+         'comments.*' => 'nullable|string'
+     ]);
+ 
+     $loginUserInfo = Auth::user();
+
+    //  $billCount = count($data['bill_date']);
+   // Insert into reimbursement_tracking
+   $reimbursement = reimbursement_tracking::create([
+    'start_date'   => $data['start_date'],
+    'end_date'     => $data['end_date'],
+    'description'  => $data['clam_comment'],
+    'status'       => 'Pending',
+    'user_id'      => $loginUserInfo->id,
+]);
+
+$insertedId = $reimbursement->id;
+
+        // Step 3: Loop through bills
+        foreach ($data['bill_date'] as $i => $billDate) {
+            // Upload bill file if present
+            $filePath = null;
+            if ($request->hasFile("bills.$i")) {
+                $filePath = $request->file("bills.$i")->store('bills', 'public');
+            }
+
+            // Step 4: Insert into reimbursement_entries table
+           $billsUpload = DB::table('reimbursement_form_entries')->insert([
+                'date' => $billDate,
+                'reimbursement_trackings_id' => $insertedId,
+                'organisation_reimbursement_types_id' => $data['type'][$i],
+                'amount' => $data['entered_amount'][$i],
+                'upload_bill' => $filePath,
+                'description_by_applicant' => $data['comments'][$i] ?? null,
+                'status' => 'Review',
+                'created_at' => now(),
+                'updated_at' => now()
+            ]);
+        }
+
+       $manger =  DB::table('emp_details')->where('user_id',$loginUserInfo->id)->first();
+
+        
+
+        if($billsUpload){
+
+            //assign_reimbursement_tokens to users like managers/finace.
+
+            $Insert = DB::table('assign_reimbursement_tokens')->insert([
+
+                'user_id' => $manger->reporting_manager,
+                'reimbursement_tracking_id' => $insertedId,
+                'created_at' => NOW(),
+                'updated_at' => NOW(),
+
+            ]);
+
+            return redirect()->route('PayRollDashboard')->with('success','Bills Uploaded');
+
+        }
+
+        return redirect()->route('PayRollDashboard')->with('error','Bills Not Uploaded');
+        
+ 
+        
+     
+
+ }
+ 
 
 }

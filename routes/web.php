@@ -250,6 +250,10 @@ Route::middleware(['auth'])->group(function () {
  Route::get('user/claim_form',[salaryBoxController::class,'loadclaimform'])->name('claim_form');
  Route::get('user/clam_record',[salaryBoxController::class,'loadUserClaims'])->name('user_claims');
  Route::get('user/manager_clam_record',[salaryBoxController::class,'loadMangerClaims'])->name('manager_claims');
+
+ Route::post('user/insert_Reimbursement_Form',[salaryBoxController::class,'insertReimbursementForm'])->name('insert_Reimbursement_Form');
+
+ Route::get('user/get_max_amount/{rm_id}',[salaryBoxController::class,'loadMaxAmoutRm'])->name('get_max_amount');
    
 });
 

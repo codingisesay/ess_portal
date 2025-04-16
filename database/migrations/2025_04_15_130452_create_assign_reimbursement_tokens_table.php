@@ -11,15 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('reimbursement_trackings', function (Blueprint $table) {
+        Schema::create('assign_reimbursement_tokens', function (Blueprint $table) {
             $table->id();
-            $table->string('token_number')->nullable();
-            $table->date('start_date');
-            $table->date('end_date');
-            $table->text('description');
-            $table->enum('status',['Pending','Approved','Reject','Cash Transfered','Review'])->nullable();
             $table->bigInteger('user_id'); 
             $table->foreign('user_id')->references('id')->on('user')->onDelete('cascade');
+            $table->bigInteger('reimbursement_tracking_id'); 
+            $table->foreign('reimbursement_tracking_id')->references('id')->on('reimbursement_trackings')->onDelete('cascade');
+            $table->text('comments');
             $table->timestamps();
         });
     }
@@ -29,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('reimbursement_trackings');
+        Schema::dropIfExists('assign_reimbursement_tokens');
     }
 };
