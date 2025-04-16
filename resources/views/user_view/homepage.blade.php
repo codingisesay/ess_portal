@@ -429,7 +429,7 @@ error_reporting(0);
                 <tr>
                     <th>EMP ID</th>
                     <th>Employee Name</th>
-                    <th>No. of Claims</th>
+                    <th>No. of bills</th>
                     <th>Total Amount</th>
                     <th>Status</th>
                     <th>Action</th>
