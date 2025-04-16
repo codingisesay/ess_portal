@@ -83,6 +83,55 @@ public function insertReimbursementValidation(Request $request){
 
 }
 
+public function updateReimbursementValidation(Request $request) {
+    $data = $request->validate([
+        'id' => 'required',
+        'reimbursement_type_id' => 'required',
+        'max_amount' => 'required',
+        'bill_required' => 'required',
+        'tax_required' => 'required',
+    ]);
+// dd($data);
+    $status = DB::table('organisation_reimbursement_type_restrictions')
+        ->where('id', $data['id'])
+        ->update([
+            'reimbursement_type_id' => $data['reimbursement_type_id'],
+            'max_amount' => $data['max_amount'],
+            'bill_required' => $data['bill_required'],
+            'tax_applicable' => $data['tax_required'],
+            'updated_at' => NOW(),
+        ]);
+
+    if ($status) {
+        return redirect()->route('reimbursement_restrictions')->with('success', 'Record Updated !!');
+    }
+
+    return redirect()->route('reimbursement_restrictions')->with('error', 'Record Not Updated !!');
+}
+
+public function updateReimbursementType(Request $request) {
+    $data = $request->validate([
+        'id' => 'required',
+        'category_name' => 'required',
+        'category_short_name' => 'required',
+        'status' => 'required',
+    ]);
+// dd($data);
+    $status = DB::table('organisation_reimbursement_types')
+        ->where('id', $data['id'])
+        ->update([
+            'name' => $data['category_name'],
+            'short_name' => $data['category_short_name'],
+            'status' => $data['status'],
+            'updated_at' => NOW(),
+        ]);
+
+    if ($status) {
+        return redirect()->route('reimbursement')->with('success', 'Record Updated !!');
+    }
+
+    return redirect()->route('reimbursement')->with('error', 'Record Not Updated !!');
+}
 
     
     public function reimbursement_restrictions_load(){ 
@@ -97,7 +146,8 @@ public function insertReimbursementValidation(Request $request){
 
         $table_data = DB::table('organisation_reimbursement_type_restrictions')
         ->join('organisation_reimbursement_types','organisation_reimbursement_type_restrictions.reimbursement_type_id','=','organisation_reimbursement_types.id')
-        ->select('organisation_reimbursement_types.name as reim_type',
+        ->select('organisation_reimbursement_type_restrictions.id as id',
+        'organisation_reimbursement_types.name as reim_type',
         'organisation_reimbursement_type_restrictions.max_amount as max_amount',
         'organisation_reimbursement_type_restrictions.bill_required as bill_required',
         'organisation_reimbursement_type_restrictions.tax_applicable as tax_applicable')

@@ -5,6 +5,7 @@
 error_reporting(0);
 $id = Auth::guard('superadmin')->user()->id;
 // dd($categories);
+
 ?>
 <head>
     <meta charset="UTF-8">
@@ -94,7 +95,53 @@ $id = Auth::guard('superadmin')->user()->id;
         ])
     </div> 
     </div>
- 
+
+    <!-- Edit Modal -->
+    <div id="editReimbursementModal" class="w3-modal">
+        <div class="w3-modal-content w3-animate-top w3-card-4">
+            <header class="w3-container w3-teal">
+                <span onclick="document.getElementById('editReimbursementModal').style.display='none'" 
+                class="w3-button w3-display-topright">&times;</span>
+                <h2>Edit Reimbursement Restriction</h2>
+            </header>
+            <div class="w3-container">
+                <form id="editReimbursementForm" action="{{ route('update_reimbursement_validation') }}" method="POST">
+                    @csrf
+                    <input type="hidden" name="id" id="editReimbursementId">
+                    <div class="popup-form-group">
+                        <select name="reimbursement_type_id" id="editReimbursementType" required>
+                            @foreach ($reim_type as $item)
+                                <option value="{{ $item->id }}">{{ $item->name }}</option>
+                            @endforeach
+                        </select>
+                        <label for="editReimbursementType">Reimbursement Type</label>
+                    </div>
+                    <div class="popup-form-group">
+                        <input type="text" name="max_amount" id="editMaxAmount" required>
+                        <label for="editMaxAmount">Maximum Amount</label>
+                    </div>
+                    <div class="popup-form-group">
+                        <select name="bill_required" id="editBillRequired" required>
+                            <option value="Yes">Yes</option>
+                            <option value="No">No</option>
+                        </select>
+                        <label for="editBillRequired">Bill Required</label>
+                    </div>
+                    <div class="popup-form-group">
+                        <select name="tax_required" id="editTaxRequired" required>
+                            <option value="Yes">Yes</option>
+                            <option value="No">No</option>
+                        </select>
+                        <label for="editTaxRequired">Tax Required</label>
+                    </div>
+                    <div class="popup-form-group">
+                        <button class="create-btn1" type="submit">Save Changes</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
     <script>
         function showHRPolicyForm(clickedElement) {
             document.getElementById('formSection').style.display = 'block';
@@ -123,8 +170,16 @@ $id = Auth::guard('superadmin')->user()->id;
         const firstButton = document.querySelector('.toggle-buttons button:first-child');
         showHRPolicyTable(firstButton);
     });
-      
- 
+
+        function openEditModal(table_data, userdata) { 
+            // console.log('to pass : ',userdata)
+            document.getElementById('editReimbursementId').value = userdata.id;
+            document.getElementById('editReimbursementType').value = userdata.reim_type;
+            document.getElementById('editMaxAmount').value = userdata.max_amount;
+            document.getElementById('editBillRequired').value = userdata.bill_required;
+            document.getElementById('editTaxRequired').value = userdata.tax_applicable;
+            document.getElementById('editReimbursementModal').style.display = 'block';
+        }
     </script>
 @endsection
 </body>
