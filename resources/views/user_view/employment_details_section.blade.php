@@ -2,7 +2,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{{ asset('/user_end/css/employment_data.css') }}">
-    {{-- <title>Employee Details</title> --}}
+    <!-- {{-- <title>Employee Details</title> --}} -->
     <link rel="icon" href="{{ asset('user_end/images/STPLLogo butterfly.png') }}" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
@@ -12,20 +12,13 @@
     <div class="employee-info">
         
         <div class="contact-details">
-            <h3>Contact Details</h3>
-            <div class="d-flex">
-                <div class="col-6">
-                    <p><strong>Phone Number</strong> <weak id="emp-phone">{{ ucfirst($userDetails->offical_phone_number ?? '-') }}</weak></p>
-                    <p><strong>Alternate Number</strong> <weak id="emp-alternate-phone">{{ ucfirst($userDetails->alternate_phone_number ?? '-') }}</weak></p>
-                    <p><strong>Email Address</strong> <weak><a href="mailto:{{ $userDetails->email ?? '-' }}" id="emp-email">{{ ucfirst($userDetails->email ?? '-') }}</a></weak></p>
-                </div>
-                <div class="col-6">
-                    <p><strong>Kin Relation</strong> <weak id="emp-contactperson">{{ ucfirst($userDetails->emergency_contact_person ?? '-') }}</weak></p>
-                    <p><strong>Kin Contact No.</strong> <weak id="emp-contactnumber">{{ ucfirst($userDetails->emergency_contact_number ?? '-') }}</weak></p>     
-                </div>
-            </div>
+            <h5>Contact Details</h5> 
+            <p><strong>Phone Number</strong> <weak id="emp-phone">{{ ucfirst($userDetails->offical_phone_number ?? '-') }}</weak></p>
+            <p><strong>Alternate Number</strong> <weak id="emp-alternate-phone">{{ ucfirst($userDetails->alternate_phone_number ?? '-') }}</weak></p>
+            <p><strong>Email Address</strong> <weak><a href="mailto:{{ $userDetails->email ?? '-' }}" id="emp-email">{{ ucfirst($userDetails->email ?? '-') }}</a></weak></p>
+         
                 <hr>
-            <h3>Address</h3>
+            <h5>Address</h5>
             <p><strong>Permanent</strong> <weak id="emp-permanent-address">
             {{ ucfirst(trim($userDetails->per_building_no) ? $userDetails->per_building_no . ',' : '') }}
             {{ ucfirst(trim($userDetails->per_name_of_premises) ? $userDetails->per_name_of_premises . ',' : '') }}
@@ -50,6 +43,11 @@
             {{ ucfirst(trim($userDetails->cor_pincode) ? $userDetails->cor_pincode : '') }}
 
             </weak></p>
+            <hr>
+             
+            <p><strong>Kin Name</strong> <weak id="emp-contactperson">{{ ucfirst($userDetails->emergency_contact_person ?? '-') }}</weak></p>
+            <p><strong>Kin Contact No.</strong> <weak id="emp-contactnumber">{{ ucfirst($userDetails->emergency_contact_number ?? '-') }}</weak></p>     
+                
         </div>
     </div>
    

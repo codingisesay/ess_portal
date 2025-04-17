@@ -185,7 +185,7 @@ if(in_array(11, $permission_array)){
                             </div>
                             <div class="form-group">
                                 <label for="title">Title :</label>
-                                <input type="text" id="title" maxlength="200" name="title" placeholder="News or event title">
+                                <input type="text" id="title" maxlength="60" name="title" placeholder="News or event title">
                             </div>
                             <div class="form-group">
                                 <label for="description">Description :</label>

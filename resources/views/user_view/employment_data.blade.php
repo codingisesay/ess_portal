@@ -75,198 +75,197 @@
     .close {
         font-size: 24px;
     }
-}
-
+} 
     </style>
      
 </head>
 <body>
  
-    <div class="row m-2">
-        <div class="col-md-5 my-3">
+    <div class="row mx-3">
+        <div class="col-md-4 my-2">
             <div class="section custom-table h-100">
             @include('user_view.employment_details_top')
-            </div>
-        </div>
-        <div class="col-md-7 my-3">
-            <div class="section custom-table h-100">
+            <hr>
             @include('user_view.employment_details_section')
             </div>
         </div>
-        <!-- comman component above -->
-
-        <div class="col-6 my-3">
-            <div class="section custom-table h-100">
-            <h2> Employee Details</h2>
-                <table> 
+        <div class="col-md-8  ">
+            <div class="row my-auto " >    
+                <div class="col-6 my-2">
+                    <div class="section custom-table h-100">
+                    <h5> Employee Details</h5>
+                        <table> 
+                            
+                            <tr>
+                                <th>Employment Status</th>
+                                <td><b>{{ ucfirst($userDetails->employment_status ?? 'Active') }}</b></td>
+                            </tr>
+                            <tr>
+                                <th>Employment Type</th>
+                                <td><b>{{ ucfirst($userDetails->employee_type_name ?? '-') }}</b></td>
+                            </tr>
+                            <tr>
+                                <th>Start Date</th>
+                                <td><b>{{ $userDetails->Joining_date ? \Carbon\Carbon::parse($userDetails->Joining_date)->format('d-m-Y') : '-' }}</b></td>
+                            </tr>
+                            <tr>
+                                <th>Total Experience</th>
+                                <td><b>{{ ucfirst($userDetails->total_experience ?? '-') }}</b></td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+                <div class="col-6 my-2">
+                    <div class="section custom-table h-100"> 
+                    <h5>Salary Bank Details</h5>
+                    <table> 
                     
-                    <tr>
-                        <th>Employment Status</th>
-                        <td><b>{{ ucfirst($userDetails->employment_status ?? 'Active') }}</b></td>
-                    </tr>
-                    <tr>
-                        <th>Employment Type</th>
-                        <td><b>{{ ucfirst($userDetails->employee_type_name ?? '-') }}</b></td>
-                    </tr>
-                    <tr>
-                        <th>Start Date</th>
-                        <td><b>{{ $userDetails->Joining_date ? \Carbon\Carbon::parse($userDetails->Joining_date)->format('d-m-Y') : '-' }}</b></td>
-                    </tr>
-                    <tr>
-                        <th>Total Experience</th>
-                        <td><b>{{ ucfirst($userDetails->total_experience ?? '-') }}</b></td>
-                    </tr>
-                </table>
-            </div>
-        </div>
-        <div class="col-6 my-3">
-            <div class="section custom-table h-100"> 
-            <h2>Salary Bank Details</h2>
-            <table> 
-            
-                <tr>
-                    <th>Bank Name</th>
-                    <td><b>{{ ucfirst($userDetails->bank_name ?? '-') }}</b></td>
-                </tr>
-                <tr>
-                    <th>Branch Name</th>
-                    <td><b>{{ ucfirst($userDetails->sal_branch_name ?? '-') }}</b></td>
-                </tr>
-                <tr>
-                    <th>Account Number</th>
-                    <td><b>{{ ucfirst($userDetails->sal_account_number ?? '-') }}</b></td>
-                </tr>
-                <tr>
-                    <th>IFSC Code</th>
-                    <td><b>{{ ucfirst($userDetails->sal_ifsc_code ?? '-') }}</b></td>
-                </tr>
-            </table>
-            </div>
-        </div>
-        <div class="col-6 my-3">
-            <div class="section custom-table h-100">
-                <h2>Personal Information</h2>
-                <table>
-                    <tr>
-                        <th>Date of Birth</th>
-                        <td><b>{{ $userDetails->date_of_birth ? \Carbon\Carbon::parse($userDetails->date_of_birth)->format('d-m-Y') : '-' }}</b></td>
-                    </tr>
-                    <tr>
-                        <th>Gender</th>
-                        <td><b>{{ ucfirst($userDetails->gender ?? '-') }}</b></td>
-                    </tr>
-                    <tr>
-                        <th>Nationality</th>
-                        <td><b>{{ ucfirst($userDetails->nationality ?? '-') }}</b></td>
-                    </tr>
-                    <tr>
-                        <th>Marital Status</th>
-                        <td><b>{{ ucfirst($userDetails->marital_status ?? '-') }}</b></td>
-                    </tr>
-                    <tr>
-                        <th>Anniversary Date</th>
-                        <td><b>{{ $userDetails->anniversary_date ? \Carbon\Carbon::parse($userDetails->anniversary_date)->format('d-m-Y') : '-' }}</b></td>
-                    </tr>
-                    <tr>
-                        <th>Blood Group</th>
-                        <td><b>{{ ucfirst($userDetails->blood_group ?? '-') }}</b></td>
-                    </tr>
-                    <tr>
-                        <th>Religion</th>
-                        <td><b>{{ ucfirst($userDetails->religion ?? '-') }}</b></td>
-                    </tr>
-                </table>
-            </div>
-        </div>
-
-        <div class="col-6 my-3">
-            <div class="section custom-table h-100"> 
-             <h2>Passport & Visa Details</h2>
-            <table class="custom-table">             
-                <tr>
-                    <th>Passport Number</th>
-                    <td><b>{{ ucfirst($userDetails->passport_number ?? '-') }}</b></td>
-                </tr>
-                <tr>
-                    <th>Issuing Country</th>
-                    <td><b>{{ ucfirst($userDetails->issuing_country ?? '-') }}</b></td>
-                </tr>
-                <tr>
-                    <th>Issue Date</th>
-                    <td><b>{{ $userDetails->passport_issue_date ? \Carbon\Carbon::parse($userDetails->passport_issue_date)->format('d-m-Y') : '-' }}</b></td>
-                </tr>
-                <tr>
-                    <th>Expiry Date</th>
-                    <td><b>{{ $userDetails->passport_expiry_date ? \Carbon\Carbon::parse($userDetails->passport_expiry_date)->format('d-m-Y') : '-' }}</b></td>
-                </tr>
-                <tr>
-                    <th>Visa</th>
-                    <td><b>{{ ucfirst($userDetails->active_visa ?? '-') }}</b></td>
-                </tr>
-                <tr>
-                    <th>Visa Expiry Date</th>
-                    <td><b>{{ $userDetails->visa_expiry_date ? \Carbon\Carbon::parse($userDetails->visa_expiry_date)->format('d-m-Y') : '-' }}</b></td>
-                </tr>
-            </table>
-
-
-            </div>
-        </div>
-        <div class="col-6 my-3">
-            <div class="section custom-table h-100"> 
-            <h2>Welfare Benefits</h2>
-            <table>                 
-                <tr>
-                    <th>UAN</th>
-                    <td><b>{{ ucfirst($userDetails->universal_account_number ?? '-') }}</b></td>
-                </tr>
-                <tr>
-                    <th>Provident Fund</th>
-                    <td><b>{{ ucfirst($userDetails->provident_fund ?? '-') }}</b></td>
-                </tr>
-                <tr>
-                    <th>ESIC NO</th>
-                    <td><b>{{ ucfirst($userDetails->esic_no ?? '-') }}</b></td>
-                </tr>
-            </table> 
-            </div>
-        </div>
-        <div class="col-6 my-3">
-            <div class="section custom-table h-100"> 
-            <h2>Educational Details</h2>
-            <table class="">
-                <thead>
-                    <tr>
-                        <th>Course Name</th>
-                        <th>Action</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach($empEducation as $education)
                         <tr>
-                            <td class="course-name">
-                                @if($education->course_type == 'degree')
-                                    {{ ucfirst($education->degree ?? '-') }}
-                                @elseif($education->course_type == 'certification')
-                                    {{ ucfirst($education->certification_name ?? '-') }}
-                                @endif
-                            </td>
-                            <td>
-                                @if($education->course_type == 'degree')
-                                    <button class="view-btn" onclick="openDegreeModal({{ $loop->index }})">View</button>
-                                @elseif($education->course_type == 'certification')
-                                    <button class="view-btn" onclick="openCertificationModal({{ $loop->index }})">View</button>
-                                @endif
-                            </td>
+                            <th>Bank Name</th>
+                            <td><b>{{ ucfirst($userDetails->bank_name ?? '-') }}</b></td>
                         </tr>
-                    @endforeach
-                </tbody>
-            </table>
+                        <tr>
+                            <th>Branch Name</th>
+                            <td><b>{{ ucfirst($userDetails->sal_branch_name ?? '-') }}</b></td>
+                        </tr>
+                        <tr>
+                            <th>Account Number</th>
+                            <td><b>{{ ucfirst($userDetails->sal_account_number ?? '-') }}</b></td>
+                        </tr>
+                        <tr>
+                            <th>IFSC Code</th>
+                            <td><b>{{ ucfirst($userDetails->sal_ifsc_code ?? '-') }}</b></td>
+                        </tr>
+                    </table>
+                    </div>
+                </div>
+                <div class="col-6 my-2">
+                    <div class="section custom-table h-100">
+                        <h5>Personal Information</h5>
+                        <table>
+                            <tr>
+                                <th>Date of Birth</th>
+                                <td><b>{{ $userDetails->date_of_birth ? \Carbon\Carbon::parse($userDetails->date_of_birth)->format('d-m-Y') : '-' }}</b></td>
+                            </tr>
+                            <tr>
+                                <th>Gender</th>
+                                <td><b>{{ ucfirst($userDetails->gender ?? '-') }}</b></td>
+                            </tr>
+                            <tr>
+                                <th>Nationality</th>
+                                <td><b>{{ ucfirst($userDetails->nationality ?? '-') }}</b></td>
+                            </tr>
+                            <tr>
+                                <th>Marital Status</th>
+                                <td><b>{{ ucfirst($userDetails->marital_status ?? '-') }}</b></td>
+                            </tr>
+                            <tr>
+                                <th>Anniversary Date</th>
+                                <td><b>{{ $userDetails->anniversary_date ? \Carbon\Carbon::parse($userDetails->anniversary_date)->format('d-m-Y') : '-' }}</b></td>
+                            </tr>
+                            <tr>
+                                <th>Blood Group</th>
+                                <td><b>{{ ucfirst($userDetails->blood_group ?? '-') }}</b></td>
+                            </tr>
+                            <tr>
+                                <th>Religion</th>
+                                <td><b>{{ ucfirst($userDetails->religion ?? '-') }}</b></td>
+                            </tr>
+                        </table>
+                    </div>
+                </div> 
+                <div class="col-6 my-2">
+                    <div class="section custom-table h-100"> 
+                    <h5>Passport & Visa Details</h5>
+                    <table class="custom-table">             
+                        <tr>
+                            <th>Passport Number</th>
+                            <td><b>{{ ucfirst($userDetails->passport_number ?? '-') }}</b></td>
+                        </tr>
+                        <tr>
+                            <th>Issuing Country</th>
+                            <td><b>{{ ucfirst($userDetails->issuing_country ?? '-') }}</b></td>
+                        </tr>
+                        <tr>
+                            <th>Issue Date</th>
+                            <td><b>{{ $userDetails->passport_issue_date ? \Carbon\Carbon::parse($userDetails->passport_issue_date)->format('d-m-Y') : '-' }}</b></td>
+                        </tr>
+                        <tr>
+                            <th>Expiry Date</th>
+                            <td><b>{{ $userDetails->passport_expiry_date ? \Carbon\Carbon::parse($userDetails->passport_expiry_date)->format('d-m-Y') : '-' }}</b></td>
+                        </tr>
+                        <tr>
+                            <th>Visa</th>
+                            <td><b>{{ ucfirst($userDetails->active_visa ?? '-') }}</b></td>
+                        </tr>
+                        <tr>
+                            <th>Visa Expiry Date</th>
+                            <td><b>{{ $userDetails->visa_expiry_date ? \Carbon\Carbon::parse($userDetails->visa_expiry_date)->format('d-m-Y') : '-' }}</b></td>
+                        </tr>
+                    </table>
+
+
+                    </div>
+                </div>
+                <div class="col-6 my-2">
+                    <div class="section custom-table h-100"> 
+                    <h5>Welfare Benefits</h5>
+                    <table>                 
+                        <tr>
+                            <th>UAN</th>
+                            <td><b>{{ ucfirst($userDetails->universal_account_number ?? '-') }}</b></td>
+                        </tr>
+                        <tr>
+                            <th>Provident Fund</th>
+                            <td><b>{{ ucfirst($userDetails->provident_fund ?? '-') }}</b></td>
+                        </tr>
+                        <tr>
+                            <th>ESIC NO</th>
+                            <td><b>{{ ucfirst($userDetails->esic_no ?? '-') }}</b></td>
+                        </tr>
+                    </table> 
+                    </div>
+                </div>
+                <div class="col-6 my-2">
+                    <div class="section custom-table h-100"> 
+                    <h5>Educational Details</h5>
+                    <table class="">
+                        <thead>
+                            <tr>
+                                <th>Course Name</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach($empEducation as $education)
+                                <tr>
+                                    <td class="course-name">
+                                        @if($education->course_type == 'degree')
+                                            {{ ucfirst($education->degree ?? '-') }}
+                                        @elseif($education->course_type == 'certification')
+                                            {{ ucfirst($education->certification_name ?? '-') }}
+                                        @endif
+                                    </td>
+                                    <td>
+                                        @if($education->course_type == 'degree')
+                                            <button class="view-btn" onclick="openDegreeModal({{ $loop->index }})">View</button>
+                                        @elseif($education->course_type == 'certification')
+                                            <button class="view-btn" onclick="openCertificationModal({{ $loop->index }})">View</button>
+                                        @endif
+                                    </td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                    </div>
+                </div>
             </div>
         </div>
+        <!-- comman component above -->
+ 
 
         <!-- table section start below -->
-        <div class="col-12 my-3 ">
+        <div class="col-12 my-2 ">
             <div class="section h-100"> 
                 <h3>Family Details</h3>
                 <div class="table-scroll-container">
@@ -301,7 +300,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-12 my-3 "> 
+        <div class="col-12 my-2 "> 
             <div class="section h-100">
                 <h3>Previous Employment</h3>
                 <div class="table-scroll-containerp">
@@ -342,7 +341,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-12 my-3 "> 
+        <div class="col-12 my-2 "> 
             <div class="section h-100"> 
                 <h3>Uploaded Documents</h3>
                 <div class="table-scroll-container">
@@ -364,7 +363,7 @@
                                     <td class="tableh-four">
                                         @if($document->file_path)
                                             <a href="{{ asset('storage/' . $document->file_path) }}" download>
-                                                <button class="download-btn">Download</button>
+                                                <button class="btn btn-secondary">Download</button>
                                             </a>
                                         @else
                                             <span>No File</span>
@@ -387,7 +386,7 @@
 
             <div id="degreeModal" class="modal">
                 <div class="modal-content"> 
-                <div class="modal-header pt-0 mb-2">  <h2>Academic Details</h2>
+                <div class="modal-header pt-0 mb-2">  <h5>Academic Details</h5>
                     <span class="close" onclick="closeModal('degreeModal')">&times;</span>
                 </div>
                     <div id="degree-modal-content-details">
