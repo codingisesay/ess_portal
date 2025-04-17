@@ -16,13 +16,13 @@ error_reporting(0);
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="stylesheet" href="{{ asset('/user_end/css/homepage.css') }}">
     <link rel="stylesheet" href="{{ asset('/user_end/css/header.css') }}">
-    <link rel="stylesheet" href="{{ asset('errors/error.css') }}">
+    <link rel="stylesheet" href="{{ asset('errors/error.css') }}"> 
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 </head>
 
 <body>
 
-    {{-- @if(session('success'))
+    <!-- {{-- @if(session('success'))
             <div class="alert custom-alert-success">
                 <strong>{{ session('success') }}</strong> 
                 <button class="close-btn" onclick="this.parentElement.style.display='none';">&times;</button>
@@ -35,32 +35,32 @@ error_reporting(0);
             <strong> {{ session('error') }}</strong>
             <button class="close-btn" onclick="this.parentElement.style.display='none';">&times;</button>
             </div>
-            @endif --}}
+            @endif --}} -->
 
-@if($errors->any())
-<div class="alert custom-alert-warning">
-<ul>
-@foreach($errors->all() as $error)
-<li style="color: red;">{{ $error }}</li>
+            @if($errors->any())
+            <div class="alert custom-alert-warning">
+            <ul>
+            @foreach($errors->all() as $error)
+            <li class="text-danger">{{ $error }}</li>
 
-@endforeach
-</ul>
-</div>
-@endif
+            @endforeach
+            </ul>
+            </div>
+            @endif
 
     <!-- First main for three sections -->
     <main class="main-group ">
         <section class="greeting">
  
             @foreach ($logs as $log)  
-            <h3 id="greeting"></h3>
+            <h2 id="greeting"></h2>
 
             <div class="top-cards">
                 <!-- Check In Card -->
                 <div class="card checkin">
-                    <img src="{{ asset('user_end/images/Group490.png'); }}" alt=""><br>
+                    <img src="{{ asset('user_end/images/Group490.png'); }}" alt="" /><br>
                     <p class="fs-6 mb-0">Check&nbsp;In</p>
-                    <small>{{ date('h:i:s A', strtotime($log->login_time)) }}</small>                   
+                    <small>{{ date('h:i:s A', strtotime($log->login_time)) }}</small>   
                 </div>
 
                 <!-- Check Out Card -->
@@ -81,23 +81,89 @@ error_reporting(0);
                             });
                         @endphp
 
-                        @if ($todaysBirthdays->isEmpty())  <!-- Check if no birthdays today -->
-                            <div class="birthday card">
-                                <img src="{{ asset('user_end/images/Group303.png') }}" height="40" width="40" alt="Avatar"> <br>
+                        <div class="birthday card slides-wrapper">
+                        <img src="{{ asset('user_end/images/Group303.png') }}" height="40" width="40" alt="Avatar"> <br>
+                        @if ($todaysBirthdays->isEmpty())   
+                                
                                 <h6>No birthdays today</h6>
-                                <p>Check back later!</p>
-                            </div>
-                        @else  <!-- If there are birthdays, loop through them -->
+                                <small>Check back later!</small>
+                         
+                        @else  
                             @foreach ($todaysBirthdays as $birthday)
-                                <div class="birthday card">
-                                    <img src="{{ asset('user_end/images/Group303.png') }}" height="40" width="40" alt="Avatar">
-                                    <h6>Wish To {{ $birthday->employee_nme }}</h6>
-                                    <p>Happy Birthday</p>
+                                <div class="slide">
+                                    <h6 class="birthday-heading">Wish You Happy Birthday!!</h6>
+                                    <p class="birthday-msg">{{ $birthday->employee_nme }}</p>
                                 </div>
-                            @endforeach
+                            @endforeach 
                         @endif
+                        </div>
                     </div> 
                 </div> 
+                <!-- <div class="birthday-carousel" id="birthdayCarousel">
+                    <div class="birthday card"> 
+                        <img src="{{ asset('user_end/images/Group303.png') }}" height="40" width="40" alt="Avatar"><br>
+
+                        @php
+                            $todaysBirthdays = $todayBirthdays->filter(function($birthday) {
+                                return \Carbon\Carbon::parse($birthday->birthdate)->isToday();
+                            });
+                        @endphp
+
+                        @if ($todaysBirthdays->isEmpty()) 
+                            <h6>No birthdays today</h6>
+                            <small>Check back later!</small>
+                        @else 
+                            @foreach ($todaysBirthdays as $birthday)
+                       
+                                    <h6>Wish To {{ $birthday->employee_nme }}</h6>
+                                    <p>Happy Birthday</p>
+                      
+                            @endforeach
+                        @endif
+                    </div>
+                </div> -->
+ 
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const slides = document.querySelectorAll(".slide");
+        const emojis = ["🎉", "🎂", "🎁", "🥳", "🎈", "🍰", "🧁", "🍾", "🎊", "🪅"];
+        let currentIndex = 0;
+
+        function getRandomEmoji() {
+            return emojis[Math.floor(Math.random() * emojis.length)];
+        }
+
+        function showSlide(index) {
+            slides.forEach((slide, i) => {
+                slide.classList.remove("active");
+                if (i === index) {
+                    slide.classList.add("active");
+
+                    const name = slide.querySelector(".birthday-msg");
+
+                    // Store the original name once
+                    if (!name.dataset.original) {
+                        name.dataset.original = name.textContent;
+                    }
+
+                    // Set content with one emoji before the name
+                    name.innerHTML = `${getRandomEmoji()} ${name.dataset.original}`;
+                }
+            });
+        }
+
+        function nextSlide() {
+            currentIndex = (currentIndex + 1) % slides.length;
+            showSlide(currentIndex);
+        }
+
+        if (slides.length > 0) {
+            showSlide(currentIndex);
+            setInterval(nextSlide, 3000); // every 3 seconds
+        }
+    });
+</script>
+
             </div>
             <!-- Include the auto-scrolling JavaScript -->
   
@@ -124,7 +190,8 @@ error_reporting(0);
                         $firstHoliday = $upcomingHolidays->first();
                     @endphp 
                         <i>
-                            {{ $firstHoliday->formatted_date }} : {{ $firstHoliday->holiday_name }} ({{ $firstHoliday->day }})
+                            {{ $firstHoliday->formatted_date }} : {{ $firstHoliday->holiday_name }} 
+                            <!-- ({{ $firstHoliday->day }}) -->
                         </i>
                     @else
                         <i>No upcoming holidays this year.</i>
@@ -168,7 +235,8 @@ error_reporting(0);
         </script>
       
         <section class="to-do-list">
-            <h3>To-do List</h3>
+           
+            <h5 class="mt-3">To-do List</h5>
             <form id="todo-form" class="to-do-list-container" method="POST" action="{{ route('user.save_todo') }}">
                 @csrf 
                     <!-- Project Field -->
@@ -211,16 +279,17 @@ error_reporting(0);
         </section>
 
         <section class="upcoming-anniversary">
-            <h3>Carnivals</h3>
+            <h5 class="mt-3">Work Anniversary</h5>
             <div class="anniversary">
                 @forelse ($anniversaries as $anniversary)
-                <div class="employee-card">
-                    <div class="employee-info">
-                        <h3><strong>{{ $anniversary->Employee_Name }}</strong></h3>
-                        <div class="details">
-                            <p>{{ $anniversary->yearsCompleted }} Years Completed</p>
+                <div class=" border rounded-3 shadow-sm mb-1">
+                    <div class="d-flex justify-content-between p-2">
+                        <div class="details"> 
+                            <h6 class="mb-0" >{{ $anniversary->Employee_Name }}</h6>
+                            <small >{{ $anniversary->yearsCompleted }} Years Completed</small>
                             <div class="badge">{{ $anniversary->badgeText }}</div>
-                        </div>
+                        </div> 
+                        <img class="mb-3" src='https://i.pinimg.com/736x/99/4b/51/994b51b05a506a082ea193492a449ca9.jpg' alt="photo" />
                     </div>
                 </div>
                 @empty
@@ -232,7 +301,7 @@ error_reporting(0);
 
        
         <section class="calendar-container">
-            <h3 class="calendar-header">Calendar</h3>
+            <h5 class="calendar-header mt-3">Calendar</h5>
             <div class="main-cal">
                 <div id="calendar-controls">
                     <button id="prev-month" class="slider-btn">&lt;</button>
@@ -255,14 +324,14 @@ error_reporting(0);
   
     <main class="main-group">
         <section class="approval-pending">
-            <h3>Approval Pending</h3>
+            <h5>Approval Pending</h5>
             <div class="approval-cards">
-                <!-- Leave Card -->
+                <!-- Leave Card #FBDC7F-->
                 <div class="approval-card {{ (!empty($leaveLists) && collect($leaveLists)->flatten()->isNotEmpty()) ? 'glow-effect' : '' }}" id="leave-card" onclick="openLeaveModal()">
                     <div class="card-left">
-                        <img src="{{ asset('user_end/images/Leave.png'); }}" alt="Leave Icon" class="icon">
+                        <div class="leave-approval-icon1"> <x-icon name="leavenoity" /> </div>
                         <div class="details">
-                            <h4>Leave</h4>
+                            <h6 class="mb-0" >Leave</h6>
                         </div>
                     </div>
                     <div class="card-right">
@@ -273,9 +342,9 @@ error_reporting(0);
                 <!-- Task Card -->
                 <div class="approval-card {{ $toDoList->isNotEmpty() ? 'glow-effect' : '' }}" id="task-card"  onclick="openTaskModal()" >
                 <div class="card-left">
-                    <img src="{{ asset('user_end/images/Task.png'); }}" alt="Task Icon" class="icon">
+                <div class="leave-approval-icon2"> <x-icon name="tasknotify" /> </div>
                     <div class="details">
-                        <h4>Task</h4>
+                        <h6>Task</h6>
                     </div>
                 </div>
                 <div class="card-right">
@@ -284,9 +353,9 @@ error_reporting(0);
             </div>
             <div class="approval-card" id="reimbursement-card" onclick="openReimbursementModal()">
                 <div class="card-left">
-                    <img src="{{ asset('user_end/images/Leave.png'); }}" alt="Leave Icon" class="icon">
+                <div class="leave-approval-icon3">     <x-icon name="reimpay" /></div>
                     <div class="details">
-                        <h4>Reimbursement</h4>
+                        <h6>Reimbursement</h6>
                     </div>
                 </div>
                 <div class="card-right">
@@ -295,9 +364,9 @@ error_reporting(0);
             </div>  
             <div class="approval-card" id="reimbursement-card" onclick="openAccountModal()">
                 <div class="card-left">
-                    <img src="{{ asset('user_end/images/Leave.png'); }}" alt="Leave Icon" class="icon">
+                <div class="leave-approval-icon4">   <x-icon name="reimpay" /></div>
                     <div class="details">
-                        <h4>Account</h4>
+                        <h6>Account</h6>
                     </div>
                 </div>
                 <div class="card-right">
@@ -313,7 +382,7 @@ error_reporting(0);
         <div id="leaveModal" class="modal">
     <div class="modal-content">
         <span class="close" onclick="closeLeaveModal()">&times;</span>
-        <h3>Leave Details</h3>
+        <h5>Leave Details</h5>
         <table>
             <thead>
                 <tr>
@@ -373,7 +442,7 @@ error_reporting(0);
 <div id="taskModal" class="modal">
     <div class="modal-content">
         <span class="close" onclick="closeTaskModal()">&times;</span>
-        <h3>Task</h3>
+        <h5>Task</h5>
         <table>
             <thead>
                 <tr>
@@ -423,7 +492,7 @@ error_reporting(0);
 <div id="reimbursementModal" class="modal">
     <div class="modal-content">
         <span class="close" onclick="closeReimbursementModal()">&times;</span>
-        <h3>Reimbursement Details</h3>
+        <h5>Reimbursement Details</h5>
         <table>
             <thead>
                 <tr>
@@ -464,7 +533,7 @@ error_reporting(0);
 <div id="accountModal" class="modal">
     <div class="modal-content">
         <span class="close" onclick="closeAccountModal()">&times;</span>
-        <h3>Account Details</h3>
+        <h5>Account Details</h5>
         <table>
             <thead>
                 <tr>
@@ -597,68 +666,31 @@ error_reporting(0);
         alert('View details for account ID: ' + accountId);
     }
 </script>
-
-<style>
-            .glow-effect {
-                position: relative;
-                animation: alertGlow 1.5s ease-in-out infinite;
-                transition: box-shadow 0.3s ease, transform 0.3s ease;
-            }
-
-            /* Flashing alert animation */
-            @keyframes alertGlow {
-                0% {
-                    box-shadow: 0 0 10px rgba(255, 69, 0, 0.5); /* Soft red/orange glow */
-                    transform: scale(1);
-                }
-                50% {
-                    box-shadow: 0 0 25px rgba(255, 69, 0, 0.8); /* Stronger red/orange glow */
-                    transform: scale(1.05);
-                }
-                100% {
-                    box-shadow: 0 0 10px rgba(255, 69, 0, 0.5); /* Soft red/orange glow */
-                    transform: scale(1);
-                }
-            }
-
-            /* Optional: Subtle alert glow without animation */
-            .glow-effect.alert-static {
-                box-shadow: 0 0 15px rgba(255, 69, 0, 0.5);
-            }
-
-            /* Hover effect to emphasize urgency */
-            .glow-effect:hover {
-                box-shadow: 0 0 30px rgba(255, 69, 0, 1); /* More intense glow */
-                transform: scale(1.05);
-                transition: box-shadow 0.3s ease, transform 0.3s ease;
-            }
-
-                    </style>
-
-
         <section class="news-events">
-    <h3>News & Events</h3>
-    <div class="container-events">
-        <ul>
-            @foreach ($newsAndEvents as $event)
-            <li>
-                <span class="date">{{ \Carbon\Carbon::parse($event->startdate)->format('d M') }}</span>
-                <span class="event"><strong>{{ $event->title }}</strong>
-                    <p><small>{{ $event->description }}</small></p>
-                </span>
-            </li>
-            @endforeach
-        </ul>
-    </div>
-</section>
+            <h5>News & Events</h5>
+            <div class="container-events">
+                <ul>
+                    @foreach ($newsAndEvents as $event)
+                    <li>
+                        <div class="d-flex">
+                        <span class="date my-auto">{{ \Carbon\Carbon::parse($event->startdate)->format('d M') }}</span>
+                        <h6>{{ $event->title }}</h6>
+                        </div>
+                        <small class="text-secondary"> {{ $event->description }} </small>
+                   
+                    </li>
+                    @endforeach
+                </ul>
+            </div>
+        </section>
 
 
         <section class="leaves">
-            <h3>Leave Types</h3>
+            <h5>Leave Types</h5>
             <ul>
                 @foreach($leaveUsage as $leave)
                     <li>
-                        <strong>{{ $leave[0] }}</strong> <!-- The first item is the leave type name -->
+                        <h6>{{ $leave[0] }}</h6> <!-- The first item is the leave type name -->
                         <div class="progress-bar-containerr">
                             <div class="progress-barr" style="width: {{ $leave[3] }}%; background-color: 
                                 @if($leave[3] <= 50) #4caf50
@@ -666,8 +698,9 @@ error_reporting(0);
                                 @else #f44336
                                 @endif;"></div> <!-- This will set the color based on the percentage -->
                         </div>
-                        <p>{{ $leave[1] }} / {{ $leave[2] }} days taken ({{ round($leave[3], 2) }}% used)</p>
+                       <small> <small class="text-secondary"   >{{ $leave[1] }} / {{ $leave[2] }} days taken ({{ round($leave[3], 2) }}% used)</small><small>
                     </li>
+                    <br>
                 @endforeach
             </ul>
         </section>
@@ -675,26 +708,9 @@ error_reporting(0);
         
 
 
-<style>
-    .progress-bar-containerr {
-        width: 100%;
-        height: 20px;
-        background-color: #f3f3f3;
-        border-radius: 10px;
-        margin-top: 5px;
-    }
-
-    .progress-barr {
-        height: 100%;
-        border-radius: 10px;
-    }
-</style>
-
-
-
        
         <section class="upcoming-birthdays">
-        <h3>Upcoming Birthdays</h3>
+        <h5>Upcoming Birthdays</h5>
 <div class="birthday-cards">
         @forelse ($upcomingBirthdays as $birthday)
         <div class="employee-card">
@@ -703,14 +719,14 @@ error_reporting(0);
             <img src="{{ asset('storage/' . ($birthday->imagelink ?: 'user_profile_image/Oqr4VRqo7RpQxnmiZCh12zybbcdsyUin2FhAKD3O.jpg')) }}" alt="Profile Image" class="profile-image">
 
             <div class="employee-info">
-                <h3><strong>{{ $birthday->employee_nme }}</strong></h3>
-                <p>{{ $birthday->designation_name }}</p>
-                <div class="badge">{{ $birthday->badgeText }}</div>
+                <h6 class="mb-0">{{ $birthday->employee_nme }}</h6>
+                <p class="text-secondary mb-0">{{ $birthday->designation_name }}</p>
+                <div class="bdg" >{{ $birthday->badgeText }}</div>
             </div>
             </div>
         
         @empty
-        <p>No upcoming birthdays this month.</p>
+        <p class="text-muted my-3 text-center" >No upcoming birthdays this month.</p>
         @endforelse
     </div>
 </section>
@@ -892,47 +908,6 @@ error_reporting(0);
     populateDropdowns();
     generateCalendar(currentYear, currentMonth);
 </script>
-
-<style>
-     .day.holiday {
-        background-color: #f3e39f;
-        color: black;
-        border-radius: 50%;
-    }
-
-    .day.week-off {
-        background-color: #8A3366;
-        color: white;
-        border-radius: 50%;
-    }
-
-    .day[title] {
-    position: relative;
-    cursor: pointer;
-}
-
-.day[title]:hover::after {
-    content: attr(title);
-    position: absolute;
-    bottom: 100%;
-    left: 50%;
-    transform: translateX(-50%);
-    background-color: #333;
-    color: #fff;
-    padding: 5px;
-    border-radius: 5px;
-    white-space: nowrap;
-    z-index: 10;
-    font-size: 12px;
-}
-
-.today {
-    background-color: #ffcc00; /* Highlight color */
-    color: white; /* Text color */
-    font-weight: bold;
-}
-
-</style>
 
 
     <script>

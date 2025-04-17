@@ -38,10 +38,10 @@ $userDetails = app('App\Http\Controllers\headerController')->getUserDetails();
             <ul>
                 <li><a href="{{ route('user.homepage') }}" class="active"> <x-icon name="dashboard" />Dashboard</a></li>
                 <li><a href="{{ route('user.employment.data') }}"> <x-icon name="userdetails" />Employee Details</a></li>
+                <li><a href="{{ route('PayRollDashboard') }}"> <x-icon name="pay" />Payroll</a></li>
                 <li><a href="{{ route('leave_dashboard') }}"> <x-icon name="attendance" />Leave & Attendance</a></li> 
                 <li><a href="{{ route('user.view_organisation') }}"> <x-icon name="chart" />Orgnizations Chart</a></li> 
                 <li><a href="{{ route('user.hr.policy') }}"> <x-icon name="policy" />HR Policy</a></li>
-                <li><a href="{{ route('PayRollDashboard') }}"> <x-icon name="pay" />Payroll</a></li>
                 <li><a href="{{ route('user.setting') }}"> <x-icon name="setting" />Settings</a></li>
             </ul>
         </nav>
