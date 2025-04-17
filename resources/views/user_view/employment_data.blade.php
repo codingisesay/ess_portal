@@ -12,76 +12,77 @@
         
     <style>
         /* General modal styling */
-.modal {
-    display: none;
-    position: fixed;
-    z-index: 1; /* Sit on top */
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    overflow: auto; /* Allow scrolling if the content is too large */
-    background-color: rgba(0, 0, 0, 0.4); /* Background overlay */
-    padding-top: 50px; /* Space for modal header */
-}
+    .modal {
+        display: none;
+        position: fixed;
+        z-index: 1; /* Sit on top */
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        overflow: auto; /* Allow scrolling if the content is too large */
+        background-color: rgba(0, 0, 0, 0.4); /* Background overlay */
+        padding-top: 50px; /* Space for modal header */
+    }
 
-/* Modal content box */
-.modal-content {
-    background-color: #fff;
-    margin: 5% auto; /* Center the modal */
-    /* padding: 20px; */
-    padding: 40px;
-    border: 1px solid #888;
-    width: 80%; /* Width can be adjusted */
-    max-width: 900px; /* Set a max width to prevent it from stretching too much */
-    border-radius: 10px; /* Rounded corners for a soft look */
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    overflow-y: auto; /* Enable vertical scrolling inside the modal */
-    max-height: 80vh; /* Limit height to 80% of the viewport height */ 
-}
-
-/* Modal close button */
-.close { 
-    color: #aaa;
-    float: right;
-    font-size: 22px;
-    font-weight: bold;
-    cursor: pointer;
-    top: 0px; width: min-content; 
-}
-
-/* Close button on hover */
-.close:hover,
-.close:focus {
-    color: black;
-    text-decoration: none;
-    cursor: pointer;
-}
-
-/* Content inside the modal */
-#degree-modal-content-details, #certification-modal-content-details {
-    max-height: 60vh; /* Allow modal content to scroll */
-    overflow-y: auto;
-}
- .no-table tr, .no-table td{background: white; border:none}
-
-/* Responsive design for small screens */
-@media (max-width: 768px) {
+    /* Modal content box */
     .modal-content {
-        width: 90%; /* Increase width for small screens */
-        padding: 15px;
+        background-color: #fff;
+        margin: 5% auto; /* Center the modal */
+        /* padding: 20px; */
+        padding: 40px;
+        border: 1px solid #888;
+        width: 80%; /* Width can be adjusted */
+        max-width: 900px; /* Set a max width to prevent it from stretching too much */
+        border-radius: 10px; /* Rounded corners for a soft look */
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        overflow-y: auto; /* Enable vertical scrolling inside the modal */
+        max-height: 80vh; /* Limit height to 80% of the viewport height */ 
     }
- 
-    .close {
-        font-size: 24px;
+
+    /* Modal close button */
+    .close { 
+        color: #aaa;
+        float: right;
+        font-size: 22px;
+        font-weight: bold;
+        cursor: pointer;
+        top: 0px; width: min-content; 
     }
-} 
+
+    /* Close button on hover */
+    .close:hover,
+    .close:focus {
+        color: black;
+        text-decoration: none;
+        cursor: pointer;
+    }
+
+    /* Content inside the modal */
+    #degree-modal-content-details, #certification-modal-content-details {
+        max-height: 60vh; /* Allow modal content to scroll */
+        overflow-y: auto;
+    }
+    .no-table tr, .no-table td{background: white; border:none}
+
+    /* Responsive design for small screens */
+    @media (max-width: 768px) {
+        .modal-content {
+            width: 90%; /* Increase width for small screens */
+            padding: 15px;
+        }
+    
+        .close {
+            font-size: 24px;
+        }
+    } 
     </style>
      
 </head>
 <body>
  
     <div class="row mx-3">
+          <!-- comman component below -->
         <div class="col-md-4 my-2">
             <div class="section custom-table h-100">
             @include('user_view.employment_details_top')
@@ -262,10 +263,9 @@
             </div>
         </div>
         <!-- comman component above -->
- 
-
+  
         <!-- table section start below -->
-        <div class="col-12 my-2 ">
+        <div class="col-6 my-2 ">
             <div class="section h-100"> 
                 <h3>Family Details</h3>
                 <div class="table-scroll-container">
@@ -300,10 +300,10 @@
                 </div>
             </div>
         </div>
-        <div class="col-12 my-2 "> 
+        <div class="col-6 my-2 "> 
             <div class="section h-100">
                 <h3>Previous Employment</h3>
-                <div class="table-scroll-containerp">
+                <div class="table-scroll-container">
                     <table>
                         <thead>
                             <tr>
@@ -343,14 +343,36 @@
         </div>
         <div class="col-12 my-2 "> 
             <div class="section h-100"> 
-                <h3>Uploaded Documents</h3>
-                <div class="table-scroll-container">
+                <h3 class='d-flex  align-items-center'> <x-icon name="openfolder" />&nbsp; Uploaded Documents</h3>                
+                <div class="row my-2">  
+                    @foreach($documents as $index => $document)
+                        <div class="col-6">
+                            <div class="border-bottom my-2 pb-2 px-3 d-flex align-items-center">
+                                <span class="text-danger me-2"><x-icon name="pdf" /></span> 
+                                <!-- <td class="tableh-one">{{ $index + 1 }}</td> -->
+                                <span class="me-auto">{{ ucfirst($document->document_type ?? '-') }}</span>
+                                <!-- <td class="tableh-three">{{ ucfirst($document->file_path ?? '-') }}</td> --> 
+                                    @if($document->file_path)
+                                        <a class="ms-auto" style="color:#8A3366" href="{{ asset('storage/' . $document->file_path) }}" download>
+                                        <x-icon name="download" />
+                                        </a>
+                                    @else
+                                        <span>No File</span>
+                                    @endif
+                                </div>
+                        </div>
+                    @endforeach 
+                </div> 
+
+
+
+
+                <!-- <div class="table-scroll-container">
                     <table>
                         <thead>
                             <tr>
                                 <th class="tableh-one">Sr. No.</th>
-                                <th class="tableh-two">Document Type</th>
-                                <!-- <th class="tableh-three">File Path</th> -->
+                                <th class="tableh-two">Document Type</th> 
                                 <th class="tableh-four">Action</th>
                             </tr>
                         </thead>
@@ -358,8 +380,7 @@
                             @foreach($documents as $index => $document)
                                 <tr>
                                     <td class="tableh-one">{{ $index + 1 }}</td>
-                                    <td class="tableh-two">{{ ucfirst($document->document_type ?? '-') }}</td>
-                                    <!-- <td class="tableh-three">{{ ucfirst($document->file_path ?? '-') }}</td> -->
+                                    <td class="tableh-two">{{ ucfirst($document->document_type ?? '-') }}</td> 
                                     <td class="tableh-four">
                                         @if($document->file_path)
                                             <a href="{{ asset('storage/' . $document->file_path) }}" download>
@@ -373,48 +394,33 @@
                             @endforeach
                         </tbody>
                     </table>
-                </div> 
+                </div>  -->
             </div>
-        </div>
-
-
-
+        </div> 
     </div>
-     
-     
- 
-
-            <div id="degreeModal" class="modal">
-                <div class="modal-content"> 
-                <div class="modal-header pt-0 mb-2">  <h5>Academic Details</h5>
-                    <span class="close" onclick="closeModal('degreeModal')">&times;</span>
-                </div>
-                    <div id="degree-modal-content-details">
-                        <!-- Degree details will be displayed here -->
-                    </div>
-                </div>
-            </div>
-
-            <div id="certificationModal" class="modal">
-                <div class="modal-content">
-                    <div class="modal-header"> 
-                        <span class="close" onclick="closeModal('certificationModal')">X</span>
-                    </div>
-                    <div id="certification-modal-content-details">
-                        <!-- Certification details will be displayed here -->
-                    </div>
-                </div>
+      
+    <div id="degreeModal" class="modal">
+        <div class="modal-content"> 
+        <div class="modal-header pt-0 mb-2">  <h5>Academic Details</h5>
+            <span class="close" onclick="closeModal('degreeModal')">&times;</span>
+        </div>
+            <div id="degree-modal-content-details">
+                <!-- Degree details will be displayed here -->
             </div>
         </div>
     </div>
 
-    <div class="right-section1">
-     
-
+    <div id="certificationModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header"> 
+                <span class="close" onclick="closeModal('certificationModal')">X</span>
+            </div>
+            <div id="certification-modal-content-details">
+                <!-- Certification details will be displayed here -->
+            </div>
+        </div>
     </div>
 
-    <div class="right-section1">
- 
  
     <script>
         // JavaScript to handle modal popup

@@ -179,7 +179,7 @@ error_reporting(0);
                     </div>
                 </div>
                 @empty
-                <p class="text-muted text-center py-3">No Carnivals for the current month.</p>
+                <p class="text-muted text-center py-3">No Work Anniversary for the current month.</p>
                 @endforelse
             </div>
         </section>
@@ -288,7 +288,7 @@ error_reporting(0);
                                 @else #f44336
                                 @endif;"></div> <!-- This will set the color based on the percentage -->
                         </div>
-                        <small class="text-secondary">{{ $leave[1] }} / {{ $leave[2] }} days taken ({{ round($leave[3], 2) }}% used)</small> 
+                    <small>    <small class="text-secondary">{{ $leave[1] }} / {{ $leave[2] }} days taken ({{ round($leave[3], 2) }}% used)</small> </small>
                     </li>  
                 @endforeach
             </ul>
@@ -311,7 +311,7 @@ error_reporting(0);
                     </div>
                 
                 @empty
-                <p class="text-muted my-3 text-center" >No upcoming birthdays this month.</p>
+                <p class="text-muted text-center py-3">No upcoming birthdays this month.</p>
                 @endforelse
             </div>
         </section> 

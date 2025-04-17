@@ -100,7 +100,7 @@ Route::middleware(['auth.superadmin'])->group(function () {
     Route::post('superadmin/insert_policy_restriction',[leavePolicyController::class,'insertPolicyConf'])->name('insertPolicyConf');
     Route::post('superadmin/insert_emp_restriction',[leavePolicyController::class,'insertEmpRestriction'])->name('insert_emp_restriction');
     Route::post('superadmin/update_policy_slot/{id}', [leavePolicyController::class, 'updatePolicyTimeSlot'])->name('update_policy_slot');
-    Route::post('superadmin/update_policy_type/{id}', [leavePolicyController::class, 'updatePolicyType'])->name('update_policy_type');
+    Route::post('superadmin/update_policy_type', [leavePolicyController::class, 'updatePolicyType'])->name('update_policy_type');
     Route::post('superadmin/update_policy_conf/{id}', [leavePolicyController::class, 'updatePolicyConf'])->name('update_policy_conf');
 
    //Load pages routes loadforms superadmin
@@ -250,6 +250,10 @@ Route::middleware(['auth'])->group(function () {
  Route::get('user/claim_form',[salaryBoxController::class,'loadclaimform'])->name('claim_form');
  Route::get('user/clam_record', [salaryBoxController::class, 'loadUserClaims'])->name('user_claims');
  Route::get('user/manager_clam_record',[salaryBoxController::class,'loadMangerClaims'])->name('manager_claims');
+
+ Route::post('user/insert_Reimbursement_Form',[salaryBoxController::class,'insertReimbursementForm'])->name('insert_Reimbursement_Form');
+
+ Route::get('user/get_max_amount/{rm_id}',[salaryBoxController::class,'loadMaxAmoutRm'])->name('get_max_amount');
    
 });
 
