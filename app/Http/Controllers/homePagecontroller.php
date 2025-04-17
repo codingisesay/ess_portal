@@ -515,6 +515,7 @@ $upcomingHolidays = $upcomingHolidays->map(function ($holiday) {
 $reimbursementList = DB::table('reimbursement_trackings')
     ->join('emp_details', 'reimbursement_trackings.user_id', '=', 'emp_details.user_id')
     ->join('reimbursement_form_entries', 'reimbursement_trackings.id', '=', 'reimbursement_form_entries.reimbursement_trackings_id')
+    ->join('assign_reimbursement_tokens', 'reimbursement_trackings.id', '=', 'assign_reimbursement_tokens.reimbursement_tracking_id') // Join with assign_reimbursement_tokens
     ->select(
         'emp_details.employee_no',
         'emp_details.employee_name',
@@ -523,6 +524,7 @@ $reimbursementList = DB::table('reimbursement_trackings')
         DB::raw('SUM(reimbursement_form_entries.amount) as total_amount'), // Calculate total amount
         DB::raw('MAX(reimbursement_form_entries.status) as status') // Fetch the latest status
     )
+    ->where('assign_reimbursement_tokens.user_id', '=', $user->id) // Filter by reporting manager's user_id
     ->groupBy('emp_details.employee_no', 'emp_details.employee_name', 'emp_details.user_id')
     ->get();
 

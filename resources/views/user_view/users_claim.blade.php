@@ -28,8 +28,8 @@
                         <th>Entered Amount</th>
                         <th>Bill</th>
                         <th>Applicant Comment</th>
-                        <th>Manager Comment</th>
-                        <th>Finance Comment</th>
+                        <!-- <th>Manager Comment</th> -->
+                        <!-- <th>Finance Comment</th> -->
                         <th>Status</th>
                     </tr>
                 </thead>
@@ -49,8 +49,8 @@
                             @endif
                         </td>
                         <td>{{ $detail->description_by_applicant }}</td>
-                        <td>{{ $detail->description_by_manager }}</td>
-                        <td>{{ $detail->description_by_finance }}</td>
+                        <!-- <td>{{ $detail->description_by_manager }}</td>
+                        <td>{{ $detail->description_by_finance }}</td> -->
                         <td>{{ $detail->status }}</td>
                     </tr>
                     @endforeach
