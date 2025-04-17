@@ -698,7 +698,7 @@ error_reporting(0);
                                 @else #f44336
                                 @endif;"></div> <!-- This will set the color based on the percentage -->
                         </div>
-                       <small> <small class="text-secondary"   >{{ $leave[1] }} / {{ $leave[2] }} days taken ({{ round($leave[3], 2) }}% used)</small><small>
+                       <small> <small class="text-secondary"   >{{ $leave[1] }} / {{ $leave[2] }} days taken ({{ round($leave[3], 2) }}% used)</small></small>
                     </li>
                     <br>
                 @endforeach
