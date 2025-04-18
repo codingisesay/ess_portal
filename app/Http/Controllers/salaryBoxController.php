@@ -335,12 +335,34 @@ class salaryBoxController extends Controller
     }
 
    
- public function loadDashboard(){
+ public function loadDashboard()
+{
+    $loginUserInfo = Auth::user();
 
-
-    return view('user_view.payrollDashboard');
-
- }
+    $reimbursementClaims = DB::table('reimbursement_trackings')
+        ->join('reimbursement_form_entries', 'reimbursement_trackings.id', '=', 'reimbursement_form_entries.reimbursement_trackings_id')
+        ->select(
+            'reimbursement_trackings.id as tracking_id',
+            'reimbursement_trackings.token_number',
+            'reimbursement_trackings.created_at as claim_date',
+            DB::raw('SUM(reimbursement_form_entries.amount) as total_amount'),
+            'reimbursement_trackings.description as purpose',
+            'reimbursement_trackings.status',
+            DB::raw('COUNT(reimbursement_form_entries.id) as no_of_entries'),
+            DB::raw('GROUP_CONCAT(reimbursement_form_entries.upload_bill) as bundled_bills') // Bundle bills
+        )
+        ->where('reimbursement_trackings.user_id', '=', $loginUserInfo->id)
+        ->groupBy(
+            'reimbursement_trackings.id',
+            'reimbursement_trackings.token_number',
+            'reimbursement_trackings.created_at',
+            'reimbursement_trackings.description',
+            'reimbursement_trackings.status'
+        )
+        ->get();
+// dd($reimbursementClaims);
+    return view('user_view.payrollDashboard', compact('reimbursementClaims'));
+}
 
  public function loadclaimform(){
     $loginUserInfo = Auth::user();
