@@ -5,8 +5,8 @@
   <!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
   <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.slim.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js"></script> -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>-->
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js"></script> 
  <!-- Option 1: Include in HTML -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css">
   <link rel="stylesheet" href="{{ asset('/user_end/css/homepage.css') }}">
@@ -28,26 +28,26 @@
   <div class="reimbursement-details">
     <!-- Initial form details -->
     <div class="row mb-2">
-      <div class="col-3">
+      {{-- <div class="col-3">
         <div class="form-group">
             <div class="floating-label-wrapper">
                 <input type="text" class="input-field" value="John Doe" disabled >
                 <label for="project">Employee Name</label>
             </div>
         </div>          
-      </div>  
-      <div class="col-3">
+      </div>   --}}
+      {{-- <div class="col-3">
         <div class="form-group">
             <div class="floating-label-wrapper">
                 <input type="date" class="input-field" palceholder="Enter title for claim" disabled >
                 <label for="project">Claim Date</label>
             </div>
         </div>          
-      </div>  
+      </div>   --}}
       <div class="col-3">
         <div class="form-group">
             <div class="floating-label-wrapper">
-                <input type="text" class="input-field"  >
+                <input type="text" class="input-field" name="clam_comment" >
                 <label for="project">Title of Claim</label>
             </div>
         </div>          
@@ -79,14 +79,16 @@
       <tbody>
         <!-- Dynamic rows will be added here -->
       </tbody>  
-          <td colspan="3">Total</td>
-          <td>₹00.00</td>
-          <td>₹00.00</td>
-          <td></td>
-          <td></td>
-          <td></td>
+          
       <tfoot>
+   
 
+        <tr>
+          <td colspan="3"><strong>Total</strong></td>
+          <td><strong id="totalMaxAmount">₹0.00</strong></td>
+          <td><strong id="totalEntryAmount">₹0.00</strong></td>
+          <td colspan="3"></td>
+        </tr>
       </tfoot>
     </table>
 
@@ -102,6 +104,28 @@
 
 <!-- JavaScript -->
 <script>
+
+function updateTotals() {
+    let totalMax = 0;
+    let totalEntry = 0;
+
+    $('#billsTable tbody tr').each(function () {
+      const maxAmount = parseFloat($(this).find('input[name="max_amount[]"]').val()) || 0;
+      const entryAmount = parseFloat($(this).find('input[name="entered_amount[]"]').val()) || 0;
+
+      totalMax += maxAmount;
+      totalEntry += entryAmount;
+    });
+
+    $('#totalMaxAmount').text('₹' + totalMax.toFixed(2));
+    $('#totalEntryAmount').text('₹' + totalEntry.toFixed(2));
+  }
+
+  // Update totals when amounts change
+  $(document).on('input', 'input[name="entered_amount[]"], input[name="max_amount[]"]', function () {
+    updateTotals();
+  });
+
   function addRow() {
     const tableBody = document.querySelector('#billsTable tbody');
     const rowCount = tableBody.rows.length + 1;
@@ -128,12 +152,14 @@
 
     tableBody.appendChild(row);
     updateSerialNumbers();
+    updateTotals();
   }
 
   function deleteRow(button) {
     const row = button.closest('tr');
     row.remove();
     updateSerialNumbers();
+    updateTotals();
   }
 
   function updateSerialNumbers() {
@@ -157,7 +183,8 @@
       success: function (response) {
         // Fill in the value returned by the server
         $maxAmountInput.val(response.max_amount);
-        console.log(response.max_amount);
+        // console.log(response.max_amount);
+        updateTotals();
       },
       error: function (xhr, status, error) {
         console.error('Error:', error);
