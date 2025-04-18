@@ -263,28 +263,25 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <td>RMB-2025-001</td>
-                        <td>12/03/2024</td>
-                        <td>₹18,000</td>
-                        <td>Food Reimbursement </td>
-                        <td><span class="review"> In Review </span></td>
-                        <td>Actions</td>
-                    </tr>
+                    @foreach ($reimbursementClaims as $claim)
+                        <tr>
+                            <td>{{ $claim->token_number }}</td>
+                            <td>{{ \Carbon\Carbon::parse($claim->claim_date)->format('d/m/Y') }}</td>
+                            <td>₹{{ number_format($claim->total_amount, 2) }}</td>
+                            <td>{{ $claim->purpose }}</td>
+                            <td>
+                                <span class="{{ $claim->status == 'In Review' ? 'review' : '' }}">
+                                    {{ $claim->status }}
+                                </span>
+                            </td>
+                        </tr>
+                    @endforeach
                 </tbody>
             </table>
             </div>
           </div>
         </div>
       </div>
-
-
-
-
-
-
-
-
 
 
 
