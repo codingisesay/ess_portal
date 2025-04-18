@@ -1,161 +1,245 @@
 @extends('user_view.header')
 @section('content')
-<?php
-use App\Helpers\SalaryHelper;
+ 
+    <!-- <a href="{{ route('claim_form') }}"><button class="w3-button w3-green">Claim</button></a> -->
+   <!-- Option 1: Include in HTML -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css">  
 
-?>
-<!DOCTYPE html>
-<html lang="en">
-<head>
-
-  <title>Payroll Dashboard</title>
- <style>
-    body {
-  font-family: Arial, sans-serif;
-  background: #f4f6f8;
-  margin: 0;
-  padding: 0;
-}
-
-.container {
-  padding: 30px;
-  max-width: 1200px;
-  margin: auto;
-}
-
-h1 {
-  text-align: center;
-  margin-bottom: 40px;
-}
-
-.cards {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 20px;
-  margin-bottom: 40px;
-}
-
-.card {
-  background: white;
-  padding: 20px;
-  border-radius: 10px;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-  text-align: center;
-}
-
-.card h3 {
-  font-size: 16px;
-  color: #666;
-}
-
-.card p {
-  font-size: 24px;
-  font-weight: bold;
-  margin: 10px 0 0;
-}
-
-table {
-  width: 100%;
-  border-collapse: collapse;
-  background: white;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-}
-
-table th, table td {
-  padding: 12px;
-  border-bottom: 1px solid #ddd;
-  text-align: left;
-}
-
-table th {
-  background: #f9fafb;
-  font-weight: bold;
-}
-
-table tr:hover {
-  background: #f1f1f1;
-}
-
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+      .payrole-dashboard{margin:10px 30px}
+        .payslip-card {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); 
+            padding: 25px;
+            position: relative;
+        }
+         
+         
+        .financial-year {
+            font-size: 16px;
+            color: #555;
+            margin-bottom: 5px;
+            font-weight: 500;
+        }
+        
+        .quarter {
+            font-size: 14px;
+            color: #777;
+            margin-bottom: 15px;
+        }
+         
+        
+        .payment-details {
+            margin: 25px 0;
+        }
+        .payment-details small{font-size:12px; color : #333}
+        
+        .payment-row1,
+        .payment-row2,
+        .payment-row3 {
+          padding-left:7px;
+            border-left: 4px solid #3498db;
+            margin-bottom: 12px;
+        }
+        .payment-row2{border-left: 4px solid #e74c3c;}
+        .payment-row3{border-left: 4px solid #2c3e50;}  
+        
+        .payment-label {
+            font-size: 16px;
+            color: #555;
+        }
+        .view-btn i {
+            vertical-align:middle
+        }
+        .payment-amount {
+            font-size: 16px;
+            font-weight: 600;
+            color: #333;
+        }
+        
+        .gross-pay {
+            font-weight: 700;
+            color: #2c3e50;
+        }
+        
+        .chart-container {
+            margin: 20px 0;
+            height: 250px;
+            position: relative;
+        }
+        
+        .view-btn {
+            display: block; 
+            padding: 5px 12px;
+            background-color: #8A3366;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: background-color 0.3s;
+        }
+        
+        .view-btn:hover {
+            background-color: #2980b9;
+        }
+        .payslip-card select {
+            padding:2px  5px; 
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            font-size: 14px;
+        }
+        
+        @media (max-width: 480px) {
+            .payslip-card {
+                padding: 20px;
+            }
+            
+            .header h1 {
+                font-size: 20px;
+            }
+            
+            .chart-container {
+                height: 200px;
+            }
+        }
     </style>
+ 
 
-</head>
-<body>
-  <div class="container">
-    <h1>Payroll Dashboard</h1>
+      <div class="payrole-dashboard">
+            <div class="col-5">
+              <h2>Payrole</h2>
+              <div class="payslip-card">
+                  <div class="header d-flex">
+                    <h4 class="me-auto mb-0">Overview</h4>
+                    <div> 
+                      FY   
+                      <select>
+                        <option value="2024-25">2024-25</option>
+                        <option value="2025-26">2025-26</option>
+                      </select>
+                      |
+                      <select>
+                      <option value="q1">Q1(jan-march)</option> 
+                      <option value="q2">Q2(Apr-June)</option> 
+                      </select>
+                      |
+                      <select>
+                      <option value="q1">January</option> 
+                      <option value="q2">February</option> 
+                      <option value="q2">March</option> 
+                      </select>
+                    </div>
+                  </div> 
+                  <hr cass="my-0">
+                    
+                  <div class="row">
+                    <div class="col-6">
+                      <div class="chart-container">
+                          <canvas id="paymentChart"></canvas>
+                      </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="payment-details">
+                            <div class="payment-row1" >
+                                <small class="payment-label" >Take Home</small><br/>
+                                <h5 class="payment-amount">80,000.00</h5>
+                            </div>
+                            <div class="payment-row2">
+                                <small class="payment-label">Deductions</small><br/>
+                                <h5 class="payment-amount">6,000.00</h5>
+                            </div>
+                            <div class="payment-row3">
+                                <small class="payment-label">Gross Pay</small><br/>
+                                <h5 class="payment-amount gross-pay">86,000.00</h5>
+                            </div>
+                  
+                          <button class="view-btn "><i class="bi bi-file-earmark-arrow-down"></i> Get Payslips</button>
+                        </div>
+                      
+                    </div>
+                  </div>
+                  
+              </div>
+            </div >
+      </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <script>
+        // Chart.js implementation
+        document.addEventListener('DOMContentLoaded', function() {
+            const ctx = document.getElementById('paymentChart').getContext('2d');
+            
+            const paymentChart = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Take Home', 'Deductions'],
+                    datasets: [{
+                        data: [80000, 6000],
+                        backgroundColor: [
+                            '#61C9A1  ',   // Blue for Take Home
+                            '#e74c3c'    // Red for Deductions
+                        ],
+                        borderColor: [
+                            '#fff',
+                            '#fff'
+                        ],
+                        borderWidth: 2
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                boxWidth: 12,
+                                padding: 20,
+                                font: {
+                                    size: 14
+                                }
+                            }
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    const label = context.label || '';
+                                    const value = context.raw || 0;
+                                    const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                                    const percentage = Math.round((value / total) * 100);
+                                    return `${label}: ₹${value.toLocaleString()} (${percentage}%)`;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+            
+            document.querySelector('.view-btn').addEventListener('click', function() {
+                alert('Payslip details would be displayed here');
+                // In a real implementation, this would navigate to another page or show more details
+            });
+        });
+    </script>
     
-    <a href="{{ route('claim_form') }}"><button class="w3-button w3-green">Claim</button></a>
-    <br>
-    <br>
-    <div class="cards">
-      <div class="card">
-        <h3>Total Employees</h3>
-        <p id="employees">0</p>
-      </div>
-      <div class="card">
-        <h3>Payroll Processed</h3>
-        <p id="payroll">₹0</p>
-      </div>
-      <div class="card">
-        <h3>This Month Salary</h3>
-        <p id="monthlySalary">₹0</p>
-      </div>
-      <div class="card">
-        <h3>Upcoming Increments</h3>
-        <p id="increments">0</p>
-      </div>
-    </div>
-
-    <h2>Recent Payrolls</h2>
-    <table>
-      <thead>
-        <tr>
-          <th>Employee</th>
-          <th>Department</th>
-          <th>Salary</th>
-          <th>Status</th>
-          <th>Date</th>
-        </tr>
-      </thead>
-      <tbody id="payrollTable">
-        <!-- JS will populate rows here -->
-      </tbody>
-    </table>
-  </div>
-
-  <script>
-    // Simulated data
-const stats = {
-  employees: 145,
-  payroll: 1250000,
-  monthlySalary: 350000,
-  increments: 8
-};
-
-const payrollData = [
-  { name: "Aman Gupta", dept: "IT", salary: 45000, status: "Paid", date: "Apr 1, 2025" },
-  { name: "Nisha Verma", dept: "HR", salary: 40000, status: "Pending", date: "Apr 5, 2025" },
-  { name: "Rohit Singh", dept: "Sales", salary: 38000, status: "Paid", date: "Apr 1, 2025" }
-];
-
-// Update stats
-document.getElementById("employees").textContent = stats.employees;
-document.getElementById("payroll").textContent = `₹${stats.payroll.toLocaleString()}`;
-document.getElementById("monthlySalary").textContent = `₹${stats.monthlySalary.toLocaleString()}`;
-document.getElementById("increments").textContent = stats.increments;
-
-// Populate table
-const table = document.getElementById("payrollTable");
-payrollData.forEach(row => {
-  const tr = document.createElement("tr");
-  tr.innerHTML = `
-    <td>${row.name}</td>
-    <td>${row.dept}</td>
-    <td>₹${row.salary.toLocaleString()}</td>
-    <td style="color: ${row.status === "Paid" ? "green" : "orange"};">${row.status}</td>
-    <td>${row.date}</td>
-  `;
-  table.appendChild(tr);
-});
-
-  </script>
-@endsection
+    
+    @endsection
