@@ -20,9 +20,10 @@ body {
 .apply-leave {
     background-color: #8A3366;
     color: white;
-    width: 178px;
-    height: 55.19px;
-    border-radius: 10px;
+    padding: 7px 12px;
+    border-radius: 8px;
+    margin-left: auto;
+    border: none;
 
 }
 
@@ -671,12 +672,12 @@ th,
 td {
     padding: 12px;
     text-align: center;
-    border: 1px solid #e0e0e0;
+    border: 1px solid #e0e0e0 !important;
     /* Border between cells */
 }
 
 th {
-    background-color: #d8a5a1;
+    background-color: #d8a5a1 !important;
     /* Light pink color */
     color: #fff;
     padding: 40px;

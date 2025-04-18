@@ -1,44 +1,69 @@
-<!DOCTYPE html>
-<html lang="en">
+@extends('user_view.header')
+@section('content')
 <head>
-  <title>Bootstrap Add Bills</title>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
+ 
+  <!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
   <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.slim.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js"></script>
-</head>
-<body>
-
-<div class="container-fluid">
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js"></script> -->
+ <!-- Option 1: Include in HTML -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css">
+  <link rel="stylesheet" href="{{ asset('/user_end/css/homepage.css') }}">
+  <link rel="stylesheet" href="{{ asset('user_end/css/leave.css') }}">
+  <link href="{{ asset('bootstrapcss/bootstrap.min.css') }}" rel="stylesheet"> 
+<style>
+.reimbursement-container {
+  margin: 15px 20px;
+}
+.reimbursement-details{background:white; padding:20px; border-radius:10px; box-shadow:0 0 10px rgba(0,0,0,0.1);}
+</style>
+<div class="reimbursement-container">
   <h2>Reimbursement Form</h2>
-
+ 
   <!-- FORM STARTS HERE -->
   <form action="{{ route('insert_Reimbursement_Form') }}" method="post" enctype="multipart/form-data">
     @csrf
+    
+  <div class="reimbursement-details">
     <!-- Initial form details -->
-    <div class="row mb-3">
-      <div class="col">
-        <textarea class="form-control" rows="1" placeholder="Comment" name="clam_comment"></textarea>
-      </div>
-      <div class="col">
-        <input type="date" class="form-control" name="start_date" placeholder="From Date" required>
-      </div>
-      <div class="col">
-        <input type="date" class="form-control" name="end_date" placeholder="To Date" required>
-      </div>
-    </div>
-
+    <div class="row mb-2">
+      <div class="col-3">
+        <div class="form-group">
+            <div class="floating-label-wrapper">
+                <input type="text" class="input-field" value="John Doe" disabled >
+                <label for="project">Employee Name</label>
+            </div>
+        </div>          
+      </div>  
+      <div class="col-3">
+        <div class="form-group">
+            <div class="floating-label-wrapper">
+                <input type="date" class="input-field" palceholder="Enter title for claim" disabled >
+                <label for="project">Claim Date</label>
+            </div>
+        </div>          
+      </div>  
+      <div class="col-3">
+        <div class="form-group">
+            <div class="floating-label-wrapper">
+                <input type="text" class="input-field"  >
+                <label for="project">Title of Claim</label>
+            </div>
+        </div>          
+      </div>  
+    </div> 
     <!-- Add Bills Button -->
-    <button type="button" class="btn btn-primary float-right mb-3" onclick="addRow()">Add Bills</button>
+
+     <div class="d-flex justify-content-between align-items-center mb-3">
+     <h4  class="my-2">Bills Details</h4>
+        <button type="button" class="btn btn-outline-primary " onclick="addRow()"> + Add Bills</button>
+    </div>
 
     <div class="clearfix"></div>
 
     <!-- Bills Table -->
-    <h4>Submit Bills Details</h4>
-    <table class="table table-bordered" id="billsTable">
+    <table class="table table-striped" id="billsTable">
       <thead>
         <tr>
           <th>S.no</th>
@@ -48,16 +73,28 @@
           <th>Entry Amount</th>
           <th>Upload Bill</th>
           <th>Description</th>
-          <th>Action</th>
+          <th class="text-center">Action</th>
         </tr>
       </thead>
       <tbody>
         <!-- Dynamic rows will be added here -->
-      </tbody>
+      </tbody>  
+          <td colspan="3">Total</td>
+          <td>₹00.00</td>
+          <td>₹00.00</td>
+          <td></td>
+          <td></td>
+          <td></td>
+      <tfoot>
+
+      </tfoot>
     </table>
 
     <!-- Submit Button -->
-    <button type="submit" class="btn btn-success">Submit</button>
+     <div style="text-align:right">
+    <button type="submit" class="apply-leave">&nbsp;Submit&nbsp;</button>
+</div>
+    </div>
   </form>
   <!-- FORM ENDS HERE -->
 
@@ -86,7 +123,7 @@
       <td><input type="number" name="entered_amount[]" class="form-control" step="0.01" required></td>
       <td><input type="file" name="bills[]" class="form-control" accept=".jpg,.jpeg,.png,.pdf" required></td>
       <td><textarea class="form-control" rows="1" name="comments[]" placeholder="Comment"></textarea></td>
-      <td><button type="button" class="btn btn-danger" onclick="deleteRow(this)">Delete</button></td>
+      <td><button type="button" class="btn text-danger" onclick="deleteRow(this)"><i class="bi bi-trash"></i></button></td>
     `;
 
     tableBody.appendChild(row);
@@ -131,6 +168,18 @@
 
 
 </script>
+ 
+<script>
+        const today = new Date();
+        const year = today.getFullYear();
+        let month = today.getMonth() + 1;
+        let day = today.getDate();
 
-</body>
-</html>
+        month = month < 10 ? '0' + month : month;
+        day = day < 10 ? '0' + day : day;
+
+        const formattedDate = `${year}-${month}-${day}`;
+        document.getElementById('todayDate').value = formattedDate;
+      </script>
+
+@endsection
