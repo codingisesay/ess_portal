@@ -19,8 +19,6 @@
         <p><strong>Department</strong> <weak  id="emp-department">{{ ucfirst($userDetails->department_name ?? '-') }}</weak></p>
         <p><strong>Office</strong> <weak id="emp-city">{{ ucfirst($userDetails->branch_name ?? '-') }}</weak></p>
         <p><strong>Reporting Manager</strong> <weak  id="emp-manager">{{ ucfirst($userDetails->reporting_manager_name ?? '-') }}</weak></p>
-         
-
-
+ 
         </div> 
          

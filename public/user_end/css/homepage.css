@@ -620,7 +620,7 @@ button {
     border-radius: 15px;
     height: 350px;
     overflow: auto;
-    height: 90%;
+    height: 89%;
 }
 
 /* Hide the scrollbar */
@@ -1289,7 +1289,7 @@ video {
 .leaves,
 .upcoming-birthdays {
     width: 400px;
-    height: 500px;
+    height: 450px;
     overflow-y: auto;
     overflow-x: hidden;
 }

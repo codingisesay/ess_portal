@@ -10,55 +10,61 @@
 </head>
 <body>
 <div class="claim-container">
-    <h2 class="claim-summary">Reimbursement Claims</h2>
-    <p class="claim-summary">No Of Claims: {{ $reimbursementList->count() }}</p>
-    <p class="claim-summary">Total Amount: Rs. {{ number_format($reimbursementList->sum('total_amount'), 2) }}</p>
+    <h2 class="claim-summary">Reimbursement Claim Details</h2>
+    @if ($reimbursementList->isNotEmpty())
+        @php 
+            $reimbursement = $reimbursementList->first(); 
+            $totalAmount = $reimbursementList->sum('entry_amount'); // Calculate total amount
+        @endphp
+        <p class="claim-summary">Tracking ID: {{ $reimbursement->token_number }}</p>
+        <!-- <p class="claim-summary">Total Amount: Rs. {{ number_format($reimbursement->total_amount, 2) }}</p> -->
+        <p class="claim-summary">Description: {{ $reimbursement->description }}</p>
 
-    <!-- Loop through each reimbursement claim -->
-    @foreach ($reimbursementList as $reimbursement)
-    <div class="claim-panel">
-        <div class="claim-header" onclick="toggleBody(this)">#clm-{{ $reimbursement->tracking_id }} | Rs. {{ number_format($reimbursement->total_amount, 2) }} | Status: {{ $reimbursement->status }}</div>
-        <div class="claim-body">
-            <table class="custom-table">
-                <thead>
-                    <tr>
-                        <th>S.No.</th>
-                        <th>Date</th>
-                        <th>Type</th>
-                        <th>Entered Amount</th>
-                        <th>Bill</th>
-                        <th>Applicant Comment</th>
-                        <!-- <th>Manager Comment</th> -->
-                        <!-- <th>Finance Comment</th> -->
-                        <th>Status</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @php $serial = 1; @endphp
-                    @foreach ($reimbursement->details as $detail)
-                    <tr>
-                        <td>{{ $serial++ }}</td>
-                        <td>{{ \Carbon\Carbon::parse($detail->date)->format('d/m/Y') }}</td>
-                        <td>{{ $detail->type }}</td>
-                        <td>{{ number_format($detail->amount, 2) }}</td>
-                        <td>
-                            @if ($detail->upload_bill)
-                                <a href="{{ asset('storage/' . $detail->upload_bill) }}" target="_blank">View Bill</a>
-                            @else
-                                N/A
-                            @endif
-                        </td>
-                        <td>{{ $detail->description_by_applicant }}</td>
-                        <!-- <td>{{ $detail->description_by_manager }}</td>
-                        <td>{{ $detail->description_by_finance }}</td> -->
-                        <td>{{ $detail->status }}</td>
-                    </tr>
-                    @endforeach
-                </tbody>
-            </table>
+        <div class="claim-panel">
+            <div class="claim-header" onclick="toggleBody(this)">Claim Details</div>
+            <div class="claim-body" style="display: block;"> <!-- Open by default -->
+                <table class="custom-table">
+                    <thead>
+                        <tr>
+                            <th>S.No.</th>
+                            <th>Date</th>
+                            <th>Entered Amount</th>
+                            <th>Bill</th>
+                            <th>Applicant Comment</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @php $serial = 1; @endphp
+                        @foreach ($reimbursementList as $detail)
+                        <tr>
+                            <td>{{ $serial++ }}</td>
+                            <td>{{ \Carbon\Carbon::parse($detail->entry_date)->format('d/m/Y') }}</td>
+                            <td>{{ number_format($detail->entry_amount, 2) }}</td>
+                            <td>
+                                @if ($detail->upload_bill)
+                                    <a href="{{ asset('storage/' . $detail->upload_bill) }}" target="_blank">View Bill</a>
+                                @else
+                                    N/A
+                                @endif
+                            </td>
+                            <td>{{ $detail->description_by_applicant }}</td>
+                            <td>{{ $detail->status }}</td>
+                        </tr>
+                        @endforeach
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <td colspan="2" style="text-align: right; font-weight: bold;">Total Amount:</td>
+                            <td colspan="4" style="font-weight: bold;">Rs. {{ number_format($totalAmount, 2) }}</td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
         </div>
-    </div>
-    @endforeach
+    @else
+        <p class="claim-summary">No claim details found for the provided tracking ID and user.</p>
+    @endif
 </div>
 
 <script>
