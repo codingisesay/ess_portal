@@ -47,7 +47,7 @@
       <div class="col-3">
         <div class="form-group">
             <div class="floating-label-wrapper">
-                <input type="text" class="input-field" name="clam_comment" >
+                <input type="text" required class="input-field" name="clam_comment" >
                 <label for="project">Title of Claim</label>
             </div>
         </div>          
