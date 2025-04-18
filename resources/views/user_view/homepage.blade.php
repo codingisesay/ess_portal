@@ -8,6 +8,8 @@ error_reporting(0);
 // dd($todayBirthdays);
 // dd($leaveLists);
 // dd($leaveUsage);
+
+// dd($reimbursementList);
 ?>
 
 <head>
@@ -496,9 +498,10 @@ error_reporting(0);
         <table>
             <thead>
                 <tr>
+                    <th>Reference ID</th>
                     <th>EMP ID</th>
                     <th>Employee Name</th>
-                    <th>No. of bills</th>
+                    <th>No. of Bills</th>
                     <th>Total Amount</th>
                     <th>Status</th>
                     <th>Action</th>
@@ -508,13 +511,14 @@ error_reporting(0);
                 @if (!empty($reimbursementList))
                     @foreach ($reimbursementList as $reimbursement)
                         <tr>
+                            <td>{{ $reimbursement->token_number }}</td>
                             <td>{{ $reimbursement->employee_no }}</td>
                             <td>{{ $reimbursement->employee_name }}</td>
-                            <td>{{ $reimbursement->no_of_claims }}</td>
+                            <td>{{ $reimbursement->no_of_entries }}</td>
                             <td>{{ number_format($reimbursement->total_amount, 2) }}</td> <!-- Display total amount -->
                             <td>{{ $reimbursement->status }}</td> <!-- Display status -->
                             <td>
-                                <a href="{{ route('user_claims') }}?userId={{ $reimbursement->user_id }}">
+                                <a href="{{ route('user_claims',['user_id' => $reimbursement->user_id, 'reimbursement_traking_id' => $reimbursement->id]) }}">
                                     <button>View</button>
                                 </a>
                             </td>
