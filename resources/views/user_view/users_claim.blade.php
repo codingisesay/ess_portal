@@ -12,12 +12,12 @@
 <div class="claim-container">
     <h2 class="claim-summary">Reimbursement Claim Details</h2>
     @if ($reimbursementList->isNotEmpty())
-        @php $reimbursement = $reimbursementList->first(); @endphp
-        <p class="claim-summary">Tracking ID:{{ $reimbursement->token_number }}</p>
-        <p class="claim-summary">Total Amount: Rs. {{ number_format($reimbursement->total_amount, 2) }}</p>
-        <!-- <p class="claim-summary">Status: {{ $reimbursement->status }}</p> -->
-        <!-- <p class="claim-summary">Start Date: {{ \Carbon\Carbon::parse($reimbursement->start_date)->format('d/m/Y') }}</p>
-        <p class="claim-summary">End Date: {{ \Carbon\Carbon::parse($reimbursement->end_date)->format('d/m/Y') }}</p> -->
+        @php 
+            $reimbursement = $reimbursementList->first(); 
+            $totalAmount = $reimbursementList->sum('entry_amount'); // Calculate total amount
+        @endphp
+        <p class="claim-summary">Tracking ID: {{ $reimbursement->token_number }}</p>
+        <!-- <p class="claim-summary">Total Amount: Rs. {{ number_format($reimbursement->total_amount, 2) }}</p> -->
         <p class="claim-summary">Description: {{ $reimbursement->description }}</p>
 
         <div class="claim-panel">
@@ -53,6 +53,12 @@
                         </tr>
                         @endforeach
                     </tbody>
+                    <tfoot>
+                        <tr>
+                            <td colspan="2" style="text-align: right; font-weight: bold;">Total Amount:</td>
+                            <td colspan="4" style="font-weight: bold;">Rs. {{ number_format($totalAmount, 2) }}</td>
+                        </tr>
+                    </tfoot>
                 </table>
             </div>
         </div>
