@@ -511,22 +511,50 @@ $upcomingHolidays = $upcomingHolidays->map(function ($holiday) {
     return $holiday;
 });
 
-// Fetch reimbursement details with total amount and status from reimbursement_form_entries
+
+// $reimbursementList = DB::table('reimbursement_trackings')
+//     ->join('emp_details', 'reimbursement_trackings.user_id', '=', 'emp_details.user_id')
+//     ->join('reimbursement_form_entries', 'reimbursement_trackings.id', '=', 'reimbursement_form_entries.reimbursement_trackings_id')
+//     ->join('assign_reimbursement_tokens', 'reimbursement_trackings.id', '=', 'assign_reimbursement_tokens.reimbursement_tracking_id')
+//     ->select(
+//         'emp_details.employee_no',
+//         'emp_details.employee_name',
+//         'emp_details.user_id',
+//         'reimbursement_trackings.token_number',
+//         'reimbursement_trackings.status',
+//         DB::raw('SUM(reimbursement_form_entries.amount) as total_amount'),
+//     )
+//     ->where('assign_reimbursement_tokens.user_id', '=', $user->id)
+//     ->where('reimbursement_trackings.status', '=', 'Pending')
+//     ->groupBy('emp_details.user_id')
+//     ->get();
+
 $reimbursementList = DB::table('reimbursement_trackings')
     ->join('emp_details', 'reimbursement_trackings.user_id', '=', 'emp_details.user_id')
     ->join('reimbursement_form_entries', 'reimbursement_trackings.id', '=', 'reimbursement_form_entries.reimbursement_trackings_id')
-    ->join('assign_reimbursement_tokens', 'reimbursement_trackings.id', '=', 'assign_reimbursement_tokens.reimbursement_tracking_id') // Join with assign_reimbursement_tokens
+    ->join('assign_reimbursement_tokens', 'reimbursement_trackings.id', '=', 'assign_reimbursement_tokens.reimbursement_tracking_id')
     ->select(
         'emp_details.employee_no',
         'emp_details.employee_name',
-        'emp_details.user_id', // Include user_id for passing to the view
-        DB::raw('COUNT(reimbursement_trackings.id) as no_of_claims'),
-        DB::raw('SUM(reimbursement_form_entries.amount) as total_amount'), // Calculate total amount
-        DB::raw('MAX(reimbursement_form_entries.status) as status') // Fetch the latest status
+        'emp_details.user_id',
+        'reimbursement_trackings.token_number',
+        'reimbursement_trackings.status',
+        'reimbursement_trackings.id',
+        DB::raw('SUM(reimbursement_form_entries.amount) as total_amount'),
+        DB::raw('COUNT(reimbursement_form_entries.id) as no_of_entries') 
     )
-    ->where('assign_reimbursement_tokens.user_id', '=', $user->id) // Filter by reporting manager's user_id
-    ->groupBy('emp_details.employee_no', 'emp_details.employee_name', 'emp_details.user_id')
+    ->where('assign_reimbursement_tokens.user_id', '=', $user->id)
+    ->where('reimbursement_trackings.status', '=', 'Pending')
+    ->groupBy(
+        'reimbursement_trackings.id',
+        'reimbursement_trackings.token_number',
+        'reimbursement_trackings.status',
+        'emp_details.employee_no',
+        'emp_details.employee_name',
+        'emp_details.user_id'
+    )
     ->get();
+
 
     // Return a view with the logs and additional data
     return view('user_view.homepage', compact('title','logs', 'thoughtOfTheDay', 'newsAndEvents', 'upcomingBirthdays','todayBirthdays', 'anniversaries', 'toDoList', 'currentMonth', 'currentDay', 'leaveUsage','leaveLists', 'holidays_upcoming', 'week_offs', 'upcomingHolidays', 'reimbursementList'));

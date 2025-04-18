@@ -353,41 +353,47 @@ class salaryBoxController extends Controller
     return view('user_view.claim_form',compact('reim_type'));
  }
 
- public function loadUserClaims(Request $request)
+ public function loadUserClaims($user_id, $reimbursement_traking_id)
 {
-    $userId = $request->query('userId'); // Get userId from query string
-
-    // Fetch reimbursement details for the specific user
     $reimbursementList = DB::table('reimbursement_trackings')
+        ->join('emp_details', 'reimbursement_trackings.user_id', '=', 'emp_details.user_id')
         ->join('reimbursement_form_entries', 'reimbursement_trackings.id', '=', 'reimbursement_form_entries.reimbursement_trackings_id')
         ->select(
             'reimbursement_trackings.id as tracking_id',
-            DB::raw('COUNT(reimbursement_form_entries.id) as no_of_claims'),
+            'reimbursement_trackings.token_number',
+            'emp_details.employee_no',
+            'emp_details.employee_name',
+            'reimbursement_trackings.start_date',
+            'reimbursement_trackings.end_date',
+            'reimbursement_trackings.description',
+            'reimbursement_trackings.status',
             DB::raw('SUM(reimbursement_form_entries.amount) as total_amount'),
-            DB::raw('MAX(reimbursement_form_entries.status) as status')
+            DB::raw('COUNT(reimbursement_form_entries.id) as no_of_entries'),
+            'reimbursement_form_entries.date as entry_date',
+            'reimbursement_form_entries.amount as entry_amount',
+            'reimbursement_form_entries.upload_bill',
+            'reimbursement_form_entries.description_by_applicant',
+            'reimbursement_form_entries.status as entry_status'
         )
-        ->where('reimbursement_trackings.user_id', '=', $userId)
-        ->groupBy('reimbursement_trackings.id')
+        ->where('reimbursement_trackings.id', '=', $reimbursement_traking_id)
+        ->where('reimbursement_trackings.user_id', '=', $user_id)
+        ->groupBy(
+            'reimbursement_trackings.id',
+            'reimbursement_trackings.token_number',
+            'emp_details.employee_no',
+            'emp_details.employee_name',
+            'reimbursement_trackings.start_date',
+            'reimbursement_trackings.end_date',
+            'reimbursement_trackings.description',
+            'reimbursement_trackings.status',
+            'reimbursement_form_entries.date',
+            'reimbursement_form_entries.amount',
+            'reimbursement_form_entries.upload_bill',
+            'reimbursement_form_entries.description_by_applicant',
+            'reimbursement_form_entries.status'
+        )
         ->get();
-
-    // Fetch details for each reimbursement claim
-    foreach ($reimbursementList as $reimbursement) {
-        $reimbursement->details = DB::table('reimbursement_form_entries')
-            ->join('organisation_reimbursement_types', 'reimbursement_form_entries.organisation_reimbursement_types_id', '=', 'organisation_reimbursement_types.id')
-            ->select(
-                'reimbursement_form_entries.date',
-                'organisation_reimbursement_types.name as type',
-                'reimbursement_form_entries.amount',
-                'reimbursement_form_entries.upload_bill',
-                'reimbursement_form_entries.description_by_applicant',
-                'reimbursement_form_entries.description_by_manager',
-                'reimbursement_form_entries.description_by_finance',
-                'reimbursement_form_entries.status'
-            )
-            ->where('reimbursement_form_entries.reimbursement_trackings_id', '=', $reimbursement->tracking_id)
-            ->get();
-    }
-
+// dd($reimbursementList);
     return view('user_view.users_claim', compact('reimbursementList'));
 }
 
@@ -416,8 +422,8 @@ class salaryBoxController extends Controller
      // Step 1: Validate input
      $data = $request->validate([
          'clam_comment' => 'nullable|string',
-         'start_date' => 'required|date',
-         'end_date' => 'required|date',
+        //  'start_date' => 'required|date',
+        //  'end_date' => 'required|date',
          'bill_date.*' => 'required|date',
          'type.*' => 'required',
          'entered_amount.*' => 'required|numeric',
@@ -430,8 +436,8 @@ class salaryBoxController extends Controller
     //  $billCount = count($data['bill_date']);
    // Insert into reimbursement_tracking
    $reimbursement = reimbursement_tracking::create([
-    'start_date'   => $data['start_date'],
-    'end_date'     => $data['end_date'],
+    // 'start_date'   => $data['start_date'],
+    // 'end_date'     => $data['end_date'],
     'description'  => $data['clam_comment'],
     'status'       => 'Pending',
     'user_id'      => $loginUserInfo->id,
