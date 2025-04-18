@@ -355,35 +355,45 @@ class salaryBoxController extends Controller
 
  public function loadUserClaims($user_id, $reimbursement_traking_id)
 {
-    
     $reimbursementList = DB::table('reimbursement_trackings')
-    ->join('emp_details', 'reimbursement_trackings.user_id', '=', 'emp_details.user_id')
-    ->join('reimbursement_form_entries', 'reimbursement_trackings.id', '=', 'reimbursement_form_entries.reimbursement_trackings_id')
-    ->join('assign_reimbursement_tokens', 'reimbursement_trackings.id', '=', 'assign_reimbursement_tokens.reimbursement_tracking_id')
-    ->select(
-        'emp_details.employee_no',
-        'emp_details.employee_name',
-        'emp_details.user_id',
-        'reimbursement_trackings.token_number',
-        'reimbursement_trackings.status',
-        'reimbursement_trackings.id',
-        DB::raw('SUM(reimbursement_form_entries.amount) as total_amount'),
-        DB::raw('COUNT(reimbursement_form_entries.id) as no_of_entries') 
-    )
-    ->where('reimbursement_trackings.id', '=', $reimbursement_traking_id)
-    ->where('reimbursement_trackings.status', '=', 'Pending')
-    ->groupBy(
-        'reimbursement_trackings.id',
-        'reimbursement_trackings.token_number',
-        'reimbursement_trackings.status',
-        'emp_details.employee_no',
-        'emp_details.employee_name',
-        'emp_details.user_id'
-    )
-    ->get();
-
-  dd($reimbursementList);
-
+        ->join('emp_details', 'reimbursement_trackings.user_id', '=', 'emp_details.user_id')
+        ->join('reimbursement_form_entries', 'reimbursement_trackings.id', '=', 'reimbursement_form_entries.reimbursement_trackings_id')
+        ->select(
+            'reimbursement_trackings.id as tracking_id',
+            'reimbursement_trackings.token_number',
+            'emp_details.employee_no',
+            'emp_details.employee_name',
+            'reimbursement_trackings.start_date',
+            'reimbursement_trackings.end_date',
+            'reimbursement_trackings.description',
+            'reimbursement_trackings.status',
+            DB::raw('SUM(reimbursement_form_entries.amount) as total_amount'),
+            DB::raw('COUNT(reimbursement_form_entries.id) as no_of_entries'),
+            'reimbursement_form_entries.date as entry_date',
+            'reimbursement_form_entries.amount as entry_amount',
+            'reimbursement_form_entries.upload_bill',
+            'reimbursement_form_entries.description_by_applicant',
+            'reimbursement_form_entries.status as entry_status'
+        )
+        ->where('reimbursement_trackings.id', '=', $reimbursement_traking_id)
+        ->where('reimbursement_trackings.user_id', '=', $user_id)
+        ->groupBy(
+            'reimbursement_trackings.id',
+            'reimbursement_trackings.token_number',
+            'emp_details.employee_no',
+            'emp_details.employee_name',
+            'reimbursement_trackings.start_date',
+            'reimbursement_trackings.end_date',
+            'reimbursement_trackings.description',
+            'reimbursement_trackings.status',
+            'reimbursement_form_entries.date',
+            'reimbursement_form_entries.amount',
+            'reimbursement_form_entries.upload_bill',
+            'reimbursement_form_entries.description_by_applicant',
+            'reimbursement_form_entries.status'
+        )
+        ->get();
+// dd($reimbursementList);
     return view('user_view.users_claim', compact('reimbursementList'));
 }
 
