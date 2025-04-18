@@ -17,12 +17,12 @@ $employeeID = Auth::guard('web')->user()->employeeID;
 
 ?>
 
-        {{-- @if(session('success'))
-        <div class="alert custom-alert-success">
-            <strong>{{ session('success') }}</strong> 
-            <button class="close-btn" onclick="this.parentElement.style.display='none';">&times;</button>
-            
-        </div>
+    {{-- @if(session('success'))
+    <div class="alert custom-alert-success">
+        <strong>{{ session('success') }}</strong> 
+        <button class="close-btn" onclick="this.parentElement.style.display='none';">&times;</button>
+        
+    </div>
     @endif
     
     @if(session('error'))

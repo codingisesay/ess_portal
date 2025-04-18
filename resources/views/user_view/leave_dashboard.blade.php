@@ -35,7 +35,7 @@
 @endif
     <div class="request-btn">
         <h1>Leave & Attendance</h1>
-        <button class="btn" onclick="redirectToForm()">Apply Leave</button>
+        <button class="apply-leave" onclick="redirectToForm()">Apply Leave</button>
     </div>
     <script>
 
