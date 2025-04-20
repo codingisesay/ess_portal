@@ -6,8 +6,8 @@
     <link rel="icon" href="{{ asset('user_end/images/STPLLogo butterfly.png') }}" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
-<div class="employee-info">
-<div class="profile-image1 text-center">
+    <div class="employee-info">
+        <div class="profile-image1 text-center">
             <?php 
             $profileimahe = session('profile_image');
             ?>
@@ -20,5 +20,5 @@
         <p><strong>Office</strong> <weak id="emp-city">{{ ucfirst($userDetails->branch_name ?? '-') }}</weak></p>
         <p><strong>Reporting Manager</strong> <weak  id="emp-manager">{{ ucfirst($userDetails->reporting_manager_name ?? '-') }}</weak></p>
  
-        </div> 
+    </div> 
          
