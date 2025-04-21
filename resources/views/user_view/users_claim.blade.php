@@ -6,64 +6,96 @@
     <meta charset="UTF-8">
     <title>Claims Page</title>
     <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="{{ asset('/user_end/css/homepage.css') }}"> 
 </head>
 <body>
-<div class="claim-container">
-    <h2 class="claim-summary">Reimbursement Claim Details</h2>
+<div class="mx-4">
+    <h2>
+        <span  onclick="history.back()" > < </span>
+         Reimbursement Claims        
+    </h2>
     @if ($reimbursementList->isNotEmpty())
         @php 
             $reimbursement = $reimbursementList->first(); 
             $totalAmount = $reimbursementList->sum('entry_amount'); // Calculate total amount
         @endphp
-        <p class="claim-summary">Tracking ID: {{ $reimbursement->token_number }}</p>
-        <!-- <p class="claim-summary">Total Amount: Rs. {{ number_format($reimbursement->total_amount, 2) }}</p> -->
-        <p class="claim-summary">Description: {{ $reimbursement->description }}</p>
-
-        <div class="claim-panel">
-            <div class="claim-header" onclick="toggleBody(this)">Claim Details</div>
-            <div class="claim-body" style="display: block;"> <!-- Open by default -->
-                <table class="custom-table">
-                    <thead>
-                        <tr>
-                            <th>S.No.</th>
-                            <th>Date</th>
-                            <th>Entered Amount</th>
-                            <th>Bill</th>
-                            <th>Applicant Comment</th>
-                            <th>Status</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @php $serial = 1; @endphp
-                        @foreach ($reimbursementList as $detail)
-                        <tr>
-                            <td>{{ $serial++ }}</td>
-                            <td>{{ \Carbon\Carbon::parse($detail->entry_date)->format('d/m/Y') }}</td>
-                            <td>{{ number_format($detail->entry_amount, 2) }}</td>
-                            <td>
-                                @if ($detail->upload_bill)
-                                    <a href="{{ asset('storage/' . $detail->upload_bill) }}" target="_blank">View Bill</a>
-                                @else
-                                    N/A
-                                @endif
-                            </td>
-                            <td>{{ $detail->description_by_applicant }}</td>
-                            <td>{{ $detail->status }}</td>
-                        </tr>
-                        @endforeach
-                    </tbody>
-                    <tfoot>
-                        <tr>
-                            <td colspan="2" style="text-align: right; font-weight: bold;">Total Amount:</td>
-                            <td colspan="4" style="font-weight: bold;">Rs. {{ number_format($totalAmount, 2) }}</td>
-                        </tr>
-                    </tfoot>
-                </table>
+        <div class="claim-panel p-3">
+        <p class="claim-summary m-0" onclick="toggleBody(this)">Tracking ID :<strong> {{ $reimbursement->token_number }} </strong></p>
+        <div>
+            <hr>
+            <!-- <p class="claim-summary">Total Amount: Rs. {{ number_format($reimbursement->total_amount, 2) }}</p> -->
+            <p class="">Description:<strong> {{ $reimbursement->description }}</strong></p>
+                <div class=" tbl-container "> <!-- Open by default -->
+                    <table class="custom-table">
+                        <thead>
+                            <tr>
+                                <th>S.No.</th>
+                                <th>Date</th>
+                                <th>Entered Amount</th>
+                                <th>Bill</th>
+                                <th>Applicant Comment</th>
+                                <th>Action</th>
+                                <th>Remark</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @php $serial = 1; @endphp
+                            @foreach ($reimbursementList as $detail)
+                            <tr>
+                                <td>{{ $serial++ }}</td>
+                                <td>{{ \Carbon\Carbon::parse($detail->entry_date)->format('d/m/Y') }}</td>
+                                <td>{{ number_format($detail->entry_amount, 2) }}</td>
+                                <td>
+                                    @if ($detail->upload_bill)
+                                        <a href="{{ asset('storage/' . $detail->upload_bill) }}" target="_blank" class="text-decoration-none" title="open in new tab">
+                                            <x-icon name="newtab" />
+                                        </a>
+                                    @else
+                                        N/A
+                                    @endif
+                                </td>
+                                <td>{{ $detail->description_by_applicant }}</td>
+                                <td>
+                                    <!-- {{ $detail->status }}  -->
+                                    <label class="toggle-switch">
+                                        <input type="checkbox" checked />
+                                        <span class="slider"></span>
+                                    </label>
+                                </td>
+                                <td>
+                                    <input class="input-field py-1 " type='text' placeholder="Remark" style="width:200px" />
+                                </td>   
+                            </tr>
+                            @endforeach
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <td colspan="2" style="text-align: right; font-weight: bold;">Total Amount:</td>
+                                <td colspan="4" style="font-weight: bold;">Rs. {{ number_format($totalAmount, 2) }}</td>
+                                <td></td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+                <div class="row ">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <div class="floating-label-wrapper">
+                                <input type="text" maxlength="200" id="task" name="task_name" placeholder="Task Description" class="input-field" required>
+                                <label for="task">Task</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 text-end  mt-2">
+                    <button class="py-1 mx-1 px-3 btn-warning text-white">Revert</button>
+                    <button class="py-1 mx-1 px-3 btn-danger">Reject</button>
+                    <button class="py-1 mx-1 px-3 btn-success">Approve</button>
+                    </div>
+                </div>
             </div>
         </div>
     @else
-        <p class="claim-summary">No claim details found for the provided tracking ID and user.</p>
+        <p class="text-center w-100 text-secondary">No claim details found for the provided tracking ID and user.</p>
     @endif
 </div>
 
@@ -73,119 +105,7 @@
         body.style.display = body.style.display === 'block' ? 'none' : 'block';
     }
 </script>
-
-<style>
-  /* General Reset */
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
-.claim-container {
-    width: 100%;
-    margin: 0 auto;
-    padding: 20px;
-}
-
-.claim-container h2 {
-    font-size: 24px;
-    margin-bottom: 10px;
-    color: #333;
-}
-
-.claim-summary {
-    margin-bottom: 10px;
-    color: #666;
-}
-
-.claim-panel {
-    background-color: #ffffff;
-    margin-bottom: 25px;
-    border-radius: 5px;
-    overflow: hidden;
-    box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
-}
-
-.claim-header {
-    padding: 15px 20px;
-    font-size: 16px;
-    font-weight: 500;
-    cursor: pointer;
-    background: #ffffff;
-    color: #333;
-    transition: background 0.3s ease;
-}
-
-.claim-header:hover {
-    background: #ffffff;
-}
-
-.claim-body {
-    display: none;
-    padding: 20px;
-    background-color: #fff;
-}
-
-.custom-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 10px;
-}
-
-.custom-table th,
-.custom-table td {
-    border: 1px solid #ddd;
-    padding: 8px;
-    text-align: left;
-}
-
-.custom-table th {
-    background-color: #E0AFA0;
-}
-
-.custom-table tr:nth-child(even) {
-    background-color: #fff;
-}
-
-.custom-table tr:nth-child(odd) {
-    background-color: #f9f9f9;
-}
-
-textarea {
-    display: none;
-    margin-top: 5px;
-    width: 100%;
-    padding: 8px;
-    font-size: 14px;
-    resize: none;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-}
-
-.button-group {
-    margin-top: 15px;
-    display: flex;
-    gap: 10px;
-    justify-content: flex-end;
-}
-
-.button-group button {
-    padding: 10px 20px;
-    background-color: #8A3366;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    font-size: 14px;
-    cursor: pointer;
-}
-
-.button-group button:hover {
-    background-color: #9b4bab;
-}
-</style>
-
-</body>
-</html>
+ 
+ 
 @endsection
 

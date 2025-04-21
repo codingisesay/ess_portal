@@ -6,82 +6,28 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{{ asset('/user_end/css/employment_data.css') }}"> 
     <link rel="icon" href="{{ asset('user_end/images/STPLLogo butterfly.png') }}" />
+    <link rel="stylesheet" href="{{ asset('/user_end/css/homepage.css') }}">
+    <link rel="stylesheet" href="{{ asset('/user_end/css/header.css') }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     
-  
-        
-    <style>
-        /* General modal styling */
-    .modal {
-        display: none;
-        position: fixed;
-        z-index: 1; /* Sit on top */
-        left: 0;
-        top: 0;
-        width: 100%;
-        height: 100%;
-        overflow: auto; /* Allow scrolling if the content is too large */
-        background-color: rgba(0, 0, 0, 0.4); /* Background overlay */
-        padding-top: 50px; /* Space for modal header */
-    }
-
-    /* Modal content box */
-    .modal-content {
-        background-color: #fff;
-        margin: 5% auto; /* Center the modal */
-        /* padding: 20px; */
-        padding: 40px;
-        border: 1px solid #888;
-        width: 80%; /* Width can be adjusted */
-        max-width: 900px; /* Set a max width to prevent it from stretching too much */
-        border-radius: 10px; /* Rounded corners for a soft look */
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        overflow-y: auto; /* Enable vertical scrolling inside the modal */
-        max-height: 80vh; /* Limit height to 80% of the viewport height */ 
-    }
-
-    /* Modal close button */
-    .close { 
-        color: #aaa;
-        float: right;
-        font-size: 22px;
-        font-weight: bold;
-        cursor: pointer;
-        top: 0px; width: min-content; 
-    }
-
-    /* Close button on hover */
-    .close:hover,
-    .close:focus {
-        color: black;
-        text-decoration: none;
-        cursor: pointer;
-    }
-
-    /* Content inside the modal */
-    #degree-modal-content-details, #certification-modal-content-details {
-        max-height: 60vh; /* Allow modal content to scroll */
-        overflow-y: auto;
-    }
-    .no-table tr, .no-table td{background: white; border:none}
-
-    /* Responsive design for small screens */
-    @media (max-width: 768px) {
-        .modal-content {
-            width: 90%; /* Increase width for small screens */
-            padding: 15px;
-        }
-    
-        .close {
-            font-size: 24px;
-        }
-    } 
-    </style>
-     
+   
+     <style> 
+    .eduction-info-item .info-value {
+            font-size: 1.1rem;
+            color: #333;
+            padding: 8px 12px;
+            background: #f8f9fa;
+            border-radius: 6px;
+            border-left: 3px solid #8A3366;}
+            .eduction-info-item .info-label {
+                font-size: 16px;font-weight: 500;
+            }
+     </style>
 </head>
 <body>
  
     <div class="row mx-3">
+        <h2> Employee Details</h2>
           <!-- comman component below -->
         <div class="col-md-4 my-2">
             <div class="section custom-table h-100">
@@ -249,9 +195,13 @@
                                     </td>
                                     <td>
                                         @if($education->course_type == 'degree')
-                                            <button class="view-btn" onclick="openDegreeModal({{ $loop->index }})">View</button>
+                                            <button class="submit d-flex justify-content-center align-items-center" onclick="openDegreeModal({{ $loop->index }})">
+                                                <x-icon name="eyefill" />&nbsp;View
+                                            </button>
                                         @elseif($education->course_type == 'certification')
-                                            <button class="view-btn" onclick="openCertificationModal({{ $loop->index }})">View</button>
+                                            <button class="submit d-flex justify-content-center align-items-center" onclick="openCertificationModal({{ $loop->index }})">
+                                                <x-icon name="eyefill" />&nbsp;View
+                                            </button>
                                         @endif
                                     </td>
                                 </tr>
@@ -363,47 +313,15 @@
                         </div>
                     @endforeach 
                 </div> 
-
-
-
-
-                <!-- <div class="table-scroll-container">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th class="tableh-one">Sr. No.</th>
-                                <th class="tableh-two">Document Type</th> 
-                                <th class="tableh-four">Action</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach($documents as $index => $document)
-                                <tr>
-                                    <td class="tableh-one">{{ $index + 1 }}</td>
-                                    <td class="tableh-two">{{ ucfirst($document->document_type ?? '-') }}</td> 
-                                    <td class="tableh-four">
-                                        @if($document->file_path)
-                                            <a href="{{ asset('storage/' . $document->file_path) }}" download>
-                                                <button class="btn btn-secondary">Download</button>
-                                            </a>
-                                        @else
-                                            <span>No File</span>
-                                        @endif
-                                    </td>
-                                </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
-                </div>  -->
+ 
             </div>
         </div> 
     </div>
       
     <div id="degreeModal" class="modal">
-        <div class="modal-content"> 
-        <div class="modal-header pt-0 mb-2">  <h5>Academic Details</h5>
+        <div class="modal-content">  
             <span class="close" onclick="closeModal('degreeModal')">&times;</span>
-        </div>
+            <h5>Academic Details</h5> 
             <div id="degree-modal-content-details">
                 <!-- Degree details will be displayed here -->
             </div>
@@ -412,9 +330,10 @@
 
     <div id="certificationModal" class="modal">
         <div class="modal-content">
-            <div class="modal-header"> 
+            <!-- <div class="modal-header">  -->
                 <span class="close" onclick="closeModal('certificationModal')">X</span>
-            </div>
+                <h5>Academic Details</h5> 
+            <!-- </div> -->
             <div id="certification-modal-content-details">
                 <!-- Certification details will be displayed here -->
             </div>
@@ -431,29 +350,30 @@
             @foreach($empEducation as $index => $education)
                 if (serialNo === {{ $index }}) {
                     modalContent.innerHTML += `
-                        <table class="no-table" >
-                            <tr>
-                                <td>Degree</td>
-                                <td>: {{ ucfirst($education->degree ?? '-') }}</td>
-                            </tr>
-                            <tr>
-                                <td>University</td>
-                                <td>: {{ ucfirst($education->university_board  ?? '-') }}</td>
-                            </tr>
-                            <tr>
-                                <td>Institution</td>
-                                <td>: {{ ucfirst($education->institution ?? '-') }}</td>
-                            </tr>
-                            <tr>
-                                <td>Passing Year</td>
-                              <td>: {{ $education->passing_year ? $education->passing_year : '-' }}</td>
-                            </tr>
-                           
-                            <tr>
-                                <td>Percentage</td>
-                                <td>: {{ ucfirst($education->percentage_cgpa ?? '-') }}</td>
-                            </tr>
-                        </table>
+                    <div class="row eduction-info-item">
+                        <div class="col-md-6 my-2">
+                            <div class="info-label">Degree</div>
+                            <div class="info-value">{{ ucfirst($education->degree ?? '-') }}</div>
+                        </div>
+                        <div class="col-md-6 my-2">
+                            <div class="info-label">University</div>
+                            <div class="info-value">{{ ucfirst($education->university_board ?? '-') }}</div>
+                        </div>
+                         
+                        <div class="col-md-6 my-2">
+                            <div class="info-label">Institution</div>
+                            <div class="info-value">{{ ucfirst($education->institution ?? '-') }}</div>
+                        </div>
+                        <div class="col-md-6 my-2">
+                            <div class="info-label">Passing Year</div>
+                            <div class="info-value">{{ $education->passing_year ? $education->passing_year : '-' }}</div>
+                        </div>
+                         
+                        <div class="col-md-6 my-2">
+                            <div class="info-label">Percentage</div>
+                            <div class="info-value">{{ ucfirst($education->percentage_cgpa ?? '-') }}</div>
+                        </div>
+                    </div>
                     `;
                 }
             @endforeach
@@ -468,24 +388,25 @@
             @foreach($empEducation as $index => $education)
                 if (serialNo === {{ $index }}) {
                     modalContent.innerHTML += `
-                        <table class="custom-table">
-                            <tr>
-                                <th>Certification Name</th>
-                                <td>{{ ucfirst($education->certification_name ?? '-') }}</td>
-                            </tr>
-                            <tr>
-                                <th>Marks Obtained</th>
-                                <td>{{ ucfirst($education->marks_obtained ?? '-') }}</td>
-                            </tr>
-                            <tr>
-                                <th>Total Marks</th>
-                                <td>{{ ucfirst($education->out_of_marks_total_marks ?? '-') }}</td>
-                            </tr>
-                            <tr>
-                                <th>Certificate Date</th>
-                                <td>{{ $education->date_of_certificate ? \Carbon\Carbon::parse($education->date_of_certificate)->format('d-m-Y') : '-' }}</td>
-                            </tr>
-                        </table>
+                    <div class="row eduction-info-item">
+                        <div class="col-md-6 my-2">
+                            <div class="info-label">Certification Name</div>
+                            <div class="info-value">{{ ucfirst($education->certification_name ?? '-') }}</div>
+                        </div>
+                        <div class="col-md-6 my-2">
+                            <div class="info-label">Marks Obtained</div>
+                            <div class="info-value">{{ ucfirst($education->marks_obtained ?? '-') }}</div>
+                        </div>
+                         
+                        <div class="col-md-6 my-2">
+                            <div class="info-label">Total Marks</div>
+                            <div class="info-value">{{ ucfirst($education->out_of_marks_total_marks ?? '-') }}</div>
+                        </div>
+                        <div class="col-md-6 my-2">
+                            <div class="info-label">Certificate Date</div>
+                            <div class="info-value">{{ $education->date_of_certificate ? \Carbon\Carbon::parse($education->date_of_certificate)->format('d-m-Y') : '-' }}</div>
+                        </div> 
+                    </div> 
                     `;
                 }
             @endforeach

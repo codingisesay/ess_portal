@@ -1,0 +1,444 @@
+.employee-info p weak,
+.employee-info p strong {
+    width: 100%;
+}
+
+.employee-info p {
+    display: block;
+}
+
+header {
+    width: 100% !important;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #f5f5f5;
+    border-radius: 10px;
+    width: 100%;
+    height: 30px;
+}
+
+
+.header .search-bar-container {
+    display: flex;
+    align-items: center;
+    background-color: #f5f5f5;
+    border-radius: 50px;
+    padding: 5px;
+    box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
+    border: solid #FFFFFF 5px;
+    height: 50px;
+    width: 250px;
+    position: relative;
+}
+
+.header .search-bar-container input {
+    border: none;
+    outline: none;
+    background: transparent;
+    width: 100%;
+    padding: 0 10px;
+    font-size: 14px;
+    color: #333;
+}
+
+.header .search-bar-container .search-icon {
+    width: 30px;
+    height: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #8A3366;
+    border-radius: 50%;
+    position: absolute;
+    right: 5px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 16px;
+    color: white;
+    cursor: pointer;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    border: 2px solid white;
+}
+
+.header .search-bar-container .search-icon img {
+    width: 50%;
+    height: 50%;
+    object-fit: cover;
+    border-radius: 50%;
+}
+
+.employee-list {
+    grid-column: 1;
+    padding: 10px;
+    background: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    overflow-y: auto;
+    height: 70vh;
+    margin: auto;
+    /* width: 420px; */
+}
+
+.employee-list ul {
+    list-style: none;
+    padding-left: 0;
+}
+
+.employee-list li {
+    margin: 5px 0;
+    padding: 5px;
+    cursor: pointer;
+    padding-bottom: 0px;
+    padding-left: 17px;
+    font-size: 14px;
+}
+
+.employee-details {
+    grid-column: 2 / 3;
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+    overflow-y: auto;
+    /* height: 70vh;
+        margin:auto */
+}
+
+.employee-details .left {
+    /* width: 30%; */
+    width: 50%;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    font-weight: bold;
+    height: 70vh;
+    overflow: auto
+}
+
+.employee-details .left .heading {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 15px;
+    background-color: #FFC107;
+    color: #FFFFFF;
+    width: 180px;
+    height: 37px;
+    border-radius: 7px;
+    padding: 2px;
+    margin-left: 25px;
+}
+
+.employee-details .right .title {
+    font-weight: bold;
+    font-size: 30px;
+    margin-bottom: 10px;
+}
+
+.employee-details .left .profile-circle {
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    background-color: #ddd;
+    margin: 0 auto 15px;
+    overflow: hidden;
+    margin-top: 50px;
+}
+
+.employee-details .left img {
+    /* width: 50%;
+        height: 50%; */
+    object-fit: cover;
+}
+
+/* .employee-details .right {
+        width: 100%;
+        background-color: #fff;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        height: auto;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        gap: 15px;
+        overflow-y: auto;
+    } */
+
+.employee-details .right {
+    width: 100%;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    height: 70vh;
+    margin: auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 15px;
+    overflow-y: auto;
+}
+
+/* Hide the scrollbar */
+.employee-details .right::-webkit-scrollbar {
+    display: none;
+}
+
+
+.detail-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 15px;
+    font-weight: bold;
+}
+
+.detail-item span:first-child {
+    color: darkgrey;
+    flex: 1;
+    text-align: left;
+    margin-left: 100px;
+}
+
+.detail-item span:last-child {
+    color: black;
+    flex: 2;
+    text-align: left;
+}
+
+.notes {
+    grid-column: 1 / 3;
+    background-color: #FFFFFF;
+    border-radius: 10px;
+    padding: 30px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    width: 935px;
+    margin-left: 480px;
+    margin-top: -250px;
+    height: 180px;
+    padding-top: 20px;
+}
+
+.notes h3 {
+    text-align: center;
+    border-radius: 7px;
+    padding: 5px;
+    background-color: #FFC107;
+    color: #FFFFFF;
+    width: 180px;
+    margin: 0px;
+    height: 37px;
+}
+
+.highlight {
+    background-color: #E0AFA0;
+    font-weight: bold;
+    /* color: white; */
+}
+
+.gender-icon {
+    width: 20px;
+    height: 20px;
+    vertical-align: middle;
+    margin-right: 8px;
+}
+
+.icon-container {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin-top: 10px;
+}
+
+.icon-container a {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 15px;
+    height: 15px;
+    background-color: #F6F5F7;
+    border-radius: 50%;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    color: white;
+    text-decoration: none;
+    font-size: 20px;
+}
+
+.icon-container a img {
+    width: 20%;
+    height: 20%;
+}
+
+.dropdown {
+    margin-left: 15px;
+    position: relative;
+}
+
+.dropdown select {
+    padding: 5px 10px;
+    font-size: 14px;
+    border: 2px solid white;
+    border-radius: 10px;
+    background-color: #f5f5f5;
+    cursor: pointer;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+
+.tree {
+    list-style-type: none;
+    padding-left: 20px;
+}
+
+.tree li {
+    margin: 5px 0;
+    padding-left: 10px;
+    position: relative;
+}
+
+
+
+/* .tree li::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 10px;
+    height: 100%;
+    border-left: 1px solid #ccc;
+} */
+
+.tree li span {
+    cursor: pointer;
+    padding: 5px;
+    display: inline-block;
+    border-radius: 5px;
+    transition: background 0.3s;
+}
+
+.tree li span:hover {
+    background: #f4f4f4;
+}
+
+.toggle-button {
+    margin-right: 5px;
+    cursor: pointer;
+    background: white;
+    color: black;
+    border: none;
+    padding: 2px 6px;
+    border-radius: 50%;
+    font-weight: bold;
+}
+
+
+
+
+/* Tree Structure Styling */
+.tree {
+    list-style-type: none;
+    padding-left: 10px;
+}
+
+.tree li {
+    position: relative;
+    padding-left: 25px;
+    margin: 8px 0;
+}
+
+/* Vertical connecting line */
+.tree li::before {
+    content: "";
+    position: absolute;
+    top: -8px;
+    left: 10px;
+    height: calc(100% + 15px);
+    width: 0;
+    border-left: 2px solid #8A3366;
+}
+
+/* Horizontal connecting line (curved) */
+.tree li::after {
+    content: "";
+    position: absolute;
+    top: 15px;
+    left: 10px;
+    width: 15px;
+    height: 0;
+    border-top: 2px solid #8A3366;
+    border-radius: 5px 0 0 0;
+}
+
+/* Remove lines from root elements */
+.tree>li::before {
+    display: none;
+}
+
+/* Remove top vertical line from first child */
+.tree>li:first-child::before {
+    top: 15px;
+    height: calc(100% - 15px);
+}
+
+/* Remove bottom vertical line from last child */
+.tree>li:last-child::before {
+    height: 30px;
+}
+
+/* Employee name styling */
+.tree li span {
+    cursor: pointer;
+    padding: 3px 5px;
+    display: inline-block;
+    transition: all 0.3s;
+    border-radius: 4px;
+    background-color: #f8f9fa;
+    border: 1px solid #e9ecef;
+    /* margin-left: 10px; */
+}
+
+.tree li span:hover {
+    background-color: #e9ecef;
+    transform: translateX(3px);
+}
+
+/* Toggle button styling */
+.toggle-button {
+    position: absolute;
+    left: 5px;
+    top: 10px;
+    width: 12px;
+    height: 12px;
+    background: #8A3366;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+    z-index: 1;
+    padding: 0;
+    font-weight: 500px
+}
+
+
+/* Subordinate list styling */
+.tree ul {
+    margin-left: 5px;
+    padding-left: 0;
+    position: relative;
+}
+
+/* Highlight for search results */
+.highlight {
+    background-color: #FFC107 !important;
+    color: #212529;
+    box-shadow: 0 0 5px rgba(255, 193, 7, 0.5);
+}
