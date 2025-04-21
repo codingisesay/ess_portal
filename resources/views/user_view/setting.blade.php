@@ -281,7 +281,6 @@
                 </div>
                 <?php } ?>
 
-<<<<<<< HEAD
                 <?php 
                 //user salary functions
                 if(in_array(14, $permission_array)){ 
@@ -345,7 +344,6 @@
                         </div>
                         <?php } ?>
             </div>
-=======
                 <div class="accordion-item">
                     <!-- Accordion Header with a toggle dropdown -->
                     <div class="accordion-header" onclick="#">
@@ -376,7 +374,6 @@
                         </div>
                     </div>      
     </div>
->>>>>>> d707121ba62890a037d0af3f7f1edf5d7593ea15
 </main>
 
 <script>
