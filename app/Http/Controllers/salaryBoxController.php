@@ -550,62 +550,7 @@ $insertedId = $reimbursement->id;
 
  }
  
- public function updateReimbursementClaims(Request $request)
-{
-    // Get the currently authenticated user
-    $loginUserInfo = Auth::user();
 
-    // Get the reimbursement tracking ID from the request
-    $reimbursementTrackingId = $request->input('reimbursement_tracking_id');
-    \Log::debug("Attempting to update reimbursement claims", [
-        'reimbursement_tracking_id' => $reimbursementTrackingId,
-        'user_id' => $loginUserInfo->id,
-    ]);
-
-    // Validate the input data
-    $validatedData = $request->validate([
-        'reimbursement_tracking_id' => 'required|exists:reimbursement_trackings,id',
-        'entries.*.id' => 'required|exists:reimbursement_form_entries,id',
-        'entries.*.date' => 'required|date',
-        'entries.*.amount' => 'required|numeric|min:0',
-        'entries.*.description' => 'nullable|string',
-    ]);
-
-    // Fetch all reimbursement form entries associated with the given reimbursement_tracking_id
-    $reimbursementEntries = DB::table('reimbursement_form_entries')
-        ->where('reimbursement_trackings_id', $reimbursementTrackingId)
-        ->get();
-
-    // Check if there are any entries for the given reimbursement_tracking_id
-    if ($reimbursementEntries->isEmpty()) {
-        \Log::debug("No reimbursement entries found for tracking ID", [
-            'reimbursement_tracking_id' => $reimbursementTrackingId,
-        ]);
-        return redirect()->route('PayRollDashboard')->with('error', 'No reimbursement entries found for the specified tracking ID.');
-    }
-
-    \Log::debug("Reimbursement entries found", ['reimbursement_entries' => $reimbursementEntries]);
-
-    // Update the reimbursement entries with the edited data
-    foreach ($validatedData['entries'] as $entryData) {
-        DB::table('reimbursement_form_entries')
-            ->where('id', $entryData['id'])
-            ->update([
-                'date' => $entryData['date'],
-                'amount' => $entryData['amount'],
-                'description_by_applicant' => $entryData['description'] ?? null,
-                'updated_at' => now(),
-            ]);
-    }
-
-    \Log::debug("Reimbursement entries updated successfully", [
-        'reimbursement_tracking_id' => $reimbursementTrackingId,
-    ]);
-
-    // Redirect back with a success message
-    return redirect()->route('PayRollDashboard')->with('success', 'Reimbursement claims updated successfully.');
-}
- 
 
 public function loadEditClaimForm($reimbursement_traking_id = null)
 {
@@ -640,6 +585,43 @@ public function loadEditClaimForm($reimbursement_traking_id = null)
         ->get();
 
     return view('user_view.edit_claim_form', compact('reimbursementClaims', 'reimbursement_traking_id', 'reim_type'));
+}
+
+public function updateClaimForm(Request $request, $reimbursement_traking_id)
+{
+    $loginUserInfo = Auth::user();
+
+    // Update reimbursement tracking description
+    DB::table('reimbursement_trackings')
+        ->where('id', $reimbursement_traking_id)
+        ->where('user_id', $loginUserInfo->id)
+        ->update([
+            'description' => $request->clam_comment,
+            'updated_at' => now(),
+        ]);
+
+    // Loop through claims and update reimbursement entries
+    foreach ($request->bill_date as $i => $billDate) {
+        $filePath = null;
+
+        // Upload bill file if present
+        if ($request->hasFile("bills.$i")) {
+            $filePath = $request->file("bills.$i")->store('bills', 'public');
+        }
+
+        DB::table('reimbursement_form_entries')
+            ->where('reimbursement_trackings_id', $reimbursement_traking_id)
+            ->update([
+                'date' => $billDate,
+                'organisation_reimbursement_types_id' => $request->type[$i],
+                'amount' => $request->entered_amount[$i],
+                'upload_bill' => $filePath ?? DB::raw('upload_bill'), // Keep existing file if no new file is uploaded
+                'description_by_applicant' => $request->comments[$i] ?? null,
+                'updated_at' => now(),
+            ]);
+    }
+
+    return redirect()->route('PayRollDashboard')->with('success', 'Reimbursement claim updated successfully.');
 }
 
 }

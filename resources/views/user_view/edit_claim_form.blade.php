@@ -25,7 +25,7 @@ th {
   <h2>Edit Reimbursement Form</h2>
  
   <!-- FORM STARTS HERE -->
-  <form action="{{ route('update_reimbursement_claims') }}" method="post" enctype="multipart/form-data">
+  <form action="{{ route('update_reimbursement_claims', ['reimbursement_tracking_id' => $reimbursement_traking_id]) }}" method="post" enctype="multipart/form-data">
     @csrf
     <input type="hidden" name="reimbursement_tracking_id" value="{{ $reimbursement_traking_id }}">
     
@@ -68,27 +68,27 @@ th {
           <tr>
             <td>{{ $index + 1 }}</td>
             <td>
-              <input type="date" name="entries[{{ $claim->id }}][date]" class="form-control" value="{{ \Carbon\Carbon::parse($claim->entry_date)->format('Y-m-d') }}" required>
+              <input type="date" name="bill_date[{{ $index }}]" class="form-control" value="{{ \Carbon\Carbon::parse($claim->entry_date)->format('Y-m-d') }}" required>
             </td>
             <td>
-              <select class="form-control rm_type" name="entries[{{ $claim->id }}][type]" required>
+              <select class="form-control rm_type" name="type[{{ $index }}]" required>
                 <option value="">Select One</option>
                 @foreach($reim_type as $rt)
                 <option value="{{ $rt->id }}" {{ $rt->id == $claim->organisation_reimbursement_types_id ? 'selected' : '' }}>{{ $rt->name }}</option>
                 @endforeach
               </select>
             </td>
-            <td><input type="text" name="entries[{{ $claim->id }}][max_amount]" class="form-control" value="{{ $claim->max_amount ?? '' }}" disabled></td>
-            <td><input type="number" name="entries[{{ $claim->id }}][amount]" class="form-control" value="{{ $claim->entry_amount }}" step="0.01" required></td>
+            <td><input type="text" class="form-control" value="{{ $claim->max_amount ?? '' }}" disabled></td>
+            <td><input type="number" name="entered_amount[{{ $index }}]" class="form-control" value="{{ $claim->entry_amount }}" step="0.01" required></td>
             <td>
               @if ($claim->upload_bill)
                 <a href="{{ asset('storage/' . $claim->upload_bill) }}" target="_blank">View Bill</a>
               @else
                 No Bill Uploaded
               @endif
-              <input type="file" name="entries[{{ $claim->id }}][upload_bill]" class="form-control mt-2" accept=".jpg,.jpeg,.png,.pdf">
+              <input type="file" name="bills[{{ $index }}]" class="form-control mt-2" accept=".jpg,.jpeg,.png,.pdf">
             </td>
-            <td><textarea class="form-control" rows="1" name="entries[{{ $claim->id }}][description]" placeholder="Comment">{{ $claim->description_by_applicant }}</textarea></td>
+            <td><textarea class="form-control" rows="1" name="comments[{{ $index }}]" placeholder="Comment">{{ $claim->description_by_applicant }}</textarea></td>
           </tr>
           @endforeach
         </tbody>  

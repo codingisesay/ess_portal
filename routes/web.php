@@ -256,7 +256,7 @@ Route::middleware(['auth'])->group(function () {
  Route::post('user/insert_Reimbursement_Form',[salaryBoxController::class,'insertReimbursementForm'])->name('insert_Reimbursement_Form');
 
  Route::get('user/get_max_amount/{rm_id}',[salaryBoxController::class,'loadMaxAmoutRm'])->name('get_max_amount');
- Route::post('user/update_reimbursement_claims', [salaryBoxController::class, 'updateReimbursementClaims'])->name('update_reimbursement_claims');
+ Route::post('user/update_reimbursement_claims', [salaryBoxController::class, 'updateClaimForm'])->name('update_reimbursement_claims');
    
 });
 

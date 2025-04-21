@@ -374,21 +374,16 @@ error_reporting(0);
                                 <form action="{{ route('leave_update_status', ['id' => $leave->leave_appliy_id, 'status' => 'Approved']) }}" method="POST" style="display: inline;">
                                     @csrf
                                     @method('PUT')
-                                    <button type="submit" style="font-size: 24px;  border: none; background: none; cursor: pointer;">
-                                        ✅
-                                    </button>
+                                    <button type="submit"  class="btn text-success"> <x-icon name="done" /> </button>
                                 </form>
                                 </td>
                                 <td>
                                 <form action="{{ route('leave_update_status', ['id' => $leave->leave_appliy_id, 'status' => 'Reject']) }}" method="POST" style="display: inline;">
                                     @csrf
                                     @method('PUT')
-                                    <button type="submit" style="font-size: 24px; border: none; background: none; cursor: pointer;">
-                                        ❌
-                                    </button>
+                                    <button type="submit" class="btn text-danger"> <x-icon name="cancel" /> </button>
                                 </form>
-                            </td>
-
+                            </td> 
                             </tr>
                         @endforeach
                     @endforeach
