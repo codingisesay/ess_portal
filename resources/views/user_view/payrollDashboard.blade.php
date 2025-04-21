@@ -274,6 +274,14 @@
                                     {{ $claim->status }}
                                 </span>
                             </td>
+                            <td>
+                                <a href="{{ route('review_claim_form', ['reimbursement_traking_id' => $claim->tracking_id]) }}" class="btn btn-primary btn-sm me-2">
+                                    <x-icon name="eyefill" />
+                                </a>
+                                <a href="{{ route('edit_claim_form', ['reimbursement_traking_id' => $claim->tracking_id]) }}" class="btn btn-primary btn-sm">
+                                    <x-icon name="edit" />
+                                </a>
+                            </td>
                         </tr>
                     @endforeach
                 </tbody>
