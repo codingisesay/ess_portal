@@ -279,7 +279,7 @@ if(in_array(12, $permission_array)){
                 </div>
         
                 <!-- Dropdown content (initially hidden) -->
-                <div id="employeeDetailsDropdown" class="dropdown-content" style="display: block;">
+                <div id="employeeDetailsDropdown" class="dropdown-content" style="display: none;">
                     <!-- Collapsible Content (Table) -->
                     <div class="content">
                         <table class="custom-table">
@@ -330,6 +330,36 @@ if(in_array(12, $permission_array)){
                     </div>
                 </div>
                 <?php } ?>
+
+                <div class="accordion-item">
+                    <!-- Accordion Header with a toggle dropdown -->
+                    <div class="accordion-header" onclick="#">
+                        Process Salary (2025-26)
+                    </div>
+            
+                    <!-- Dropdown content (initially hidden) -->
+                    <div id="employeeDetailsDropdown" class="dropdown-content" style="display: block;">
+                        <!-- Collapsible Content (Table) -->
+                        <form action="{{ route('process_salary') }}" method="POST">
+                            @csrf
+                        <label>Cycle Year</label>
+                        <input type="hidden" value="{{ $dataofcurrentyear->id }}" name="cycle_id">
+                        <input type="text" value="{{ $dataofcurrentyear->name }}" disabled>
+                        
+                        <label>Salary Month</label>
+                       <select name="selected_month">
+                        <option value="">Select Month</option>
+                        @foreach ($monthsInCycle as $MC)
+
+                        <option value="{{ $MC  }}">{{ $MC  }}</option>
+                        
+                        @endforeach
+                       </select>
+                       
+                       <input type="submit" value="Process">
+                    </form>
+                        </div>
+                    </div>      
     </div>
 </main>
 

@@ -82,6 +82,8 @@ $name = Auth::guard('superadmin')->user()->name;
                         <img src="{{ asset('user_end/images/arrow-right.svg') }}" alt="arrow" class="dropdown-arrow">
                     </strong>
                     <ul id="salaryManagementDropdown" class="submenu">
+                        <li><a href="{{ route('create_salary_cycle') }}" class="{{ request()->routeIs('create_salary_cycle') ? 'active' : '' }}">Salary Cycle</a></li>
+                        {{-- <li><a href="{{ route('create_salary_configuration') }}" class="{{ request()->routeIs('create_salary_configuration') ? 'active' : '' }}">Salary Configuration</a></li> --}}
                         <li><a href="{{ route('salary_template_form') }}" class="{{ request()->routeIs('salary_template_form') ? 'active' : '' }}">Create Salary Templates</a></li>
                         <li><a href="{{ route('create_salary_components') }}" class="{{ request()->routeIs('create_salary_components') ? 'active' : '' }}">Salary Template Components</a></li>
                     </ul>

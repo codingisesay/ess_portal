@@ -549,6 +549,61 @@ $insertedId = $reimbursement->id;
      
 
  }
+
+ public function loadSalaryCycleForm(){
+
+    $org_data = Auth::guard('superadmin')->user();
+
+    $cycle_datas = DB::table('salary_cycles')
+    ->where('organisation_id',$org_data->id)
+    ->get();
+
+    // dd($cycle_datas);
+
+    return view('superadmin_view.create_salary_cycle',compact('cycle_datas'));
+
+ }
+
+//  public function loadSalaryConfigurationForm(){
+
+//     return view('superadmin_view.create_salary_configuration');
+
+//  }
+
+public function insertSalaryCycle(Request $request){
+
+    $data = $request->validate([
+        'name' => 'required',
+        'applicable_from' => 'required',
+        'applicable_to' => 'required',
+        'month_start_date' => 'required',
+        'month_end_date' => 'required',
+        'status' => 'required'
+    ]);
+
+    $org_data = Auth::guard('superadmin')->user();
+
+    $status = DB::table('salary_cycles')->insert([
+        'organisation_id' => $org_data->id,
+        'name' => $data['name'],
+        'start_date' => $data['applicable_from'] ,
+        'end_date' => $data['applicable_to'],
+        'month_start' => $data['month_start_date'],
+        'month_end' => $data['month_end_date'],
+        'status' => $data['status'],
+        'created_at' => NOW(),
+        'updated_at' => NOW(),
+
+    ]);
+
+    if($status){
+
+        return redirect()->route('create_salary_cycle')->with('success','Record Inserted');
+
+    }
+    return redirect()->route('create_salary_cycle')->with('error','Record Not Inserted');
+
+}
  
 
 
