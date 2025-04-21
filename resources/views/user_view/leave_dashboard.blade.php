@@ -337,13 +337,13 @@
                                                 @csrf
                                                 @method('PUT')  <!-- Use DELETE HTTP method for cancellation -->
                                                 <!-- <button class="cancel-btn" type="submit">Cancel</button> -->
-                                                <button class="cancel-btn" type="button" onclick="showConfirmPopup()">
-                                                <i class="fas fa-times"></i> <!-- fa-times is the cancel icon -->
-                                                </button>
+                                                <span class="text-danger mt-4 me-3" type="button" onclick="showConfirmPopup()">
+                                                    <x-icon name="trash" />
+                                                </span>
                                             </form>
                                         @endif
                                     </div>
-                                @endforeach
+                                @endforeach 
                             </div>
                         </div>
                     </div>

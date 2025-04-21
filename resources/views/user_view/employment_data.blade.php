@@ -330,9 +330,10 @@
 
     <div id="certificationModal" class="modal">
         <div class="modal-content">
-            <div class="modal-header"> 
+            <!-- <div class="modal-header">  -->
                 <span class="close" onclick="closeModal('certificationModal')">X</span>
-            </div>
+                <h5>Academic Details</h5> 
+            <!-- </div> -->
             <div id="certification-modal-content-details">
                 <!-- Certification details will be displayed here -->
             </div>
