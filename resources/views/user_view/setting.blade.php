@@ -281,6 +281,7 @@
                 </div>
                 <?php } ?>
 
+<<<<<<< HEAD
                 <?php 
                 //user salary functions
                 if(in_array(14, $permission_array)){ 
@@ -344,6 +345,38 @@
                         </div>
                         <?php } ?>
             </div>
+=======
+                <div class="accordion-item">
+                    <!-- Accordion Header with a toggle dropdown -->
+                    <div class="accordion-header" onclick="#">
+                        Process Salary (2025-26)
+                    </div>
+            
+                    <!-- Dropdown content (initially hidden) -->
+                    <div id="employeeDetailsDropdown" class="dropdown-content" style="display: block;">
+                        <!-- Collapsible Content (Table) -->
+                        <form action="{{ route('process_salary') }}" method="POST">
+                            @csrf
+                        <label>Cycle Year</label>
+                        <input type="hidden" value="{{ $dataofcurrentyear->id }}" name="cycle_id">
+                        <input type="text" value="{{ $dataofcurrentyear->name }}" disabled>
+                        
+                        <label>Salary Month</label>
+                       <select name="selected_month">
+                        <option value="">Select Month</option>
+                        @foreach ($monthsInCycle as $MC)
+
+                        <option value="{{ $MC  }}">{{ $MC  }}</option>
+                        
+                        @endforeach
+                       </select>
+                       
+                       <input type="submit" value="Process">
+                    </form>
+                        </div>
+                    </div>      
+    </div>
+>>>>>>> d707121ba62890a037d0af3f7f1edf5d7593ea15
 </main>
 
 <script>

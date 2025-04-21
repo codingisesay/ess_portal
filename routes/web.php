@@ -105,6 +105,10 @@ Route::middleware(['auth.superadmin'])->group(function () {
 
    //Load pages routes loadforms superadmin
 
+   Route::get('superadmin/create_salary_cycle',[salaryBoxController::class,'loadSalaryCycleForm'])->name('create_salary_cycle');
+
+//    Route::get('superadmin/create_salary_configuration',[salaryBoxController::class,'loadSalaryConfigurationForm'])->name('create_salary_configuration');
+
     Route::get('superadmin/create_salary_templates',[salaryBoxController::class,'loadInsertForm'])->name('salary_template_form');
     Route::get('superadmin/create_salary_components',[salaryBoxController::class,'loadcomponentsForm'])->name('create_salary_components');
 
@@ -112,7 +116,7 @@ Route::middleware(['auth.superadmin'])->group(function () {
     Route::get('superadmin/create_taxes',[salaryBoxController::class,'loadTaxForm'])->name('taxes');
 
     //routes for insert salary box data
-
+    Route::post('superadmin/insert_salary_cycle',[salaryBoxController::class,'insertSalaryCycle'])->name('insert_salary_cycle');
     Route::post('superadmin/insert_salary_template',[salaryBoxController::class,'insertSalaryTemplate'])->name('insert_salary_template');
     Route::post('superadmin/insert_salary_Components',[salaryBoxController::class,'insertSalaryComponents'])->name('insert_salary_Components');
 
@@ -234,6 +238,7 @@ Route::middleware(['auth'])->group(function () {
     Route::post('user/save_news_events', [settingController::class, 'saveNewsEvents'])->name('save_news_events');
     Route::post('user/save_calendra_master', [settingController::class, 'createCalendraMaster'])->name('create_calendra_master');
     Route::post('user/salaryTemCTC',[settingController::class, 'insertSalaryTempCTC'])->name('user.salaryTemCTC');
+    Route::post('user/process_slary',[settingController::class, 'processSalary'])->name('process_salary');
 
        //userend
 
@@ -250,10 +255,13 @@ Route::middleware(['auth'])->group(function () {
  Route::get('user/claim_form',[salaryBoxController::class,'loadclaimform'])->name('claim_form');
  Route::get('user/clam_record/{user_id},{reimbursement_traking_id}', [salaryBoxController::class, 'loadUserClaims'])->name('user_claims');
  Route::get('user/manager_clam_record',[salaryBoxController::class,'loadMangerClaims'])->name('manager_claims');
+ Route::get('user/review_claim_form/{reimbursement_traking_id}',[salaryBoxController::class,'loadreviewclaimform'])->name('review_claim_form');
+ Route::get('user/edit_claim_form/{reimbursement_traking_id}', [salaryBoxController::class, 'loadEditClaimForm'])->name('edit_claim_form');
 
  Route::post('user/insert_Reimbursement_Form',[salaryBoxController::class,'insertReimbursementForm'])->name('insert_Reimbursement_Form');
 
  Route::get('user/get_max_amount/{rm_id}',[salaryBoxController::class,'loadMaxAmoutRm'])->name('get_max_amount');
+ Route::post('user/update_reimbursement_claims/{reimbursement_traking_id}', [salaryBoxController::class, 'updateClaimForm'])->name('update_reimbursement_claims');
    
 });
 
