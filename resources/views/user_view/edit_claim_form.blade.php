@@ -25,7 +25,7 @@ th {
   <h2>Edit Reimbursement Form</h2>
  
   <!-- FORM STARTS HERE -->
-  <form action="{{ route('update_reimbursement_claims', ['reimbursement_tracking_id' => $reimbursement_traking_id]) }}" method="post" enctype="multipart/form-data">
+  <form action="{{ route('update_reimbursement_claims', ['reimbursement_traking_id' => $reimbursement_traking_id]) }}" method="post" enctype="multipart/form-data">
     @csrf
     <input type="hidden" name="reimbursement_tracking_id" value="{{ $reimbursement_traking_id }}">
     
