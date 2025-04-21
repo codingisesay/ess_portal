@@ -552,69 +552,60 @@ $insertedId = $reimbursement->id;
  
  public function updateReimbursementClaims(Request $request)
 {
+    // Get the currently authenticated user
     $loginUserInfo = Auth::user();
 
-    // Validate incoming request
-    $data = $request->validate([
-        'claims.*.id' => 'required|exists:reimbursement_form_entries,id', // Ensure the ID exists in the table
-        'claims.*.entry_date' => 'required|date',
-        'claims.*.entry_amount' => 'required|numeric',
-        'claims.*.description_by_applicant' => 'nullable|string',
-        'claims.*.type' => 'required|exists:organisation_reimbursement_types,id',
-        'claims.*.upload_bill' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048',
+    // Get the reimbursement tracking ID from the request
+    $reimbursementTrackingId = $request->input('reimbursement_tracking_id');
+    \Log::debug("Attempting to update reimbursement claims", [
+        'reimbursement_tracking_id' => $reimbursementTrackingId,
+        'user_id' => $loginUserInfo->id,
     ]);
 
-    foreach ($data['claims'] as $claim) {
-        // Debugging: Log the claim data
-        \Log::info('Processing claim update:', $claim);
+    // Validate the input data
+    $validatedData = $request->validate([
+        'reimbursement_tracking_id' => 'required|exists:reimbursement_trackings,id',
+        'entries.*.id' => 'required|exists:reimbursement_form_entries,id',
+        'entries.*.date' => 'required|date',
+        'entries.*.amount' => 'required|numeric|min:0',
+        'entries.*.description' => 'nullable|string',
+    ]);
 
-        // Find the reimbursement entry
-        $entry = DB::table('reimbursement_form_entries')
-            ->join('reimbursement_trackings', 'reimbursement_form_entries.reimbursement_trackings_id', '=', 'reimbursement_trackings.id')
-            ->where('reimbursement_form_entries.id', $claim['id'])
-            ->where('reimbursement_trackings.user_id', $loginUserInfo->id)
-            ->select('reimbursement_form_entries.*')
-            ->first();
+    // Fetch all reimbursement form entries associated with the given reimbursement_tracking_id
+    $reimbursementEntries = DB::table('reimbursement_form_entries')
+        ->where('reimbursement_trackings_id', $reimbursementTrackingId)
+        ->get();
 
-        // Debugging: Log the entry found
-        if (!$entry) {
-            \Log::error('Entry not found or unauthorized for claim ID: ' . $claim['id']);
-            return redirect()->back()->with('error', 'Entry not found or unauthorized.');
-        }
-
-        \Log::info('Entry found for claim ID: ' . $claim['id'], (array) $entry);
-
-        // Handle file upload if available
-        if (isset($claim['upload_bill'])) {
-            $filePath = $claim['upload_bill']->store('bills', 'public');
-            \Log::info('File uploaded for claim ID: ' . $claim['id'], ['filePath' => $filePath]);
-        } else {
-            $filePath = $entry->upload_bill; // Keep the existing file if not uploading new
-            \Log::info('No new file uploaded for claim ID: ' . $claim['id']);
-        }
-
-        // Update the entry
-        $updateStatus = DB::table('reimbursement_form_entries')
-            ->where('id', $claim['id'])
-            ->update([
-                'date' => $claim['entry_date'],
-                'amount' => $claim['entry_amount'],
-                'description_by_applicant' => $claim['description_by_applicant'],
-                'organisation_reimbursement_types_id' => $claim['type'],
-                'upload_bill' => $filePath,
-                'updated_at' => now(),
-            ]);
-
-        // Debugging: Log the update status
-        if ($updateStatus) {
-            \Log::info('Claim updated successfully for ID: ' . $claim['id']);
-        } else {
-            \Log::error('Failed to update claim for ID: ' . $claim['id']);
-        }
+    // Check if there are any entries for the given reimbursement_tracking_id
+    if ($reimbursementEntries->isEmpty()) {
+        \Log::debug("No reimbursement entries found for tracking ID", [
+            'reimbursement_tracking_id' => $reimbursementTrackingId,
+        ]);
+        return redirect()->route('PayRollDashboard')->with('error', 'No reimbursement entries found for the specified tracking ID.');
     }
 
+    \Log::debug("Reimbursement entries found", ['reimbursement_entries' => $reimbursementEntries]);
+
+    // Update the reimbursement entries with the edited data
+    foreach ($validatedData['entries'] as $entryData) {
+        DB::table('reimbursement_form_entries')
+            ->where('id', $entryData['id'])
+            ->update([
+                'date' => $entryData['date'],
+                'amount' => $entryData['amount'],
+                'description_by_applicant' => $entryData['description'] ?? null,
+                'updated_at' => now(),
+            ]);
+    }
+
+    \Log::debug("Reimbursement entries updated successfully", [
+        'reimbursement_tracking_id' => $reimbursementTrackingId,
+    ]);
+
+    // Redirect back with a success message
     return redirect()->route('PayRollDashboard')->with('success', 'Reimbursement claims updated successfully.');
 }
+ 
 
 public function loadEditClaimForm($reimbursement_traking_id = null)
 {
