@@ -9,15 +9,7 @@
     <link rel="stylesheet" href="{{ asset('errors/error.css') }}">
     
 </head>
-
-<style>
-  .content {
-      padding: 0 18px;
-      display: block;
-      overflow-y: auto;
-      background-color: #ffffff;
-  }
-</style>
+ 
 
 <main class="settings-container">
     <?php $permission_array = session('permission_array'); ?>
@@ -35,185 +27,206 @@
         <div class="accordion">
             <!-- Upcoming Holidays -->
             <?php 
-if(in_array(11, $permission_array)){ 
-?>
-    <div class="accordion-item">
-        <!-- Accordion Header with a toggle dropdown -->
-        <div class="accordion-header" onclick="toggleCalendarMasterDropdown()">
-            Calendar Master
-        </div>
+                if(in_array(11, $permission_array)){ 
+                ?>
+                    <div class="accordion-item">
+                        <!-- Accordion Header with a toggle dropdown -->
+                        <div class="accordion-header" onclick="toggleCalendarMasterDropdown()">
+                            Calendar Master
+                        </div>
 
-        <!-- Dropdown content (initially hidden) -->
-        <div id="calendarMasterDropdown" class="dropdown-content" style="display: none;">
-            <form id="calendarMasterForm" method="POST" action="{{ route('create_calendra_master') }}">
-                @csrf
-                <!-- Year Selection -->
-                <div class="form-group">
-                    <label for="year">Select Year:</label>
-                    <select id="year" name="year">
-                        <option value="">--Select Year--</option>
-                    </select>
-                    <span class="error" id="yearError"></span>
-                </div>
+                        <!-- Dropdown content (initially hidden) -->
+                        <div id="calendarMasterDropdown" class="dropdown-content px-3" style="display: none;">
+                            <form id="calendarMasterForm" method="POST" action="{{ route('create_calendra_master') }}">
+                                @csrf
+                                <div class="row">
+                                    <!-- Year Selection -->
+                                     <div class="col-4">
+                                        <div class="form-group">
+                                            <label for="year">Select Year:</label>
+                                            <select id="year" name="year">
+                                                <option value="">--Select Year--</option>
+                                            </select>
+                                            <span class="error" id="yearError"></span>
+                                        </div>
+                                     </div>
 
-                <!-- Type of Selection (Week Off / Holiday) -->
-                <div class="form-group">
-                    <label for="weekOffHolidaySelect">Select Type:</label>
-                    <select id="weekOffHolidaySelect" name="weekOffHolidaySelect">
-                        <option value="">--Select--</option>
-                        <option value="weekoff">Week Off</option>
-                        <option value="holiday">Holiday</option>
-                    </select>
-                    <span class="error" id="typeError"></span>
-                </div>
+                                    <!-- Type of Selection (Week Off / Holiday) -->
+                                     <div class="col-4">
+                                        <div class="form-group">
+                                            <label for="weekOffHolidaySelect">Select Type:</label>
+                                            <select id="weekOffHolidaySelect" name="weekOffHolidaySelect">
+                                                <option value="">--Select--</option>
+                                                <option value="weekoff">Week Off</option>
+                                                <option value="holiday">Holiday</option>
+                                            </select>
+                                            <span class="error" id="typeError"></span>
+                                        </div>
+                                     </div>
+                                </div>
+                                <!-- Week Off Selection (checkboxes) -->
+                                <div id="weekOffSelection" style="display:none;"> 
+                                    <div class="row mx-2">
+                                        <div class="col-3 my-1"><input type="checkbox" id="sunday" name="weekoff[]" value="0"> Sunday</div>
+                                        <div class="col-3 my-1"><input type="checkbox" id="monday" name="weekoff[]" value="1"> Monday</div>
+                                        <div class="col-3 my-1"><input type="checkbox" id="tuesday" name="weekoff[]" value="2"> Tuesday</div>
+                                        <div class="col-3 my-1"><input type="checkbox" id="wednesday" name="weekoff[]" value="3"> Wednesday</div>
+                                        <div class="col-3 my-1"><input type="checkbox" id="thursday" name="weekoff[]" value="4"> Thursday</div>
+                                        <div class="col-3 my-1"><input type="checkbox" id="friday" name="weekoff[]" value="5"> Friday</div>
+                                        <div class="col-3 my-1"><input type="checkbox" id="saturday" name="weekoff[]" value="6"> Saturday</div>
+                                    </div> 
+                                    <span class="error" id="weekOffError"></span>
+                                </div>
 
-                <!-- Week Off Selection (checkboxes) -->
-                <div id="weekOffSelection" style="display:none;">
-                    <div class="form-group">
-                        <!-- <label></label><br> -->
-                        <div class="checkbox-grid">
-                            <div><input type="checkbox" id="sunday" name="weekoff[]" value="0"> Sunday</div>
-                            <div><input type="checkbox" id="monday" name="weekoff[]" value="1"> Monday</div>
-                            <div><input type="checkbox" id="tuesday" name="weekoff[]" value="2"> Tuesday</div>
-                            <div><input type="checkbox" id="wednesday" name="weekoff[]" value="3"> Wednesday</div>
-                            <div><input type="checkbox" id="thursday" name="weekoff[]" value="4"> Thursday</div>
-                            <div><input type="checkbox" id="friday" name="weekoff[]" value="5"> Friday</div>
-                            <div><input type="checkbox" id="saturday" name="weekoff[]" value="6"> Saturday</div>
+                                <!-- Holiday Selection (Date, Name, and Description) -->
+                                <div id="holidayUpdate" style="display:none;">
+                                    <div class="row">
+                                        <div class="col-md-4 my-2">                                                                
+                                            <div class="form-group">
+                                                <label for="holiday_date">Holiday Date</label>
+                                                <input type="date" id="holiday_date" name="holiday_date">
+                                                <span class="error" id="holidayDateError"></span><br><br>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4 my-2">                                        
+                                            <div class="form-group">
+                                                <label for="holiday_name">Holiday Name</label>
+                                                <input type="text" maxlength="200" id="holiday_name" name="holiday_name">
+                                                <span class="error" id="holidayNameError"></span><br><br>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4 my-2">                                        
+                                            <div class="form-group">
+                                                <label for="holiday_desc">Holiday Description</label>
+                                                <textarea id="holiday_desc" maxlength="200" name="holiday_desc"></textarea>
+                                                <span class="error" id="holidayDescError"></span>
+                                            </div>
+                                        </div>
+
+                                </div>
+                                </div>
+
+                                <!-- Working Hours Container (Dynamically populated) -->
+                                <div id="workingHoursContainer" style="display:none;">
+                                    <!-- Working hours will be dynamically inserted here -->
+                                </div>
+
+                                <!-- Submit Button -->
+                                <button type="submit" class="submit-btn px-3 py-1">Submit</button>
+                            </form>
                         </div>
                     </div>
-                    <span class="error" id="weekOffError"></span>
-                </div>
-
-                <!-- Holiday Selection (Date, Name, and Description) -->
-                <div id="holidayUpdate" style="display:none;">
-                    <div class="form-group">
-                        <label for="holiday_date">Holiday Date:</label>
-                        <input type="date" id="holiday_date" name="holiday_date">
-                        <span class="error" id="holidayDateError"></span><br><br>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="holiday_name">Holiday Name:</label>
-                        <input type="text" maxlength="200" id="holiday_name" name="holiday_name">
-                        <span class="error" id="holidayNameError"></span><br><br>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="holiday_desc">Holiday Description:</label>
-                        <textarea id="holiday_desc" maxlength="200" name="holiday_desc"></textarea>
-                        <span class="error" id="holidayDescError"></span>
-                    </div>
-                </div>
-
-                <!-- Working Hours Container (Dynamically populated) -->
-                <div id="workingHoursContainer" style="display:none;">
-                    <!-- Working hours will be dynamically inserted here -->
-                </div>
-
-                <!-- Submit Button -->
-                <button type="submit" class="submit-btn">Submit</button>
-            </form>
-        </div>
-    </div>
-<?php 
-}
-?>
+                <?php 
+                }
+                ?>
 
 
             <!-- Leave Section (With Link to hr_universal.php) -->
-            {{-- <div class="accordion-item">
+            <!-- {{-- <div class="accordion-item">
                 <div class="accordion-header" onclick="window.location.href='{{ url('hr_universal') }}'">
                     Global Leaves
                 </div>
-            </div> --}}
+            </div> --}} -->
 
             <!-- Thought of the Day -->
             <?php 
             if(in_array(13,$permission_array)){?>
-            
-            
-            
-            <div class="accordion-item">
-                <div class="accordion-header" onclick="toggleDropdown()">Thought of the Day/News & Events</div>
-                <div class="dropdown-content" id="dropdownContent">
-                    <form action="{{ route('save_thought') }}" method="POST">
-                        @csrf
-                        <!-- Entry Type -->
-                        <div class="form-group">
-                            <label>Entry Type :</label>
-                            <div class="radio-group">
-                                <label>
-                                    <input type="radio" name="entryType" value="thought" checked onclick="switchForm('thought')"> Thought of the Day
-                                </label>
-                                <label>
-                                    <input type="radio" name="entryType" value="news" onclick="switchForm('news')"> News & Events
-                                </label>
-                            </div>
-                        </div>
-                    </form>
-
-                    <!-- Thought of the Day Form -->
-                    <div id="thoughtForm" class="dynamic-form active">
+             
+                <div class="accordion-item">
+                    <div class="accordion-header" onclick="toggleDropdown()">Thought of the Day/News & Events</div>
+                    <div class="dropdown-content" id="dropdownContent">
                         <form action="{{ route('save_thought') }}" method="POST">
                             @csrf
-                            <input type="hidden" name="entryType" value="thought">
-                            <div class="form-group">
-                                <label for="entryDate">Date:</label>
-                                <div class="input-with-icon">
-                                    <input type="date" id="thoughtDate" name="date" placeholder="DD/MM/YYYY">
-                                    <!-- <img src="{{ asset('resource/image/setting/calendar (4) 1.png') }}" alt="Calendar" class="calendar-icon" /> -->
+                            <!-- Entry Type -->
+                            <!-- <div class="form-group"> --> 
+                                <div class="radio-group">
+                                    <div class="col-4 my-1">
+                                        <div class="form-group">
+                                            <input type="radio" name="entryType" value="thought" checked onclick="switchForm('thought')"> Thought of the Day
+                                        </div>
+                                    </div>
+                                    <div class="col-4 my-1">
+                                        <div class="form-group">
+                                            <input type="radio" name="entryType" value="news" onclick="switchForm('news')"> News & Events
+                                        </div>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="form-group">
-                                <label for="thoughtDescription">Thought of the day :</label>
-                                <textarea id="thoughtDescription" maxlength="200" name="description" placeholder="Thought of the day"></textarea>
-                            </div>
-                            <button type="submit" class="submit-btn" id="submitThought" disabled>Submit</button>
+                            <!-- </div> -->
                         </form>
-                    </div>
 
-                    <!-- News & Events Form -->
-                    <div id="newsForm" class="dynamic-form">
-                        <form action="{{ route('save_news_events') }}" method="POST">
-                            @csrf
-                            <input type="hidden" name="entryType" value="news">
-                            <div class="form-group">
-                                <label for="entryDate">Date:</label>
-                                <div class="input-with-icon">
-                                    <!-- <img src="{{ asset('resource/image/setting/calendar (4) 1.png') }}" alt="Calendar" class="calendar-icon" /> -->
-                                    <input type="date" id="date" name="date" placeholder="DD/MM/YYYY">
+                        <!-- Thought of the Day Form -->
+                        <div id="thoughtForm" class="dynamic-form active">
+                            <form action="{{ route('save_thought') }}" method="POST">
+                                @csrf
+                                <input type="hidden" name="entryType" value="thought">
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label for="entryDate">Date:</label> 
+                                            <input type="date" id="thoughtDate" name="date" placeholder="DD/MM/YYYY"> 
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label for="thoughtDescription">Thought of the day :</label>
+                                            <textarea id="thoughtDescription" maxlength="200" name="description" placeholder="Thought of the day"></textarea>
+                                        </div>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="form-group">
-                                <label for="title">Title :</label>
-                                <input type="text" id="title" maxlength="60" name="title" placeholder="News or event title">
-                            </div>
-                            <div class="form-group">
-                                <label for="description">Description :</label>
-                                <textarea id="description" maxlength="200" name="description" placeholder="Detailed information about the news or event"></textarea>
-                            </div>
-                            <div class="form-group">
-                                <label for="event-start-date">Event Start Date:</label>
-                                <div class="input-with-icon">
-                                    <input type="date" id="event-start-date" name="startdate" placeholder="Select Start Date">
+                                <button type="submit" class="submit-btn" id="submitThought" disabled>Submit</button>
+                            </form>
+                        </div>
+
+                        <!-- News & Events Form -->
+                        <div id="newsForm" class="dynamic-form">
+                            <form action="{{ route('save_news_events') }}" method="POST">
+                                @csrf
+                                <input type="hidden" name="entryType" value="news">
+                                <div class="row">
+
+                                    <div class="col-md-4 my-2">
+                                        <div class="form-group">
+                                            <label for="entryDate">Date:</label> 
+                                                <input type="date" id="date" name="date" placeholder="DD/MM/YYYY"> 
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4 my-2">
+                                        <div class="form-group">
+                                            <label for="title">Title :</label>
+                                            <input type="text" id="title" maxlength="60" name="title" placeholder="News or event title">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4 my-2">
+                                        <div class="form-group">
+                                            <label for="description">Description :</label>
+                                            <textarea id="description" maxlength="200" name="description" placeholder="Detailed information about the news or event"></textarea>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4 my-2">
+                                        <div class="form-group">
+                                            <label for="event-start-date">Event Start Date:</label> 
+                                            <input type="date" id="event-start-date" name="startdate" placeholder="Select Start Date"> 
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4 my-2">
+                                        <div class="form-group">
+                                            <label for="event-end-date">Event End Date:</label> 
+                                            <input type="date" id="event-end-date" name="enddate" placeholder="Select End Date"> 
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4 my-2">
+                                        <div class="form-group">
+                                            <label for="location">Location :</label>
+                                            <input type="text" id="location" maxlength="200" name="location" placeholder="Optional, e.g., 'City Hall'">
+                                        </div>
+                                    </div> 
                                 </div>
-                            </div>
-                            <div class="form-group">
-                                <label for="event-end-date">Event End Date:</label>
-                                <div class="input-with-icon">
-                                    <input type="date" id="event-end-date" name="enddate" placeholder="Select End Date">
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label for="location">Location :</label>
-                                <input type="text" id="location" maxlength="200" name="location" placeholder="Optional, e.g., 'City Hall'">
-                            </div>
-                            <button type="submit" class="submit-btn" id="submitNews" disabled>Submit</button>
-                        </form>
+                                <button type="submit" class="submit-btn px-3 py-1" id="submitNews" disabled>Submit</button>
+                            </form>
+                        </div>
                     </div>
                 </div>
-            </div>
-            
+                
             <?php
             }
             
@@ -223,114 +236,114 @@ if(in_array(11, $permission_array)){
          
             <!-- Employee Edit -->
             <?php 
-if(in_array(12, $permission_array)){ 
-?>
-    <div class="accordion-item">
-        <!-- Accordion Header with a toggle dropdown -->
-        <div class="accordion-header" onclick="toggleEmployeeDetailsDropdown()">
-            Employee Details Edit
-        </div>
-
-        <!-- Dropdown content (initially hidden) -->
-        <div id="employeeDetailsDropdown" class="dropdown-content" style="display: none;">
-            <!-- Collapsible Content (Table) -->
-            <div class="content">
-                <table class="custom-table">
-                    <thead>
-                        <tr>
-                            <th>S.No</th>
-                            <th>Name</th>
-                            <th>Email ID</th>
-                            <th>Edit</th>
-                        </tr>
-                    </thead>
-
-                    <tbody>
-                        @foreach ($users as $user)
-                            <tr>
-                                <td>{{ $loop->iteration }}</td>
-                                <td>{{$user->name}}</td>
-                                <td>{{$user->email}}</td>
-                                <td>
-                                    <a type="button" href="{{ route('user.editdashboard',['id' => $user->id]) }}">
-                                        <img src="{{ asset('user_end/images/edit 1.png') }}" alt="Edit" style="width: 20px; height: 20px;"/>
-                                    </a>
-                                </td>
-                            </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
-                    <div class="d-flex justify-content-center">
-                        {{ $users->links() }}
-                    </div>
-                </div>
-            </div>
-        </div>
-        <?php } ?>
-
-        <?php 
-        //user salary functions
-        if(in_array(14, $permission_array)){ 
-        ?>
+                if(in_array(12, $permission_array)){ 
+                ?>
             <div class="accordion-item">
                 <!-- Accordion Header with a toggle dropdown -->
-                <div class="accordion-header" onclick="#">
-                    Employee Salary
+                <div class="accordion-header" onclick="toggleEmployeeDetailsDropdown()">
+                    Employee Details Edit
                 </div>
-        
+
                 <!-- Dropdown content (initially hidden) -->
-                <div id="employeeDetailsDropdown" class="dropdown-content" style="display: block;">
+                <div id="employeeDetailsDropdown" class="dropdown-content" style="display: none;">
                     <!-- Collapsible Content (Table) -->
                     <div class="content">
                         <table class="custom-table">
                             <thead>
                                 <tr>
                                     <th>S.No</th>
-                                    <th>Employee ID</th>
-                                    <th>Salary Template</th>
-                                    <th>Employee CTC</th>
+                                    <th>Name</th>
+                                    <th>Email ID</th>
                                     <th>Edit</th>
                                 </tr>
                             </thead>
-        
+
                             <tbody>
-                                @foreach ($users_for_salary as $us)
-                                <form action="{{ route('user.salaryTemCTC') }}" method="POST">
-                                    @csrf
+                                @foreach ($users as $user)
                                     <tr>
-                                        <input type="hidden" name="user_id" value="{{ $us->user_id }}">
                                         <td>{{ $loop->iteration }}</td>
-                                        <td>{{ $us->emp_employeeID }}</td>
+                                        <td>{{$user->name}}</td>
+                                        <td>{{$user->email}}</td>
                                         <td>
-                                            <select name="trmplate_id" required>
-                                                <option value="{{ $us->org_salary_templates_id }}">{{ $us->org_salary_templates_name }}</option>
-                                                @foreach ($salary_templates as $st)
-                                                <option value="{{$st->id}}">{{$st->name}}</option>
-                                                @endforeach
-                                               
-                                            </select>
-                                        </td>
-                                        <td>
-                                            <input type="number" name="ctc" value="{{$us->user_ctc}}">
-                                        </td>
-                                        <td>
-    
-                                                <input type="submit" value="submit">
-                                            
+                                            <a type="button" href="{{ route('user.editdashboard',['id' => $user->id]) }}" class="text-secondary">
+                                               <x-icon name="edit" />
+                                            </a>
                                         </td>
                                     </tr>
-                                </form>
-                                   @endforeach
+                                    @endforeach
                                 </tbody>
                             </table>
                             <div class="d-flex justify-content-center">
-                                {{-- {{ $users_for_salary->links() }} --}}
+                                {{ $users->links() }}
                             </div>
                         </div>
                     </div>
                 </div>
                 <?php } ?>
-    </div>
+
+                <?php 
+                //user salary functions
+                if(in_array(14, $permission_array)){ 
+                ?>
+                    <div class="accordion-item">
+                        <!-- Accordion Header with a toggle dropdown -->
+                        <div class="accordion-header" onclick="#">
+                            Employee Salary
+                        </div>
+                
+                        <!-- Dropdown content (initially hidden) -->
+                        <div id="employeeDetailsDropdown" class="dropdown-content" style="display: block;">
+                            <!-- Collapsible Content (Table) -->
+                            <div class="content">
+                                <table class="custom-table">
+                                    <thead>
+                                        <tr>
+                                            <th>S.No</th>
+                                            <th>Employee ID</th>
+                                            <th>Salary Template</th>
+                                            <th>Employee CTC</th>
+                                            <th>Edit</th>
+                                        </tr>
+                                    </thead>
+                
+                                    <tbody>
+                                        @foreach ($users_for_salary as $us)
+                                        <form action="{{ route('user.salaryTemCTC') }}" method="POST">
+                                            @csrf
+                                            <tr>
+                                                <input type="hidden" name="user_id" value="{{ $us->user_id }}">
+                                                <td>{{ $loop->iteration }}</td>
+                                                <td>{{ $us->emp_employeeID }}</td>
+                                                <td>
+                                                    <select name="trmplate_id" required>
+                                                        <option value="{{ $us->org_salary_templates_id }}">{{ $us->org_salary_templates_name }}</option>
+                                                        @foreach ($salary_templates as $st)
+                                                        <option value="{{$st->id}}">{{$st->name}}</option>
+                                                        @endforeach
+                                                    
+                                                    </select>
+                                                </td>
+                                                <td>
+                                                    <input type="number" name="ctc" value="{{$us->user_ctc}}">
+                                                </td>
+                                                <td>
+            
+                                                        <input type="submit" value="submit">
+                                                    
+                                                </td>
+                                            </tr>
+                                        </form>
+                                        @endforeach
+                                        </tbody>
+                                    </table>
+                                    <div class="d-flex justify-content-center">
+                                        {{-- {{ $users_for_salary->links() }} --}}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <?php } ?>
+            </div>
 </main>
 
 <script>
@@ -401,11 +414,19 @@ if(in_array(12, $permission_array)){
 
             if (workingDays.length > 0) {
                 workingHoursContainer.innerHTML = `
-                    <label>Set Working Hours for All Working Days:</label><br>
-                    <label for="start_time">Start Time:</label>
-                    <input type="time" id="start_time" name="working_start_time"><br>
-                    <label for="end_time">End Time:</label>
-                    <input type="time" id="end_time" name="working_end_time"><br>
+                    <div class='row '>
+                        <div class="col-md-4">
+                         <div class="form-group">
+                        <label>Set Working Hours for All Working Days:</label><br>
+                        <label for="start_time">Start Time:</label>
+                        <input type="time" id="start_time" name="working_start_time"><br>
+                        </div></div>
+                        <div class="col-md-4">
+                         <div class="form-group">
+                        <label for="end_time">End Time:</label>
+                        <input type="time" id="end_time" name="working_end_time"><br>
+                        </div></div>
+                    </div>
                 `;
             } else {
                 workingHoursContainer.innerHTML = "<p>No working days left. Please select week off days first.</p>";

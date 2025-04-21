@@ -13,9 +13,9 @@
         
         <div class="contact-details">
             <h5>Contact Details</h5> 
-            <p><strong>Phone Number</strong> <weak id="emp-phone">{{ ucfirst($userDetails->offical_phone_number ?? '-') }}</weak></p>
-            <p><strong>Alternate Number</strong> <weak id="emp-alternate-phone">{{ ucfirst($userDetails->alternate_phone_number ?? '-') }}</weak></p>
-            <p><strong>Email Address</strong> <weak><a href="mailto:{{ $userDetails->email ?? '-' }}" id="emp-email">{{ ucfirst($userDetails->email ?? '-') }}</a></weak></p>
+            <p ><strong >Phone Number</strong> <weak id="emp-phone">{{ ucfirst($userDetails->offical_phone_number ?? '-') }}</weak></p>
+            <p ><strong >Alternate Number</strong> <weak id="emp-alternate-phone">{{ ucfirst($userDetails->alternate_phone_number ?? '-') }}</weak></p>
+            <p ><strong >Email Address</strong> <weak><a href="mailto:{{ $userDetails->email ?? '-' }}" id="emp-email">{{ ucfirst($userDetails->email ?? '-') }}</a></weak></p>
          
                 <hr>
             <h5>Address</h5>

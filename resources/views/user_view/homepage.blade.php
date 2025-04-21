@@ -66,8 +66,10 @@ error_reporting(0);
                             <div class="card birthday mx-1">
                                 <img src="{{ asset('user_end/images/Group303.png') }}" height="40" width="40" alt="Avatar" class="mb-2">  
                                 @if ($todaysBirthdays->isEmpty())    
-                                        <h6 class="mb-0 " >No birthdays today</h6>
-                                        <small>Check back later!</small> 
+                                        <div>
+                                            <h6 class="mb-0 " >No birthdays today</h6>
+                                            <small>Check back later!</small> 
+                                        </div>
                                 @else  
                                     @foreach ($todaysBirthdays as $birthday)
                                         <div class="slide">
@@ -82,12 +84,12 @@ error_reporting(0);
                 </div> 
                 <div class="col-6 p-0">
                     <div class=" thought card mx-1 ">
-                        <p class="fs-6 mb-0">
-                            <img src="{{ asset('user_end/images/Group326.png'); }}" alt=""> 
+                        <p class="fs-6 mb-0 d-flex justify-content-left align-items-center  ">
+                            <img src="{{ asset('user_end/images/Group326.png'); }}" alt=""> &nbsp;
                             Daily Insight
                         </p>
                         @if($thoughtOfTheDay)
-                        <i>{{ $thoughtOfTheDay->thought }}</i>
+                            <i>{{ $thoughtOfTheDay->thought }}</i>
                         @else
                             <small class="text-secondary">No thought for today.</small>
                         @endif 
@@ -96,7 +98,7 @@ error_reporting(0);
                 <div class="col-6 p-0">
                     <!-- Upcoming Holiday Card -->
                     <div class="card holiday1 mx-1">
-                        <p class="fs-6 mb-0">
+                        <p class="fs-6 mb-0 d-flex justify-content-left align-items-center ">
                             <img src="{{ asset('user_end/images/holiday.png'); }}" alt="">
                             Break Alert
                         </p>

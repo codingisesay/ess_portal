@@ -44,8 +44,8 @@
             <div class="one row"> 
                 <div class="col-md-3 mb-3">
                     <div class="attendance-header p-3">
-                        <h1>Average Working Hours</h1>
-                        <hr>
+                        <h1 class="mb-0">Average Working Hours</h1>
+                        <hr class="my-2"  >
                         <canvas id="attendanceChart" style="width: 600px; height: 450px;"></canvas>
                         <script>
                             // Passing PHP variables into JavaScript using Blade
@@ -101,7 +101,7 @@
                 
                 <div class="col-md-3 mb-3">
                     <div class="attendance-header p-3">
-                        <h1>Absenteeism Rate</h1><hr>
+                        <h1 class="mb-0">Absenteeism Rate</h1><hr class="my-2"  >
                         <div class="chart-container1" style="width: 100%; text-align: center; background-color:white; ">
                             <div style="width:65%" class='mx-auto mb-2'> <canvas id="chartContainer"></canvas></div>
                             <div class="d-flex justify-content-center align-items-center"> 
@@ -184,7 +184,7 @@
 
                 <div class="col-md-3 mb-3">  
                     <div class="attendance-header p-3">
-                        <h1>Leave Type</h1><hr>
+                        <h1 class="mb-0">Leave Type</h1><hr class="my-2"  >
                         <div class="leave-type-collection">
                             @foreach($leaveSummary as $leave)
                                 <button class="button" style="background-color: {{ $loop->index % 2 == 0 ? '#8a3366' : '#2B53C1' }};">
@@ -197,7 +197,7 @@
                  
                 <div class="col-md-3 mb-3">
                     <div class="attendance-header p-3">
-                        <h1>Upcoming Holidays</h1><hr>
+                        <h1 class="mb-0">Upcoming Holidays</h1><hr class="my-2"  >
                         <div class="holidays">
                             <div class="container-holiday">
                                 <ul class="holiday-list">
@@ -228,8 +228,8 @@
 
                 <div class="col-md-6 mb-3"> 
                     <div class="summary p-3">
-                        <h1>Leave Summary</h1>
-                        <hr>
+                        <h1 class="mb-0">Leave Summary</h1>
+                        <hr class="my-2"  >
                         <div class="leave-summary-container row justify-content-around">
                             <!-- Leave cards will be dynamically inserted here -->
                             @foreach($leaveSummary as $index => $leave)
@@ -317,7 +317,7 @@
                                     
                 <div class="col-md-6 mb-3">
                     <div class="applied-leaves p-3 overflow-auto"  >
-                        <h1>Applied Leave</h1> <hr>
+                        <h1 class="mb-0">Applied Leave</h1> <hr class="my-2"  >
                         <div style="height:300px; overflow-y:auto" >
                             <div class="container">
                                 @foreach($appliedLeaves as $leave)
@@ -377,7 +377,7 @@
 
                 <div class="col-md-6 mb-3">              
                     <div class="attendance p-3">
-                        <h1>Attendance Overview</h1> <hr>
+                        <h1 class="mb-0">Attendance Overview</h1> <hr class="my-2"  >
                             <canvas id="newAttendanceChart" width="900px" height="430px"></canvas>
 
                             <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -440,7 +440,7 @@
                 
                 <div class="col-md-6 mb-3">  
                     <div class="attendance-header p-3 ">
-                        <h1>Absenteeism Rate</h1> <hr>
+                        <h1 class="mb-0">Absenteeism Rate</h1> <hr class="my-2"  >
                         <div class="container-absent">
                             <div class="controls">
                                 <select id="yearSelect"></select>
@@ -556,7 +556,7 @@
 
                 <div class="col-12 mb-3">  
                     <div class="attendance-header p-3 ">
-                        <h1>Leave Balance Summary</h1><hr>
+                        <h1 class="mb-0">Leave Balance Summary</h1><hr class="my-2"  >
                         <table>
                             <thead>
                                 <tr>

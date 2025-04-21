@@ -1,9 +1,9 @@
-.employee-info p weak,
-.employee-info p strong {
+.employee-info .key-val-flex-block p weak,
+.employee-info .key-val-flex-block p strong {
     width: 100%;
 }
 
-.employee-info p {
+.employee-info .key-val-flex-block p {
     display: block;
 }
 
@@ -177,9 +177,6 @@ header {
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     height: 70vh;
     margin: auto;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
     gap: 15px;
     overflow-y: auto;
 }

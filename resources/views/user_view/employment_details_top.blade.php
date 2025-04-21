@@ -11,14 +11,15 @@
             <?php 
             $profileimahe = session('profile_image');
             ?>
-            <img id="profile-image" src="{{ asset('storage/'.$profileimahe) }}" class="profile-image" alt="Profile Picture"> <br>
+            <img id="profile-image" src="{{ asset('storage/'.$profileimahe) }}" class="profile-image mb-2" alt="Profile Picture"> 
             <h4 id="emp-name">{{ ucfirst($userDetails->name ?? '-') }}</h4>
         </div>
         <hr>
-        <p><strong>Designation</strong> <weak id="emp-designation">{{ ucfirst($userDetails->designation_name ?? '-') }}</weak></p>
-        <p><strong>Department</strong> <weak  id="emp-department">{{ ucfirst($userDetails->department_name ?? '-') }}</weak></p>
-        <p><strong>Office</strong> <weak id="emp-city">{{ ucfirst($userDetails->branch_name ?? '-') }}</weak></p>
-        <p><strong>Reporting Manager</strong> <weak  id="emp-manager">{{ ucfirst($userDetails->reporting_manager_name ?? '-') }}</weak></p>
- 
+        <div class="key-val-flex-block">
+            <p><strong>Designation</strong> <weak id="emp-designation">{{ ucfirst($userDetails->designation_name ?? '-') }}</weak></p>
+            <p><strong>Department</strong> <weak  id="emp-department">{{ ucfirst($userDetails->department_name ?? '-') }}</weak></p>
+            <p><strong>Office</strong> <weak id="emp-city">{{ ucfirst($userDetails->branch_name ?? '-') }}</weak></p>
+            <p><strong>Reporting Manager</strong> <weak  id="emp-manager">{{ ucfirst($userDetails->reporting_manager_name ?? '-') }}</weak></p>
+        </div>
     </div> 
          
