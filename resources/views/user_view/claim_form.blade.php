@@ -7,14 +7,23 @@
   <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>-->
   <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js"></script> 
- <!-- Option 1: Include in HTML -->
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css">
   <link rel="stylesheet" href="{{ asset('/user_end/css/homepage.css') }}">
-  <link rel="stylesheet" href="{{ asset('user_end/css/leave.css') }}">
-  <link href="{{ asset('bootstrapcss/bootstrap.min.css') }}" rel="stylesheet"> 
+ <!-- Option 1: Include in HTML --> 
+  <link rel="stylesheet" href="{{ asset('user_end/css/leave.css') }}"> 
+  <link rel="stylesheet" href="{{ asset('/user_end/css/homepage.css') }}"> 
 <style>
 .reimbursement-container {
-  margin: 15px 20px;
+  margin: 10px 20px;
+}
+th {
+  background-color: #8A3366 !important;}
+  .submit2 {
+    border: 1px solid #8A3366 !important;
+    color: #8A3366;background:white;
+    padding: 7px 12px;
+    border-radius: 8px;
+    margin-left: auto;
+    border: none;
 }
 .reimbursement-details{background:white; padding:20px; border-radius:10px; box-shadow:0 0 10px rgba(0,0,0,0.1);}
 </style>
@@ -28,7 +37,7 @@
   <div class="reimbursement-details">
     <!-- Initial form details -->
     <div class="row mb-2">
-      {{-- <div class="col-3">
+      <!-- {{-- <div class="col-3">
         <div class="form-group">
             <div class="floating-label-wrapper">
                 <input type="text" class="input-field" value="John Doe" disabled >
@@ -43,7 +52,7 @@
                 <label for="project">Claim Date</label>
             </div>
         </div>          
-      </div>   --}}
+      </div>   --}} -->
       <div class="col-3">
         <div class="form-group">
             <div class="floating-label-wrapper">
@@ -57,42 +66,43 @@
 
      <div class="d-flex justify-content-between align-items-center mb-3">
      <h4  class="my-2">Bills Details</h4>
-        <button type="button" class="btn btn-outline-primary " onclick="addRow()"> + Add Bills</button>
+        <button type="button" class="submit2" onclick="addRow()"> +&nbsp;Add&nbsp;Bills</button>
     </div>
 
     <div class="clearfix"></div>
 
-    <!-- Bills Table -->
-    <table class="table table-striped" id="billsTable">
-      <thead>
-        <tr>
-          <th>S.no</th>
-          <th>Date</th>
-          <th>Type</th>
-          <th>Max Amount</th>
-          <th>Entry Amount</th>
-          <th>Upload Bill</th>
-          <th>Description</th>
-          <th class="text-center">Action</th>
-        </tr>
-      </thead>
-      <tbody>
-        <!-- Dynamic rows will be added here -->
-      </tbody>  
-          
-      <tfoot>
-   
+    <div class="tbl-container">
+      <!-- Bills Table -->
+      <table class="table table-striped" id="billsTable">
+        <thead>
+          <tr>
+            <th>S.no</th>
+            <th>Date</th>
+            <th>Type</th>
+            <th>Max Amount</th>
+            <th>Entry Amount</th>
+            <th>Upload Bill</th>
+            <th>Description</th>
+            <th class="text-center">Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- Dynamic rows will be added here -->
+        </tbody>  
+            
+        <tfoot>
+    
 
-        <tr>
-          <td colspan="3"><strong>Total</strong></td>
-          <td><strong id="totalMaxAmount">₹0.00</strong></td>
-          <td><strong id="totalEntryAmount">₹0.00</strong></td>
-          <td colspan="3"></td>
-        </tr>
-      </tfoot>
-    </table>
-
-    <!-- Submit Button -->
+          <tr>
+            <td colspan="3"><strong>Total</strong></td>
+            <td><strong id="totalMaxAmount">₹0.00</strong></td>
+            <td><strong id="totalEntryAmount">₹0.00</strong></td>
+            <td colspan="3"></td>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
+    <!-- Submit Button --> <br>
      <div style="text-align:right">
     <button type="submit" class="apply-leave">&nbsp;Submit&nbsp;</button>
 </div>
@@ -147,7 +157,7 @@ function updateTotals() {
       <td><input type="number" name="entered_amount[]" class="form-control" step="0.01" required></td>
       <td><input type="file" name="bills[]" class="form-control" accept=".jpg,.jpeg,.png,.pdf" required></td>
       <td><textarea class="form-control" rows="1" name="comments[]" placeholder="Comment"></textarea></td>
-      <td><button type="button" class="btn text-danger" onclick="deleteRow(this)"><i class="bi bi-trash"></i></button></td>
+      <td><button type="button" class="btn border-0 text-danger" onclick="deleteRow(this)"><x-icon name="trash" /></button></td>
     `;
 
     tableBody.appendChild(row);

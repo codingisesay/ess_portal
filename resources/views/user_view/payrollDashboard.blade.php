@@ -174,8 +174,10 @@
                   </div>
                   <div class="col-6">
                       <div class="payment-details">
-                        <button class="btn btn-outline-secondary py-0">Show/hide details</button>
-                        <br>   <br>
+                        <button class="btn btn-outline-secondary py-0 d-flex justify-centent-center align-items-center"> 
+                            <x-icon name="eyefill" />&nbsp; Show/hide details
+                        </button>
+                        <br> 
                           <div class="payment-row1" >
                               <small class="payment-label" >Take Home</small><br/>
                               <h4 class="payment-amount">80,000.00</h4>
@@ -273,6 +275,16 @@
                                 <span class="{{ $claim->status == 'In Review' ? 'review' : '' }}">
                                     {{ $claim->status }}
                                 </span>
+                            </td>
+                            <td>
+                                <a href="{{ route('review_claim_form', ['reimbursement_traking_id' => $claim->tracking_id]) }}" class="btn btn-primary btn-sm me-2">
+                                    <x-icon name="eyefill" />
+                                </a>
+                                @if ($claim->status == 'Review')
+                                    <a href="{{ route('edit_claim_form', ['reimbursement_traking_id' => $claim->tracking_id]) }}" class="btn btn-primary btn-sm">
+                                        <x-icon name="edit" />
+                                    </a>
+                                @endif
                             </td>
                         </tr>
                     @endforeach

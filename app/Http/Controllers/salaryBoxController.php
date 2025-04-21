@@ -423,6 +423,38 @@ class salaryBoxController extends Controller
     return view('user_view.managers_claim');
  }
 
+ public function loadreviewclaimform($reimbursement_traking_id = null)
+{
+    $loginUserInfo = Auth::user();
+
+    if (!$reimbursement_traking_id) {
+        return redirect()->route('PayRollDashboard')->with('error', 'Reimbursement Tracking ID is required.');
+    }
+
+    $reimbursementClaims = DB::table('reimbursement_trackings')
+        ->join('reimbursement_form_entries', 'reimbursement_trackings.id', '=', 'reimbursement_form_entries.reimbursement_trackings_id')
+        ->join('organisation_reimbursement_types', 'reimbursement_form_entries.organisation_reimbursement_types_id', '=', 'organisation_reimbursement_types.id')
+        ->select(
+            'reimbursement_trackings.token_number',
+            'reimbursement_form_entries.date as entry_date',
+            'reimbursement_form_entries.amount as entry_amount',
+            'reimbursement_form_entries.upload_bill',
+            'reimbursement_form_entries.description_by_applicant',
+            'reimbursement_trackings.status as status',
+            'organisation_reimbursement_types.name as type_name'
+        )
+        ->where('reimbursement_trackings.id', '=', $reimbursement_traking_id)
+        ->where('reimbursement_trackings.user_id', '=', $loginUserInfo->id)
+        ->get();
+
+    $reim_type = DB::table('organisation_reimbursement_types')
+        ->where('organisation_id', '=', $loginUserInfo->organisation_id)
+        ->where('status', '=', 'Active')
+        ->get();
+
+    return view('user_view.review_claim_from', compact('reimbursementClaims', 'reimbursement_traking_id', 'reim_type'));
+}
+
  public function loadMaxAmoutRm($rm_id){
 
     $data = DB::table('organisation_reimbursement_type_restrictions')
@@ -518,5 +550,78 @@ $insertedId = $reimbursement->id;
 
  }
  
+
+
+public function loadEditClaimForm($reimbursement_traking_id = null)
+{
+    $loginUserInfo = Auth::user();
+
+    if (!$reimbursement_traking_id) {
+        return redirect()->route('PayRollDashboard')->with('error', 'Reimbursement Tracking ID is required.');
+    }
+
+    $reimbursementClaims = DB::table('reimbursement_trackings')
+        ->join('reimbursement_form_entries', 'reimbursement_trackings.id', '=', 'reimbursement_form_entries.reimbursement_trackings_id')
+        ->join('organisation_reimbursement_types', 'reimbursement_form_entries.organisation_reimbursement_types_id', '=', 'organisation_reimbursement_types.id')
+        ->select(
+            'reimbursement_form_entries.id',
+            'reimbursement_form_entries.date as entry_date',
+            'reimbursement_form_entries.amount as entry_amount',
+            'reimbursement_form_entries.upload_bill',
+            'reimbursement_form_entries.description_by_applicant',
+            'reimbursement_form_entries.organisation_reimbursement_types_id',
+            'organisation_reimbursement_types.name as type_name',
+            'reimbursement_trackings.description',
+            'organisation_reimbursement_type_restrictions.max_amount'
+        )
+        ->leftJoin('organisation_reimbursement_type_restrictions', 'organisation_reimbursement_types.id', '=', 'organisation_reimbursement_type_restrictions.reimbursement_type_id')
+        ->where('reimbursement_trackings.id', '=', $reimbursement_traking_id)
+        ->where('reimbursement_trackings.user_id', '=', $loginUserInfo->id)
+        ->get();
+
+    $reim_type = DB::table('organisation_reimbursement_types')
+        ->where('organisation_id', '=', $loginUserInfo->organisation_id)
+        ->where('status', '=', 'Active')
+        ->get();
+
+    return view('user_view.edit_claim_form', compact('reimbursementClaims', 'reimbursement_traking_id', 'reim_type'));
+}
+
+public function updateClaimForm(Request $request, $reimbursement_traking_id)
+{
+    $loginUserInfo = Auth::user();
+
+    // Update reimbursement tracking description
+    DB::table('reimbursement_trackings')
+        ->where('id', $reimbursement_traking_id)
+        ->where('user_id', $loginUserInfo->id)
+        ->update([
+            'description' => $request->clam_comment,
+            'updated_at' => now(),
+        ]);
+
+    // Loop through claims and update reimbursement entries
+    foreach ($request->bill_date as $i => $billDate) {
+        $filePath = null;
+
+        // Upload bill file if present
+        if ($request->hasFile("bills.$i")) {
+            $filePath = $request->file("bills.$i")->store('bills', 'public');
+        }
+
+        DB::table('reimbursement_form_entries')
+            ->where('reimbursement_trackings_id', $reimbursement_traking_id)
+            ->update([
+                'date' => $billDate,
+                'organisation_reimbursement_types_id' => $request->type[$i],
+                'amount' => $request->entered_amount[$i],
+                'upload_bill' => $filePath ?? DB::raw('upload_bill'), // Keep existing file if no new file is uploaded
+                'description_by_applicant' => $request->comments[$i] ?? null,
+                'updated_at' => now(),
+            ]);
+    }
+
+    return redirect()->route('PayRollDashboard')->with('success', 'Reimbursement claim updated successfully.');
+}
 
 }

@@ -3,7 +3,8 @@
 @section('content')
 
 <head>
-    <link rel="stylesheet" href="{{ asset('/user_end/css/setting.css') }}">
+<link rel="stylesheet" href="{{ asset('/user_end/css/setting.css') }}">
+<link rel="stylesheet" href="{{ asset('/user_end/css/homepage.css') }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="stylesheet" href="{{ asset('errors/error.css') }}">
     
@@ -30,7 +31,7 @@
             </ul>
             </div>
             @endif
-        <h1>Settings</h1>
+        <h2>Settings</h2>
         <div class="accordion">
             <!-- Upcoming Holidays -->
             <?php 
