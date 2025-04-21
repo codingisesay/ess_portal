@@ -15,17 +15,14 @@ class SalaryHelper
      * @param int $leaveDays
      * @return float
      */
-    public static function calculateSalary($monthlySalary, $monthDays, $workingHoursPerDay, $presentDays, $absentDays, $leaveDays)
+    public static function calculateSalary($month_start,$month_end,$year,$user_id)
     {
-        // Total payable days = present + paid leave
-        $payableDays = $presentDays + $leaveDays;
+     
 
-        // Salary per day
-        $salaryPerDay = $monthlySalary / $monthDays;
 
-        // Final salary
-        $finalSalary = $salaryPerDay * $payableDays;
-
-        return round($finalSalary, 2);
+        
+        
+    
+        
     }
 }

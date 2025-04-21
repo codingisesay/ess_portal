@@ -9,6 +9,8 @@ use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
+use Carbon\Carbon;
+use Carbon\CarbonPeriod;
 
 
 
@@ -37,7 +39,25 @@ class settingController extends Controller
         ->where('organisation_id',$loginUserInfo->organisation_id)
         ->where('status','Active')
         ->get();
-        return view('user_view.setting',compact('users','title','salary_templates','users_for_salary'));
+         
+        $dataofcurrentyear = DB::table('salary_cycles')
+        ->where('organisation_id',$loginUserInfo->organisation_id)
+        ->where('status','Active')
+        ->first();
+
+        $start = Carbon::parse($dataofcurrentyear->start_date);
+        $end = Carbon::parse($dataofcurrentyear->end_date);
+
+        $period = CarbonPeriod::create($start->startOfMonth(), '1 month', $end->startOfMonth());
+
+        $monthsInCycle = [];
+        foreach ($period as $date) {
+        // $monthsInCycle[] = $date->format('F'); // Full month name like 'April'
+        $monthsInCycle[] = $date->format('F Y');
+        }
+
+// dd($monthsInCycle);
+        return view('user_view.setting',compact('users','title','salary_templates','users_for_salary','monthsInCycle','dataofcurrentyear'));
     }
 
     public function saveThought(Request $request)
@@ -296,4 +316,94 @@ return redirect()->route('user.setting')->with('error','Calendra Is Not Created 
 
 
     }
+
+    public function processSalary(Request $request){
+        $data = $request->validate([
+            'cycle_id' => 'required',
+            'selected_month' => 'required',
+            
+        ]);
+
+        $loginUserInfo = Auth::user();
+       
+       $users = DB::table('users')
+       ->where('organisation_id', '=', $loginUserInfo->organisation_id)
+       ->where('user_status', '=', 'Active')
+       ->where('id', '=', 2) //This is for testing, after function body ready remove this condition
+       ->get();
+
+       //Calculate total days in selected months
+
+       $monthYearString = $data['selected_month'];
+
+       $date = Carbon::createFromFormat('F Y', $monthYearString);
+       
+       $monthName = $date->format('F'); // April (Alphbets month)
+       $monthNumber = $date->format('m'); // 4 (numeric month)
+       $year = $date->format('Y');  // 2025
+
+       $month = date('n', strtotime($monthName));
+       $dateforDays = Carbon::create($year, $month, 1);
+       
+       $totalDaysInSelectedMonth = $dateforDays->daysInMonth; // Total  Days in selected month
+
+       //Calcualte Week Offs in selected month and holidays
+
+       $weekOffsAndHolidays = DB::table('calendra_masters')
+       ->whereYear('date', $year)
+       ->whereMonth('date', $month) // or $monthNumber
+       ->where('organisation_id',$loginUserInfo->organisation_id)
+       ->where(function($query) {
+        $query->where('week_off', 'Yes')
+              ->orWhere('holiday', 'Yes');
+    })->get();
+
+    $totalWorkingDaysInMonth = $totalDaysInSelectedMonth - count($weekOffsAndHolidays);  // Total Working Days in the selected month
+
+    //    dd($totalWorkingDaysInMonth);
+
+       foreach($users as $user){
+       //Calculate Taken Leave by User in selected month
+       $leaves = DB::table('leave_applies')
+       ->where('user_id',$user->id)
+       ->whereYear('start_date',$year)
+       ->whereMonth('start_date',$month)
+       ->where('leave_approve_status', 'Approved')
+       ->get();
+
+    //    dd($leaves);
+   
+   $totalLeaveDays = 0;
+   
+   foreach ($leaves as $leave) {
+       $fromDate = Carbon::parse($leave->start_date);
+       $toDate = Carbon::parse($leave->end_date);
+   
+       // If leave is for the same day
+       if ($fromDate->eq($toDate)) {
+           if ($leave->half_day === 'First Half' || $leave->half_day === 'Second Half') {
+               $totalLeaveDays += 0.5;
+           } else {
+               $totalLeaveDays += 1;
+           }
+       } else {
+           // Multi-day leave: count days between from and to (inclusive)
+           $days = $fromDate->diffInDays($toDate) + 1;
+           $totalLeaveDays += $days;
+       }
+   }
+   
+$noOfDaysForPaySalary = $totalWorkingDaysInMonth - $totalLeaveDays;
+
+dd($noOfDaysForPaySalary);
+
+
+       } 
+        
+
+
+
+       
+    }
+
 }
