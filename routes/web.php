@@ -258,7 +258,7 @@ Route::middleware(['auth'])->group(function () {
  Route::get('user/review_claim_form/{reimbursement_traking_id}',[salaryBoxController::class,'loadreviewclaimform'])->name('review_claim_form');
  Route::get('user/edit_claim_form/{reimbursement_traking_id}', [salaryBoxController::class, 'loadEditClaimForm'])->name('edit_claim_form');
  
- Route::post('user/update_reimbursement_status/{trackingId}', [salaryBoxController::class, 'updateReimbursementStatus'])->name('update_reimbursement_status');
+ Route::post('user/update_reimbursement_status/{reimbursement_traking_id}', [salaryBoxController::class, 'updateReimbursementStatus'])->name('update_reimbursement_status');
  Route::post('user/insert_Reimbursement_Form',[salaryBoxController::class,'insertReimbursementForm'])->name('insert_Reimbursement_Form');
 
  Route::get('user/get_max_amount/{rm_id}',[salaryBoxController::class,'loadMaxAmoutRm'])->name('get_max_amount');

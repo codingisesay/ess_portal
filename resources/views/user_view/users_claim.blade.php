@@ -23,6 +23,9 @@
         <p class="claim-summary m-0" onclick="toggleBody(this)">Tracking ID :<strong> {{ $reimbursement->token_number }} </strong></p>
         <div>
             <hr>
+            <form action="{{ route('update_reimbursement_status', $reimbursement_traking_id) }}" method="POST">
+    @csrf
+    <input type="hidden" name="status" id="status" value="">
             <!-- <p class="claim-summary">Total Amount: Rs. {{ number_format($reimbursement->total_amount, 2) }}</p> -->
             <p class="">Description:<strong> {{ $reimbursement->description }}</strong></p>
                 <div class=" tbl-container "> <!-- Open by default -->
@@ -63,8 +66,8 @@
                                     </label>
                                 </td>
                                 <td>
-                                    <input class="input-field py-1 " type='text' placeholder="Remark" style="width:200px" />
-                                </td>   
+                                <input type="text" name="remarks[{{ $detail->entry_id }}]" value="" />
+                                </td>
                             </tr>
                             @endforeach
                         </tbody>
@@ -87,9 +90,8 @@
                         </div>
                     </div>
                     <div class="col-md-6 text-end  mt-2">
-                    <form action="{{ route('update_reimbursement_status', $reimbursement_traking_id) }}" method="POST">
-                        @csrf
-                        <input type="hidden" name="remark" id="remark-input" value="">
+                   
+                        <!-- <input type="hidden" name="status" id="status" value=""> -->
                         <button type="button" class="py-1 mx-1 px-3 btn-warning text-white" onclick="submitForm('REVERT')">Revert</button>
                         <button type="button" class="py-1 mx-1 px-3 btn-danger" onclick="submitForm('REJECTED')">Reject</button>
                         <button type="button" class="py-1 mx-1 px-3 btn-success" onclick="submitForm('APPROVED')">Approve</button>
@@ -112,7 +114,7 @@
 <script>
     function submitForm(status) {
         // Set the remark input value to the status
-        document.getElementById('remark-input').value = status;
+        document.getElementById('status').value = status;
 
         // Submit the form
         const form = event.target.closest('form');
