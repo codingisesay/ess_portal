@@ -220,6 +220,5 @@ error_reporting(0);
         // Call the function to display the logged-in employee details
         displayEmployeeDetails(empNo, empName, empDesignation, empManager, empDepartment, empCity, empPhone, empAlternatephone, empEmail, empContactperson, empContactnumber, profileImage, permanentAddress, correspondanceAddress);
     };
-</script>
- 
+</script> 
 @endsection

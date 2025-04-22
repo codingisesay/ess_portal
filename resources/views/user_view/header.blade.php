@@ -30,7 +30,7 @@ $userDetails = app('App\Http\Controllers\headerController')->getUserDetails();
     </script>
     <header>
         <div class="logo">
-            <img class="px-3" src="{{ asset('user_end/images/STPL Logo with TagLine HD Transparent.png') }}" alt="STPL Logo">
+            <img class="px-1" src="{{ asset('user_end/images/STPL Logo with TagLine HD Transparent.png') }}" alt="STPL Logo">
         </div>
         <!-- 🔹 MENU BUTTON -->
         <button class="menu-btn"><i class="fas fa-bars"></i></button>

@@ -757,7 +757,7 @@ table button {
 /* Upcoming Anniversary */
 .upcoming-anniversary {
     /* max-width: 600px; */
-    margin-top: 13px;
+    /* margin-top: 13px; */
     /* width: 268px; */
     width: 100%;
     /* margin-left: 90px; */
@@ -960,7 +960,7 @@ label {
     width: 100%;
     /* max-width: 339px; */
     /* Align with the width of .greeting */
-    margin: 10px auto;
+    /* margin: 10px auto; */
     font-family: Arial, sans-serif;
     box-sizing: border-box;
     flex-basis: auto;

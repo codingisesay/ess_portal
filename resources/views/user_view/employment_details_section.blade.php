@@ -30,8 +30,10 @@
             {{ ucfirst(trim($userDetails->per_country) ? $userDetails->per_country . ',' : '') }}
             {{ ucfirst(trim($userDetails->per_pincode) ? $userDetails->per_pincode : '') }}
 
-            </weak></p>
+            </weak></p> 
             <p><strong>Correspondance</strong> <weak id="emp-correspondance-address">
+      
+ 
             {{ ucfirst($userDetails->cor_building_no ? $userDetails->cor_building_no . ',' : '') }}
             {{ ucfirst(trim($userDetails->cor_name_of_premises) ? $userDetails->cor_name_of_premises . ',' : '') }}
             {{ ucfirst(trim($userDetails->cor_nearby_landmark) ? $userDetails->cor_nearby_landmark . ',' : '') }}
@@ -50,5 +52,24 @@
                 
         </div>
     </div>
+  
+    <script>
+    window.addEventListener('DOMContentLoaded', function () {
+        const elem = document.getElementById('emp-correspondance-address');
+        if (elem) {
+            let raw = elem.textContent;
+
+            let cleaned = raw
+                .split(',')
+                .map(s => s.trim())
+                .filter(s => s !== '')
+                .join(', ');
+
+            elem.textContent = cleaned;
+            console.log( 'data  :', cleaned)
+        }
+    });
+</script>
+
    
 <!-- </div> -->
