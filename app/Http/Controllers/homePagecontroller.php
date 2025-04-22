@@ -555,9 +555,41 @@ $reimbursementList = DB::table('reimbursement_trackings')
     )
     ->get();
 
+    // $approvedClaimsByManager = DB::table('reimbursement_trackings')
+    // ->join('emp_details as employees', 'reimbursement_trackings.user_id', '=', 'employees.user_id')
+    // ->join('emp_details as managers', 'employees.reporting_manager', '=', 'managers.user_id')
+    // ->join('reimbursement_form_entries', 'reimbursement_trackings.id', '=', 'reimbursement_form_entries.reimbursement_trackings_id')
+    // ->select(
+    //     'managers.user_id as manager_id',
+    //     'managers.employee_name as manager_name',
+    //     DB::raw('COUNT(DISTINCT reimbursement_trackings.id) as approved_claims') // Count distinct claims
+    // )
+    // ->where('reimbursement_trackings.status', '=', 'Approved') // Filter only approved claims
+    // ->groupBy('managers.user_id', 'managers.employee_name') // Group by manager ID and name
+    // ->get();
+
+    $approvedClaimsByManager = DB::table('reimbursement_trackings')
+    ->join('emp_details as employees', 'reimbursement_trackings.user_id', '=', 'employees.user_id')
+    ->join('emp_details as managers', 'employees.reporting_manager', '=', 'managers.user_id')
+    ->join('reimbursement_form_entries', 'reimbursement_trackings.id', '=', 'reimbursement_form_entries.reimbursement_trackings_id')
+    ->select(
+        'managers.user_id as manager_id',
+        'managers.employee_name as manager_name',
+        'managers.employee_no as manager_employee_no', // Include manager's employee number
+        'employees.employee_no', // Include employee_no
+        'employees.employee_name as employee_name', // Include employee name
+       'reimbursement_trackings.id as reimbursement_traking_id', // Include reimbursement tracking ID
+        'reimbursement_form_entries.date as entry_date',
+        'reimbursement_form_entries.amount as entry_amount',
+        'reimbursement_form_entries.upload_bill',
+        'reimbursement_form_entries.description_by_applicant',
+        'reimbursement_form_entries.description_by_manager'
+    )
+    ->where('reimbursement_trackings.status', '=', 'Approved') // Filter only approved claims
+    ->get();
 
     // Return a view with the logs and additional data
-    return view('user_view.homepage', compact('title','logs', 'thoughtOfTheDay', 'newsAndEvents', 'upcomingBirthdays','todayBirthdays', 'anniversaries', 'toDoList', 'currentMonth', 'currentDay', 'leaveUsage','leaveLists', 'holidays_upcoming', 'week_offs', 'upcomingHolidays', 'reimbursementList'));
+    return view('user_view.homepage', compact('title','logs', 'thoughtOfTheDay', 'newsAndEvents', 'upcomingBirthdays','todayBirthdays', 'anniversaries', 'toDoList', 'currentMonth', 'currentDay', 'leaveUsage','leaveLists', 'holidays_upcoming', 'week_offs', 'upcomingHolidays', 'reimbursementList', 'approvedClaimsByManager'));
 }
 
     

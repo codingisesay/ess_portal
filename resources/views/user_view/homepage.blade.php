@@ -508,40 +508,16 @@ error_reporting(0);
                         </tr>
                     </thead>
                     <tbody>
-                        @if (!empty($accountList))
-                            @foreach ($accountList as $account)
-                                <tr>
-                                    <td>{{ $account->manager_id }}</td>
-                                    <td>{{ $account->name }}</td>
-                                    <td>{{ $account->approved_claims }}</td>
-                                    <td>
-                                        <button onclick="viewAccountDetails({{ $account->id }})">View</button>
-                                    </td>
-                                </tr>
-                            @endforeach
-                        @else
-                            <tr>
-                                <!-- <td colspan="4">No account details available.</td> -->
-                            </tr>
-                            <!-- Dummy Data -->
-                            <tr>
-                                <td>EMP001</td>
-                                <td>Paresh Sir</td>
-                                <td>04</td>
-                                <td>
-                                <a href="{{ route('manager_claims') }}"><button>View</button></a>
-                                </td>
-                            </tr>
-                            <tr>
-                            <td>EMP001</td>
-                                <td>Akash Sir</td>
-                                <td>04</td>
-                                <td>
-                                <a href="{{ route('manager_claims') }}"><button>View</button></a>
-                                </td>
-                                
-                            </tr>
-                        @endif
+                        @foreach ($approvedClaimsByManager as $manager)
+                        <tr>
+                            <td>{{ $manager->manager_employee_no }}</td>
+                            <td>{{ $manager->manager_name }}</td>
+                            <td>{{ $manager->employee_name }}</td>
+                            <td>
+                            <a href="{{ route('manager_claims', ['manager_id' => $manager->manager_id, 'reimbursement_traking_id' => $manager->reimbursement_traking_id]) }}" class="btn btn-primary btn-sm">View</a>
+                           </td>
+                        </tr>
+                        @endforeach
                     </tbody>
                 </table>
             </div>

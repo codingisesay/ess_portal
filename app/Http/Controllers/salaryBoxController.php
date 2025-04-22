@@ -421,9 +421,50 @@ class salaryBoxController extends Controller
     return view('user_view.users_claim', compact('reimbursementList', 'reimbursement_traking_id'));
 }
 
- public function loadMangerClaims(){
-    return view('user_view.managers_claim');
- }
+public function loadMangerClaims($manager_id, $reimbursement_traking_id)
+{
+    // Fetch claims approved by employees under the reporting manager and specific reimbursement tracking ID
+    $managerClaims = DB::table('reimbursement_trackings')
+        ->join('emp_details as employees', 'reimbursement_trackings.user_id', '=', 'employees.user_id')
+        ->join('reimbursement_form_entries', 'reimbursement_trackings.id', '=', 'reimbursement_form_entries.reimbursement_trackings_id')
+        ->select(
+            'reimbursement_form_entries.id as entry_id',
+            'reimbursement_form_entries.date as entry_date',
+            'reimbursement_form_entries.amount as entry_amount',
+            'reimbursement_form_entries.upload_bill',
+            'reimbursement_form_entries.description_by_applicant',
+            'reimbursement_form_entries.description_by_manager',
+            'reimbursement_trackings.id as tracking_id',
+            'reimbursement_trackings.token_number',
+            'employees.employee_no',
+            'employees.employee_name',
+            DB::raw('SUM(reimbursement_form_entries.amount) as total_amount'),
+            'reimbursement_trackings.status',
+            'reimbursement_trackings.description',
+            'reimbursement_trackings.created_at as claim_date'
+        )
+        ->where('employees.reporting_manager', '=', $manager_id) // Filter by reporting manager
+        ->where('reimbursement_trackings.id', '=', $reimbursement_traking_id) // Filter by reimbursement tracking ID
+        ->where('reimbursement_trackings.status', '=', 'Approved') // Only show approved claims
+        ->groupBy(
+            'reimbursement_form_entries.id',
+            'reimbursement_form_entries.date',
+            'reimbursement_form_entries.amount',
+            'reimbursement_form_entries.upload_bill',
+            'reimbursement_form_entries.description_by_applicant',
+            'reimbursement_form_entries.description_by_manager',
+            'reimbursement_trackings.id',
+            'reimbursement_trackings.token_number',
+            'employees.employee_no',
+            'employees.employee_name',
+            'reimbursement_trackings.status',
+            'reimbursement_trackings.description',
+            'reimbursement_trackings.created_at'
+        )
+        ->get();
+
+    return view('user_view.managers_claim', compact('managerClaims', 'reimbursement_traking_id'));
+}
 
  public function loadreviewclaimform($reimbursement_traking_id = null)
 {
@@ -454,7 +495,12 @@ class salaryBoxController extends Controller
         ->where('status', '=', 'Active')
         ->get();
 
-    return view('user_view.review_claim_from', compact('reimbursementClaims', 'reimbursement_traking_id', 'reim_type'));
+         // Fetch the token number for the tracking ID
+    $tokenNumber = DB::table('reimbursement_trackings')
+    ->where('id', '=', $reimbursement_traking_id)
+    ->value('token_number');
+
+    return view('user_view.review_claim_from', compact('reimbursementClaims', 'reimbursement_traking_id', 'reim_type', 'tokenNumber'));
 }
 
  public function loadMaxAmoutRm($rm_id){
@@ -692,7 +738,7 @@ public function updateReimbursementStatus(Request $request, $reimbursement_traki
         'status' => 'required|string',
         'remarks' => 'array', // Ensure remarks is an array
         'remarks.*' => 'nullable|string', // Each remark can be nullable
-        'task_name' => 'required|string|max:200', // Validate the task_name field
+        'task_name' => 'nullable|string|max:200', // Validate the task_name field
     ]);
 
     $status = $data['status'];
@@ -719,13 +765,13 @@ public function updateReimbursementStatus(Request $request, $reimbursement_traki
             ]);
     }
 
- // Update the comments column in assign_reimbursement_tokens
- DB::table('assign_reimbursement_tokens')
- ->where('reimbursement_tracking_id', $reimbursement_traking_id)
- ->update([
-     'comments' => $taskName, // Save the task_name in the comments column
-     'updated_at' => now(),
- ]);
+    // Update the comments column in assign_reimbursement_tokens
+    DB::table('assign_reimbursement_tokens')
+    ->where('reimbursement_tracking_id', $reimbursement_traking_id)
+    ->update([
+        'comments' => $taskName, // Save the task_name in the comments column
+        'updated_at' => now(),
+    ]);
 
     return redirect()->route('PayRollDashboard')->with('success', 'Reimbursement status updated successfully.');
 }

@@ -254,7 +254,7 @@ Route::middleware(['auth'])->group(function () {
  Route::get('user/PayRollDashboard',[salaryBoxController::class,'loadDashboard'])->name('PayRollDashboard');
  Route::get('user/claim_form',[salaryBoxController::class,'loadclaimform'])->name('claim_form');
  Route::get('user/clam_record/{user_id},{reimbursement_traking_id}', [salaryBoxController::class, 'loadUserClaims'])->name('user_claims');
- Route::get('user/manager_clam_record',[salaryBoxController::class,'loadMangerClaims'])->name('manager_claims');
+ Route::get('user/manager_clam_record/{manager_id}/{reimbursement_traking_id}',[salaryBoxController::class,'loadMangerClaims'])->name('manager_claims');
  Route::get('user/review_claim_form/{reimbursement_traking_id}',[salaryBoxController::class,'loadreviewclaimform'])->name('review_claim_form');
  Route::get('user/edit_claim_form/{reimbursement_traking_id}', [salaryBoxController::class, 'loadEditClaimForm'])->name('edit_claim_form');
  
