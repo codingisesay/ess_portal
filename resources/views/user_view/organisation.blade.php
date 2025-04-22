@@ -74,7 +74,7 @@ error_reporting(0);
  
 <div class="mx-4 mt-3">
     <div class="header mb-5">
-        <h2>Organization Hierarchy</h2>
+        <!-- <h4>Organization Hierarchy</h4> -->
         <div class="dropdown">
             <select id="display-option" onchange="changeDisplayMode()">
                 <option value="horizontal">Horizontal Organization Chart</option>
@@ -220,6 +220,5 @@ error_reporting(0);
         // Call the function to display the logged-in employee details
         displayEmployeeDetails(empNo, empName, empDesignation, empManager, empDepartment, empCity, empPhone, empAlternatephone, empEmail, empContactperson, empContactnumber, profileImage, permanentAddress, correspondanceAddress);
     };
-</script>
- 
+</script> 
 @endsection

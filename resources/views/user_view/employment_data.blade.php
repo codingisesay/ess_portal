@@ -27,7 +27,7 @@
 <body>
  
     <div class="row mx-3">
-        <h2> Employee Details</h2>
+        <!-- <h2> Employee Detailssss</h2> -->
           <!-- comman component below -->
         <div class="col-md-4 my-2">
             <div class="section custom-table h-100">

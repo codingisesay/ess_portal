@@ -30,7 +30,7 @@ $userDetails = app('App\Http\Controllers\headerController')->getUserDetails();
     </script>
     <header>
         <div class="logo">
-            <img class="px-3" src="{{ asset('user_end/images/STPL Logo with TagLine HD Transparent.png') }}" alt="STPL Logo">
+            <img class="px-1" src="{{ asset('user_end/images/STPL Logo with TagLine HD Transparent.png') }}" alt="STPL Logo">
         </div>
         <!-- 🔹 MENU BUTTON -->
         <button class="menu-btn"><i class="fas fa-bars"></i></button>
@@ -41,8 +41,8 @@ $userDetails = app('App\Http\Controllers\headerController')->getUserDetails();
                 <li><a href="{{ route('PayRollDashboard') }}"> <x-icon name="pay" />Payroll</a></li>
                 <li><a href="{{ route('leave_dashboard') }}"> <x-icon name="attendance" />Leave & Attendance</a></li> 
                 <li><a href="{{ route('user.view_organisation') }}"> <x-icon name="chart" />Orgnizations Chart</a></li> 
-                <li><a href="{{ route('user.hr.policy') }}"> <x-icon name="policy" />HR Policy</a></li>
-                <li><a href="{{ route('user.setting') }}"> <x-icon name="setting" />Settings</a></li>
+                <li><a href="{{ route('user.hr.policy') }}"> <x-icon name="policyfill" />HR Policy</a></li>
+                <li><a href="{{ route('user.setting') }}"> <x-icon name="settingfill" />Settings</a></li>
             </ul>
         </nav>
         <script>
