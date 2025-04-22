@@ -138,7 +138,7 @@
  
 
       <div class="payrole-dashboard">
-      <h2>Payroll</h2>
+      <!-- <h2>Payroll</h2> -->
         <div class="row">
           <!-- graph 1 -->
           <div class="col-5">

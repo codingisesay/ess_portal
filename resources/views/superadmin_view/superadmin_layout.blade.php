@@ -106,7 +106,7 @@ $name = Auth::guard('superadmin')->user()->name;
                 <li id="reimbursementManagementLi">
                     <strong onclick="toggleDropdown('reimbManagementDropdown', this)">
                         <strong>
-                        <x-icon name="tax" />&nbsp;<lable> Reimbursement Management</lable></strong>
+                        <x-icon name="cash" />&nbsp;<lable> Reimbursement Management</lable></strong>
                         <img src="{{ asset('user_end/images/arrow-right.svg') }}" alt="arrow" class="dropdown-arrow">
                     </strong>
                     <ul id="reimbManagementDropdown" class="submenu">

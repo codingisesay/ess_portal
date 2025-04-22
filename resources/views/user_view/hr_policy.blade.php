@@ -19,7 +19,7 @@ error_reporting(0);
     
     <!-- Header Section -->
     <div class="header mx-4">
-        <h2>Human Resource Policy</h2>
+        <!-- <h2>Human Resource Policy</h2> -->
         <div class="search-bar">
             <input type="text" placeholder="Search Category..." id="searchInput">
             <div class="search-icon-circle">

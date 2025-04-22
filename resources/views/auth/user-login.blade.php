@@ -17,7 +17,9 @@
     @enderror
     <div class="container">
         <div class="left-container">
-            <img src="{{ asset('user_end/images/Vector 58.jpg') }}" class="img-fluid vh-100 w-100 object-fit-cover" alt="Login Image">
+            
+        <!-- <img src="{{ asset('user_end/images/Vector 58.jpg') }}" alt="Login Image"> -->
+            <img src="{{ asset('user_end/images/loginbg.png') }}" class="img-fluid vh-100 w-100 object-fit-cover" alt="Login Image">
         </div>
         <div class="right-container">
 
@@ -44,6 +46,7 @@
                     <input type="text" name="email" id="username" placeholder=" " oninput="this.value = this.value.toUpperCase(); validateUsername()" required>
                     <label for="username">Username</label>
                     <span class="eye-icon">
+                        <!-- <x-icon name="userfill" /> -->
                         <img src="{{ asset('user_end/images/user.png') }}" alt="Username Icon" width="24" height="24">
                     </span>
                     <div class="text-danger small"></div>
@@ -54,6 +57,7 @@
                     <label for="password">Password</label>
                     <span class="eye-icon" onclick="togglePasswordVisibility('password')">
                         <img src="{{ asset('user_end/images/hidden.png') }}" alt="Show Password" width="24" height="24" id="password-icon">
+                        <!-- <x-icon name="eyefill" /> -->
                     </span>
                     <div class="text-danger small"></div>
                 </div>

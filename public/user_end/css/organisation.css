@@ -1,9 +1,9 @@
-.employee-info p weak,
-.employee-info p strong {
+.employee-info .key-val-flex-block p weak,
+.employee-info .key-val-flex-block p strong {
     width: 100%;
 }
 
-.employee-info p {
+.employee-info .key-val-flex-block p {
     display: block;
 }
 
@@ -85,7 +85,7 @@ header {
 
 .employee-list ul {
     list-style: none;
-    padding-left: 0;
+    padding-left: 15px;
 }
 
 .employee-list li {
@@ -177,9 +177,6 @@ header {
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     height: 70vh;
     margin: auto;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
     gap: 15px;
     overflow-y: auto;
 }
@@ -347,7 +344,7 @@ header {
 
 .tree li {
     position: relative;
-    padding-left: 25px;
+    padding-left: 17px;
     margin: 8px 0;
 }
 
@@ -356,10 +353,10 @@ header {
     content: "";
     position: absolute;
     top: -8px;
-    left: 10px;
+    left: -8px;
     height: calc(100% + 15px);
     width: 0;
-    border-left: 2px solid #8A3366;
+    border-left: 1px solid #8A3366;
 }
 
 /* Horizontal connecting line (curved) */
@@ -367,10 +364,10 @@ header {
     content: "";
     position: absolute;
     top: 15px;
-    left: 10px;
-    width: 15px;
+    left: -7px;
+    width: 10px;
     height: 0;
-    border-top: 2px solid #8A3366;
+    border-top: 1px solid #8A3366;
     border-radius: 5px 0 0 0;
 }
 
@@ -393,13 +390,13 @@ header {
 /* Employee name styling */
 .tree li span {
     cursor: pointer;
-    padding: 3px 5px;
+    padding: 0px 5px;
     display: inline-block;
     transition: all 0.3s;
     border-radius: 4px;
     background-color: #f8f9fa;
     border: 1px solid #e9ecef;
-    /* margin-left: 10px; */
+    margin-left: -15px;
 }
 
 .tree li span:hover {
@@ -410,10 +407,10 @@ header {
 /* Toggle button styling */
 .toggle-button {
     position: absolute;
-    left: 5px;
+    left: -12px;
     top: 10px;
-    width: 12px;
-    height: 12px;
+    width: 10px;
+    height: 10px;
     background: #8A3366;
     color: white;
     border: none;
@@ -425,7 +422,7 @@ header {
     font-size: 10px;
     z-index: 1;
     padding: 0;
-    font-weight: 500px
+    font-weight: 500;
 }
 
 
