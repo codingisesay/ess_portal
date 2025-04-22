@@ -416,7 +416,7 @@ class salaryBoxController extends Controller
         )
         ->get();
 // dd($reimbursementList);
-    return view('user_view.users_claim', compact('reimbursementList'));
+    return view('user_view.users_claim', compact('reimbursementList', 'reimbursement_traking_id'));
 }
 
  public function loadMangerClaims(){
@@ -679,4 +679,31 @@ public function updateClaimForm(Request $request, $reimbursement_traking_id)
     return redirect()->route('PayRollDashboard')->with('success', 'Reimbursement claim updated successfully.');
 }
 
+
+public function updateReimbursementStatus(Request $request, $reimbursement_traking_id)
+{
+    // Remove validation
+    $status = $request->status;
+    $remark = $request->remark;
+
+    // Update the status in reimbursement_trackings
+    DB::table('reimbursement_trackings')
+        ->where('id', $reimbursement_traking_id)
+        ->update([
+            'status' => $status,
+            'updated_at' => now(),
+        ]);
+
+    // Update the description_by_manager in reimbursement_form_entries
+    DB::table('reimbursement_form_entries')
+        ->where('reimbursement_trackings_id', $reimbursement_traking_id)
+        ->update([
+            'description_by_manager' => $remark,
+            'updated_at' => now(),
+        ]);
+
+    return redirect()->back()->with('success', 'Reimbursement status updated successfully.');
 }
+
+}
+

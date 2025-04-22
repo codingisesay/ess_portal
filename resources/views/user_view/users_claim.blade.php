@@ -87,9 +87,13 @@
                         </div>
                     </div>
                     <div class="col-md-6 text-end  mt-2">
-                    <button class="py-1 mx-1 px-3 btn-warning text-white">Revert</button>
-                    <button class="py-1 mx-1 px-3 btn-danger">Reject</button>
-                    <button class="py-1 mx-1 px-3 btn-success">Approve</button>
+                    <form action="{{ route('update_reimbursement_status', $reimbursement_traking_id) }}" method="POST">
+                        @csrf
+                        <input type="hidden" name="remark" id="remark-input" value="">
+                        <button type="button" class="py-1 mx-1 px-3 btn-warning text-white" onclick="submitForm('REVERT')">Revert</button>
+                        <button type="button" class="py-1 mx-1 px-3 btn-danger" onclick="submitForm('REJECTED')">Reject</button>
+                        <button type="button" class="py-1 mx-1 px-3 btn-success" onclick="submitForm('APPROVED')">Approve</button>
+                    </form>
                     </div>
                 </div>
             </div>
@@ -103,6 +107,20 @@
     function toggleBody(header) {
         const body = header.nextElementSibling;
         body.style.display = body.style.display === 'block' ? 'none' : 'block';
+    }
+</script>
+<script>
+    function submitForm(status) {
+        // Set the remark input value to the status
+        document.getElementById('remark-input').value = status;
+
+        // Submit the form
+        const form = event.target.closest('form');
+        if (form) {
+            form.submit();
+        } else {
+            console.error('Form not found.');
+        }
     }
 </script>
  
