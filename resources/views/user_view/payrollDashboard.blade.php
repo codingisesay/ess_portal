@@ -279,7 +279,7 @@
                             </td>
                             <td>
                                 <button>
-                                <a href="{{ route('review_claim_form', ['reimbursement_traking_id' => $claim->tracking_id]) }}" class="text-raspberry me-2">
+                                <a href="{{ route('review_claim_form', ['reimbursement_traking_id' => $claim->tracking_id]) }}" class="text-raspberry ">
                                     <x-icon name="eyefill" />
                                 </a></button>
                                 @if ($claim->status == 'REVERT')
