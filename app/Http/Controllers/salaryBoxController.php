@@ -673,6 +673,7 @@ public function loadEditClaimForm($reimbursement_traking_id = null)
             'reimbursement_form_entries.upload_bill',
             'reimbursement_form_entries.description_by_applicant',
             'reimbursement_form_entries.description_by_manager',
+            'reimbursement_form_entries.description_by_finance',
             'reimbursement_form_entries.organisation_reimbursement_types_id',
             'organisation_reimbursement_types.name as type_name',
             'reimbursement_trackings.description',
@@ -714,7 +715,7 @@ public function updateClaimForm(Request $request, $reimbursement_traking_id)
             $filePath = $request->file("bills.$i")->store('bills', 'public');
         }
 
-        DB::table('reimbursement_form_entries')
+        $entryUpdated =  DB::table('reimbursement_form_entries')
             ->where('id', $entryId) // Use the entry ID to target the specific row
             ->where('reimbursement_trackings_id', $reimbursement_traking_id) // Ensure it matches the tracking ID
             ->update([
@@ -726,8 +727,13 @@ public function updateClaimForm(Request $request, $reimbursement_traking_id)
                 'updated_at' => now(),
             ]);
     }
-
-    return redirect()->route('PayRollDashboard')->with('success', 'Reimbursement claim updated successfully.');
+    // Check if all entries were updated successfully
+    if ($entryUpdated) {
+        return redirect()->route('PayRollDashboard')->with('success', 'Reimbursement claim updated successfully.');
+    } else {
+        return redirect()->route('PayRollDashboard')->with('error', 'Some entries could not be updated.');
+    }
+    // return redirect()->route('PayRollDashboard')->with('success', 'Reimbursement claim updated successfully.');
 }
 
 
