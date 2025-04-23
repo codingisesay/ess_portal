@@ -73,7 +73,7 @@ error_reporting(0);
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
  
 <div class="mx-4 mt-3">
-    <div class="header mb-5">
+    <div class="header mb-4">
         <!-- <h4>Organization Hierarchy</h4> -->
         <div class="dropdown">
             <select id="display-option" onchange="changeDisplayMode()">
