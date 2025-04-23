@@ -16,10 +16,10 @@
         </div>
         <hr>
         <div class="key-val-flex-block">
-            <p><strong>Designation</strong> <weak id="emp-designation">{{ ucfirst($userDetails->designation_name ?? '-') }}</weak></p>
-            <p><strong>Department</strong> <weak  id="emp-department">{{ ucfirst($userDetails->department_name ?? '-') }}</weak></p>
-            <p><strong>Office</strong> <weak id="emp-city">{{ ucfirst($userDetails->branch_name ?? '-') }}</weak></p>
-            <p><strong>Reporting Manager</strong> <weak  id="emp-manager">{{ ucfirst($userDetails->reporting_manager_name ?? '-') }}</weak></p>
+        <p><strong>Office Name</strong> <weak id="emp-city">{{ ucfirst($userDetails->branch_name ?? '-') }}</weak></p>
+        <p><strong>Reporting Manager</strong> <weak  id="emp-manager">{{ ucfirst($userDetails->reporting_manager_name ?? '-') }}</weak></p>
+        <p><strong>Department</strong> <weak  id="emp-department">{{ ucfirst($userDetails->department_name ?? '-') }}</weak></p>
+        <p><strong>Designation</strong> <weak id="emp-designation">{{ ucfirst($userDetails->designation_name ?? '-') }}</weak></p>
         </div>
     </div> 
          

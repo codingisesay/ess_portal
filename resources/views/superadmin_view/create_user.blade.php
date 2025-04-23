@@ -48,10 +48,10 @@ $id = Auth::guard('superadmin')->user()->id;
                 </div>
                 </div>
                 <div class="col-3 mb-2">
-                <div class="form-group">
-                    <input type="email" name="usermailid" required>
-                    <label>Email</label>
-                </div>
+                    <div class="form-group">
+                        <input type="email" name="usermailid" required>
+                        <label>Email</label>
+                    </div>
                 </div>
                 <div class="col-3 mb-2">
                 <div class="form-group">
@@ -61,6 +61,17 @@ $id = Auth::guard('superadmin')->user()->id;
                 <small> <a href="#" onclick="generateAndDisplayPassword()">Generate Password</a></small>
                 </div>
                  
+                <div class="col-3 mb-2">
+                <div class="form-group">
+                        <input type="hidden" name="organisation_id" value="1">
+                        <select name="acct_allow" required="" fdprocessedid="kg1mb">
+                            <option value="" disabled="" selected=""></option>
+                                    <option value="1">Not Allow</option>
+                                    <option value="2">Allowed</option> 
+                            </select>
+                        <label>Account Access</label>
+                    </div>
+                </div>
                 <div class="col-12">
                 <button class="create-btn" type="submit">Create User</button>
             </div>

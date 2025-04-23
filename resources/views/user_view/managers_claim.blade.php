@@ -16,6 +16,10 @@ error_reporting(0);
         <p class="claim-summary m-0">Employee Name: <strong>{{ $claim->employee_name }}</strong></p>
         <div>
             <hr>
+            <form action="{{ route('update.finance.reimbursement', $reimbursement_traking_id) }}" method="POST">
+                @csrf
+                <input type="hidden" name="status" id="status" value="">
+                @method('PUT')
             <p class="">Description: <strong>{{ $claim->description }}</strong></p>
             <div class="tbl-container"> <!-- Open by default -->
                 <table class="custom-table">
@@ -54,8 +58,8 @@ error_reporting(0);
                                 </label>
                             </td>
                             <td>
-                                <input class="input-field py-1" type="text" placeholder="Remark" style="width:200px">
-                            </td>  
+                            <input type="text" name="remarks[{{ $claim->entry_id }}]" class="form-control" placeholder="Enter Finance Remark" value="">
+                            </td>
                         </tr>
                     </tbody>
                     <tfoot>
@@ -72,19 +76,45 @@ error_reporting(0);
                 <div class="col-md-6">
                     <div class="form-group">
                         <div class="floating-label-wrapper">
+                            <!-- <input type="text" maxlength="200" id="task" name="task_name" placeholder="Task Description" class="input-field" required> -->
                             <input type="text" maxlength="200" id="task" name="task_name" placeholder="Task Description" class="input-field" required>
                             <label for="task">Task</label>
                         </div>
                     </div>
                 </div>
                 <div class="col-md-6 text-end mt-2">
-                    <button class="py-1 mx-1 px-3 btn-warning text-white">Revert</button>
-                    <button class="py-1 mx-1 px-3 btn-danger">Reject</button>
-                    <button class="py-1 mx-1 px-3 btn-success">Approve</button>
+                <button type="button" class="py-1 mx-1 px-3 btn-warning text-white" onclick="submitForm('REVERT')">Revert</button>
+                <button type="button" class="py-1 mx-1 px-3 btn-danger" onclick="submitForm('REJECTED')">Reject</button>
+                <button type="button" class="py-1 mx-1 px-3 btn-success" onclick="submitForm('APPROVED')">Approve</button>
                 </div>
             </div>
         </div>
         @endforeach
+        </form>
     </div>
 </div>
+
+
+<script>
+    function toggleBody(header) {
+        const body = header.nextElementSibling;
+        body.style.display = body.style.display === 'block' ? 'none' : 'block';
+    }
+</script>
+<script>
+    function submitForm(status) {
+        // Set the status input value
+        document.getElementById('status').value = status;
+
+        // Submit the form
+        const form = event.target.closest('form');
+        if (form) {
+            form.submit();
+        } else {
+            console.error('Form not found.');
+        }
+    }
+</script>
+
+ 
 @endsection

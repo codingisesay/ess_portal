@@ -8,6 +8,7 @@
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style> 
+    .text-raspberry{color:#8A3366}
     .review{border: 0.98px solid #FFC107; background: #FFC10733      ; color: #FFC107; padding: 5px 15px; border-radius: 50px;}  
            .month-labels {
             display: flex;
@@ -269,7 +270,7 @@
                         <tr>
                             <td>{{ $claim->token_number }}</td>
                             <td>{{ \Carbon\Carbon::parse($claim->claim_date)->format('d/m/Y') }}</td>
-                            <td>₹{{ number_format($claim->total_amount, 2) }}</td>
+                            <td class="text-end">₹{{ number_format($claim->total_amount, 2) }}</td>
                             <td>{{ $claim->purpose }}</td>
                             <td>
                                 <span class="{{ $claim->status == 'In Review' ? 'review' : '' }}">
@@ -277,13 +278,15 @@
                                 </span>
                             </td>
                             <td>
-                                <a href="{{ route('review_claim_form', ['reimbursement_traking_id' => $claim->tracking_id]) }}" class="btn btn-primary btn-sm me-2">
+                                <button>
+                                <a href="{{ route('review_claim_form', ['reimbursement_traking_id' => $claim->tracking_id]) }}" class="text-raspberry ">
                                     <x-icon name="eyefill" />
-                                </a>
+                                </a></button>
                                 @if ($claim->status == 'REVERT')
-                                    <a href="{{ route('edit_claim_form', ['reimbursement_traking_id' => $claim->tracking_id]) }}" class="btn btn-primary btn-sm">
+                                <button>
+                                    <a href="{{ route('edit_claim_form', ['reimbursement_traking_id' => $claim->tracking_id]) }}" class="text-raspberry">
                                         <x-icon name="edit" />
-                                    </a>
+                                    </a></button>
                                 @endif
                             </td>
                         </tr>

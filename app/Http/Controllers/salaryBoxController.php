@@ -673,6 +673,7 @@ public function loadEditClaimForm($reimbursement_traking_id = null)
             'reimbursement_form_entries.upload_bill',
             'reimbursement_form_entries.description_by_applicant',
             'reimbursement_form_entries.description_by_manager',
+            'reimbursement_form_entries.description_by_finance',
             'reimbursement_form_entries.organisation_reimbursement_types_id',
             'organisation_reimbursement_types.name as type_name',
             'reimbursement_trackings.description',
@@ -714,7 +715,7 @@ public function updateClaimForm(Request $request, $reimbursement_traking_id)
             $filePath = $request->file("bills.$i")->store('bills', 'public');
         }
 
-        DB::table('reimbursement_form_entries')
+        $entryUpdated =  DB::table('reimbursement_form_entries')
             ->where('id', $entryId) // Use the entry ID to target the specific row
             ->where('reimbursement_trackings_id', $reimbursement_traking_id) // Ensure it matches the tracking ID
             ->update([
@@ -726,8 +727,13 @@ public function updateClaimForm(Request $request, $reimbursement_traking_id)
                 'updated_at' => now(),
             ]);
     }
-
-    return redirect()->route('PayRollDashboard')->with('success', 'Reimbursement claim updated successfully.');
+    // Check if all entries were updated successfully
+    if ($entryUpdated) {
+        return redirect()->route('PayRollDashboard')->with('success', 'Reimbursement claim updated successfully.');
+    } else {
+        return redirect()->route('PayRollDashboard')->with('error', 'Some entries could not be updated.');
+    }
+    // return redirect()->route('PayRollDashboard')->with('success', 'Reimbursement claim updated successfully.');
 }
 
 
@@ -773,9 +779,53 @@ public function updateReimbursementStatus(Request $request, $reimbursement_traki
         'updated_at' => now(),
     ]);
 
-    return redirect()->route('PayRollDashboard')->with('success', 'Reimbursement status updated successfully.');
+    return redirect()->route('user.homepage')->with('success', 'Reimbursement status updated successfully.');
 }
 
+
+public function updateFinanceReimbursementStatus(Request $request, $reimbursement_traking_id)
+{
+    // Validate the request
+    $data = $request->validate([
+        'status' => 'required|string',
+        'remarks' => 'array', // Ensure remarks is an array
+        'remarks.*' => 'nullable|string', // Each remark can be nullable
+        'task_name' => 'nullable|string|max:200', // nullable the task_name field
+    ]);
+
+    $status = $data['status'];
+    $remarks = $data['remarks'];
+    $taskName = $data['task_name']; // Get the task_name input
+
+    // Update the status in reimbursement_trackings
+    DB::table('reimbursement_trackings')
+        ->where('id', $reimbursement_traking_id)
+        ->update([
+            'status' => $status,
+            'updated_at' => now(),
+        ]);
+
+    // Update the description_by_finance in reimbursement_form_entries
+    foreach ($remarks as $entryId => $remark) {
+        DB::table('reimbursement_form_entries')
+            ->where('id', $entryId)
+            ->where('reimbursement_trackings_id', $reimbursement_traking_id) // Ensure it matches the tracking ID
+            ->update([
+                'description_by_finance' => $remark, // Update description_by_finance
+                'updated_at' => now(),
+            ]);
+    }
+
+    // Update the comments column in assign_reimbursement_tokens
+    DB::table('assign_reimbursement_tokens')
+        ->where('reimbursement_tracking_id', $reimbursement_traking_id)
+        ->update([
+            'comments' => $taskName, // Save the task_name in the comments column
+            'updated_at' => now(),
+        ]);
+
+    return redirect()->route('user.homepage')->with('success', 'Reimbursement status updated successfully.');
+}
 
 
 }
