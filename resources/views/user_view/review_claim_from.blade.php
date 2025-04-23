@@ -58,7 +58,8 @@ th {
                         </td>
                         <td>
                             @if ($claim->upload_bill)
-                                <a href="{{ asset('storage/' . $claim->upload_bill) }}" target="_blank">View Bill</a>
+                                <a href="{{ asset('storage/' . $claim->upload_bill) }}" target="_blank"><x-icon name="newtab" />
+                                </a>
                             @else
                                 No Bill Uploaded
                             @endif

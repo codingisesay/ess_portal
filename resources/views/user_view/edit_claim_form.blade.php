@@ -62,6 +62,7 @@ th {
             <th>Upload Bill</th>
             <th>Description</th>
             <th>Manager Description</th>
+            <th>Account Description</th>
           </tr>
         </thead>
       
@@ -168,6 +169,7 @@ th {
     </td>
     <td><textarea class="form-control" rows="1" name="comments[{{ $index }}]" placeholder="Comment">{{ $claim->description_by_applicant }}</textarea></td>
     <td><textarea class="form-control" rows="1" name="comments[{{ $index }}]" disabled placeholder="Comment">{{ $claim->description_by_manager }}</textarea></td>
+    <td><textarea class="form-control" rows="1" name="comments[{{ $index }}]" disabled placeholder="Comment">{{ $claim->description_by_finance }}</textarea></td>
   </tr>
   @endforeach
 </tbody>
