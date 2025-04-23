@@ -8,6 +8,7 @@
     <link rel="icon" href="{{ asset('user_end/images/STPLLogo butterfly.png') }}" />
     <link rel="stylesheet" href="{{ asset('/user_end/css/homepage.css') }}">
     <link rel="stylesheet" href="{{ asset('/user_end/css/header.css') }}">
+    <link rel="stylesheet" href="{{ asset('/user_end/css/homepage.css') }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     
    
@@ -354,30 +355,51 @@
             @foreach($empEducation as $index => $education)
                 if (serialNo === {{ $index }}) {
                     modalContent.innerHTML += `
-                    <div class="row eduction-info-item">
+                        <div class="row eduction-info-item">
                         <div class="col-md-6 my-2">
-                            <div class="info-label">Degree</div>
-                            <div class="info-value">{{ ucfirst($education->degree ?? '-') }}</div>
+                            <div class="form-group">
+                                <div class="floating-label-wrapper">
+                                    <label >Degree</label>
+                                    <input class="input-field" type="text" value=" {{ ucfirst($education->degree ?? '-') }} " />
+                                </div>                                
+                            </div>
                         </div>
                         <div class="col-md-6 my-2">
-                            <div class="info-label">University</div>
-                            <div class="info-value">{{ ucfirst($education->university_board ?? '-') }}</div>
+                            <div class="form-group">
+                                <div class="floating-label-wrapper">
+                                    <label >University</label>
+                                    <input class="input-field" type="text" value=" {{ ucfirst($education->university_board ?? '-') }} " />
+                                </div>                                
+                            </div>
                         </div>
                          
                         <div class="col-md-6 my-2">
-                            <div class="info-label">Institution</div>
-                            <div class="info-value">{{ ucfirst($education->institution ?? '-') }}</div>
+                            <div class="form-group">
+                                <div class="floating-label-wrapper">
+                                    <label >Institution</label>
+                                    <input class="input-field" type="text" value=" {{ ucfirst($education->institution ?? '-') }} " />
+                                </div>                                
+                            </div>
                         </div>
                         <div class="col-md-6 my-2">
-                            <div class="info-label">Passing Year</div>
-                            <div class="info-value">{{ $education->passing_year ? $education->passing_year : '-' }}</div>
+                            <div class="form-group">
+                                <div class="floating-label-wrapper">
+                                    <label >Passing Year</label>
+                                    <input class="input-field" type="text" value=" {{ $education->passing_year ? $education->passing_year : '-' }} " />
+                                </div>                                
+                            </div>
                         </div>
                          
                         <div class="col-md-6 my-2">
-                            <div class="info-label">Percentage</div>
-                            <div class="info-value">{{ ucfirst($education->percentage_cgpa ?? '-') }}</div>
+                            <div class="form-group">
+                                <div class="floating-label-wrapper">
+                                    <label >Percentage</label>
+                                    <input class="input-field" type="text" value=" {{ ucfirst($education->percentage_cgpa ?? '-') }} " />
+                                </div>                                
+                            </div>
                         </div>
                     </div>
+
                     `;
                 }
             @endforeach
@@ -394,21 +416,37 @@
                     modalContent.innerHTML += `
                     <div class="row eduction-info-item">
                         <div class="col-md-6 my-2">
-                            <div class="info-label">Certification Name</div>
-                            <div class="info-value">{{ ucfirst($education->certification_name ?? '-') }}</div>
+                            <div class="form-group">
+                                <div class="floating-label-wrapper">
+                                    <label>Certification Name</label>
+                                    <input type="text" class="input-field" {{ ucfirst($education->certification_name ?? '-') }} />
+                                </div>
+                            </div>
                         </div>
                         <div class="col-md-6 my-2">
-                            <div class="info-label">Marks Obtained</div>
-                            <div class="info-value">{{ ucfirst($education->marks_obtained ?? '-') }}</div>
+                            <div class="form-group">
+                                <div class="floating-label-wrapper">
+                                    <label>Marks Obtained</label>
+                                    <input type="text" class="input-field" {{ ucfirst($education->marks_obtained ?? '-') }} />
+                                </div>
+                            </div>
                         </div>
                          
                         <div class="col-md-6 my-2">
-                            <div class="info-label">Total Marks</div>
-                            <div class="info-value">{{ ucfirst($education->out_of_marks_total_marks ?? '-') }}</div>
+                            <div class="form-group">
+                                <div class="floating-label-wrapper">
+                                    <label>Total Marks</label>
+                                    <input type="text" class="input-field" {{ ucfirst($education->out_of_marks_total_marks ?? '-') }} />
+                                </div>
+                            </div>
                         </div>
                         <div class="col-md-6 my-2">
-                            <div class="info-label">Certificate Date</div>
-                            <div class="info-value">{{ $education->date_of_certificate ? \Carbon\Carbon::parse($education->date_of_certificate)->format('d-m-Y') : '-' }}</div>
+                            <div class="form-group">
+                                <div class="floating-label-wrapper">
+                                    <label>Certificate Date</label>
+                                    <input type="text" class="input-field" {{ $education->date_of_certificate ? \Carbon\Carbon::parse($education->date_of_certificate)->format('d-m-Y') : '-' }} />
+                                </div>
+                            </div>
                         </div> 
                     </div> 
                     `;
