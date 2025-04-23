@@ -38,7 +38,8 @@ error_reporting(0);
 ?>
 <body>
     <div class="modal d-block" >
-        <div class="modal-content">
+  
+        <div class="modal-content  modal-lg">
             <div class="close" onclick="confirmCancel()">×</div>
             <h5>Leave Request Form</h5>  
             <form action="{{ route('insert_leave') }}" method="POST" id="leave_form" class="row">
@@ -107,6 +108,7 @@ error_reporting(0);
                 </div>
             </form>
         </div>
+       
     </div>
 <div id="customAlert" class="custom-alert">
     <div class="alert-box">

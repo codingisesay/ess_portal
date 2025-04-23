@@ -60,7 +60,7 @@
                                 <td><b>{{ ucfirst($userDetails->total_experience ?? '-') }}</b></td>
                             </tr>
                             <tr>
-                                <th>Experience In Current Companey</th>
+                                <th>Experience In Current Company</th>
                                 <td><b>{{ ucfirst($userDetails->total_experience ?? '-') }}</b></td>
                             </tr>
                         </table>

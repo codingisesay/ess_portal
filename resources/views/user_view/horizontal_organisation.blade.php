@@ -112,7 +112,7 @@ function renderEmployeeTree($employees) {
             top: 0;
             /* right: 50%; */left:-5%;
             border-top: 2px solid #8A3366; /* Color and thickness of the line */
-            width: 57%;
+            width: 55%;
             height: 12px;
             transition: all 0.3s ease;
             border-left:none;
