@@ -59,17 +59,20 @@ class OrganisationController extends Controller
                 COALESCE(emp_contact_details.per_country, ''), ', ',
                 COALESCE(emp_contact_details.per_pincode, '')
             ) as permanent_address"),
-            DB::raw("CONCAT(
-                COALESCE(emp_contact_details.cor_building_no, ''), ', ',
-                COALESCE(emp_contact_details.cor_name_of_premises, ''), ', ',
-                COALESCE(emp_contact_details.cor_nearby_landmark, ''), ', ',
-                COALESCE(emp_contact_details.cor_road_street, ''), ', ',
-                COALESCE(emp_contact_details.cor_city, ''), ', ',
-                COALESCE(emp_contact_details.cor_district, ''), ', ',
-                COALESCE(emp_contact_details.cor_state, ''), ', ',
-                COALESCE(emp_contact_details.cor_country, ''), ', ',
-                COALESCE(emp_contact_details.cor_pincode, '')
-            ) as correspondance_address")
+            DB::raw("
+            CONCAT_WS(', ',
+                NULLIF(emp_contact_details.cor_building_no, ''),
+                NULLIF(emp_contact_details.cor_name_of_premises, ''),
+                NULLIF(emp_contact_details.cor_nearby_landmark, ''),
+                NULLIF(emp_contact_details.cor_road_street, ''),
+                NULLIF(emp_contact_details.cor_city, ''),
+                NULLIF(emp_contact_details.cor_district, ''),
+                NULLIF(emp_contact_details.cor_state, ''),
+                NULLIF(emp_contact_details.cor_country, ''),
+                NULLIF(emp_contact_details.cor_pincode, '')
+            ) as correspondance_address
+        ")
+        
         )
         ->where('emp_details.user_id', '=', $user->id) // Add the session user_id condition
         ->first();
@@ -115,17 +118,20 @@ class OrganisationController extends Controller
                     COALESCE(emp_contact_details.per_country, ''), ', ',
                     COALESCE(emp_contact_details.per_pincode, '')
                 ) as permanent_address"),
-                DB::raw("CONCAT(
-                    COALESCE(emp_contact_details.cor_building_no, ''), ', ',
-                    COALESCE(emp_contact_details.cor_name_of_premises, ''), ', ',
-                    COALESCE(emp_contact_details.cor_nearby_landmark, ''), ', ',
-                    COALESCE(emp_contact_details.cor_road_street, ''), ', ',
-                    COALESCE(emp_contact_details.cor_city, ''), ', ',
-                    COALESCE(emp_contact_details.cor_district, ''), ', ',
-                    COALESCE(emp_contact_details.cor_state, ''), ', ',
-                    COALESCE(emp_contact_details.cor_country, ''), ', ',
-                    COALESCE(emp_contact_details.cor_pincode, '')
-                ) as correspondance_address")
+                DB::raw("
+                CONCAT_WS(', ',
+                    NULLIF(emp_contact_details.cor_building_no, ''),
+                    NULLIF(emp_contact_details.cor_name_of_premises, ''),
+                    NULLIF(emp_contact_details.cor_nearby_landmark, ''),
+                    NULLIF(emp_contact_details.cor_road_street, ''),
+                    NULLIF(emp_contact_details.cor_city, ''),
+                    NULLIF(emp_contact_details.cor_district, ''),
+                    NULLIF(emp_contact_details.cor_state, ''),
+                    NULLIF(emp_contact_details.cor_country, ''),
+                    NULLIF(emp_contact_details.cor_pincode, '')
+                ) as correspondance_address
+            ")
+            
             )
             ->get();
 // dd($employees);

@@ -20,24 +20,24 @@ error_reporting(0);
     <link rel="stylesheet" href="{{ asset('/user_end/css/header.css') }}">
     <link rel="stylesheet" href="{{ asset('errors/error.css') }}"> 
     <link href="{{ asset('bootstrapcss/bootstrap.min.css') }}" rel="stylesheet"> 
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+ 
+    
 </head>
-
-
-    <!-- First main for three sections -->
-     
+ 
     <div class="row mx-3">
         <div class=" col-lg-4 col-md-6 col-sm-12 p-0">
-            <h2 class="ms-2" id="greeting"></h2> 
+            <h4 class="ms-2 mb-1 fw-bold" id="greeting"></h4> 
+    
+
             <div class="row mx-1"> 
                 @foreach ($logs as $log)  
                 <div class="col-md-6 col-sm-6">
                     <div class="row ">
                     <div class="col-md-6 col-sm-6 my-2 px-0">
-                        <div class="card checkin  mx-1">
+                        <div class="card checkin mx-1">
                             <img src="{{ asset('user_end/images/Group490.png'); }}" alt="" />
                             <div >
-                                <p class="fs-6 mb-0">Sign&nbsp;In</p>
+                                <p class="fs-6 mb-0">Log&nbsp;In</p>
                                 <small>{{ date('h:i:s A', strtotime($log->login_time)) }}</small>   
                             </div>
                         </div>
@@ -46,7 +46,7 @@ error_reporting(0);
                         <div class="checkout card  mx-1 ">
                             <img src="{{ asset('user_end/images/Group491.png'); }}" alt=""/>
                             <div >
-                                <p class="fs-6 mb-0">Sign&nbsp;Out</p>
+                                <p class="fs-6 mb-0">Log&nbsp;Out</p>
                                 <small>{{ $log->logout_time ? date('h:i:s A', strtotime($log->logout_time)) : 'First Login' }}</small>
                             </div>
                         </div>
@@ -66,8 +66,10 @@ error_reporting(0);
                             <div class="card birthday mx-1">
                                 <img src="{{ asset('user_end/images/Group303.png') }}" height="40" width="40" alt="Avatar" class="mb-2">  
                                 @if ($todaysBirthdays->isEmpty())    
-                                        <h6 class="mb-0 " >No birthdays today</h6>
-                                        <small>Check back later!</small> 
+                                        <div>
+                                            <h6 class="mb-0 " >No birthdays today</h6>
+                                            <small>Check back later!</small> 
+                                        </div>
                                 @else  
                                     @foreach ($todaysBirthdays as $birthday)
                                         <div class="slide">
@@ -82,12 +84,12 @@ error_reporting(0);
                 </div> 
                 <div class="col-6 p-0">
                     <div class=" thought card mx-1 ">
-                        <p class="fs-6 mb-0">
-                            <img src="{{ asset('user_end/images/Group326.png'); }}" alt=""> 
+                        <p class="fs-6 mb-0 d-flex justify-content-left align-items-center  ">
+                            <img src="{{ asset('user_end/images/Group326.png'); }}" alt=""> &nbsp;
                             Daily Insight
                         </p>
                         @if($thoughtOfTheDay)
-                        <i>{{ $thoughtOfTheDay->thought }}</i>
+                            <i>{{ $thoughtOfTheDay->thought }}</i>
                         @else
                             <small class="text-secondary">No thought for today.</small>
                         @endif 
@@ -96,9 +98,9 @@ error_reporting(0);
                 <div class="col-6 p-0">
                     <!-- Upcoming Holiday Card -->
                     <div class="card holiday1 mx-1">
-                        <p class="fs-6 mb-0">
-                            <img src="{{ asset('user_end/images/holiday.png'); }}" alt="">
-                            Break Alert
+                        <p class="fs-6 mb-0 d-flex justify-content-left align-items-center ">
+                            <img src="{{ asset('user_end/images/holiday.png'); }}" alt=""> &nbsp;
+                            Holiday
                         </p>
                         
                         @if($upcomingHolidays->isNotEmpty())
@@ -130,7 +132,7 @@ error_reporting(0);
         </div>
         <div class=" col-lg-2 col-md-6 col-sm-12 p-1">            
             <section class="to-do-list"> 
-                <h5 class="mt-3">To-do List</h5>
+                <h5 class="">To-do List</h5>
                 <form id="todo-form" class="to-do-list-container" method="POST" action="{{ route('user.save_todo') }}">
                     @csrf 
                         <!-- Project Field -->
@@ -152,7 +154,7 @@ error_reporting(0);
                         <!-- Date Field -->
                         <div class="form-group">
                             <div class="floating-label-wrapper">
-                                <input type="date" name="task_date" id="task_date" placeholder=" " class="input-field" required>
+                                <input type="date" name="task_date" id="task_date" placeholder=" " class="input-field" required>                                
                                 <label for="task_date">Date</label>
                             </div>
                         </div>
@@ -160,7 +162,10 @@ error_reporting(0);
                         <!-- Hours Field -->
                         <div class="form-group">
                             <div class="floating-label-wrapper">
-                                <input type="time" id="hours" name="hours" class="input-field" value="00:00:00" placeholder=" " required>
+                                
+                            <input class="input-field standard" type="text" placeholder="00.00" id="hours" name="hours"
+                                        onchange="console.log('Time changed to: ' + this.value)" />
+                                <!-- <input type="time" id="hours" name="hours" class="input-field" value="00:00:00" placeholder=" " required> -->
                                 <label for="hours">Hours</label>
                             </div>
                         </div>
@@ -172,13 +177,13 @@ error_reporting(0);
         </div>
         <div class=" col-lg-2 col-md-6 col-sm-12 p-1">      
             <section class="upcoming-anniversary">
-                <h5 class="mt-3">Work Anniversary</h5>
+                <h5 class="">Work Anniversary</h5>
                 <div class="anniversary">
                     @forelse ($anniversaries as $anniversary)
                     <div class=" border rounded-3 shadow-sm mb-1">
                         <div class="d-flex justify-content-between p-2">
                             <div class="details mb-4"> 
-                                <h6 class="mb-0" >{{ $anniversary->Employee_Name }}</h6>
+                                <p class="mb-0" ><strong> {{ $anniversary->Employee_Name }}</strong></p>
                                 <small >{{ $anniversary->yearsCompleted }} Years Completed</small>
                                 <div class="badge">{{ $anniversary->badgeText }}</div>
                             </div> 
@@ -194,7 +199,7 @@ error_reporting(0);
         <div class=" col-lg-4 col-md-6 col-sm-12 p-1">
            
             <section class="calendar-container">
-                <h5 class="calendar-header mt-3">Calendar</h5>
+                <h5 class="calendar-header ">Calendar</h5>
                 <div class="main-cal">
                     <div id="calendar-controls">
                         <button id="prev-month" class="slider-btn">&lt;</button>
@@ -333,9 +338,7 @@ error_reporting(0);
         </div>
 
     </div>
-
-
-
+ 
     <!-- Popup Modal -->
     <div id="leaveModal" class="modal">
         <div class="modal-content">
@@ -508,40 +511,16 @@ error_reporting(0);
                         </tr>
                     </thead>
                     <tbody>
-                        @if (!empty($accountList))
-                            @foreach ($accountList as $account)
-                                <tr>
-                                    <td>{{ $account->manager_id }}</td>
-                                    <td>{{ $account->name }}</td>
-                                    <td>{{ $account->approved_claims }}</td>
-                                    <td>
-                                        <button onclick="viewAccountDetails({{ $account->id }})">View</button>
-                                    </td>
-                                </tr>
-                            @endforeach
-                        @else
-                            <tr>
-                                <!-- <td colspan="4">No account details available.</td> -->
-                            </tr>
-                            <!-- Dummy Data -->
-                            <tr>
-                                <td>EMP001</td>
-                                <td>Paresh Sir</td>
-                                <td>04</td>
-                                <td>
-                                <a href="{{ route('manager_claims') }}"><button>View</button></a>
-                                </td>
-                            </tr>
-                            <tr>
-                            <td>EMP001</td>
-                                <td>Akash Sir</td>
-                                <td>04</td>
-                                <td>
-                                <a href="{{ route('manager_claims') }}"><button>View</button></a>
-                                </td>
-                                
-                            </tr>
-                        @endif
+                        @foreach ($approvedClaimsByManager as $manager)
+                        <tr>
+                            <td>{{ $manager->manager_employee_no }}</td>
+                            <td>{{ $manager->manager_name }}</td>
+                            <td>{{ $manager->employee_name }}</td>
+                            <td>
+                            <a href="{{ route('manager_claims', ['manager_id' => $manager->manager_id, 'reimbursement_traking_id' => $manager->reimbursement_traking_id]) }}" class="btn btn-primary btn-sm">View</a>
+                           </td>
+                        </tr>
+                        @endforeach
                     </tbody>
                 </table>
             </div>
@@ -550,6 +529,10 @@ error_reporting(0);
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script src="{{ asset('/bootstrapjs/jquery-clock-timepicker.min.js') }}"></script>
+<script src="{{ asset('/bootstrapjs/jquery-clock-timepicker.js') }}"></script>
+<!-- <script src="{{ asset('/bootstrapjs/jquery3.js') }}"></script>/ -->
 <script>
 
     // Leave Model script below
@@ -684,13 +667,13 @@ error_reporting(0);
         let greeting = "";
 
         if (hours >= 5 && hours < 12) {
-            greeting = "Good Morning";
+            greeting = "👋Good Morning";
         } else if (hours >= 12 && hours < 17) {
-            greeting = "Good Afternoon";
+            greeting = "👋Good Afternoon";
         } else if (hours >= 17 && hours < 21) {
-            greeting = "Good Evening";
+            greeting = "👋Good Evening";
         } else {
-            greeting = "Good Night";
+            greeting = "👋Good Night";
         }
 
         document.getElementById("greeting").textContent = greeting;
@@ -701,7 +684,66 @@ error_reporting(0);
     //greeting script above 
 </script>
       
+<script type="text/javascript">
+        $(document).ready(function () {
+            $('.standard').clockTimePicker();
+            $('.required').clockTimePicker({ required: true });
+            $('.separatorTime').clockTimePicker({ separator: '.' });
+            $('.precisionTime5').clockTimePicker({ precision: 5 });
+            $('.precisionTime10').clockTimePicker({ precision: 10 });
+            $('.precisionTime15').clockTimePicker({ precision: 15 });
+            $('.precisionTime30').clockTimePicker({ precision: 30 });
+            $('.precisionTime60').clockTimePicker({ precision: 60 });
+            $('.simpleTime').clockTimePicker({ onlyShowClockOnMobile: true });
+            $('.duration').clockTimePicker({ duration: true, maximum: '80:00' });
+            $('.durationNegative').clockTimePicker({ duration: true, durationNegative: true });
+            $('.durationMinMax').clockTimePicker({ duration: true, minimum: '1:00', maximum: '5:30' });
+            $('.durationNegativeMinMax').clockTimePicker({ duration: true, durationNegative: true, minimum: '-5:00', maximum: '5:00', precision: 5 });
+        });
+    </script>
+    <style type="text/css">
+        h1 {
+            font-size: 20px;
+            margin-bottom: 3px;
+        }
 
+        h2 {
+            margin-top: 40px;
+            margin-bottom: 3px;
+        }
+
+        h3 {
+            font-size: 13px;
+            margin-top: 0px;
+        }
+
+        .main {
+            text-align: center;
+        }
+
+        .example {
+            margin-bottom: 25px;
+        }
+
+        .example table {
+            width: 650px;
+            margin: 0px auto;
+        }
+
+        @media (max-width: 650px) {
+            .example table {
+                width: 100%;
+            }
+
+            .example td {
+                display: block;
+                text-align: center;
+            }
+        }
+
+        .clock-timepicker{width: 100%;}
+    </style>
+  
 <script>
     // PHP data passed to JavaScript for calendar below
     const holidays = <?php echo json_encode($holidays_upcoming); ?>;
@@ -847,4 +889,6 @@ error_reporting(0);
     generateCalendar(currentYear, currentMonth);
     //  calendar script above
 </script>
+
+
  @endsection

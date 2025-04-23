@@ -31,7 +31,7 @@ th {
      
 
 <div class="reimbursement-container">
-    <h2>Review Reimbursement Claims for Tracking ID: {{ $reimbursement_traking_id }}</h2>
+    <h2>Review Reimbursement Claims for Tracking ID: {{ $tokenNumber }}</h2>
     <div class="reimbursement-details">
         <table class="table table-striped">
             <thead>

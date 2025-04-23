@@ -61,6 +61,7 @@ th {
             <th>Entry Amount</th>
             <th>Upload Bill</th>
             <th>Description</th>
+            <th>Manager Description</th>
           </tr>
         </thead>
         <tbody>
@@ -68,6 +69,7 @@ th {
           <tr>
             <td>{{ $index + 1 }}</td>
             <td>
+            <input type="hidden" name="entry_ids[]" value="{{ $claim->id }}" /> <!-- Pass the entry ID -->
               <input type="date" name="bill_date[{{ $index }}]" class="form-control" value="{{ \Carbon\Carbon::parse($claim->entry_date)->format('Y-m-d') }}" required>
             </td>
             <td>
@@ -89,6 +91,7 @@ th {
               <input type="file" name="bills[{{ $index }}]" class="form-control mt-2" accept=".jpg,.jpeg,.png,.pdf">
             </td>
             <td><textarea class="form-control" rows="1" name="comments[{{ $index }}]" placeholder="Comment">{{ $claim->description_by_applicant }}</textarea></td>
+            <td><textarea class="form-control" rows="1" name="comments[{{ $index }}]" disabled placeholder="Comment">{{ $claim->description_by_manager }}</textarea></td>
           </tr>
           @endforeach
         </tbody>  
