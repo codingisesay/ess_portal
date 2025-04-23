@@ -59,6 +59,10 @@
                                 <th>Total Experience</th>
                                 <td><b>{{ ucfirst($userDetails->total_experience ?? '-') }}</b></td>
                             </tr>
+                            <tr>
+                                <th>Experience In Current Companey</th>
+                                <td><b>{{ ucfirst($userDetails->total_experience ?? '-') }}</b></td>
+                            </tr>
                         </table>
                     </div>
                 </div>
@@ -103,20 +107,20 @@
                                 <td><b>{{ ucfirst($userDetails->nationality ?? '-') }}</b></td>
                             </tr>
                             <tr>
-                                <th>Marital Status</th>
-                                <td><b>{{ ucfirst($userDetails->marital_status ?? '-') }}</b></td>
-                            </tr>
-                            <tr>
-                                <th>Anniversary Date</th>
-                                <td><b>{{ $userDetails->anniversary_date ? \Carbon\Carbon::parse($userDetails->anniversary_date)->format('d-m-Y') : '-' }}</b></td>
+                                <th>Religion</th>
+                                <td><b>{{ ucfirst($userDetails->religion ?? '-') }}</b></td>
                             </tr>
                             <tr>
                                 <th>Blood Group</th>
                                 <td><b>{{ ucfirst($userDetails->blood_group ?? '-') }}</b></td>
                             </tr>
                             <tr>
-                                <th>Religion</th>
-                                <td><b>{{ ucfirst($userDetails->religion ?? '-') }}</b></td>
+                                <th>Marital Status</th>
+                                <td><b>{{ ucfirst($userDetails->marital_status ?? '-') }}</b></td>
+                            </tr>
+                            <tr>
+                                <th>Anniversary Date</th>
+                                <td><b>{{ $userDetails->anniversary_date ? \Carbon\Carbon::parse($userDetails->anniversary_date)->format('d-m-Y') : '-' }}</b></td>
                             </tr>
                         </table>
                     </div>
@@ -142,7 +146,7 @@
                             <td><b>{{ $userDetails->passport_expiry_date ? \Carbon\Carbon::parse($userDetails->passport_expiry_date)->format('d-m-Y') : '-' }}</b></td>
                         </tr>
                         <tr>
-                            <th>Visa</th>
+                            <th>Visa Applicable</th>
                             <td><b>{{ ucfirst($userDetails->active_visa ?? '-') }}</b></td>
                         </tr>
                         <tr>
