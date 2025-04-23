@@ -90,13 +90,11 @@ th {
           <!-- Dynamic rows will be added here -->
         </tbody>  
             
-        <tfoot>
-    
-
+        <tfoot> 
           <tr>
-            <td colspan="3"><strong>Total</strong></td>
-            <td><strong id="totalMaxAmount">₹0.00</strong></td>
-            <td><strong id="totalEntryAmount">₹0.00</strong></td>
+            <td colspan="3" class="text-end"><strong>Total</strong></td>
+            <td class="text-end"><strong id="totalMaxAmount" >₹0.00</strong></td>
+            <td class="text-end"><strong id="totalEntryAmount" >₹0.00</strong></td>
             <td colspan="3"></td>
           </tr>
         </tfoot>
@@ -153,8 +151,8 @@ function updateTotals() {
           @endforeach
         </select>
       </td>
-      <td><input type="text" name="max_amount[]" class="form-control" step="0.01" disabled></td>
-      <td><input type="number" name="entered_amount[]" class="form-control" step="0.01" required></td>
+      <td><input type="text" name="max_amount[]" class="form-control text-end" step="0.01" disabled></td>
+      <td><input type="number" name="entered_amount[]" class="form-control text-end" step="0.01" required></td>
       <td><input type="file" name="bills[]" class="form-control" accept=".jpg,.jpeg,.png,.pdf" required></td>
       <td><textarea class="form-control" rows="1" name="comments[]" placeholder="Comment"></textarea></td>
       <td><button type="button" class="btn border-0 text-danger" onclick="deleteRow(this)"><x-icon name="trash" /></button></td>
