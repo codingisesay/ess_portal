@@ -341,188 +341,196 @@ error_reporting(0);
  
     <!-- Popup Modal -->
     <div id="leaveModal" class="modal">
-        <div class="modal-content">
-            <span class="close" onclick="closeLeaveModal()">&times;</span>
-            <h5>Leave Details</h5>
-            <div class="tbl-container">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Employee No.</th>
-                            <th>Employee Name</th>
-                            <th>Leave Type</th>
-                            <th>Start Date</th>
-                            <th>End Date</th>
-                            <th>Days Count</th>
-                            <th>Reason</th>
-                            <th>Approve</th>
-                            <th>Reject</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                    @if (!empty($leaveLists))
-                        @foreach ($leaveLists as $leaveApply)
-                        @foreach ($leaveApply as $leave)
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <span class="close" onclick="closeLeaveModal()">&times;</span>
+                <h5>Leave Details</h5>
+                <div class="tbl-container">
+                    <table>
+                        <thead>
                             <tr>
-                                <td>{{ $leave->employee_no }}</td>
-                                <td>{{ $leave->employee_name }}</td>
-                                <td>{{ $leave->leave_name }}</td>
-                                <td>{{ \Carbon\Carbon::parse($leave->leave_start_date)->format('d-m-Y') }}</td>
-                                <td>{{ \Carbon\Carbon::parse($leave->leave_end_date)->format('d-m-Y') }}</td>
-                                <td>{{ $leave->days_count }}</td>
-                                <td>{{ $leave->leave_resion }}</td>
-                    
-                            
-                                <td>
-                                <form action="{{ route('leave_update_status', ['id' => $leave->leave_appliy_id, 'status' => 'Approved']) }}" method="POST" style="display: inline;">
-                                    @csrf
-                                    @method('PUT')
-                                    <button type="submit"  class="btn text-success"> <x-icon name="done" /> </button>
-                                </form>
-                                </td>
-                                <td>
-                                <form action="{{ route('leave_update_status', ['id' => $leave->leave_appliy_id, 'status' => 'Reject']) }}" method="POST" style="display: inline;">
-                                    @csrf
-                                    @method('PUT')
-                                    <button type="submit" class="btn text-danger"> <x-icon name="cancel" /> </button>
-                                </form>
-                            </td> 
+                                <th>Employee No.</th>
+                                <th>Employee Name</th>
+                                <th>Leave Type</th>
+                                <th>Start Date</th>
+                                <th>End Date</th>
+                                <th>Days Count</th>
+                                <th>Reason</th>
+                                <th>Approve</th>
+                                <th>Reject</th>
                             </tr>
+                        </thead>
+                        <tbody>
+                        @if (!empty($leaveLists))
+                            @foreach ($leaveLists as $leaveApply)
+                            @foreach ($leaveApply as $leave)
+                                <tr>
+                                    <td>{{ $leave->employee_no }}</td>
+                                    <td>{{ $leave->employee_name }}</td>
+                                    <td>{{ $leave->leave_name }}</td>
+                                    <td>{{ \Carbon\Carbon::parse($leave->leave_start_date)->format('d-m-Y') }}</td>
+                                    <td>{{ \Carbon\Carbon::parse($leave->leave_end_date)->format('d-m-Y') }}</td>
+                                    <td>{{ $leave->days_count }}</td>
+                                    <td>{{ $leave->leave_resion }}</td>
+                        
+                                
+                                    <td>
+                                    <form action="{{ route('leave_update_status', ['id' => $leave->leave_appliy_id, 'status' => 'Approved']) }}" method="POST" style="display: inline;">
+                                        @csrf
+                                        @method('PUT')
+                                        <button type="submit"  class="btn text-success"> <x-icon name="done" /> </button>
+                                    </form>
+                                    </td>
+                                    <td>
+                                    <form action="{{ route('leave_update_status', ['id' => $leave->leave_appliy_id, 'status' => 'Reject']) }}" method="POST" style="display: inline;">
+                                        @csrf
+                                        @method('PUT')
+                                        <button type="submit" class="btn text-danger"> <x-icon name="cancel" /> </button>
+                                    </form>
+                                </td> 
+                                </tr>
+                            @endforeach
                         @endforeach
-                    @endforeach
-                    @endif
-                    </tbody>
-                </table>
+                        @endif
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </div>
 
     <!-- Task Modal -->
     <div id="taskModal" class="modal">
-        <div class="modal-content">
-            <span class="close" onclick="closeTaskModal()">&times;</span>
-            <h5>Task</h5>
-            <div class="tbl-container">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Date</th>
-                            <th>Project</th>
-                            <th>Task</th>
-                            <th>Hours</th>
-                            <th>Status</th> <!-- New Column for Delete Icon -->
-                            <th>Action</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                    @if ($toDoList->isNotEmpty())
-                        @foreach($toDoList as $task)
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <span class="close" onclick="closeTaskModal()">&times;</span>
+                <h5>Task</h5>
+                <div class="tbl-container">
+                    <table>
+                        <thead>
                             <tr>
-                                <td>{{ date('d-m-Y', strtotime($task->date)) }}</td>
-                                <td>{{ $task->project_name }}</td>
-                                <td>{{ $task->task }}</td>
-                                <td>{{ $task->hours }}</td>
-                                <td>
-                                    <form action="{{ route('update_do_do', $task->id) }}" method="POST">
-                                        @csrf
-                                        @method('PUT')
-                                        <input type="hidden" name="id" value="{{ $task->id }}">
-                                        <select name="status">
-                                            <option value="{{ $task->status }}" selected>{{ $task->status }}</option>
-                                            <option value="Completed">Completed</option>
-                                            <option value="Cancelled">Cancelled</option>
-                                        </select>
-                                    </td>
-                                    <td>
-                                        <button type="submit">Update</button>
-                                    
-                                </td>
-                            </form>
+                                <th>Date</th>
+                                <th>Project</th>
+                                <th>Task</th>
+                                <th>Hours</th>
+                                <th>Status</th> <!-- New Column for Delete Icon -->
+                                <th>Action</th>
                             </tr>
-                        @endforeach
-                        @endif
+                        </thead>
+                        <tbody>
+                        @if ($toDoList->isNotEmpty())
+                            @foreach($toDoList as $task)
+                                <tr>
+                                    <td>{{ date('d-m-Y', strtotime($task->date)) }}</td>
+                                    <td>{{ $task->project_name }}</td>
+                                    <td>{{ $task->task }}</td>
+                                    <td>{{ $task->hours }}</td>
+                                    <td>
+                                        <form action="{{ route('update_do_do', $task->id) }}" method="POST">
+                                            @csrf
+                                            @method('PUT')
+                                            <input type="hidden" name="id" value="{{ $task->id }}">
+                                            <select name="status">
+                                                <option value="{{ $task->status }}" selected>{{ $task->status }}</option>
+                                                <option value="Completed">Completed</option>
+                                                <option value="Cancelled">Cancelled</option>
+                                            </select>
+                                        </td>
+                                        <td>
+                                            <button type="submit">Update</button>
+                                        
+                                    </td>
+                                </form>
+                                </tr>
+                            @endforeach
+                            @endif
 
-                        </form>
-                    </tbody>
-                </table>
+                            </form>
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </div>
 
     <!-- Reimbursement Modal -->
     <div id="reimbursementModal" class="modal">
-        <div class="modal-content">
-            <span class="close" onclick="closeReimbursementModal()">&times;</span>
-            <h5>Reimbursement Details</h5>
-            <div class="tbl-container">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Reference ID</th>
-                            <th>EMP ID</th>
-                            <th>Employee Name</th>
-                            <th>No. of Bills</th>
-                            <th>Total Amount</th>
-                            <th>Status</th>
-                            <th>Action</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @if (!empty($reimbursementList))
-                            @foreach ($reimbursementList as $reimbursement)
-                                <tr>
-                                    <td>{{ $reimbursement->token_number }}</td>
-                                    <td>{{ $reimbursement->employee_no }}</td>
-                                    <td>{{ $reimbursement->employee_name }}</td>
-                                    <td>{{ $reimbursement->no_of_entries }}</td>
-                                    <td>{{ number_format($reimbursement->total_amount, 2) }}</td> <!-- Display total amount -->
-                                    <td>{{ $reimbursement->status }}</td> <!-- Display status -->
-                                    <td>
-                                        <a href="{{ route('user_claims',['user_id' => $reimbursement->user_id, 'reimbursement_traking_id' => $reimbursement->id]) }}">
-                                            <button>View</button>
-                                        </a>
-                                    </td>
-                                </tr>
-                            @endforeach
-                        @else
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <span class="close" onclick="closeReimbursementModal()">&times;</span>
+                <h5>Reimbursement Details</h5>
+                <div class="tbl-container">
+                    <table>
+                        <thead>
                             <tr>
-                                <td colspan="6" class="text-center">No reimbursement details available.</td>
+                                <th>Reference ID</th>
+                                <th>EMP ID</th>
+                                <th>Employee Name</th>
+                                <th>No. of Bills</th>
+                                <th>Total Amount</th>
+                                <th>Status</th>
+                                <th>Action</th>
                             </tr>
-                        @endif
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody>
+                            @if (!empty($reimbursementList))
+                                @foreach ($reimbursementList as $reimbursement)
+                                    <tr>
+                                        <td>{{ $reimbursement->token_number }}</td>
+                                        <td>{{ $reimbursement->employee_no }}</td>
+                                        <td>{{ $reimbursement->employee_name }}</td>
+                                        <td>{{ $reimbursement->no_of_entries }}</td>
+                                        <td>{{ number_format($reimbursement->total_amount, 2) }}</td> <!-- Display total amount -->
+                                        <td>{{ $reimbursement->status }}</td> <!-- Display status -->
+                                        <td>
+                                            <a href="{{ route('user_claims',['user_id' => $reimbursement->user_id, 'reimbursement_traking_id' => $reimbursement->id]) }}">
+                                                <button>View</button>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            @else
+                                <tr>
+                                    <td colspan="6" class="text-center">No reimbursement details available.</td>
+                                </tr>
+                            @endif
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </div>
 
     <!-- Reimbursement Account Modal -->
     <div id="accountModal" class="modal">
-        <div class="modal-content">
-            <span class="close" onclick="closeAccountModal()">&times;</span>
-            <h5>Account Details</h5>
-            <div class="tbl-container">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Manager ID</th>
-                            <th>Manager Name</th>
-                            <th>Claim of Employee</th>
-                            <th>Action</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach ($approvedClaimsByManager as $manager)
-                        <tr>
-                            <td>{{ $manager->manager_employee_no }}</td>
-                            <td>{{ $manager->manager_name }}</td>
-                            <td>{{ $manager->employee_name }}</td>
-                            <td>
-                            <a href="{{ route('manager_claims', ['manager_id' => $manager->manager_id, 'reimbursement_traking_id' => $manager->reimbursement_traking_id]) }}" class="btn btn-primary btn-sm">View</a>
-                           </td>
-                        </tr>
-                        @endforeach
-                    </tbody>
-                </table>
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <span class="close" onclick="closeAccountModal()">&times;</span>
+                <h5>Account Details</h5>
+                <div class="tbl-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Manager ID</th>
+                                <th>Manager Name</th>
+                                <th>Claim of Employee</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach ($approvedClaimsByManager as $manager)
+                            <tr>
+                                <td>{{ $manager->manager_employee_no }}</td>
+                                <td>{{ $manager->manager_name }}</td>
+                                <td>{{ $manager->employee_name }}</td>
+                                <td>
+                                <a href="{{ route('manager_claims', ['manager_id' => $manager->manager_id, 'reimbursement_traking_id' => $manager->reimbursement_traking_id]) }}" class="btn btn-primary btn-sm">View</a>
+                            </td>
+                            </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </div>

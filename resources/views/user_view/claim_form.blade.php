@@ -240,20 +240,7 @@
   });
   
 </script>
-<!--  
-<script>
-    const today = new Date();
-    const year = today.getFullYear();
-    let month = today.getMonth() + 1;
-    let day = today.getDate();
-
-    month = month < 10 ? '0' + month : month;
-    day = day < 10 ? '0' + day : day;
-
-    const formattedDate = `${year}-${month}-${day}`;
-    document.getElementById('todayDate').value = formattedDate;
-</script> -->
-
+ 
 
 
 <script>
@@ -325,6 +312,5 @@
 
     <!-- Bootstrap JS Bundle with Popper -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js">
-
- <!--  // <td><input type="file" name="bills[]" class="form-control" accept=".jpg,.jpeg,.png,.pdf" required></td> -->
+ 
 @endsection

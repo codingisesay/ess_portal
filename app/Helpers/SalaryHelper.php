@@ -18,11 +18,6 @@ class SalaryHelper
     public static function calculateSalary($month_start,$month_end,$year,$user_id)
     {
      
-
-
-        
-        
     
-        
     }
 }
