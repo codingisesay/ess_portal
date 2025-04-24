@@ -135,6 +135,12 @@
                 height: 200px;
             }
         }
+        small.status-badge{font-size:12px;border-radius:50px;padding: 2px 7px; width: 100px;display:block;text-align:center}
+        .badge-approved{ border: 1px solid #0E8D4A; background: #05C63133; color: #0E8D4A; }
+        .badge-warning{ border: 1px solid #FFC107; background: #FFC10733; color: #FFC107; }
+        .badge-danger{ border: 1px solid #D53040; background: #D5304033; color: #D53040; }
+        .badge-info{ border: 1px solid #17A2B8; background: #17A2B833 ; color: #17A2B8; }
+
     </style>
  
 
@@ -253,7 +259,7 @@
                   <h4 class="me-auto mb-0">Reimbursement Claims List</h4> 
                   <a href="{{ route('claim_form') }}" class="text-decoration-none"><button class="view-btn px-3 "> Claim </button></a>
             </div>
-              <hr>
+              <hr> 
             <table>
                 <thead>
                     <tr>
@@ -272,10 +278,23 @@
                             <td>{{ \Carbon\Carbon::parse($claim->claim_date)->format('d/m/Y') }}</td>
                             <td class="text-end">₹{{ number_format($claim->total_amount, 2) }}</td>
                             <td>{{ $claim->purpose }}</td>
-                            <td>
-                                <span class="{{ $claim->status == 'In Review' ? 'review' : '' }}">
+                            <td> 
+                                @php
+                                    $statusClass = match($claim->status) {
+                                        'PENDING' => 'badge-warning',
+                                        'APPROVED BY MANAGER' => 'badge-approved',
+                                        'APPROVED' => 'badge-approved',
+                                        'REJECTED' => 'badge-danger',
+                                        'REVERT' => 'badge-info',
+                                        'INREVIEW' => 'review',
+                                        default => ''
+                                    };
+                                @endphp
+
+                                <small class="{{ $statusClass }} status-badge">
                                     {{ $claim->status }}
-                                </span>
+                                </small>
+
                             </td>
                             <td>
                                 <button>

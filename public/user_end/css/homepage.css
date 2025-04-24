@@ -538,6 +538,10 @@ button {
     cursor: pointer;
 }
 
+table button a {
+    color: #8A3366 !important;
+}
+
 table button {
     color: #8A3366 !important;
     border: 1px solid #8A3366 !important;
@@ -978,6 +982,7 @@ label {
     padding: 15px;
     height: 320px;
     overflow-y: auto;
+    width: max-content;
 }
 
 /* Controls like prev/next buttons and dropdowns */
@@ -996,7 +1001,6 @@ label {
     border: 1px solid #ccc;
     border-radius: 8px;
     color: white;
-    width: 100px;
 }
 
 /* Dropdown container styling */
@@ -1024,7 +1028,7 @@ select {
 
 /* Styling for each day in the calendar */
 #calendar .day {
-    padding: 5px 8px;
+    padding: 3px 5px;
     border: 1px solid #902323;
     border-radius: 5px;
 }
@@ -1032,7 +1036,7 @@ select {
 /* Header days like Sun, Mon, Tue, etc. */
 #calendar .day.header {
     background-color: #f0f0f0;
-    font-weight: bold;
+    font-weight: 500;
 }
 
 /* Empty days styling (for empty cells in the calendar) */

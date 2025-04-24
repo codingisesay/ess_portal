@@ -41,7 +41,7 @@
             <div class="row my-auto " >    
                 <div class="col-6 my-2">
                     <div class="section custom-table h-100">
-                    <h5> Employee Details</h5>
+                    <h5 class="d-flex align-items-center"><x-icon name="empidoutline"/>&nbsp;Employee Details</h5>
                         <table> 
                             
                             <tr>
@@ -69,7 +69,7 @@
                 </div>
                 <div class="col-6 my-2">
                     <div class="section custom-table h-100"> 
-                    <h5>Salary Bank Details</h5>
+                    <h5 class="d-flex align-items-center"><x-icon name="bankoutline"/>&nbsp;Salary Bank Details</h5>
                     <table> 
                     
                         <tr>
@@ -93,7 +93,7 @@
                 </div>
                 <div class="col-6 my-2">
                     <div class="section custom-table h-100">
-                        <h5>Personal Information</h5>
+                        <h5 class="d-flex align-items-center"><x-icon name="personalinfooutline"/>&nbsp;Personal Information</h5>
                         <table>
                             <tr>
                                 <th>Date of Birth</th>
@@ -128,7 +128,7 @@
                 </div> 
                 <div class="col-6 my-2">
                     <div class="section custom-table h-100"> 
-                    <h5>Passport & Visa Details</h5>
+                    <h5 class="d-flex align-items-center"><x-icon name="passportoutline"/>&nbsp;Passport & Visa Details</h5>
                     <table class="custom-table">             
                         <tr>
                             <th>Passport Number</th>
@@ -161,7 +161,7 @@
                 </div>
                 <div class="col-6 my-2">
                     <div class="section custom-table h-100"> 
-                    <h5>Welfare Benefits</h5>
+                    <h5 class="d-flex align-items-center"><x-icon name="wellfareoutline"/>&nbsp;Welfare Benefits</h5>
                     <table>                 
                         <tr>
                             <th>UAN</th>
@@ -180,7 +180,7 @@
                 </div>
                 <div class="col-6 my-2">
                     <div class="section custom-table h-100"> 
-                    <h5>Educational Details</h5>
+                    <h5 class="d-flex align-items-center"><x-icon name="educationoutline"/>&nbsp;Educational Details</h5>
                     <table class="">
                         <thead>
                             <tr>
@@ -222,7 +222,7 @@
         <!-- table section start below -->
         <div class="col-6 my-2 ">
             <div class="section h-100"> 
-                <h3>Family Details</h3>
+                <h3 class="d-flex align-items-center"><x-icon name="useroutline" />&nbsp;Family Details</h3>
                 <div class="table-scroll-container">
                     <table>
                         <thead>
@@ -257,7 +257,7 @@
         </div>
         <div class="col-6 my-2 "> 
             <div class="section h-100">
-                <h3>Previous Employment</h3>
+                <h3 class="d-flex align-items-center"><x-icon name="buildingoutline"/>&nbsp;Previous Employment</h3>
                 <div class="table-scroll-container">
                     <table>
                         <thead>
@@ -298,7 +298,7 @@
         </div>
         <div class="col-12 my-2 "> 
             <div class="section h-100"> 
-                <h3 class='d-flex  align-items-center'> <x-icon name="openfolder" />&nbsp; Uploaded Documents</h3>                
+                <h3 class='d-flex align-items-center'> <x-icon name="openfolder" />&nbsp; Uploaded Documents</h3>                
                 <div class="row my-2">  
                     @foreach($documents as $index => $document)
                         <div class="col-6">
@@ -430,8 +430,7 @@
                                     <input type="text" class="input-field" {{ ucfirst($education->marks_obtained ?? '-') }} />
                                 </div>
                             </div>
-                        </div>
-                         
+                        </div>                         
                         <div class="col-md-6 my-2">
                             <div class="form-group">
                                 <div class="floating-label-wrapper">

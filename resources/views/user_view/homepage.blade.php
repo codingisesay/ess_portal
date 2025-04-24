@@ -100,7 +100,7 @@ error_reporting(0);
                     <div class="card holiday1 mx-1">
                         <p class="fs-6 mb-0 d-flex justify-content-left align-items-center ">
                             <img src="{{ asset('user_end/images/holiday.png'); }}" alt=""> &nbsp;
-                            Holiday
+                            Upcoming Holiday
                         </p>
                         
                         @if($upcomingHolidays->isNotEmpty())
@@ -175,7 +175,7 @@ error_reporting(0);
                 </form>
             </section>
         </div>
-        <div class=" col-lg-2 col-md-6 col-sm-12 p-1">      
+        <div class=" col-lg-3 col-md-6 col-sm-12 p-1">      
             <section class="upcoming-anniversary">
                 <h5 class="">Work Anniversary</h5>
                 <div class="anniversary">
@@ -196,11 +196,11 @@ error_reporting(0);
                 </div>
             </section>
         </div>
-        <div class=" col-lg-4 col-md-6 col-sm-12 p-1">
+        <div class=" col-lg-3 col-md-6 col-sm-12 p-1">
            
-            <section class="calendar-container">
+            <section class="calendar-container ">
                 <h5 class="calendar-header ">Calendar</h5>
-                <div class="main-cal">
+                <div class="main-cal px-3">
                     <div id="calendar-controls">
                         <button id="prev-month" class="slider-btn">&lt;</button>
 
@@ -482,10 +482,10 @@ error_reporting(0);
                                         <td>{{ $reimbursement->no_of_entries }}</td>
                                         <td>{{ number_format($reimbursement->total_amount, 2) }}</td> <!-- Display total amount -->
                                         <td>{{ $reimbursement->status }}</td> <!-- Display status -->
-                                        <td>
+                                        <td>  <button>  
                                             <a href="{{ route('user_claims',['user_id' => $reimbursement->user_id, 'reimbursement_traking_id' => $reimbursement->id]) }}">
-                                                <button>View</button>
-                                            </a>
+                                                <x-icon name="newtab" />
+                                            </a> </button>
                                         </td>
                                     </tr>
                                 @endforeach
@@ -506,7 +506,7 @@ error_reporting(0);
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <span class="close" onclick="closeAccountModal()">&times;</span>
-                <h5>Account Details</h5>
+                <h5>Reimbursement Details</h5>
                 <div class="tbl-container">
                     <table>
                         <thead>
@@ -524,7 +524,11 @@ error_reporting(0);
                                 <td>{{ $manager->manager_name }}</td>
                                 <td>{{ $manager->employee_name }}</td>
                                 <td>
-                                <a href="{{ route('manager_claims', ['manager_id' => $manager->manager_id, 'reimbursement_traking_id' => $manager->reimbursement_traking_id]) }}" class="btn btn-primary btn-sm">View</a>
+                                    <button>
+                                    <a href="{{ route('manager_claims', ['manager_id' => $manager->manager_id, 'reimbursement_traking_id' => $manager->reimbursement_traking_id]) }}"  >
+                                        <x-icon name="newtab" />
+                                    </a>
+                                    </button>
                             </td>
                             </tr>
                             @endforeach
