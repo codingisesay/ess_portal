@@ -1,64 +1,15 @@
 @extends('user_view.header')
 @section('content')
  
- 
-  <!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
-  <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.slim.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>-->
+  
   <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js"></script> 
   <link rel="stylesheet" href="{{ asset('/user_end/css/homepage.css') }}">
  <!-- Option 1: Include in HTML --> 
   <link rel="stylesheet" href="{{ asset('user_end/css/leave.css') }}"> 
   <link rel="stylesheet" href="{{ asset('/user_end/css/homepage.css') }}"> 
-  <style>
-    .reimbursement-container {
-      margin: 10px 20px;
-    }
-    th {
-      background-color: #8A3366 !important;}
-      .submit2 {
-        border: 1px solid #8A3366 !important;
-        color: #8A3366;background:white;
-        padding: 7px 12px;
-        border-radius: 8px;
-        margin-left: auto;
-        border: none;
-    }
-    .reimbursement-details{background:white; padding:20px; border-radius:10px; box-shadow:0 0 10px rgba(0,0,0,0.1);}
-  </style>
- <style>
- 
-        .file-upload {
-            position: relative;
-            overflow: hidden; 
-        }
    
-      
-        .imagePreview {
-            height:30px;
-            width: 50px;
-            background-size: contain;
-            background-repeat: no-repeat;
-            background-position: center; 
-            border-radius: 4px;
-            display: none;
-        }
-        .profileimg {
-            position: absolute;
-            top: 0;
-            left: 0; 
-            opacity: 0; 
-            width:15px;
-            cursor: pointer;
-        }
-        .modal-backdrop.fade.show{display:none}
-    </style>
-      <div class="reimbursement-container">
-        <h2>Reimbursement Form</h2>
-    
-
-
+      <div class="mx-3">
+        <h2> <span class="back-btn mx-3" onclick="history.back()"> &lt; </span>Reimbursement Form</h2> 
         <!-- FORM STARTS HERE -->
         <form action="{{ route('insert_Reimbursement_Form') }}" method="post" enctype="multipart/form-data">
           @csrf
@@ -94,7 +45,7 @@
             <!-- Add Bills Button -->
 
             <div class="d-flex justify-content-between align-items-center mb-3">
-                <h4  class="my-2">Bills Details</h4>
+                <h6 class="my-2">Billing Details</h6>
                 <button type="button" class="submit2" onclick="addRow()"> +&nbsp;Add&nbsp;Bills</button>
             </div>
 
@@ -102,7 +53,7 @@
 
             <div class="tbl-container">
               <!-- Bills Table -->
-              <table class="table table-striped" id="billsTable">
+              <table class="" id="billsTable">
                 <thead>
                   <tr>
                     <th>S.no</th>
@@ -296,16 +247,13 @@
         <div class="modal-dialog modal-lg modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header p-0">
-                    <h6 class="modal-title mb-3">Image Preview</h6>
-                    <span class="btn-close fw-normal" data-bs-dismiss="modal" aria-label="Close" ></span>
+                    <h6 class="modal-title ">Image Preview</h6>
+                    <span class=" " data-bs-dismiss="modal" aria-label="Close" >&times;</span>
                     <!-- <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button> -->
                 </div>
                 <div class="modal-body text-center">
                     <img src="" class="modal-image-preview" id="modalImage">
-                </div>
-                <!-- <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                </div> -->
+                </div> 
             </div>
         </div>
     </div>

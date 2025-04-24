@@ -11,7 +11,7 @@
 <body>
 <div class="mx-4">
     <h2>
-        <span  onclick="history.back()" > < </span>
+        <span  onclick="history.back()" > &lt; </span>
          Reimbursement Claims        
     </h2>
     @if ($reimbursementList->isNotEmpty())

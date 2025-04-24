@@ -336,7 +336,7 @@
     <div id="certificationModal" class="modal">
         <div class="modal-content">
             <!-- <div class="modal-header">  -->
-                <span class="close" onclick="closeModal('certificationModal')">X</span>
+                <span class="close" onclick="closeModal('certificationModal')">&times;</span>
                 <h5>Academic Details</h5> 
             <!-- </div> -->
             <div id="certification-modal-content-details">
@@ -419,7 +419,7 @@
                             <div class="form-group">
                                 <div class="floating-label-wrapper">
                                     <label>Certification Name</label>
-                                    <input type="text" class="input-field" {{ ucfirst($education->certification_name ?? '-') }} />
+                                    <input type="text" class="input-field" value=" {{ ucfirst($education->certification_name ?? '-') }}" />
                                 </div>
                             </div>
                         </div>
@@ -427,7 +427,7 @@
                             <div class="form-group">
                                 <div class="floating-label-wrapper">
                                     <label>Marks Obtained</label>
-                                    <input type="text" class="input-field" {{ ucfirst($education->marks_obtained ?? '-') }} />
+                                    <input type="text" class="input-field" value=" {{ ucfirst($education->marks_obtained ?? '-') }} " />
                                 </div>
                             </div>
                         </div>                         
@@ -435,7 +435,7 @@
                             <div class="form-group">
                                 <div class="floating-label-wrapper">
                                     <label>Total Marks</label>
-                                    <input type="text" class="input-field" {{ ucfirst($education->out_of_marks_total_marks ?? '-') }} />
+                                    <input type="text" class="input-field" value=" {{ ucfirst($education->out_of_marks_total_marks ?? '-') }} " />
                                 </div>
                             </div>
                         </div>
@@ -443,7 +443,7 @@
                             <div class="form-group">
                                 <div class="floating-label-wrapper">
                                     <label>Certificate Date</label>
-                                    <input type="text" class="input-field" {{ $education->date_of_certificate ? \Carbon\Carbon::parse($education->date_of_certificate)->format('d-m-Y') : '-' }} />
+                                    <input type="text" class="input-field" value=" {{ $education->date_of_certificate ? \Carbon\Carbon::parse($education->date_of_certificate)->format('d-m-Y') : '-' }} " />
                                 </div>
                             </div>
                         </div> 

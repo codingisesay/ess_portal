@@ -839,6 +839,7 @@ table button {
     right: 0;
     color: #fff;
     padding: 5px 10px;
+    width: 100px;
     border-radius: 15px 0 0 0;
 }
 
@@ -1561,6 +1562,52 @@ video {
 
 .toggle-switch input:checked+.slider::before {
     transform: translateX(16px);
+}
+
+.submit2 {
+    border: 1px solid #8A3366 !important;
+    color: #8A3366;
+    background: white;
+    padding: 7px 12px;
+    border-radius: 8px;
+    margin-left: auto;
+    border: none;
+}
+
+.reimbursement-details {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.file-upload {
+    position: relative;
+    overflow: hidden;
+}
+
+
+.imagePreview {
+    height: 30px;
+    width: 50px;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    border-radius: 4px;
+    display: none;
+}
+
+.profileimg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    opacity: 0;
+    width: 15px;
+    cursor: pointer;
+}
+
+.modal-backdrop.fade.show {
+    display: none
 }
 
 /* reimbursment css above */

@@ -130,7 +130,28 @@ error_reporting(0);
                 </div>
             </div>
         </div>
-        <div class=" col-lg-2 col-md-6 col-sm-12 p-1">            
+        <div class=" col-lg-2 col-md-6 col-sm-12 p-1">      
+            <section class="upcoming-anniversary">
+                <h5 class="">Work Anniversary</h5>
+                <div class="anniversary">
+                    @forelse ($anniversaries as $anniversary)
+                    <div class=" border rounded-3 shadow-sm mb-1">
+                        <div class="d-flex justify-content-between p-2">
+                            <div class="details mb-3"> 
+                                <p class="mb-0" ><strong> {{ $anniversary->Employee_Name }}</strong></p>
+                                <small >{{ $anniversary->yearsCompleted }} Years Completed</small>
+                                <div class="badge">{{ $anniversary->badgeText }}</div>
+                            </div> 
+                            <!-- <img class="mb-3" src='https://i.pinimg.com/736x/99/4b/51/994b51b05a506a082ea193492a449ca9.jpg' alt="photo" /> -->
+                        </div>
+                    </div>
+                    @empty
+                    <p class="text-muted text-center py-3">No Work Anniversary for the current month.</p>
+                    @endforelse
+                </div>
+            </section>
+        </div>
+        <div class=" col-lg-3 col-md-6 col-sm-12 p-1">            
             <section class="to-do-list"> 
                 <h5 class="">To-do List</h5>
                 <form id="todo-form" class="to-do-list-container" method="POST" action="{{ route('user.save_todo') }}">
@@ -171,29 +192,8 @@ error_reporting(0);
                         </div>
 
                         <!-- Save Button -->
-                        <button type="submit" class="save-button">Save</button> 
+                        <button type="submit" class="save-button w-auto mx-auto py-1 px-3">Save</button> 
                 </form>
-            </section>
-        </div>
-        <div class=" col-lg-3 col-md-6 col-sm-12 p-1">      
-            <section class="upcoming-anniversary">
-                <h5 class="">Work Anniversary</h5>
-                <div class="anniversary">
-                    @forelse ($anniversaries as $anniversary)
-                    <div class=" border rounded-3 shadow-sm mb-1">
-                        <div class="d-flex justify-content-between p-2">
-                            <div class="details mb-4"> 
-                                <p class="mb-0" ><strong> {{ $anniversary->Employee_Name }}</strong></p>
-                                <small >{{ $anniversary->yearsCompleted }} Years Completed</small>
-                                <div class="badge">{{ $anniversary->badgeText }}</div>
-                            </div> 
-                            <!-- <img class="mb-3" src='https://i.pinimg.com/736x/99/4b/51/994b51b05a506a082ea193492a449ca9.jpg' alt="photo" /> -->
-                        </div>
-                    </div>
-                    @empty
-                    <p class="text-muted text-center py-3">No Work Anniversary for the current month.</p>
-                    @endforelse
-                </div>
             </section>
         </div>
         <div class=" col-lg-3 col-md-6 col-sm-12 p-1">
@@ -281,7 +281,7 @@ error_reporting(0);
                     <ul>
                         @foreach ($newsAndEvents as $event)
                         <li>
-                            <div class="d-flex">
+                            <div class="d-flex align-items-center">
                             <span class="date my-auto">{{ \Carbon\Carbon::parse($event->startdate)->format('d M') }}</span>
                             <h6>{{ $event->title }}</h6>
                             </div>
