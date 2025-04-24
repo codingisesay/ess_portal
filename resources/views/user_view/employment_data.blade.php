@@ -10,20 +10,7 @@
     <link rel="stylesheet" href="{{ asset('/user_end/css/header.css') }}">
     <link rel="stylesheet" href="{{ asset('/user_end/css/homepage.css') }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    
-   
-     <style> 
-    .eduction-info-item .info-value {
-            font-size: 1.1rem;
-            color: #333;
-            padding: 8px 12px;
-            background: #f8f9fa;
-            border-radius: 6px;
-            border-left: 3px solid #8A3366;}
-            .eduction-info-item .info-label {
-                font-size: 16px;font-weight: 500;
-            }
-     </style>
+     
 </head>
 <body>
  
@@ -222,7 +209,7 @@
         <!-- table section start below -->
         <div class="col-6 my-2 ">
             <div class="section h-100"> 
-                <h3 class="d-flex align-items-center"><x-icon name="useroutline" />&nbsp;Family Details</h3>
+                <h5 class="d-flex align-items-center"><x-icon name="useroutline" />&nbsp;Family Details</h5>
                 <div class="table-scroll-container">
                     <table>
                         <thead>
@@ -257,7 +244,7 @@
         </div>
         <div class="col-6 my-2 "> 
             <div class="section h-100">
-                <h3 class="d-flex align-items-center"><x-icon name="buildingoutline"/>&nbsp;Previous Employment</h3>
+                <h5 class="d-flex align-items-center"><x-icon name="buildingoutline"/>&nbsp;Previous Employment</h5>
                 <div class="table-scroll-container">
                     <table>
                         <thead>
@@ -298,7 +285,7 @@
         </div>
         <div class="col-12 my-2 "> 
             <div class="section h-100"> 
-                <h3 class='d-flex align-items-center'> <x-icon name="openfolder" />&nbsp; Uploaded Documents</h3>                
+                <h5 class='d-flex align-items-center'> <x-icon name="openfolder" />&nbsp; Uploaded Documents</h5>                
                 <div class="row my-2">  
                     @foreach($documents as $index => $document)
                         <div class="col-6">

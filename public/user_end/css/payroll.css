@@ -1,0 +1,198 @@
+.text-raspberry {
+    color: #8A3366
+}
+
+.review {
+    border: 0.98px solid #FFC107;
+    background: #FFC10733;
+    color: #FFC107;
+    padding: 5px 15px;
+    border-radius: 50px;
+}
+
+.month-labels {
+    display: flex;
+    justify-content: space-between;
+    margin-top: -5px;
+    flex-wrap: wrap;
+}
+
+.month-label {
+    font-size: 9px;
+    transform: rotate(-31deg);
+    color: #777;
+    width: 8.33%;
+    text-align: center;
+    margin-bottom: 0px;
+}
+
+@media (max-width: 768px) {
+    .tax-trend-card {
+        padding: 20px;
+    }
+
+    .month-label {
+        width: 25%;
+        margin-bottom: 10px;
+    }
+
+    .chart-container {
+        height: 250px;
+    }
+}
+
+.payrole-dashboard {
+    margin: 10px 20px
+}
+
+.payslip-card {
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    position: relative;
+}
+
+
+.financial-year {
+    font-size: 16px;
+    color: #555;
+    margin-bottom: 5px;
+    font-weight: 500;
+}
+
+.quarter {
+    font-size: 14px;
+    color: #777;
+    margin-bottom: 15px;
+}
+
+
+.payment-details small {
+    font-size: 12px;
+    color: #333
+}
+
+.payment-row1,
+.payment-row2,
+.payment-row3 {
+    padding-left: 7px;
+    border-left: 4px solid #3498db;
+    margin-bottom: 12px;
+}
+
+.payment-row2 {
+    border-left: 4px solid #e74c3c;
+}
+
+.payment-row3 {
+    border-left: 4px solid #2c3e50;
+}
+
+.payment-label {
+    font-size: 16px;
+    color: #555;
+}
+
+.view-btn i {
+    vertical-align: middle
+}
+
+.payment-amount {
+    font-size: 20px;
+    font-weight: 600;
+    color: #333;
+}
+
+.gross-pay {
+    font-weight: 700;
+    color: #2c3e50;
+}
+
+.chart-container {
+    margin: 20px 0;
+    height: 250px;
+    position: relative;
+}
+
+.view-btn {
+    display: block;
+    padding: 5px 12px;
+    background-color: #8A3366;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.view-btn:hover {
+    background-color: #2980b9;
+}
+
+.payslip-card select {
+    padding: 2px 5px;
+    border-radius: 5px;
+    border: none;
+    font-size: 14px;
+}
+
+@media (max-width: 480px) {
+    .payslip-card {
+        padding: 20px;
+    }
+
+    .header h1 {
+        font-size: 20px;
+    }
+
+    .chart-container {
+        height: 200px;
+    }
+}
+
+small.status-badge {
+    font-size: 12px;
+    border-radius: 50px;
+    padding: 2px 7px;
+    width: 100px;
+    display: block;
+    text-align: center
+}
+
+.badge-approved {
+    border: 1px solid #0E8D4A;
+    background: #05C63133;
+    color: #0E8D4A;
+}
+
+.badge-warning {
+    border: 1px solid #FFC107;
+    background: #FFC10733;
+    color: #FFC107;
+}
+
+.badge-danger {
+    border: 1px solid #D53040;
+    background: #D5304033;
+    color: #D53040;
+}
+
+.badge-info {
+    border: 1px solid #17A2B8;
+    background: #17A2B833;
+    color: #17A2B8;
+}
+
+.reimbursment-tbl-height {
+    /* min-height: fit-content; */
+    height: 300px;
+    overflow-y: auto;
+    box-shadow: rgba(0, 0, 0, 0.04) 0px 3px 5px;
+}
+
+.reimbursment-filter-button-collection button {
+    width: 100px;
+}
