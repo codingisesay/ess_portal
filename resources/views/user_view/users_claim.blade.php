@@ -104,7 +104,7 @@
                         <!-- <input type="hidden" name="status" id="status" value=""> -->
                         <button type="button" class="py-1 mx-1 px-3 btn-warning text-white" onclick="submitForm('REVERT')">Revert</button>
                         <button type="button" class="py-1 mx-1 px-3 btn-danger" onclick="submitForm('REJECTED')">Reject</button>
-                        <button type="button" class="py-1 mx-1 px-3 btn-success" onclick="submitForm('APPROVED')">Approve</button>
+                        <button type="button" class="py-1 mx-1 px-3 btn-success" onclick="submitForm('APPROVED BY MANAGER')">Approve</button>
                     </form>
                     </div>
                 </div>

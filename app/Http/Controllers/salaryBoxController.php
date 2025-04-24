@@ -461,7 +461,7 @@ public function loadMangerClaims($manager_id, $reimbursement_traking_id)
         )
         ->where('employees.reporting_manager', '=', $manager_id) // Filter by reporting manager
         ->where('reimbursement_trackings.id', '=', $reimbursement_traking_id) // Filter by reimbursement tracking ID
-        ->where('reimbursement_trackings.status', '=', 'Approved') // Only show approved claims
+        ->where('reimbursement_trackings.status', '=', 'APPROVED BY MANAGER') // Only show approved claims
         ->groupBy(
             'reimbursement_form_entries.id',
             'reimbursement_form_entries.date',
@@ -677,6 +677,43 @@ public function insertSalaryCycle(Request $request){
 
 }
  
+
+
+public function updateSalaryCycle(Request $request, $id)
+{
+    // Retrieve the request data directly
+    $data = $request->all();
+
+    // Check if the salary cycle exists
+    $salaryCycle = DB::table('salary_cycles')->where('id', $id)->first();
+
+    if (!$salaryCycle) {
+        return redirect()->route('create_salary_cycle')->with('error', 'Salary Cycle not found.');
+    }
+
+    // Update the salary cycle
+    $status = DB::table('salary_cycles')
+        ->where('id', $id)
+        ->update([
+            'name' => $data['name'] ?? $salaryCycle->name,
+            'start_date' => $data['applicable_from'] ?? $salaryCycle->start_date,
+            'end_date' => $data['applicable_to'] ?? $salaryCycle->end_date,
+            'month_start' => $data['month_start_date'] ?? $salaryCycle->month_start,
+            'month_end' => $data['month_end_date'] ?? $salaryCycle->month_end,
+            'status' => $data['status'] ?? $salaryCycle->status,
+            'updated_at' => now(),
+        ]);
+
+    // Debugging: Check the update status
+    // dd($status);
+
+    if ($status) {
+        return redirect()->route('create_salary_cycle')->with('success', 'Salary Cycle updated successfully.');
+    } else {
+        return redirect()->route('create_salary_cycle')->with('error', 'Failed to update Salary Cycle.');
+    }
+}
+
 
 
 public function loadEditClaimForm($reimbursement_traking_id = null)
