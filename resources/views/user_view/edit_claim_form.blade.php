@@ -5,24 +5,9 @@
   <link rel="stylesheet" href="{{ asset('/user_end/css/homepage.css') }}">
   <link rel="stylesheet" href="{{ asset('user_end/css/leave.css') }}"> 
   <link rel="stylesheet" href="{{ asset('/user_end/css/homepage.css') }}"> 
-<style>
-.reimbursement-container {
-  margin: 10px 20px;
-}
-th {
-  background-color: #8A3366 !important;}
-  .submit2 {
-    border: 1px solid #8A3366 !important;
-    color: #8A3366;background:white;
-    padding: 7px 12px;
-    border-radius: 8px;
-    margin-left: auto;
-    border: none;
-}
-.reimbursement-details{background:white; padding:20px; border-radius:10px; box-shadow:0 0 10px rgba(0,0,0,0.1);}
-</style>
-<div class="reimbursement-container">
-  <h2>Edit Reimbursement Form</h2>
+ 
+<div class="mx-3">
+  <h2> <span class="back-btn mx-3" onclick="history.back()"> &lt; </span>Edit Reimbursement Form</h2>
  
   <!-- FORM STARTS HERE -->
   <form action="{{ route('update_reimbursement_claims', ['reimbursement_traking_id' => $reimbursement_traking_id]) }}" method="post" enctype="multipart/form-data">
@@ -51,7 +36,7 @@ th {
 
     <div class="tbl-container">
       <!-- Bills Table -->
-      <table class="table table-striped" id="billsTable">
+      <table id="billsTable">
         <thead>
           <tr>
             <th>S.no</th>
@@ -129,8 +114,8 @@ th {
         @endforeach
       </select>
     </td>
-    <td><input type="text" class="form-control" value="{{ $claim->max_amount ?? '' }}" disabled></td>
-    <td><input type="number" name="entered_amount[{{ $index }}]" class="form-control" value="{{ $claim->entry_amount }}" step="0.01" required></td>
+    <td><input type="text" class="form-control text-end" value="{{ $claim->max_amount ?? '' }}" disabled></td>
+    <td><input type="number" name="entered_amount[{{ $index }}]" class="form-control text-end" value="{{ $claim->entry_amount }}" step="0.01" required></td>
     <td>
       <div class="file-upload d-flex">
         <div class="file-select d-flex align-items-center">

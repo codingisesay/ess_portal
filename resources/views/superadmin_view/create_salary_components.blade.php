@@ -75,13 +75,14 @@ $id = Auth::guard('superadmin')->user()->id;
                             <option value="" disabled selected></option>
                             <option value="Percentage">Percentage</option>
                             <option value="Fixed">Fixed</option>
+                            <option value="Others">Others</option>
                         </select>
                         <label>Calculation Type</label>
                     </div>
                 </div>
                 <div class="col-3 mb-4">
                     <div class="form-group">
-                        <input type="number" name="value" required>
+                        <input type="number" name="value">
                         <label>Value</label>
                     </div>
                 </div>

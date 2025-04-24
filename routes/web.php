@@ -125,6 +125,7 @@ Route::middleware(['auth.superadmin'])->group(function () {
         
     Route::post('superadmin/update_salary_template/{id}', [salaryBoxController::class, 'updateSalaryTemplate'])->name('update_salary_template');
     Route::post('superadmin/update_salary_component/{id}', [salaryBoxController::class, 'updateSalaryComponent'])->name('update_salary_component');
+    Route::post('superadmin/update_salary_cycle/{id}', [salaryBoxController::class, 'updateSalaryCycle'])->name('update_salary_cycle');
     Route::post('superadmin/update_tax_cycle/{id}', [salaryBoxController::class, 'updateTaxCycle'])->name('update_tax_cycle');
     Route::post('superadmin/update_tax_slab/{id}', [salaryBoxController::class, 'updateTaxSlab'])->name('update_tax_slab');
 
