@@ -34,6 +34,8 @@
                             <tr>
                                 <th>S.No.</th>
                                 <th>Date</th>
+                                <th>Claim Type</th>
+                                <th>Max Amount</th>
                                 <th>Entered Amount</th>
                                 <th>Bill</th>
                                 <th>Applicant Comment</th>
@@ -47,6 +49,12 @@
                             <tr>
                                 <td>{{ $serial++ }}</td>
                                 <td>{{ \Carbon\Carbon::parse($detail->entry_date)->format('d/m/Y') }}</td>
+                                <td>
+                                    <input type="text" class="form-control" value="{{ $reim_type->type_name }}" disabled>
+                                </td>
+                                <td>
+                                    <input type="text" class="form-control" value="{{ $reim_type->max_amount }}" disabled>
+                                </td>
                                 <td>{{ number_format($detail->entry_amount, 2) }}</td>
                                 <td>
                                     @if ($detail->upload_bill)
@@ -75,6 +83,8 @@
                             <tr>
                                 <td colspan="2" style="text-align: right; font-weight: bold;">Total Amount:</td>
                                 <td colspan="4" style="font-weight: bold;">Rs. {{ number_format($totalAmount, 2) }}</td>
+                                <td></td>
+                                <td></td>
                                 <td></td>
                             </tr>
                         </tfoot>

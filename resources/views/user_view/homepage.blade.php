@@ -356,8 +356,7 @@ error_reporting(0);
                                 <th>End Date</th>
                                 <th>Days Count</th>
                                 <th>Reason</th>
-                                <th>Approve</th>
-                                <th>Reject</th>
+                                <th>Action</th>                     
                             </tr>
                         </thead>
                         <tbody>
@@ -380,14 +379,12 @@ error_reporting(0);
                                         @method('PUT')
                                         <button type="submit"  class="btn text-success"> <x-icon name="done" /> </button>
                                     </form>
-                                    </td>
-                                    <td>
                                     <form action="{{ route('leave_update_status', ['id' => $leave->leave_appliy_id, 'status' => 'Reject']) }}" method="POST" style="display: inline;">
                                         @csrf
                                         @method('PUT')
                                         <button type="submit" class="btn text-danger"> <x-icon name="cancel" /> </button>
                                     </form>
-                                </td> 
+                                    </td>
                                 </tr>
                             @endforeach
                         @endforeach
