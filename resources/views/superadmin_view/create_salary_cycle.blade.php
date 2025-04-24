@@ -111,36 +111,44 @@ $id = Auth::guard('superadmin')->user()->id;
 
 </div>
 
-<div id="editSalaryTemplateModal" class="w3-modal" style="display: none;">
+<div id="editSalaryCycleModal" class="w3-modal" style="display: none;">
     <div class="w3-modal-content w3-animate-top w3-card-4">
         <header class="w3-container w3-teal"> 
-            <span onclick="document.getElementById('editSalaryTemplateModal').style.display='none'" 
+            <span onclick="document.getElementById('editSalaryCycleModal').style.display='none'" 
             class="w3-button w3-display-topright">&times;</span>
             <h2>Edit Salary Template</h2>
         </header>
         <div class="w3-container">
-            <form id="editSalaryTemplateForm" method="POST">
+        <form id="editSalaryCycleForm" method="POST" action="{{ route('update_salary_cycle', ['id' => ':id']) }}">
                 @csrf
                 @method('POST')
-                <input type="hidden" name="template_id" id="editSalaryTemplateId">
+                <input type="hidden" name="id" id="editSalaryCycleId">
                 <div class="popup-form-group">
-                    <input type="text" name="template_name" id="editSalaryTemplateName" required>
-                    <label for="editSalaryTemplateName">Name</label>
+                    <input type="text" name="template_name" id="editSalaryCycleName" required>
+                    <label for="editSalaryCycleName">Name</label>
                 </div>
                 <div class="popup-form-group">
-                    <input type="number" name="min_ctc" id="editSalaryTemplateMinCTC" required>
-                    <label for="editSalaryTemplateMinCTC">Min CTC</label>
+                    <input type="datetime-local" name="applicable_from" id="editApplicableFrom" required>
+                    <label for="editApplicableFrom">Applicable From</label>
                 </div>
                 <div class="popup-form-group">
-                    <input type="number" name="max_ctc" id="editSalaryTemplateMaxCTC" required>
-                    <label for="editSalaryTemplateMaxCTC">Max CTC</label>
+                    <input type="datetime-local" name="applicable_to" id="editApplicableTo" required>
+                    <label for="editApplicableTo">Applicable To</label>
                 </div>
                 <div class="popup-form-group">
-                    <select name="status" id="editSalaryTemplateStatus" required>
+                    <input type="number" name="month_start_date" id="editMonthStartDate" required>
+                    <label for="editMonthStartDate">Month Start Date</label>
+                </div>
+                <div class="popup-form-group">
+                    <input type="number" name="month_end_date" id="editMonthEndDate" required>
+                    <label for="editMonthEndDate">Month End Date</label>
+                </div>
+                <div class="popup-form-group">
+                    <select name="status" id="editSalaryCycleStatus" required>
                         <option value="Active">Active</option>
                         <option value="Inactive">Inactive</option>
                     </select>
-                    <label for="editSalaryTemplateStatus">Status</label>
+                    <label for="editSalaryCycleStatus">Status</label>
                 </div>
                 <div class="popup-form-group">
                     <button class="create-btn1" type="submit">Save Changes</button>
@@ -178,22 +186,28 @@ $id = Auth::guard('superadmin')->user()->id;
     });
     
 
-    // function openEditModal(id, templatedata) {
-    //     if (!id) {
-    //         alert('Invalid template data. Please try again.');
-    //         return;
-    //     } 
-    //     document.getElementById('editSalaryTemplateId').value = templatedata.id;
-    //     document.getElementById('editSalaryTemplateName').value = templatedata.name || '';
-    //     document.getElementById('editSalaryTemplateMinCTC').value =templatedata.min_ctc || '';
-    //     document.getElementById('editSalaryTemplateMaxCTC').value = templatedata.max_ctc || '';
-    //     document.getElementById('editSalaryTemplateStatus').value = templatedata.status || '';
+    function openEditModal(id, cycleData) {
+    if (!id || !cycleData) {
+        alert('Invalid data. Please try again.');
+        return;
+    }
 
-    //     const formAction = "{{ route('update_salary_template', ['id' => ':id']) }}".replace(':id', templatedata.id);
-    //     document.getElementById('editSalaryTemplateForm').action = formAction;
+    // Populate the modal fields
+    document.getElementById('editSalaryCycleId').value = cycleData.id;
+    document.getElementById('editSalaryCycleName').value = cycleData.name || '';
+    document.getElementById('editApplicableFrom').value = cycleData.start_date || '';
+    document.getElementById('editApplicableTo').value = cycleData.end_date || '';
+    document.getElementById('editMonthStartDate').value = cycleData.month_start || '';
+    document.getElementById('editMonthEndDate').value = cycleData.month_end || '';
+    document.getElementById('editSalaryCycleStatus').value = cycleData.status || '';
 
-    //     document.getElementById('editSalaryTemplateModal').style.display = 'block';
-    // }
+    // Set the form action dynamically
+    const formAction = "{{ route('update_salary_cycle', ['id' => ':id']) }}".replace(':id', cycleData.id);
+    document.getElementById('editSalaryCycleForm').action = formAction;
+
+    // Show the modal
+    document.getElementById('editSalaryCycleModal').style.display = 'block';
+}
 </script>
 
 @endsection

@@ -26,7 +26,7 @@
                     <th>Description by Applicant</th>
                     <th>Entry Amount</th>
                     <th>Status</th>
-                    <th>Upload Bill</th>
+                    <th>View Bill</th>
                 </tr>
             </thead>
             <tbody>

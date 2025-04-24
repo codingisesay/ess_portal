@@ -347,6 +347,8 @@ return redirect()->route('user.setting')->with('error','Calendra Is Not Created 
        
        $totalDaysInSelectedMonth = $dateforDays->daysInMonth; // Total  Days in selected month
 
+    //    dd($totalDaysInSelectedMonth);
+
        //Calcualte Week Offs in selected month and holidays
 
        $weekOffsAndHolidays = DB::table('calendra_masters')
@@ -361,7 +363,7 @@ return redirect()->route('user.setting')->with('error','Calendra Is Not Created 
     $totalWorkingDaysInMonth = $totalDaysInSelectedMonth - count($weekOffsAndHolidays);  // Total Working Days in the selected month
 
     //    dd($totalWorkingDaysInMonth);
-
+$allEmployeeSalary = [];
        foreach($users as $user){
        //Calculate Taken Leave by User in selected month
        $leaves = DB::table('leave_applies')
@@ -395,15 +397,106 @@ return redirect()->route('user.setting')->with('error','Calendra Is Not Created 
    
 $noOfDaysForPaySalary = $totalWorkingDaysInMonth - $totalLeaveDays;
 
-dd($noOfDaysForPaySalary);
+$workingDaysByUser = $totalDaysInSelectedMonth - $totalLeaveDays;
 
+$getCtcAndST = DB::table('employee_salaries')->where('user_id',2)->first();
+$salaryComponents = DB::table('org_salary_template_components')->where('salary_template_id',$getCtcAndST->salary_template_id)->get();
+
+$getCtcPerMonth = $getCtcAndST->user_ctc/12;
+
+// $getCtcPerMonth = number_format($getCtcAndST->user_ctc/12, 2);
+
+$employeeSalary = [];
+
+foreach($salaryComponents as $SC){
+    $components_id = $SC->id;
+    $value = 0;
+    $type = $SC->type;
+
+    if($SC->calculation_type == 'Percentage'){
+
+        if($SC->name == 'House Rent Allowance (HRA)'){
+
+            $basicSalary = $getCtcPerMonth*50/100;
+
+            $value = $basicSalary*$SC->value/100;
+
+            $employeeSalary[$SC->name] = [
+                'value' => $value,
+                'type' => $type,
+                'components_id' => $components_id
+            ];
+
+        }else{
+
+        $value = $getCtcPerMonth*$SC->value/100;
+
+        $employeeSalary[$SC->name] = [
+            'value' => $value,
+            'type' => $type,
+            'components_id' => $components_id
+        ];
+
+    }
+
+    }elseif($SC->calculation_type == 'Fixed'){
+
+        $value = $SC->value;
+
+        $employeeSalary[$SC->name] = [
+            'value' => $value,
+            'type' => $type,
+            'components_id' => $components_id
+        ];
+
+
+
+    }elseif($SC->calculation_type == 'Others'){
+
+        $value = 0;
+
+        $employeeSalary[$SC->name] = [
+            'value' => $value,
+            'type' => $type,
+            'components_id' => $components_id
+        ];
+
+    }
+
+    
+}
+
+foreach($salaryComponents as $SCSA){
+
+    if($SCSA->calculation_type == 'Calculative' && $SCSA->type == 'Earning'){
+        $SumOfEarnings = 0;
+        foreach($employeeSalary as $ES){
+            if($ES['type'] == 'Earning'){
+                $SumOfEarnings += $ES['value'];
+            }
+        }
+        $components_id = $SC->id;
+        $value = $getCtcPerMonth - $SumOfEarnings;
+        $type = $SCSA->type;
+
+        $employeeSalary[$SCSA->name] = [
+            'value' => $value,
+            'type' => $type,
+            'components_id' => $components_id
+        ];
+    }
+}
+
+array_push($allEmployeeSalary,$employeeSalary);
 
        } 
         
 
-
+dd($allEmployeeSalary);
 
        
     }
+
+    
 
 }

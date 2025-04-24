@@ -34,6 +34,8 @@
                             <tr>
                                 <th>S.No.</th>
                                 <th>Date</th>
+                                <th>Claim Type</th>
+                                <th>Max Amount</th>
                                 <th>Entered Amount</th>
                                 <th>Bill</th>
                                 <th>Applicant Comment</th>
@@ -47,7 +49,13 @@
                             <tr>
                                 <td>{{ $serial++ }}</td>
                                 <td>{{ \Carbon\Carbon::parse($detail->entry_date)->format('d/m/Y') }}</td>
-                                <td>{{ number_format($detail->entry_amount, 2) }}</td>
+                                <td>
+                                    <input type="text" class="form-control" value="{{ $reim_type->type_name }}" disabled>
+                                </td>
+                                <td>
+                                    <input type="text" class="form-control text-end" value="{{ $reim_type->max_amount }}" disabled>
+                                </td>
+                                <td class="text-end">{{ number_format($detail->entry_amount, 2) }}</td>
                                 <td>
                                     @if ($detail->upload_bill)
                                         <a href="{{ asset('storage/' . $detail->upload_bill) }}" target="_blank" class="text-decoration-none" title="open in new tab">
@@ -73,8 +81,11 @@
                         </tbody>
                         <tfoot>
                             <tr>
-                                <td colspan="2" style="text-align: right; font-weight: bold;">Total Amount:</td>
-                                <td colspan="4" style="font-weight: bold;">Rs. {{ number_format($totalAmount, 2) }}</td>
+                                <td colspan="4" style="text-align: right; font-weight: bold;">Total Amount:</td>
+                                <td  class="fw-bold text-end">Rs. {{ number_format($totalAmount, 2) }}</td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
                                 <td></td>
                             </tr>
                         </tfoot>
@@ -94,7 +105,7 @@
                         <!-- <input type="hidden" name="status" id="status" value=""> -->
                         <button type="button" class="py-1 mx-1 px-3 btn-warning text-white" onclick="submitForm('REVERT')">Revert</button>
                         <button type="button" class="py-1 mx-1 px-3 btn-danger" onclick="submitForm('REJECTED')">Reject</button>
-                        <button type="button" class="py-1 mx-1 px-3 btn-success" onclick="submitForm('APPROVED')">Approve</button>
+                        <button type="button" class="py-1 mx-1 px-3 btn-success" onclick="submitForm('APPROVED BY MANAGER')">Approve</button>
                     </form>
                     </div>
                 </div>
