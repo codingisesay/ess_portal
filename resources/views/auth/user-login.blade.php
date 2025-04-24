@@ -40,7 +40,7 @@
             <div class="logo">
                 <img src="{{ asset('user_end/images/STPL Logo with TagLine HD Transparent.png') }}" alt="SIL Logo" class="img-fluid" width="180">
             </div>
-            <form class="signup-form" method="POST" action="{{ route('user.login') }}">
+            <form class="signup-form " method="POST" action="{{ route('user.login') }}">
                 @csrf
                 <div class="form-group">
                     <input type="text" name="email" id="username" placeholder=" " oninput="this.value = this.value.toUpperCase(); validateUsername()" required>

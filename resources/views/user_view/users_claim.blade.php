@@ -11,7 +11,7 @@
 <body>
 <div class="mx-4">
     <h2>
-        <span  onclick="history.back()" > < </span>
+        <span  onclick="history.back()" > &lt; </span>
          Reimbursement Claims        
     </h2>
     @if ($reimbursementList->isNotEmpty())
@@ -53,9 +53,9 @@
                                     <input type="text" class="form-control" value="{{ $reim_type->type_name }}" disabled>
                                 </td>
                                 <td>
-                                    <input type="text" class="form-control" value="{{ $reim_type->max_amount }}" disabled>
+                                    <input type="text" class="form-control text-end" value="{{ $reim_type->max_amount }}" disabled>
                                 </td>
-                                <td>{{ number_format($detail->entry_amount, 2) }}</td>
+                                <td class="text-end">{{ number_format($detail->entry_amount, 2) }}</td>
                                 <td>
                                     @if ($detail->upload_bill)
                                         <a href="{{ asset('storage/' . $detail->upload_bill) }}" target="_blank" class="text-decoration-none" title="open in new tab">
@@ -81,8 +81,9 @@
                         </tbody>
                         <tfoot>
                             <tr>
-                                <td colspan="2" style="text-align: right; font-weight: bold;">Total Amount:</td>
-                                <td colspan="4" style="font-weight: bold;">Rs. {{ number_format($totalAmount, 2) }}</td>
+                                <td colspan="4" style="text-align: right; font-weight: bold;">Total Amount:</td>
+                                <td  class="fw-bold text-end">Rs. {{ number_format($totalAmount, 2) }}</td>
+                                <td></td>
                                 <td></td>
                                 <td></td>
                                 <td></td>

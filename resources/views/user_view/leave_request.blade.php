@@ -36,11 +36,14 @@ error_reporting(0);
 // dd($loginUserInfo);
 
 ?>
-<body>
+<body > 
     <div class="modal d-block" >
-        <div class="modal-content">
+  
+        <div class="modal-content  modal-lg">
             <div class="close" onclick="confirmCancel()">×</div>
-            <h5>Leave Request Form</h5>  
+            <h5>
+                <!-- <span class="back-btn mx-2" onclick="history.back()"> &lt; </span> -->
+                Leave Request Form</h5>  
             <form action="{{ route('insert_leave') }}" method="POST" id="leave_form" class="row">
                 @csrf
                 <div class="col-md-6 my-2">             
@@ -107,6 +110,7 @@ error_reporting(0);
                 </div>
             </form>
         </div>
+       
     </div>
 <div id="customAlert" class="custom-alert">
     <div class="alert-box">

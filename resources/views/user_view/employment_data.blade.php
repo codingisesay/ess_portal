@@ -8,21 +8,9 @@
     <link rel="icon" href="{{ asset('user_end/images/STPLLogo butterfly.png') }}" />
     <link rel="stylesheet" href="{{ asset('/user_end/css/homepage.css') }}">
     <link rel="stylesheet" href="{{ asset('/user_end/css/header.css') }}">
+    <link rel="stylesheet" href="{{ asset('/user_end/css/homepage.css') }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    
-   
-     <style> 
-    .eduction-info-item .info-value {
-            font-size: 1.1rem;
-            color: #333;
-            padding: 8px 12px;
-            background: #f8f9fa;
-            border-radius: 6px;
-            border-left: 3px solid #8A3366;}
-            .eduction-info-item .info-label {
-                font-size: 16px;font-weight: 500;
-            }
-     </style>
+     
 </head>
 <body>
  
@@ -40,7 +28,7 @@
             <div class="row my-auto " >    
                 <div class="col-6 my-2">
                     <div class="section custom-table h-100">
-                    <h5> Employee Details</h5>
+                    <h5 class="d-flex align-items-center"><x-icon name="empidoutline"/>&nbsp;Employee Details</h5>
                         <table> 
                             
                             <tr>
@@ -60,7 +48,7 @@
                                 <td><b>{{ ucfirst($userDetails->total_experience ?? '-') }}</b></td>
                             </tr>
                             <tr>
-                                <th>Experience In Current Companey</th>
+                                <th>Experience In Current Company</th>
                                 <td><b>{{ ucfirst($userDetails->total_experience ?? '-') }}</b></td>
                             </tr>
                         </table>
@@ -68,7 +56,7 @@
                 </div>
                 <div class="col-6 my-2">
                     <div class="section custom-table h-100"> 
-                    <h5>Salary Bank Details</h5>
+                    <h5 class="d-flex align-items-center"><x-icon name="bankoutline"/>&nbsp;Salary Bank Details</h5>
                     <table> 
                     
                         <tr>
@@ -92,7 +80,7 @@
                 </div>
                 <div class="col-6 my-2">
                     <div class="section custom-table h-100">
-                        <h5>Personal Information</h5>
+                        <h5 class="d-flex align-items-center"><x-icon name="personalinfooutline"/>&nbsp;Personal Information</h5>
                         <table>
                             <tr>
                                 <th>Date of Birth</th>
@@ -127,7 +115,7 @@
                 </div> 
                 <div class="col-6 my-2">
                     <div class="section custom-table h-100"> 
-                    <h5>Passport & Visa Details</h5>
+                    <h5 class="d-flex align-items-center"><x-icon name="passportoutline"/>&nbsp;Passport & Visa Details</h5>
                     <table class="custom-table">             
                         <tr>
                             <th>Passport Number</th>
@@ -160,7 +148,7 @@
                 </div>
                 <div class="col-6 my-2">
                     <div class="section custom-table h-100"> 
-                    <h5>Welfare Benefits</h5>
+                    <h5 class="d-flex align-items-center"><x-icon name="wellfareoutline"/>&nbsp;Welfare Benefits</h5>
                     <table>                 
                         <tr>
                             <th>UAN</th>
@@ -179,7 +167,7 @@
                 </div>
                 <div class="col-6 my-2">
                     <div class="section custom-table h-100"> 
-                    <h5>Educational Details</h5>
+                    <h5 class="d-flex align-items-center"><x-icon name="educationoutline"/>&nbsp;Educational Details</h5>
                     <table class="">
                         <thead>
                             <tr>
@@ -221,7 +209,7 @@
         <!-- table section start below -->
         <div class="col-6 my-2 ">
             <div class="section h-100"> 
-                <h3>Family Details</h3>
+                <h5 class="d-flex align-items-center"><x-icon name="useroutline" />&nbsp;Family Details</h5>
                 <div class="table-scroll-container">
                     <table>
                         <thead>
@@ -256,7 +244,7 @@
         </div>
         <div class="col-6 my-2 "> 
             <div class="section h-100">
-                <h3>Previous Employment</h3>
+                <h5 class="d-flex align-items-center"><x-icon name="buildingoutline"/>&nbsp;Previous Employment</h5>
                 <div class="table-scroll-container">
                     <table>
                         <thead>
@@ -297,7 +285,7 @@
         </div>
         <div class="col-12 my-2 "> 
             <div class="section h-100"> 
-                <h3 class='d-flex  align-items-center'> <x-icon name="openfolder" />&nbsp; Uploaded Documents</h3>                
+                <h5 class='d-flex align-items-center'> <x-icon name="openfolder" />&nbsp; Uploaded Documents</h5>                
                 <div class="row my-2">  
                     @foreach($documents as $index => $document)
                         <div class="col-6">
@@ -335,7 +323,7 @@
     <div id="certificationModal" class="modal">
         <div class="modal-content">
             <!-- <div class="modal-header">  -->
-                <span class="close" onclick="closeModal('certificationModal')">X</span>
+                <span class="close" onclick="closeModal('certificationModal')">&times;</span>
                 <h5>Academic Details</h5> 
             <!-- </div> -->
             <div id="certification-modal-content-details">
@@ -354,30 +342,51 @@
             @foreach($empEducation as $index => $education)
                 if (serialNo === {{ $index }}) {
                     modalContent.innerHTML += `
-                    <div class="row eduction-info-item">
+                        <div class="row eduction-info-item">
                         <div class="col-md-6 my-2">
-                            <div class="info-label">Degree</div>
-                            <div class="info-value">{{ ucfirst($education->degree ?? '-') }}</div>
+                            <div class="form-group">
+                                <div class="floating-label-wrapper">
+                                    <label >Degree</label>
+                                    <input class="input-field" type="text" value=" {{ ucfirst($education->degree ?? '-') }} " />
+                                </div>                                
+                            </div>
                         </div>
                         <div class="col-md-6 my-2">
-                            <div class="info-label">University</div>
-                            <div class="info-value">{{ ucfirst($education->university_board ?? '-') }}</div>
+                            <div class="form-group">
+                                <div class="floating-label-wrapper">
+                                    <label >University</label>
+                                    <input class="input-field" type="text" value=" {{ ucfirst($education->university_board ?? '-') }} " />
+                                </div>                                
+                            </div>
                         </div>
                          
                         <div class="col-md-6 my-2">
-                            <div class="info-label">Institution</div>
-                            <div class="info-value">{{ ucfirst($education->institution ?? '-') }}</div>
+                            <div class="form-group">
+                                <div class="floating-label-wrapper">
+                                    <label >Institution</label>
+                                    <input class="input-field" type="text" value=" {{ ucfirst($education->institution ?? '-') }} " />
+                                </div>                                
+                            </div>
                         </div>
                         <div class="col-md-6 my-2">
-                            <div class="info-label">Passing Year</div>
-                            <div class="info-value">{{ $education->passing_year ? $education->passing_year : '-' }}</div>
+                            <div class="form-group">
+                                <div class="floating-label-wrapper">
+                                    <label >Passing Year</label>
+                                    <input class="input-field" type="text" value=" {{ $education->passing_year ? $education->passing_year : '-' }} " />
+                                </div>                                
+                            </div>
                         </div>
                          
                         <div class="col-md-6 my-2">
-                            <div class="info-label">Percentage</div>
-                            <div class="info-value">{{ ucfirst($education->percentage_cgpa ?? '-') }}</div>
+                            <div class="form-group">
+                                <div class="floating-label-wrapper">
+                                    <label >Percentage</label>
+                                    <input class="input-field" type="text" value=" {{ ucfirst($education->percentage_cgpa ?? '-') }} " />
+                                </div>                                
+                            </div>
                         </div>
                     </div>
+
                     `;
                 }
             @endforeach
@@ -394,21 +403,36 @@
                     modalContent.innerHTML += `
                     <div class="row eduction-info-item">
                         <div class="col-md-6 my-2">
-                            <div class="info-label">Certification Name</div>
-                            <div class="info-value">{{ ucfirst($education->certification_name ?? '-') }}</div>
+                            <div class="form-group">
+                                <div class="floating-label-wrapper">
+                                    <label>Certification Name</label>
+                                    <input type="text" class="input-field" value=" {{ ucfirst($education->certification_name ?? '-') }}" />
+                                </div>
+                            </div>
                         </div>
                         <div class="col-md-6 my-2">
-                            <div class="info-label">Marks Obtained</div>
-                            <div class="info-value">{{ ucfirst($education->marks_obtained ?? '-') }}</div>
-                        </div>
-                         
+                            <div class="form-group">
+                                <div class="floating-label-wrapper">
+                                    <label>Marks Obtained</label>
+                                    <input type="text" class="input-field" value=" {{ ucfirst($education->marks_obtained ?? '-') }} " />
+                                </div>
+                            </div>
+                        </div>                         
                         <div class="col-md-6 my-2">
-                            <div class="info-label">Total Marks</div>
-                            <div class="info-value">{{ ucfirst($education->out_of_marks_total_marks ?? '-') }}</div>
+                            <div class="form-group">
+                                <div class="floating-label-wrapper">
+                                    <label>Total Marks</label>
+                                    <input type="text" class="input-field" value=" {{ ucfirst($education->out_of_marks_total_marks ?? '-') }} " />
+                                </div>
+                            </div>
                         </div>
                         <div class="col-md-6 my-2">
-                            <div class="info-label">Certificate Date</div>
-                            <div class="info-value">{{ $education->date_of_certificate ? \Carbon\Carbon::parse($education->date_of_certificate)->format('d-m-Y') : '-' }}</div>
+                            <div class="form-group">
+                                <div class="floating-label-wrapper">
+                                    <label>Certificate Date</label>
+                                    <input type="text" class="input-field" value=" {{ $education->date_of_certificate ? \Carbon\Carbon::parse($education->date_of_certificate)->format('d-m-Y') : '-' }} " />
+                                </div>
+                            </div>
                         </div> 
                     </div> 
                     `;

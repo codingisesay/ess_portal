@@ -45,9 +45,9 @@ error_reporting(0);
                                 <input type="text" class="form-control" value="{{ $reim_type->type_name }}" disabled>
                             </td>
                             <td>
-                                <input type="text" class="form-control" value="{{ $reim_type->max_amount }}" disabled>
+                                <input type="text" class="form-control text-end" value="{{ $reim_type->max_amount }}" disabled>
                             </td>
-                            <td>{{ number_format($claim->entry_amount, 2) }}</td>
+                            <td class="text-end">{{ number_format($claim->entry_amount, 2) }}</td>
                             <td>
                                 @if ($claim->upload_bill)
                                 <a href="{{ asset('storage/' . $claim->upload_bill) }}" target="_blank" class="text-decoration-none" title="open in new tab">
