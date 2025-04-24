@@ -72,7 +72,7 @@ class salaryBoxController extends Controller
             'component_name' => 'required',
             'component_type' => 'required',
             'calculation_type' => 'required',
-            'value' => 'required',
+            'value' => '',
         ]);
 
         $org_data = Auth::guard('superadmin')->user();
