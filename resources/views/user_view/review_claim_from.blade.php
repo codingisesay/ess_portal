@@ -11,29 +11,14 @@
  <!-- Option 1: Include in HTML --> 
   <link rel="stylesheet" href="{{ asset('user_end/css/leave.css') }}"> 
   <link rel="stylesheet" href="{{ asset('/user_end/css/homepage.css') }}"> 
-<style>
-.reimbursement-container {
-  margin: 10px 20px;
-}
-th {
-  background-color: #8A3366 !important;}
-  .submit2 {
-    border: 1px solid #8A3366 !important;
-    color: #8A3366;background:white;
-    padding: 7px 12px;
-    border-radius: 8px;
-    margin-left: auto;
-    border: none;
-}
-.reimbursement-details{background:white; padding:20px; border-radius:10px; box-shadow:0 0 10px rgba(0,0,0,0.1);}
-</style>
+ 
 
      
 
-<div class="reimbursement-container">
-    <h2>Review Reimbursement Claims for Tracking ID: {{ $tokenNumber }}</h2>
+<div class="mx-3">
+    <h2><span class="back-btn mx-2" onclick="history.back()"> &lt; </span>Review Reimbursement For : {{ $tokenNumber }}</h2>
     <div class="reimbursement-details">
-        <table class="table table-striped">
+        <table >
             <thead>
                 <tr>
                     <th>Entry Date</th>
@@ -41,7 +26,7 @@ th {
                     <th>Description by Applicant</th>
                     <th>Entry Amount</th>
                     <th>Status</th>
-                    <th>Upload Bill</th>
+                    <th>View Bill</th>
                 </tr>
             </thead>
             <tbody>
@@ -50,13 +35,13 @@ th {
                         <td>{{ \Carbon\Carbon::parse($claim->entry_date)->format('d/m/Y') }}</td>
                         <td>{{ $claim->type_name }}</td>
                         <td>{{ $claim->description_by_applicant }}</td>
-                        <td>₹{{ number_format($claim->entry_amount, 2) }}</td>
+                        <td class="text-end" >₹{{ number_format($claim->entry_amount, 2) }}</td>
                         <td>
                             <span class="{{ $claim->status == 'In Review' ? 'review' : '' }}">
                                 {{ $claim->status }}
                             </span>
                         </td>
-                        <td>
+                        <td class='text-center'>
                             @if ($claim->upload_bill)
                                 <a href="{{ asset('storage/' . $claim->upload_bill) }}" target="_blank"><x-icon name="newtab" />
                                 </a>

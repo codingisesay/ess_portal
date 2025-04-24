@@ -27,6 +27,8 @@ error_reporting(0);
                         <tr>
                             <th>S.No.</th>
                             <th>Date</th>
+                            <th>Reimbursement Type</th>
+                            <th>Max Amount</th>
                             <th>Entered Amount</th>
                             <th>Bill</th>
                             <th>Applicant Comment</th>
@@ -39,7 +41,13 @@ error_reporting(0);
                         <tr>
                             <td>{{ $loop->iteration }}</td>
                             <td>{{ \Carbon\Carbon::parse($claim->entry_date)->format('d/m/Y') }}</td>
-                            <td>{{ number_format($claim->entry_amount, 2) }}</td>
+                            <td>
+                                <input type="text" class="form-control" value="{{ $reim_type->type_name }}" disabled>
+                            </td>
+                            <td>
+                                <input type="text" class="form-control text-end" value="{{ $reim_type->max_amount }}" disabled>
+                            </td>
+                            <td class="text-end">{{ number_format($claim->entry_amount, 2) }}</td>
                             <td>
                                 @if ($claim->upload_bill)
                                 <a href="{{ asset('storage/' . $claim->upload_bill) }}" target="_blank" class="text-decoration-none" title="open in new tab">
@@ -66,6 +74,8 @@ error_reporting(0);
                         <tr>
                             <td colspan="2" style="text-align: right; font-weight: bold;">Total Amount:</td>
                             <td colspan="4" style="font-weight: bold;">Rs. {{ number_format($claim->total_amount, 2) }}</td>
+                            <td></td>
+                            <td></td>
                             <td></td>
                             <td></td>
                         </tr>

@@ -100,7 +100,7 @@ error_reporting(0);
                     <div class="card holiday1 mx-1">
                         <p class="fs-6 mb-0 d-flex justify-content-left align-items-center ">
                             <img src="{{ asset('user_end/images/holiday.png'); }}" alt=""> &nbsp;
-                            Holiday
+                            Upcoming Holiday
                         </p>
                         
                         @if($upcomingHolidays->isNotEmpty())
@@ -130,7 +130,28 @@ error_reporting(0);
                 </div>
             </div>
         </div>
-        <div class=" col-lg-2 col-md-6 col-sm-12 p-1">            
+        <div class=" col-lg-2 col-md-6 col-sm-12 p-1">      
+            <section class="upcoming-anniversary">
+                <h5 class="">Work Anniversary</h5>
+                <div class="anniversary">
+                    @forelse ($anniversaries as $anniversary)
+                    <div class=" border rounded-3 shadow-sm mb-1">
+                        <div class="d-flex justify-content-between p-2">
+                            <div class="details mb-3"> 
+                                <p class="mb-0" ><strong> {{ $anniversary->Employee_Name }}</strong></p>
+                                <small >{{ $anniversary->yearsCompleted }} Years Completed</small>
+                                <div class="badge">{{ $anniversary->badgeText }}</div>
+                            </div> 
+                            <!-- <img class="mb-3" src='https://i.pinimg.com/736x/99/4b/51/994b51b05a506a082ea193492a449ca9.jpg' alt="photo" /> -->
+                        </div>
+                    </div>
+                    @empty
+                    <p class="text-muted text-center py-3">No Work Anniversary for the current month.</p>
+                    @endforelse
+                </div>
+            </section>
+        </div>
+        <div class=" col-lg-3 col-md-6 col-sm-12 p-1">            
             <section class="to-do-list"> 
                 <h5 class="">To-do List</h5>
                 <form id="todo-form" class="to-do-list-container" method="POST" action="{{ route('user.save_todo') }}">
@@ -171,36 +192,15 @@ error_reporting(0);
                         </div>
 
                         <!-- Save Button -->
-                        <button type="submit" class="save-button">Save</button> 
+                        <button type="submit" class="save-button w-auto mx-auto py-1 px-3">Save</button> 
                 </form>
             </section>
         </div>
-        <div class=" col-lg-2 col-md-6 col-sm-12 p-1">      
-            <section class="upcoming-anniversary">
-                <h5 class="">Work Anniversary</h5>
-                <div class="anniversary">
-                    @forelse ($anniversaries as $anniversary)
-                    <div class=" border rounded-3 shadow-sm mb-1">
-                        <div class="d-flex justify-content-between p-2">
-                            <div class="details mb-4"> 
-                                <p class="mb-0" ><strong> {{ $anniversary->Employee_Name }}</strong></p>
-                                <small >{{ $anniversary->yearsCompleted }} Years Completed</small>
-                                <div class="badge">{{ $anniversary->badgeText }}</div>
-                            </div> 
-                            <!-- <img class="mb-3" src='https://i.pinimg.com/736x/99/4b/51/994b51b05a506a082ea193492a449ca9.jpg' alt="photo" /> -->
-                        </div>
-                    </div>
-                    @empty
-                    <p class="text-muted text-center py-3">No Work Anniversary for the current month.</p>
-                    @endforelse
-                </div>
-            </section>
-        </div>
-        <div class=" col-lg-4 col-md-6 col-sm-12 p-1">
+        <div class=" col-lg-3 col-md-6 col-sm-12 p-1">
            
-            <section class="calendar-container">
+            <section class="calendar-container ">
                 <h5 class="calendar-header ">Calendar</h5>
-                <div class="main-cal">
+                <div class="main-cal px-3">
                     <div id="calendar-controls">
                         <button id="prev-month" class="slider-btn">&lt;</button>
 
@@ -281,7 +281,7 @@ error_reporting(0);
                     <ul>
                         @foreach ($newsAndEvents as $event)
                         <li>
-                            <div class="d-flex">
+                            <div class="d-flex align-items-center">
                             <span class="date my-auto">{{ \Carbon\Carbon::parse($event->startdate)->format('d M') }}</span>
                             <h6>{{ $event->title }}</h6>
                             </div>
@@ -356,8 +356,7 @@ error_reporting(0);
                                 <th>End Date</th>
                                 <th>Days Count</th>
                                 <th>Reason</th>
-                                <th>Approve</th>
-                                <th>Reject</th>
+                                <th>Action</th>                     
                             </tr>
                         </thead>
                         <tbody>
@@ -380,14 +379,12 @@ error_reporting(0);
                                         @method('PUT')
                                         <button type="submit"  class="btn text-success"> <x-icon name="done" /> </button>
                                     </form>
-                                    </td>
-                                    <td>
                                     <form action="{{ route('leave_update_status', ['id' => $leave->leave_appliy_id, 'status' => 'Reject']) }}" method="POST" style="display: inline;">
                                         @csrf
                                         @method('PUT')
                                         <button type="submit" class="btn text-danger"> <x-icon name="cancel" /> </button>
                                     </form>
-                                </td> 
+                                    </td>
                                 </tr>
                             @endforeach
                         @endforeach
@@ -482,10 +479,10 @@ error_reporting(0);
                                         <td>{{ $reimbursement->no_of_entries }}</td>
                                         <td>{{ number_format($reimbursement->total_amount, 2) }}</td> <!-- Display total amount -->
                                         <td>{{ $reimbursement->status }}</td> <!-- Display status -->
-                                        <td>
+                                        <td>  <button>  
                                             <a href="{{ route('user_claims',['user_id' => $reimbursement->user_id, 'reimbursement_traking_id' => $reimbursement->id]) }}">
-                                                <button>View</button>
-                                            </a>
+                                                <x-icon name="newtab" />
+                                            </a> </button>
                                         </td>
                                     </tr>
                                 @endforeach
@@ -506,7 +503,7 @@ error_reporting(0);
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <span class="close" onclick="closeAccountModal()">&times;</span>
-                <h5>Account Details</h5>
+                <h5>Reimbursement Details</h5>
                 <div class="tbl-container">
                     <table>
                         <thead>
@@ -524,7 +521,11 @@ error_reporting(0);
                                 <td>{{ $manager->manager_name }}</td>
                                 <td>{{ $manager->employee_name }}</td>
                                 <td>
-                                <a href="{{ route('manager_claims', ['manager_id' => $manager->manager_id, 'reimbursement_traking_id' => $manager->reimbursement_traking_id]) }}" class="btn btn-primary btn-sm">View</a>
+                                    <button>
+                                    <a href="{{ route('manager_claims', ['manager_id' => $manager->manager_id, 'reimbursement_traking_id' => $manager->reimbursement_traking_id]) }}"  >
+                                        <x-icon name="newtab" />
+                                    </a>
+                                    </button>
                             </td>
                             </tr>
                             @endforeach
