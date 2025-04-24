@@ -186,7 +186,7 @@
         <div class="file-upload">
             <div class="file-select d-flex align-items-center">
                 <span class="me-2 my-2"><x-icon name="upload" /></span> 
-                <input type="file" name="bills[]" class="profileimg" accept=".jpg,.jpeg,.png,.pdf" required>
+                <input type="file" name="bills[]" class="profileimg" accept=".jpg,.jpeg,.png,.pdf" >
                 <div class="imagePreview"></div>
             </div>
         </div>
