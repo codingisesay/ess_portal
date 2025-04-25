@@ -114,17 +114,17 @@
                         <a href="{{ route('claim_form') }}" class="text-decoration-none text-white">Claim Reimbursement</a>
                     </button>
                 </div>
-                <hr class="my-2"> 
-       
-                <div class=" reimbursment-filter-button-collection">
+                <hr class="my-2">       
+                <div class=" reimbursment-filter-button-collection mb-2">
                     <button class="me-3 py-1 btn border-0 btn-outline-primary filter-btn filter-btn active" data-status="ALL">All</button>
                     <button class="me-3 py-1 btn border-0 btn-outline-success filter-btn " data-status="APPROVED">Approved</button>
                     <button class="me-3 py-1 btn border-0 btn-outline-warning filter-btn " data-status="PENDING">Pending</button>
                     <button class="me-3 py-1 btn border-0 btn-outline-danger filter-btn " data-status="REJECTED">Rejected</button>
+                    <button class="me-3 py-1 btn border-0 btn-outline-info filter-btn " data-status="REVERT">Revert</button>
                 </div> 
-                    <div class="tbl-container reimbursment-tbl-height">
+                    <div class="tbl-container reimbursment-tbl-height p-0">
                         <table>
-                            <thead class="position-sticky top-0">
+                            <thead class="position-sticky " style="margin-top:-1px">
                                 <tr>
                                     <th>Claim ID</th>
                                     <th>Date</th>

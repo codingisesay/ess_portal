@@ -35,7 +35,7 @@
                                 <th>S.No.</th>
                                 <th>Date</th>
                                 <th>Claim Type</th>
-                                <th>Max Amount</th>
+                                <th>Max Amount(₹)</th>
                                 <th>Entered Amount</th>
                                 <th>Bill</th>
                                 <th>Applicant Comment</th>
@@ -52,10 +52,10 @@
                                 <td>
                                     <input type="text" class="form-control" value="{{ $reim_type->type_name }}" disabled>
                                 </td>
-                                <td>
+                                <td class="d-flex jusify-content-end">
                                     <input type="text" class="form-control text-end" value="{{ $reim_type->max_amount }}" disabled>
                                 </td>
-                                <td class="text-end">{{ number_format($detail->entry_amount, 2) }}</td>
+                                <td class="text-end">₹ {{ number_format($detail->entry_amount, 2) }}</td>
                                 <td>
                                     @if ($detail->upload_bill)
                                         <a href="{{ asset('storage/' . $detail->upload_bill) }}" target="_blank" class="text-decoration-none" title="open in new tab">
@@ -82,7 +82,7 @@
                         <tfoot>
                             <tr>
                                 <td colspan="4" style="text-align: right; font-weight: bold;">Total Amount:</td>
-                                <td  class="fw-bold text-end">Rs. {{ number_format($totalAmount, 2) }}</td>
+                                <td  class="fw-bold text-end">₹ {{ number_format($totalAmount, 2) }}</td>
                                 <td></td>
                                 <td></td>
                                 <td></td>

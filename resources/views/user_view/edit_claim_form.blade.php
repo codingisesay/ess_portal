@@ -39,7 +39,7 @@
       <table id="billsTable">
         <thead>
           <tr>
-            <th>S.no</th>
+            <th>Sr.No.</th>
             <th>Date</th>
             <th>Type</th>
             <th>Max Amount</th>
@@ -126,20 +126,27 @@
             </div>
             @if ($claim->upload_bill)
               @if (Str::endsWith($claim->upload_bill, ['.jpg', '.jpeg', '.png']))
-                <img src="{{ asset('storage/' . $claim->upload_bill) }}" 
-                     class="existing-image img-thumbnail" width="100" height="100" style="display:block;">
-                <img src="#" class="new-image-preview img-thumbnail" width="100" height="100" style="display:none;">
+               <!-- Thumbnail image that triggers modal -->
+<img src="{{ asset('storage/' . $claim->upload_bill) }}"
+     class="existing-image img-thumbnail"
+     width="50" height="50"
+     style="cursor: pointer;"
+     data-bs-toggle="modal"
+     data-bs-target="#imageModal"
+     data-img="{{ asset('storage/' . $claim->upload_bill) }}">
+
+                <img src="#" class="new-image-preview img-thumbnail" width="50" height="50" style="display:none;">
               @elseif (Str::endsWith($claim->upload_bill, '.pdf'))
-                <div class="pdf-preview d-flex flex-column align-items-center justify-content-center bg-light" style="width:100px;height:100px;">
+                <div class="pdf-preview d-flex flex-column align-items-center justify-content-center bg-light"  >
                   <x-icon name="file-text" class="text-primary" size="48" />
                   <small class="text-muted mt-1">PDF</small>
                 </div>
               @endif
             @else
-              <div class="no-file-placeholder d-flex align-items-center justify-content-center bg-light" style="width:100px;height:100px;">
+              <div class="no-file-placeholder d-flex align-items-center justify-content-center bg-light"  >
                 <x-icon name="upload" size="24" class="text-muted" />
               </div>
-              <img src="#" class="new-image-preview img-thumbnail" width="100" height="100" style="display:none;">
+              <img src="#" class="new-image-preview img-thumbnail" width="50" height="50" style="display:none;">
             @endif
           </div>
         </div>
@@ -216,37 +223,32 @@ document.addEventListener('DOMContentLoaded', function() {
 </script>
 
 <style>
-.image-preview-container {
-  position: relative;
-}
-.existing-image, .new-image-preview, .pdf-preview, .no-file-placeholder {
-  border: 1px solid #dee2e6;
-  border-radius: 4px;
-  object-fit: contain;
-}
-.file-input {
-  width: 20px;
-  height: 50px;
-  opacity: 1;
-  overflow: hidden;
-  position: absolute; 
-}
-.upload-icon-input{position: relative;}
-.upload-icon-input input{position:absolute; top:0; left:0; width:100%; height:100%; opacity:0;}
+  .image-preview-container {
+    position: relative;
+  }
+  .existing-image, .new-image-preview, .pdf-preview, .no-file-placeholder {
+    border: 1px solid #dee2e6;
+    border-radius: 4px;
+    object-fit: contain;
+  }
+  .file-input {
+    width: 20px;
+    height: 50px;
+    opacity: 1;
+    overflow: hidden;
+    position: absolute; 
+  }
+  .upload-icon-input{position: relative;}
+  .upload-icon-input input{position:absolute; top:0; left:0; width:100%; height:100%; opacity:0;}
 </style>
 
-
-
-
-
-
-
-
+ 
       </table>
     </div>
     <!-- Submit Button --> <br>
      <div style="text-align:right">
-    <button type="submit" class="apply-leave">&nbsp;Save Changes&nbsp;</button>
+     <button type="refresh" class="btn btn-secondary py-2 me-3 fw-normal">&nbsp;Cancel&nbsp;</button>
+     <button type="submit" class="apply-leave">&nbsp;Save Changes&nbsp;</button>
 
 
 
@@ -279,6 +281,42 @@ document.addEventListener('DOMContentLoaded', function() {
 </script>
 
 
+<!-- image handel below -->
+ <!-- Bootstrap Modal -->
+<div class="modal fade" id="imageModal" tabindex="-1" aria-labelledby="imageModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content">
+  <div class="modal-header p-0">
+    <h6 class="modal-title mb-2">Image Preview</h6>
+    <span class=" " data-bs-dismiss="modal" aria-label="Close" >&times;</span> 
+  </div>
+      <div class="modal-body text-center">
+        <img src="" id="modalImage" class="img-fluid" alt="Zoomed Image">
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+    // Wait until the DOM is loaded
+    document.addEventListener('DOMContentLoaded', function () {
+        const modalImage = document.getElementById('modalImage');
+        const imageModal = document.getElementById('imageModal');
 
+        document.querySelectorAll('.existing-image').forEach(img => {
+            img.addEventListener('click', function () {
+                const imgSrc = this.getAttribute('data-img');
+                modalImage.src = imgSrc;
+            });
+        });
+
+        // Optional: Clear the image when modal is closed
+        imageModal.addEventListener('hidden.bs.modal', function () {
+            modalImage.src = '';
+        });
+    });
+</script>
  
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
 @endsection

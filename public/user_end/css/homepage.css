@@ -621,7 +621,7 @@ table button {
     background-color: rgba(138, 51, 102, 0.8);
     border-radius: 10px;
     color: #ffffff;
-    padding: 5px 10px;
+    padding: 5px;
     font-weight: 500;
     margin-right: 10px;
     height: 40px;
@@ -1608,6 +1608,26 @@ video {
 
 .modal-backdrop.fade.show {
     display: none
+}
+
+input.form-control.text-end {
+    width: 150px;
+    max-width: max-content;
+    margin-left: auto
+}
+
+input.form-control.text-end:disabled {
+    background-color: transparent;
+    /* Light gray background */
+    text-align: right;
+    /* Enforces right text alignment */
+    cursor: not-allowed;
+    /* Visual cue for disabled state */
+    border: none;
+    padding: 0;
+    width: 100px;
+    max-width: max-content;
+    margin-left: auto
 }
 
 /* reimbursment css above */

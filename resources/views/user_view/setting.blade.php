@@ -251,7 +251,7 @@
                         <table class="custom-table">
                             <thead>
                                 <tr>
-                                    <th>S.No</th>
+                                    <th>Sr.No.</th>
                                     <th>Name</th>
                                     <th>Email ID</th>
                                     <th>Edit</th>
@@ -298,7 +298,7 @@
                                 <table class="custom-table">
                                     <thead>
                                         <tr>
-                                            <th>S.No</th>
+                                            <th>Sr.No.</th>
                                             <th>Employee ID</th>
                                             <th>Salary Template</th>
                                             <th>Employee CTC</th>
