@@ -46,43 +46,42 @@
                         <tbody>
                             @php $serial = 1; @endphp
                             @foreach ($reimbursementList as $detail)
-                            <tr>
-                                <td>{{ $serial++ }}</td>
-                                <td>{{ \Carbon\Carbon::parse($detail->entry_date)->format('d/m/Y') }}</td>
-                                <td>
-                                    <input type="text" class="form-control" value="{{ $reim_type->type_name }}" disabled>
-                                </td>
-                                <td>
-                                    <input type="text" class="form-control text-end" value="{{ $reim_type->max_amount }}" disabled>
-                                </td>
-                                <td class="text-end">{{ number_format($detail->entry_amount, 2) }}</td>
-                                <td>
-                                    @if ($detail->upload_bill)
-                                        <a href="{{ asset('storage/' . $detail->upload_bill) }}" target="_blank" class="text-decoration-none" title="open in new tab">
-                                            <x-icon name="newtab" />
-                                        </a>
-                                    @else
-                                        N/A
-                                    @endif
-                                </td>
-                                <td>{{ $detail->description_by_applicant }}</td>
-                                <td>
-                                    <!-- {{ $detail->status }}  -->
-                                    <label class="toggle-switch">
-                                        <input type="checkbox" checked />
-                                        <span class="slider"></span>
-                                    </label>
-                                </td>
-                                <td>
-                                <input type="text" name="remarks[{{ $detail->entry_id }}]" value="" />
-                                </td>
-                            </tr>
+                                <tr>
+                                    <td>{{ $serial++ }}</td>
+                                    <td>{{ \Carbon\Carbon::parse($detail->entry_date)->format('d/m/Y') }}</td>
+                                    <td>
+                                        <input type="text" class="form-control" value="{{ $detail->type_name }}" disabled>
+                                    </td>
+                                    <td>
+                                        <input type="text" class="form-control text-end" value="{{ $detail->max_amount ?? 'N/A' }}" disabled>
+                                    </td>
+                                    <td class="text-end">{{ number_format($detail->entry_amount, 2) }}</td>
+                                    <td>
+                                        @if ($detail->upload_bill)
+                                            <a href="{{ asset('storage/' . $detail->upload_bill) }}" target="_blank" class="text-decoration-none" title="open in new tab">
+                                                <x-icon name="newtab" />
+                                            </a>
+                                        @else
+                                            N/A
+                                        @endif
+                                    </td>
+                                    <td>{{ $detail->description_by_applicant }}</td>
+                                    <td>
+                                        <label class="toggle-switch">
+                                            <input type="checkbox" checked />
+                                            <span class="slider"></span>
+                                        </label>
+                                    </td>
+                                    <td>
+                                        <input type="text" name="remarks[{{ $detail->entry_id }}]" value="" />
+                                    </td>
+                                </tr>
                             @endforeach
                         </tbody>
                         <tfoot>
                             <tr>
                                 <td colspan="4" style="text-align: right; font-weight: bold;">Total Amount:</td>
-                                <td  class="fw-bold text-end">Rs. {{ number_format($totalAmount, 2) }}</td>
+                                <td class="fw-bold text-end">Rs. {{ number_format($totalAmount, 2) }}</td>
                                 <td></td>
                                 <td></td>
                                 <td></td>
