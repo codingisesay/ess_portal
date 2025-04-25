@@ -73,7 +73,7 @@
                                         </label>
                                     </td>
                                     <td>
-                                        <input type="text" name="remarks[{{ $detail->entry_id }}]" value="" />
+                                        <input type="text" id="remarks"  name="remarks[{{ $detail->entry_id }}]" value="" />
                                     </td>
                                 </tr>
                             @endforeach
@@ -123,6 +123,14 @@
 </script>
 <script>
     function submitForm(status) {
+
+        if (status === 'REVERT') {
+            const taskInput = document.getElementById('remarks');
+            if (taskInput.value.trim() === '') {
+                alert('Please enter a Remark description before reverting.');
+                return;
+            }
+        }
         // Set the remark input value to the status
         document.getElementById('status').value = status;
 
@@ -136,6 +144,28 @@
     }
 </script>
  
- 
+<script>
+
+document.querySelectorAll('input[type="checkbox"]').forEach(function (checkbox) {
+    checkbox.addEventListener('change', function () { 
+        const button = document.querySelector('.btn-success');
+        const allChecked = Array.from(document.querySelectorAll('input[type="checkbox"]')).every(cb => cb.checked);
+
+        if (allChecked) {
+            button.disabled = false;
+            button.style.opacity = '1';
+            button.style.cursor = 'pointer';
+        } else {
+            button.disabled = true;
+            button.style.opacity = '0.5';
+            button.style.cursor = 'not-allowed';
+        }
+    });
+});
+
+
+
+    </script>
+
 @endsection
 

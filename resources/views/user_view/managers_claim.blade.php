@@ -67,7 +67,7 @@ error_reporting(0);
                                         </label>
                                     </td>
                                     <td>
-                                        <input type="text" name="remarks[{{ $claim->entry_id }}]" class="form-control" placeholder="Enter Finance Remark" value="">
+                                        <input type="text" id="remarks" name="remarks[{{ $claim->entry_id }}]" class="form-control" placeholder="Enter Finance Remark" value="">
                                     </td>
                                 </tr>
                             @endforeach
@@ -114,6 +114,18 @@ error_reporting(0);
 </script>
 <script>
     function submitForm(status) {
+
+        if (status === 'REVERT') {
+            const taskInput = document.getElementById('remarks');
+            if (taskInput.value.trim() === '') {
+                alert('Please enter a Remark description before reverting.');
+                return;
+            }
+        } 
+           
+        if 
+        
+
         // Set the status input value
         document.getElementById('status').value = status;
 
@@ -127,5 +139,24 @@ error_reporting(0);
     }
 </script>
 
- 
+<script>
+document.querySelectorAll('input[type="checkbox"]').forEach(function (checkbox) {
+    checkbox.addEventListener('change', function () { 
+        const button = document.querySelector('.btn-success');
+        const allChecked = Array.from(document.querySelectorAll('input[type="checkbox"]')).every(cb => cb.checked);
+
+        if (allChecked) {
+            button.disabled = false;
+            button.style.opacity = '1';
+            button.style.cursor = 'pointer';
+        } else {
+            button.disabled = true;
+            button.style.opacity = '0.5';
+            button.style.cursor = 'not-allowed';
+        }
+    });
+});
+
+
+    </script>
 @endsection
