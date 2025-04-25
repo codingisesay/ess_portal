@@ -35,7 +35,7 @@
                                 <th>S.No.</th>
                                 <th>Date</th>
                                 <th>Claim Type</th>
-                                <th>Max Amount</th>
+                                <th>Max Amount(₹)</th>
                                 <th>Entered Amount</th>
                                 <th>Bill</th>
                                 <th>Applicant Comment</th>
@@ -81,11 +81,12 @@
                         <tfoot>
                             <tr>
                                 <td colspan="4" style="text-align: right; font-weight: bold;">Total Amount:</td>
-                                <td class="fw-bold text-end">Rs. {{ number_format($totalAmount, 2) }}</td>
+                                <td  class="fw-bold text-end">₹ {{ number_format($totalAmount, 2) }}</td>
                                 <td></td>
                                 <td></td>
                                 <td></td>
                                 <td></td>
+                                
                             </tr>
                         </tfoot>
                     </table>

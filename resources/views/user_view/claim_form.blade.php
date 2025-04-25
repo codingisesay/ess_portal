@@ -1,7 +1,6 @@
 @extends('user_view.header')
 @section('content')
  
-  
   <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js"></script> 
   <link rel="stylesheet" href="{{ asset('/user_end/css/homepage.css') }}">
  <!-- Option 1: Include in HTML --> 
@@ -56,7 +55,7 @@
               <table class="" id="billsTable">
                 <thead>
                   <tr>
-                    <th>S.no</th>
+                    <th>Sr.No.</th>
                     <th>Date</th>
                     <th>Type</th>
                     <th>Max Amount</th>
@@ -131,7 +130,7 @@
             @endforeach
           </select>
         </td>
-        <td><input type="text" name="max_amount[]" class="form-control text-end" step="0.01" disabled></td>
+        <td><input type="text" name="max_amount[]" class="form-control text-end  " step="0.01" disabled></td>
         <td><input type="number" name="entered_amount[]" class="form-control text-end" step="0.01" required></td>
         <td> 
         <div class="file-upload">
@@ -194,71 +193,70 @@
  
 
 
-<script>
-        $(document).ready(function() {
-            $(document).on('change', '.file-upload input[type="file"]', function() {
-                var filename = $(this).val();
-                if (/^\s*$/.test(filename)) {
-                    $(this).parents(".file-upload").find(".file-select-name").text("No file chosen...");
-                    $(this).parents(".file-upload").find(".imagePreview").hide();
-                } else {
-                    $(this).parents(".file-upload").find(".file-select-name").text(filename.substring(filename.lastIndexOf("\\") + 1, filename.length));
-                }
+  <script>
+  $(document).ready(function() {
+  $(document).on('change', '.file-upload input[type="file"]', function() {
+  var filename = $(this).val();
+  if (/^\s*$/.test(filename)) {
+  $(this).parents(".file-upload").find(".file-select-name").text("No file chosen...");
+  $(this).parents(".file-upload").find(".imagePreview").hide();
+  } else {
+  $(this).parents(".file-upload").find(".file-select-name").text(filename.substring(filename.lastIndexOf("\\") + 1, filename.length));
+  }
 
-                var uploadFile = $(this);
-                var files = !!this.files ? this.files : [];
-                if (!files.length || !window.FileReader) return; // no file selected, or no FileReader support
+  var uploadFile = $(this);
+  var files = !!this.files ? this.files : [];
+  if (!files.length || !window.FileReader) return; // no file selected, or no FileReader support
 
-                if (/^image/.test(files[0].type)) { // only image file
-                    var reader = new FileReader(); // instance of the FileReader
-                    reader.readAsDataURL(files[0]); // read the local file
+  if (/^image/.test(files[0].type)) { // only image file
+  var reader = new FileReader(); // instance of the FileReader
+  reader.readAsDataURL(files[0]); // read the local file
 
-                    reader.onloadend = function() { // set image data as background of div
-                        var preview = uploadFile.closest(".file-upload").find('.imagePreview');
-                        preview.css("background-image", "url(" + this.result + ")");
-                        preview.show(); preview.data('image-src', this.result);
-                    }
-                } else if (files[0].type === 'application/pdf') {
-                    // For PDF files, show a PDF icon or text
-                    var preview = uploadFile.closest(".file-upload").find('.imagePreview');
-                    preview.css("background-image", "url('')");
-                    preview.show();   preview.removeData('image-src');
-                } else {
-                    // For other file types, hide the preview
-                    uploadFile.closest(".file-upload").find('.imagePreview').hide();
-                }
-            });
+  reader.onloadend = function() { // set image data as background of div
+      var preview = uploadFile.closest(".file-upload").find('.imagePreview');
+      preview.css("background-image", "url(" + this.result + ")");
+      preview.show(); preview.data('image-src', this.result);
+  }
+  } else if (files[0].type === 'application/pdf') {
+  // For PDF files, show a PDF icon or text
+  var preview = uploadFile.closest(".file-upload").find('.imagePreview');
+  preview.css("background-image", "url('')");
+  preview.show();   preview.removeData('image-src');
+  } else {
+  // For other file types, hide the preview
+  uploadFile.closest(".file-upload").find('.imagePreview').hide();
+  }
+  });
 
-            var imageModal = new bootstrap.Modal(document.getElementById('imageModal'));
-                   // Click handler for image preview
-                   $(document).on('click', '.imagePreview', function() {
-                var imageSrc = $(this).data('image-src'); 
-                if (imageSrc) {
-                    $('#modalImage').attr('src', $(this).data('image-src'));
-                    imageModal.show();
-                }
-            });
-        });
-</script>
+  var imageModal = new bootstrap.Modal(document.getElementById('imageModal'));
+  // Click handler for image preview
+  $(document).on('click', '.imagePreview', function() {
+  var imageSrc = $(this).data('image-src'); 
+  if (imageSrc) {
+  $('#modalImage').attr('src', $(this).data('image-src'));
+  imageModal.show();
+  }
+  });
+  });
+  </script>
 
 
-    <!-- Modal for enlarged image -->
-    <div class="modal fade" id="imageModal" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-lg modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header p-0">
-                    <h6 class="modal-title ">Image Preview</h6>
-                    <span class=" " data-bs-dismiss="modal" aria-label="Close" >&times;</span>
-                    <!-- <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button> -->
-                </div>
-                <div class="modal-body text-center">
-                    <img src="" class="modal-image-preview" id="modalImage">
-                </div> 
-            </div>
-        </div>
-    </div>
+  <!-- Modal for enlarged image -->
+  <div class="modal fade" id="imageModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+  <div class="modal-content">
+  <div class="modal-header p-0">
+    <h6 class="modal-title mb-2">Image Preview</h6>
+    <span class=" " data-bs-dismiss="modal" aria-label="Close" >&times;</span> 
+  </div>
+  <div class="modal-body text-center">
+  <img src="" class="modal-image-preview" id="modalImage">
+  </div> 
+  </div>
+  </div>
+  </div>
 
-    <!-- Bootstrap JS Bundle with Popper -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js">
- 
+  <!-- Bootstrap JS Bundle with Popper -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
 @endsection

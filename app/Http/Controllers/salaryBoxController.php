@@ -72,7 +72,7 @@ class salaryBoxController extends Controller
             'component_name' => 'required',
             'component_type' => 'required',
             'calculation_type' => 'required',
-            'value' => 'required',
+            'value' => '',
         ]);
 
         $org_data = Auth::guard('superadmin')->user();
@@ -359,6 +359,7 @@ class salaryBoxController extends Controller
             'reimbursement_trackings.description',
             'reimbursement_trackings.status'
         )
+        ->orderBy('reimbursement_trackings.created_at', 'desc') // Order by claim date
         ->get();
 // dd($reimbursementClaims);
     return view('user_view.payrollDashboard', compact('reimbursementClaims'));
