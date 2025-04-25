@@ -19,13 +19,11 @@ error_reporting(0);
     <link rel="stylesheet" href="{{ asset('/user_end/css/homepage.css') }}">
     <link rel="stylesheet" href="{{ asset('/user_end/css/header.css') }}">
     <link rel="stylesheet" href="{{ asset('errors/error.css') }}"> 
-    <link href="{{ asset('bootstrapcss/bootstrap.min.css') }}" rel="stylesheet"> 
- 
-    
+    <link href="{{ asset('bootstrapcss/bootstrap.min.css') }}" rel="stylesheet">  
 </head>
  
     <div class="row mx-3">
-        <div class=" col-lg-4 col-md-6 col-sm-12 p-0">
+        <div class=" col-lg-4 col-md-6 col-sm-12 p-1">
             <h4 class="ms-2 mb-1 fw-bold" id="greeting"></h4> 
     
 
@@ -130,75 +128,82 @@ error_reporting(0);
                 </div>
             </div>
         </div>
-        <div class=" col-lg-2 col-md-6 col-sm-12 p-1">      
-            <section class="upcoming-anniversary">
-                <h5 class="">Work Anniversary</h5>
-                <div class="anniversary">
-                    @forelse ($anniversaries as $anniversary)
-                    <div class=" border rounded-3 shadow-sm mb-1">
-                        <div class="d-flex justify-content-between p-2">
-                            <div class="details mb-3"> 
-                                <p class="mb-0" ><strong> {{ $anniversary->Employee_Name }}</strong></p>
-                                <small >{{ $anniversary->yearsCompleted }} Years Completed</small>
-                                <div class="badge">{{ $anniversary->badgeText }}</div>
-                            </div> 
-                            <!-- <img class="mb-3" src='https://i.pinimg.com/736x/99/4b/51/994b51b05a506a082ea193492a449ca9.jpg' alt="photo" /> -->
+
+        <div class="col-lg-5 col-md-6 col-sm-12  row">
+
+
+            <div class=" col-md-6 col-sm-12 p-1">      
+                <section class="upcoming-anniversary">
+                    <h5 class="">Work Anniversary</h5>
+                    <div class="anniversary">
+                        @forelse ($anniversaries as $anniversary)
+                        <div class=" border rounded-3 shadow-sm mb-2">
+                            <div class="d-flex justify-content-between p-2">
+                                <div class="details mb-1"> 
+                                    <p class="mb-0" ><strong> {{ $anniversary->Employee_Name }}</strong></p>
+                                    <small >{{ $anniversary->yearsCompleted }} Years Completed</small>
+                                    <div class="badge">{{ $anniversary->badgeText }}</div>
+                                </div> 
+                                <!-- <img class="mb-3" src='https://i.pinimg.com/736x/99/4b/51/994b51b05a506a082ea193492a449ca9.jpg' alt="photo" /> -->
+                            </div>
                         </div>
+                        @empty
+                        <p class="text-muted text-center py-3">No Work Anniversary for the current month.</p>
+                        @endforelse
                     </div>
-                    @empty
-                    <p class="text-muted text-center py-3">No Work Anniversary for the current month.</p>
-                    @endforelse
-                </div>
-            </section>
+                </section>
+            </div>
+            <div class=" col-md-6 col-sm-12 p-1">            
+                <section class="to-do-list"> 
+                    <h5 class="">To-do List</h5>
+                    <form id="todo-form" class="to-do-list-container" method="POST" action="{{ route('user.save_todo') }}">
+                        @csrf 
+                            <!-- Project Field -->
+                            <div class="form-group">
+                                <div class="floating-label-wrapper">
+                                    <input type="text" id="project" maxlength="200" name="project_name" Placeholder="Project Name" class="input-field" required>
+                                    <label for="project">Project</label>
+                                </div>
+                            </div>
+
+                            <!-- Task Field -->
+                            <div class="form-group">
+                                <div class="floating-label-wrapper">
+                                    <input type="text" maxlength="200" id="task" name="task_name" placeholder="Task Description" class="input-field" required>
+                                    <label for="task">Task</label>
+                                </div>
+                            </div>
+
+                            <!-- Date Field -->
+                            <div class="form-group">
+                                <div class="floating-label-wrapper">
+                                    <input type="date" name="task_date" id="task_date" placeholder=" " class="input-field" required>                                
+                                    <label for="task_date">Date</label>
+                                </div>
+                            </div>
+
+                            <!-- Hours Field -->
+                            <div class="form-group">
+                                <div class="floating-label-wrapper">
+                                    
+                                <input class="input-field standard" type="text" placeholder="00.00" id="hours" name="hours"
+                                            onchange="console.log('Time changed to: ' + this.value)" />
+                                    <!-- <input type="time" id="hours" name="hours" class="input-field" value="00:00:00" placeholder=" " required> -->
+                                    <label for="hours">Hours</label>
+                                </div>
+                            </div>
+
+                            <!-- Save Button -->
+                            <button type="submit" class="save-button w-auto mx-auto py-1 px-3">Save</button> 
+                    </form>
+                </section>
+            </div>
+
         </div>
-        <div class=" col-lg-3 col-md-6 col-sm-12 p-1">            
-            <section class="to-do-list"> 
-                <h5 class="">To-do List</h5>
-                <form id="todo-form" class="to-do-list-container" method="POST" action="{{ route('user.save_todo') }}">
-                    @csrf 
-                        <!-- Project Field -->
-                        <div class="form-group">
-                            <div class="floating-label-wrapper">
-                                <input type="text" id="project" maxlength="200" name="project_name" Placeholder="Project Name" class="input-field" required>
-                                <label for="project">Project</label>
-                            </div>
-                        </div>
 
-                        <!-- Task Field -->
-                        <div class="form-group">
-                            <div class="floating-label-wrapper">
-                                <input type="text" maxlength="200" id="task" name="task_name" placeholder="Task Description" class="input-field" required>
-                                <label for="task">Task</label>
-                            </div>
-                        </div>
 
-                        <!-- Date Field -->
-                        <div class="form-group">
-                            <div class="floating-label-wrapper">
-                                <input type="date" name="task_date" id="task_date" placeholder=" " class="input-field" required>                                
-                                <label for="task_date">Date</label>
-                            </div>
-                        </div>
-
-                        <!-- Hours Field -->
-                        <div class="form-group">
-                            <div class="floating-label-wrapper">
-                                
-                            <input class="input-field standard" type="text" placeholder="00.00" id="hours" name="hours"
-                                        onchange="console.log('Time changed to: ' + this.value)" />
-                                <!-- <input type="time" id="hours" name="hours" class="input-field" value="00:00:00" placeholder=" " required> -->
-                                <label for="hours">Hours</label>
-                            </div>
-                        </div>
-
-                        <!-- Save Button -->
-                        <button type="submit" class="save-button w-auto mx-auto py-1 px-3">Save</button> 
-                </form>
-            </section>
-        </div>
-        <div class=" col-lg-3 col-md-6 col-sm-12 p-1">
-           
-            <section class="calendar-container ">
+        <div class=" col-lg-3 col-md-6 col-sm-12 p-1">           
+            <section class="calendar-container mx-auto">
                 <h5 class="calendar-header ">Calendar</h5>
                 <div class="main-cal px-3">
                     <div id="calendar-controls">
@@ -316,24 +321,45 @@ error_reporting(0);
         <div class="col-lg-3 col-md-6 col-sm-12 p-1"> 
             <section class="upcoming-birthdays">
                 <h5>Upcoming Birthdays</h5>
-                <div class="birthday-cards">
+               
+                <div class=" birthday-cards p-0">
+                    <div class="h-100 anniversary">
+                        @forelse ($upcomingBirthdays as $birthday)
+                        <div class=" border rounded-3 shadow-sm mb-2">
+                            <div class="d-flex  p-2">
+                            <img class="my-auto me-2" height="60" width="60" src="{{ asset('storage/' . ($birthday->imagelink ?: 'user_profile_image/Oqr4VRqo7RpQxnmiZCh12zybbcdsyUin2FhAKD3O.jpg')) }}" alt="photo" />
+                                <div class="details mb-1"> 
+                                    <p class="mb-0" ><strong> {{ $birthday->employee_nme }}</strong></p>
+                                    <small >{{ $birthday->designation_name }}</small>
+                                    <div class="badge">{{ $birthday->badgeText }}</div>
+                                </div> 
+                            </div>
+                        </div>
+                        @empty
+                        <p class="text-muted text-center py-3">No upcoming birthdays this month.</p>
+                        @endforelse
+                    </div>
+                </div>
+
+
+                <!-- <div class="birthday-cards">
                     @forelse ($upcomingBirthdays as $birthday)
-                    <div class="employee-card">
-                        <!-- <img src="{{ asset('storage/'.$birthday->imagelink) }}" alt="Profile Image" class="profile-image"> -->
-                        <!-- Check if the image exists or use the default image -->
+                    <div class="employee-card"> 
                         <img src="{{ asset('storage/' . ($birthday->imagelink ?: 'user_profile_image/Oqr4VRqo7RpQxnmiZCh12zybbcdsyUin2FhAKD3O.jpg')) }}" alt="Profile Image" class="profile-image">
 
-                        <div class="employee-info">
-                            <h6 class="mb-0">{{ $birthday->employee_nme }}</h6>
-                            <p class="text-secondary mb-0">{{ $birthday->designation_name }}</p>
-                            <div class="bdg" >{{ $birthday->badgeText }}</div>
-                        </div>
-                        </div>
+                            <div class="employee-info">
+                                <h6 class="mb-0">{{ $birthday->employee_nme }}</h6>
+                                <p class="text-secondary mb-0">{{ $birthday->designation_name }}</p>
+                                <div class="bdg" >{{ $birthday->badgeText }}</div>
+                            </div>
+                    </div>
                     
                     @empty
                     <p class="text-muted text-center py-3">No upcoming birthdays this month.</p>
                     @endforelse
-                </div>
+                </div> -->
+
+
             </section> 
         </div>
 
