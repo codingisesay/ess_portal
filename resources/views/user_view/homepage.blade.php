@@ -24,15 +24,13 @@ error_reporting(0);
  
     <div class="row mx-3">
         <div class=" col-lg-4 col-md-6 col-sm-12 p-1">
-            <h4 class="ms-2 mb-1 fw-bold" id="greeting"></h4> 
-    
-
-            <div class="row mx-1"> 
+            <h4 class="ms-2 mb-1 fw-bold" id="greeting"></h4>  
+            <div class="row mx-1 my-2"> 
                 @foreach ($logs as $log)  
                 <div class="col-md-6 col-sm-6">
                     <div class="row ">
-                    <div class="col-md-6 col-sm-6 my-2 px-0">
-                        <div class="card checkin mx-1">
+                    <div class="col-6 px-0">
+                        <div class="card checkin m-1">
                             <img src="{{ asset('user_end/images/Group490.png'); }}" alt="" />
                             <div >
                                 <p class="fs-6 mb-0">Log&nbsp;In</p>
@@ -40,8 +38,8 @@ error_reporting(0);
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-6 col-sm-6 my-2 px-0">
-                        <div class="checkout card  mx-1 ">
+                    <div class="col-6 px-0">
+                        <div class="checkout card m-1">
                             <img src="{{ asset('user_end/images/Group491.png'); }}" alt=""/>
                             <div >
                                 <p class="fs-6 mb-0">Log&nbsp;Out</p>
@@ -52,7 +50,7 @@ error_reporting(0);
                     </div>
                 </div>
                 @endforeach
-                <div class="col-md-6 col-sm-6 my-2 p-0"> 
+                <div class="col-md-6 col-sm-6 p-0"> 
                     <!-- Birthday Card -->
                     <!-- <div class="birthday-carousel-container mx-1"> -->
                         <!-- <div class="birthday-carousel" id="birthdayCarousel"> -->
@@ -61,7 +59,7 @@ error_reporting(0);
                                     return \Carbon\Carbon::parse($birthday->birthdate)->isToday();
                                 });
                             @endphp 
-                            <div class="card birthday mx-1">
+                            <div class="card birthday m-1">
                                 <img src="{{ asset('user_end/images/Group303.png') }}" height="40" width="40" alt="Avatar" class="mb-2">  
                                 @if ($todaysBirthdays->isEmpty())    
                                         <div>
@@ -80,8 +78,8 @@ error_reporting(0);
                         <!-- </div>  -->
                     <!-- </div>    -->
                 </div> 
-                <div class="col-6 p-0">
-                    <div class=" thought card mx-1 ">
+                <div class="col-sm-6 p-0">
+                    <div class=" thought card  m-1">
                         <p class="fs-6 mb-0 d-flex justify-content-left align-items-center  ">
                             <img src="{{ asset('user_end/images/Group326.png'); }}" alt=""> &nbsp;
                             Daily Insight
@@ -93,9 +91,9 @@ error_reporting(0);
                         @endif 
                     </div> 
                 </div>
-                <div class="col-6 p-0">
+                <div class="col-sm-6 p-0">
                     <!-- Upcoming Holiday Card -->
-                    <div class="card holiday1 mx-1">
+                    <div class="card holiday1  m-1">
                         <p class="fs-6 mb-0 d-flex justify-content-left align-items-center ">
                             <img src="{{ asset('user_end/images/holiday.png'); }}" alt=""> &nbsp;
                             Upcoming Holiday
@@ -129,11 +127,10 @@ error_reporting(0);
             </div>
         </div>
 
-        <div class="col-lg-5 col-md-6 col-sm-12  row">
-
-
+        <div class="col-lg-5 col-md-6 col-sm-12 py-1 row">
+ 
             <div class=" col-md-6 col-sm-12 p-1">      
-                <section class="upcoming-anniversary">
+                <section class="upcoming-anniversary ">
                     <h5 class="">Work Anniversary</h5>
                     <div class="anniversary">
                         @forelse ($anniversaries as $anniversary)
@@ -154,7 +151,7 @@ error_reporting(0);
                 </section>
             </div>
             <div class=" col-md-6 col-sm-12 p-1">            
-                <section class="to-do-list"> 
+                <section class="to-do-list "> 
                     <h5 class="">To-do List</h5>
                     <form id="todo-form" class="to-do-list-container" method="POST" action="{{ route('user.save_todo') }}">
                         @csrf 
