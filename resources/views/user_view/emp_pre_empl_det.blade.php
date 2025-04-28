@@ -172,7 +172,7 @@
 <td><input type="custom-reason" name="reason_for_leaving[]" placeholder="Enter Reason For Leaving"  maxlength="250" required></td>
 <td><input type="custom-major" name="major_responsibilities[]" placeholder="Enter Major Responsibilities"  maxlength="2000" required></td>
 
-<td><button type="button" onclick="removeEmploymentRow(this)"  class="btn text-danger  border-0 bg-transferent"><x-icon name="trash" /></button></td>
+<td><button type="button" onclick="removeEmploymentRow(this)" class="btn text-danger border-0 bg-transferent"><x-icon name="trash" /></button></td>
 `;
 
         tableBody.appendChild(newRow);

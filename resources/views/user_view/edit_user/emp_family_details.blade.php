@@ -104,7 +104,7 @@ $permission_array = session('id');
                                 title="Please enter a 10-digit phone number" 
                                 oninput="this.value = this.value.replace(/[^0-9]/g, '')"></td>
                                 <!-- {{-- <td><button type="button" onclick="editFamilyRow(this)">✏️</button></td> --}} -->
-                                <td>  <div class="delete-button text-danger" > <x-icon name="trash" /> </div> </td>
+                                <td>  <div class="delete-button text-danger"  data-id="{{ $detail->id }}"  onclick="removeFamilyRow(this)" > <x-icon name="trash" /> </div> </td>
 
                             </tr>
                             @endforeach
@@ -219,7 +219,7 @@ document.addEventListener('DOMContentLoaded', function () {
 <td><input type="tel" name="phone_number[]" placeholder="Phone Number"  maxlength="10"  inputmode="numeric" 
 title="Please enter a 10-digit phone number" 
 oninput="this.value = this.value.replace(/[^0-9]/g, '')"></td>
-<td> <div class=" text-danger" onclick="removeFamilyRow(this)" > <x-icon name="trash" /> </div>  </td>
+<td> <div class=" text-danger" data-id="{{ $detail->id }}" onclick="removeFamilyRow(this)" > <x-icon name="trash" /> </div>  </td>
 `;
 
         tableBody.appendChild(newRow);

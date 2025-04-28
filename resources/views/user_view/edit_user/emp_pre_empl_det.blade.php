@@ -103,7 +103,7 @@ $permission_array = session('id');
                             <td><input type="custom-reason" name="reason_for_leaving[]" placeholder="Enter Reason For Leaving"  maxlength="250" value="{{$detail->reason_for_leaving}}" required></td>
                             <td><input type="custom-major" name="major_responsibilities[]" placeholder="Enter Major Responsibilities"  maxlength="2000" required value="{{$detail->major_responsibilities}}"></td>
                             <!-- {{-- <td><button type="button" onclick="editEmploymentRow(this)">✏️</button></td> --}} -->
-                            <td><button class="btn text-danger border-0 bg-transferent delete-button btn" data-id="{{ $detail->id }}" type="button" ><x-icon name="trash" /></button></td>
+                            <td><button class="btn text-danger border-0 bg-transferent delete-button btn" data-id="{{ $detail->id }}"  onclick="removeEmploymentRow(this)" type="button" ><x-icon name="trash" /></button></td>
                         </tr>
                         @endforeach
                     </tbody>

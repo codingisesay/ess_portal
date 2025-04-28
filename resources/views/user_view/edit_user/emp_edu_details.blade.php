@@ -39,7 +39,7 @@ $permission_array = session('id');
         <form id="educationForm" action="{{ route('edit_education_insert') }}" method="POST">
             @csrf
             <input type="hidden" name="form_step4" value="education_step">
-            <h4 class="d-flex align-items-center"><x-icon name="educationoutline"/>&nbsp;Educational Detailss</h4>
+            <h4 class="d-flex align-items-center"><x-icon name="educationoutline"/>&nbsp;Educational Details</h4>
             <button type="button" class="add-row-education action-button" onclick="addEducationRow()">Add Educational Information</button>
             <div class="table-container">
                 <table>
@@ -94,7 +94,7 @@ $permission_array = session('id');
                                 <td><input type="date" name="date_of_certificate[]" class="date-input" value="{{ $detail->date_of_certificate }}" max="{{ date('Y-m-d') }}"></td>
                                 <!-- {{-- <td><button type="button" onclick="editEducationRow(this)">✏️</button></td> --}} -->
                                 <td>
-                                <div class="delete-button text-danger" onclick="removeEducationRow(this)" > <x-icon name="trash" /></div>
+                                <div class="delete-button text-danger"  onclick="removeEducationRow(this)" data-id="{{ $detail->id }}"> <x-icon name="trash" /></div>
                                     <!-- <button type="button" class="delete-button" data-id="{{ $detail->id }}">❌</button>
                                     {{-- <form action="{{ route('edu.destroy', $detail->id) }}" method="POST" style="display:inline;">
                                         @csrf
@@ -200,7 +200,7 @@ document.addEventListener('DOMContentLoaded', function () {
                         <td><input type="text" name="total_marks[]" class="total-marks-input" required placeholder="Enter Total Marks" oninput="validateMarks(this)" maxlength="3"></td>
             <td><input type="text" name="marks_obtained[]" class="marks-input" required placeholder="Enter Marks Obtained" oninput="validateMarks(this)" maxlength="3"></td>
             <td><input type="date" name="date_of_certificate[]" class="date-input" max="<?php echo date('Y-m-d'); ?>"></td>
-            <td>  <div class=" text-danger" onclick="removeEducationRow(this)" > <x-icon name="trash" />  </td>
+            <td>  <div class=" text-danger" onclick="removeEducationRow(this)"  data-id="{{ $detail->id }}"> <x-icon name="trash" />  </td>
         `;
         tableBody.appendChild(newRow);
         educationCounter++; // Increment the counter for new rows
@@ -479,9 +479,9 @@ $(document).on('click', '.delete-button', function () {
     });
 
 });
-document.getElementById('previous-btn-link').addEventListener('click', function(event) {
-        event.stopPropagation(); // Stop the form submission from being triggered
-    });
+// document.getElementById('previous-btn-link').addEventListener('click', function(event) {
+//         event.stopPropagation(); // Stop the form submission from being triggered
+//     });
 
 </script>
 
