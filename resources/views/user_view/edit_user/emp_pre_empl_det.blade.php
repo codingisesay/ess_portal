@@ -103,7 +103,7 @@ $permission_array = session('id');
                             <td><input type="custom-reason" name="reason_for_leaving[]" placeholder="Enter Reason For Leaving"  maxlength="250" value="{{$detail->reason_for_leaving}}" required></td>
                             <td><input type="custom-major" name="major_responsibilities[]" placeholder="Enter Major Responsibilities"  maxlength="2000" required value="{{$detail->major_responsibilities}}"></td>
                             <!-- {{-- <td><button type="button" onclick="editEmploymentRow(this)">✏️</button></td> --}} -->
-                            <td><button class="btn text-danger border-0 bg-transferent delete-button btn" data-id="{{ $detail->id }}"  onclick="removeEmploymentRow(this)" type="button" ><x-icon name="trash" /></button></td>
+                            <td><button class="btn text-danger border-0 bg-transferent delete-button btn"  onclick="removeEmploymentRow(this)" type="button" ><x-icon name="trash" /></button></td>
                         </tr>
                         @endforeach
                     </tbody>
@@ -176,7 +176,7 @@ $permission_array = session('id');
 <td><input type="custom-reason" name="reason_for_leaving[]" placeholder="Enter Reason For Leaving"  maxlength="250" required></td>
 <td><input type="custom-major" name="major_responsibilities[]" placeholder="Enter Major Responsibilities"  maxlength="2000" required></td>
 
-<td><button type="button" class="btn text-danger border-0 bg-transferent" onclick="removeEmploymentRow(this)"><x-icon name="trash" /></button></td>
+<td><button  data-id="{{ $detail->id }}"  type="button" class="btn text-danger border-0 bg-transferent" ><x-icon name="trash" /></button></td>
 `;
 
         tableBody.appendChild(newRow);
@@ -289,9 +289,9 @@ $permission_array = session('id');
 
 
     });
-    document.getElementById('previous-btn-link').addEventListener('click', function(event) {
-        event.stopPropagation(); // Stop the form submission from being triggered
-    });
+    // document.getElementById('previous-btn-link').addEventListener('click', function(event) {
+    //     event.stopPropagation(); // Stop the form submission from being triggered
+    // });
 
     </script>
 

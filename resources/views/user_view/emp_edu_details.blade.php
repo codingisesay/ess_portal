@@ -35,7 +35,7 @@
         <form id="educationForm" action="{{ route('education_insert') }}" method="POST">
             @csrf
             <input type="hidden" name="form_step4" value="education_step">
-            <h4 class="d-flex align-items-center"><x-icon name="educationoutline"/>&nbsp;Educational Details</h4>
+            <h4 class="d-flex align-items-center"><x-icon name="educationoutline"/>&nbsp;Educational Details </h4>
             <button type="button" class="add-row-education action-button" onclick="addEducationRow()">Add Educational Information</button>
             <div class="table-container">
                 <table>
@@ -87,10 +87,9 @@
                                 <td><input type="text" name="total_marks[]" class="total-marks-input" required value="{{ $detail->out_of_marks_total_marks }}" oninput="validateMarks(this)" maxlength="3"></td>
                                 <td><input type="text" name="marks_obtained[]" class="marks-input" required value="{{ $detail->marks_obtained }}" oninput="validateMarks(this)" maxlength="3"></td>
                                 <td><input type="date" name="date_of_certificate[]" class="date-input" value="{{ $detail->date_of_certificate }}" max="{{ date('Y-m-d') }}"></td>
-                                {{-- <td><button type="button" onclick="editEducationRow(this)">✏️</button></td> --}}
-                                <td>
-                                    <div class="delete-button text-danger" > <x-icon name="trash" /> </div>
-                                    <!-- <button type="button" class="delete-button" data-id="{{ $detail->id }}">❌</button> -->
+                                <!-- {{-- <td><button type="button" onclick="editEducationRow(this)">✏️</button></td> --}} -->
+                                <td> 
+                                    <button type="button" class="delete-button btn text-danger" data-id="{{ $detail->id }}"><x-icon name="trash" /></button>
                                     <!-- {{-- <form action="{{ route('edu.destroy', $detail->id) }}" method="POST" style="display:inline;">
                                         @csrf
                                         @method('DELETE')
@@ -194,10 +193,9 @@ document.addEventListener('DOMContentLoaded', function () {
             <td><input type="text" name="certification_name[]" class="certification-name-input" required placeholder="Enter Certification Name" maxlength="50"></td>
              <td><input type="text" name="total_marks[]" class="total-marks-input" required placeholder="Enter Total Marks" oninput="validateMarks(this)" maxlength="3"></td>
             <td><input type="text" name="marks_obtained[]" class="marks-input" required placeholder="Enter Marks Obtained" oninput="validateMarks(this)" maxlength="3"></td>
-            <td><input type="date" name="date_of_certificate[]" class="date-input" max="<?php echo date('Y-m-d'); ?>"></td>
-            <td>   <div class=" text-danger" onclick="removeEducationRow(this)" > <x-icon name="trash" /> </div> 
-     
-            </td>
+            <td><input type="date" name="date_of_certificate[]" class="date-input" max="<?php echo date('Y-m-d'); ?>"></td> 
+              <td><button type="button" onclick="removeEducationRow(this)" class="btn text-danger"><x-icon name="trash" /></button></td>
+        
         `;
         tableBody.appendChild(newRow);
         educationCounter++; // Increment the counter for new rows
@@ -415,7 +413,7 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     </script>
 
-{{-- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> --}}
+<!-- {{-- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> --}} -->
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <script>
@@ -425,58 +423,58 @@ $(document).on('click', '.delete-button', function () {
   
 
     // Confirm delete action
-    if (confirm('Are you sure you want to delete this item?')) {
-        // Send an AJAX DELETE request to the server
-        $.ajax({
-            url: '/user/del_education/' + educationId,  // Adjust the route URL if necessary
-            type: 'DELETE',
-            data: {
-                _method: 'DELETE',
-                _token: '{{ csrf_token() }}', 
-                educationId:educationId,// CSRF token for security
-            },
-            success: function (response) {
-                // On success, remove the row from the table
-                $('button[data-id="' + educationId + '"]').closest('tr').remove();
-                alert('Education record deleted successfully!');
-            },
-            error: function (response) {
-                alert('Error deleting record. Please try again.');
-            }
-        });
-    }
+    // if (confirm('Are you sure you want to delete this item?')) {
+    //     // Send an AJAX DELETE request to the server
+    //     $.ajax({
+    //         url: '/user/del_education/' + educationId,  // Adjust the route URL if necessary
+    //         type: 'DELETE',
+    //         data: {
+    //             _method: 'DELETE',
+    //             _token: '{{ csrf_token() }}', 
+    //             educationId:educationId,// CSRF token for security
+    //         },
+    //         success: function (response) {
+    //             // On success, remove the row from the table
+    //             $('button[data-id="' + educationId + '"]').closest('tr').remove();
+    //             alert('Education record deleted successfully!');
+    //         },
+    //         error: function (response) {
+    //             alert('Error deleting record. Please try again.');
+    //         }
+    //     });
+    // }
 
     // Confirm delete action with SweetAlert2
-        // Swal.fire({
-        //     title: 'Are you sure?',
-        //     text: "You won't be able to revert this!",
-        //     icon: 'warning',
-        //     showCancelButton: true,
-        //     confirmButtonText: 'Yes, delete it!',
-        //     cancelButtonText: 'Cancel',
-        //     reverseButtons: true
-        // }).then((result) => {
-        //     if (result.isConfirmed) {
-        //         // Send an AJAX DELETE request to the server
-        //         $.ajax({
-        //             url: '/user/del_education/' + educationId,  // Adjust the route URL if necessary
-        //             type: 'DELETE',
-        //             data: {
-        //                 _method: 'DELETE',
-        //                 _token: '{{ csrf_token() }}',  // CSRF token for security
-        //                 educationId: educationId,
-        //             },
-        //             success: function (response) {
-        //                 // On success, remove the row from the table
-        //                 $('button[data-id="' + educationId + '"]').closest('tr').remove();
-        //                 Swal.fire('Deleted!', 'Education record deleted successfully!', 'success');
-        //             },
-        //             error: function (response) {
-        //                 Swal.fire('Error!', 'Error deleting record. Please try again.', 'error');
-        //             }
-        //         });
-        //     }
-        // });
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "You won't be able to revert this!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Yes, delete it!',
+            cancelButtonText: 'Cancel',
+            reverseButtons: true
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // Send an AJAX DELETE request to the server
+                $.ajax({
+                    url: '/user/del_education/' + educationId,  // Adjust the route URL if necessary
+                    type: 'DELETE',
+                    data: {
+                        _method: 'DELETE',
+                        _token: '{{ csrf_token() }}',  // CSRF token for security
+                        educationId: educationId,
+                    },
+                    success: function (response) {
+                        // On success, remove the row from the table
+                        $('button[data-id="' + educationId + '"]').closest('tr').remove();
+                        Swal.fire('Deleted!', 'Education record deleted successfully!', 'success');
+                    },
+                    error: function (response) {
+                        Swal.fire('Error!', 'Error deleting record. Please try again.', 'error');
+                    }
+                });
+            }
+        });
 
 });
 document.getElementById('previous-btn-link').addEventListener('click', function(event) {

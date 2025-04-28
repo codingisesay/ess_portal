@@ -35,7 +35,7 @@
             <!-- <input type="hidden" name="employeeNo" value="P111"> -->
         @csrf
             <input type="hidden" name="form_step7" value="family_step">
-            <h4 class="d-flex align-items-center"><x-icon name="usersfill"/>&nbsp;Family Details</h4>
+            <h4 class="d-flex align-items-center"><x-icon name="usersfill"/>&nbsp;Family Details /h4>
             <button type="button" class="add-row-family action-button" onclick="addFamilyRow()">Add Family
                 Information</button>
 
@@ -100,8 +100,8 @@
                                 title="Please enter a 10-digit phone number" 
                                 oninput="this.value = this.value.replace(/[^0-9]/g, '')"></td>
                                 <!-- {{-- <td><button type="button" onclick="editFamilyRow(this)">✏️</button></td> --}} -->
-                                <td>  <div class="delete-button text-danger" > <x-icon name="trash" /> </div>
-                                    <!-- <button type="button" class="delete-button" data-id="{{ $detail->id }}">❌</button> -->
+                                <td>   
+                                    <button type="button" class="delete-button" data-id="{{ $detail->id }}"> <x-icon name="trash" /> </button>
                                 </td>
 
                             </tr>
@@ -217,7 +217,7 @@ document.addEventListener('DOMContentLoaded', function () {
 <td><input type="tel" name="phone_number[]" placeholder="Phone Number"  maxlength="10"  inputmode="numeric" 
 title="Please enter a 10-digit phone number" 
 oninput="this.value = this.value.replace(/[^0-9]/g, '')"></td>
-<td><div class=" text-danger" onclick="removeFamilyRow(this)" > <x-icon name="trash" /> </div> </td>
+ <td><button type="button" onclick="removeFamilyRow(this)" class="btn text-danger"><x-icon name="trash" /></button></td>
 `;
 
         tableBody.appendChild(newRow);
