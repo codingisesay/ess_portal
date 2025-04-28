@@ -5,7 +5,6 @@
     padding: 0;
     box-sizing: border-box;
     font-family: 'Poppins', sans-serif;
-    font-size: 13px;
 }
 
 
@@ -48,10 +47,9 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin: 20px -31px;
-    width: 102%;
     position: relative;
-    margin-top: 1%;
+    margin: 10px auto;
+    overflow: auto;
 }
 
 .step {
@@ -61,7 +59,8 @@
     text-align: center;
     position: relative;
     flex-grow: 1;
-    /* Ensures equal spacing for steps */
+    padding: 0 10px
+        /* Ensures equal spacing for steps */
 }
 
 .step:not(:last-child)::after {
@@ -110,18 +109,17 @@
 
 /* Content area for the tabs */
 .tab-content {
-
     display: none;
     /* Hide by default */
     padding: 0px;
     /* border: 1px solid #ddd; */
     border-radius: 12px;
     /* Rounded corners for content area */
-    /* background: white; */
-    /* box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); /* Light shadow for a clean effect  */
-    margin-top: -1px;
+    background: #fff;
+    box-shadow: rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px;
+    margin: 10px 20px;
     animation: fadeIn 0.5s ease;
-    /* Smooth fade-in effect */
+    padding: 20px
 }
 
 /* Active content display */
@@ -154,7 +152,6 @@
     top: 21px;
     left: 12px;
     transform: translateY(-50%);
-    background: white;
     padding: 0 5px;
     font-size: 14px;
     color: #666;
@@ -171,7 +168,9 @@
     left: 10px;
     font-size: 13px;
     color: #8A3366;
-    font-weight: bold;
+    background-color: #fff;
+    border-radius: 5px;
+    font-weight: 600px;
 }
 
 /* Input Styles */
@@ -219,9 +218,6 @@ form {
     /* Glass effect */
     backdrop-filter: blur(10px);
     /* Blurring the background */
-    box-shadow: 0px 8px 24px rgba(0, 0, 0, 0.2);
-    /* 3D shadow effect */
-    border: 20px solid rgba(255, 255, 255, 0.2);
     /* Light inner border */
 }
 
@@ -373,13 +369,11 @@ table {
 
 /* Header row */
 table th {
-    background-color: #d99b8a;
-    /* Light peach color for headers */
-    color: #000;
-    /* Text color for contrast */
+    background-color: #8A3366;
+    color: #fff;
     text-align: center;
-    font-weight: bold;
-    padding: 10px;
+    font-weight: 600;
+    padding: 7px 10px;
     border: 1px solid #e0e0e0;
 }
 
@@ -387,15 +381,19 @@ table th {
 table td {
     border: 1px solid #e0e0e0;
     text-align: center;
-    padding: 10px;
+    padding: 7px 10px;
     vertical-align: middle;
+}
+
+table svg {
+    cursor: pointer;
 }
 
 /* Input fields inside the table */
 table input,
 table select {
     width: 90%;
-    padding: 8px;
+    padding: 3px 8px;
     border: 1px solid #ccc;
     border-radius: 4px;
     font-size: 14px;
@@ -414,10 +412,10 @@ table select {
     justify-content: center;
     color: #fff;
     border: none;
-    border-radius: 20px;
+    border-radius: 8px;
     padding: 8px 15px;
     font-size: 14px;
-    font-weight: bold;
+    font-weight: 600;
     cursor: pointer;
     transition: all 0.3s ease;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
@@ -642,8 +640,6 @@ select {
 body {
     font-family: Arial, sans-serif;
     background-color: #f4f4f4;
-    margin: px;
-    padding: px;
 }
 
 /* Updated CSS for service container and cards */
@@ -653,7 +649,7 @@ body {
     gap: 20px;
     width: 100%;
     margin: 0;
-    padding: 20px;
+    padding: 20px 0;
 }
 
 .service-card {
@@ -676,15 +672,14 @@ body {
 }
 
 .service-title {
-    font-weight: bold;
+    font-weight: 600;
     color: #333;
-    margin: 10px 0;
     text-align: left;
 }
 
 .service-description {
     color: #777;
-    font-size: 14px;
+    font-size: 12px;
     text-align: left;
 }
 
@@ -715,8 +710,8 @@ h4 {
     /* color: #333; */
     color: #8A3366;
     margin-bottom: 25px;
-    font-size: 20px;
-    margin-left: 22px;
+    /* font-size: 20px;
+    margin-left: 22px; */
 }
 
 
@@ -775,6 +770,13 @@ h4 {
     width: 100%;
 }
 
+.input-column {
+    flex: 1;
+    border: 1px solid #ba184e;
+    padding: 20px;
+    border-radius: 8px;
+}
+
 /* General Form Row Styling */
 .form-row,
 .form-row1,
@@ -784,9 +786,7 @@ h4 {
     flex-wrap: wrap;
     gap: 1vw;
     /* Ensure the gap is consistent across all form rows */
-    margin-bottom: 15px;
     width: 100%;
-    margin-left: 22px;
 }
 
 /* Form Group Styling */
@@ -1029,7 +1029,6 @@ h4 {
 
 .relation-type {
     width: 150px;
-    padding: 10px;
     border: 1px solid #ddd;
     border-radius: 4px;
     font-size: 14px;
@@ -1272,4 +1271,67 @@ input[type="custom-major"] {
 
 .clear-btn2 select:focus {
     outline: none;
+}
+
+.dropzone .dz-preview .dz-image {
+    height: 80px !important;
+    width: 80px !important;
+    border: 1px solid lightgray;
+}
+
+.dropzone.dz-clickable {
+    text-align: center !important;
+    overflow: auto !important;
+}
+
+.dropzone .dz-preview .dz-success-mark,
+.dropzone .dz-preview .dz-error-mark {
+    top: 40% !important;
+}
+
+.dz-filename {
+    display: none !important;
+}
+
+.dropzone .dz-preview .dz-details {
+    padding: 0 !important;
+}
+
+.dropzone .dz-preview .dz-details .dz-filename span,
+.dropzone .dz-preview .dz-details .dz-size span {
+    font-size: 12px !important;
+}
+
+a:hover {
+    color: #00356e !important;
+}
+
+/* Reduce the width and height of the Dropzone container */
+.dropzone {
+    width: 100%;
+    /* Adjust as needed */
+    height: 180px;
+    /* Adjust to the desired height */
+    border: 2px dashed #ccc;
+    /* Optional: Style the border */
+    border-radius: 8px;
+    /* Optional: Rounded corners */
+    padding: 20px;
+    /* Optional: Add some padding */
+}
+
+/* Customize the inner dropzone content (for example the file preview area) */
+.dropzone .dz-preview {
+    max-width: 100%;
+    /* Ensure the preview images don't overflow */
+}
+
+/* Optional: Increase the size of the file input area */
+.dropzone input[type="file"] {
+    width: 100%;
+    /* Adjust width */
+    height: 100%;
+    /* Adjust height */
+    opacity: 0;
+    /* Hide the default file input element */
 }

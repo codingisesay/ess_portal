@@ -1,7 +1,9 @@
 @extends('user_view/employee_form_layout')  <!-- Extending the layout file -->
 @section('content')  <!-- Defining the content section -->
 <!-- <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css"> -->
+<link href="{{ asset('bootstrapcss/bootstrap.min.css') }}" rel="stylesheet"> 
 <link rel="stylesheet" href="{{ asset('errors/error.css') }}">
+<style>body{margin:10px}</style>
 {{-- @if(session('success'))
 <div class="alert custom-alert-success">
     <strong>{{ session('success') }}</strong> 
@@ -28,99 +30,103 @@
 </div>
 @endif
 <div class="tab-content active" id="tab5">
-    <form id="familyForm" action="{{route('family_insert')}}" method="POST">
-        <!-- <input type="hidden" name="employeeNo" value="P111"> -->
-       @csrf
-        <input type="hidden" name="form_step7" value="family_step">
-        <h3>Family Details</h3>
-        <button type="button" class="add-row-family action-button" onclick="addFamilyRow()">Add Family
-            Information</button>
+    <div  class="input-column">
+        <form id="familyForm" action="{{route('family_insert')}}" method="POST">
+            <!-- <input type="hidden" name="employeeNo" value="P111"> -->
+        @csrf
+            <input type="hidden" name="form_step7" value="family_step">
+            <h4 class="d-flex align-items-center"><x-icon name="usersfill"/>&nbsp;Family Details</h4>
+            <button type="button" class="add-row-family action-button" onclick="addFamilyRow()">Add Family
+                Information</button>
 
-        <div class="table-container-family">
-            <div class="table-container">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Serial No.</th>
-                            <th>Name</th>
-                            <th>Relation</th>
-                            <th>Birth Date</th>
-                            <th>Gender</th>
-                            <th>Age</th>
-                            <th>Dependent</th>
-                            <th>Phone Number</th>
-                            {{-- <th>Edit</th> --}}
-                            <th>Action</th>
-                        </tr>
-                    </thead>
-                    <tbody id="familyTableBody">
-                        <!-- Rows will be added dynamically here -->
-                        @foreach($familyDetails as $index => $detail)
-                        <tr>
-                            <td>{{$index +1 }}</td> <!-- Display serial number in the table -->
-                            <td>
-                                <input type="hidden" name="serial_no[]" value="${familyCounter}">
-                                <input type="text" name="name[]" class="custom-name" placeholder="Enter Name" value="{{$detail->name}}" required maxlength="50"
-                                   oninput="this.value = this.value.replace(/[^a-zA-Z ]/g, '').();"  onkeydown="return blockNumbers(event);">
-                            </td>
-                            <td>
-                                <select name="relation[]" class="relation-type dropdown drop" required>
-                                    <option value="{{$detail->relation}}">{{$detail->relation}}</option>
-                                    <option value="Spouse">Spouse</option>
-                                    <option value="Child">Child</option>
-                                    <option value="Parent">Parent</option>
-                                    <option value="Sibiling">Sibling</option>
-                                    <option value="Other">Other</option>
-                                </select>
-                            </td>
-                            <td>
-                                <input type="date" name="birth_date[]" required value="{{$detail->birth_date}}" onchange="calculateAge(this)" 
-                                    max="<?php echo date('Y-m-d'); ?>">
-                            </td>
-                            <td>
-                                <select name="gender[]" class="gender-type dropdown drop" required>
-                                    <option value="{{$detail->gender}}">{{$detail->gender}}</option>
-                                    <option value="Male">Male</option>
-                                    <option value="Female">Female</option>
-                                    <option value="Other">Other</option>
-                                </select>
-                            </td>
-                            <td><input type="custom-age" name="age[]" value="{{$detail->age}}" placeholder="Age" required readonly></td>
-                            <td>
-                                <select name="dependent[]" class="dependent-type dropdown drop" required>
-                                    <option value="{{$detail->dependent}}" >{{$detail->dependent}}</option>
-                                    <option value="Yes">Yes</option>
-                                    <option value="No">No</option>
-                                </select>
-                            </td>
-                            <td><input type="tel" name="phone_number[]" placeholder="Phone Number" value="{{$detail->phone_number}}"  maxlength="10" inputmode="numeric" 
-                            title="Please enter a 10-digit phone number" 
-                            oninput="this.value = this.value.replace(/[^0-9]/g, '')"></td>
-                            {{-- <td><button type="button" onclick="editFamilyRow(this)">✏️</button></td> --}}
-                            <td><button type="button" class="delete-button" data-id="{{ $detail->id }}">❌</button></td>
+            <div class="table-container-family">
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Sr.&nbsp;No.</th>
+                                <th>Name</th>
+                                <th>Relation</th>
+                                <th>Birth Date</th>
+                                <th>Gender</th>
+                                <th>Age</th>
+                                <th>Dependent</th>
+                                <th>Phone Number</th>
+                                {{-- <th>Edit</th> --}}
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="familyTableBody">
+                            <!-- Rows will be added dynamically here -->
+                            @foreach($familyDetails as $index => $detail)
+                            <tr>
+                                <td>{{$index +1 }}</td> <!-- Display serial number in the table -->
+                                <td>
+                                    <input type="hidden" name="serial_no[]" value="${familyCounter}">
+                                    <input type="text" name="name[]" class="custom-name" placeholder="Enter Name" value="{{$detail->name}}" required maxlength="50"
+                                    oninput="this.value = this.value.replace(/[^a-zA-Z ]/g, '').();"  onkeydown="return blockNumbers(event);">
+                                </td>
+                                <td>
+                                    <select name="relation[]" class="relation-type dropdown drop" required>
+                                        <option value="{{$detail->relation}}">{{$detail->relation}}</option>
+                                        <option value="Spouse">Spouse</option>
+                                        <option value="Child">Child</option>
+                                        <option value="Parent">Parent</option>
+                                        <option value="Sibiling">Sibling</option>
+                                        <option value="Other">Other</option>
+                                    </select>
+                                </td>
+                                <td>
+                                    <input type="date" name="birth_date[]" required value="{{$detail->birth_date}}" onchange="calculateAge(this)" 
+                                        max="<?php echo date('Y-m-d'); ?>">
+                                </td>
+                                <td>
+                                    <select name="gender[]" class="gender-type dropdown drop" required>
+                                        <option value="{{$detail->gender}}">{{$detail->gender}}</option>
+                                        <option value="Male">Male</option>
+                                        <option value="Female">Female</option>
+                                        <option value="Other">Other</option>
+                                    </select>
+                                </td>
+                                <td><input type="custom-age" name="age[]" value="{{$detail->age}}" placeholder="Age" required readonly></td>
+                                <td>
+                                    <select name="dependent[]" class="dependent-type dropdown drop" required>
+                                        <option value="{{$detail->dependent}}" >{{$detail->dependent}}</option>
+                                        <option value="Yes">Yes</option>
+                                        <option value="No">No</option>
+                                    </select>
+                                </td>
+                                <td><input type="tel" name="phone_number[]" placeholder="Phone Number" value="{{$detail->phone_number}}"  maxlength="10" inputmode="numeric" 
+                                title="Please enter a 10-digit phone number" 
+                                oninput="this.value = this.value.replace(/[^0-9]/g, '')"></td>
+                                <!-- {{-- <td><button type="button" onclick="editFamilyRow(this)">✏️</button></td> --}} -->
+                                <td>  <div class="delete-button text-danger" > <x-icon name="trash" /> </div>
+                                    <!-- <button type="button" class="delete-button" data-id="{{ $detail->id }}">❌</button> -->
+                                </td>
 
-                        </tr>
-                        @endforeach
-                    </tbody>
-                </table>
+                            </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
             </div>
-        </div>
-        <!-- <div class="button-container">
-            <button class="previous-btn" type="button">Previous</button>
-            <button type="submit" class="next-btn">Next</button>
-        </div> -->
-        <div class="button-container">
-            <a href="{{ route('user.bank') }}" style="text-decoration:none;">
-                <button type="button" class="previous-btn">
-                    <span>&#8249;</span>
+            <!-- <div class="button-container">
+                <button class="previous-btn" type="button">Previous</button>
+                <button type="submit" class="next-btn">Next</button>
+            </div> -->
+            <div class="button-container">
+                <a href="{{ route('user.bank') }}" style="text-decoration:none;">
+                    <button type="button" class="previous-btn">
+                        <span>&#8249;</span>
+                    </button>
+                </a>
+                <button type="submit" class="next-btn">
+                    <span>&#8250;</span>
                 </button>
-            </a>
-            <button type="submit" class="next-btn">
-                <span>&#8250;</span>
-            </button>
-        </div>
+            </div>
 
-    </form>
+        </form>
+    </div>
 </div>
 <!-- uppercase bug -->
 
@@ -211,7 +217,7 @@ document.addEventListener('DOMContentLoaded', function () {
 <td><input type="tel" name="phone_number[]" placeholder="Phone Number"  maxlength="10"  inputmode="numeric" 
 title="Please enter a 10-digit phone number" 
 oninput="this.value = this.value.replace(/[^0-9]/g, '')"></td>
-<td><button type="button" onclick="removeFamilyRow(this)">❌</button></td>
+<td><div class=" text-danger" onclick="removeFamilyRow(this)" > <x-icon name="trash" /> </div> </td>
 `;
 
         tableBody.appendChild(newRow);
@@ -278,6 +284,7 @@ oninput="this.value = this.value.replace(/[^0-9]/g, '')"></td>
     });
 </script>
 {{-- <script src="{{ asset('user_end/js/onboarding_form.js') }}"></script> --}}
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
     $(document).on('click', '.delete-button', function () {
         // Get the ID of the record to be deleted
@@ -285,27 +292,59 @@ oninput="this.value = this.value.replace(/[^0-9]/g, '')"></td>
       
     console.log(familyId);
         // Confirm delete action
-        if (confirm('Are you sure you want to delete this item?')) {
-            // Send an AJAX DELETE request to the server
-            $.ajax({
-                url: '/user/del_family/' + familyId,  // Adjust the route URL if necessary
-                type: 'DELETE',
-                data: {
-                    _method: 'DELETE',
-                    _token: '{{ csrf_token() }}', 
-                    familyId:familyId,// CSRF token for security
-                },
-                success: function (response) {
-                    // On success, remove the row from the table
-                    $('button[data-id="' + familyId + '"]').closest('tr').remove();
-                    alert('Education record deleted successfully!');
-                },
-                error: function (response) {
-                    alert('Error deleting record. Please try again.');
-                    console.log(familyId);
-                }
-            });
-        }
+        // if (confirm('Are you sure you want to delete this item?')) {
+        //     // Send an AJAX DELETE request to the server
+        //     $.ajax({
+        //         url: '/user/del_family/' + familyId,  // Adjust the route URL if necessary
+        //         type: 'DELETE',
+        //         data: {
+        //             _method: 'DELETE',
+        //             _token: '{{ csrf_token() }}', 
+        //             familyId:familyId,// CSRF token for security
+        //         },
+        //         success: function (response) {
+        //             // On success, remove the row from the table
+        //             $('button[data-id="' + familyId + '"]').closest('tr').remove();
+        //             alert('Education record deleted successfully!');
+        //         },
+        //         error: function (response) {
+        //             alert('Error deleting record. Please try again.');
+        //             console.log(familyId);
+        //         }
+        //     });
+        // }
+        // Confirm delete action with SweetAlert2
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "You won't be able to revert this!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Yes, delete it!',
+            cancelButtonText: 'Cancel',
+            reverseButtons: true
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // Send an AJAX DELETE request to the server
+                $.ajax({
+                    url: '/user/del_family/' + familyId,  // Adjust the route URL if necessary
+                    type: 'DELETE',
+                    data: {
+                        _method: 'DELETE',
+                        _token: '{{ csrf_token() }}',  // CSRF token for security
+                        familyId: familyId,
+                    },
+                    success: function (response) {
+                        // On success, remove the row from the table
+                        $('button[data-id="' + familyId + '"]').closest('tr').remove();
+                        Swal.fire('Deleted!', 'Family record deleted successfully!', 'success');
+                    },
+                    error: function (response) {
+                        Swal.fire('Error!', 'Error deleting record. Please try again.', 'error');
+                        console.log(familyId);
+                    }
+                });
+            }
+        });
     });
     document.getElementById('previous-btn-link').addEventListener('click', function(event) {
         event.stopPropagation(); // Stop the form submission from being triggered
