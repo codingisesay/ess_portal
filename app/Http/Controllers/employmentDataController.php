@@ -58,7 +58,9 @@ class employmentDataController extends Controller
                 'employee_types.name as employee_type_name',  // Select employee type name
                 'managers.name as reporting_manager_name',  // Select reporting manager name
                 'banks.name as bank_name',  // Select bank name
-                'branches.name as branch_name'  // Select branch name
+                'branches.name as branch_name',  // Select branch name
+                DB::raw('TIMESTAMPDIFF(YEAR, emp_details.joining_date, CURDATE()) as experience_year'),
+                DB::raw('TIMESTAMPDIFF(MONTH, emp_details.joining_date, CURDATE()) % 12 as experience_month')
             )
             ->where('users.id', $userId)
             ->where('users.organisation_id', $organisationId)

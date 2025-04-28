@@ -2,17 +2,14 @@
 @section('content')  <!-- Defining the content section -->
 <!-- <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css"> -->
 <link rel="stylesheet" href="{{ asset('errors/error.css') }}">
+<link href="{{ asset('bootstrapcss/bootstrap.min.css') }}" rel="stylesheet"> 
+<link rel="stylesheet" href="{{ asset('user_end/css/onboarding_form.css') }}">
 <?php 
 error_reporting(0);
 $id = Auth::guard('web')->user()->id;
 $name = Auth::guard('web')->user()->name;
-$employeeID = Auth::guard('web')->user()->employeeID;
-
-
-
-// dd($results);
-
-
+$employeeID = Auth::guard('web')->user()->employeeID; 
+// dd($results); 
 // dd($results);
 
 ?>
@@ -34,22 +31,23 @@ $employeeID = Auth::guard('web')->user()->employeeID;
 
     @if($errors->any())
     <div class="alert custom-alert-warning">
-<ul>
-    @foreach($errors->all() as $error)
-        <li class="text-danger">{{ $error }}</li>
-    @endforeach
-</ul>
+    <ul>
+        @foreach($errors->all() as $error)
+            <li class="text-danger">{{ $error }}</li>
+        @endforeach
+    </ul>
 @endif
 
+ <style>body{margin:10px}</style>
 
 <div class="tab-content active" id="tab1">
     <form action="{{ route('detail_insert') }}" method="POST">
         @csrf
         <input type="hidden" name="form_step" value="form_step">
         <!-- Hidden input to identify the step -->
-        <div class="column" style="flex: 1; border: 1px solid #ba184e; padding: 20px; border-radius: 8px;">
+        <div class="input-column" >
             <div class="address-form">
-                <h3>Employee Details</h3>
+                <h4 class="d-flex align-items-center"><x-icon name="empidoutline"/>&nbsp;Employee Details</h4>
                 <div class="form-row">
                     <div class="form-group">
                         <select id="employmentType" class="form-control dropdown drop" name="employmentType" placeholder="" required>
@@ -71,9 +69,7 @@ $employeeID = Auth::guard('web')->user()->employeeID;
                     <div class="form-group">
                         <input type="date" id="joiningDate" class="form-control" name="joiningDate" placeholder="" value="{{old('joiningDate',$results[0]->Joining_date) }}" max="<?php echo date('Y-m-d'); ?>" required>
                         <label for="joiningDate">Joining Date<span style="color: red;">*</span></label>
-                    </div>
-                </div>
-                <div class="form-row">
+                    </div> 
                    <div class="form-group">
                     <select id="reportingManager" class="form-control dropdown drop" name="reportingManager" placeholder="" required>
                         <option value="{{ old('reportingManager', $results[0]->reporting_manager_id) }}">
@@ -122,13 +118,13 @@ $employeeID = Auth::guard('web')->user()->employeeID;
                     </div>      
 
 
-                </div>
+                    </div>
                 
             </div>
         </div>
-        <div class="column" style="flex: 1; border: 1px solid #ba184e; padding: 20px; border-radius: 8px;">
+        <div class="input-column" >
             <div class="address-form">
-                <h3>Basic Details</h3>
+                <h4 class="d-flex align-items-center"><x-icon name="personline"/>&nbsp;Basic Details</h4>
                 <div class="form-row">
                     <div class="form-group">
                         <select id="gender" class="form-control dropdown drop" name="gender"  placeholder=""  required>
@@ -163,8 +159,7 @@ $employeeID = Auth::guard('web')->user()->employeeID;
                         </select>
                         <label for="nationality">Nationality <span style="color: red;">*</span></label>
                     </div>
-                </div>
-                <div class="form-row">
+                
                     <div class="form-group">
                         <select id="religion" class="form-control dropdown drop" name="religion" placeholder="" required>
                             <option value="{{ old('religion',$results[0]->religion) }}" disable Select> {{ old('religion', $results[0]->religion) }}</option>
@@ -198,9 +193,9 @@ $employeeID = Auth::guard('web')->user()->employeeID;
                 </div>
             </div>
         </div>
-        <div class="column" style="flex: 1; border: 1px solid #ba184e; padding: 20px; border-radius: 8px;">
+        <div class="input-column" >
             <div class="address-form">
-                <h3>Welfare Benefits</h3>
+                <h4 class="d-flex align-items-center"><x-icon name="wellfareoutline"/>&nbsp;Welfare Benefits</h4>
                 <div class="form-row">
                     <div class="form-group">
                         <input type="text" id="uan" name="uan" class="form-control" placeholder="Enter Universal Account Number" minlength="12" value='{{old('uan',$results[0]->universal_account_number)}}' maxlength="16" pattern="\d{12,16}" oninput="validateUAN(this)" placeholder="" onkeypress="return isNumberKey(event)">
@@ -229,101 +224,94 @@ $employeeID = Auth::guard('web')->user()->employeeID;
 </div>
 
 <script>
-document.addEventListener('DOMContentLoaded', function () {
-    // Function to highlight the preselected option for a dropdown
-    function highlightSelectedOption(dropdown, selectedValue) {
-        // Loop through all options in the dropdown
-        const options = dropdown.querySelectorAll('option');
-        options.forEach(option => {
-            // Remove the highlighted class from all options
-            option.classList.remove('highlighted-option');
-            // Add the highlighted class to the selected option
-            if (option.value === selectedValue) {
-                option.classList.add('highlighted-option');
-            }
-        });
-    }
+    document.addEventListener('DOMContentLoaded', function () {
+        // Function to highlight the preselected option for a dropdown
+        function highlightSelectedOption(dropdown, selectedValue) {
+            // Loop through all options in the dropdown
+            const options = dropdown.querySelectorAll('option');
+            options.forEach(option => {
+                // Remove the highlighted class from all options
+                option.classList.remove('highlighted-option');
+                // Add the highlighted class to the selected option
+                if (option.value === selectedValue) {
+                    option.classList.add('highlighted-option');
+                }
+            });
+        }
 
-    // Get all dropdowns with the class 'dropdown'
-    const dropdowns = document.querySelectorAll('.drop');
+        // Get all dropdowns with the class 'dropdown'
+        const dropdowns = document.querySelectorAll('.drop');
 
-    dropdowns.forEach(dropdown => {
-        // Get the old value from a custom data attribute or fallback to the value from $results
-        const oldValue = dropdown.dataset.oldValue || dropdown.value;
+        dropdowns.forEach(dropdown => {
+            // Get the old value from a custom data attribute or fallback to the value from $results
+            const oldValue = dropdown.dataset.oldValue || dropdown.value;
 
-        // Highlight the preselected option on page load
-        highlightSelectedOption(dropdown, oldValue);
+            // Highlight the preselected option on page load
+            highlightSelectedOption(dropdown, oldValue);
 
-        // Add event listener for change event to handle updates
-        dropdown.addEventListener('change', function () {
-            // Highlight the newly selected option
-            highlightSelectedOption(dropdown, dropdown.value);
+            // Add event listener for change event to handle updates
+            dropdown.addEventListener('change', function () {
+                // Highlight the newly selected option
+                highlightSelectedOption(dropdown, dropdown.value);
+            });
         });
     });
-});
 </script>
 
 
-<style>
-    .highlighted-option {
-    background-color: #d99b8a;  /* Light blue background for selected option */
-    color: black;
-}
-
-</style>
 
 <script>
 
-$(document).ready(function () {
-    //For load leave according to the leave policy and taken leaves
-            $('#branch').on('change',function () {
-                // Create data to send with the request
-             var branch_id = $(this).val();
-        
-    $.ajax({
-    url: '/user/fetch_department/' + branch_id, // Send branch_id in the URL
-    type: 'get',
-    success: function (response) {
-        // On success, update the department dropdown
-        var $departmentSelect = $('#department');
-        $departmentSelect.empty(); // Clear existing options
+    $(document).ready(function () {
+        //For load leave according to the leave policy and taken leaves
+        $('#branch').on('change',function () {
+            // Create data to send with the request
+        var branch_id = $(this).val();
+    
+        $.ajax({
+            url: '/user/fetch_department/' + branch_id, // Send branch_id in the URL
+            type: 'get',
+            success: function (response) {
+                // On success, update the department dropdown
+                var $departmentSelect = $('#department');
+                $departmentSelect.empty(); // Clear existing options
 
-        // Add the default option (if needed)
-        $departmentSelect.append('<option value="" disabled>Select Department</option>');
+                // Add the default option (if needed)
+                $departmentSelect.append('<option value="" disabled>Select Department</option>');
 
-        // Iterate over the response to add options dynamically
-        $.each(response, function (index, department) {
-            $departmentSelect.append('<option value="' + department.department_id + '">' + department.department_name + '</option>');
+                // Iterate over the response to add options dynamically
+                $.each(response, function (index, department) {
+                    $departmentSelect.append('<option value="' + department.department_id + '">' + department.department_name + '</option>');
+                });
+            },
+            error: function (xhr, status, error) {
+                // Handle error
+                $('#response').html('Error: ' + error);
+            },
+            dataType: 'json', // Expect a JSON response
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
         });
-    },
-    error: function (xhr, status, error) {
-        // Handle error
-        $('#response').html('Error: ' + error);
-    },
-    dataType: 'json', // Expect a JSON response
-    headers: {
-        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-    }
-});
-});
+    });
 
-           $('#department').on('change',function () {
-                // Create data to send with the request
-             
-             var department_id = $(this).val();
-              
-            //  console.log(designation_id);
+    $('#department').on('change',function () {
+        // Create data to send with the request
+        
+        var department_id = $(this).val();
+        
+        //  console.log(designation_id);
 
-         var url = '/user/fetch_designation/' + department_id;
+        var url = '/user/fetch_designation/' + department_id;
 
-         console.log(url);
+        console.log(url);
 
-                     // Perform the AJAX request
-                     $.ajax({
-                  
-                  url: url,
-                  type: 'get',
-                  success: function (response) {
+                    // Perform the AJAX request
+                    $.ajax({
+                
+                url: url,
+                type: 'get',
+                success: function (response) {
         
         var $designationSelect = $('#designation');
         $designationSelect.empty(); // Clear existing options
@@ -335,22 +323,22 @@ $(document).ready(function () {
         $.each(response, function (index, designation) {
             $designationSelect.append('<option value="' + designation.id + '">' + designation.name + '</option>');
         });
-    },
-    error: function (xhr, status, error) {
-        // Handle error
-        $('#response').html('Error: ' + error);
-    },
-    dataType: 'json', // Expect a JSON response
-    headers: {
-        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-    }
-              });
-
-
-        
-            });
-
+        },
+        error: function (xhr, status, error) {
+            // Handle error
+            $('#response').html('Error: ' + error);
+        },
+        dataType: 'json', // Expect a JSON response
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        }
         });
+
+
+
+    });
+
+    });
 
     const maritalStatusSelect = document.getElementById("maritalStatus");
     const anniversaryDateInput = document.getElementById("anniversaryDate");

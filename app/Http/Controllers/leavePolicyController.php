@@ -447,6 +447,7 @@ class leavePolicyController extends Controller
         // Fetch applied leaves for the logged-in user (including approved, pending, and rejected)
         $appliedLeaves = DB::table('leave_applies')
             ->where('user_id', $user->id)
+            ->orderBy('created_at', 'desc') 
             ->get(); 
 
     // dd($appliedLeaves);

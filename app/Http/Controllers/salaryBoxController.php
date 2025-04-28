@@ -40,8 +40,8 @@ class salaryBoxController extends Controller
     public function insertSalaryTemplate(Request $request){
         $data = $request->validate([
             'template_name' => 'required',
-            'min_ctc' => 'required',
-            'max_ctc' => 'required',
+            'min_ctc' => '',
+            'max_ctc' => '',
             'status' => 'required',
         ]);
 
@@ -359,6 +359,8 @@ class salaryBoxController extends Controller
             'reimbursement_trackings.description',
             'reimbursement_trackings.status'
         )
+        ->orderBy('reimbursement_trackings.created_at', 'desc') // Order by claim date
+        
         ->get();
 // dd($reimbursementClaims);
     return view('user_view.payrollDashboard', compact('reimbursementClaims'));
@@ -375,117 +377,128 @@ class salaryBoxController extends Controller
     return view('user_view.claim_form',compact('reim_type'));
  }
 
- public function loadUserClaims($user_id, $reimbursement_traking_id)
-{
-    $reimbursementList = DB::table('reimbursement_trackings')
-        ->join('emp_details', 'reimbursement_trackings.user_id', '=', 'emp_details.user_id')
-        ->join('reimbursement_form_entries', 'reimbursement_trackings.id', '=', 'reimbursement_form_entries.reimbursement_trackings_id')
-        ->join('organisation_reimbursement_types', 'reimbursement_form_entries.organisation_reimbursement_types_id', '=', 'organisation_reimbursement_types.id')
-        ->join('organisation_reimbursement_type_restrictions', 'organisation_reimbursement_types.id', '=', 'organisation_reimbursement_type_restrictions.reimbursement_type_id')
-        ->select(
-            'reimbursement_trackings.id as tracking_id',
-            'reimbursement_trackings.token_number',
-            'emp_details.employee_no',
-            'emp_details.employee_name',
-            'reimbursement_trackings.start_date',
-            'reimbursement_trackings.end_date',
-            'reimbursement_trackings.description',
-            'reimbursement_trackings.status',
-            'organisation_reimbursement_type_restrictions.max_amount',
-            'reimbursement_form_entries.organisation_reimbursement_types_id',
-            DB::raw('SUM(reimbursement_form_entries.amount) as total_amount'),
-            DB::raw('COUNT(reimbursement_form_entries.id) as no_of_entries'),
-            'reimbursement_form_entries.id as entry_id', // Include the entry ID
-            'reimbursement_form_entries.date as entry_date',
-            'reimbursement_form_entries.amount as entry_amount',
-            'reimbursement_form_entries.upload_bill',
-            'reimbursement_form_entries.description_by_applicant',
-            'reimbursement_form_entries.status as entry_status'
-        )
-        ->where('reimbursement_trackings.id', '=', $reimbursement_traking_id)
-        ->where('reimbursement_trackings.user_id', '=', $user_id)
-        ->groupBy(
-            'reimbursement_trackings.id',
-            'reimbursement_trackings.token_number',
-            'emp_details.employee_no',
-            'emp_details.employee_name',
-            'reimbursement_trackings.start_date',
-            'reimbursement_trackings.end_date',
-            'reimbursement_trackings.description',
-            'reimbursement_trackings.status',
-            'reimbursement_form_entries.id', // Add entry ID to groupBy
-            'reimbursement_form_entries.date',
-            'reimbursement_form_entries.amount',
-            'reimbursement_form_entries.upload_bill',
-            'reimbursement_form_entries.description_by_applicant',
-            'reimbursement_form_entries.status',
-            'organisation_reimbursement_type_restrictions.max_amount'
-        )
-        ->get();
 
-        $reim_type = DB::table('reimbursement_form_entries')
-        ->join('organisation_reimbursement_types', 'reimbursement_form_entries.organisation_reimbursement_types_id', '=', 'organisation_reimbursement_types.id')
-        ->join('organisation_reimbursement_type_restrictions', 'organisation_reimbursement_types.id', '=', 'organisation_reimbursement_type_restrictions.reimbursement_type_id')
-        ->where('reimbursement_form_entries.reimbursement_trackings_id', '=', $reimbursement_traking_id)
-        ->select('organisation_reimbursement_types.name as type_name', 'organisation_reimbursement_type_restrictions.max_amount as max_amount')
-        ->first();
-// dd($reim_type);
-    return view('user_view.users_claim', compact('reimbursementList', 'reimbursement_traking_id', 'reim_type'));
-}
+ public function loadUserClaims($user_id, $reimbursement_traking_id)
+ {
+     $reimbursementList = DB::table('reimbursement_trackings')
+         ->join('emp_details', 'reimbursement_trackings.user_id', '=', 'emp_details.user_id')
+         ->join('reimbursement_form_entries', 'reimbursement_trackings.id', '=', 'reimbursement_form_entries.reimbursement_trackings_id')
+         ->join('organisation_reimbursement_types', 'reimbursement_form_entries.organisation_reimbursement_types_id', '=', 'organisation_reimbursement_types.id')
+         ->leftJoin('organisation_reimbursement_type_restrictions', 'organisation_reimbursement_types.id', '=', 'organisation_reimbursement_type_restrictions.reimbursement_type_id') // Use LEFT JOIN here
+         ->select(
+             'reimbursement_trackings.id as tracking_id',
+             'reimbursement_trackings.token_number',
+             'emp_details.employee_no',
+             'emp_details.employee_name',
+             'reimbursement_trackings.start_date',
+             'reimbursement_trackings.end_date',
+             'reimbursement_trackings.description',
+             'reimbursement_trackings.status',
+             'organisation_reimbursement_types.name as type_name',
+             DB::raw('COALESCE(organisation_reimbursement_type_restrictions.max_amount, "N/A") as max_amount'), // Handle NULL for max_amount
+             'reimbursement_form_entries.organisation_reimbursement_types_id',
+             DB::raw('SUM(reimbursement_form_entries.amount) as total_amount'),
+             DB::raw('COUNT(reimbursement_form_entries.id) as no_of_entries'),
+             'reimbursement_form_entries.id as entry_id', // Include the entry ID
+             'reimbursement_form_entries.date as entry_date',
+             'reimbursement_form_entries.amount as entry_amount',
+             'reimbursement_form_entries.upload_bill',
+             'reimbursement_form_entries.description_by_applicant',
+             'reimbursement_form_entries.status as entry_status'
+         )
+         ->where('reimbursement_trackings.id', '=', $reimbursement_traking_id)
+         ->where('reimbursement_trackings.user_id', '=', $user_id)
+         ->groupBy(
+             'reimbursement_trackings.id',
+             'reimbursement_trackings.token_number',
+             'emp_details.employee_no',
+             'emp_details.employee_name',
+             'reimbursement_trackings.start_date',
+             'reimbursement_trackings.end_date',
+             'reimbursement_trackings.description',
+             'reimbursement_trackings.status',
+             'reimbursement_form_entries.id', // Add entry ID to groupBy
+             'reimbursement_form_entries.date',
+             'reimbursement_form_entries.amount',
+             'reimbursement_form_entries.upload_bill',
+             'reimbursement_form_entries.description_by_applicant',
+             'reimbursement_form_entries.status',
+             'organisation_reimbursement_type_restrictions.max_amount'
+         )
+         ->get();
+//  dd($reimbursementList);
+     $reim_type = DB::table('reimbursement_form_entries')
+         ->join('organisation_reimbursement_types', 'reimbursement_form_entries.organisation_reimbursement_types_id', '=', 'organisation_reimbursement_types.id')
+         ->leftJoin('organisation_reimbursement_type_restrictions', 'organisation_reimbursement_types.id', '=', 'organisation_reimbursement_type_restrictions.reimbursement_type_id') // Use LEFT JOIN here
+         ->where('reimbursement_form_entries.reimbursement_trackings_id', '=', $reimbursement_traking_id)
+         ->select(
+             'organisation_reimbursement_types.name as type_name',
+             DB::raw('COALESCE(organisation_reimbursement_type_restrictions.max_amount, "N/A") as max_amount') // Handle NULL for max_amount
+         )
+         ->get(); // Fetch all matching records
+ 
+     return view('user_view.users_claim', compact('reimbursementList', 'reimbursement_traking_id', 'reim_type'));
+ }
 
 public function loadMangerClaims($manager_id, $reimbursement_traking_id)
 {
     // Fetch claims approved by employees under the reporting manager and specific reimbursement tracking ID
     $managerClaims = DB::table('reimbursement_trackings')
-        ->join('emp_details as employees', 'reimbursement_trackings.user_id', '=', 'employees.user_id')
-        ->join('reimbursement_form_entries', 'reimbursement_trackings.id', '=', 'reimbursement_form_entries.reimbursement_trackings_id')
-        ->join('organisation_reimbursement_types', 'reimbursement_form_entries.organisation_reimbursement_types_id', '=', 'organisation_reimbursement_types.id')
-        ->join('organisation_reimbursement_type_restrictions', 'organisation_reimbursement_types.id', '=', 'organisation_reimbursement_type_restrictions.reimbursement_type_id')
-        ->select(
-            'reimbursement_form_entries.id as entry_id',
-            'reimbursement_form_entries.date as entry_date',
-            'reimbursement_form_entries.amount as entry_amount',
-            'reimbursement_form_entries.upload_bill',
-            'reimbursement_form_entries.description_by_applicant',
-            'reimbursement_form_entries.description_by_manager',
-            'reimbursement_trackings.id as tracking_id',
-            'reimbursement_trackings.token_number',
-            'organisation_reimbursement_type_restrictions.max_amount',
-            'reimbursement_form_entries.organisation_reimbursement_types_id',
-            'employees.employee_no',
-            'employees.employee_name',
-            DB::raw('SUM(reimbursement_form_entries.amount) as total_amount'),
-            'reimbursement_trackings.status',
-            'reimbursement_trackings.description',
-            'reimbursement_trackings.created_at as claim_date'
-        )
-        ->where('employees.reporting_manager', '=', $manager_id) // Filter by reporting manager
-        ->where('reimbursement_trackings.id', '=', $reimbursement_traking_id) // Filter by reimbursement tracking ID
-        ->where('reimbursement_trackings.status', '=', 'APPROVED BY MANAGER') // Only show approved claims
-        ->groupBy(
-            'reimbursement_form_entries.id',
-            'reimbursement_form_entries.date',
-            'reimbursement_form_entries.amount',
-            'reimbursement_form_entries.upload_bill',
-            'reimbursement_form_entries.description_by_applicant',
-            'reimbursement_form_entries.description_by_manager',
-            'reimbursement_trackings.id',
-            'reimbursement_trackings.token_number',
-            'employees.employee_no',
-            'employees.employee_name',
-            'reimbursement_trackings.status',
-            'reimbursement_trackings.description',
-            'reimbursement_trackings.created_at',
-            'organisation_reimbursement_type_restrictions.max_amount'
-        )
-        ->get();
+    ->join('emp_details as employees', 'reimbursement_trackings.user_id', '=', 'employees.user_id')
+    ->join('reimbursement_form_entries', 'reimbursement_trackings.id', '=', 'reimbursement_form_entries.reimbursement_trackings_id')
+    ->join('organisation_reimbursement_types', 'reimbursement_form_entries.organisation_reimbursement_types_id', '=', 'organisation_reimbursement_types.id')
+    ->leftJoin('organisation_reimbursement_type_restrictions', 'organisation_reimbursement_types.id', '=', 'organisation_reimbursement_type_restrictions.reimbursement_type_id') // Use LEFT JOIN here
+    ->select(
+        'reimbursement_form_entries.id as entry_id',
+        'reimbursement_form_entries.date as entry_date',
+        'reimbursement_form_entries.amount as entry_amount',
+        'reimbursement_form_entries.upload_bill',
+        'reimbursement_form_entries.description_by_applicant',
+        'reimbursement_form_entries.description_by_manager',
+        'reimbursement_trackings.id as tracking_id',
+        'reimbursement_trackings.token_number',
+        DB::raw('COALESCE(organisation_reimbursement_type_restrictions.max_amount, "N/A") as max_amount'), // Handle NULL for max_amount
+        'reimbursement_form_entries.organisation_reimbursement_types_id',
+        'organisation_reimbursement_types.name as type_name', // Include type name
+        'employees.employee_no',
+        'employees.employee_name',
+        DB::raw('SUM(reimbursement_form_entries.amount) as total_amount'),
+        'reimbursement_trackings.status',
+        'reimbursement_trackings.description',
+        'reimbursement_trackings.created_at as claim_date'
+    )
+    ->where('employees.reporting_manager', '=', $manager_id) // Filter by reporting manager
+    ->where('reimbursement_trackings.id', '=', $reimbursement_traking_id) // Filter by reimbursement tracking ID
+    ->where('reimbursement_trackings.status', '=', 'APPROVED BY MANAGER') // Only show approved claims
+    ->groupBy(
+        'reimbursement_form_entries.id',
+        'reimbursement_form_entries.date',
+        'reimbursement_form_entries.amount',
+        'reimbursement_form_entries.upload_bill',
+        'reimbursement_form_entries.description_by_applicant',
+        'reimbursement_form_entries.description_by_manager',
+        'reimbursement_trackings.id',
+        'reimbursement_trackings.token_number',
+        'employees.employee_no',
+        'employees.employee_name',
+        'reimbursement_trackings.status',
+        'reimbursement_trackings.description',
+        'reimbursement_trackings.created_at',
+        'organisation_reimbursement_type_restrictions.max_amount',
+        'organisation_reimbursement_types.name' // Add type_name to groupBy
+    )
+    ->get();
 
+    //    dd($managerClaims);
         $reim_type = DB::table('reimbursement_form_entries')
-        ->join('organisation_reimbursement_types', 'reimbursement_form_entries.organisation_reimbursement_types_id', '=', 'organisation_reimbursement_types.id')
-        ->join('organisation_reimbursement_type_restrictions', 'organisation_reimbursement_types.id', '=', 'organisation_reimbursement_type_restrictions.reimbursement_type_id')
-        ->where('reimbursement_form_entries.reimbursement_trackings_id', '=', $reimbursement_traking_id)
-        ->select('organisation_reimbursement_types.name as type_name', 'organisation_reimbursement_type_restrictions.max_amount as max_amount')
-        ->first();
+    ->join('organisation_reimbursement_types', 'reimbursement_form_entries.organisation_reimbursement_types_id', '=', 'organisation_reimbursement_types.id')
+    ->leftJoin('organisation_reimbursement_type_restrictions', 'organisation_reimbursement_types.id', '=', 'organisation_reimbursement_type_restrictions.reimbursement_type_id') // Use LEFT JOIN here
+    ->where('reimbursement_form_entries.reimbursement_trackings_id', '=', $reimbursement_traking_id)
+    ->select(
+        'organisation_reimbursement_types.name as type_name',
+        'organisation_reimbursement_type_restrictions.max_amount as max_amount'
+    )
+    ->get(); // Fetch all matching records
 // dd($reim_type);
     return view('user_view.managers_claim', compact('managerClaims', 'reimbursement_traking_id', 'reim_type'));
 }
@@ -753,6 +766,23 @@ public function loadEditClaimForm($reimbursement_traking_id = null)
     return view('user_view.edit_claim_form', compact('reimbursementClaims', 'reimbursement_traking_id', 'reim_type'));
 }
 
+
+public function cancelReimbursement($reimbursement_traking_id)
+{
+    $loginUserInfo = Auth::user();
+
+    // Update the status to "Cancel"
+    DB::table('reimbursement_trackings')
+        ->where('id', $reimbursement_traking_id)
+        ->where('user_id', $loginUserInfo->id)
+        ->update([
+        'status' => 'CANCELLED',
+            'updated_at' => now(),
+        ]);
+
+    return redirect()->route('PayRollDashboard')->with('success', 'Reimbursement claim has been canceled.');
+}
+
 public function updateClaimForm(Request $request, $reimbursement_traking_id)
 {
     $loginUserInfo = Auth::user();
@@ -831,6 +861,7 @@ public function updateReimbursementStatus(Request $request, $reimbursement_traki
                 'updated_at' => now(),
             ]);
     }
+    
 
     // Update the comments column in assign_reimbursement_tokens
     DB::table('assign_reimbursement_tokens')

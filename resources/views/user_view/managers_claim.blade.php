@@ -12,95 +12,96 @@ error_reporting(0);
         Reimbursement Claims for Tracking ID: <strong>{{ $managerClaims->first()->token_number ?? 'N/A' }}</strong>
     </h2>
     <div class="claim-panel p-3">
-        @foreach ($managerClaims as $claim)
-        <p class="claim-summary m-0">Employee Name: <strong>{{ $claim->employee_name }}</strong></p>
+        <p class="claim-summary m-0">Employee Name: <strong>{{ $managerClaims->first()->employee_name ?? 'N/A' }}</strong></p>
         <div>
             <hr>
             <form action="{{ route('update.finance.reimbursement', $reimbursement_traking_id) }}" method="POST">
                 @csrf
                 <input type="hidden" name="status" id="status" value="">
                 @method('PUT')
-            <p class="">Description: <strong>{{ $claim->description }}</strong></p>
-            <div class="tbl-container"> <!-- Open by default -->
-                <table class="custom-table">
-                    <thead>
-                        <tr>
-                            <th>S.No.</th>
-                            <th>Date</th>
-                            <th>Reimbursement Type</th>
-                            <th>Max Amount</th>
-                            <th>Entered Amount</th>
-                            <th>Bill</th>
-                            <th>Applicant Comment</th>
-                            <th>Manager Remark</th>
-                            <th>Action</th>
-                            <th>Remark</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>{{ $loop->iteration }}</td>
-                            <td>{{ \Carbon\Carbon::parse($claim->entry_date)->format('d/m/Y') }}</td>
-                            <td>
-                                <input type="text" class="form-control" value="{{ $reim_type->type_name }}" disabled>
-                            </td>
-                            <td>
-                                <input type="text" class="form-control text-end" value="{{ $reim_type->max_amount }}" disabled>
-                            </td>
-                            <td class="text-end">{{ number_format($claim->entry_amount, 2) }}</td>
-                            <td>
-                                @if ($claim->upload_bill)
-                                <a href="{{ asset('storage/' . $claim->upload_bill) }}" target="_blank" class="text-decoration-none" title="open in new tab">
-                                    <x-icon name="newtab" />
-                                </a>
-                                @else
-                                No Bill Uploaded
-                                @endif
-                            </td>
-                            <td>{{ $claim->description_by_applicant }}</td>
-                            <td>{{ $claim->description_by_manager }}</td>
-                            <td> 
-                                <label class="toggle-switch">
-                                    <input type="checkbox" checked="">
-                                    <span class="slider"></span>
-                                </label>
-                            </td>
-                            <td>
-                            <input type="text" name="remarks[{{ $claim->entry_id }}]" class="form-control" placeholder="Enter Finance Remark" value="">
-                            </td>
-                        </tr>
-                    </tbody>
-                    <tfoot>
-                        <tr>
-                            <td colspan="2" style="text-align: right; font-weight: bold;">Total Amount:</td>
-                            <td colspan="4" style="font-weight: bold;">Rs. {{ number_format($claim->total_amount, 2) }}</td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                        </tr>
-                    </tfoot>
-                </table>
-            </div>
-            <div class="row">
-                <div class="col-md-6">
-                    <div class="form-group">
-                        <div class="floating-label-wrapper">
-                            <!-- <input type="text" maxlength="200" id="task" name="task_name" placeholder="Task Description" class="input-field" required> -->
-                            <input type="text" maxlength="200" id="task" name="task_name" placeholder="Task Description" class="input-field" required>
-                            <label for="task">Task</label>
+                <p class="">Description: <strong>{{ $managerClaims->first()->description ?? 'N/A' }}</strong></p>
+                <div class="tbl-container"> <!-- Open by default -->
+                    <table class="custom-table">
+                        <thead>
+                            <tr>
+                                <th>S.No.</th>
+                                <th>Date</th>
+                                <th>Reimbursement Type</th>
+                                <th>Max Amount</th>
+                                <th>Entered Amount</th>
+                                <th>Bill</th>
+                                <th>Applicant Comment</th>
+                                <th>Manager Remark</th>
+                                <th>Action</th>
+                                <th>Remark</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @php $serial = 1; @endphp
+                            @foreach ($managerClaims as $claim)
+                                <tr>
+                                    <td>{{ $serial++ }}</td>
+                                    <td>{{ \Carbon\Carbon::parse($claim->entry_date)->format('d/m/Y') }}</td>
+                                    <td>
+                                        <input type="text" class="form-control" value="{{ $claim->type_name }}" disabled>
+                                    </td>
+                                    <td>
+                                        <input type="text" class="form-control text-end" value="{{ $claim->max_amount ?? 'N/A' }}" disabled>
+                                    </td>
+                                    <td class="text-end">{{ number_format($claim->entry_amount, 2) }}</td>
+                                    <td>
+                                        @if ($claim->upload_bill)
+                                            <a href="{{ asset('storage/' . $claim->upload_bill) }}" target="_blank" class="text-decoration-none" title="open in new tab">
+                                                <x-icon name="newtab" />
+                                            </a>
+                                        @else
+                                            No Bill Uploaded
+                                        @endif
+                                    </td>
+                                    <td>{{ $claim->description_by_applicant }}</td>
+                                    <td>{{ $claim->description_by_manager }}</td>
+                                    <td> 
+                                        <label class="toggle-switch">
+                                            <input type="checkbox" checked="">
+                                            <span class="slider"></span>
+                                        </label>
+                                    </td>
+                                    <td>
+                                        <input type="text" id="remarks" name="remarks[{{ $claim->entry_id }}]" class="form-control" placeholder="Enter Finance Remark" value="">
+                                    </td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <td colspan="4" style="text-align: right; font-weight: bold;">Total Amount:</td>
+                                <td class="fw-bold text-end">Rs. {{ number_format($managerClaims->sum('entry_amount'), 2) }}</td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <div class="floating-label-wrapper">
+                                <input type="text" maxlength="200" id="task" name="task_name" placeholder="Task Description" class="input-field" required>
+                                <label for="task">Task</label>
+                            </div>
                         </div>
                     </div>
+                    <div class="col-md-6 text-end mt-2">
+                        <button type="button" class="py-1 mx-1 px-3 btn-warning text-white" onclick="submitForm('REVERT')">Revert</button>
+                        <button type="button" class="py-1 mx-1 px-3 btn-danger" onclick="submitForm('REJECTED')">Reject</button>
+                        <button type="button" class="py-1 mx-1 px-3 btn-success" onclick="submitForm('APPROVED')">Approve</button>
+                    </div>
                 </div>
-                <div class="col-md-6 text-end mt-2">
-                <button type="button" class="py-1 mx-1 px-3 btn-warning text-white" onclick="submitForm('REVERT')">Revert</button>
-                <button type="button" class="py-1 mx-1 px-3 btn-danger" onclick="submitForm('REJECTED')">Reject</button>
-                <button type="button" class="py-1 mx-1 px-3 btn-success" onclick="submitForm('APPROVED')">Approve</button>
-                </div>
-            </div>
+            </form>
         </div>
-        @endforeach
-        </form>
     </div>
 </div>
 
@@ -113,6 +114,18 @@ error_reporting(0);
 </script>
 <script>
     function submitForm(status) {
+
+        if (status === 'REVERT') {
+            const taskInput = document.getElementById('remarks');
+            if (taskInput.value.trim() === '') {
+                alert('Please enter a Remark description before reverting.');
+                return;
+            }
+        } 
+           
+        if 
+        
+
         // Set the status input value
         document.getElementById('status').value = status;
 
@@ -126,5 +139,24 @@ error_reporting(0);
     }
 </script>
 
- 
+<script>
+document.querySelectorAll('input[type="checkbox"]').forEach(function (checkbox) {
+    checkbox.addEventListener('change', function () { 
+        const button = document.querySelector('.btn-success');
+        const allChecked = Array.from(document.querySelectorAll('input[type="checkbox"]')).every(cb => cb.checked);
+
+        if (allChecked) {
+            button.disabled = false;
+            button.style.opacity = '1';
+            button.style.cursor = 'pointer';
+        } else {
+            button.disabled = true;
+            button.style.opacity = '0.5';
+            button.style.cursor = 'not-allowed';
+        }
+    });
+});
+
+
+    </script>
 @endsection

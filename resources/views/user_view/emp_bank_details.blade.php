@@ -1,8 +1,9 @@
 @extends('user_view/employee_form_layout')  <!-- Extending the layout file -->
 @section('content')  <!-- Defining the content section -->
 <!-- <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css"> -->
+<link href="{{ asset('bootstrapcss/bootstrap.min.css') }}" rel="stylesheet"> 
 <link rel="stylesheet" href="{{ asset('errors/error.css') }}">
-
+<style>body{margin:10px}</style>
 <link rel="stylesheet" href="{{ asset('user_end/css/onboarding_form.css') }}">
 <?php 
 error_reporting(0);
@@ -41,10 +42,10 @@ $id = Auth::guard('web')->user()->id;
   <form action="{{ route('bank_insert') }}" method="POST">
      @csrf
       <input type="hidden" name="form_step5" value="bank_info">
-      <!-- <h3>Bank Information</h3> -->
-      <div class="column" style="flex: 1; border: 1px solid #ba184e; padding: 20px; border-radius: 8px;">
+      <!-- <h4 class="d-flex align-items-center"><x-icon name="educationoutline"/>&nbsp;Bank Information</h4> -->
+      <div class="input-column" >
           <div class="address-form">
-              <h3>Personal A/C Details</h3>
+              <h4 class="d-flex align-items-center"><x-icon name="pay"/>&nbsp;Personal A/C Details</h4>
               <button type="button" class="clear-btn" onclick="clearPermanentBankDetails()"><i class="fas fa-undo"></i></button>
               <!-- Personal Account Details -->
               <div class="form-row">
@@ -82,10 +83,10 @@ $id = Auth::guard('web')->user()->id;
       </div>
 
       <!-- salary Account Details -->
-      <div class="column" style="flex: 1; border: 1px solid #ba184e; padding: 20px; border-radius: 8px;">
+      <div class="input-column" >
           <div class="address-form">
               <div class="correspondence-header1">
-                  <h3>Salary Bank Details</h3>
+                  <h4 class="d-flex align-items-center"><x-icon name="cash"/>&nbsp;Salary Bank Details</h4>
                   <button type="button" class="clear-btn2" onclick="clearSalaryBankDetails()"><i class="fas fa-undo"></i></button>
                   <div class="same-address-container">
                     
@@ -127,9 +128,9 @@ $id = Auth::guard('web')->user()->id;
           </div>
       </div>
 
-      <div class="column" style="flex: 1; border: 1px solid #ba184e; padding: 20px; border-radius: 8px;">
+      <div class="input-column" >
           <div class="address-form">
-              <h3>Passport and Visa</h3>
+              <h4 class="d-flex align-items-center"><x-icon name="passportoutline"/>&nbsp;Passport and Visa</h4>
               <div class="form-row">
                   <div class="form-group">
                       <input type="text" class="form-control" id="passportNumber" name="passportNumber"
@@ -170,8 +171,7 @@ $id = Auth::guard('web')->user()->id;
                       <label for="passportExpiryDate">Passport Expiry Date<span class="passport-required"
                               style="display: none; color: red;">*</span></label>
                   </div>
-              </div>
-              <div class="form-row">
+           
                   <div class="form-group">
                       <select id="usaVisa" class="form-control dropdown drop" name="usaVisa"
                           onchange="toggleVisaExpiryDate()" placeholder="" style="pointer-events: none; opacity: 0.6;">
@@ -198,9 +198,9 @@ $id = Auth::guard('web')->user()->id;
 
 
 
-      <div class="column" style="flex: 1; border: 1px solid #ba184e; padding: 20px; border-radius: 8px;">
+      <div class="input-column" >
           <div class="address-form">
-              <h3>Vehicle Details</h3>
+              <h4 class="d-flex align-items-center"><x-icon name="vehicalfill"/>&nbsp;Vehicle Details</h4>
               <div class="form-row">
                   <div class="form-group">
                       <select id="vehicleType" class="form-control dropdown drop" placeholder="" name="vehicleType">
@@ -233,8 +233,7 @@ $id = Auth::guard('web')->user()->id;
                               class="registration-number-required"
                               style="display: none; color: red;">*</span></label>
                   </div>
-              </div>
-              <div class="form-row">
+          
                   <div class="form-group">
                       <input type="text" id="insuranceProvider" class="form-control" name="insuranceProvider"
                           placeholder="Enter Insurance Provider" oninput="this.value = this.value.replace(/[0-9]/g, ''); toggleInsuranceFields()" value="{{ old('insuranceProvider', $emp_bank_datas[0]->insurance_provider) }}">
@@ -268,47 +267,40 @@ $id = Auth::guard('web')->user()->id;
 </div>
 <script src="{{ asset('user_end/js/onboarding_form.js') }}"></script>
 <script>
-document.addEventListener('DOMContentLoaded', function () {
-    // Function to highlight the preselected option for a dropdown
-    function highlightSelectedOption(dropdown, selectedValue) {
-        // Loop through all options in the dropdown
-        const options = dropdown.querySelectorAll('option');
-        options.forEach(option => {
-            // Remove the highlighted class from all options
-            option.classList.remove('highlighted-option');
-            // Add the highlighted class to the selected option
-            if (option.value === selectedValue) {
-                option.classList.add('highlighted-option');
-            }
-        });
-    }
+    document.addEventListener('DOMContentLoaded', function () {
+        // Function to highlight the preselected option for a dropdown
+        function highlightSelectedOption(dropdown, selectedValue) {
+            // Loop through all options in the dropdown
+            const options = dropdown.querySelectorAll('option');
+            options.forEach(option => {
+                // Remove the highlighted class from all options
+                option.classList.remove('highlighted-option');
+                // Add the highlighted class to the selected option
+                if (option.value === selectedValue) {
+                    option.classList.add('highlighted-option');
+                }
+            });
+        }
 
-    // Get all dropdowns with the class 'dropdown'
-    const dropdowns = document.querySelectorAll('.drop');
+        // Get all dropdowns with the class 'dropdown'
+        const dropdowns = document.querySelectorAll('.drop');
 
-    dropdowns.forEach(dropdown => {
-        // Get the old value from a custom data attribute or fallback to the value from $results
-        const oldValue = dropdown.dataset.oldValue || dropdown.value;
+        dropdowns.forEach(dropdown => {
+            // Get the old value from a custom data attribute or fallback to the value from $results
+            const oldValue = dropdown.dataset.oldValue || dropdown.value;
 
-        // Highlight the preselected option on page load
-        highlightSelectedOption(dropdown, oldValue);
+            // Highlight the preselected option on page load
+            highlightSelectedOption(dropdown, oldValue);
 
-        // Add event listener for change event to handle updates
-        dropdown.addEventListener('change', function () {
-            // Highlight the newly selected option
-            highlightSelectedOption(dropdown, dropdown.value);
+            // Add event listener for change event to handle updates
+            dropdown.addEventListener('change', function () {
+                // Highlight the newly selected option
+                highlightSelectedOption(dropdown, dropdown.value);
+            });
         });
     });
-});
 </script>
-<style>
-    .highlighted-option {
-    background-color: #d99b8a;  /* Light blue background for selected option */
-    color: black;
-}
-
-
-</style>
+ 
 <script>
     // Function that will be called on page load and on input change
     document.addEventListener('DOMContentLoaded', function () {
@@ -333,9 +325,9 @@ document.addEventListener('DOMContentLoaded', function () {
 </script>
 
 <script>
-    // ...existing code...
+        // ...existing code...
 
-    document.getElementById('bankName2').addEventListener('change', function () {
+        document.getElementById('bankName2').addEventListener('change', function () {
         const selectedBank = this.value.trim();
 
         // Get all dependent fields
@@ -367,9 +359,9 @@ document.addEventListener('DOMContentLoaded', function () {
             accountNumberRequired.style.display = 'none';
             ifscCodeRequired.style.display = 'none';
         }
-    });
+        });
 
-    document.getElementById('vehicleType').addEventListener('change', function () {
+        document.getElementById('vehicleType').addEventListener('change', function () {
         const selectedVehicleType = this.value.trim();
 
         // Get all dependent fields
@@ -409,39 +401,41 @@ document.addEventListener('DOMContentLoaded', function () {
             vehicleOwnerRequired.style.display = 'none';
             registrationNumberRequired.style.display = 'none';
         }
-    });
-
-    document.getElementById('passportIssueDate').addEventListener('input', function() {
-    const issueDate = new Date(this.value);
-    const expiryDate = new Date(issueDate.setFullYear(issueDate.getFullYear() + 10));
-    expiryDate.setDate(expiryDate.getDate() - 1); // Subtract one day from the expiry date
-    document.getElementById('passportExpiryDate').value = expiryDate.toISOString().split('T')[0];
-});
-
-
-    function isNumberKey(evt) {
-        var charCode = (evt.which) ? evt.which : evt.keyCode;
-        if (charCode > 31 && (charCode < 48 || charCode > 57))
-            return false;
-        return true;
-    }
-
-    window.onload = function() {
-        const dropdowns = document.querySelectorAll('.dropdown');
-        
-        dropdowns.forEach(dropdown => {
-          const selectedValue = dropdown.value;
-    
-          for (let option of dropdown.options) {
-            if (option.value === selectedValue) {
-              option.style.display = 'none';
-              break;
-            }
-          }
         });
-      };
 
-    // ...existing code...
+        document.getElementById('passportIssueDate').addEventListener('input', function() {
+        const issueDate = new Date(this.value);
+        const expiryDate = new Date(issueDate.setFullYear(issueDate.getFullYear() + 10));
+        expiryDate.setDate(expiryDate.getDate() - 1); // Subtract one day from the expiry date
+        document.getElementById('passportExpiryDate').value = expiryDate.toISOString().split('T')[0];
+        });
+
+
+        function isNumberKey(evt) {
+            var charCode = (evt.which) ? evt.which : evt.keyCode;
+            if (charCode > 31 && (charCode < 48 || charCode > 57))
+                return false;
+            return true;
+        }
+
+        window.onload = function() {
+            const dropdowns = document.querySelectorAll('.dropdown');
+            
+            dropdowns.forEach(dropdown => {
+            const selectedValue = dropdown.value;
+        
+            for (let option of dropdown.options) {
+                if (option.value === selectedValue) {
+                option.style.display = 'none';
+                break;
+                }
+            }
+            });
+        };
+
+        // ...existing code...
+
+
 </script>
 <script>
     // Function to clear the Permanent Bank Details fields

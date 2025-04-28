@@ -35,7 +35,7 @@
                                 <th>S.No.</th>
                                 <th>Date</th>
                                 <th>Claim Type</th>
-                                <th>Max Amount</th>
+                                <th>Max Amount(₹)</th>
                                 <th>Entered Amount</th>
                                 <th>Bill</th>
                                 <th>Applicant Comment</th>
@@ -46,47 +46,47 @@
                         <tbody>
                             @php $serial = 1; @endphp
                             @foreach ($reimbursementList as $detail)
-                            <tr>
-                                <td>{{ $serial++ }}</td>
-                                <td>{{ \Carbon\Carbon::parse($detail->entry_date)->format('d/m/Y') }}</td>
-                                <td>
-                                    <input type="text" class="form-control" value="{{ $reim_type->type_name }}" disabled>
-                                </td>
-                                <td>
-                                    <input type="text" class="form-control text-end" value="{{ $reim_type->max_amount }}" disabled>
-                                </td>
-                                <td class="text-end">{{ number_format($detail->entry_amount, 2) }}</td>
-                                <td>
-                                    @if ($detail->upload_bill)
-                                        <a href="{{ asset('storage/' . $detail->upload_bill) }}" target="_blank" class="text-decoration-none" title="open in new tab">
-                                            <x-icon name="newtab" />
-                                        </a>
-                                    @else
-                                        N/A
-                                    @endif
-                                </td>
-                                <td>{{ $detail->description_by_applicant }}</td>
-                                <td>
-                                    <!-- {{ $detail->status }}  -->
-                                    <label class="toggle-switch">
-                                        <input type="checkbox" checked />
-                                        <span class="slider"></span>
-                                    </label>
-                                </td>
-                                <td>
-                                <input type="text" name="remarks[{{ $detail->entry_id }}]" value="" />
-                                </td>
-                            </tr>
+                                <tr>
+                                    <td>{{ $serial++ }}</td>
+                                    <td>{{ \Carbon\Carbon::parse($detail->entry_date)->format('d/m/Y') }}</td>
+                                    <td>
+                                        <input type="text" class="form-control" value="{{ $detail->type_name }}" disabled>
+                                    </td>
+                                    <td>
+                                        <input type="text" class="form-control text-end" value="{{ $detail->max_amount ?? 'N/A' }}" disabled>
+                                    </td>
+                                    <td class="text-end">{{ number_format($detail->entry_amount, 2) }}</td>
+                                    <td>
+                                        @if ($detail->upload_bill)
+                                            <a href="{{ asset('storage/' . $detail->upload_bill) }}" target="_blank" class="text-decoration-none" title="open in new tab">
+                                                <x-icon name="newtab" />
+                                            </a>
+                                        @else
+                                            N/A
+                                        @endif
+                                    </td>
+                                    <td>{{ $detail->description_by_applicant }}</td>
+                                    <td>
+                                        <label class="toggle-switch">
+                                            <input type="checkbox" checked />
+                                            <span class="slider"></span>
+                                        </label>
+                                    </td>
+                                    <td>
+                                        <input type="text" id="remarks"  name="remarks[{{ $detail->entry_id }}]" value="" />
+                                    </td>
+                                </tr>
                             @endforeach
                         </tbody>
                         <tfoot>
                             <tr>
                                 <td colspan="4" style="text-align: right; font-weight: bold;">Total Amount:</td>
-                                <td  class="fw-bold text-end">Rs. {{ number_format($totalAmount, 2) }}</td>
+                                <td  class="fw-bold text-end">₹ {{ number_format($totalAmount, 2) }}</td>
                                 <td></td>
                                 <td></td>
                                 <td></td>
                                 <td></td>
+
                             </tr>
                         </tfoot>
                     </table>
@@ -124,6 +124,8 @@
 </script>
 <script>
     function submitForm(status) {
+
+
         // Set the remark input value to the status
         document.getElementById('status').value = status;
 
@@ -137,6 +139,36 @@
     }
 </script>
  
- 
+<script>
+document.querySelectorAll('input[type="checkbox"]').forEach(function (checkbox) {
+    checkbox.addEventListener('change', function () { 
+        const button = document.querySelector('.btn-success');
+        const allChecked = Array.from(document.querySelectorAll('input[type="checkbox"]')).every(cb => cb.checked);
+
+        // Enable/disable the button based on all checkboxes
+        if (allChecked) {
+            button.disabled = false;
+            button.style.opacity = '1';
+            button.style.cursor = 'pointer';
+        } else {
+            button.disabled = true;
+            button.style.opacity = '0.5';
+            button.style.cursor = 'not-allowed';
+        }
+
+        // Handle remark field requirement
+        const row = checkbox.closest('tr'); // Get the row of the current checkbox
+        const remarkField = row.querySelector('input[type="text"][id="remarks"]'); // Find the remark field in the same row
+
+        if (!checkbox.checked) {
+            remarkField.setAttribute('required', 'required'); // Make the remark field required
+            alert('Please add a remark for the unchecked row.'); // Show alert
+        } else {
+            remarkField.removeAttribute('required'); // Remove the required attribute
+        }
+    });
+});
+</script>
+
 @endsection
 

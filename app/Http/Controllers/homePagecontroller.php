@@ -625,16 +625,23 @@ $reimbursementList = DB::table('reimbursement_trackings')
         'managers.employee_no as manager_employee_no', // Include manager's employee number
         'employees.employee_no', // Include employee_no
         'employees.employee_name as employee_name', // Include employee name
-       'reimbursement_trackings.id as reimbursement_traking_id', // Include reimbursement tracking ID
-        'reimbursement_form_entries.date as entry_date',
-        'reimbursement_form_entries.amount as entry_amount',
-        'reimbursement_form_entries.upload_bill',
-        'reimbursement_form_entries.description_by_applicant',
-        'reimbursement_form_entries.description_by_manager'
+        'reimbursement_trackings.id as reimbursement_traking_id', // Include reimbursement tracking ID
+        DB::raw('SUM(reimbursement_form_entries.amount) as total_amount'), // Sum of all amounts in the bundle
+        DB::raw('GROUP_CONCAT(reimbursement_form_entries.upload_bill SEPARATOR ", ") as upload_bills'), // Concatenate bill URLs
+        DB::raw('GROUP_CONCAT(reimbursement_form_entries.description_by_applicant SEPARATOR "; ") as applicant_descriptions'),
+        DB::raw('GROUP_CONCAT(reimbursement_form_entries.description_by_manager SEPARATOR "; ") as manager_descriptions')
     )
     ->where('reimbursement_trackings.status', '=', 'APPROVED BY MANAGER') // Filter only approved claims
+    ->groupBy(
+        'reimbursement_trackings.id', 
+        'managers.user_id', 
+        'managers.employee_name', 
+        'managers.employee_no', 
+        'employees.employee_no', 
+        'employees.employee_name'
+    ) // Group by bundle ID and other unique fields
     ->get();
-
+// dd($approvedClaimsByManager);
     // Return a view with the logs and additional data
     return view('user_view.homepage', compact('title','logs', 'thoughtOfTheDay', 'newsAndEvents', 'upcomingBirthdays','todayBirthdays', 'anniversaries', 'toDoList', 'currentMonth', 'currentDay', 'leaveUsage','leaveLists', 'holidays_upcoming', 'week_offs', 'upcomingHolidays', 'reimbursementList', 'approvedClaimsByManager'));
 }
