@@ -101,7 +101,7 @@
                                 oninput="this.value = this.value.replace(/[^0-9]/g, '')"></td>
                                 <!-- {{-- <td><button type="button" onclick="editFamilyRow(this)">✏️</button></td> --}} -->
                                 <td>   
-                                    <button type="button" class="delete-button" data-id="{{ $detail->id }}"> <x-icon name="trash" /> </button>
+                                    <button type="button" class="delete-button btn text-danger" data-id="{{ $detail->id }}"> <x-icon name="trash" /> </button>
                                 </td>
 
                             </tr>
