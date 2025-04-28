@@ -39,7 +39,7 @@ $permission_array = session('id');
         <form id="educationForm" action="{{ route('edit_education_insert') }}" method="POST">
             @csrf
             <input type="hidden" name="form_step4" value="education_step">
-            <h4 class="d-flex align-items-center"><x-icon name="educationoutline"/>&nbsp;Educational Details</h4>
+            <h4 class="d-flex align-items-center"><x-icon name="educationoutline"/>&nbsp;Educational Detailss</h4>
             <button type="button" class="add-row-education action-button" onclick="addEducationRow()">Add Educational Information</button>
             <div class="table-container">
                 <table>
@@ -455,28 +455,28 @@ $(document).on('click', '.delete-button', function () {
             confirmButtonText: 'Yes, delete it!',
             cancelButtonText: 'Cancel',
             reverseButtons: true
-        }).then((result) => {
-            if (result.isConfirmed) {
-                // Send an AJAX DELETE request to the server
-                $.ajax({
-                    url: '/user/del_education/' + educationId,  // Adjust the route URL if necessary
-                    type: 'DELETE',
-                    data: {
-                        _method: 'DELETE',
-                        _token: '{{ csrf_token() }}',  // CSRF token for security
-                        educationId: educationId,
-                    },
-                    success: function (response) {
-                        // On success, remove the row from the table
-                        $('button[data-id="' + educationId + '"]').closest('tr').remove();
-                        Swal.fire('Deleted!', 'Education record deleted successfully!', 'success');
-                    },
-                    error: function (response) {
-                        Swal.fire('Error!', 'Error deleting record. Please try again.', 'error');
-                    }
-                });
-            }
-        });
+    }).then((result) => {
+        if (result.isConfirmed) {
+            // Send an AJAX DELETE request to the server
+            $.ajax({
+                url: '/user/del_education/' + educationId,  // Adjust the route URL if necessary
+                type: 'DELETE',
+                data: {
+                    _method: 'DELETE',
+                    _token: '{{ csrf_token() }}',  // CSRF token for security
+                    educationId: educationId,
+                },
+                success: function (response) {
+                    // On success, remove the row from the table
+                    $('button[data-id="' + educationId + '"]').closest('tr').remove();
+                    Swal.fire('Deleted!', 'Education record deleted successfully!', 'success');
+                },
+                error: function (response) {
+                    Swal.fire('Error!', 'Error deleting record. Please try again.', 'error');
+                }
+            });
+        }
+    });
 
 });
 document.getElementById('previous-btn-link').addEventListener('click', function(event) {

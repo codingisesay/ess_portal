@@ -425,58 +425,58 @@ $(document).on('click', '.delete-button', function () {
   
 
     // Confirm delete action
-    // if (confirm('Are you sure you want to delete this item?')) {
-    //     // Send an AJAX DELETE request to the server
-    //     $.ajax({
-    //         url: '/user/del_education/' + educationId,  // Adjust the route URL if necessary
-    //         type: 'DELETE',
-    //         data: {
-    //             _method: 'DELETE',
-    //             _token: '{{ csrf_token() }}', 
-    //             educationId:educationId,// CSRF token for security
-    //         },
-    //         success: function (response) {
-    //             // On success, remove the row from the table
-    //             $('button[data-id="' + educationId + '"]').closest('tr').remove();
-    //             alert('Education record deleted successfully!');
-    //         },
-    //         error: function (response) {
-    //             alert('Error deleting record. Please try again.');
-    //         }
-    //     });
-    // }
-
-    // Confirm delete action with SweetAlert2
-        Swal.fire({
-            title: 'Are you sure?',
-            text: "You won't be able to revert this!",
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonText: 'Yes, delete it!',
-            cancelButtonText: 'Cancel',
-            reverseButtons: true
-        }).then((result) => {
-            if (result.isConfirmed) {
-                // Send an AJAX DELETE request to the server
-                $.ajax({
-                    url: '/user/del_education/' + educationId,  // Adjust the route URL if necessary
-                    type: 'DELETE',
-                    data: {
-                        _method: 'DELETE',
-                        _token: '{{ csrf_token() }}',  // CSRF token for security
-                        educationId: educationId,
-                    },
-                    success: function (response) {
-                        // On success, remove the row from the table
-                        $('button[data-id="' + educationId + '"]').closest('tr').remove();
-                        Swal.fire('Deleted!', 'Education record deleted successfully!', 'success');
-                    },
-                    error: function (response) {
-                        Swal.fire('Error!', 'Error deleting record. Please try again.', 'error');
-                    }
-                });
+    if (confirm('Are you sure you want to delete this item?')) {
+        // Send an AJAX DELETE request to the server
+        $.ajax({
+            url: '/user/del_education/' + educationId,  // Adjust the route URL if necessary
+            type: 'DELETE',
+            data: {
+                _method: 'DELETE',
+                _token: '{{ csrf_token() }}', 
+                educationId:educationId,// CSRF token for security
+            },
+            success: function (response) {
+                // On success, remove the row from the table
+                $('button[data-id="' + educationId + '"]').closest('tr').remove();
+                alert('Education record deleted successfully!');
+            },
+            error: function (response) {
+                alert('Error deleting record. Please try again.');
             }
         });
+    }
+
+    // Confirm delete action with SweetAlert2
+        // Swal.fire({
+        //     title: 'Are you sure?',
+        //     text: "You won't be able to revert this!",
+        //     icon: 'warning',
+        //     showCancelButton: true,
+        //     confirmButtonText: 'Yes, delete it!',
+        //     cancelButtonText: 'Cancel',
+        //     reverseButtons: true
+        // }).then((result) => {
+        //     if (result.isConfirmed) {
+        //         // Send an AJAX DELETE request to the server
+        //         $.ajax({
+        //             url: '/user/del_education/' + educationId,  // Adjust the route URL if necessary
+        //             type: 'DELETE',
+        //             data: {
+        //                 _method: 'DELETE',
+        //                 _token: '{{ csrf_token() }}',  // CSRF token for security
+        //                 educationId: educationId,
+        //             },
+        //             success: function (response) {
+        //                 // On success, remove the row from the table
+        //                 $('button[data-id="' + educationId + '"]').closest('tr').remove();
+        //                 Swal.fire('Deleted!', 'Education record deleted successfully!', 'success');
+        //             },
+        //             error: function (response) {
+        //                 Swal.fire('Error!', 'Error deleting record. Please try again.', 'error');
+        //             }
+        //         });
+        //     }
+        // });
 
 });
 document.getElementById('previous-btn-link').addEventListener('click', function(event) {
