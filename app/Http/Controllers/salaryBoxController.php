@@ -40,8 +40,8 @@ class salaryBoxController extends Controller
     public function insertSalaryTemplate(Request $request){
         $data = $request->validate([
             'template_name' => 'required',
-            'min_ctc' => 'required',
-            'max_ctc' => 'required',
+            'min_ctc' => '',
+            'max_ctc' => '',
             'status' => 'required',
         ]);
 
