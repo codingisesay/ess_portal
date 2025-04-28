@@ -36,7 +36,7 @@
             <form id="employmentForm" action="{{route('preEmp_insert')}}" method="POST">
                 @csrf
                 <input type="hidden" name="form_step8" value="employment_step">
-                <h4 class="d-flex align-items-center"><x-icon name="building"/>&nbsp;Previous Employment 1</h4>
+                <h4 class="d-flex align-items-center"><x-icon name="building"/>&nbsp;Previous Employment </h4>
                 <button type="button" class="add-row-employment action-button" onclick="addEmploymentRow()">Add Previous
                     Employment</button>
                 <div class="table-container">
