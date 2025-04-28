@@ -371,7 +371,6 @@ table {
 table th {
     background-color: #8A3366;
     color: #fff;
-    text-align: center;
     font-weight: 600;
     padding: 7px 10px;
     border: 1px solid #e0e0e0;
@@ -380,7 +379,6 @@ table th {
 /* Data rows */
 table td {
     border: 1px solid #e0e0e0;
-    text-align: center;
     padding: 7px 10px;
     vertical-align: middle;
 }
