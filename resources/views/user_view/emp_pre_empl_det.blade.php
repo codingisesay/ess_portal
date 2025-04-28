@@ -36,7 +36,7 @@
             <form id="employmentForm" action="{{route('preEmp_insert')}}" method="POST">
                 @csrf
                 <input type="hidden" name="form_step8" value="employment_step">
-                <h4 class="d-flex align-items-center"><x-icon name="building"/>&nbsp;Previous Employment </h4>
+                <h4 class="d-flex align-items-center"><x-icon name="building"/>&nbsp;Previous Employment 1</h4>
                 <button type="button" class="add-row-employment action-button" onclick="addEmploymentRow()">Add Previous
                     Employment</button>
                 <div class="table-container">
@@ -99,7 +99,7 @@
                                 <td><input type="custom-reason" name="reason_for_leaving[]" placeholder="Enter Reason For Leaving"  maxlength="250" value="{{$detail->reason_for_leaving}}" required></td>
                                 <td><input type="custom-major" name="major_responsibilities[]" placeholder="Enter Major Responsibilities"  maxlength="2000" required value="{{$detail->major_responsibilities}}"></td>
                                 <!-- {{-- <td><button type="button" onclick="editEmploymentRow(this)">✏️</button></td> --}} -->
-                                <td><button class="btn text-danger  border-0 bg-transferent delete-button" data-id="{{ $detail->id }}" type="button" ><x-icon name="trash" /></button></td> 
+                                <td><button class="btn text-danger border-0 bg-transferent delete-button" data-id="{{ $detail->id }}" type="button" ><x-icon name="trash" /></button></td> 
                             </tr>
                             @endforeach
                         </tbody>
@@ -172,7 +172,7 @@
     <td><input type="custom-reason" name="reason_for_leaving[]" placeholder="Enter Reason For Leaving"  maxlength="250" required></td>
     <td><input type="custom-major" name="major_responsibilities[]" placeholder="Enter Major Responsibilities"  maxlength="2000" required></td>
 
-    <td><button type="button" data-id="{{ $detail->id }}" class="btn text-danger border-0 bg-transferent" ><x-icon name="trash" /></button></td>
+    <td><button type="button" onclick="removeEmploymentRow(this)" class="btn text-danger border-0 bg-transferent" ><x-icon name="trash" /></button></td>
     `;
 
             tableBody.appendChild(newRow);
@@ -225,28 +225,58 @@
         
         // console.log(preEmolyee);
             // Confirm delete action
-            if (confirm('Are you sure you want to delete this item?')) {
+            // if (confirm('Are you sure you want to delete this item?')) {
+            //     // Send an AJAX DELETE request to the server
+            //     $.ajax({
+            //         url: '/user/pre_emply/' + preEmolyee,  // Adjust the route URL if necessary
+            //         type: 'DELETE',
+            //         data: {
+            //             _method: 'DELETE',
+            //             _token: '{{ csrf_token() }}', 
+            //             preEmolyee:preEmolyee,// CSRF token for security
+            //         },
+            //         success: function (response) {
+            //             // On success, remove the row from the table
+            //             $('button[data-id="' + preEmolyee + '"]').closest('tr').remove();
+            //             alert('Previous Employment record deleted successfully!');
+            //         },
+            //         error: function (response) {
+            //             alert('Error deleting record. Please try again.');
+            //             console.log(preEmolyee);
+            //         }
+            //     });
+            // }
+    
+
+            Swal.fire({
+            title: 'Are you sure?',
+            text: "You won't be able to revert this!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Yes, delete it!',
+            cancelButtonText: 'Cancel',
+            reverseButtons: true
+        }).then((result) => {
+            if (result.isConfirmed) {
                 // Send an AJAX DELETE request to the server
                 $.ajax({
-                    url: '/user/pre_emply/' + preEmolyee,  // Adjust the route URL if necessary
+                    url: '/user/del_education/' + preEmolyee,  // Adjust the route URL if necessary
                     type: 'DELETE',
                     data: {
                         _method: 'DELETE',
-                        _token: '{{ csrf_token() }}', 
-                        preEmolyee:preEmolyee,// CSRF token for security
+                        _token: '{{ csrf_token() }}',  // CSRF token for security
+                        preEmolyee:preEmolyee,
                     },
-                    success: function (response) {
-                        // On success, remove the row from the table
+                    success: function (response) { 
                         $('button[data-id="' + preEmolyee + '"]').closest('tr').remove();
-                        alert('Previous Employment record deleted successfully!');
+                        Swal.fire('Deleted!', 'Education record deleted successfully!', 'success');
                     },
                     error: function (response) {
-                        alert('Error deleting record. Please try again.');
-                        console.log(preEmolyee);
+                        Swal.fire('Error!', 'Error deleting record. Please try again.', 'error');
                     }
                 });
             }
-    
+        });
 
 
 
