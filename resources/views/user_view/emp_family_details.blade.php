@@ -35,7 +35,7 @@
             <!-- <input type="hidden" name="employeeNo" value="P111"> -->
         @csrf
             <input type="hidden" name="form_step7" value="family_step">
-            <h4 class="d-flex align-items-center"><x-icon name="usersfill"/>&nbsp;Family Details /h4>
+            <h4 class="d-flex align-items-center"><x-icon name="usersfill"/>&nbsp;Family Details </h4>
             <button type="button" class="add-row-family action-button" onclick="addFamilyRow()">Add Family
                 Information</button>
 
