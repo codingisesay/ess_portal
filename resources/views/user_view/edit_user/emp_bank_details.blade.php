@@ -43,10 +43,10 @@ $permission_array = session('id');
   <form action="{{ route('edit_bank_insert') }}" method="POST">
      @csrf
       <input type="hidden" name="form_step5" value="bank_info">
-      <!-- <h3>Bank Information</h3> -->
-      <div class="column" style="flex: 1; border: 1px solid #ba184e; padding: 20px; border-radius: 8px;">
+      <!-- <h4 class="d-flex align-items-center"><x-icon name="educationoutline"/>&nbsp;Bank Information</h4> -->
+      <div class="input-column" >
           <div class="address-form">
-              <h3>Personal A/C Details</h3>
+              <h4 class="d-flex align-items-center"><x-icon name="pay"/>&nbsp;Personal A/C Details</h4>
               <button type="button" class="clear-btn" onclick="clearPermanentBankDetails()"><i class="fas fa-undo"></i></button>
               <!-- Personal Account Details -->
               <div class="form-row">
@@ -84,10 +84,10 @@ $permission_array = session('id');
       </div>
 
       <!-- salary Account Details -->
-      <div class="column" style="flex: 1; border: 1px solid #ba184e; padding: 20px; border-radius: 8px;">
+      <div class="input-column" >
           <div class="address-form">
               <div class="correspondence-header1">
-                  <h3>Salary Bank Details</h3>
+                  <h4 class="d-flex align-items-center"><x-icon name="cash"/>&nbsp;Salary Bank Details</h4>
                   <button type="button" class="clear-btn2" onclick="clearSalaryBankDetails()"><i class="fas fa-undo"></i></button>
                   <div class="same-address-container">
                     
@@ -129,9 +129,9 @@ $permission_array = session('id');
           </div>
       </div>
 
-      <div class="column" style="flex: 1; border: 1px solid #ba184e; padding: 20px; border-radius: 8px;">
+      <div class="input-column" >
           <div class="address-form">
-              <h3>Passport and Visa</h3>
+              <h4 class="d-flex align-items-center"><x-icon name="passportoutline"/>&nbsp;Passport and Visa</h4>
               <div class="form-row">
                   <div class="form-group">
                       <input type="text" class="form-control" id="passportNumber" name="passportNumber"
@@ -169,8 +169,7 @@ $permission_array = session('id');
                       <label for="passportExpiryDate">Passport Expiry Date<span class="passport-required"
                               style="display: none; color: red;">*</span></label>
                   </div>
-              </div>
-              <div class="form-row">
+          
                   <div class="form-group">
                       <select id="usaVisa" class="form-control dropdown" name="usaVisa"
                           onchange="toggleVisaExpiryDate()" placeholder="" style="pointer-events: none; opacity: 0.6;">
@@ -195,9 +194,9 @@ $permission_array = session('id');
           </div>
       </div>
 
-      <div class="column" style="flex: 1; border: 1px solid #ba184e; padding: 20px; border-radius: 8px;">
+      <div class="input-column" >
           <div class="address-form">
-              <h3>Vehicle Details</h3>
+              <h4 class="d-flex align-items-center"><x-icon name="vehicalfill"/>&nbsp;Vehicle Details</h4>
               <div class="form-row">
                   <div class="form-group">
                       <select id="vehicleType" class="form-control dropdown drop" placeholder="" name="vehicleType">
@@ -230,8 +229,7 @@ $permission_array = session('id');
                               class="registration-number-required"
                               style="display: none; color: red;">*</span></label>
                   </div>
-              </div>
-              <div class="form-row">
+              
                   <div class="form-group">
                       <input type="text" id="insuranceProvider" class="form-control" name="insuranceProvider"
                           placeholder="Enter Insurance Provider" oninput="this.value = this.value.replace(/[0-9]/g, ''); toggleInsuranceFields()" value="{{ old('insuranceProvider', $emp_bank_datas[0]->insurance_provider) }}">

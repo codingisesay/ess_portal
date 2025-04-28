@@ -260,8 +260,9 @@ Route::middleware(['auth'])->group(function () {
  Route::get('user/edit_claim_form/{reimbursement_traking_id}', [salaryBoxController::class, 'loadEditClaimForm'])->name('edit_claim_form');
  
  Route::post('user/update_reimbursement_status/{reimbursement_traking_id}', [salaryBoxController::class, 'updateReimbursementStatus'])->name('update_reimbursement_status');
-Route::put('update-finance-reimbursement/{reimbursement_traking_id}', [salaryBoxController::class, 'updateFinanceReimbursementStatus'])->name('update.finance.reimbursement');
+ Route::put('update-finance-reimbursement/{reimbursement_traking_id}', [salaryBoxController::class, 'updateFinanceReimbursementStatus'])->name('update.finance.reimbursement');
  Route::post('user/insert_Reimbursement_Form',[salaryBoxController::class,'insertReimbursementForm'])->name('insert_Reimbursement_Form');
+ Route::post('user/cancel-reimbursement/{reimbursement_traking_id}', [SalaryBoxController::class, 'cancelReimbursement'])->name('cancel.reimbursement');
 
  Route::get('user/get_max_amount/{rm_id}',[salaryBoxController::class,'loadMaxAmoutRm'])->name('get_max_amount');
  Route::post('user/update_reimbursement_claims/{reimbursement_traking_id}', [salaryBoxController::class, 'updateClaimForm'])->name('update_reimbursement_claims');

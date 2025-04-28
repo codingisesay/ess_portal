@@ -52,31 +52,31 @@ $permission_array = session('id');
     <div class="step-tabs">
         <div class="step" id="step1" data-route="{{ route('user.editdashboard',['id' => $permission_array]) }}">
             <div class="circle">1</div>
-            <div class="label">Employee Details</div>
+            <div class="label">Employee&nbsp;Details</div>
         </div>
         <div class="step" id="step2" data-route="{{ route('user.editcontact',['id' => $permission_array]) }}">
             <div class="circle">2</div>
-            <div class="label">Contact Details</div>
+            <div class="label">Contact&nbsp;Details</div>
         </div>
         <div class="step" id="step3" data-route="{{ route('user.editedu',['id' => $permission_array]) }}">
             <div class="circle">3</div>
-            <div class="label">Education Details</div>
+            <div class="label">Education&nbsp;Details</div>
         </div>
         <div class="step" id="step4" data-route="{{ route('user.editbank',['id' => $permission_array]) }}">
             <div class="circle">4</div>
-            <div class="label">Bank Details</div>
+            <div class="label">Bank&nbsp;Details</div>
         </div>
         <div class="step" id="step5" data-route="{{ route('user.editfamily',['id' => $permission_array]) }}">
             <div class="circle">5</div>
-            <div class="label">Family Details</div>
+            <div class="label">Family&nbsp;Details</div>
         </div>
         <div class="step" id="step6" data-route="{{ route('user.editpreemp',['id' => $permission_array]) }}">
             <div class="circle">6</div>
-            <div class="label">Previous Employment</div>
+            <div class="label">Work&nbsp;History</div>
         </div>
         <div class="step" id="step7" data-route="{{ route('user.editdocupload',['id' => $permission_array]) }}">
             <div class="circle">7</div>
-            <div class="label">Document Upload</div>
+            <div class="label">Document&nbsp;Upload</div>
         </div>
     </div>
 
