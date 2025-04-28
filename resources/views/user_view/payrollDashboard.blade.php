@@ -149,6 +149,7 @@
                                                     'APPROVED BY MANAGER' => 'badge-approved',
                                                     'APPROVED' => 'badge-approved',
                                                     'REJECTED' => 'badge-danger',
+                                                    'CANCELLED' => 'badge-danger',
                                                     'REVERT' => 'badge-info',
                                                     'INREVIEW' => 'review',
                                                     default => ''

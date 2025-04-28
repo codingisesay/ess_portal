@@ -766,6 +766,23 @@ public function loadEditClaimForm($reimbursement_traking_id = null)
     return view('user_view.edit_claim_form', compact('reimbursementClaims', 'reimbursement_traking_id', 'reim_type'));
 }
 
+
+public function cancelReimbursement($reimbursement_traking_id)
+{
+    $loginUserInfo = Auth::user();
+
+    // Update the status to "Cancel"
+    DB::table('reimbursement_trackings')
+        ->where('id', $reimbursement_traking_id)
+        ->where('user_id', $loginUserInfo->id)
+        ->update([
+        'status' => 'CANCELLED',
+            'updated_at' => now(),
+        ]);
+
+    return redirect()->route('PayRollDashboard')->with('success', 'Reimbursement claim has been canceled.');
+}
+
 public function updateClaimForm(Request $request, $reimbursement_traking_id)
 {
     $loginUserInfo = Auth::user();
@@ -844,6 +861,7 @@ public function updateReimbursementStatus(Request $request, $reimbursement_traki
                 'updated_at' => now(),
             ]);
     }
+    
 
     // Update the comments column in assign_reimbursement_tokens
     DB::table('assign_reimbursement_tokens')

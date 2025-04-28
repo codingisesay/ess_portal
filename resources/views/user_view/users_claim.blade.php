@@ -86,7 +86,7 @@
                                 <td></td>
                                 <td></td>
                                 <td></td>
-                                
+
                             </tr>
                         </tfoot>
                     </table>
@@ -125,13 +125,7 @@
 <script>
     function submitForm(status) {
 
-        if (status === 'REVERT') {
-            const taskInput = document.getElementById('remarks');
-            if (taskInput.value.trim() === '') {
-                alert('Please enter a Remark description before reverting.');
-                return;
-            }
-        }
+
         // Set the remark input value to the status
         document.getElementById('status').value = status;
 
@@ -146,12 +140,12 @@
 </script>
  
 <script>
-
 document.querySelectorAll('input[type="checkbox"]').forEach(function (checkbox) {
     checkbox.addEventListener('change', function () { 
         const button = document.querySelector('.btn-success');
         const allChecked = Array.from(document.querySelectorAll('input[type="checkbox"]')).every(cb => cb.checked);
 
+        // Enable/disable the button based on all checkboxes
         if (allChecked) {
             button.disabled = false;
             button.style.opacity = '1';
@@ -161,12 +155,20 @@ document.querySelectorAll('input[type="checkbox"]').forEach(function (checkbox) 
             button.style.opacity = '0.5';
             button.style.cursor = 'not-allowed';
         }
+
+        // Handle remark field requirement
+        const row = checkbox.closest('tr'); // Get the row of the current checkbox
+        const remarkField = row.querySelector('input[type="text"][id="remarks"]'); // Find the remark field in the same row
+
+        if (!checkbox.checked) {
+            remarkField.setAttribute('required', 'required'); // Make the remark field required
+            alert('Please add a remark for the unchecked row.'); // Show alert
+        } else {
+            remarkField.removeAttribute('required'); // Remove the required attribute
+        }
     });
 });
-
-
-
-    </script>
+</script>
 
 @endsection
 

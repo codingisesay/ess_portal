@@ -66,7 +66,33 @@
                   </tr>
                 </thead>
                 <tbody>
-                  <!-- Dynamic rows will be added here -->
+                  <!-- Dynamic rows will be added here -->                 
+            <tr>
+              <!-- Default Row -->
+                <td>1</td>
+                <td><input type="date" name="bill_date[]" class="form-control" required></td>
+                <td>
+                    <select class="form-control rm_type" name="type[]" required>
+                        <option value="">Select One</option>
+                        @foreach($reim_type as $rt)
+                        <option value="{{ $rt->id }}">{{ $rt->name }}</option>
+                        @endforeach
+                    </select>
+                </td>
+                <td><input type="text" name="max_amount[]" class="form-control text-end" step="0.01" disabled></td>
+                <td><input type="number" name="entered_amount[]" class="form-control text-end" step="0.01" required></td>
+                <td>
+                    <div class="file-upload">
+                        <div class="file-select d-flex align-items-center">
+                            <span class="me-2 my-2"><x-icon name="upload" /></span>
+                            <input type="file" name="bills[]" class="profileimg" accept=".jpg,.jpeg,.png,.pdf">
+                            <div class="imagePreview"></div>
+                        </div>
+                    </div>
+                </td>
+                <td><textarea class="form-control" rows="1" name="comments[]" placeholder="Comment"></textarea></td>
+                <td><button type="button" class="btn border-0 text-danger" onclick="deleteRow(this)"><x-icon name="trash" /></button></td>
+            </tr>
                 </tbody>  
                     
                 <tfoot> 

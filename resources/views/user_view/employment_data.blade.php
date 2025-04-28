@@ -49,7 +49,11 @@
                             </tr>
                             <tr>
                                 <th>Experience In Current Company</th>
-                                <td><b>{{ ucfirst($userDetails->total_experience ?? '-') }}</b></td>
+                                <td>
+                                    <b>
+                                        {{ $userDetails->experience_year }} . {{ $userDetails->experience_month }} months
+                                    </b>
+                                </td>
                             </tr>
                         </table>
                     </div>

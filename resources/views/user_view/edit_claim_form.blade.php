@@ -127,13 +127,13 @@
             @if ($claim->upload_bill)
               @if (Str::endsWith($claim->upload_bill, ['.jpg', '.jpeg', '.png']))
                <!-- Thumbnail image that triggers modal -->
-<img src="{{ asset('storage/' . $claim->upload_bill) }}"
-     class="existing-image img-thumbnail"
-     width="50" height="50"
-     style="cursor: pointer;"
-     data-bs-toggle="modal"
-     data-bs-target="#imageModal"
-     data-img="{{ asset('storage/' . $claim->upload_bill) }}">
+                <img src="{{ asset('storage/' . $claim->upload_bill) }}"
+                    class="existing-image img-thumbnail"
+                    width="50" height="50"
+                    style="cursor: pointer;"
+                    data-bs-toggle="modal"
+                    data-bs-target="#imageModal"
+                    data-img="{{ asset('storage/' . $claim->upload_bill) }}">
 
                 <img src="#" class="new-image-preview img-thumbnail" width="50" height="50" style="display:none;">
               @elseif (Str::endsWith($claim->upload_bill, '.pdf'))
@@ -142,10 +142,7 @@
                   <small class="text-muted mt-1">PDF</small>
                 </div>
               @endif
-            @else
-              <div class="no-file-placeholder d-flex align-items-center justify-content-center bg-light"  >
-                <x-icon name="upload" size="24" class="text-muted" />
-              </div>
+            @else 
               <img src="#" class="new-image-preview img-thumbnail" width="50" height="50" style="display:none;">
             @endif
           </div>
@@ -247,17 +244,25 @@ document.addEventListener('DOMContentLoaded', function() {
     </div>
     <!-- Submit Button --> <br>
      <div style="text-align:right">
-     <button type="refresh" class="btn btn-secondary py-2 me-3 fw-normal">&nbsp;Cancel&nbsp;</button>
+     <button type="button" class="btn btn-secondary py-2 me-3 fw-normal" id="cancelButton">&nbsp;Cancel&nbsp;</button>
      <button type="submit" class="apply-leave">&nbsp;Save Changes&nbsp;</button>
-
-
-
   </div>
     </div>
   </form>
   <!-- FORM ENDS HERE -->
-
+ <!-- Hidden Cancel Form -->
+<form id="cancelForm" action="{{ route('cancel.reimbursement', ['reimbursement_traking_id' => $reimbursement_traking_id]) }}" method="post" style="display: none;">
+    @csrf
+</form>
 </div>
+
+<script>
+    document.getElementById('cancelButton').addEventListener('click', function () {
+        if (confirm('Are you sure you want to cancel this reimbursement?')) {
+            document.getElementById('cancelForm').submit();
+        }
+    });
+</script>
 
 <script>
   $(document).ready(function () {
