@@ -15,18 +15,18 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.6.6/dist/sweetalert2.all.min.js"></script>
     <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11.6.6/dist/sweetalert2.min.css" rel="stylesheet">
 
-    
-<div class="m-3">
-@if($errors->any())
-<div class="alert custom-alert-warning">
-<ul>
-@foreach($errors->all() as $error)
-<li style="color: red;">{{ $error }}</li>
+        
+    <div class="m-3">
+    @if($errors->any())
+    <div class="alert custom-alert-warning">
+    <ul>
+    @foreach($errors->all() as $error)
+    <li style="color: red;">{{ $error }}</li>
 
-@endforeach
-</ul>
-</div>
-@endif
+    @endforeach
+    </ul>
+    </div>
+    @endif
     <!-- <div class="d-flex justify-content-between align-items-center"> 
         <button class="apply-leave" onclick="redirectToForm()">Apply Leave</button>
     </div>  -->
@@ -102,7 +102,7 @@
                     <div class="attendance-header p-3">
                         <h5 class="mb-0">Absenteeism Rate</h5><hr class="my-2"  >
                         <div class="chart-container1" style="width: 100%; text-align: center; background-color:white; ">
-                            <div style="width:65%" class='mx-auto mb-2'> <canvas id="chartContainer"></canvas></div>
+                            <div style="width:65%" class='mx-auto mb-2'> <canvas height="200px" height="200px" id="chartContainer"></canvas></div>
                             <div class="d-flex justify-content-center align-items-center"> 
                                 <small  style="color: #3086FF " class="d-flex justify-content-center align-items-center">
                                     <x-icon name="squarefill" /> <span class="text-secondary">&nbsp;Absent day <span>
@@ -129,14 +129,14 @@
                             // Initialize the chart
                             const ctxs = document.getElementById('chartContainer').getContext('2d');
                             const chartContainer = new Chart(ctxs, {
-                                type: 'doughnut',
+                                type: 'pie',
                                 data: {
                                     datasets: [{
                                         data: [presentDays, absentDays],
                                         backgroundColor: ['#3086FF', '#2B53C1BF'],
                                     }]
                                 },
-                                options: {
+                                options: {maintainAspectRatio: false, 
                                     responsive: true,
                                     plugins: {
                                         legend: {
@@ -257,7 +257,7 @@
                                 <div class="col-md-5">
                                     <div class="leave-card ">
                                         <div class="chart-container-leave">
-                                            <canvas id="chart${index}" style="width: 130px; height: 200px;"></canvas>
+                                            <canvas id="chart${index}"  width="130px" height="200px"></canvas>
                                         </div>
                                         <div class="legend">
                                             <h6>${leave.leave_type}</h6>
@@ -273,7 +273,7 @@
                                 const ctx = document.getElementById(`chart${index}`).getContext('2d');
 
                                 new Chart(ctx, {
-                                    type: 'doughnut',
+                                    type: 'pie',
                                     data: {
                                         datasets: [{
                                             data: [totalLeaves, consumed],
@@ -283,7 +283,7 @@
                                             offset: 20
                                         }]
                                     },
-                                    options: {
+                                    options: {maintainAspectRatio: false, // Add this
                                         responsive: true,
                                         cutout: '50%',
                                         rotation: Math.PI / 2.8,

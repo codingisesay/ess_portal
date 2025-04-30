@@ -45,7 +45,7 @@ $name = Auth::guard('superadmin')->user()->name;
                 <li id="orgConfigLi">
                     <strong onclick="toggleDropdown('orgConfigDropdown', this)">
                         <strong>  
-                        <x-icon name="building" />&nbsp;&nbsp;<lable>Organisation&nbsp;Configuration</lable>&nbsp;&nbsp;&nbsp;</strong>
+                        <x-icon name="buildingoutline" />&nbsp;&nbsp;<lable>Organisation&nbsp;Configuration</lable>&nbsp;&nbsp;&nbsp;</strong>
                         <img src="{{ asset('user_end/images/arrow-right.svg') }}" alt="arrow" class="dropdown-arrow">
                     </strong>
                     <ul id="orgConfigDropdown" class="submenu">
