@@ -28,7 +28,7 @@ class settingController extends Controller
         ->leftjoin('employee_salaries','users.id','=','employee_salaries.user_id')
         ->leftjoin('org_salary_templates','employee_salaries.salary_template_id','=','org_salary_templates.id')
         ->select('users.employeeID as emp_employeeID',
-        'users.id as user_id',
+        'users.id as user_id','users.name as user_name',
         'org_salary_templates.name as org_salary_templates_name',
         'org_salary_templates.id as org_salary_templates_id',
         'employee_salaries.user_ctc as user_ctc'
