@@ -229,66 +229,69 @@ $permission_array = session('id');
       
     // console.log(preEmolyee);
         // Confirm delete action
-        if (confirm('Are you sure you want to delete this item?')) {
-            // Send an AJAX DELETE request to the server
-            $.ajax({
-                url: '/user/pre_emply/' + preEmolyee,  // Adjust the route URL if necessary
-                type: 'DELETE',
-                data: {
-                    _method: 'DELETE',
-                    _token: '{{ csrf_token() }}', 
-                    preEmolyee:preEmolyee,// CSRF token for security
-                },
-                success: function (response) {
-                    // On success, remove the row from the table
-                    $('button[data-id="' + preEmolyee + '"]').closest('tr').remove();
-                    alert('Previous Employment record deleted successfully!');
-                },
-                error: function (response) {
-                    alert('Error deleting record. Please try again.');
-                    console.log(preEmolyee);
+        // if (confirm('Are you sure you want to delete this item?')) {
+        //     // Send an AJAX DELETE request to the server
+        //     $.ajax({
+        //         url: '/user/pre_emply/' + preEmolyee,  // Adjust the route URL if necessary
+        //         type: 'DELETE',
+        //         data: {
+        //             _method: 'DELETE',
+        //             _token: '{{ csrf_token() }}', 
+        //             preEmolyee:preEmolyee,// CSRF token for security
+        //         },
+        //         success: function (response) {
+        //             // On success, remove the row from the table
+        //             $('button[data-id="' + preEmolyee + '"]').closest('tr').remove();
+        //             alert('Previous Employment record deleted successfully!');
+        //         },
+        //         error: function (response) {
+        //             alert('Error deleting record. Please try again.');
+        //             console.log(preEmolyee);
+        //         }
+        //     });
+        // }
+        Swal.fire({
+                title: 'Are you sure?',
+                text: "Do you really want to delete this item?",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'Yes, delete it!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: '/user/pre_emply/' + preEmolyee,
+                        type: 'DELETE',
+                        data: {
+                            _method: 'DELETE',
+                            _token: '{{ csrf_token() }}',
+                            preEmolyee: preEmolyee
+                        },
+                        success: function (response) {
+                            $('button[data-id="' + preEmolyee + '"]').closest('tr').remove();
+
+                            Swal.fire(
+                                'Deleted!',
+                                'Previous Employment record deleted successfully.',
+                                'success'
+                            );
+                        },
+                        error: function (response) {
+                            Swal.fire(
+                                'Error!',
+                                'There was a problem deleting the record. Please try again.',
+                                'error'
+                            );
+                            console.log(preEmolyee);
+                        }
+                    });
                 }
             });
-        }
+
     });
 
-    // Swal.fire({
-    //         title: 'Are you sure?',
-    //         text: "You won't be able to revert this!",
-    //         icon: 'warning',
-    //         showCancelButton: true,
-    //         confirmButtonText: 'Yes, delete it!',
-    //         cancelButtonText: 'Cancel',
-    //         reverseButtons: true
-    //     }).then((result) => {
-    //         if (result.isConfirmed) {
-    //             // Send an AJAX DELETE request to the server
-    //             $.ajax({
-    //                 url: '/user/del_education/' + preEmolyee,  // Adjust the route URL if necessary
-    //                 type: 'DELETE',
-    //                 data: {
-    //                     _method: 'DELETE',
-    //                     _token: '{{ csrf_token() }}',  // CSRF token for security
-    //                     preEmolyee:preEmolyee,
-    //                 },
-    //                 success: function (response) { 
-    //                     $('button[data-id="' + preEmolyee + '"]').closest('tr').remove();
-    //                     Swal.fire('Deleted!', 'Education record deleted successfully!', 'success');
-    //                 },
-    //                 error: function (response) {
-    //                     Swal.fire('Error!', 'Error deleting record. Please try again.', 'error');
-    //                 }
-    //             });
-    //         }
-    //     });
-
-
-
-
-
-
-
-    // });
+    
     // document.getElementById('previous-btn-link').addEventListener('click', function(event) {
     //     event.stopPropagation(); // Stop the form submission from being triggered
     // });
