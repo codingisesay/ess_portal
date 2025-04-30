@@ -88,7 +88,7 @@ error_reporting(0);
     </div>
     
     <div class=" row">  
-        <div class="col-md-4">
+        <div class="col-md-4 my-2">
             <div class="employee-list">
                 <ul class="tree">
                     @foreach ($employeeHierarchy as $employee)
@@ -97,14 +97,18 @@ error_reporting(0);
                 </ul>
             </div>  
         </div>
-            <div class="col-md-8"> 
-                <div class="employee-details ">  
-                    <div class="left">  
-                        @include('user_view.employment_details_top')
-                    </div> 
-                    <div class="right"> 
-                        <!-- Include employment details section -->
-                        @include('user_view.employment_details_section')
+            <div class="col-md-8 "> 
+                <div class="employee-details row">  
+                    <div class="col-md-4 my-2">
+                        <div class="left">  
+                            @include('user_view.employment_details_top')
+                        </div> 
+                    </div>
+                    <div class="col-md-8 my-2">
+                        <div class="right"> 
+                            <!-- Include employment details section -->
+                            @include('user_view.employment_details_section')
+                        </div>
                     </div>
 
                 </div>  

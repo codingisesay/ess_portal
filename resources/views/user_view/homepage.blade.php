@@ -22,8 +22,8 @@ error_reporting(0);
     <link href="{{ asset('bootstrapcss/bootstrap.min.css') }}" rel="stylesheet">  
 </head>
  
-    <div class="row mx-3">
-        <div class=" col-lg-4 col-md-6 col-sm-12 p-1">
+    <div class="row justify-content-center mx-3">
+        <div class=" col-lg-4 col-md-6 col-sm-12 p-0">
             <h4 class="ms-2 mb-1 fw-bold" id="greeting"></h4>  
             <div class="row mx-1 my-2"> 
                 @foreach ($logs as $log)  
@@ -219,9 +219,9 @@ error_reporting(0);
             </section> 
          
         </div>
-    </div> 
+    <!-- </div> 
  
-    <div class="row mx-3">
+    <div class="row mx-3"> -->
         <div class="col-lg-3 col-md-6 col-sm-12 p-1"> 
             <section class="approval-pending">
                 <h5>Approval Pending</h5>

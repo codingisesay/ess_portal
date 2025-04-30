@@ -40,7 +40,7 @@
 
     <div class="main">
         <div class="left-sec">
-            <div class="one row"> 
+            <div class="one row mx-auto"> 
                 <div class="col-md-3 mb-3">
                     <div class="attendance-header p-3">
                         <h5 class="mb-0">Average Working Hours</h5>

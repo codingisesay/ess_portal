@@ -29,7 +29,7 @@
             <?php 
                 if(in_array(11, $permission_array)){ 
                 ?>
-                    <div class="accordion-item">
+                    <div class="accordion-item my-2">
                         <!-- Accordion Header with a toggle dropdown -->
                         <div class="accordion-header" onclick="toggleCalendarMasterDropdown()">
                             Calendar Master
@@ -122,7 +122,7 @@
 
 
             <!-- Leave Section (With Link to hr_universal.php) -->
-            <!-- {{-- <div class="accordion-item">
+            <!-- {{-- <div class="accordion-item my-2">
                 <div class="accordion-header" onclick="window.location.href='{{ url('hr_universal') }}'">
                     Global Leaves
                 </div>
@@ -132,7 +132,7 @@
             <?php 
             if(in_array(13,$permission_array)){?>
              
-                <div class="accordion-item">
+                <div class="accordion-item my-2">
                     <div class="accordion-header" onclick="toggleDropdown()">Thought of the Day/News & Events</div>
                     <div class="dropdown-content" id="dropdownContent">
                         <form action="{{ route('save_thought') }}" method="POST">
@@ -238,7 +238,7 @@
             <?php 
                 if(in_array(12, $permission_array)){ 
                 ?>
-            <div class="accordion-item">
+            <div class="accordion-item my-2">
                 <!-- Accordion Header with a toggle dropdown -->
                 <div class="accordion-header" onclick="toggleEmployeeDetailsDropdown()">
                     Employee Details Edit
@@ -285,7 +285,7 @@
                 //user salary functions
                 if(in_array(14, $permission_array)){ 
                 ?>
-                    <div class="accordion-item">
+                    <div class="accordion-item my-2">
                         <!-- Accordion Header with a toggle dropdown -->
                         <div class="accordion-header" onclick="#">
                             Employee Salary
@@ -344,7 +344,7 @@
                         </div>
                         <?php } ?>
             </div>
-                <div class="accordion-item">
+                <div class="accordion-item my-2">
                     <!-- Accordion Header with a toggle dropdown -->
                     <div class="accordion-header" onclick="#">
                         Process Salary (2025-26)
