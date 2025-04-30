@@ -332,6 +332,10 @@ return redirect()->route('user.setting')->with('error','Calendra Is Not Created 
     //    ->where('id', '=', 2) //This is for testing, after function body ready remove this condition
        ->get();
 
+       $orgsalaryComponents = DB::table('org_salary_components')->where('organisation_id',$loginUserInfo->organisation_id)->get();
+
+    //    dd($orgsalaryComponents);
+
        $allemployeeSalaryDetails = [];
        $allEmployeeSalary = [];
        $allSalaryComponents = [];
@@ -413,8 +417,10 @@ $noOfDaysForPaySalary = $totalWorkingDaysInMonth - $totalLeaveDays;
 $workingDaysByUser = $totalDaysInSelectedMonth - $totalLeaveDays;
 
 $getCtcAndST = DB::table('employee_salaries')->where('user_id',$user->id)->first();
-$allSalaryComponents[] =  $getCtcAndST->salary_template_id;
+
 $salaryComponents = DB::table('org_salary_template_components')->where('salary_template_id',$getCtcAndST->salary_template_id)->get();
+
+// dd($salaryComponents);
 
 $getCtcPerMonth = $getCtcAndST->user_ctc/12;
 
@@ -425,19 +431,19 @@ $employeeSalary = [];
 
 foreach($salaryComponents as $SC){
 
-    $components_id = $SC->id;
+    $components_id = $SC->org_comp_id;
     $value = 0;
     $type = $SC->type;
 
     if($SC->calculation_type == 'Percentage'){
 
-        if($SC->id == 2){  //House Rent Allowance (HRA)
+        if($SC->org_comp_id == 2){  //House Rent Allowance (HRA)
 
             $basicSalary = $getCtcPerMonth*50/100;
 
             $value = $basicSalary*$SC->value/100;
 
-            $employeeSalary[$SC->name] = [
+            $employeeSalary[$SC->id] = [
                 'value' => $value,
                 'type' => $type,
                 'components_id' => $components_id
@@ -447,7 +453,7 @@ foreach($salaryComponents as $SC){
 
         $value = $getCtcPerMonth*$SC->value/100;
 
-        $employeeSalary[$SC->name] = [
+        $employeeSalary[$SC->org_comp_id] = [
             'value' => $value,
             'type' => $type,
             'components_id' => $components_id
@@ -459,7 +465,7 @@ foreach($salaryComponents as $SC){
 
         $value = $SC->value;
 
-        $employeeSalary[$SC->name] = [
+        $employeeSalary[$SC->org_comp_id] = [
             'value' => $value,
             'type' => $type,
             'components_id' => $components_id
@@ -471,7 +477,7 @@ foreach($salaryComponents as $SC){
 
         $value = 0;
 
-        $employeeSalary[$SC->name] = [
+        $employeeSalary[$SC->org_comp_id] = [
             'value' => $value,
             'type' => $type,
             'components_id' => $components_id
@@ -484,43 +490,43 @@ foreach($salaryComponents as $SC){
 
 foreach($salaryComponents as $SCSA){
 
-    if($SCSA->id == 9 && $SCSA->calculation_type == 'Calculative' && $SCSA->type == 'Earning'){
+    if($SCSA->org_comp_id == 5 && $SCSA->calculation_type == 'Calculative' && $SCSA->type == 'Earning'){
         $SumOfEarnings = 0;
         foreach($employeeSalary as $ES){
             if($ES['type'] == 'Earning'){
                 $SumOfEarnings += $ES['value'];
             }
         }
-        $components_id = $SCSA->id;
+        $components_id = $SCSA->org_comp_id;
         // $value = $getCtcPerMonth - $SumOfEarnings;
         $value = max(0, $getCtcPerMonth - $SumOfEarnings);
         $type = $SCSA->type;
 
-        $employeeSalary[$SCSA->name] = [
+        $employeeSalary[$SCSA->org_comp_id] = [
             'value' => $value,
             'type' => $type,
             'components_id' => $components_id
         ];
 
-    }elseif($SCSA->id == 10 && $SCSA->calculation_type == 'Calculative' && $SCSA->type == 'Earning'){
+    }elseif($SCSA->org_comp_id == 11 && $SCSA->calculation_type == 'Calculative' && $SCSA->type == 'Earning'){
 
         $value = 0;
 
-        $employeeSalary[$SCSA->name] = [
+        $employeeSalary[$SCSA->id] = [
             'value' => $value,
             'type' => $SCSA->type,
-            'components_id' => $SCSA->id
+            'components_id' => $SCSA->org_comp_id
         ];
 
 
-    }elseif($SCSA->id == 11 && $SCSA->calculation_type == 'Calculative' && $SCSA->type == 'Deduction'){
+    }elseif($SCSA->org_comp_id == 10 && $SCSA->calculation_type == 'Calculative' && $SCSA->type == 'Deduction'){
 
         $value = 0;
 
-        $employeeSalary[$SCSA->name] = [
+        $employeeSalary[$SCSA->id] = [
             'value' => $value,
             'type' => $SCSA->type,
-            'components_id' => $SCSA->id
+            'components_id' => $SCSA->org_comp_id
         ];
 
 
@@ -572,29 +578,17 @@ array_push($allEmployeeSalary, [
 ]);
 
        } 
-        
-       $SalartTempCom = [];
-       $allSalaryComponents = array_values(array_unique($allSalaryComponents, SORT_REGULAR));
-       
-       foreach ($allSalaryComponents as $tem_id) {
-           $components = DB::table('org_salary_template_components')
-               ->where('salary_template_id', $tem_id)
-               ->get();
-       
-           foreach ($components as $comp) {
-               $SalartTempCom[$tem_id][] = [
-                   'name' => $comp->name,
-                   'type' => $comp->type,
-                   // Add more component fields if needed
-               ];
-           }
-       }
-       
-    //    dd( $SalartTempCom);
-       
-   
+// dd($orgsalaryComponents);
+    //    dd($allEmployeeSalary);
+    //    echo "<pre>";
+    //    print_r($orgsalaryComponents);
 
-    return view('user_view.salary_lookup',compact('SalartTempCom','allEmployeeSalary'));
+    //    echo "<pre>";
+    //    print_r($allEmployeeSalary);
+        
+
+
+    return view('user_view.salary_lookup',compact('orgsalaryComponents','allEmployeeSalary'));
 
        
     }

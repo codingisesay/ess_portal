@@ -110,6 +110,7 @@ Route::middleware(['auth.superadmin'])->group(function () {
 //    Route::get('superadmin/create_salary_configuration',[salaryBoxController::class,'loadSalaryConfigurationForm'])->name('create_salary_configuration');
 
     Route::get('superadmin/create_salary_templates',[salaryBoxController::class,'loadInsertForm'])->name('salary_template_form');
+    Route::get('superadmin/create_components',[salaryBoxController::class,'loadCompForm'])->name('create_components');
     Route::get('superadmin/create_salary_components',[salaryBoxController::class,'loadcomponentsForm'])->name('create_salary_components');
 
     Route::get('superadmin/create_tax_cycle',[salaryBoxController::class,'loadTaxCycleForm'])->name('tax_cycle');
@@ -118,6 +119,7 @@ Route::middleware(['auth.superadmin'])->group(function () {
     //routes for insert salary box data
     Route::post('superadmin/insert_salary_cycle',[salaryBoxController::class,'insertSalaryCycle'])->name('insert_salary_cycle');
     Route::post('superadmin/insert_salary_template',[salaryBoxController::class,'insertSalaryTemplate'])->name('insert_salary_template');
+    Route::post('superadmin/insert_Components',[salaryBoxController::class,'insertComponents'])->name('insert_Components');
     Route::post('superadmin/insert_salary_Components',[salaryBoxController::class,'insertSalaryComponents'])->name('insert_salary_Components');
 
     Route::post('superadmin/insert_tax_cycle',[salaryBoxController::class,'insertTaxCycle'])->name('insert_tax_cycle');
