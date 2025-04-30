@@ -17,14 +17,14 @@
     <div class="row mx-3">
         <!-- <h2> Employee Detailssss</h2> -->
           <!-- comman component below -->
-        <div class="col-md-4 my-2">
+        <div class="col-lg-4 col-md-12 col-sm-12 my-2">
             <div class="section custom-table h-100">
             @include('user_view.employment_details_top')
             <hr>
             @include('user_view.employment_details_section')
             </div>
         </div>
-        <div class="col-md-8  ">
+        <div class="col-lg-8 col-md-12 ">
             <div class="row my-auto " >    
                 <div class="col-md-6 my-2">
                     <div class="section custom-table h-100">
