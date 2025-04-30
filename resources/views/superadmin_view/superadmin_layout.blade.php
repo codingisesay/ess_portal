@@ -85,7 +85,7 @@ $name = Auth::guard('superadmin')->user()->name;
                         <li><a href="{{ route('create_salary_cycle') }}" class="{{ request()->routeIs('create_salary_cycle') ? 'active' : '' }}">Salary Cycle</a></li>
                         {{-- <li><a href="{{ route('create_salary_configuration') }}" class="{{ request()->routeIs('create_salary_configuration') ? 'active' : '' }}">Salary Configuration</a></li> --}}
                         <li><a href="{{ route('salary_template_form') }}" class="{{ request()->routeIs('salary_template_form') ? 'active' : '' }}">Create Salary Templates</a></li>
-                        <li><a href="{{ route('create_components') }}" class="{{ request()->routeIs('salary_template_form') ? 'active' : '' }}">Create Salary Components</a></li>
+                        <li><a href="{{ route('create_components') }}" class="{{ request()->routeIs('create_components') ? 'active' : '' }}">Create Salary Components</a></li>
                         <li><a href="{{ route('create_salary_components') }}" class="{{ request()->routeIs('create_salary_components') ? 'active' : '' }}">Salary Template Components</a></li>
                     </ul>
                 </li>
