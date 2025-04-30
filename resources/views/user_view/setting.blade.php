@@ -300,6 +300,7 @@
                                         <tr>
                                             <th>Sr.No.</th>
                                             <th>Employee ID</th>
+                                            <th>Employee Name</th>
                                             <th>Salary Template</th>
                                             <th>Employee CTC</th>
                                             <th>Edit</th>
@@ -314,6 +315,7 @@
                                                 <input type="hidden" name="user_id" value="{{ $us->user_id }}">
                                                 <td>{{ $loop->iteration }}</td>
                                                 <td>{{ $us->emp_employeeID }}</td>
+                                                <td>{{ $us->user_name }}</td>
                                                 <td>
                                                     <select name="trmplate_id" required>
                                                         <option value="{{ $us->org_salary_templates_id }}">{{ $us->org_salary_templates_name }}</option>
