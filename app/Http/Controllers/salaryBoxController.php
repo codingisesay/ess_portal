@@ -747,6 +747,7 @@ public function loadEditClaimForm($reimbursement_traking_id = null)
             'reimbursement_form_entries.upload_bill',
             'reimbursement_form_entries.description_by_applicant',
             'reimbursement_form_entries.description_by_manager',
+            'reimbursement_form_entries.status', // Include the status column
             'reimbursement_form_entries.description_by_finance',
             'reimbursement_form_entries.organisation_reimbursement_types_id',
             'organisation_reimbursement_types.name as type_name',
@@ -919,8 +920,8 @@ public function updateFinanceReimbursementStatus(Request $request, $reimbursemen
     //         ]);
     // }
 
-    foreach ($remarks as $entryId => $remark) {
-        $entryStatus = isset($checkboxes[$entryId]) && $checkboxes[$entryId] ? 'PENDING' : 'APPROVED';
+    foreach ($request->remarks as $entryId => $remark) {
+        $entryStatus = isset($checkboxes[$entryId]) && $checkboxes[$entryId] ? 'APPROVED ' : 'REVERT ';
     
         DB::table('reimbursement_form_entries')
             ->where('id', $entryId) // Ensure it matches the specific entry ID
@@ -943,7 +944,7 @@ public function updateFinanceReimbursementStatus(Request $request, $reimbursemen
     //             'updated_at' => now(),
     //         ]);
     // }
-dd($entryStatus);
+// dd($entryStatus);
     // Update the comments column in assign_reimbursement_tokens
     DB::table('assign_reimbursement_tokens')
         ->where('reimbursement_tracking_id', $reimbursement_traking_id)

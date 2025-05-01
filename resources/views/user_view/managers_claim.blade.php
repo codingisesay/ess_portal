@@ -62,8 +62,8 @@ error_reporting(0);
                                     <td>{{ $claim->description_by_manager }}</td>
                                     <td> 
                                         <label class="toggle-switch">
-                                        <input type="hidden" name="checkboxes[{{ $detail->entry_id }}]" value="0">
-                                        <input type="checkbox" name="checkboxes[{{ $detail->entry_id }}]" value="1" {{ $detail->status == '' ? 'checked' : '' }}>
+                                        <input type="hidden" name="checkboxes[{{ $claim->entry_id }}]" value="0">
+                                        <input type="checkbox" name="checkboxes[{{ $claim->entry_id }}]" value="1" {{ $detail->status == '' ? 'checked' : '' }}>
                                             <span class="slider"></span>
                                         </label>
                                     </td>
