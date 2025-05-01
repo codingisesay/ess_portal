@@ -836,11 +836,14 @@ public function updateReimbursementStatus(Request $request, $reimbursement_traki
         'remarks' => 'array', // Ensure remarks is an array
         'remarks.*' => 'nullable|string', // Each remark can be nullable
         'task_name' => 'nullable|string|max:200', // Validate the task_name field
+        'checkboxes' => 'array', // Ensure checkboxes is an array
+        'checkboxes.*' => 'nullable|boolean', // Each checkbox value can be true/false
     ]);
 
     $status = $data['status'];
     $remarks = $data['remarks'];
     $taskName = $data['task_name']; // Get the task_name input
+    $checkboxes = $data['checkboxes']; // Get the checkbox states
     
 
     // Update the status in reimbursement_trackings
@@ -851,17 +854,22 @@ public function updateReimbursementStatus(Request $request, $reimbursement_traki
             'updated_at' => now(),
         ]);
 
-    // Update the description_by_manager in reimbursement_form_entries
-    foreach ($remarks as $entryId => $remark) {
-        DB::table('reimbursement_form_entries')
-            ->where('id', $entryId)
-            ->where('reimbursement_trackings_id', $reimbursement_traking_id) // Ensure it matches the tracking ID
-            ->update([
-                'description_by_manager' => $remark,
-                'updated_at' => now(),
-            ]);
-    }
+ // Update the status and description_by_manager in reimbursement_form_entries
+ foreach ($remarks as $entryId => $remark) {
+    $entryStatus = isset($checkboxes[$entryId]) && $checkboxes[$entryId] ? 'PENDING' : 'REVERT';
+
+    DB::table('reimbursement_form_entries')
+        ->where('id', $entryId) // Ensure it matches the specific entry ID
+        ->where('reimbursement_trackings_id', $reimbursement_traking_id) // Ensure it matches the tracking ID
+        ->update([
+            'description_by_manager' => $remark,
+            'status' => $entryStatus, // Update the status based on the checkbox
+            'updated_at' => now(),
+        ]);
+}
     
+
+
 
     // Update the comments column in assign_reimbursement_tokens
     DB::table('assign_reimbursement_tokens')
@@ -883,11 +891,14 @@ public function updateFinanceReimbursementStatus(Request $request, $reimbursemen
         'remarks' => 'array', // Ensure remarks is an array
         'remarks.*' => 'nullable|string', // Each remark can be nullable
         'task_name' => 'nullable|string|max:200', // nullable the task_name field
+        'checkboxes' => 'array', // Ensure checkboxes is an array
+        'checkboxes.*' => 'nullable|boolean', // Each checkbox value can be true/false
     ]);
 
     $status = $data['status'];
     $remarks = $data['remarks'];
     $taskName = $data['task_name']; // Get the task_name input
+    $checkboxes = $data['checkboxes']; // Get the checkbox states
 
     // Update the status in reimbursement_trackings
     DB::table('reimbursement_trackings')
@@ -898,16 +909,41 @@ public function updateFinanceReimbursementStatus(Request $request, $reimbursemen
         ]);
 
     // Update the description_by_finance in reimbursement_form_entries
+    // foreach ($remarks as $entryId => $remark) {
+    //     DB::table('reimbursement_form_entries')
+    //         ->where('id', $entryId)
+    //         ->where('reimbursement_trackings_id', $reimbursement_traking_id) // Ensure it matches the tracking ID
+    //         ->update([
+    //             'description_by_finance' => $remark, // Update description_by_finance
+    //             'updated_at' => now(),
+    //         ]);
+    // }
+
     foreach ($remarks as $entryId => $remark) {
+        $entryStatus = isset($checkboxes[$entryId]) && $checkboxes[$entryId] ? 'PENDING' : 'APPROVED';
+    
         DB::table('reimbursement_form_entries')
-            ->where('id', $entryId)
+            ->where('id', $entryId) // Ensure it matches the specific entry ID
             ->where('reimbursement_trackings_id', $reimbursement_traking_id) // Ensure it matches the tracking ID
             ->update([
-                'description_by_finance' => $remark, // Update description_by_finance
+                'description_by_finance' => $remark,
+                'status' => $entryStatus, // Update the status based on the checkbox
                 'updated_at' => now(),
             ]);
     }
 
+    // foreach ($checkboxes as $entryId => $isChecked) {
+    //     $entryStatus = $isChecked ? 'APPROVED' : 'REVERT';
+    
+    //     DB::table('reimbursement_form_entries')
+    //         ->where('id', $entryId)
+    //         ->where('reimbursement_trackings_id', $reimbursement_traking_id) // Ensure it matches the tracking ID
+    //         ->update([
+    //             'status' => $entryStatus,
+    //             'updated_at' => now(),
+    //         ]);
+    // }
+dd($entryStatus);
     // Update the comments column in assign_reimbursement_tokens
     DB::table('assign_reimbursement_tokens')
         ->where('reimbursement_tracking_id', $reimbursement_traking_id)
@@ -915,7 +951,7 @@ public function updateFinanceReimbursementStatus(Request $request, $reimbursemen
             'comments' => $taskName, // Save the task_name in the comments column
             'updated_at' => now(),
         ]);
-
+// dd($request->all());
     return redirect()->route('user.homepage')->with('success', 'Reimbursement status updated successfully.');
 }
 

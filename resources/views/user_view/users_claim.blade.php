@@ -68,7 +68,9 @@
                                     <td>{{ $detail->description_by_applicant }}</td>
                                     <td>
                                         <label class="toggle-switch">
-                                            <input type="checkbox" checked />
+                                            <!-- <input type="checkbox" checked /> -->
+                                            <input type="hidden" name="checkboxes[{{ $detail->entry_id }}]" value="0">
+                                            <input type="checkbox" name="checkboxes[{{ $detail->entry_id }}]" value="1" {{ $detail->status == 'PENDING' ? 'checked' : '' }}>
                                             <span class="slider"></span>
                                         </label>
                                     </td>
@@ -95,7 +97,7 @@
                     <div class="col-md-6">
                         <div class="form-group">
                             <div class="floating-label-wrapper">
-                                <input type="text" maxlength="200" id="task" name="task_name" placeholder="Task Description" class="input-field" required>
+                                <input type="text" maxlength="200" id="task" name="task_name" placeholder="Task Description" class="input-field" >
                                 <label for="task">Task</label>
                             </div>
                         </div>
@@ -124,20 +126,39 @@
 </script>
 <script>
     function submitForm(status) {
-
-
         // Set the remark input value to the status
         document.getElementById('status').value = status;
 
-        // Submit the form
-        const form = event.target.closest('form');
-        if (form) {
-            form.submit();
-        } else {
-            console.error('Form not found.');
+        // Validate required fields
+        const requiredFields = document.querySelectorAll('input[required]');
+        let isValid = true;
+
+        requiredFields.forEach(function (field) {
+            if (!field.value.trim()) {
+                isValid = false;
+                field.classList.add('error'); // Add a class to highlight the field (optional)
+                alert('Please fill out all required fields.');
+            } else {
+                field.classList.remove('error'); // Remove the error class if the field is valid
+            }
+        });
+
+        // If all required fields are valid, submit the form
+        if (isValid) {
+            const form = event.target.closest('form');
+            if (form) {
+                form.submit();
+            } else {
+                console.error('Form not found.');
+            }
         }
     }
 </script>
+<style>
+    .error {
+    border: 2px solid red;
+}
+</style>
  
 <script>
 document.querySelectorAll('input[type="checkbox"]').forEach(function (checkbox) {
