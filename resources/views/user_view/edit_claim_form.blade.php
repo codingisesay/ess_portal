@@ -56,72 +56,61 @@
     <td>{{ $index + 1 }}</td>
     <td>
       <input type="hidden" name="entry_ids[]" value="{{ $claim->id }}" />
-      <input type="date" name="bill_date[{{ $index }}]" class="form-control" 
-             value="{{ \Carbon\Carbon::parse($claim->entry_date)->format('Y-m-d') }}" 
-             {{ $claim->status != 'REVERT' ? 'disabled' : '' }} required>
+      <input type="date" name="bill_date[{{ $index }}]" class="form-control" value="{{ \Carbon\Carbon::parse($claim->entry_date)->format('Y-m-d') }}" required>
     </td>
     <td>
-      <select class="form-control rm_type" name="type[{{ $index }}]" 
-              {{ $claim->status != 'REVERT' ? 'disabled' : '' }} required>
+      <select class="form-control rm_type" name="type[{{ $index }}]" required>
         <option value="">Select One</option>
         @foreach($reim_type as $rt)
-        <option value="{{ $rt->id }}" {{ $rt->id == $claim->organisation_reimbursement_types_id ? 'selected' : '' }}>
-          {{ $rt->name }}
-        </option>
+        <option value="{{ $rt->id }}" {{ $rt->id == $claim->organisation_reimbursement_types_id ? 'selected' : '' }}>{{ $rt->name }}</option>
         @endforeach
       </select>
     </td>
-    <td>
-      <input type="text" class="form-control text-end" value="{{ $claim->max_amount ?? '' }}" disabled>
-    </td>
-    <td>
-      <input type="number" name="entered_amount[{{ $index }}]" class="form-control text-end" 
-             value="{{ $claim->entry_amount }}" step="0.01" 
-             {{ $claim->status != 'REVERT' ? 'disabled' : '' }} required>
-    </td>
+    <td><input type="text" class="form-control text-end" value="{{ $claim->max_amount ?? '' }}" disabled></td>
+    <td><input type="number" name="entered_amount[{{ $index }}]" class="form-control text-end" value="{{ $claim->entry_amount }}" step="0.01" required></td>
     <td>
       <div class="file-upload d-flex">
         <div class="file-select d-flex align-items-center">
-          <div class="image-preview-container me-2 d-flex align-items-center">
-            <div class="upload-icon-input me-2">
+          <div class="image-preview-container me-2 d-flex align-items-center" >
+            <div  class="upload-icon-input me-2">
               <x-icon name="upload" />
-              <input type="file" name="bills[{{ $index }}]" class="file-input" 
-                     accept=".jpg,.jpeg,.png,.pdf" data-index="{{ $index }}" 
-                     {{ $claim->status != 'REVERT' ? 'disabled' : '' }}>
+              <input type="file" name="bills[{{ $index }}]" class="file-input " accept=".jpg,.jpeg,.png,.pdf" data-index="{{ $index }}" >
             </div>
             @if ($claim->upload_bill)
               @if (Str::endsWith($claim->upload_bill, ['.jpg', '.jpeg', '.png']))
-                <img src="{{ asset('storage/' . $claim->upload_bill) }}" class="existing-image img-thumbnail" 
-                     width="50" height="50" style="cursor: pointer;" 
-                     data-bs-toggle="modal" data-bs-target="#imageModal" 
-                     data-img="{{ asset('storage/' . $claim->upload_bill) }}">
+               <!-- Thumbnail image that triggers modal -->
+                <img src="{{ asset('storage/' . $claim->upload_bill) }}"
+                    class="existing-image img-thumbnail"
+                    width="50" height="50"
+                    style="cursor: pointer;"
+                    data-bs-toggle="modal"
+                    data-bs-target="#imageModal"
+                    data-img="{{ asset('storage/' . $claim->upload_bill) }}">
+
+                <img src="#" class="new-image-preview img-thumbnail" width="50" height="50" style="display:none;">
               @elseif (Str::endsWith($claim->upload_bill, '.pdf'))
-                <div class="pdf-preview d-flex flex-column align-items-center justify-content-center bg-light">
+                <div class="pdf-preview d-flex flex-column align-items-center justify-content-center bg-light"  >
                   <x-icon name="file-text" class="text-primary" size="48" />
                   <small class="text-muted mt-1">PDF</small>
                 </div>
               @endif
-            @else
+            @else 
               <img src="#" class="new-image-preview img-thumbnail" width="50" height="50" style="display:none;">
             @endif
           </div>
         </div>
+        <!-- @if ($claim->upload_bill)
+          <small class="text-muted d-block mt-2">
+            <a href="{{ asset('storage/' . $claim->upload_bill) }}" target="_blank" class="text-decoration-none">
+              <x-icon name="external-link" size="14" /> View Original
+            </a>
+          </small>
+        @endif -->
       </div>
     </td>
-    <td>
-      <textarea class="form-control" rows="1" name="comments[{{ $index }}]" 
-                placeholder="Comment" {{ $claim->status != 'REVERT' ? 'disabled' : '' }}>
-        {{ $claim->description_by_applicant }}
-      </textarea>
-    </td>
-    <td>
-      <textarea class="form-control" rows="1" name="manager_comments[{{ $index }}]" 
-                disabled placeholder="Comment">{{ $claim->description_by_manager }}</textarea>
-    </td>
-    <td>
-      <textarea class="form-control" rows="1" name="finance_comments[{{ $index }}]" 
-                disabled placeholder="Comment">{{ $claim->description_by_finance }}</textarea>
-    </td>
+    <td><textarea class="form-control" rows="1" name="comments[{{ $index }}]" placeholder="Comment">{{ $claim->description_by_applicant }}</textarea></td>
+    <td><textarea class="form-control" rows="1" name="comments[{{ $index }}]" disabled placeholder="Comment">{{ $claim->description_by_manager }}</textarea></td>
+    <td><textarea class="form-control" rows="1" name="comments[{{ $index }}]" disabled placeholder="Comment">{{ $claim->description_by_finance }}</textarea></td>
   </tr>
   @endforeach
 </tbody>
