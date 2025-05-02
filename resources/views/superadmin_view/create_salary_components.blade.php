@@ -55,7 +55,12 @@ $id = Auth::guard('superadmin')->user()->id;
                 </div>
                 <div class="col-3 mb-4">
                     <div class="form-group">
-                        <input type="component_name" name="component_name" required>
+                        <select name="component_id" required>
+                            <option value="" disabled selected></option>
+                            @foreach ($orgComp as $OC)
+                                <option value="{{ $OC->id }}">{{ $OC->name }}</option>
+                            @endforeach
+                        </select>
                         <label>Component Name</label>
                     </div>
                 </div>
@@ -75,6 +80,7 @@ $id = Auth::guard('superadmin')->user()->id;
                             <option value="" disabled selected></option>
                             <option value="Percentage">Percentage</option>
                             <option value="Fixed">Fixed</option>
+                            <option value="Calculative">Calculative</option>
                             <option value="Others">Others</option>
                         </select>
                         <label>Calculation Type</label>

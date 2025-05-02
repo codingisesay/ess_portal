@@ -26,12 +26,19 @@ class salaryBoxController extends Controller
         $templates = DB::table('org_salary_templates')
         ->where('organisation_id' , '=' , $org_data->id)
         ->get();
+   
+         $orgComp = DB::table('org_salary_components')
+         ->where('organisation_id' , '=' , $org_data->id)
+         ->where('status' , '=' , 'Active')
+         ->get();
+
         $componentdata = DB::table('org_salary_template_components')
         ->join('org_salary_templates','org_salary_template_components.salary_template_id','=','org_salary_templates.id')
-        ->select('org_salary_templates.name as template_name','org_salary_template_components.*')
+        ->join('org_salary_components', 'org_salary_template_components.org_comp_id','=','org_salary_components.id')
+        ->select('org_salary_templates.name as template_name','org_salary_template_components.*','org_salary_components.*')
         ->get();
         // dd($componentdata);
-        return view('superadmin_view.create_salary_components',compact('templates','componentdata'));
+        return view('superadmin_view.create_salary_components',compact('templates','componentdata','orgComp'));
 
     }
 
@@ -40,8 +47,8 @@ class salaryBoxController extends Controller
     public function insertSalaryTemplate(Request $request){
         $data = $request->validate([
             'template_name' => 'required',
-            'min_ctc' => 'required',
-            'max_ctc' => 'required',
+            'min_ctc' => '',
+            'max_ctc' => '',
             'status' => 'required',
         ]);
 
@@ -69,7 +76,7 @@ class salaryBoxController extends Controller
     public function insertSalaryComponents(Request $request){
         $data = $request->validate([
             'template_id' => 'required',
-            'component_name' => 'required',
+            'component_id' => 'required',
             'component_type' => 'required',
             'calculation_type' => 'required',
             'value' => '',
@@ -79,7 +86,7 @@ class salaryBoxController extends Controller
 
         $insertStatus = DB::table('org_salary_template_components')->insert([
             'salary_template_id' => $data['template_id'],
-            'name' => $data['component_name'],
+            'org_comp_id' => $data['component_id'],
             'type' => $data['component_type'],
             'calculation_type' => $data['calculation_type'],
             'value' => $data['value'],
@@ -962,6 +969,44 @@ public function updateFinanceReimbursementStatus(Request $request, $reimbursemen
         ]);
 // dd($request->all());
     return redirect()->route('user.homepage')->with('success', 'Reimbursement status updated successfully.');
+}
+
+public function loadCompForm(){
+
+    $org_data = Auth::guard('superadmin')->user();
+    $template_datas = DB::table('org_salary_components')
+    ->where('organisation_id', '=', $org_data->id)
+    ->where('status', '=', 'Active')
+    ->get();
+
+    return view('superadmin_view.create_comp',compact('template_datas'));
+
+}
+
+public function insertComponents(Request $request){
+    $data = $request->validate([
+        'name' => 'required',
+        'status' => 'required',
+    ]);
+
+    $org_data = Auth::guard('superadmin')->user();
+
+    $insertStatus = DB::table('org_salary_components')->insert([
+        'organisation_id' => $org_data->id,
+        'name' => $data['name'],
+        'status' => $data['status'],
+        'created_at' => NOW(),
+        'updated_at' => NOW(),
+    ]);
+
+    if($insertStatus){
+
+        return redirect()->route('create_components')->with('success','Component Created Successfully!!');
+
+    }
+
+    return redirect()->route('create_components')->with('error','Component Not Created Successfully!!');
+
 }
 
 
