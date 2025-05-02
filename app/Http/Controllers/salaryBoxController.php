@@ -986,6 +986,7 @@ public function loadCompForm(){
 public function insertComponents(Request $request){
     $data = $request->validate([
         'name' => 'required',
+        'component_type' => 'required',
         'status' => 'required',
     ]);
 
@@ -994,6 +995,7 @@ public function insertComponents(Request $request){
     $insertStatus = DB::table('org_salary_components')->insert([
         'organisation_id' => $org_data->id,
         'name' => $data['name'],
+        'type' => $data['component_type'],
         'status' => $data['status'],
         'created_at' => NOW(),
         'updated_at' => NOW(),
