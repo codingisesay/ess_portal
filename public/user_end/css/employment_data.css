@@ -37,6 +37,7 @@ body {
     .section1 {
         width: 80%;
         height: auto;
+        overflow-x: auto;
     }
 }
 
@@ -513,6 +514,7 @@ p weak {
     overflow-wrap: break-word;
     /* Ensure long words break to the next line */
     overflow: hidden;
+    overflow-x: auto;
     /* Hide overflow content */
 }
 

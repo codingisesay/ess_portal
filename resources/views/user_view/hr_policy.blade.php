@@ -33,7 +33,7 @@ error_reporting(0);
     <div class="main-container mx-">
         <!-- Sidebar -->
        
-            <div class="sidebar me-2">
+            <div class="sidebar me-2 my-2">
                 @foreach($policies->groupBy('policy_categorie_id') as $categoryId => $categoryPolicies)
                     <div class="category-item" data-category="{{ $categoryId }}">
                         <div class="category-icon">
@@ -49,7 +49,7 @@ error_reporting(0);
        
         <!-- Content Area -->
         @foreach($policies->groupBy('policy_categorie_id') as $categoryId => $categoryPolicies)
-            <div class="content-area " data-category="{{ $categoryId }}">
+            <div class="content-area  my-2" data-category="{{ $categoryId }}">
                 @foreach($categoryPolicies as $policy)
                     <a href="{{ Storage::url($policy->docLink) }}" class="download-btn" download>
                     <img src="{{ asset('user_end/images/download 1.png') }}" alt="Download Icon"> Download

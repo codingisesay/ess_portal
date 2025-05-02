@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="stylesheet" href="{{ asset('errors/error.css') }}">
     
+    <link href="{{ asset('bootstrapcss/bootstrap.min.css') }}" rel="stylesheet"> 
 </head>
  
 
@@ -29,7 +30,7 @@
             <?php 
                 if(in_array(11, $permission_array)){ 
                 ?>
-                    <div class="accordion-item">
+                    <div class="accordion-item my-2">
                         <!-- Accordion Header with a toggle dropdown -->
                         <div class="accordion-header" onclick="toggleCalendarMasterDropdown()">
                             Calendar Master
@@ -122,7 +123,7 @@
 
 
             <!-- Leave Section (With Link to hr_universal.php) -->
-            <!-- {{-- <div class="accordion-item">
+            <!-- {{-- <div class="accordion-item my-2">
                 <div class="accordion-header" onclick="window.location.href='{{ url('hr_universal') }}'">
                     Global Leaves
                 </div>
@@ -132,7 +133,7 @@
             <?php 
             if(in_array(13,$permission_array)){?>
              
-                <div class="accordion-item">
+                <div class="accordion-item my-2">
                     <div class="accordion-header" onclick="toggleDropdown()">Thought of the Day/News & Events</div>
                     <div class="dropdown-content" id="dropdownContent">
                         <form action="{{ route('save_thought') }}" method="POST">
@@ -238,7 +239,7 @@
             <?php 
                 if(in_array(12, $permission_array)){ 
                 ?>
-            <div class="accordion-item">
+            <div class="accordion-item my-2">
                 <!-- Accordion Header with a toggle dropdown -->
                 <div class="accordion-header" onclick="toggleEmployeeDetailsDropdown()">
                     Employee Details Edit
@@ -285,7 +286,7 @@
                 //user salary functions
                 if(in_array(14, $permission_array)){ 
                 ?>
-                    <div class="accordion-item">
+                    <div class="accordion-item my-2">
                         <!-- Accordion Header with a toggle dropdown -->
                         <div class="accordion-header" onclick="#">
                             Employee Salary
@@ -346,36 +347,47 @@
                         </div>
                         <?php } ?>
             </div>
-                <div class="accordion-item">
+                <div class="accordion-item my-2">
                     <!-- Accordion Header with a toggle dropdown -->
                     <div class="accordion-header" onclick="#">
                         Process Salary (2025-26)
                     </div>
             
                     <!-- Dropdown content (initially hidden) -->
-                    <div id="employeeDetailsDropdown" class="dropdown-content" style="display: block;">
+                    <div id="employeeDetailsDropdown" class="dropdown-content mt-0 pt-0" style="display: block;">
                         <!-- Collapsible Content (Table) -->
-                        <form action="{{ route('process_salary') }}" method="POST">
+                        <form action="{{ route('process_salary') }}" method="POST" >
                             @csrf
-                        <label>Cycle Year</label>
-                        <input type="hidden" value="{{ $dataofcurrentyear->id }}" name="cycle_id">
-                        <input type="text" value="{{ $dataofcurrentyear->name }}" disabled>
-                        
-                        <label>Salary Month</label>
-                       <select name="selected_month">
-                        <option value="">Select Month</option>
-                        @foreach ($monthsInCycle as $MC)
-
-                        <option value="{{ $MC  }}">{{ $MC  }}</option>
-                        
-                        @endforeach
-                       </select>
-                       
-                       <input type="submit" value="Process">
-                    </form>
-                        </div>
-                    </div>      
-    </div>
+                            <div class="row">
+                            
+                                <div class="col-md-3 my-2">                                            
+                                    <div class="form-group">
+                                        <div class="floating-label-wrapper w-100">
+                                            <label>Cycle Year</label>
+                                            <input class="form-control" type="hidden" value="{{ $dataofcurrentyear->id }}" name="cycle_id">
+                                            <input type="text" value="{{ $dataofcurrentyear->name }}" disabled>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-3 my-2">                                                        
+                                    <div class="form-group">
+                                        <div class="floating-label-wrapper w-100">
+                                            <label>Salary Month</label>
+                                            <select class="form-control" name="selected_month">
+                                            <option value="">Select Month</option>
+                                            @foreach ($monthsInCycle as $MC)
+                                                <option value="{{ $MC  }}">{{ $MC  }}</option>                        
+                                            @endforeach
+                                            </select>
+                                        </div>
+                                    </div>    
+                                </div>
+                            </div>
+                        <button class="ms-auto px-4 py-1" type="submit">Process</button>
+                        </form>
+                    </div>
+                </div>      
+        </div>
 </main>
 
 <script>

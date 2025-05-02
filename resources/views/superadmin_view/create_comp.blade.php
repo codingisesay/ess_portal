@@ -18,7 +18,7 @@ $id = Auth::guard('superadmin')->user()->id;
 <link rel="stylesheet" href="{{ asset('admin_end/css/admin_form.css') }}">
 <link rel="stylesheet" href="{{ asset('admin_end/css/popup_form.css') }}">
 <div class="container">
-    <h3>Creates Salary Templates</h3>
+    <h3>Creates Salary Component</h3>
 
     <!-- Toggle Buttons -->
     <div class="toggle-buttons">
@@ -48,6 +48,17 @@ $id = Auth::guard('superadmin')->user()->id;
                     </div>
                 </div>
              
+                <div class="col-3 mb-4">
+                    <div class="form-group">
+                        <select name="component_type" required>
+                            <option value="" disabled selected></option>
+                            <option value="Earning">Earning</option>
+                            <option value="Deduction">Deduction</option>
+                        </select>
+                        <label>Type</label>
+                    </div>
+                </div>
+                
                 <div class="col-3 mb-4">
                     <div class="form-group">
                         <select name="status" required>

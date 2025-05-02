@@ -39,13 +39,13 @@ $permission_array = session('id');
         <form id="educationForm" action="{{ route('edit_education_insert') }}" method="POST">
             @csrf
             <input type="hidden" name="form_step4" value="education_step">
-            <h4 class="d-flex align-items-center"><x-icon name="educationoutline"/>&nbsp;Educational Details</h4>
+            <h4 class="d-flex align-items-center"><x-icon name="educationoutline"/>&nbsp;Educational Details ss</h4>
             <button type="button" class="add-row-education action-button" onclick="addEducationRow()">Add Educational Information</button>
             <div class="table-container">
                 <table>
                     <thead>
                         <tr>
-                            <th>Sr.&nbsp;No.</th>
+                            <!-- <th>Sr.&nbsp;No.</th> -->
                             <th>Course Type</th>
                             <th>Degree</th>
                             <th>University/Board</th>
@@ -64,7 +64,7 @@ $permission_array = session('id');
                         <!-- Pre-populate existing records from the backend -->
                         @foreach($emp_eduction_details as $index => $detail)
                             <tr>
-                                <td>{{ $index + 1 }}</td>
+                                <td class="d-none">{{ $index + 1 }}</td>
                                 <td>
                                     <select name="course_type[]" class="relation-type" onload="toggleLoadFields(this)" required>
                                         <option value="degree" {{ $detail->course_type == 'degree' ? 'selected' : '' }}>Degree</option>
@@ -171,7 +171,7 @@ document.addEventListener('DOMContentLoaded', function () {
         const newRow = document.createElement('tr');
         
         newRow.innerHTML = `
-            <td>${educationCounter}</td>
+            <td class="d-none">${educationCounter}</td>
             <td>
                 <select name="course_type[]" class="relation-type" required onchange="toggleFields(this)">
                     <option value="">Select</option>

@@ -1020,7 +1020,7 @@
 						.css('top', '0px')
 						.css('width', '200px')
 						.css('height', popupWidth + 20 + 'px');
-					canvasHolder.css('margin', '10px 25px 0px 230px');
+					canvasHolder.css('margin', '20px');
 					popupHeight = popupWidth + parseInt(canvasHolder.css('margin-top')) + parseInt(canvasHolder.css('margin-bottom'));
 				}
 				//Normal mode (enough space for normal popup)

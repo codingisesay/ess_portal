@@ -22,8 +22,8 @@ error_reporting(0);
     <link href="{{ asset('bootstrapcss/bootstrap.min.css') }}" rel="stylesheet">  
 </head>
  
-    <div class="row mx-3">
-        <div class=" col-lg-4 col-md-6 col-sm-12 p-1">
+    <div class="row justify-content-center mx-3">
+        <div class=" col-lg-4 col-md-6 col-sm-12 p-0">
             <h4 class="ms-2 mb-1 fw-bold" id="greeting"></h4>  
             <div class="row mx-1 my-2"> 
                 @foreach ($logs as $log)  
@@ -136,7 +136,7 @@ error_reporting(0);
                         @forelse ($anniversaries as $anniversary)
                         <div class=" border rounded-3 shadow-sm mb-2">
                             <div class="d-flex justify-content-between p-2">
-                                <div class="details mb-1"> 
+                                <div class="details mb-3"> 
                                     <p class="mb-0" ><strong> {{ $anniversary->Employee_Name }}</strong></p>
                                     <small >{{ $anniversary->yearsCompleted }} Years Completed</small>
                                     <div class="badge">{{ $anniversary->badgeText }}</div>
@@ -219,9 +219,9 @@ error_reporting(0);
             </section> 
          
         </div>
-    </div> 
+    <!-- </div> 
  
-    <div class="row mx-3">
+    <div class="row mx-3"> -->
         <div class="col-lg-3 col-md-6 col-sm-12 p-1"> 
             <section class="approval-pending">
                 <h5>Approval Pending</h5>
@@ -325,7 +325,7 @@ error_reporting(0);
                         <div class=" border rounded-3 shadow-sm mb-2">
                             <div class="d-flex  p-2">
                             <img class="my-auto me-2" height="60" width="60" src="{{ asset('storage/' . ($birthday->imagelink ?: 'user_profile_image/Oqr4VRqo7RpQxnmiZCh12zybbcdsyUin2FhAKD3O.jpg')) }}" alt="photo" />
-                                <div class="details mb-1"> 
+                                <div class="details mb-3"> 
                                     <p class="mb-0" ><strong> {{ $birthday->employee_nme }}</strong></p>
                                     <small >{{ $birthday->designation_name }}</small>
                                     <div class="badge">{{ $birthday->badgeText }}</div>

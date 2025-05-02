@@ -6,6 +6,8 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css">  
     <link rel="stylesheet" href="{{ asset('/user_end/css/homepage.css') }}">
     <link rel="stylesheet" href="{{ asset('/user_end/css/payroll.css') }}">
+    <link href="{{ asset('bootstrapcss/bootstrap.min.css') }}" rel="stylesheet"> 
+    <link href="{{ asset('bootstrapjs/bootstrap.js') }}" rel="stylesheet"> 
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     
@@ -13,28 +15,31 @@
       
             <div class="row">
             <!-- graph 1 -->
-            <div class="col-5">
+            <div class="col-md-5 my-2">
                 <div class="payslip-card">
-                    <div class="header d-flex">
-                    <h5 class="me-auto mb-0">Overview</h5>
-                    <div> 
-                        FY   
-                        <select>
-                        <option value="2024-25">2024-25</option>
-                        <option value="2025-26">2025-26</option>
-                        </select>
-                        |
-                        <select>
-                        <option value="q1">Q1(jan-march)</option> 
-                        <option value="q2">Q2(Apr-June)</option> 
-                        </select>
-                        |
-                        <select>
-                        <option value="q1">January</option> 
-                        <option value="q2">February</option> 
-                        <option value="q2">March</option> 
-                        </select>
-                    </div>
+                    <div class="header d-flex ">
+                        <h5 class="mb-0">Overview</h5>
+                        <span class="ms-auto d-flex flex-wrap  justify-content-end"> 
+                            <span class="d-flex justify-content-end"> 
+                            <select class="border-bottom">
+                            <option value="2024-25">FY2025-26</option>
+                            <option value="2025-26">FY2026-27</option>
+                            </select>
+                            |</span>
+                            <span class="d-flex justify-content-end">
+                                <select class="border-bottom">
+                                <option value="q1">Q1(jan-march)</option> 
+                                <option value="q2">Q2(Apr-June)</option> 
+                                </select>
+                            |</span>
+                            <span>
+                                <select class="border-bottom">
+                                <option value="q1">January</option> 
+                                <option value="q2">February</option> 
+                                <option value="q2">March</option> 
+                                </select>
+                            </span>
+                        </span>
                     </div> 
                     <hr cass="my-0">
                     
@@ -46,33 +51,35 @@
                     </div>
                     <div class="col-6">
                         <div class="payment-details">
-                            <button class="btn btn-outline-secondary py-0 d-flex justify-centent-center align-items-center"> 
-                                <x-icon name="eyefill" />&nbsp; Show/hide details
+                            <button id="toggleButton"  class="btn btn-outline-secondary py-1 d-flex justify-centent-center align-items-center"> 
+                                Salary Brief Show
                             </button>
                             <br> 
-                            <div class="payment-row1" >
-                                <small class="payment-label" >Take Home</small><br/>
-                                <h5 class="payment-amount">80,000.00</h5>
-                            </div>
-                            <div class="payment-row2">
-                                <small class="payment-label">Deductions</small><br/>
-                                <h5 class="payment-amount">6,000.00</h5>
-                            </div>
-                            <div class="payment-row3">
-                                <small class="payment-label">Gross Pay</small><br/>
-                                <h5 class="payment-amount gross-pay">86,000.00</h5>
-                            </div>
-                    
-                            <button class="view-btn mt-4"><i class="bi bi-file-earmark-arrow-down"></i> Get Payslips</button>
+                                <!-- Payment Info -->
+                                <div class="payment-row1">
+                                    <small class="payment-label">Take Home</small><br/>
+                                    <h6 class="payment-amount" data-amount="80,000.00">₹ *****</h6>
+                                </div>
+                                <div class="payment-row2">
+                                    <small class="payment-label">Deductions</small><br/>
+                                    <h6 class="payment-amount" data-amount="6,000.00">₹ *****</h6>
+                                </div>
+                                <div class="payment-row3">
+                                    <small class="payment-label">Gross Pay</small><br/>
+                                    <h6 class="payment-amount gross-pay" data-amount="86,000.00">₹ *****</h6>
+                                </div>
+                              
+                            <button class="submit d-flex jusify-content-center align-items-center mt-3 px-3 py-1"  onclick="openSalaryModal()">
+                                <i class="bi bi-file-earmark-arrow-down"></i>&nbsp;Get&nbsp;Payslips
+                            </button>
                         </div>
-                        
                     </div>
                     </div>
                     
                 </div>
             </div >
             <!-- graph 2 -->
-            <div class="col-7">
+            <div class="col-md-7 my-2">
                 <div class="tax-trend-card payslip-card">
                 <div class="header d-flex">
                     <h5 class="me-auto mb-0">Income Tax Trend</h5> 
@@ -106,7 +113,7 @@
             </div>
             </div>
             <!-- table below -->
-            <div class="col-12 my-4">
+            <div class="col-12 my-2">
                 <div class="payslip-card"> 
                 <div class="header d-flex justify-content-between align-items-center ">
                     <h5 class=" mb-0">Reimbursement Claims List</h5> 
@@ -195,7 +202,7 @@
                     datasets: [{
                         data: [80000, 6000],
                         backgroundColor: [
-                            '#61C9A1  ',   // Blue for Take Home
+                            '#3498DB',   // Blue for Take Home
                             '#e74c3c'    // Red for Deductions
                         ],
                         borderColor: [
@@ -213,35 +220,34 @@
                     responsive: true,
                     maintainAspectRatio: false,
                     plugins: {
-                        legend: {
-                            position: 'bottom',
-                            labels: {
-                                boxWidth: 12,
-                                padding: 20,
-                                font: {
-                                    size: 14
-                                }
-                            }
-                        },
-                        tooltip: {
-                            callbacks: {
-                                label: function(context) {
-                                    const label = context.label || '';
-                                    const value = context.raw || 0;
-                                    const total = context.dataset.data.reduce((a, b) => a + b, 0);
-                                    const percentage = Math.round((value / total) * 100);
-                                    return `${label}: ₹${value.toLocaleString()} (${percentage}%)`;
-                                }
-                            }
-                        }
+                        
+                        legend: false, 
+                        // legend: {
+                        //     position: 'bottom',
+                        //     labels: {
+                        //         boxWidth: 12,
+                        //         padding: 20,
+                        //         font: {
+                        //             size: 14
+                        //         }
+                        //     }
+                        // },
+                        // tooltip: {
+                        //     callbacks: {
+                        //         label: function(context) {
+                        //             const label = context.label || '';
+                        //             const value = context.raw || 0;
+                        //             const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                        //             const percentage = Math.round((value / total) * 100);
+                        //             return `${label}: ₹${value.toLocaleString()} (${percentage}%)`;
+                        //         }
+                        //     }
+                        // }
                     }
                 }
             });
             
-            document.querySelector('.view-btn').addEventListener('click', function() {
-                alert('Payslip details would be displayed here');
-                // In a real implementation, this would navigate to another page or show more details
-            });
+             
         });
     </script>
     
@@ -339,4 +345,117 @@
             });
         });
     </script>
+    
+    <script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const amounts = document.querySelectorAll(".payment-amount");
+        const toggleButton = document.getElementById("toggleButton");
+        let isMasked = true; // start with masked values
+
+        toggleButton.addEventListener("click", function () {
+            amounts.forEach(el => {
+                if (isMasked) {
+                    el.textContent = '₹ ' + el.getAttribute("data-amount"); // show amount
+                } else {
+                    el.textContent = "₹ *****"; // mask amount
+                }
+            });
+
+            // Toggle button text
+            toggleButton.textContent = isMasked ? "Salary Brief Hide" : "Salary Brief Show";
+            isMasked = !isMasked;
+        });
+    });
+</script>
+
+<script>
+
+// Leave Model script below
+function openSalaryModal() {
+    document.getElementById('leaveModal').style.display = 'block';  // Show the modal
+}
+
+// Close the leave modal
+function closeSalaryModal() {
+    document.getElementById('leaveModal').style.display = 'none';  // Hide the modal
+}
+
+// Close the modal if the user clicks outside of it
+window.onclick = function(event) {
+    var taskModal = document.getElementById('taskModal');
+    var leaveModal = document.getElementById('leaveModal');
+
+    // Close task modal if clicked outside
+    if (event.target === taskModal) {
+        closeTaskModal();
+    }
+
+    // Close leave modal if clicked outside
+    if (event.target === leaveModal) {
+        closeSalaryModal();
+    }
+}
+// Leave Model script above
+  
+</script>
+  
+    <!-- salary model  -->
+    <div id="leaveModal" class="modal"  >
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <span class="close" onclick="closeSalaryModal()">×</span>
+                <h5>Salary Details For : EMP001 </h5>
+                <div class="tbl-container">
+                    <table>
+                        <thead>
+                            <tr> 
+                                <th>Month</th>
+                                <th>Basic Pay</th>
+                                <th>HRA</th>
+                                <th>Allowances</th>
+                                <th>Deductions</th>
+                                <th>Net Pay</th>
+                                <!-- <th>Payment Date</th> -->
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr> 
+                                <td>Jan-2025</td>
+                                <td>40,000</td>
+                                <td>10,000</td>
+                                <td>5,000</td>
+                                <td>3,000</td>
+                                <td>52,000</td>
+                                <!-- <td>31-Jan-2025</td> -->
+                                <td><a href="" download=""><x-icon name="download" /></a> </td>
+                            </tr>
+                            <tr> 
+                                <td>Feb-2025</td>
+                                <td>40,000</td>
+                                <td>10,000</td>
+                                <td>5,000</td>
+                                <td>3,000</td>
+                                <td>52,000</td>
+                                <!-- <td>28-Feb-2025</td> -->
+                                <td><a href="" download=""><x-icon name="download" /></a> </td>
+                            </tr>
+                            <tr> 
+                                <td>Mar-2025</td>
+                                <td>40,000</td>
+                                <td>10,000</td>
+                                <td>5,000</td>
+                                <td>3,000</td>
+                                <td>52,000</td>
+                                <!-- <td>31-Mar-2025</td> -->
+                                <td><a href="" download=""><x-icon name="download" /></a> </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+        </div>
+    </div>
+ 
     @endsection

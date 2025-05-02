@@ -14,9 +14,9 @@ function renderEmployeeTree($employees) {
             . '" alt="Profile Image"> <br/>';
         echo ' <small class="emp-name">' . $employee->employee_name . '</small>';
         echo '    <div class="emp-info"> ';
-        echo '        <div class="emp-name">' . $employee->employee_name . '</div> ';
-        echo '        <div class="emp-designation">' . $employee->designation . '</div> ';
-        echo '        <div class="">' . $employee->department . '</div> ';
+        echo '        <div class=""> Dept - ' . $employee->department . '</div> ';
+        echo '        <h6 class="emp-name mb-0">' . $employee->employee_name . '</h6> ';
+        echo '        <div class="emp-designation"> Role - ' . $employee->designation . '</div> ';
         echo '    </div> ';
         echo '</div>  ';
 
