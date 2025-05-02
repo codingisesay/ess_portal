@@ -560,9 +560,9 @@ $employeeSalaryDetails[$user->id] = [
     'leave_taken' => $totalLeaveDays,
     'present_days' => $presentDays,
     'absent_days' => $totalWorkingDaysInMonth - $presentDays,
-    'total_earning' => round($totalEarning),
-    'total_deducation' => round($totalDeduction),
-    'net_amount' => round($totalEarning - $totalDeduction),
+    // 'total_earning' => round($totalEarning),
+    // 'total_deducation' => round($totalDeduction),
+    // 'net_amount' => round($totalEarning - $totalDeduction),
 ];
 
 // $employeeSalary['2'] = $employeeSalary;
@@ -586,7 +586,7 @@ array_push($allEmployeeSalary, [
     //    echo "<pre>";
     //    print_r($allEmployeeSalary);
         
-
+    // dd($allemployeeSalaryDetails);
 
     return view('user_view.salary_lookup',compact('orgsalaryComponents','allEmployeeSalary'));
 
