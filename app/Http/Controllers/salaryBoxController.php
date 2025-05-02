@@ -759,11 +759,11 @@ public function loadEditClaimForm($reimbursement_traking_id = null)
         ->where('reimbursement_trackings.user_id', '=', $loginUserInfo->id)
         ->get();
 
-   // Add an 'editable' property based on the status
-   $reimbursementClaims = $reimbursementClaims->map(function ($claim) {
-    $claim->editable = $claim->status === 'REVERT'; // Editable only if status is 'REVERT'
-    return $claim;
-});
+        // Add an 'editable' property based on the status
+        $reimbursementClaims = $reimbursementClaims->map(function ($claim) {
+            $claim->editable = $claim->status === 'REVERT'; // Editable only if status is 'REVERT'
+            return $claim;
+        });
 
 // dd($reimbursementClaims);
     $reim_type = DB::table('organisation_reimbursement_types')
