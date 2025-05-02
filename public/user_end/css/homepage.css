@@ -984,7 +984,7 @@ label {
     min-height: max-content;
     overflow-y: auto;
     width: 100%;
-    min-width: max-content;
+    /* min-width: max-content; */
     /* margin: auto; */
     display: flex;
     justify-content: center;
@@ -1104,6 +1104,10 @@ select {
     }
 }
 
+.clock-timepicker input {
+    min-width: 100%;
+}
+
 .clock-timepicker-mobile-time,
 .clock-timepicker-mobile-time {
     display: none;
@@ -1112,6 +1116,8 @@ select {
 .clock-timepicker-popup {
     width: max-content !important;
 }
+
+
 
 /* ===========================
    APPROVAL PENDING SECTION

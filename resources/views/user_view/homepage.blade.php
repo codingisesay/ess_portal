@@ -136,7 +136,7 @@ error_reporting(0);
                         @forelse ($anniversaries as $anniversary)
                         <div class=" border rounded-3 shadow-sm mb-2">
                             <div class="d-flex justify-content-between p-2">
-                                <div class="details mb-1"> 
+                                <div class="details mb-3"> 
                                     <p class="mb-0" ><strong> {{ $anniversary->Employee_Name }}</strong></p>
                                     <small >{{ $anniversary->yearsCompleted }} Years Completed</small>
                                     <div class="badge">{{ $anniversary->badgeText }}</div>
@@ -325,7 +325,7 @@ error_reporting(0);
                         <div class=" border rounded-3 shadow-sm mb-2">
                             <div class="d-flex  p-2">
                             <img class="my-auto me-2" height="60" width="60" src="{{ asset('storage/' . ($birthday->imagelink ?: 'user_profile_image/Oqr4VRqo7RpQxnmiZCh12zybbcdsyUin2FhAKD3O.jpg')) }}" alt="photo" />
-                                <div class="details mb-1"> 
+                                <div class="details mb-3"> 
                                     <p class="mb-0" ><strong> {{ $birthday->employee_nme }}</strong></p>
                                     <small >{{ $birthday->designation_name }}</small>
                                     <div class="badge">{{ $birthday->badgeText }}</div>

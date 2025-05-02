@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="stylesheet" href="{{ asset('errors/error.css') }}">
     
+    <link href="{{ asset('bootstrapcss/bootstrap.min.css') }}" rel="stylesheet"> 
 </head>
  
 
@@ -353,29 +354,40 @@
                     </div>
             
                     <!-- Dropdown content (initially hidden) -->
-                    <div id="employeeDetailsDropdown" class="dropdown-content" style="display: block;">
+                    <div id="employeeDetailsDropdown" class="dropdown-content mt-0 pt-0" style="display: block;">
                         <!-- Collapsible Content (Table) -->
-                        <form action="{{ route('process_salary') }}" method="POST">
+                        <form action="{{ route('process_salary') }}" method="POST" >
                             @csrf
-                        <label>Cycle Year</label>
-                        <input type="hidden" value="{{ $dataofcurrentyear->id }}" name="cycle_id">
-                        <input type="text" value="{{ $dataofcurrentyear->name }}" disabled>
-                        
-                        <label>Salary Month</label>
-                       <select name="selected_month">
-                        <option value="">Select Month</option>
-                        @foreach ($monthsInCycle as $MC)
-
-                        <option value="{{ $MC  }}">{{ $MC  }}</option>
-                        
-                        @endforeach
-                       </select>
-                       
-                       <input type="submit" value="Process">
-                    </form>
-                        </div>
-                    </div>      
-    </div>
+                            <div class="row">
+                            
+                                <div class="col-md-3 my-2">                                            
+                                    <div class="form-group">
+                                        <div class="floating-label-wrapper w-100">
+                                            <label>Cycle Year</label>
+                                            <input class="form-control" type="hidden" value="{{ $dataofcurrentyear->id }}" name="cycle_id">
+                                            <input type="text" value="{{ $dataofcurrentyear->name }}" disabled>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-3 my-2">                                                        
+                                    <div class="form-group">
+                                        <div class="floating-label-wrapper w-100">
+                                            <label>Salary Month</label>
+                                            <select class="form-control" name="selected_month">
+                                            <option value="">Select Month</option>
+                                            @foreach ($monthsInCycle as $MC)
+                                                <option value="{{ $MC  }}">{{ $MC  }}</option>                        
+                                            @endforeach
+                                            </select>
+                                        </div>
+                                    </div>    
+                                </div>
+                            </div>
+                        <button class="ms-auto px-4 py-1" type="submit">Process</button>
+                        </form>
+                    </div>
+                </div>      
+        </div>
 </main>
 
 <script>
