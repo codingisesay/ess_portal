@@ -268,7 +268,7 @@ strong {
     transition: box-shadow 0.3s;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     padding: 10px;
-    height: 140px;
+    height: 145px;
     overflow-y: auto;
     justify-content: space-around;
 }
@@ -967,6 +967,7 @@ label {
     font-family: Arial, sans-serif;
     box-sizing: border-box;
     flex-basis: auto;
+    overflow-x: auto;
 }
 
 /* Header and controls of the calendar */
@@ -982,8 +983,9 @@ label {
     height: 300px;
     min-height: max-content;
     overflow-y: auto;
-    width: max-content;
-    margin: auto;
+    width: 100%;
+    /* min-width: max-content; */
+    /* margin: auto; */
     display: flex;
     justify-content: center;
 }
@@ -1072,9 +1074,7 @@ select {
     }
 
     /* Decrease padding for smaller screens */
-    #calendar .day {
-        padding: 8px;
-    }
+
 }
 
 @media screen and (max-width: 480px) {
@@ -1096,8 +1096,25 @@ select {
 
     /* Reduce day padding for compact view */
     #calendar .day {
-        padding: 6px;
+        padding: 2px;
     }
+
+    .to-do-list {
+        margin-top: 15px;
+    }
+}
+
+.clock-timepicker input {
+    min-width: 100%;
+}
+
+.clock-timepicker-mobile-time,
+.clock-timepicker-mobile-time {
+    display: none;
+}
+
+.clock-timepicker-popup {
+    width: max-content !important;
 }
 
 

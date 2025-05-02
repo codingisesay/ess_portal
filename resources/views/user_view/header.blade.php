@@ -33,7 +33,7 @@ $userDetails = app('App\Http\Controllers\headerController')->getUserDetails();
             <img class="px-1" src="{{ asset('user_end/images/STPL Logo with TagLine HD Transparent.png') }}" alt="STPL Logo">
         </div>
         <!-- 🔹 MENU BUTTON -->
-        <button class="menu-btn"><i class="fas fa-bars"></i></button>
+        <button class="menu-btn"><x-icon name="menu"/></button>
         <nav>
             <ul>
                 <li><a href="{{ route('user.homepage') }}" class="active"> <x-icon name="dashboard" />Dashboard</a></li>

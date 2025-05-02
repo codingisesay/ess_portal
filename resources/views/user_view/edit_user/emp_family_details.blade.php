@@ -39,7 +39,7 @@ $permission_array = session('id');
             <!-- <input type="hidden" name="employeeNo" value="P111"> -->
         @csrf
             <input type="hidden" name="form_step7" value="family_step">
-            <h4 class="d-flex align-items-center"><x-icon name="usersfill"/>&nbsp;Family Details </h4>
+            <h4 class="d-flex align-items-center"><x-icon name="usersfill"/>&nbsp;Family Details  </h4>
             <button type="button" class="add-row-family action-button" onclick="addFamilyRow()">Add Family
                 Information</button>
 
@@ -48,7 +48,7 @@ $permission_array = session('id');
                     <table>
                         <thead>
                             <tr>
-                                <th>Sr.&nbsp;No.</th>
+                                <!-- <th>Sr.&nbsp;No.</th> -->
                                 <th>Name</th>
                                 <th>Relation</th>
                                 <th>Birth Date</th>
@@ -64,7 +64,7 @@ $permission_array = session('id');
                             <!-- Rows will be added dynamically here -->
                             @foreach($familyDetails as $index => $detail)
                             <tr>
-                                <td>{{$index +1 }}</td> <!-- Display serial number in the table -->
+                                <td class="d-none">{{$index +1 }}</td> <!-- Display serial number in the table -->
                                 <td>
                                     <input type="hidden" name="serial_no[]" value="${familyCounter}">
                                     <input type="text" name="name[]" class="custom-name" placeholder="Enter Name" value="{{$detail->name}}" required maxlength="50"
@@ -181,47 +181,47 @@ document.addEventListener('DOMContentLoaded', function () {
         const newRow = document.createElement('tr');
 
         newRow.innerHTML = `
-<td>${familyCounter}</td> <!-- Display serial number in the table -->
-<td>
-    <input type="hidden" name="serial_no[]" value="${familyCounter}">
-    <input type="text" name="name[]" class="custom-name" placeholder="Enter Name" required maxlength="50"
-       oninput="this.value = this.value.replace(/[^a-zA-Z ]/g, '').();"  onkeydown="return blockNumbers(event);">
-</td>
-<td>
-    <select name="relation[]" class="relation-type" required>
-        <option value="" disabled selected>Select Relation</option>
-        <option value="Spouse">Spouse</option>
-        <option value="Child">Child</option>
-        <option value="Parent">Parent</option>
-        <option value="Sibiling">Sibling</option>
-        <option value="Other">Other</option>
-    </select>
-</td>
-<td>
-    <input type="date" name="birth_date[]" required onchange="calculateAge(this)" 
-        max="<?php echo date('Y-m-d'); ?>">
-</td>
-<td>
-    <select name="gender[]" class="gender-type" required>
-        <option value="" disabled selected>Select Gender</option>
-        <option value="Male">Male</option>
-        <option value="Female">Female</option>
-        <option value="Other">Other</option>
-    </select>
-</td>
-<td><input type="custom-age" name="age[]" placeholder="Age" required readonly></td>
-<td>
-    <select name="dependent[]" class="dependent-type" required>
-        <option value="" disabled selected>Select</option>
-        <option value="Yes">Yes</option>
-        <option value="No">No</option>
-    </select>
-</td>
-<td><input type="tel" name="phone_number[]" placeholder="Phone Number"  maxlength="10"  inputmode="numeric" 
-title="Please enter a 10-digit phone number" 
-oninput="this.value = this.value.replace(/[^0-9]/g, '')"></td>
-              <td><button type="button" onclick="removeFamilyRow(this)" class="btn text-danger"><x-icon name="trash" /></button></td>
-`;
+            <td class="d-none">${familyCounter}</td> <!-- Display serial number in the table -->
+            <td>
+                <input type="hidden" name="serial_no[]" value="${familyCounter}">
+                <input type="text" name="name[]" class="custom-name" placeholder="Enter Name" required maxlength="50"
+                oninput="this.value = this.value.replace(/[^a-zA-Z ]/g, '').();"  onkeydown="return blockNumbers(event);">
+            </td>
+            <td>
+                <select name="relation[]" class="relation-type" required>
+                    <option value="" disabled selected>Select Relation</option>
+                    <option value="Spouse">Spouse</option>
+                    <option value="Child">Child</option>
+                    <option value="Parent">Parent</option>
+                    <option value="Sibiling">Sibling</option>
+                    <option value="Other">Other</option>
+                </select>
+            </td>
+            <td>
+                <input type="date" name="birth_date[]" required onchange="calculateAge(this)" 
+                    max="<?php echo date('Y-m-d'); ?>">
+            </td>
+            <td>
+                <select name="gender[]" class="gender-type" required>
+                    <option value="" disabled selected>Select Gender</option>
+                    <option value="Male">Male</option>
+                    <option value="Female">Female</option>
+                    <option value="Other">Other</option>
+                </select>
+            </td>
+            <td><input type="custom-age" name="age[]" placeholder="Age" required readonly></td>
+            <td>
+                <select name="dependent[]" class="dependent-type" required>
+                    <option value="" disabled selected>Select</option>
+                    <option value="Yes">Yes</option>
+                    <option value="No">No</option>
+                </select>
+            </td>
+            <td><input type="tel" name="phone_number[]" placeholder="Phone Number"  maxlength="10"  inputmode="numeric" 
+            title="Please enter a 10-digit phone number" 
+            oninput="this.value = this.value.replace(/[^0-9]/g, '')"></td>
+                        <td><button type="button" onclick="removeFamilyRow(this)" class="btn text-danger"><x-icon name="trash" /></button></td>
+            `;
 
         tableBody.appendChild(newRow);
 

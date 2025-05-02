@@ -50,64 +50,16 @@
             <th>Account Description</th>
           </tr>
         </thead>
-      
-<!--         
-        <tbody>
-          @foreach ($reimbursementClaims as $index => $claim)
-          <tr>
-            <td>{{ $index + 1 }}</td>
-            <td>
-              <input type="hidden" name="entry_ids[]" value="{{ $claim->id }}" />  
-              <input type="date" name="bill_date[{{ $index }}]" class="form-control" value="{{ \Carbon\Carbon::parse($claim->entry_date)->format('Y-m-d') }}" required>
-            </td>
-            <td>
-              <select class="form-control rm_type" name="type[{{ $index }}]" required>
-                <option value="">Select One</option>
-                @foreach($reim_type as $rt)
-                <option value="{{ $rt->id }}" {{ $rt->id == $claim->organisation_reimbursement_types_id ? 'selected' : '' }}>{{ $rt->name }}</option>
-                @endforeach
-              </select>
-            </td>
-            <td><input type="text" class="form-control" value="{{ $claim->max_amount ?? '' }}" disabled></td>
-            <td><input type="number" name="entered_amount[{{ $index }}]" class="form-control" value="{{ $claim->entry_amount }}" step="0.01" required></td>
-            <td>
-              <div class="file-upload">
-                <div class="file-select d-flex align-items-center">
-                  @if ($claim->upload_bill)
-                    @if (Str::endsWith($claim->upload_bill, ['.jpg', '.jpeg', '.png']))
-                      <div class="imagePreview" style="background-image: url('{{ asset('storage/' . $claim->upload_bill) }}'); display: block;" data-image-src="{{ asset('storage/' . $claim->upload_bill) }}"></div>
-                    @elseif (Str::endsWith($claim->upload_bill, '.pdf'))
-                      <div class="imagePreview" style="background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IiM4QTMzNjYiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIiBjbGFzcz0ibHVjaWRlIGx1Y2lkZS1maWxlLXRleHQiPjxwYXRoIGQ9Ik0xNSAydjRhMiAyIDAgMCAwIDIgMmg0Ii8+PHBhdGggZD0iTTE0IDJ2NGg0Ii8+PHBhdGggZD0iTTkgMjBWNGEyIDIgMCAwIDEgMi0yaDdsNCA0djEzYTIgMiAwIDAgMS0yIDJIOGEyIDIgMCAwIDEtMi0yWiIvPjxwYXRoIGQ9Ik05IDloMSIvPjxwYXRoIGQ9Ik05IDEyaDEiLz48cGF0aCBkPSJNOSAxNWgxIi8+PHBhdGggZD0iTTkgMThoMSIvPjwvc3ZnPg=='); display: block;"></div>
-                    @endif
-                  @else
-                    <span class="me-2 my-2"><x-icon name="upload" /></span>
-                  @endif
-                  <input type="file" name="bills[{{ $index }}]" class="profileimg" accept=".jpg,.jpeg,.png,.pdf">
-                </div>
-              </div>
-              @if ($claim->upload_bill)
-                <small class="text-muted">
-                  <a href="{{ asset('storage/' . $claim->upload_bill) }}" target="_blank">View Original</a>
-                </small>
-              @endif
-            </td>
-            <td><textarea class="form-control" rows="1" name="comments[{{ $index }}]" placeholder="Comment">{{ $claim->description_by_applicant }}</textarea></td>
-            <td><textarea class="form-control" rows="1" name="comments[{{ $index }}]" disabled placeholder="Comment">{{ $claim->description_by_manager }}</textarea></td>
-          </tr>
-          @endforeach
-</tbody> -->
-
-
 <tbody>
   @foreach ($reimbursementClaims as $index => $claim)
   <tr>
     <td>{{ $index + 1 }}</td>
     <td>
       <input type="hidden" name="entry_ids[]" value="{{ $claim->id }}" />
-      <input type="date" name="bill_date[{{ $index }}]" class="form-control" value="{{ \Carbon\Carbon::parse($claim->entry_date)->format('Y-m-d') }}" required>
+      <input type="date" name="bill_date[{{ $index }}]" class="form-control" value="{{ \Carbon\Carbon::parse($claim->entry_date)->format('Y-m-d') }}" {{ !$claim->editable ? 'readonly' : '' }} required>
     </td>
     <td>
-      <select class="form-control rm_type" name="type[{{ $index }}]" required>
+      <select class="form-control rm_type" name="type[{{ $index }}]" {{ !$claim->editable ? 'readonly' : '' }} required>
         <option value="">Select One</option>
         @foreach($reim_type as $rt)
         <option value="{{ $rt->id }}" {{ $rt->id == $claim->organisation_reimbursement_types_id ? 'selected' : '' }}>{{ $rt->name }}</option>
@@ -115,14 +67,14 @@
       </select>
     </td>
     <td><input type="text" class="form-control text-end" value="{{ $claim->max_amount ?? '' }}" disabled></td>
-    <td><input type="number" name="entered_amount[{{ $index }}]" class="form-control text-end" value="{{ $claim->entry_amount }}" step="0.01" required></td>
+    <td><input type="number" name="entered_amount[{{ $index }}]" class="form-control text-end" value="{{ $claim->entry_amount }}" step="0.01" {{ !$claim->editable ? 'readonly' : '' }} required></td>
     <td>
       <div class="file-upload d-flex">
         <div class="file-select d-flex align-items-center">
           <div class="image-preview-container me-2 d-flex align-items-center" >
             <div  class="upload-icon-input me-2">
               <x-icon name="upload" />
-              <input type="file" name="bills[{{ $index }}]" class="file-input " accept=".jpg,.jpeg,.png,.pdf" data-index="{{ $index }}" >
+              <input type="file" name="bills[{{ $index }}]" class="file-input " accept=".jpg,.jpeg,.png,.pdf" data-index="{{ $index }}" {{ !$claim->editable ? 'readonly' : '' }} >
             </div>
             @if ($claim->upload_bill)
               @if (Str::endsWith($claim->upload_bill, ['.jpg', '.jpeg', '.png']))
@@ -156,7 +108,7 @@
         @endif -->
       </div>
     </td>
-    <td><textarea class="form-control" rows="1" name="comments[{{ $index }}]" placeholder="Comment">{{ $claim->description_by_applicant }}</textarea></td>
+    <td><textarea class="form-control" rows="1" name="comments[{{ $index }}]" placeholder="Comment" {{ !$claim->editable ? 'readonly' : '' }}>{{ $claim->description_by_applicant }}</textarea></td>
     <td><textarea class="form-control" rows="1" name="comments[{{ $index }}]" disabled placeholder="Comment">{{ $claim->description_by_manager }}</textarea></td>
     <td><textarea class="form-control" rows="1" name="comments[{{ $index }}]" disabled placeholder="Comment">{{ $claim->description_by_finance }}</textarea></td>
   </tr>
@@ -219,25 +171,7 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 </script>
 
-<style>
-  .image-preview-container {
-    position: relative;
-  }
-  .existing-image, .new-image-preview, .pdf-preview, .no-file-placeholder {
-    border: 1px solid #dee2e6;
-    border-radius: 4px;
-    object-fit: contain;
-  }
-  .file-input {
-    width: 20px;
-    height: 50px;
-    opacity: 1;
-    overflow: hidden;
-    position: absolute; 
-  }
-  .upload-icon-input{position: relative;}
-  .upload-icon-input input{position:absolute; top:0; left:0; width:100%; height:100%; opacity:0;}
-</style>
+
 
  
       </table>
@@ -320,7 +254,25 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 </script>
- 
+<style>
+  .image-preview-container {
+    position: relative;
+  }
+  .existing-image, .new-image-preview, .pdf-preview, .no-file-placeholder {
+    border: 1px solid #dee2e6;
+    border-radius: 4px;
+    object-fit: contain;
+  }
+  .file-input {
+    width: 20px;
+    height: 50px;
+    opacity: 1;
+    overflow: hidden;
+    position: absolute; 
+  }
+  .upload-icon-input{position: relative;}
+  .upload-icon-input input{position:absolute; top:0; left:0; width:100%; height:100%; opacity:0;}
+</style>
 <!-- Bootstrap JS -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
