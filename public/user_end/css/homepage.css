@@ -1011,7 +1011,7 @@ label {
 /* Dropdown container styling */
 #dropdown-container {
     display: flex;
-    margin: 0 10px;
+    margin: 0 auto;
 }
 
 /* Styling for select elements */
@@ -1033,7 +1033,7 @@ select {
 
 /* Styling for each day in the calendar */
 #calendar .day {
-    padding: 3px 5px;
+    padding: 3px;
     border: 1px solid #902323;
     border-radius: 5px;
 }

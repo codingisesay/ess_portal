@@ -3,36 +3,96 @@
   
 
 <link href="{{ asset('bootstrapcss/bootstrap.min.css') }}" rel="stylesheet"> 
-<link rel="stylesheet" href="{{ asset('user_end/css/onboarding_form.css') }}">
+<!-- <link rel="stylesheet" href="{{ asset('user_end/css/onboarding_form.css') }}"> -->
 <link rel="stylesheet" href="{{ asset('user_end/css/homepage.css') }}">
+<link rel="stylesheet" href="{{ asset('user_end/css/employment_data.css') }}">
 <link href="{{ asset('bootstrapcss/bootstrap.min.css') }}" rel="stylesheet"> 
  
-  <style>
-  table thead{ 
-    position: sticky;
-  position: -webkit-sticky;
-  top: 0; /* required */
+<style>
+        .table-container {
+            max-width: 100%;
+            max-height: 75vh;
+            overflow: auto;
+            margin: 10px;
+            border: 1px solid #ddd;
+        }
 
-  }
-    /* .table-container{height:80vh; } */
-    
-    th{font-weight:normal !important}
-    td input{width: 100px ;text-align:right}
-    td input[type="number"] {
-        -moz-appearance: textfield;
-    }
-    input[type="number"]::-webkit-inner-spin-button,
-    input[type="number"]::-webkit-outer-spin-button {
-        -webkit-appearance: none;
-        margin: 0;
-    }
-    input:disabled {
-  cursor: not-allowed; /* Or use default if you want to show no special cursor */
-  background-color: #f0f0f0; /* Optional: style the disabled input */
-  color: #999;              /* Optional: make text appear dimmed */
-}
+        table {
+            border-collapse: collapse;
+            width: 100%;
+        }
 
+        th,
+        td {
+            padding: 12px 16px;
+            text-align: left;
+            border: 1px solid #ddd;
+            white-space: nowrap;
+        }
+     /* First column cells */
+        td:first-child,
+        thead th:first-child {
+            position: sticky;
+            left: 0; 
+            z-index: 15;
+        }
+
+        /* First column header in first row */
+        thead tr:first-child th:first-child {
+            z-index: 25;
+        }
+
+        /* First column header in second row */
+        thead tr:nth-child(2) th:first-child {
+            z-index: 25;
+        }
+        th {
+            /* background-color: #f8f8f8; */
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+         /* Second header row */
+         thead tr:nth-child(2) th {  
+            position: sticky;
+            top: 48px;
+            /* Height of first header row */
+            z-index: 20;
+        }
+
+
+        td:first-child{ position: sticky;
+            left: 0;    background:#f5f5f5;
+            z-index: 5;}
+        th:first-child {
+            position: sticky;
+            left: 0;
+            /* background-color: #f8f8f8; */
+            z-index: 5;
+        }
+
+        th:first-child {
+            z-index: 15;
+        }
+
+        tr:nth-child(even) td {
+            background-color: #f9f9f9;
+        }
+
+        tr:nth-child(even) td:first-child {
+            /* background-color: #f0f0f0; */
+        }
+        thead tr:first-child th::after {
+            content: "";
+            position: absolute;
+            left: 0;
+            bottom: -1px;
+            width: 100%;
+            height: 1px;
+            background-color: #ddd;
+        }
     </style>
+ 
  
     <?php 
         $earning = 0;
@@ -47,12 +107,12 @@
     ?>
 
 <div class="m-3">
-<h2> <span class="back-btn mx-1" role="button" onclick="history.back()"> &lt; </span>Salary Details</h2>
+<h2> <span class="back-btn fs-2" role="button" onclick="history.back()"> &lt; </span>Salary Details</h2>
   <div class="table-container">
   <table id="">
     <thead>
       <tr>
-        <th rowspan="2">Employee Name</th>
+        <th >Employee Name</th>
         
         {{-- Earnings Section --}}
         <th colspan="<?php echo $earning; ?>">Earnings</th>
@@ -71,6 +131,7 @@
         <th>-</th>
       </tr>
       <tr>
+        <th></th>
         {{-- Display Component Names under Earnings --}}
         @foreach ($orgsalaryComponents as $comp)
           @if ($comp->type == 'Earning')
