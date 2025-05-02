@@ -56,10 +56,10 @@
     <td>{{ $index + 1 }}</td>
     <td>
       <input type="hidden" name="entry_ids[]" value="{{ $claim->id }}" />
-      <input type="date" name="bill_date[{{ $index }}]" class="form-control" value="{{ \Carbon\Carbon::parse($claim->entry_date)->format('Y-m-d') }}" required>
+      <input type="date" name="bill_date[{{ $index }}]" class="form-control" value="{{ \Carbon\Carbon::parse($claim->entry_date)->format('Y-m-d') }}" {{ !$claim->editable ? 'readonly' : '' }} required>
     </td>
     <td>
-      <select class="form-control rm_type" name="type[{{ $index }}]" required>
+      <select class="form-control rm_type" name="type[{{ $index }}]" {{ !$claim->editable ? 'readonly' : '' }} required>
         <option value="">Select One</option>
         @foreach($reim_type as $rt)
         <option value="{{ $rt->id }}" {{ $rt->id == $claim->organisation_reimbursement_types_id ? 'selected' : '' }}>{{ $rt->name }}</option>
@@ -67,14 +67,14 @@
       </select>
     </td>
     <td><input type="text" class="form-control text-end" value="{{ $claim->max_amount ?? '' }}" disabled></td>
-    <td><input type="number" name="entered_amount[{{ $index }}]" class="form-control text-end" value="{{ $claim->entry_amount }}" step="0.01" required></td>
+    <td><input type="number" name="entered_amount[{{ $index }}]" class="form-control text-end" value="{{ $claim->entry_amount }}" step="0.01" {{ !$claim->editable ? 'readonly' : '' }} required></td>
     <td>
       <div class="file-upload d-flex">
         <div class="file-select d-flex align-items-center">
           <div class="image-preview-container me-2 d-flex align-items-center" >
             <div  class="upload-icon-input me-2">
               <x-icon name="upload" />
-              <input type="file" name="bills[{{ $index }}]" class="file-input " accept=".jpg,.jpeg,.png,.pdf" data-index="{{ $index }}" >
+              <input type="file" name="bills[{{ $index }}]" class="file-input " accept=".jpg,.jpeg,.png,.pdf" data-index="{{ $index }}" {{ !$claim->editable ? 'readonly' : '' }} >
             </div>
             @if ($claim->upload_bill)
               @if (Str::endsWith($claim->upload_bill, ['.jpg', '.jpeg', '.png']))
@@ -108,7 +108,7 @@
         @endif -->
       </div>
     </td>
-    <td><textarea class="form-control" rows="1" name="comments[{{ $index }}]" placeholder="Comment">{{ $claim->description_by_applicant }}</textarea></td>
+    <td><textarea class="form-control" rows="1" name="comments[{{ $index }}]" placeholder="Comment" {{ !$claim->editable ? 'readonly' : '' }}>{{ $claim->description_by_applicant }}</textarea></td>
     <td><textarea class="form-control" rows="1" name="comments[{{ $index }}]" disabled placeholder="Comment">{{ $claim->description_by_manager }}</textarea></td>
     <td><textarea class="form-control" rows="1" name="comments[{{ $index }}]" disabled placeholder="Comment">{{ $claim->description_by_finance }}</textarea></td>
   </tr>

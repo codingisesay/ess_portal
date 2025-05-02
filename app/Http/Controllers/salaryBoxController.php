@@ -758,6 +758,13 @@ public function loadEditClaimForm($reimbursement_traking_id = null)
         ->where('reimbursement_trackings.id', '=', $reimbursement_traking_id)
         ->where('reimbursement_trackings.user_id', '=', $loginUserInfo->id)
         ->get();
+
+   // Add an 'editable' property based on the status
+   $reimbursementClaims = $reimbursementClaims->map(function ($claim) {
+    $claim->editable = $claim->status === 'REVERT'; // Editable only if status is 'REVERT'
+    return $claim;
+});
+
 // dd($reimbursementClaims);
     $reim_type = DB::table('organisation_reimbursement_types')
         ->where('organisation_id', '=', $loginUserInfo->organisation_id)
@@ -811,7 +818,7 @@ public function updateClaimForm(Request $request, $reimbursement_traking_id)
             ->where('id', $entryId) // Use the entry ID to target the specific row
             ->where('reimbursement_trackings_id', $reimbursement_traking_id) // Ensure it matches the tracking ID
             ->update([
-                'date' => $request->bill_date[$i],
+                'date' => $request->bill_date[$i] ?? null,
                 'organisation_reimbursement_types_id' => $request->type[$i],
                 'amount' => $request->entered_amount[$i],
                 'upload_bill' => $filePath ?? DB::raw('upload_bill'), // Keep existing file if no new file is uploaded
@@ -819,6 +826,7 @@ public function updateClaimForm(Request $request, $reimbursement_traking_id)
                 'updated_at' => now(),
             ]);
     }
+  
     // Check if all entries were updated successfully
     if ($entryUpdated) {
         return redirect()->route('PayRollDashboard')->with('success', 'Reimbursement claim updated successfully.');
