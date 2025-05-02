@@ -242,6 +242,7 @@ Route::middleware(['auth'])->group(function () {
     Route::post('user/save_calendra_master', [settingController::class, 'createCalendraMaster'])->name('create_calendra_master');
     Route::post('user/salaryTemCTC',[settingController::class, 'insertSalaryTempCTC'])->name('user.salaryTemCTC');
     Route::post('user/process_slary',[settingController::class, 'processSalary'])->name('process_salary');
+    Route::post('/user/insert_payroll_deductions', [SettingController::class, 'insertPayrollDeductions'])->name('insert_payroll_deductions');
 
        //userend
 
