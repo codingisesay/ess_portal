@@ -242,7 +242,7 @@ Route::middleware(['auth'])->group(function () {
     Route::post('user/save_calendra_master', [settingController::class, 'createCalendraMaster'])->name('create_calendra_master');
     Route::post('user/salaryTemCTC',[settingController::class, 'insertSalaryTempCTC'])->name('user.salaryTemCTC');
     Route::post('user/process_slary',[settingController::class, 'processSalary'])->name('process_salary');
-    Route::post('/user/insert_payroll_deductions', [SettingController::class, 'insertPayrollDeductions'])->name('insert_payroll_deductions');
+    Route::post('user/process_salary_details', [settingController::class, 'processSalaryDetails'])->name('process_salary_details');
 
        //userend
 
@@ -269,6 +269,8 @@ Route::middleware(['auth'])->group(function () {
 
  Route::get('user/get_max_amount/{rm_id}',[salaryBoxController::class,'loadMaxAmoutRm'])->name('get_max_amount');
  Route::post('user/update_reimbursement_claims/{reimbursement_traking_id}', [salaryBoxController::class, 'updateClaimForm'])->name('update_reimbursement_claims');
-   
+
+ Route::get('user/download-payslip/{payroll_id}', [App\Http\Controllers\salaryBoxController::class, 'downloadPayslip'])->name('download_payslip');
+ Route::get('/load-payslip/{payroll_id}', [App\Http\Controllers\salaryBoxController::class, 'loadPayslip'])->name('load_payslip');
 });
 

@@ -45,13 +45,10 @@
             }
         }
     ?>
-<form action="{{ route('insert_payroll_deductions') }}" method="POST">
-    @csrf
-    @foreach ($payrollData as $data)
-        <input type="hidden" name="payroll_id" value="{{ $data['payroll_id'] }}">
-        <input type="hidden" name="user_id" value="{{ $data['user_id'] }}">
-        <input type="hidden" name="salary_details" value="{{ json_encode($data['salary_details']) }}">
-    @endforeach
+<form action="{{ route('process_salary_details') }}" method="post">
+@csrf
+<input type="hidden" name="allemployeeSalaryDetails" value="{{ serialize($allemployeeSalaryDetails) }}">
+<input type="hidden" name="allEmployeeSalary" value="{{ serialize($allEmployeeSalary) }}">
 <div class="m-3">
 <h2> <span class="back-btn mx-1" role="button" onclick="history.back()"> &lt; </span>Salary Details</h2>
   <div class="table-container">

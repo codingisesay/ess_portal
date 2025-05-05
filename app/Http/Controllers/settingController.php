@@ -339,7 +339,6 @@ return redirect()->route('user.setting')->with('error','Calendra Is Not Created 
        $allemployeeSalaryDetails = [];
        $allEmployeeSalary = [];
        $allSalaryComponents = [];
-       $payrollData = []; // Initialize the variable
 
        foreach($users as $user){
 
@@ -591,60 +590,96 @@ array_push($allEmployeeSalary, [
 
     // Call the new function to insert data into the payrolls table
     // Insert data into the payrolls table
-    foreach ($allemployeeSalaryDetails as $employeeSalaryDetail) {
-        foreach ($employeeSalaryDetail as $salaryDetail) {
-            $payrollId = DB::table('payrolls')->insertGetId([
-                'organisation_id'    => Auth::user()->organisation_id,
-                'user_id'            => $salaryDetail['user_id'],
-                'salary_cycle_id'    => $salaryDetail['salary_cycle_id'],
-                'salary_month'       => $salaryDetail['salary_month'],
-                'days_count_month'   => $salaryDetail['total_days_month'],
-                'week_offs'          => $salaryDetail['week_offs_holidays'],
-                'holidays'           => 0, // Adjust if holidays are tracked separately
-                'present_days_count' => $salaryDetail['present_days'],
-                'absent_days'        => $salaryDetail['absent_days'],
-                'total_earnings'     => round($salaryDetail['total_earning'] ?? 0, 2),
-                'total_dedcutions'   => round($salaryDetail['total_deducation'] ?? 0, 2),
-                'net_amount'         => round(($salaryDetail['total_earning'] ?? 0) - ($salaryDetail['total_deducation'] ?? 0), 2),
-                'created_at'         => now(),
-                'updated_at'         => now(),
-            ]);
+    // foreach ($allemployeeSalaryDetails as $employeeSalaryDetail) {
+    //     foreach ($employeeSalaryDetail as $salaryDetail) {
+    //         $payrollId = DB::table('payrolls')->insertGetId([
+    //             'organisation_id'    => Auth::user()->organisation_id,
+    //             'user_id'            => $salaryDetail['user_id'],
+    //             'salary_cycle_id'    => $salaryDetail['salary_cycle_id'],
+    //             'salary_month'       => $salaryDetail['salary_month'],
+    //             'days_count_month'   => $salaryDetail['total_days_month'],
+    //             'week_offs'          => $salaryDetail['week_offs_holidays'],
+    //             'holidays'           => 0, // Adjust if holidays are tracked separately
+    //             'present_days_count' => $salaryDetail['present_days'],
+    //             'absent_days'        => $salaryDetail['absent_days'],
+    //             'total_earnings'     => round($salaryDetail['total_earning'] ?? 0, 2),
+    //             'total_dedcutions'   => round($salaryDetail['total_deducation'] ?? 0, 2),
+    //             'net_amount'         => round(($salaryDetail['total_earning'] ?? 0) - ($salaryDetail['total_deducation'] ?? 0), 2),
+    //             'created_at'         => now(),
+    //             'updated_at'         => now(),
+    //         ]);
 
-            
-        // Collect data for payroll deductions
-        $payrollData[] = [
-            'payroll_id' => $payrollId,
-            'user_id' => $salaryDetail['user_id'],
-            'salary_details' => $allEmployeeSalary[array_search($salaryDetail['user_id'], array_column($allEmployeeSalary, 'user_id'))]['salary_details'],
-        ];
-    }
-}
-    return view('user_view.salary_lookup',compact('orgsalaryComponents','allEmployeeSalary', 'payrollData'));
+    //         // Insert into payroll_deductions table
+    //         foreach ($allEmployeeSalary as $employee) {
+    //             if ($employee['user_id'] == $salaryDetail['user_id']) {
+    //                 foreach ($employee['salary_details'] as $componentId => $component) {
+    //                     DB::table('payroll_deductions')->insert([
+    //                         'payroll_id'           => $payrollId,
+    //                         'user_id'              => $salaryDetail['user_id'],
+    //                         'salary_components_id' => $component['components_id'],
+    //                         'components_type'      => strtoupper($component['type']),
+    //                         'amount'               => round($component['value'], 2),
+    //                         'created_at'           => now(),
+    //                         'updated_at'           => now(),
+    //                     ]);
+    //                 }
+    //             }
+    //         }
+    //     }
+    // }
+    return view('user_view.salary_lookup',compact('orgsalaryComponents','allEmployeeSalary', 'allemployeeSalaryDetails'));
 
        
     }
 
-    public function insertPayrollDeductions(Request $request)
-{
-    $data = $request->validate([
-        'payroll_id' => 'required|integer',
-        'user_id' => 'required|integer',
-        'salary_details' => 'required|array',
-    ]);
-
-    foreach ($data['salary_details'] as $componentId => $component) {
-        DB::table('payroll_deductions')->insert([
-            'payroll_id'           => $data['payroll_id'],
-            'user_id'              => $data['user_id'],
-            'salary_components_id' => $component['components_id'],
-            'components_type'      => strtoupper($component['type']),
-            'amount'               => round($component['value'], 2),
-            'created_at'           => now(),
-            'updated_at'           => now(),
-        ]);
+    public function processSalaryDetails(Request $request)
+    {
+        // Unserialize the data from the request
+        $allemployeeSalaryDetails = unserialize($request->input('allemployeeSalaryDetails'));
+        $allEmployeeSalary = unserialize($request->input('allEmployeeSalary'));
+    
+        // Loop through each employee's salary details
+        foreach ($allemployeeSalaryDetails as $employeeSalaryDetail) {
+            foreach ($employeeSalaryDetail as $salaryDetail) {
+                // Insert into the payrolls table and get the payroll ID
+                $payrollId = DB::table('payrolls')->insertGetId([
+                    'organisation_id'    => Auth::user()->organisation_id,
+                    'user_id'            => $salaryDetail['user_id'],
+                    'salary_cycle_id'    => $salaryDetail['salary_cycle_id'],
+                    'salary_month'       => $salaryDetail['salary_month'],
+                    'days_count_month'   => $salaryDetail['total_days_month'],
+                    'week_offs'          => $salaryDetail['week_offs_holidays'],
+                    'holidays'           => 0, // Adjust if holidays are tracked separately
+                    'present_days_count' => $salaryDetail['present_days'],
+                    'absent_days'        => $salaryDetail['absent_days'],
+                    'total_earnings'     => round($salaryDetail['total_earning'] ?? 0, 2),
+                    'total_dedcutions'   => round($salaryDetail['total_deducation'] ?? 0, 2),
+                    'net_amount'         => round(($salaryDetail['total_earning'] ?? 0) - ($salaryDetail['total_deducation'] ?? 0), 2),
+                    'created_at'         => now(),
+                    'updated_at'         => now(),
+                ]);
+    
+                // Insert into payroll_deductions table
+                foreach ($allEmployeeSalary as $employee) {
+                    if ($employee['user_id'] == $salaryDetail['user_id']) {
+                        foreach ($employee['salary_details'] as $componentId => $component) {
+                            DB::table('payroll_deductions')->insert([
+                                'payroll_id'           => $payrollId,
+                                'user_id'              => $salaryDetail['user_id'],
+                                'salary_components_id' => $component['components_id'],
+                                'components_type'      => strtoupper($component['type']),
+                                'amount'               => round($component['value'], 2),
+                                'created_at'           => now(),
+                                'updated_at'           => now(),
+                            ]);
+                        }
+                    }
+                }
+            }
+        }
+    
+        // Redirect back with a success message
+        return redirect()->route('user.setting')->with('success', 'Salary details processed successfully!');
     }
-
-    return redirect()->route('user.setting')->with('success', 'Payroll deductions inserted successfully.');
-}
 
 }
