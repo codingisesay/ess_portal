@@ -45,7 +45,10 @@
             }
         }
     ?>
-
+<form action="{{ route('process_salary_details') }}" method="post">
+@csrf
+<input type="hidden" name="allemployeeSalaryDetails" value="{{ serialize($allemployeeSalaryDetails) }}">
+<input type="hidden" name="allEmployeeSalary" value="{{ serialize($allEmployeeSalary) }}">
 <div class="m-3">
 <h2> <span class="back-btn mx-1" role="button" onclick="history.back()"> &lt; </span>Salary Details</h2>
   <div class="table-container">
@@ -165,6 +168,7 @@
   <button type="submit" class="py-2 px-3 ms-auto">Process Salary</button>
       </div>
 </div>
+</form>
 <script>
     document.addEventListener('DOMContentLoaded', function () {
       const rows = document.querySelectorAll('tbody tr');
