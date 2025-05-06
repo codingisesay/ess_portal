@@ -23,7 +23,7 @@ error_reporting(0);
 </head>
  
     <div class="row justify-content-center mx-3">
-        <div class=" col-lg-4 col-md-6 col-sm-12 p-0">
+        <div class=" col-lg-4 col-md-12 col-sm-12 p-0">
             <h4 class="ms-2 mb-1 fw-bold" id="greeting"></h4>  
             <div class="row mx-1 my-2"> 
                 @foreach ($logs as $log)  
@@ -127,7 +127,7 @@ error_reporting(0);
             </div>
         </div>
 
-        <div class="col-lg-5 col-md-6 col-sm-12 py-1 row">
+        <div class="col-lg-5 col-md-12 col-sm-12 py-1 row">
  
             <div class=" col-md-6 col-sm-12 p-1">      
                 <section class="upcoming-anniversary ">

@@ -8,6 +8,8 @@
     <link rel="stylesheet" href="{{ asset('/user_end/css/payroll.css') }}">
     <link href="{{ asset('bootstrapcss/bootstrap.min.css') }}" rel="stylesheet"> 
     <link href="{{ asset('bootstrapjs/bootstrap.js') }}" rel="stylesheet"> 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     

@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use App\Models\reimbursement_tracking;
-// use Barryvdh\DomPDF\Facade as PDF;
+use Barryvdh\DomPDF\Facade\Pdf;
 // use App\Helpers\SalaryHelper;
 
 class salaryBoxController extends Controller
@@ -405,12 +405,13 @@ public function downloadPayslip($payroll_id)
     // Fetch payroll data for the given payroll ID
     $payroll = DB::table('payrolls')
         ->join('emp_details', 'payrolls.user_id', '=', 'emp_details.user_id') // Join with emp_details table
+        ->join('organisation_designations', 'emp_details.designation', '=', 'organisation_designations.id') // Join with organisation_designations table
         ->select(
             'payrolls.*',
             'emp_details.employee_no',
             'emp_details.employee_name',
             'emp_details.joining_date',
-            'emp_details.designation',
+            'organisation_designations.name as designation_name', // Fetch designation name
             'emp_details.provident_fund',
             'emp_details.esic_no',
             'emp_details.universal_account_number'
@@ -433,7 +434,7 @@ public function downloadPayslip($payroll_id)
         ->where('payroll_deductions.payroll_id', $payroll_id)
         ->get();
 
-    // Prepare data for the HTML
+    // Prepare data for the view
     $data = [
         'salaryMonth' => $payroll->salary_month,
         'employee' => (object)[
@@ -441,7 +442,7 @@ public function downloadPayslip($payroll_id)
             'employee_no' => $payroll->employee_no,
             'employee_name' => $payroll->employee_name,
             'joining_date' => $payroll->joining_date,
-            'designation' => $payroll->designation,
+            'designation' => $payroll->designation_name,
             'provident_fund' => $payroll->provident_fund,
             'esic_no' => $payroll->esic_no,
             'universal_account_number' => $payroll->universal_account_number,
@@ -452,14 +453,12 @@ public function downloadPayslip($payroll_id)
         'netAmount' => $payroll->net_amount,
     ];
 
-    // Generate HTML content
-    $html = view('user_view.payslip_layout', $data)->render();
+    // Generate PDF from view
+    $pdf = Pdf::loadView('user_view.payslip_layout', $data);
 
-    // Set headers for file download
-    $fileName = "Payslip_{$payroll->salary_month}.html";
-    return response($html)
-        ->header('Content-Type', 'text/html')
-        ->header('Content-Disposition', "attachment; filename={$fileName}");
+    $fileName = "Payslip_{$payroll->salary_month}.pdf";
+
+    return $pdf->download($fileName);
 }
 
 public function loadPayslip($payroll_id)
@@ -467,12 +466,13 @@ public function loadPayslip($payroll_id)
      // Fetch payroll data for the given payroll ID
      $payroll = DB::table('payrolls')
      ->join('emp_details', 'payrolls.user_id', '=', 'emp_details.user_id') // Join with emp_details table
+     ->join('organisation_designations', 'emp_details.designation', '=', 'organisation_designations.id') // Join with organisation_designations table
      ->select(
          'payrolls.*',
          'emp_details.employee_no',
          'emp_details.employee_name',
          'emp_details.joining_date',
-         'emp_details.designation',
+         'organisation_designations.name as designation_name', // Fetch designation name
          'emp_details.provident_fund',
          'emp_details.esic_no',
          'emp_details.universal_account_number'
@@ -503,7 +503,7 @@ public function loadPayslip($payroll_id)
          'employee_no' => $payroll->employee_no,
          'employee_name' => $payroll->employee_name,
          'joining_date' => $payroll->joining_date,
-         'designation' => $payroll->designation,
+         'designation' => $payroll->designation_name, // Use designation name
          'provident_fund' => $payroll->provident_fund,
          'esic_no' => $payroll->esic_no,
          'universal_account_number' => $payroll->universal_account_number,
