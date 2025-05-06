@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use App\Models\reimbursement_tracking;
+// use Barryvdh\DomPDF\Facade as PDF;
 // use App\Helpers\SalaryHelper;
 
 class salaryBoxController extends Controller
@@ -346,6 +347,30 @@ class salaryBoxController extends Controller
 {
     $loginUserInfo = Auth::user();
 
+    // Fetch payroll data for the logged-in user
+    $payrollData = DB::table('payrolls')
+        ->where('user_id', $loginUserInfo->id)
+        ->orderBy('created_at', 'desc') // Get the latest payroll data
+        ->first();
+
+
+   // Fetch payroll deductions data for the logged-in user
+        $payrollDeductions = DB::table('payroll_deductions')
+        ->join('org_salary_components', 'payroll_deductions.salary_components_id', '=', 'org_salary_components.id')
+        ->join('payrolls', 'payroll_deductions.payroll_id', '=', 'payrolls.id')
+        ->select(
+            'payroll_deductions.payroll_id',
+            'payroll_deductions.amount',
+            'org_salary_components.name as component_name', // Corrected column name
+            'org_salary_components.type',
+            'payroll_deductions.created_at',
+            'payroll_deductions.*', 'payrolls.salary_month'
+        )
+        ->where('payroll_deductions.user_id', $loginUserInfo->id)
+        ->orderBy('payroll_deductions.created_at', 'desc')
+        ->get();
+
+    // Fetch reimbursement claims data for the logged-in user
     $reimbursementClaims = DB::table('reimbursement_trackings')
         ->join('reimbursement_form_entries', 'reimbursement_trackings.id', '=', 'reimbursement_form_entries.reimbursement_trackings_id')
         ->select(
@@ -370,7 +395,127 @@ class salaryBoxController extends Controller
         
         ->get();
 // dd($reimbursementClaims);
-    return view('user_view.payrollDashboard', compact('reimbursementClaims'));
+    return view('user_view.payrollDashboard', compact('payrollData', 'payrollDeductions','reimbursementClaims'));
+}
+
+
+
+public function downloadPayslip($payroll_id)
+{
+    // Fetch payroll data for the given payroll ID
+    $payroll = DB::table('payrolls')
+        ->join('emp_details', 'payrolls.user_id', '=', 'emp_details.user_id') // Join with emp_details table
+        ->select(
+            'payrolls.*',
+            'emp_details.employee_no',
+            'emp_details.employee_name',
+            'emp_details.joining_date',
+            'emp_details.designation',
+            'emp_details.provident_fund',
+            'emp_details.esic_no',
+            'emp_details.universal_account_number'
+        )
+        ->where('payrolls.id', $payroll_id)
+        ->first();
+
+    if (!$payroll) {
+        return redirect()->back()->with('error', 'Payslip not found.');
+    }
+
+    // Fetch payroll deductions and earnings components for the given payroll ID
+    $components = DB::table('payroll_deductions')
+        ->join('org_salary_components', 'payroll_deductions.salary_components_id', '=', 'org_salary_components.id')
+        ->select(
+            'payroll_deductions.amount',
+            'org_salary_components.name as component_name', // Component name
+            'org_salary_components.type as component_type'  // Component type (e.g., Earning/Deduction)
+        )
+        ->where('payroll_deductions.payroll_id', $payroll_id)
+        ->get();
+
+    // Prepare data for the HTML
+    $data = [
+        'salaryMonth' => $payroll->salary_month,
+        'employee' => (object)[
+            'id' => $payroll->user_id,
+            'employee_no' => $payroll->employee_no,
+            'employee_name' => $payroll->employee_name,
+            'joining_date' => $payroll->joining_date,
+            'designation' => $payroll->designation,
+            'provident_fund' => $payroll->provident_fund,
+            'esic_no' => $payroll->esic_no,
+            'universal_account_number' => $payroll->universal_account_number,
+        ],
+        'components' => $components,
+        'totalEarnings' => $payroll->total_earnings,
+        'totalDeductions' => $payroll->total_dedcutions,
+        'netAmount' => $payroll->net_amount,
+    ];
+
+    // Generate HTML content
+    $html = view('user_view.payslip_layout', $data)->render();
+
+    // Set headers for file download
+    $fileName = "Payslip_{$payroll->salary_month}.html";
+    return response($html)
+        ->header('Content-Type', 'text/html')
+        ->header('Content-Disposition', "attachment; filename={$fileName}");
+}
+
+public function loadPayslip($payroll_id)
+{
+     // Fetch payroll data for the given payroll ID
+     $payroll = DB::table('payrolls')
+     ->join('emp_details', 'payrolls.user_id', '=', 'emp_details.user_id') // Join with emp_details table
+     ->select(
+         'payrolls.*',
+         'emp_details.employee_no',
+         'emp_details.employee_name',
+         'emp_details.joining_date',
+         'emp_details.designation',
+         'emp_details.provident_fund',
+         'emp_details.esic_no',
+         'emp_details.universal_account_number'
+     )
+     ->where('payrolls.id', $payroll_id)
+     ->first();
+
+ if (!$payroll) {
+     return redirect()->back()->with('error', 'Payslip not found.');
+ }
+
+ // Fetch payroll deductions and earnings components for the given payroll ID
+ $components = DB::table('payroll_deductions')
+     ->join('org_salary_components', 'payroll_deductions.salary_components_id', '=', 'org_salary_components.id')
+     ->select(
+         'payroll_deductions.amount',
+         'org_salary_components.name as component_name', // Component name
+         'org_salary_components.type as component_type'  // Component type (e.g., Earning/Deduction)
+     )
+     ->where('payroll_deductions.payroll_id', $payroll_id)
+     ->get();
+
+ // Prepare data for the view
+ $data = [
+     'salaryMonth' => $payroll->salary_month,
+     'employee' => (object)[
+         'id' => $payroll->user_id,
+         'employee_no' => $payroll->employee_no,
+         'employee_name' => $payroll->employee_name,
+         'joining_date' => $payroll->joining_date,
+         'designation' => $payroll->designation,
+         'provident_fund' => $payroll->provident_fund,
+         'esic_no' => $payroll->esic_no,
+         'universal_account_number' => $payroll->universal_account_number,
+     ],
+     'components' => $components,
+     'totalEarnings' => $payroll->total_earnings,
+     'totalDeductions' => $payroll->total_dedcutions,
+     'netAmount' => $payroll->net_amount,
+ ];
+
+ // Return the payslip view
+ return view('user_view.payslip_layout', $data);
 }
 
  public function loadclaimform(){

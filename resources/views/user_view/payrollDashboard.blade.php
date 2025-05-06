@@ -58,15 +58,15 @@
                                 <!-- Payment Info -->
                                 <div class="payment-row1">
                                     <small class="payment-label">Take Home</small><br/>
-                                    <h6 class="payment-amount" data-amount="80,000.00">₹ *****</h6>
+                                    <h6 class="payment-amount" data-amount="{{ number_format($payrollData->net_amount ?? 0, 2) }}">₹ *****</h6>
                                 </div>
                                 <div class="payment-row2">
                                     <small class="payment-label">Deductions</small><br/>
-                                    <h6 class="payment-amount" data-amount="6,000.00">₹ *****</h6>
+                                    <h6 class="payment-amount" data-amount="{{ number_format($payrollData->total_dedcutions ?? 0, 2) }}">₹ *****</h6>
                                 </div>
                                 <div class="payment-row3">
                                     <small class="payment-label">Gross Pay</small><br/>
-                                    <h6 class="payment-amount gross-pay" data-amount="86,000.00">₹ *****</h6>
+                                    <h6 class="payment-amount gross-pay" data-amount="{{ number_format($payrollData->total_earnings ?? 0, 2) }}">₹ *****</h6>
                                 </div>
                               
                             <button class="submit d-flex jusify-content-center align-items-center mt-3 px-3 py-1"  onclick="openSalaryModal()">
@@ -192,63 +192,38 @@
 
 
     <script>
-        // Chart.js implementation
         document.addEventListener('DOMContentLoaded', function() {
-            const ctx = document.getElementById('paymentChart').getContext('2d');            
-            const paymentChart = new Chart(ctx, {
-                type: 'doughnut',
-                data: {
-                    labels: ['Take Home', 'Deductions'],
-                    datasets: [{
-                        data: [80000, 6000],
-                        backgroundColor: [
-                            '#3498DB',   // Blue for Take Home
-                            '#e74c3c'    // Red for Deductions
-                        ],
-                        borderColor: [
-                            '#fff',
-                            '#fff'
-                        ],
-                        borderWidth: 2
-                    }]
-                },
-                options: {
-                    interaction: {
-                        mode: 'nearest',
-                        intersect: false
-                    },
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        
-                        legend: false, 
-                        // legend: {
-                        //     position: 'bottom',
-                        //     labels: {
-                        //         boxWidth: 12,
-                        //         padding: 20,
-                        //         font: {
-                        //             size: 14
-                        //         }
-                        //     }
-                        // },
-                        // tooltip: {
-                        //     callbacks: {
-                        //         label: function(context) {
-                        //             const label = context.label || '';
-                        //             const value = context.raw || 0;
-                        //             const total = context.dataset.data.reduce((a, b) => a + b, 0);
-                        //             const percentage = Math.round((value / total) * 100);
-                        //             return `${label}: ₹${value.toLocaleString()} (${percentage}%)`;
-                        //         }
-                        //     }
-                        // }
-                    }
-                }
-            });
-            
-             
-        });
+    const ctx = document.getElementById('paymentChart').getContext('2d');            
+    const paymentChart = new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+            labels: ['Take Home', 'Deductions'],
+            datasets: [{
+                data: [{{ $payrollData->net_amount ?? 0 }}, {{ $payrollData->total_dedcutions ?? 0 }}],
+                backgroundColor: [
+                    '#3498DB',   // Blue for Take Home
+                    '#e74c3c'    // Red for Deductions
+                ],
+                borderColor: [
+                    '#fff',
+                    '#fff'
+                ],
+                borderWidth: 2
+            }]
+        },
+        options: {
+            interaction: {
+                mode: 'nearest',
+                intersect: false
+            },
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: false
+            }
+        }
+    });
+});
     </script>
     
     <script>
@@ -406,54 +381,38 @@ window.onclick = function(event) {
                 <span class="close" onclick="closeSalaryModal()">×</span>
                 <h5>Salary Details For : EMP001 </h5>
                 <div class="tbl-container">
-                    <table>
-                        <thead>
-                            <tr> 
-                                <th>Month</th>
-                                <th>Basic Pay</th>
-                                <th>HRA</th>
-                                <th>Allowances</th>
-                                <th>Deductions</th>
-                                <th>Net Pay</th>
-                                <!-- <th>Payment Date</th> -->
-                                <th>Action</th>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Salary Month</th>
+                            @foreach ($payrollDeductions->groupBy('component_name') as $componentName => $deductions)
+                                <th>{{ $componentName }}</th>
+                            @endforeach
+                            <th>Download</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach ($payrollDeductions->groupBy('salary_month') as $month => $deductionsByMonth)
+                            <tr>
+                                <td>{{ $month }}</td>
+                                @foreach ($payrollDeductions->groupBy('component_name') as $componentName => $deductions)
+                                    <td>
+                                        ₹{{ number_format($deductionsByMonth->where('component_name', $componentName)->sum('amount'), 2) }}
+                                    </td>
+                                @endforeach
+                                <td>
+                                <a href="{{ route('download_payslip', ['payroll_id' => $deductionsByMonth->first()->payroll_id]) }}" download>
+                                        <x-icon name="download" />
+                                    </a>
+                                    <a href="{{ route('load_payslip', ['payroll_id' => $deductionsByMonth->first()->payroll_id]) }}" target="_blank">
+                                        <x-icon name="eye" /> Preview
+                                    </a>
+                                </td>
                             </tr>
-                        </thead>
-                        <tbody>
-                            <tr> 
-                                <td>Jan-2025</td>
-                                <td>40,000</td>
-                                <td>10,000</td>
-                                <td>5,000</td>
-                                <td>3,000</td>
-                                <td>52,000</td>
-                                <!-- <td>31-Jan-2025</td> -->
-                                <td><a href="" download=""><x-icon name="download" /></a> </td>
-                            </tr>
-                            <tr> 
-                                <td>Feb-2025</td>
-                                <td>40,000</td>
-                                <td>10,000</td>
-                                <td>5,000</td>
-                                <td>3,000</td>
-                                <td>52,000</td>
-                                <!-- <td>28-Feb-2025</td> -->
-                                <td><a href="" download=""><x-icon name="download" /></a> </td>
-                            </tr>
-                            <tr> 
-                                <td>Mar-2025</td>
-                                <td>40,000</td>
-                                <td>10,000</td>
-                                <td>5,000</td>
-                                <td>3,000</td>
-                                <td>52,000</td>
-                                <!-- <td>31-Mar-2025</td> -->
-                                <td><a href="" download=""><x-icon name="download" /></a> </td>
-                            </tr>
-                        </tbody>
-                    </table>
+                        @endforeach
+                    </tbody>
+                </table>
                 </div>
-
             </div>
         </div>
     </div>

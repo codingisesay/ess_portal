@@ -52,31 +52,31 @@ $permission_array = session('id');
     <div class="step-tabs">
         <div class="step" id="step1" data-route="{{ route('user.editdashboard',['id' => $permission_array]) }}">
             <div class="circle">1</div>
-            <div class="label">Employee&nbsp;Details</div>
+            <div class="label">Employee Details</div>
         </div>
         <div class="step" id="step2" data-route="{{ route('user.editcontact',['id' => $permission_array]) }}">
             <div class="circle">2</div>
-            <div class="label">Contact&nbsp;Details</div>
+            <div class="label">Contact Details</div>
         </div>
         <div class="step" id="step3" data-route="{{ route('user.editedu',['id' => $permission_array]) }}">
             <div class="circle">3</div>
-            <div class="label">Education&nbsp;Details</div>
+            <div class="label">Education Details</div>
         </div>
         <div class="step" id="step4" data-route="{{ route('user.editbank',['id' => $permission_array]) }}">
             <div class="circle">4</div>
-            <div class="label">Bank&nbsp;Details</div>
+            <div class="label">Bank Details</div>
         </div>
         <div class="step" id="step5" data-route="{{ route('user.editfamily',['id' => $permission_array]) }}">
             <div class="circle">5</div>
-            <div class="label">Family&nbsp;Details</div>
+            <div class="label">Family Details</div>
         </div>
         <div class="step" id="step6" data-route="{{ route('user.editpreemp',['id' => $permission_array]) }}">
             <div class="circle">6</div>
-            <div class="label">Work&nbsp;History</div>
+            <div class="label">Previous Employment</div>
         </div>
         <div class="step" id="step7" data-route="{{ route('user.editdocupload',['id' => $permission_array]) }}">
             <div class="circle">7</div>
-            <div class="label">Document&nbsp;Upload</div>
+            <div class="label">Document Upload</div>
         </div>
     </div>
 
@@ -86,154 +86,129 @@ $permission_array = session('id');
      <!-- Include the section for the current step -->
      @stack('step')  <!-- Push the current step to be used in JavaScript -->
 
- 
- 
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    const steps = document.querySelectorAll('.step');
-    
-    // Get the current route (current page URL)
-    const currentRoute = window.location.pathname;
-
-    // Initialize stepper state
-    function initializeStepper() {
-        let foundActive = false;
+     <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const steps = document.querySelectorAll('.step');
         
+        // Get the current route (current page URL)
+        const currentRoute = window.location.pathname;
+
+        // Track the index of the active step
+        let activeStepIndex = -1;
+
+        // Loop through the steps to initialize them based on the current route
         steps.forEach((step, index) => {
             const route = step.getAttribute('data-route');
-            const routePath = new URL(route, window.location.origin).pathname;
-            
-            // Reset classes
-            step.classList.remove('active', 'completed');
-            
-            // Mark as active if matches current route
-            if (currentRoute === routePath && !foundActive) {
+
+            // If the current route matches the step's route, mark it as active
+            if (currentRoute === new URL(route, window.location.origin).pathname) {
                 step.classList.add('active');
-                foundActive = true;
-                
-                // Mark all previous steps as completed
-                for (let i = 0; i < index; i++) {
-                    steps[i].classList.add('completed');
-                }
-            } 
-            // Mark as completed if we've passed the active step
-            else if (foundActive) {
-                step.classList.remove('completed');
-            }
-            // Mark as completed if before active step
-            else {
+                activeStepIndex = index; // Track the index of the active step
+            } else if (index < activeStepIndex) {
+                // If the step is before the active one, mark it as completed
                 step.classList.add('completed');
             }
         });
-    }
 
-    // Initialize on page load
-    initializeStepper();
+        // Update the progress when a step is clicked
+        steps.forEach((step, index) => {
+            step.addEventListener('click', function() {
+                const route = step.getAttribute('data-route');
 
-    // Handle step clicks
-    steps.forEach(step => {
-        step.addEventListener('click', function() {
-            const route = step.getAttribute('data-route');
-            window.location.href = route;
-        });
-    });
+                // Remove 'active' class from all steps
+                steps.forEach(s => {
+                    s.classList.remove('active');
+                    s.classList.remove('completed');
+                });
 
-    // Handle next button navigation if exists
-    const nextButton = document.querySelector('.next-btn');
-    if (nextButton) {
-        nextButton.addEventListener('click', function(e) {
-            e.preventDefault();
-            
-            // Find current active step
-            let currentActiveIndex = -1;
-            steps.forEach((step, index) => {
-                if (step.classList.contains('active')) {
-                    currentActiveIndex = index;
-                }
+                // Add 'active' class to the clicked step
+                step.classList.add('active');
+
+                // Mark the clicked step and all previous steps as completed
+                steps.forEach((s, i) => {
+                    if (i <= index) {
+                        s.classList.add('completed');
+                    }
+                });
+
+                // Update the activeStepIndex to the clicked step's index
+                activeStepIndex = index;
+
+                // Redirect to the corresponding route (page)
+                window.location.href = route;
             });
-            
-            // If found and not last step, go to next
-            if (currentActiveIndex >= 0 && currentActiveIndex < steps.length - 1) {
-                const nextStep = steps[currentActiveIndex + 1];
-                const nextRoute = nextStep.getAttribute('data-route');
-                window.location.href = nextRoute;
-            }
         });
-    }
-});
+
+        // // Handle programmatic next step navigation when the next button is clicked
+        // const nextButton = document.querySelector('.next-btn'); // Your "next" button
+
+        // if (nextButton) {
+        //     nextButton.addEventListener('click', function(event) {
+        //         event.preventDefault(); // Prevent form submission (if it's inside a form)
+
+        //         // Move to the next step if possible
+        //         if (activeStepIndex >= 0 && activeStepIndex < steps.length - 1) {
+        //             const nextStep = steps[activeStepIndex + 1];
+        //             const nextStepRoute = nextStep.getAttribute('data-route');
+
+        //             // Remove the 'active' class from all steps
+        //             steps.forEach(s => s.classList.remove('active'));
+
+        //             // Add the 'active' class to the next step
+        //             nextStep.classList.add('active');
+
+        //             // Mark the previous steps as completed
+        //             steps.forEach((s, i) => {
+        //                 if (i <= activeStepIndex + 1) {
+        //                     s.classList.add('completed');
+        //                 }
+        //             });
+
+        //             // Update the activeStepIndex
+        //             activeStepIndex++;
+
+        //             // Redirect to the next step route
+        //             window.location.href = nextStepRoute;
+        //         }
+        //     });
+        // }
+
+        // Ensure the previous steps are marked as completed when navigating programmatically
+        if (activeStepIndex > -1) {
+            for (let i = 0; i < activeStepIndex; i++) {
+                steps[i].classList.add('completed');
+            }
+        }
+    });
 </script>
 
-<style>
-    /* Improved stepper styling */
-    .step-tabs {
-        display: flex;
-        justify-content: space-between;
-        margin-bottom: 2rem;
-        position: relative;
-    }
-    
-    .step {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        position: relative;
-        z-index: 1;
-        cursor: pointer;
-        flex: 1;
-    }
-    
-    .step:not(:last-child)::after {
-        content: '';
-        position: absolute;
-        top: 15px;
-        left: 60%;
-        width: 80%;
-        height: 2px;
-        background-color: #e0e0e0;
-        z-index: -1;
-    }
-    
-    .step.completed:not(:last-child)::after {
-        background-color: #8A3366;
-    }
-    
-    .circle {
-        width: 30px;
-        height: 30px;
-        border-radius: 50%;
-        background-color: #e0e0e0;
-        color: white;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        margin-bottom: 0.5rem;
-        font-weight: bold;
-    }
-    
-    .step.active .circle {
-        background-color: #8A3366;
-    }
-    
-    .step.completed .circle {
-        background-color: #8A3366;
-    }
-    
-    .label {
-        text-align: center;
-        font-size: 0.9rem;
-        color: #666;
-    }
-    
-    .step.active .label {
-        color: #8A3366;
-        font-weight: bold;
-    }
-    
-    .step.completed .label {
-        color: #8A3366;
-    }
-</style>
+
+
+
+    <style>
+        /* Style for active step */
+        .step.active .circle {
+            background-color: #8A3366; /* Blue color for active step */
+        }
+
+        /* Style for completed step */
+        .step.completed .circle {
+            background-color: #8A3366; /* Gray color for completed steps */
+        }
+
+        .step.completed:not(:last-child)::after {
+            background-color: #8A3366; /* Gray line for completed steps */
+        }
+
+        /* Optional: Style for active step's label */
+        .step.active .label {
+            font-weight: bold;
+        }
+
+        /* Add transitions for smooth color change */
+        .step .circle {
+            transition: background-color 0.3s ease;
+        }
+    </style>
 </body>
 </html>
-
-
