@@ -101,7 +101,7 @@ error_reporting(0);
                             <option value="First Half">First Half</option>
                             <option value="Second Half">Second Half</option> 
                         </select>
-                        <label for="leave_slot">Slot</label>
+                        <label style="display: none" for="leave_slot">Slot</label>
                     </div>
                 </div>
          
@@ -130,6 +130,31 @@ error_reporting(0);
     </div>
 </div> --}} -->
 
+<script>
+// assuming you have input fields for start date and end date
+const startDateInput = document.getElementById('start_date');
+const endDateInput = document.getElementById('end_date');
+const slotField = document.getElementById('leave_slot');
+
+// add an event listener to the end date input field
+endDateInput.addEventListener('change', () => {
+  const startDate = startDateInput.value;
+  const endDate = endDateInput.value;
+
+  if (startDate === endDate) {
+    // show the slot field
+    slotField.style.display = 'block';
+  } else {
+    // hide the slot field
+    slotField.style.display = 'none';
+  }
+});
+</script>
+<style>
+    #leave_slot {
+  display: none;
+}
+</style>
 <script>
 
 $(document).ready(function () {
