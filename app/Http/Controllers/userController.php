@@ -87,7 +87,7 @@ class userController extends Controller
         $id = Auth::guard('superadmin')->user()->id;
        
         $users = User::where('organisation_id', $id)->get();
-       // dd($users);
+    //    dd($users);
         // Pass the data to the view
         return view('superadmin_view.create_user', compact('users'));
     }
@@ -99,6 +99,7 @@ class userController extends Controller
             'username' => 'required',
             'empid' => 'required',
             'usermailid' => 'required|email',
+            'user_status' => 'required|in:active,inactive', // Adjust validation as needed
         ]);
 
         $user = User::find($request->user_id);
@@ -110,6 +111,7 @@ class userController extends Controller
         $user->name = $request->username;
         $user->employeeID = $request->empid;
         $user->email = $request->usermailid;
+        $user->user_status = $request->user_status;
 
         try {
             if ($user->isDirty()) { // Check if fields are dirty
