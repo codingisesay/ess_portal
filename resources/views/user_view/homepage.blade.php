@@ -251,7 +251,7 @@ error_reporting(0);
                         <img src="{{ asset('user_end/images/cake 5.png'); }}" alt="Alert Icon" class="alert-icon">
                     </div>
                 </div> 
-                <div class="approval-card" id="reimbursement-card" onclick="openReimbursementModal()">
+                <div class="approval-card {{ $reimbursementList->isNotEmpty() ? 'glow-effect' : '' }}" id="reimbursement-card" onclick="openReimbursementModal()">
                     <div class="card-left">
                         <div class="leave-approval-icon3"> <x-icon name="reimpay" /></div>
                         <div class="details">
@@ -262,7 +262,7 @@ error_reporting(0);
                         <img src="{{ asset('user_end/images/cake 5.png'); }}" alt="Alert Icon" class="alert-icon">
                     </div>
                 </div>  
-                <div class="approval-card" id="reimbursement-card" onclick="openAccountModal()">
+                <div class="approval-card {{ $approvedClaimsByManager->isNotEmpty() ? 'glow-effect' : '' }}" id="reimbursement-card" onclick="openAccountModal()">
                     <div class="card-left">
                     <div class="leave-approval-icon4">   <x-icon name="reimpay" /></div>
                         <div class="details">
