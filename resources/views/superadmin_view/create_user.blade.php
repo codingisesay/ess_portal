@@ -118,6 +118,14 @@ $id = Auth::guard('superadmin')->user()->id;
                     <label for="editUsermailid">User Email</label>
                 </div>
                 <div class="popup-form-group">
+                    <select name="user_status" id="editUserStatus" required>
+                        <option value="">-- Select Status --</option>
+                        <option value="active">Active</option>
+                        <option value="inactive">Inactive</option>
+                    </select>
+                    <label for="editUserStatus">User Status</label>
+                </div>
+                <div class="popup-form-group">
                     <button class="create-btn1" type="submit">Save Changes</button>
                 </div>
             </form>
@@ -172,6 +180,7 @@ $id = Auth::guard('superadmin')->user()->id;
         document.getElementById('editUsername').value = userdata.name;
         document.getElementById('editEmpid').value = userdata.employeeID;
         document.getElementById('editUsermailid').value = userdata.email;
+        document.getElementById('editUserStatus').value = userdata.user_status; // new line
         document.getElementById('editUserModal').style.display = 'block';
     }
 </script>
