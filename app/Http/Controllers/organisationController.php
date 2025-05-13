@@ -88,6 +88,8 @@ class OrganisationController extends Controller
             ->leftJoin('users as managers', 'emp_details.reporting_manager', '=', 'managers.id')
             ->leftJoin('user_status_imgs', 'emp_details.user_id', '=', 'user_status_imgs.user_id') // Join profile image
             ->leftJoin('branches', 'emp_details.branch_id', '=', 'branches.id')  // Join for branch name using branch_id
+            ->leftJoin('users', 'emp_details.user_id', '=', 'users.id') // <-- Added join
+            ->where('users.user_status', 'Active') // <-- Added condition
             ->select(
                 'emp_details.user_id',
                 'emp_details.employee_name',
@@ -174,6 +176,8 @@ class OrganisationController extends Controller
             ->leftJoin('employee_types', 'emp_details.employee_type', '=', 'employee_types.id')
             ->leftJoin('users as managers', 'emp_details.reporting_manager', '=', 'managers.id')
             ->leftJoin('user_status_imgs', 'emp_details.user_id', '=', 'user_status_imgs.user_id') 
+            ->leftJoin('users', 'emp_details.user_id', '=', 'users.id') // <-- Added join
+            ->where('users.user_status', 'Active') // <-- Added condition
             ->select(
                 'emp_details.user_id',
                 'emp_details.employee_name',

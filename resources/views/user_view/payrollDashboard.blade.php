@@ -381,7 +381,7 @@ window.onclick = function(event) {
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <span class="close" onclick="closeSalaryModal()">×</span>
-                <h5>Salary Details For : EMP001 </h5>
+                <!-- <h5>Salary Details For : EMP001 </h5> -->
                 <div class="tbl-container">
                 <table>
                     <thead>

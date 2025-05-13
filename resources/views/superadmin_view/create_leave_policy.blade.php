@@ -89,24 +89,24 @@ $id = Auth::guard('superadmin')->user()->id;
                         </div> 
                     </div>
                     <div class="col-3 mb-4">
-                        <div class="form-group">
-                            <select id="category_id" name="is_carry_forward" class="form-control" required>
-                                <option value="" disabled selected></option>
-                                <option value="Yes">Yes</option>
-                                <option value="No">No</option> 
-                            </select>
-                            <label for="category_name">Is Carry Forward?</label>
-                        </div>
+                    <div class="form-group">
+                        <select id="is_carry_forward" name="is_carry_forward" class="form-control" required>
+                            <option value="" disabled selected></option>
+                            <option value="Yes">Yes</option>
+                            <option value="No">No</option> 
+                        </select>
+                        <label for="is_carry_forward">Is Carry Forward?</label>
                     </div>
+                </div>
+                <div class="col-3 mb-4">
+                    <div class="form-group">
+                        <input type="number" id="no_of_carry_forward" name="no_of_carry_forward" class="form-control" required>
+                        <label for="no_of_carry_forward">No. Of Carry Forward</label>
+                    </div>
+                </div>
                     <div class="col-3 mb-4">
                         <div class="form-group">
-                            <input type="number" id="category_name" name="no_of_carry_forward" class="form-control" required>
-                            <label for="category_name">No. Of Carry Forward</label>
-                        </div>
-                    </div>
-                    <div class="col-3 mb-4">
-                        <div class="form-group">
-                            <select id="category_id" name="leave_encash" class="form-control" required>
+                            <select id="LeaveEncash" name="leave_encash" class="form-control" required>
                                 <option value="" disabled selected></option>
                                 <option value="Yes">Yes</option>
                                 <option value="No">No</option> 
@@ -116,7 +116,7 @@ $id = Auth::guard('superadmin')->user()->id;
                     </div>
                     <div class="col-3 mb-4">
                         <div class="form-group">
-                            <input type="number" id="category_name" name="leave_encash_count" class="form-control" required>
+                            <input type="number" id="NoOfLeaveEncash" name="leave_encash_count" class="form-control" required>
                             <label for="category_name">No. Of Leave Encash</label>
                         </div> 
                     </div>
@@ -221,25 +221,25 @@ $id = Auth::guard('superadmin')->user()->id;
                         <label for="editNoOfTimesPerMonth">No of Times Per Month</label>
                     </div>
                     <div class="popup-form-group">
-                        <select name="is_carry_forward" id="editCarryForward" required>
+                        <select name="is_carry_forward" id="editCarryForward" required> editCarryForward editNoOfCarryForward
                             <option value="Yes">Yes</option>
                             <option value="No">No</option>
                         </select>
                         <label for="editCarryForward">Carry Forward</label>
                     </div>
                     <div class="popup-form-group">
-                        <input type="number" name="no_of_carry_forward" id="editNoOfCarryForward" required>
+                        <input type="number" name="no_of_carry_forward" id="editNoOfCarryForward">
                         <label for="editNoOfCarryForward">No. Of Carry Forward</label>
                     </div>
                     <div class="popup-form-group">
-                        <select name="leave_encash" id="editLeaveEncash" required>
+                        <select name="leave_encash" id="editLeaveEncash" required> 
                             <option value="Yes">Yes</option>
                             <option value="No">No</option>
                         </select>
                         <label for="editLeaveEncash">Leave Encash</label>
                     </div>
                     <div class="popup-form-group">
-                        <input type="number" name="leave_encash_count" id="editNoOfLeaveEncash" required>
+                        <input type="number" name="leave_encash_count" id="editNoOfLeaveEncash">
                         <label for="editNoOfLeaveEncash">No. Of Leave Encash</label>
                     </div>
                     <div class="popup-form-group">
@@ -268,6 +268,82 @@ $id = Auth::guard('superadmin')->user()->id;
             </div>
         </div>
     </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+    const carryForwardSelect = document.getElementById('is_carry_forward');
+    const noOfCarryForwardInput = document.getElementById('no_of_carry_forward');
+    
+    function toggleCarryForwardInput() {
+        if (carryForwardSelect.value === 'No') {
+            noOfCarryForwardInput.disabled = true;
+            noOfCarryForwardInput.value = '';
+        } else {
+            noOfCarryForwardInput.disabled = false;
+        }
+    }
+    
+    toggleCarryForwardInput();
+    carryForwardSelect.addEventListener('change', toggleCarryForwardInput);
+});
+    </script>
+
+ <script>
+        document.addEventListener('DOMContentLoaded', function() {  
+    const carryForwardSelect = document.getElementById('LeaveEncash');
+    const noOfCarryForwardInput = document.getElementById('NoOfLeaveEncash');
+    
+    function toggleCarryForwardInput() {
+        if (carryForwardSelect.value === 'No') {
+            noOfCarryForwardInput.disabled = true;
+            noOfCarryForwardInput.value = '';
+        } else {
+            noOfCarryForwardInput.disabled = false;
+        }
+    }
+    
+    toggleCarryForwardInput();
+    carryForwardSelect.addEventListener('change', toggleCarryForwardInput);
+});
+    </script>
+
+ <script>
+        document.addEventListener('DOMContentLoaded', function() {  
+    const carryForwardSelect = document.getElementById('editCarryForward');
+    const noOfCarryForwardInput = document.getElementById('editNoOfCarryForward');
+    
+    function toggleCarryForwardInput() {
+        if (carryForwardSelect.value === 'No') {
+            noOfCarryForwardInput.disabled = true;
+            noOfCarryForwardInput.value = '';
+        } else {
+            noOfCarryForwardInput.disabled = false;
+        }
+    }
+    
+    toggleCarryForwardInput();
+    carryForwardSelect.addEventListener('change', toggleCarryForwardInput);
+});
+    </script>
+
+     <script>
+        document.addEventListener('DOMContentLoaded', function() {   
+    const carryForwardSelect = document.getElementById('editLeaveEncash');
+    const noOfCarryForwardInput = document.getElementById('editNoOfLeaveEncash');
+    
+    function toggleCarryForwardInput() {
+        if (carryForwardSelect.value === 'No') {
+            noOfCarryForwardInput.disabled = true;
+            noOfCarryForwardInput.value = '';
+        } else {
+            noOfCarryForwardInput.disabled = false;
+        }
+    }
+    
+    toggleCarryForwardInput();
+    carryForwardSelect.addEventListener('change', toggleCarryForwardInput);
+});
+    </script>
 
     <script>
         function showLeavePolicyForm(clickedElement) {

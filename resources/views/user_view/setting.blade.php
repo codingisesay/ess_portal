@@ -288,12 +288,12 @@
                 ?>
                     <div class="accordion-item my-2">
                         <!-- Accordion Header with a toggle dropdown -->
-                        <div class="accordion-header" onclick="#">
+                        <div class="accordion-header" onclick="toggleEmployeeSalaryDropdown()">
                             Employee Salary
                         </div>
                 
                         <!-- Dropdown content (initially hidden) -->
-                        <div id="employeeDetailsDropdown" class="dropdown-content" style="display: block;">
+                        <div id="EmployeeSalaryDropdown" class="dropdown-content" style="display: none;">
                             <!-- Collapsible Content (Table) -->
                             <div class="content">
                                 <table class="custom-table">
@@ -349,12 +349,12 @@
             </div>
                 <div class="accordion-item my-2">
                     <!-- Accordion Header with a toggle dropdown -->
-                    <div class="accordion-header" onclick="#">
+                    <div class="accordion-header" onclick="toggleProcessSalaryDropdown()">
                         Process Salary (2025-26)
                     </div>
             
                     <!-- Dropdown content (initially hidden) -->
-                    <div id="employeeDetailsDropdown" class="dropdown-content mt-0 pt-0" style="display: block;">
+                    <div id="ProcessSalaryDropdown" class="dropdown-content mt-0 pt-0" style="display: none;">
                         <!-- Collapsible Content (Table) -->
                         <form action="{{ route('process_salary') }}" method="POST" >
                             @csrf
@@ -388,6 +388,65 @@
                     </div>
                 </div>      
         </div>
+
+
+
+<!-- Leave Summary Section -->
+<div class="accordion-item my-2">
+    <div class="accordion-header" onclick="#">
+        Leave Summary
+    </div>
+    <div id="LeaveSummaryDropdown" class="dropdown-content mt-0 pt-0" style="display: block;">
+    <div class="accordion-content">
+        {{-- Month & Year Filter --}}
+            <form method="GET" action="{{ route('user.setting') }}" class="mb-3 d-flex align-items-center gap-2">
+                <label for="month">Select Month:</label>
+                <select name="month" id="month" onchange="this.form.submit()">
+                    @for ($m = 1; $m <= 12; $m++)
+                        <option value="{{ $m }}" {{ $m == $month ? 'selected' : '' }}>
+                            {{ \Carbon\Carbon::create()->month($m)->format('F') }}
+                        </option>
+                    @endfor
+                </select>
+
+                <label for="year">Select Year:</label>
+                <select name="year" id="year" onchange="this.form.submit()">
+                    @for ($y = now()->year - 5; $y <= now()->year + 1; $y++)
+                        <option value="{{ $y }}" {{ $y == $year ? 'selected' : '' }}>
+                            {{ $y }}
+                        </option>
+                    @endfor
+                </select>
+            </form>     
+        <!-- Leave Summary Table -->
+          <table class="custom-table">
+            <thead>
+                <tr>
+                    <th>Employee Name</th>
+                    <th>Employee ID</th>
+                    <th>Approved Days</th>
+                    <th>Rejected Days</th>
+                    <th>Cancelled Days</th>
+                    <th>Max Leave Per Month</th>
+                    <th>Remaining Leave</th>
+                </tr>
+            </thead>
+            <tbody>
+               @foreach ($leaveSummary as $leave)
+                <tr>
+                    <td>{{ $leave->employee_name }}</td>
+                    <td>{{ $leave->employeeID }}</td>
+                    <td>{{ $leave->approved_days }}</td>
+                    <td>{{ $leave->rejected_days }}</td>
+                    <td>{{ $leave->cancelled_days }}</td>
+                    <td>{{ $leave->max_leave_per_month }}</td>
+                    <td>{{ $leave->remaining_leave_days }}</td>
+                </tr>
+              @endforeach
+            </tbody>
+        </table>
+    </div>
+</div>
 </main>
 
 <script>
@@ -398,6 +457,21 @@
 
     function toggleCalendarMasterDropdown() {
         var dropdown = document.getElementById("calendarMasterDropdown");
+        dropdown.style.display = dropdown.style.display === "none" ? "block" : "none";
+    }
+
+    function toggleEmployeeSalaryDropdown() {
+        var dropdown = document.getElementById("EmployeeSalaryDropdown");
+        dropdown.style.display = dropdown.style.display === "none" ? "block" : "none";
+    }
+
+     function toggleProcessSalaryDropdown() {
+        var dropdown = document.getElementById("ProcessSalaryDropdown");
+        dropdown.style.display = dropdown.style.display === "none" ? "block" : "none";
+    }
+
+     function toggleLeaveSummaryDropdown() {
+        var dropdown = document.getElementById("LeaveSummaryDropdown");
         dropdown.style.display = dropdown.style.display === "none" ? "block" : "none";
     }
 
