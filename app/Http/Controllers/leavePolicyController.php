@@ -238,9 +238,9 @@ class leavePolicyController extends Controller
             'leave_count_per_month' => 'required',
             'no_of_leaves_per_month' => 'required',
             'is_carry_forward' => 'required',
-            'no_of_carry_forward' => 'required',
+            'no_of_carry_forward' => 'nullable|numeric',
             'leave_encash' => 'required',
-            'leave_encash_count' => 'required',
+            'leave_encash_count' => 'nullable|numeric',
 
             'provision_status' => 'required',
             'max_leave_pp' => 'required',
@@ -268,9 +268,9 @@ class leavePolicyController extends Controller
                 'no_of_time_per_month' =>$data['no_of_leaves_per_month'],
 
                 'carry_forward'=> $data['is_carry_forward'],
-                'no_carry_forward' => $data['no_of_carry_forward'],
+                'no_carry_forward' => $data['no_of_carry_forward']?? null,
                 'leave_encash' => $data['leave_encash'],
-                'no_leave_encash' => $data['leave_encash_count'],
+                'no_leave_encash' => $data['leave_encash_count']?? null,
 
 
                 'provision_status'=> $data['provision_status'],
@@ -310,9 +310,9 @@ class leavePolicyController extends Controller
             'leave_count_per_month' => 'required|numeric',
             'no_of_leaves_per_month' => 'required|numeric',
             'is_carry_forward' => 'required|in:Yes,No',
-            'no_of_carry_forward' => 'required|numeric',
+            'no_of_carry_forward' => 'nullable|numeric',
             'leave_encash' => 'required|in:Yes,No',
-            'leave_encash_count' => 'required|numeric',
+            'leave_encash_count' => 'nullable|numeric',
             'provision_status' => 'required|in:Applicable,Not Applicable',
             'max_leave_pp' => 'required|numeric',
             'probation_period_per_month' => 'required|numeric',

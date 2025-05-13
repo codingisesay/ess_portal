@@ -16,12 +16,15 @@ use Carbon\CarbonPeriod;
 
 class settingController extends Controller
 {
-    public function showsetting()
+    public function showsetting(Request $request)
     {
         $title = "Settings";
         $loginUserInfo = Auth::user();
        
-        $users = User::where('organisation_id', $loginUserInfo->organisation_id)->paginate(10);
+        // $users = User::where('organisation_id', $loginUserInfo->organisation_id)->paginate(10);
+        $users = User::where('organisation_id', $loginUserInfo->organisation_id)
+             ->where('user_status', 'Active') // ✅ Only active users
+             ->paginate(10);
 
         // $users_for_salary = User::where('organisation_id', $loginUserInfo->organisation_id)->get();
         $users_for_salary = DB::table('users')
@@ -33,6 +36,7 @@ class settingController extends Controller
         'org_salary_templates.id as org_salary_templates_id',
         'employee_salaries.user_ctc as user_ctc'
         )
+        ->where('users.user_status', 'Active') // ✅ Added filter
         ->get();
         // dd($sal);
         $salary_templates = DB::table('org_salary_templates')
@@ -56,8 +60,65 @@ class settingController extends Controller
         $monthsInCycle[] = $date->format('F Y');
         }
 
+   $month = $request->input('month', now()->month);
+$year = $request->input('year', now()->year);
+
+$leaveSummary = DB::table('leave_applies as la')
+    ->join('users as u', 'la.user_id', '=', 'u.id')
+    ->join('leave_types as lt', 'la.leave_type_id', '=', 'lt.id')
+    ->join('leave_type_restrictions as ltr', 'lt.id', '=', 'ltr.leave_type_id')
+    ->select(
+        'u.name as employee_name',
+        'u.employeeID',
+        DB::raw("SUM(CASE 
+            WHEN la.leave_approve_status = 'Approved' THEN 
+                CASE 
+                    WHEN la.half_day IN ('First Half', 'Second Half') THEN 0.5
+                    ELSE DATEDIFF(la.end_date, la.start_date) + 1
+                END
+            ELSE 0
+        END) as approved_days"),
+        DB::raw("SUM(CASE 
+            WHEN la.leave_approve_status = 'Rejected' THEN 
+                CASE 
+                    WHEN la.half_day IN ('First Half', 'Second Half') THEN 0.5
+                    ELSE DATEDIFF(la.end_date, la.start_date) + 1
+                END
+            ELSE 0
+        END) as rejected_days"),
+        DB::raw("SUM(CASE 
+            WHEN la.leave_approve_status = 'Cancelled' THEN 
+                CASE 
+                    WHEN la.half_day IN ('First Half', 'Second Half') THEN 0.5
+                    ELSE DATEDIFF(la.end_date, la.start_date) + 1
+                END
+            ELSE 0
+        END) as cancelled_days"),
+        DB::raw("LTRIM(RTRIM(CAST(
+            ltr.leave_count_per_month AS SIGNED))) as max_leave_per_month"),
+        
+        // Calculate remaining leave, ensuring it doesn't go below 0
+        DB::raw("GREATEST(
+            0,
+            LTRIM(RTRIM(CAST(ltr.leave_count_per_month AS SIGNED))) - 
+            SUM(CASE 
+                WHEN la.leave_approve_status = 'Approved' THEN 
+                    CASE 
+                        WHEN la.half_day IN ('First Half', 'Second Half') THEN 0.5
+                        ELSE DATEDIFF(la.end_date, la.start_date) + 1
+                    END
+                ELSE 0
+            END)
+        ) as remaining_leave_days")
+    )
+    ->where('u.user_status', 'Active') // ✅ Added condition here
+    ->whereMonth('la.start_date', $month)
+    ->whereYear('la.start_date', $year)
+    ->groupBy('u.employeeID', 'u.name', 'ltr.leave_count_per_month')
+    ->get();
+
 // dd($monthsInCycle);
-        return view('user_view.setting',compact('users','title','salary_templates','users_for_salary','monthsInCycle','dataofcurrentyear'));
+        return view('user_view.setting',compact('users','title','salary_templates','users_for_salary','monthsInCycle','dataofcurrentyear','leaveSummary','month','year'));
     }
 
     public function saveThought(Request $request)
@@ -681,5 +742,17 @@ array_push($allEmployeeSalary, [
         // Redirect back with a success message
         return redirect()->route('user.setting')->with('success', 'Salary details processed successfully!');
     }
+
+    
+
+// public function showLeaveSummary()
+// {
+    
+// dd($leaveSummary);
+//     return view('leave.summary', compact('leaveSummary'));
+// }
+
+
+
 
 }
