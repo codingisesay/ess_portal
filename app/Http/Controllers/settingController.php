@@ -62,14 +62,26 @@ class settingController extends Controller
 
    $month = $request->input('month', now()->month);
 $year = $request->input('year', now()->year);
+// Get filters
+$startDate = request('start_date');
+$endDate = request('end_date');
+$leaveTypeId = request('leave_type_id'); 
 
+// Base Query
 $leaveSummary = DB::table('leave_applies as la')
     ->join('users as u', 'la.user_id', '=', 'u.id')
     ->join('leave_types as lt', 'la.leave_type_id', '=', 'lt.id')
     ->join('leave_type_restrictions as ltr', 'lt.id', '=', 'ltr.leave_type_id')
+    ->leftJoin('user_leave_encash_carries as ulec', function($join) {
+        $join->on('ulec.user_id', '=', 'u.id')
+             ->on('ulec.leave_type_map_with', '=', 'lt.id');
+    })
     ->select(
         'u.name as employee_name',
         'u.employeeID',
+        'lt.name as leave_type_name',
+        
+        // Approved Days
         DB::raw("SUM(CASE 
             WHEN la.leave_approve_status = 'Approved' THEN 
                 CASE 
@@ -78,6 +90,8 @@ $leaveSummary = DB::table('leave_applies as la')
                 END
             ELSE 0
         END) as approved_days"),
+        
+        // Rejected Days
         DB::raw("SUM(CASE 
             WHEN la.leave_approve_status = 'Rejected' THEN 
                 CASE 
@@ -86,6 +100,8 @@ $leaveSummary = DB::table('leave_applies as la')
                 END
             ELSE 0
         END) as rejected_days"),
+        
+        // Cancelled Days
         DB::raw("SUM(CASE 
             WHEN la.leave_approve_status = 'Cancelled' THEN 
                 CASE 
@@ -94,13 +110,26 @@ $leaveSummary = DB::table('leave_applies as la')
                 END
             ELSE 0
         END) as cancelled_days"),
+        
+        // Pending for Approval Days
+        DB::raw("SUM(CASE 
+            WHEN la.leave_approve_status = 'Pending' THEN 
+                CASE 
+                    WHEN la.half_day IN ('First Half', 'Second Half') THEN 0.5
+                    ELSE DATEDIFF(la.end_date, la.start_date) + 1
+                END
+            ELSE 0
+        END) as pending_days"),
+
+        // Max Leave Allowed (Per Leave Type)
         DB::raw("LTRIM(RTRIM(CAST(
             ltr.leave_count_per_month AS SIGNED))) as max_leave_per_month"),
         
-        // Calculate remaining leave, ensuring it doesn't go below 0
+        // Total Leave Remaining (Including Carry Forward)
         DB::raw("GREATEST(
             0,
-            LTRIM(RTRIM(CAST(ltr.leave_count_per_month AS SIGNED))) - 
+            (LTRIM(RTRIM(CAST(ltr.leave_count_per_month AS SIGNED))) * 12) + 
+            IFNULL(SUM(ulec.carry_forward), 0) - 
             SUM(CASE 
                 WHEN la.leave_approve_status = 'Approved' THEN 
                     CASE 
@@ -109,16 +138,31 @@ $leaveSummary = DB::table('leave_applies as la')
                     END
                 ELSE 0
             END)
-        ) as remaining_leave_days")
+        ) as total_leave_remaining"),
+        
+        // Total Carry Forward
+        DB::raw("IFNULL(SUM(ulec.carry_forward), 0) as total_carry_forward")
     )
-    ->where('u.user_status', 'Active') // ✅ Added condition here
-    ->whereMonth('la.start_date', $month)
-    ->whereYear('la.start_date', $year)
-    ->groupBy('u.employeeID', 'u.name', 'ltr.leave_count_per_month')
-    ->get();
+    ->where('u.user_status', 'Active');
+
+// Apply Start and End Date Filters
+if ($startDate && $endDate) {
+    $leaveSummary->whereBetween('la.start_date', [$startDate, $endDate]);
+}
+
+// Apply Leave Type Filter
+if ($leaveTypeId) {
+    $leaveSummary->where('lt.id', $leaveTypeId);
+}
+
+// Finalize the query
+$leaveSummary = $leaveSummary->groupBy('u.employeeID', 'u.name', 'lt.id', 'lt.name', 'ltr.leave_count_per_month')->get();
+
+$leaveTypes = DB::table('leave_types')->where('status', 'ACTIVE')->get();
+
 
 // dd($monthsInCycle);
-        return view('user_view.setting',compact('users','title','salary_templates','users_for_salary','monthsInCycle','dataofcurrentyear','leaveSummary','month','year'));
+        return view('user_view.setting',compact('users','title','salary_templates','users_for_salary','monthsInCycle','dataofcurrentyear','leaveSummary','startDate','endDate','leaveTypeId','leaveTypes'));
     }
 
     public function saveThought(Request $request)
@@ -378,320 +422,320 @@ return redirect()->route('user.setting')->with('error','Calendra Is Not Created 
 
     }
 
-    public function processSalary(Request $request){
-        $data = $request->validate([
-            'cycle_id' => 'required',
-            'selected_month' => 'required',
-            
-        ]);
+        public function processSalary(Request $request){
+            $data = $request->validate([
+                'cycle_id' => 'required',
+                'selected_month' => 'required',
+                
+            ]);
 
-        $loginUserInfo = Auth::user();
-       
-       $users = DB::table('users')
-       ->where('organisation_id', '=', $loginUserInfo->organisation_id)
-       ->where('user_status', '=', 'Active')
-    //    ->where('id', '=', 2) //This is for testing, after function body ready remove this condition
-       ->get();
+            $loginUserInfo = Auth::user();
+        
+        $users = DB::table('users')
+        ->where('organisation_id', '=', $loginUserInfo->organisation_id)
+        ->where('user_status', '=', 'Active')
+        //    ->where('id', '=', 2) //This is for testing, after function body ready remove this condition
+        ->get();
 
-       $orgsalaryComponents = DB::table('org_salary_components')->where('organisation_id',$loginUserInfo->organisation_id)->get();
+        $orgsalaryComponents = DB::table('org_salary_components')->where('organisation_id',$loginUserInfo->organisation_id)->get();
 
-    //    dd($orgsalaryComponents);
+        //    dd($orgsalaryComponents);
 
-       $allemployeeSalaryDetails = [];
-       $allEmployeeSalary = [];
-       $allSalaryComponents = [];
+        $allemployeeSalaryDetails = [];
+        $allEmployeeSalary = [];
+        $allSalaryComponents = [];
 
-       foreach($users as $user){
+        foreach($users as $user){
 
-        $employeeSalaryDetails = [];
+            $employeeSalaryDetails = [];
 
-       //Calculate total days in selected months
-       $monthYearString = $data['selected_month'];
+        //Calculate total days in selected months
+        $monthYearString = $data['selected_month'];
 
-       $date = Carbon::createFromFormat('F Y', $monthYearString);
-       
-       $monthName = $date->format('F'); // April (Alphbets month)
-       $monthNumber = $date->format('m'); // 4 (numeric month)
-       $year = $date->format('Y');  // 2025
+        $date = Carbon::createFromFormat('F Y', $monthYearString);
+        
+        $monthName = $date->format('F'); // April (Alphbets month)
+        $monthNumber = $date->format('m'); // 4 (numeric month)
+        $year = $date->format('Y');  // 2025
 
-       $month = date('n', strtotime($monthName));
-       $dateforDays = Carbon::create($year, $month, 1);
-       
-       $totalDaysInSelectedMonth = $dateforDays->daysInMonth; // Total  Days in selected month
+        $month = date('n', strtotime($monthName));
+        $dateforDays = Carbon::create($year, $month, 1);
+        
+        $totalDaysInSelectedMonth = $dateforDays->daysInMonth; // Total  Days in selected month
 
-    //    dd($totalDaysInSelectedMonth);
+        //    dd($totalDaysInSelectedMonth);
 
-       //Calcualte Week Offs in selected month and holidays
+        //Calcualte Week Offs in selected month and holidays
 
-       $weekOffsAndHolidays = DB::table('calendra_masters')
-       ->whereYear('date', $year)
-       ->whereMonth('date', $month) // or $monthNumber
-       ->where('organisation_id',$loginUserInfo->organisation_id)
-       ->where(function($query) {
-        $query->where('week_off', 'Yes')
-              ->orWhere('holiday', 'Yes');
-    })->get();
+        $weekOffsAndHolidays = DB::table('calendra_masters')
+        ->whereYear('date', $year)
+        ->whereMonth('date', $month) // or $monthNumber
+        ->where('organisation_id',$loginUserInfo->organisation_id)
+        ->where(function($query) {
+            $query->where('week_off', 'Yes')
+                ->orWhere('holiday', 'Yes');
+        })->get();
 
-    $totalWorkingDaysInMonth = $totalDaysInSelectedMonth - count($weekOffsAndHolidays);  // Total Working Days in the selected month
+        $totalWorkingDaysInMonth = $totalDaysInSelectedMonth - count($weekOffsAndHolidays);  // Total Working Days in the selected month
 
-    $presentDays = DB::table('login_logs')
-    ->whereYear('login_date', $year)
-    ->whereMonth('login_date', $month) // or $monthNumber
-    ->where('user_id', $user->id)
-    ->count();
-
-
-
-       //Calculate Taken Leave by User in selected month
-       $leaves = DB::table('leave_applies')
-       ->where('user_id',$user->id)
-       ->whereYear('start_date',$year)
-       ->whereMonth('start_date',$month)
-       ->where('leave_approve_status', 'Approved')
-       ->get();
-
-    //    dd($leaves);
-   
-   $totalLeaveDays = 0;
-   
-   foreach ($leaves as $leave) {
-       $fromDate = Carbon::parse($leave->start_date);
-       $toDate = Carbon::parse($leave->end_date);
-   
-       // If leave is for the same day
-       if ($fromDate->eq($toDate)) {
-           if ($leave->half_day === 'First Half' || $leave->half_day === 'Second Half') {
-               $totalLeaveDays += 0.5;
-           } else {
-               $totalLeaveDays += 1;
-           }
-       } else {
-           // Multi-day leave: count days between from and to (inclusive)
-           $days = $fromDate->diffInDays($toDate) + 1;
-           $totalLeaveDays += $days;
-       }
-   }
-
-   
-$noOfDaysForPaySalary = $totalWorkingDaysInMonth - $totalLeaveDays;
-
-$workingDaysByUser = $totalDaysInSelectedMonth - $totalLeaveDays;
-
-$getCtcAndST = DB::table('employee_salaries')->where('user_id',$user->id)->first();
-
-$salaryComponents = DB::table('org_salary_template_components')->where('salary_template_id',$getCtcAndST->salary_template_id)->get();
-
-// dd($salaryComponents);
-
-$getCtcPerMonth = $getCtcAndST->user_ctc/12;
-
-// $getCtcPerMonth = number_format($getCtcAndST->user_ctc/12, 2);
-
-$employeeSalary = [];
+        $presentDays = DB::table('login_logs')
+        ->whereYear('login_date', $year)
+        ->whereMonth('login_date', $month) // or $monthNumber
+        ->where('user_id', $user->id)
+        ->count();
 
 
-foreach($salaryComponents as $SC){
 
-    $components_id = $SC->org_comp_id;
-    $value = 0;
-    $type = $SC->type;
+        //Calculate Taken Leave by User in selected month
+        $leaves = DB::table('leave_applies')
+        ->where('user_id',$user->id)
+        ->whereYear('start_date',$year)
+        ->whereMonth('start_date',$month)
+        ->where('leave_approve_status', 'Approved')
+        ->get();
 
-    if($SC->calculation_type == 'Percentage'){
+        //    dd($leaves);
+    
+    $totalLeaveDays = 0;
+    
+    foreach ($leaves as $leave) {
+        $fromDate = Carbon::parse($leave->start_date);
+        $toDate = Carbon::parse($leave->end_date);
+    
+        // If leave is for the same day
+        if ($fromDate->eq($toDate)) {
+            if ($leave->half_day === 'First Half' || $leave->half_day === 'Second Half') {
+                $totalLeaveDays += 0.5;
+            } else {
+                $totalLeaveDays += 1;
+            }
+        } else {
+            // Multi-day leave: count days between from and to (inclusive)
+            $days = $fromDate->diffInDays($toDate) + 1;
+            $totalLeaveDays += $days;
+        }
+    }
 
-        if($SC->org_comp_id == 2){  //House Rent Allowance (HRA)
+    
+    $noOfDaysForPaySalary = $totalWorkingDaysInMonth - $totalLeaveDays;
 
-            $basicSalary = $getCtcPerMonth*50/100;
+    $workingDaysByUser = $totalDaysInSelectedMonth - $totalLeaveDays;
 
-            $value = $basicSalary*$SC->value/100;
+    $getCtcAndST = DB::table('employee_salaries')->where('user_id',$user->id)->first();
 
-            $employeeSalary[$SC->id] = [
+    $salaryComponents = DB::table('org_salary_template_components')->where('salary_template_id',$getCtcAndST->salary_template_id)->get();
+
+    // dd($salaryComponents);
+
+    $getCtcPerMonth = $getCtcAndST->user_ctc/12;
+
+    // $getCtcPerMonth = number_format($getCtcAndST->user_ctc/12, 2);
+
+    $employeeSalary = [];
+
+
+    foreach($salaryComponents as $SC){
+
+        $components_id = $SC->org_comp_id;
+        $value = 0;
+        $type = $SC->type;
+
+        if($SC->calculation_type == 'Percentage'){
+
+            if($SC->org_comp_id == 2){  //House Rent Allowance (HRA)
+
+                $basicSalary = $getCtcPerMonth*50/100;
+
+                $value = $basicSalary*$SC->value/100;
+
+                $employeeSalary[$SC->id] = [
+                    'value' => $value,
+                    'type' => $type,
+                    'components_id' => $components_id
+                ];
+
+            }else{
+
+            $value = $getCtcPerMonth*$SC->value/100;
+
+            $employeeSalary[$SC->org_comp_id] = [
                 'value' => $value,
                 'type' => $type,
                 'components_id' => $components_id
             ];
 
-        }else{
-
-        $value = $getCtcPerMonth*$SC->value/100;
-
-        $employeeSalary[$SC->org_comp_id] = [
-            'value' => $value,
-            'type' => $type,
-            'components_id' => $components_id
-        ];
-
-    }
-
-    }elseif($SC->calculation_type == 'Fixed'){
-
-        $value = $SC->value;
-
-        $employeeSalary[$SC->org_comp_id] = [
-            'value' => $value,
-            'type' => $type,
-            'components_id' => $components_id
-        ];
-
-
-
-    }elseif($SC->calculation_type == 'Others'){
-
-        $value = 0;
-
-        $employeeSalary[$SC->org_comp_id] = [
-            'value' => $value,
-            'type' => $type,
-            'components_id' => $components_id
-        ];
-
-    }
-
-    
-}
-
-foreach($salaryComponents as $SCSA){
-
-    if($SCSA->org_comp_id == 5 && $SCSA->calculation_type == 'Calculative' && $SCSA->type == 'Earning'){
-        $SumOfEarnings = 0;
-        foreach($employeeSalary as $ES){
-            if($ES['type'] == 'Earning'){
-                $SumOfEarnings += $ES['value'];
-            }
         }
-        $components_id = $SCSA->org_comp_id;
-        // $value = $getCtcPerMonth - $SumOfEarnings;
-        $value = max(0, $getCtcPerMonth - $SumOfEarnings);
-        $type = $SCSA->type;
 
-        $employeeSalary[$SCSA->org_comp_id] = [
-            'value' => $value,
-            'type' => $type,
-            'components_id' => $components_id
-        ];
+        }elseif($SC->calculation_type == 'Fixed'){
 
-    }elseif($SCSA->org_comp_id == 11 && $SCSA->calculation_type == 'Calculative' && $SCSA->type == 'Earning'){
+            $value = $SC->value;
 
-        $value = 0;
-
-        $employeeSalary[$SCSA->id] = [
-            'value' => $value,
-            'type' => $SCSA->type,
-            'components_id' => $SCSA->org_comp_id
-        ];
+            $employeeSalary[$SC->org_comp_id] = [
+                'value' => $value,
+                'type' => $type,
+                'components_id' => $components_id
+            ];
 
 
-    }elseif($SCSA->org_comp_id == 10 && $SCSA->calculation_type == 'Calculative' && $SCSA->type == 'Deduction'){
 
-        $value = 0;
+        }elseif($SC->calculation_type == 'Others'){
 
-        $employeeSalary[$SCSA->id] = [
-            'value' => $value,
-            'type' => $SCSA->type,
-            'components_id' => $SCSA->org_comp_id
-        ];
+            $value = 0;
 
+            $employeeSalary[$SC->org_comp_id] = [
+                'value' => $value,
+                'type' => $type,
+                'components_id' => $components_id
+            ];
 
-    }
-}
+        }
 
-$totalEarning = 0;
-$totalDeduction = 0;
-
-foreach($employeeSalary as $empSal){
-
-    if($empSal['type'] == 'Earning'){
-
-        $totalEarning = $totalEarning + $empSal['value'];
-
-    }elseif($empSal['type'] == 'Deduction'){
-
-        $totalDeduction = $totalDeduction + $empSal['value'];
-
-    }
-
-}
-
-$employeeSalaryDetails[$user->id] = [
-    'user_id' => $user->id,
-    'salary_cycle_id' => $data['cycle_id'],
-    'salary_month' => $monthYearString,
-    'total_days_month' => $totalDaysInSelectedMonth,
-    'week_offs_holidays' => count($weekOffsAndHolidays),
-    'total_working_daysMonth' => $totalWorkingDaysInMonth,
-    'leave_taken' => $totalLeaveDays,
-    'present_days' => $presentDays,
-    'absent_days' => $totalWorkingDaysInMonth - $presentDays,
-    'total_earning' => round($totalEarning, 2),
-    'total_deducation' => round($totalDeduction, 2),
-    'net_amount' => round($totalEarning - $totalDeduction, 2),
-];
-
-// $employeeSalary['2'] = $employeeSalary;
-
-array_push($allemployeeSalaryDetails,$employeeSalaryDetails);
-// array_push($allEmployeeSalary,$employeeSalary);
-
-array_push($allEmployeeSalary, [
-    'user_id' => $user->id,
-    'employee_name' => $user->name,
-    'salary_temp_id' => $getCtcAndST->salary_template_id,
-    'salary_details' => $employeeSalary
-]);
-
-       } 
-// dd($orgsalaryComponents);
-    //    dd($allEmployeeSalary);
-    //    echo "<pre>";
-    //    print_r($orgsalaryComponents);
-
-    //    echo "<pre>";
-    //    print_r($allEmployeeSalary);
         
-    // dd($allemployeeSalaryDetails);
-
-    // Call the new function to insert data into the payrolls table
-    // Insert data into the payrolls table
-    // foreach ($allemployeeSalaryDetails as $employeeSalaryDetail) {
-    //     foreach ($employeeSalaryDetail as $salaryDetail) {
-    //         $payrollId = DB::table('payrolls')->insertGetId([
-    //             'organisation_id'    => Auth::user()->organisation_id,
-    //             'user_id'            => $salaryDetail['user_id'],
-    //             'salary_cycle_id'    => $salaryDetail['salary_cycle_id'],
-    //             'salary_month'       => $salaryDetail['salary_month'],
-    //             'days_count_month'   => $salaryDetail['total_days_month'],
-    //             'week_offs'          => $salaryDetail['week_offs_holidays'],
-    //             'holidays'           => 0, // Adjust if holidays are tracked separately
-    //             'present_days_count' => $salaryDetail['present_days'],
-    //             'absent_days'        => $salaryDetail['absent_days'],
-    //             'total_earnings'     => round($salaryDetail['total_earning'] ?? 0, 2),
-    //             'total_dedcutions'   => round($salaryDetail['total_deducation'] ?? 0, 2),
-    //             'net_amount'         => round(($salaryDetail['total_earning'] ?? 0) - ($salaryDetail['total_deducation'] ?? 0), 2),
-    //             'created_at'         => now(),
-    //             'updated_at'         => now(),
-    //         ]);
-
-    //         // Insert into payroll_deductions table
-    //         foreach ($allEmployeeSalary as $employee) {
-    //             if ($employee['user_id'] == $salaryDetail['user_id']) {
-    //                 foreach ($employee['salary_details'] as $componentId => $component) {
-    //                     DB::table('payroll_deductions')->insert([
-    //                         'payroll_id'           => $payrollId,
-    //                         'user_id'              => $salaryDetail['user_id'],
-    //                         'salary_components_id' => $component['components_id'],
-    //                         'components_type'      => strtoupper($component['type']),
-    //                         'amount'               => round($component['value'], 2),
-    //                         'created_at'           => now(),
-    //                         'updated_at'           => now(),
-    //                     ]);
-    //                 }
-    //             }
-    //         }
-    //     }
-    // }
-    return view('user_view.salary_lookup',compact('orgsalaryComponents','allEmployeeSalary', 'allemployeeSalaryDetails'));
-
-       
     }
+
+    foreach($salaryComponents as $SCSA){
+
+        if($SCSA->org_comp_id == 5 && $SCSA->calculation_type == 'Calculative' && $SCSA->type == 'Earning'){
+            $SumOfEarnings = 0;
+            foreach($employeeSalary as $ES){
+                if($ES['type'] == 'Earning'){
+                    $SumOfEarnings += $ES['value'];
+                }
+            }
+            $components_id = $SCSA->org_comp_id;
+            // $value = $getCtcPerMonth - $SumOfEarnings;
+            $value = max(0, $getCtcPerMonth - $SumOfEarnings);
+            $type = $SCSA->type;
+
+            $employeeSalary[$SCSA->org_comp_id] = [
+                'value' => $value,
+                'type' => $type,
+                'components_id' => $components_id
+            ];
+
+        }elseif($SCSA->org_comp_id == 11 && $SCSA->calculation_type == 'Calculative' && $SCSA->type == 'Earning'){
+
+            $value = 0;
+
+            $employeeSalary[$SCSA->id] = [
+                'value' => $value,
+                'type' => $SCSA->type,
+                'components_id' => $SCSA->org_comp_id
+            ];
+
+
+        }elseif($SCSA->org_comp_id == 10 && $SCSA->calculation_type == 'Calculative' && $SCSA->type == 'Deduction'){
+
+            $value = 0;
+
+            $employeeSalary[$SCSA->id] = [
+                'value' => $value,
+                'type' => $SCSA->type,
+                'components_id' => $SCSA->org_comp_id
+            ];
+
+
+        }
+    }
+
+    $totalEarning = 0;
+    $totalDeduction = 0;
+
+    foreach($employeeSalary as $empSal){
+
+        if($empSal['type'] == 'Earning'){
+
+            $totalEarning = $totalEarning + $empSal['value'];
+
+        }elseif($empSal['type'] == 'Deduction'){
+
+            $totalDeduction = $totalDeduction + $empSal['value'];
+
+        }
+
+    }
+
+    $employeeSalaryDetails[$user->id] = [
+        'user_id' => $user->id,
+        'salary_cycle_id' => $data['cycle_id'],
+        'salary_month' => $monthYearString,
+        'total_days_month' => $totalDaysInSelectedMonth,
+        'week_offs_holidays' => count($weekOffsAndHolidays),
+        'total_working_daysMonth' => $totalWorkingDaysInMonth,
+        'leave_taken' => $totalLeaveDays,
+        'present_days' => $presentDays,
+        'absent_days' => $totalWorkingDaysInMonth - $presentDays,
+        'total_earning' => round($totalEarning, 2),
+        'total_deducation' => round($totalDeduction, 2),
+        'net_amount' => round($totalEarning - $totalDeduction, 2),
+    ];
+
+    // $employeeSalary['2'] = $employeeSalary;
+
+    array_push($allemployeeSalaryDetails,$employeeSalaryDetails);
+    // array_push($allEmployeeSalary,$employeeSalary);
+
+    array_push($allEmployeeSalary, [
+        'user_id' => $user->id,
+        'employee_name' => $user->name,
+        'salary_temp_id' => $getCtcAndST->salary_template_id,
+        'salary_details' => $employeeSalary
+    ]);
+
+        } 
+    // dd($orgsalaryComponents);
+        //    dd($allEmployeeSalary);
+        //    echo "<pre>";
+        //    print_r($orgsalaryComponents);
+
+        //    echo "<pre>";
+        //    print_r($allEmployeeSalary);
+            
+        // dd($allemployeeSalaryDetails);
+
+        // Call the new function to insert data into the payrolls table
+        // Insert data into the payrolls table
+        // foreach ($allemployeeSalaryDetails as $employeeSalaryDetail) {
+        //     foreach ($employeeSalaryDetail as $salaryDetail) {
+        //         $payrollId = DB::table('payrolls')->insertGetId([
+        //             'organisation_id'    => Auth::user()->organisation_id,
+        //             'user_id'            => $salaryDetail['user_id'],
+        //             'salary_cycle_id'    => $salaryDetail['salary_cycle_id'],
+        //             'salary_month'       => $salaryDetail['salary_month'],
+        //             'days_count_month'   => $salaryDetail['total_days_month'],
+        //             'week_offs'          => $salaryDetail['week_offs_holidays'],
+        //             'holidays'           => 0, // Adjust if holidays are tracked separately
+        //             'present_days_count' => $salaryDetail['present_days'],
+        //             'absent_days'        => $salaryDetail['absent_days'],
+        //             'total_earnings'     => round($salaryDetail['total_earning'] ?? 0, 2),
+        //             'total_dedcutions'   => round($salaryDetail['total_deducation'] ?? 0, 2),
+        //             'net_amount'         => round(($salaryDetail['total_earning'] ?? 0) - ($salaryDetail['total_deducation'] ?? 0), 2),
+        //             'created_at'         => now(),
+        //             'updated_at'         => now(),
+        //         ]);
+
+        //         // Insert into payroll_deductions table
+        //         foreach ($allEmployeeSalary as $employee) {
+        //             if ($employee['user_id'] == $salaryDetail['user_id']) {
+        //                 foreach ($employee['salary_details'] as $componentId => $component) {
+        //                     DB::table('payroll_deductions')->insert([
+        //                         'payroll_id'           => $payrollId,
+        //                         'user_id'              => $salaryDetail['user_id'],
+        //                         'salary_components_id' => $component['components_id'],
+        //                         'components_type'      => strtoupper($component['type']),
+        //                         'amount'               => round($component['value'], 2),
+        //                         'created_at'           => now(),
+        //                         'updated_at'           => now(),
+        //                     ]);
+        //                 }
+        //             }
+        //         }
+        //     }
+        // }
+        return view('user_view.salary_lookup',compact('orgsalaryComponents','allEmployeeSalary', 'allemployeeSalaryDetails'));
+
+        
+        }
 
     public function processSalaryDetails(Request $request)
     {

@@ -677,24 +677,22 @@ class leavePolicyController extends Controller
 
         //Load upcoming holidays
 
-         // Fetch upcoming and today's birthdays
-         $currentDate = Carbon::now();
-         $currentMonth = $currentDate->month;
-         $currentDay = $currentDate->day;
-         
-         $holidays_upcoming = DB::table('calendra_masters')
-             ->select('date', 'holiday_name', 'day')
-             ->where('holiday', '=', 'Yes')
-             ->whereMonth('date', '=', $currentMonth) // Filter by the current month
-             ->whereDay('date', '>=', $currentDay)   // Filter by day of the month in 'date'
-             ->get();
+                    // Get the current year
+            $currentYear = Carbon::now()->year;
 
-             $holidays_upcoming = $holidays_upcoming->map(function ($holiday) {
-                // Format the date to '19-March'
+            // Fetch holidays for the current year
+            $holidays_upcoming = DB::table('calendra_masters')
+                ->select('date', 'holiday_name', 'day')
+                ->where('holiday', '=', 'Yes')
+                ->whereYear('date', '=', $currentYear) // ✅ Only current year filter
+                ->get();
+
+            // Format the date for better display
+            $holidays_upcoming = $holidays_upcoming->map(function ($holiday) {
+                // Format the date to '19 March'
                 $holiday->formatted_date = Carbon::parse($holiday->date)->format('d F'); 
                 return $holiday;
             });
-         
         //  dd($holidays_upcoming);
 
         // attendence  rate query start
