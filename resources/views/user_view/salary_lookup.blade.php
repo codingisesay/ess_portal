@@ -100,13 +100,22 @@
                   value="{{ round($val, 2) }}"
                   data-type="Earning"
                   {{ $isApplicable ? '' : 'disabled' }}
+                  
                 >
               </td>
             @endif
           @endforeach
       
-          {{-- Total Earning --}}
-          <td class="total-earning">{{ round($totalEarning, 2) }}</td>
+          <!-- Total Earnings -->
+            <td>
+                <input 
+                    type="number" 
+                    step="0.01" 
+                    name="salary[{{ $employee['user_id'] }}][total_earning]" 
+                    value="{{ round($totalEarning, 2) }}" 
+                    class="total-earning"    
+                >
+            </td>
       
           {{-- Deduction Inputs --}}
           @foreach ($orgsalaryComponents as $comp)
@@ -125,16 +134,35 @@
                   value="{{ round($val, 2) }}"
                   data-type="Deduction"
                   {{ $isApplicable ? '' : 'disabled' }}
+                  
                 >
               </td>
             @endif
           @endforeach
       
-          {{-- Total Deduction --}}
-          <td class="total-deduction">{{ round($totalDeduction) }}</td>
+          <!-- Total Deductions -->
+          <td>
+              <input 
+                  type="number" 
+                  step="0.01" 
+                  name="salary[{{ $employee['user_id'] }}][total_deduction]" 
+                  value="{{ round($totalDeduction, 2) }}" 
+                  class="total-deduction"
+                  
+              >
+          </td>
       
-          {{-- Net Salary --}}
-          <td class="net-salary">{{ round($totalEarning - $totalDeduction) }}</td>
+         <!-- Net Salary -->
+          <td>
+              <input 
+                  type="number" 
+                  step="0.01" 
+                  name="salary[{{ $employee['user_id'] }}][net_salary]" 
+                  value="{{ round($totalEarning - $totalDeduction, 2) }}" 
+                  class="net-salary"
+                  
+              >
+          </td>
       
         </tr>
       @endforeach
@@ -149,45 +177,47 @@
 </form>
 <script>
     document.addEventListener('DOMContentLoaded', function () {
-      const rows = document.querySelectorAll('tbody tr');
-    
-      rows.forEach(row => {
-        const inputs = row.querySelectorAll('input[type="number"]');
-    
-        inputs.forEach(input => {
-          input.addEventListener('input', function () {
+        const rows = document.querySelectorAll('tbody tr');
+        
+        rows.forEach(row => {
+            const inputs = row.querySelectorAll('input[type="number"]');
+            
+            inputs.forEach(input => {
+                input.addEventListener('input', function () {
+                    updateTotals(row);
+                });
+            });
+            
+            // Initial calculation on load
             updateTotals(row);
-          });
         });
-    
-        updateTotals(row); // Initial calculation
-      });
-    
-      function updateTotals(row) {
-        let totalEarning = 0;
-        let totalDeduction = 0;
-    
-        const inputs = row.querySelectorAll('input[type="number"]');
-        inputs.forEach(input => {
-          if (input.disabled) return;
-    
-          const val = parseFloat(input.value) || 0;
-          const type = input.dataset.type;
-    
-          if (type === 'Earning') {
-            totalEarning += val;
-          } else if (type === 'Deduction') {
-            totalDeduction += val;
-          }
-        });
-    
-        // Update DOM
-        row.querySelector('.total-earning').textContent = totalEarning.toFixed(2);
-        row.querySelector('.total-deduction').textContent = totalDeduction.toFixed(2);
-        row.querySelector('.net-salary').textContent = (totalEarning - totalDeduction).toFixed(2);
-      }
+
+        function updateTotals(row) {
+            let totalEarning = 0;
+            let totalDeduction = 0;
+
+            const inputs = row.querySelectorAll('input[type="number"]');
+            inputs.forEach(input => {
+                if (input.disabled) return;
+
+                const val = parseFloat(input.value) || 0;
+                const type = input.dataset.type;
+                
+                if (type === 'Earning') {
+                    totalEarning += val;
+                } else if (type === 'Deduction') {
+                    totalDeduction += val;
+                }
+            });
+
+            // Update input fields directly for form submission
+            row.querySelector('.total-earning').value = totalEarning.toFixed(2);
+            row.querySelector('.total-deduction').value = totalDeduction.toFixed(2);
+            row.querySelector('.net-salary').value = (totalEarning - totalDeduction).toFixed(2);
+        }
     });
-    </script>
+</script>
+
     
     <style>
         .table-container {
