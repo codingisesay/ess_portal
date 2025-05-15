@@ -430,19 +430,76 @@ $user_leave_encash_carries = DB::table('user_leave_encash_carries')
         // dd($todayBirthdays);
 
     // Fetch upcoming anniversaries
-    $anniversaries = DB::table('emp_details')
-        ->select('Employee_Name', 'Joining_Date')
-        ->whereMonth('Joining_Date', '=', $currentMonth)
-        ->whereDay('Joining_Date', '>=', $currentDay)
-        ->orderByRaw("DATE_FORMAT(Joining_Date, '%m-%d') >= ? DESC, DATE_FORMAT(Joining_Date, '%m-%d') ASC", [$currentDate->format('m-d')]) 
-        ->get()
-        ->map(function ($employee) use ($currentDay, $currentDate) {
-            $joiningDate = new Carbon($employee->Joining_Date);
-            $joiningDay = $joiningDate->day;
-            $employee->yearsCompleted = $joiningDate->diffInYears($currentDate);
-            $employee->badgeText = $joiningDay === $currentDay ? "Today" : "Upcoming in " . ($joiningDay - $currentDay) . " days";
-            return $employee;
-        });
+    // $anniversaries = DB::table('emp_details')
+    //     ->select('Employee_Name', 'Joining_Date')
+    //     ->whereMonth('Joining_Date', '=', $currentMonth)
+    //     ->whereDay('Joining_Date', '>=', $currentDay)
+    //     ->orderByRaw("DATE_FORMAT(Joining_Date, '%m-%d') >= ? DESC, DATE_FORMAT(Joining_Date, '%m-%d') ASC", [$currentDate->format('m-d')]) 
+    //     ->get()
+    //     ->map(function ($employee) use ($currentDay, $currentDate) {
+    //         $joiningDate = new Carbon($employee->Joining_Date);
+    //         $joiningDay = $joiningDate->day;
+    //         $employee->yearsCompleted = $joiningDate->diffInYears($currentDate);
+    //         $employee->badgeText = $joiningDay === $currentDay ? "Today" : "Upcoming in " . ($joiningDay - $currentDay) . " days";
+    //         return $employee;
+    //     });
+
+$currentDate = Carbon::now();
+
+$anniversaries = DB::table('emp_details')
+    ->select('Employee_Name', 'Joining_Date')
+    ->get()
+    ->filter(function ($employee) use ($currentDate) {
+        $joiningDate = Carbon::parse($employee->Joining_Date);
+
+        // Try to set the anniversary in the current year
+        try {
+            $anniversaryThisYear = $joiningDate->copy()->year($currentDate->year);
+        } catch (\Exception $e) {
+            // Handle leap year issue (e.g., Feb 29)
+            $anniversaryThisYear = $joiningDate->copy()->addYear();
+        }
+
+        // Include if anniversary is today or in the future
+        return $anniversaryThisYear->isToday() || $anniversaryThisYear->isFuture();
+    })
+    ->sortBy(function ($employee) use ($currentDate) {
+        $joiningDate = Carbon::parse($employee->Joining_Date);
+
+        // Try to set the anniversary in the current year
+        try {
+            $anniversary = $joiningDate->copy()->year($currentDate->year);
+        } catch (\Exception $e) {
+            $anniversary = $joiningDate->copy()->addYear();
+        }
+
+        return $currentDate->diffInDays($anniversary, false);
+    })
+    ->take(10)
+    ->map(function ($employee) use ($currentDate) {
+        $joiningDate = Carbon::parse($employee->Joining_Date);
+
+        // Determine next anniversary (adjust if already passed this year)
+        try {
+            $nextAnniversary = $joiningDate->copy()->year($currentDate->year);
+        } catch (\Exception $e) {
+            $nextAnniversary = $joiningDate->copy()->addYear();
+        }
+
+        if ($nextAnniversary->isPast() && !$nextAnniversary->isToday()) {
+            $nextAnniversary->addYear();
+        }
+
+        $employee->yearsCompleted = $joiningDate->diffInYears($currentDate);
+        $employee->badgeText = $nextAnniversary->isToday()
+            ? "Today"
+            : "Upcoming in " . $currentDate->diffInDays($nextAnniversary) . " days";
+
+        $employee->nextAnniversary = $nextAnniversary->toDateString();
+
+        return $employee;
+    })
+    ->values(); // Reset keys for clean array
 
        // Fetch data from emp_details with respect to manager
 $dataOfteamMambers = DB::table('emp_details')->where('reporting_manager', '=', $user->id)->get();

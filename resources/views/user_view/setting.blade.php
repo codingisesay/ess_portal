@@ -400,51 +400,82 @@
     <div class="accordion-content">
         {{-- Month & Year Filter --}}
             <form method="GET" action="{{ route('user.setting') }}" class="mb-3 d-flex align-items-center gap-2">
-                <label for="month">Select Month:</label>
-                <select name="month" id="month" onchange="this.form.submit()">
-                    @for ($m = 1; $m <= 12; $m++)
-                        <option value="{{ $m }}" {{ $m == $month ? 'selected' : '' }}>
-                            {{ \Carbon\Carbon::create()->month($m)->format('F') }}
+                <select name="leave_type_id" id="leave_type_id" onchange="this.form.submit()">
+                    <option value="">All</option>
+                    @foreach ($leaveTypes as $type)
+                        <option value="{{ $type->id }}" {{ $type->id == request('leave_type_id') ? 'selected' : '' }}>
+                            {{ $type->name }}
                         </option>
-                    @endfor
+                    @endforeach
                 </select>
-
-                <label for="year">Select Year:</label>
-                <select name="year" id="year" onchange="this.form.submit()">
-                    @for ($y = now()->year - 5; $y <= now()->year + 1; $y++)
-                        <option value="{{ $y }}" {{ $y == $year ? 'selected' : '' }}>
-                            {{ $y }}
-                        </option>
-                    @endfor
-                </select>
+                   <label for="start_date">Start Date:</label>
+                    <input type="date" name="start_date" id="start_date" value="{{ request('start_date') }}" onchange="this.form.submit()">
+                    
+                    <label for="end_date">End Date:</label>
+                    <input type="date" name="end_date" id="end_date" value="{{ request('end_date') }}" onchange="this.form.submit()">
             </form>     
         <!-- Leave Summary Table -->
-          <table class="custom-table">
-            <thead>
-                <tr>
-                    <th>Employee Name</th>
-                    <th>Employee ID</th>
-                    <th>Approved Days</th>
-                    <th>Rejected Days</th>
-                    <th>Cancelled Days</th>
-                    <th>Max Leave Per Month</th>
-                    <th>Remaining Leave</th>
-                </tr>
-            </thead>
-            <tbody>
-               @foreach ($leaveSummary as $leave)
-                <tr>
-                    <td>{{ $leave->employee_name }}</td>
-                    <td>{{ $leave->employeeID }}</td>
-                    <td>{{ $leave->approved_days }}</td>
-                    <td>{{ $leave->rejected_days }}</td>
-                    <td>{{ $leave->cancelled_days }}</td>
-                    <td>{{ $leave->max_leave_per_month }}</td>
-                    <td>{{ $leave->remaining_leave_days }}</td>
-                </tr>
-              @endforeach
-            </tbody>
-        </table>
+            <table class="custom-table">
+                <thead>
+                    <tr>
+                        <th>Employee Name</th>
+                        <th>Employee ID</th>
+                        <th>Leave Type</th>
+                        <th>Approved Days</th>
+                        <th>Rejected Days</th>
+                        <th>Cancelled Days</th>
+                        <th>Pending for Approval</th>
+                        <th>Total Carry Forward</th>
+                        <th>Total Leave Remaining</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @php
+                        // Initialize summary totals
+                        $totalApproved = 0;
+                        $totalRejected = 0;
+                        $totalCancelled = 0;
+                        $totalPending = 0;
+                        $totalCarryForward = 0;
+                        $totalRemaining = 0;
+                    @endphp
+                    
+                    @foreach ($leaveSummary as $leave)
+                        <tr>
+                            <td>{{ $leave->employee_name }}</td>
+                            <td>{{ $leave->employeeID }}</td>
+                            <td>{{ $leave->leave_type_name }}</td>
+                            <td>{{ $leave->approved_days }}</td>
+                            <td>{{ $leave->rejected_days }}</td>
+                            <td>{{ $leave->cancelled_days }}</td>
+                            <td>{{ $leave->pending_days }}</td>
+                            <td>{{ $leave->total_carry_forward }}</td>
+                            <td>{{ $leave->total_leave_remaining }}</td>
+                        </tr>
+
+                        @php
+                            // Add to summary totals
+                            $totalApproved += $leave->approved_days;
+                            $totalRejected += $leave->rejected_days;
+                            $totalCancelled += $leave->cancelled_days;
+                            $totalPending += $leave->pending_days;
+                            $totalCarryForward += $leave->total_carry_forward;
+                            $totalRemaining += $leave->total_leave_remaining;
+                        @endphp
+                    @endforeach
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <th colspan="3">Total</th>
+                        <th>{{ $totalApproved }}</th>
+                        <th>{{ $totalRejected }}</th>
+                        <th>{{ $totalCancelled }}</th>
+                        <th>{{ $totalPending }}</th>
+                        <th>{{ $totalCarryForward }}</th>
+                        <th>{{ $totalRemaining }}</th>
+                    </tr>
+                </tfoot>
+            </table>             
     </div>
 </div>
 </main>
