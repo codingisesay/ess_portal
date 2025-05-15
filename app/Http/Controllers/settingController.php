@@ -737,55 +737,80 @@ return redirect()->route('user.setting')->with('error','Calendra Is Not Created 
         
         }
 
-    public function processSalaryDetails(Request $request)
-    {
-        // Unserialize the data from the request
-        $allemployeeSalaryDetails = unserialize($request->input('allemployeeSalaryDetails'));
-        $allEmployeeSalary = unserialize($request->input('allEmployeeSalary'));
-    
-        // Loop through each employee's salary details
-        foreach ($allemployeeSalaryDetails as $employeeSalaryDetail) {
-            foreach ($employeeSalaryDetail as $salaryDetail) {
-                // Insert into the payrolls table and get the payroll ID
-                $payrollId = DB::table('payrolls')->insertGetId([
-                    'organisation_id'    => Auth::user()->organisation_id,
-                    'user_id'            => $salaryDetail['user_id'],
-                    'salary_cycle_id'    => $salaryDetail['salary_cycle_id'],
-                    'salary_month'       => $salaryDetail['salary_month'],
-                    'days_count_month'   => $salaryDetail['total_days_month'],
-                    'week_offs'          => $salaryDetail['week_offs_holidays'],
-                    'holidays'           => 0, // Adjust if holidays are tracked separately
-                    'present_days_count' => $salaryDetail['present_days'],
-                    'absent_days'        => $salaryDetail['absent_days'],
-                    'total_earnings'     => round($salaryDetail['total_earning'] ?? 0, 2),
-                    'total_dedcutions'   => round($salaryDetail['total_deducation'] ?? 0, 2),
-                    'net_amount'         => round(($salaryDetail['total_earning'] ?? 0) - ($salaryDetail['total_deducation'] ?? 0), 2),
-                    'created_at'         => now(),
-                    'updated_at'         => now(),
-                ]);
-    
+   public function processSalaryDetails(Request $request)
+{
+    // Unserialize data
+    $allemployeeSalaryDetails = unserialize($request->input('allemployeeSalaryDetails'));
+    $allEmployeeSalary = unserialize($request->input('allEmployeeSalary'));
+    $updatedSalaryData = $request->input('salary');
+
+    foreach ($allemployeeSalaryDetails as $employeeSalaryDetail) {
+        foreach ($employeeSalaryDetail as $salaryDetail) {
+            $userId = $salaryDetail['user_id'];
+
+            // Use updated totals if present
+            $totalEarnings = isset($updatedSalaryData[$userId]['total_earning'])
+                ? round($updatedSalaryData[$userId]['total_earning'], 2)
+                : round($salaryDetail['total_earning'] ?? 0, 2);
+                
+            $totalDeductions = isset($updatedSalaryData[$userId]['total_deduction'])
+                ? round($updatedSalaryData[$userId]['total_deduction'], 2)
+                : round($salaryDetail['total_deducation'] ?? 0, 2);
+                
+            $netAmount = isset($updatedSalaryData[$userId]['net_salary'])
+                ? round($updatedSalaryData[$userId]['net_salary'], 2)
+                : round(($salaryDetail['total_earning'] ?? 0) - ($salaryDetail['total_deducation'] ?? 0), 2);
+                
+
+            // Insert into the payrolls table
+            $payrollId = DB::table('payrolls')->insertGetId([
+                'organisation_id'    => Auth::user()->organisation_id,
+                'user_id'            => $userId,
+                'salary_cycle_id'    => $salaryDetail['salary_cycle_id'],
+                'salary_month'       => $salaryDetail['salary_month'],
+                'days_count_month'   => $salaryDetail['total_days_month'],
+                'week_offs'          => $salaryDetail['week_offs_holidays'],
+                'holidays'           => 0, // Adjust if holidays are tracked separately
+                'present_days_count' => $salaryDetail['present_days'],
+                'absent_days'        => $salaryDetail['absent_days'],
+                'total_earnings'     => $totalEarnings,
+                'total_dedcutions'   => $totalDeductions,
+                'net_amount'         => $netAmount,
+                'created_at'         => now(),
+                'updated_at'         => now(),
+            ]);
+
+            // Insert into payroll_deductions table
+            // Get the updated salary details from the request
+                $updatedSalaryDetails = $request->input('salary', []);
+
                 // Insert into payroll_deductions table
                 foreach ($allEmployeeSalary as $employee) {
-                    if ($employee['user_id'] == $salaryDetail['user_id']) {
+                    if ($employee['user_id'] == $userId) {
                         foreach ($employee['salary_details'] as $componentId => $component) {
+                            // Check if the component exists in the updated form data
+                            $amount = isset($updatedSalaryDetails[$userId][$componentId]) 
+                                    ? round($updatedSalaryDetails[$userId][$componentId], 2) 
+                                    : round($component['value'], 2);
+
                             DB::table('payroll_deductions')->insert([
                                 'payroll_id'           => $payrollId,
-                                'user_id'              => $salaryDetail['user_id'],
-                                'salary_components_id' => $component['components_id'],
+                                'user_id'              => $userId,
+                                'salary_components_id' => $componentId,
                                 'components_type'      => strtoupper($component['type']),
-                                'amount'               => round($component['value'], 2),
+                                'amount'               => $amount,
                                 'created_at'           => now(),
                                 'updated_at'           => now(),
                             ]);
                         }
                     }
                 }
-            }
         }
-    
-        // Redirect back with a success message
-        return redirect()->route('user.setting')->with('success', 'Salary details processed successfully!');
     }
+
+    // Redirect back with a success message
+    return redirect()->route('user.setting')->with('success', 'Salary details processed successfully!');
+}
 
     
 
