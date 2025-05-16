@@ -212,8 +212,8 @@ class salaryBoxController extends Controller
     {
         $request->validate([
             'template_name' => 'required|string|max:255',
-            'min_ctc' => 'required|numeric',
-            'max_ctc' => 'required|numeric',
+            'min_ctc' => 'nullable|numeric',
+            'max_ctc' => 'nullable|numeric',
             'status' => 'required|in:Active,Inactive',
         ]);
 
@@ -260,7 +260,7 @@ class salaryBoxController extends Controller
             ->where('id', $id)
             ->update([
                 'salary_template_id' => $request->template_id,
-                'name' => $request->component_name,
+                'org_comp_id' => $request->component_name,
                 'type' => $request->component_type,
                 'calculation_type' => $request->calculation_type,
                 'value' => $request->value,
@@ -343,7 +343,7 @@ class salaryBoxController extends Controller
     }
 
    
- public function loadDashboard()
+ public function loadDashboard(Request $request)
 {
     $loginUserInfo = Auth::user();
 
@@ -394,8 +394,56 @@ class salaryBoxController extends Controller
         ->orderBy('reimbursement_trackings.created_at', 'desc') // Order by claim date
         
         ->get();
-// dd($reimbursementClaims);
-    return view('user_view.payrollDashboard', compact('payrollData', 'payrollDeductions','reimbursementClaims'));
+
+       
+        // **1. Fetch the ID of "Income Tax (Section 192)"**
+           $incomeTaxComponentId = 7;  // Hardcoded component ID
+
+      // Fetch monthly tax amounts for the current financial year (Apr to Mar)
+    // Determine the current financial year
+    $currentYear = now()->year;
+    $currentMonth = now()->month;
+    $currentFYStart = $currentMonth >= 4 ? $currentYear : $currentYear - 1;
+    $currentFYEnd = $currentFYStart + 1;
+    $currentFY = "{$currentFYStart}-{$currentFYEnd}";
+
+    // Use selected FY or default to the current FY
+    $selectedFY = $request->get('fy', $currentFY);
+    [$startYear, $endYear] = explode('-', $selectedFY);
+
+    // Fetch the data as before
+    $startDate = $startYear . '-04-01';
+    $endDate = $endYear . '-03-31';
+
+    $monthlyTaxData = DB::table('payroll_deductions')
+        ->selectRaw('MONTH(created_at) as month, SUM(amount) as total_tax')
+        ->where('user_id', $loginUserInfo->id)
+        ->where('salary_components_id', $incomeTaxComponentId)
+        ->whereBetween('created_at', [$startDate, $endDate])
+        ->groupBy(DB::raw('MONTH(created_at)'))
+        ->orderBy('month')
+        ->pluck('total_tax', 'month')
+        ->toArray();
+
+    // Fill missing months with zero
+    $fullYearData = [];
+    for ($i = 4; $i <= 12; $i++) { // Apr to Dec
+        $fullYearData[] = $monthlyTaxData[$i] ?? 0;
+    }
+    for ($i = 1; $i <= 3; $i++) { // Jan to Mar
+        $fullYearData[] = $monthlyTaxData[$i] ?? 0;
+    }
+
+    // Generate financial years for the last 5 years
+    $financialYears = [];
+    for ($i = 0; $i < 5; $i++) {
+        $fyStart = $currentFYStart - $i;
+        $fyEnd = $fyStart + 1;
+        $financialYears[] = "{$fyStart}-{$fyEnd}";
+    }
+
+  
+    return view('user_view.payrollDashboard', compact('payrollData', 'payrollDeductions','reimbursementClaims','fullYearData','financialYears', 'selectedFY'));
 }
 
 
@@ -1123,7 +1171,7 @@ public function loadCompForm(){
     ->where('organisation_id', '=', $org_data->id)
     ->where('status', '=', 'Active')
     ->get();
-
+// dd($template_datas);
     return view('superadmin_view.create_comp',compact('template_datas'));
 
 }
@@ -1155,6 +1203,37 @@ public function insertComponents(Request $request){
     return redirect()->route('create_components')->with('error','Component Not Created Successfully!!');
 
 }
+
+public function updateComponents(Request $request, $id) {
+    // Validate the incoming request data
+    $data = $request->validate([
+        'name' => 'required',
+        'type' => 'required',
+        'status' => 'required',
+    ]);
+
+    // Get the authenticated superadmin's organization ID
+    $org_data = Auth::guard('superadmin')->user();
+
+    // Perform the update
+    $updateStatus = DB::table('org_salary_components')
+        ->where('organisation_id', $org_data->id)
+        ->where('id', $id)
+        ->update([
+            'name' => $data['name'],
+            'type' => $data['type'],
+            'status' => $data['status'],
+            'updated_at' => NOW(),
+        ]);
+
+    // Return with appropriate success or error message
+    if ($updateStatus) {
+        return redirect()->route('create_components')->with('success', 'Component Updated Successfully!!');
+    }
+
+    return redirect()->route('create_components')->with('error', 'Component Not Updated Successfully!!');
+}
+
 
 
 }

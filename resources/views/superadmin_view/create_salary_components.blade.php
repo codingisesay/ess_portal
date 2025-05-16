@@ -143,7 +143,12 @@ $id = Auth::guard('superadmin')->user()->id;
                     <label for="editSalaryComponentTemplate">Salary Template</label>
                 </div>
                 <div class="popup-form-group">
-                    <input type="text" name="component_name" id="editSalaryComponentName" required>
+                    <!-- <input type="text" name="component_name" id="editSalaryComponentName" required> -->
+                    <select name="component_name" id="editSalaryComponentName" required>
+                        @foreach ($orgComp as $comp)
+                            <option value="{{ $comp->id }}">{{ $comp->name }}</option>
+                        @endforeach
+                    </select>
                     <label for="editSalaryComponentName">Component Name</label>
                 </div>
                 <div class="popup-form-group">
@@ -202,7 +207,7 @@ $id = Auth::guard('superadmin')->user()->id;
         console.log(datas);
         document.getElementById('editSalaryComponentId').value = datas.id;
         document.getElementById('editSalaryComponentTemplate').value = datas.salary_template_id;
-        document.getElementById('editSalaryComponentName').value = datas.name;
+        document.getElementById('editSalaryComponentName').value = datas.org_comp_id;
         document.getElementById('editSalaryComponentType').value = datas.type;
         document.getElementById('editSalaryComponentCalculationType').value = datas.calculation_type;
         document.getElementById('editSalaryComponentValue').value = datas.value;
