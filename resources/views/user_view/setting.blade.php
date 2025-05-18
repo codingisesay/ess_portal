@@ -421,9 +421,8 @@
                         <th>Employee Name</th>
                         <th>Employee ID</th>
                         <th>Leave Type</th>
+                        <th>Max Leave</th>
                         <th>Approved Days</th>
-                        <th>Rejected Days</th>
-                        <th>Cancelled Days</th>
                         <th>Pending for Approval</th>
                         <th>Total Carry Forward</th>
                         <th>Total Leave Remaining</th>
@@ -433,11 +432,10 @@
                     @php
                         // Initialize summary totals
                         $totalApproved = 0;
-                        $totalRejected = 0;
-                        $totalCancelled = 0;
                         $totalPending = 0;
                         $totalCarryForward = 0;
                         $totalRemaining = 0;
+                        $totalMaxLeave = 0;
                     @endphp
                     
                     @foreach ($leaveSummary as $leave)
@@ -445,9 +443,8 @@
                             <td>{{ $leave->employee_name }}</td>
                             <td>{{ $leave->employeeID }}</td>
                             <td>{{ $leave->leave_type_name }}</td>
+                             <td>{{ $leave->max_leave }}</td> 
                             <td>{{ $leave->approved_days }}</td>
-                            <td>{{ $leave->rejected_days }}</td>
-                            <td>{{ $leave->cancelled_days }}</td>
                             <td>{{ $leave->pending_days }}</td>
                             <td>{{ $leave->total_carry_forward }}</td>
                             <td>{{ $leave->total_leave_remaining }}</td>
@@ -456,20 +453,18 @@
                         @php
                             // Add to summary totals
                             $totalApproved += $leave->approved_days;
-                            $totalRejected += $leave->rejected_days;
-                            $totalCancelled += $leave->cancelled_days;
                             $totalPending += $leave->pending_days;
                             $totalCarryForward += $leave->total_carry_forward;
                             $totalRemaining += $leave->total_leave_remaining;
+                             $totalMaxLeave += $leave->max_leave; // New Total
                         @endphp
                     @endforeach
                 </tbody>
                 <tfoot>
                     <tr>
                         <th colspan="3">Total</th>
+                         <th>{{ $totalMaxLeave }}</th>
                         <th>{{ $totalApproved }}</th>
-                        <th>{{ $totalRejected }}</th>
-                        <th>{{ $totalCancelled }}</th>
                         <th>{{ $totalPending }}</th>
                         <th>{{ $totalCarryForward }}</th>
                         <th>{{ $totalRemaining }}</th>

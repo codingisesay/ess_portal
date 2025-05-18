@@ -67,7 +67,6 @@ $startDate = request('start_date');
 $endDate = request('end_date');
 $leaveTypeId = request('leave_type_id'); 
 
-// Base Query
 $leaveSummary = DB::table('leave_applies as la')
     ->join('users as u', 'la.user_id', '=', 'u.id')
     ->join('leave_types as lt', 'la.leave_type_id', '=', 'lt.id')
@@ -80,7 +79,8 @@ $leaveSummary = DB::table('leave_applies as la')
         'u.name as employee_name',
         'u.employeeID',
         'lt.name as leave_type_name',
-        
+        'ltr.max_leave',
+
         // Approved Days
         DB::raw("SUM(CASE 
             WHEN la.leave_approve_status = 'Approved' THEN 
@@ -121,27 +121,24 @@ $leaveSummary = DB::table('leave_applies as la')
             ELSE 0
         END) as pending_days"),
 
-        // Max Leave Allowed (Per Leave Type)
-        DB::raw("LTRIM(RTRIM(CAST(
-            ltr.leave_count_per_month AS SIGNED))) as max_leave_per_month"),
-        
-        // Total Leave Remaining (Including Carry Forward)
-        DB::raw("GREATEST(
-            0,
-            (LTRIM(RTRIM(CAST(ltr.leave_count_per_month AS SIGNED))) * 12) + 
-            IFNULL(SUM(ulec.carry_forward), 0) - 
-            SUM(CASE 
-                WHEN la.leave_approve_status = 'Approved' THEN 
-                    CASE 
-                        WHEN la.half_day IN ('First Half', 'Second Half') THEN 0.5
-                        ELSE DATEDIFF(la.end_date, la.start_date) + 1
-                    END
-                ELSE 0
-            END)
-        ) as total_leave_remaining"),
-        
         // Total Carry Forward
-        DB::raw("IFNULL(SUM(ulec.carry_forward), 0) as total_carry_forward")
+        DB::raw("IFNULL(SUM(ulec.carry_forward), 0) as total_carry_forward"),
+        
+        // Total Leave Remaining (Updated Logic)
+        DB::raw("
+            GREATEST(
+                0,
+                (LTRIM(RTRIM(CAST(ltr.max_leave AS SIGNED))) + IFNULL(SUM(ulec.carry_forward), 0)) - 
+                SUM(CASE 
+                    WHEN la.leave_approve_status = 'Approved' THEN 
+                        CASE 
+                            WHEN la.half_day IN ('First Half', 'Second Half') THEN 0.5
+                            ELSE DATEDIFF(la.end_date, la.start_date) + 1
+                        END
+                    ELSE 0
+                END)
+            ) as total_leave_remaining
+        ")
     )
     ->where('u.user_status', 'Active');
 
@@ -156,7 +153,7 @@ if ($leaveTypeId) {
 }
 
 // Finalize the query
-$leaveSummary = $leaveSummary->groupBy('u.employeeID', 'u.name', 'lt.id', 'lt.name', 'ltr.leave_count_per_month')->get();
+$leaveSummary = $leaveSummary->groupBy('u.employeeID', 'u.name', 'lt.id', 'lt.name', 'ltr.max_leave')->get();
 
 $leaveTypes = DB::table('leave_types')->where('status', 'ACTIVE')->get();
 

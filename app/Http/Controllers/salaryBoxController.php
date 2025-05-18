@@ -396,36 +396,31 @@ class salaryBoxController extends Controller
         ->get();
 
        
-        // **1. Fetch the ID of "Income Tax (Section 192)"**
-           $incomeTaxComponentId = 7;  // Hardcoded component ID
+        
+   
 
-      // Fetch monthly tax amounts for the current financial year (Apr to Mar)
     // Determine the current financial year
+   // **1. Determine the Current Financial Year (Apr to Mar)**
     $currentYear = now()->year;
     $currentMonth = now()->month;
     $currentFYStart = $currentMonth >= 4 ? $currentYear : $currentYear - 1;
     $currentFYEnd = $currentFYStart + 1;
-    $currentFY = "{$currentFYStart}-{$currentFYEnd}";
+    $startDate = "{$currentFYStart}-04-01";
+    $endDate = "{$currentFYEnd}-03-31";
 
-    // Use selected FY or default to the current FY
-    $selectedFY = $request->get('fy', $currentFY);
-    [$startYear, $endYear] = explode('-', $selectedFY);
-
-    // Fetch the data as before
-    $startDate = $startYear . '-04-01';
-    $endDate = $endYear . '-03-31';
-
+    // **5. Fetch Current FY Monthly Tax Data**
+    $incomeTaxComponentId = 7; // Assuming the ID for "Income Tax (Section 192)" is 7
     $monthlyTaxData = DB::table('payroll_deductions')
-        ->selectRaw('MONTH(created_at) as month, SUM(amount) as total_tax')
+        ->selectRaw('MONTH(STR_TO_DATE(created_at, "%d-%m-%Y")) as month, SUM(amount) as total_tax')
         ->where('user_id', $loginUserInfo->id)
         ->where('salary_components_id', $incomeTaxComponentId)
-        ->whereBetween('created_at', [$startDate, $endDate])
-        ->groupBy(DB::raw('MONTH(created_at)'))
-        ->orderBy('month')
+        ->whereBetween(DB::raw('STR_TO_DATE(created_at, "%d-%m-%Y")'), [$startDate, $endDate])
+        ->groupBy(DB::raw('MONTH(STR_TO_DATE(created_at, "%d-%m-%Y"))'))
+        ->orderBy(DB::raw('MONTH(STR_TO_DATE(created_at, "%d-%m-%Y"))'))
         ->pluck('total_tax', 'month')
         ->toArray();
 
-    // Fill missing months with zero
+    // **6. Fill Missing Months with Zero**
     $fullYearData = [];
     for ($i = 4; $i <= 12; $i++) { // Apr to Dec
         $fullYearData[] = $monthlyTaxData[$i] ?? 0;
@@ -433,17 +428,8 @@ class salaryBoxController extends Controller
     for ($i = 1; $i <= 3; $i++) { // Jan to Mar
         $fullYearData[] = $monthlyTaxData[$i] ?? 0;
     }
-
-    // Generate financial years for the last 5 years
-    $financialYears = [];
-    for ($i = 0; $i < 5; $i++) {
-        $fyStart = $currentFYStart - $i;
-        $fyEnd = $fyStart + 1;
-        $financialYears[] = "{$fyStart}-{$fyEnd}";
-    }
-
   
-    return view('user_view.payrollDashboard', compact('payrollData', 'payrollDeductions','reimbursementClaims','fullYearData','financialYears', 'selectedFY'));
+    return view('user_view.payrollDashboard', compact('payrollData', 'payrollDeductions','reimbursementClaims','fullYearData'));
 }
 
 

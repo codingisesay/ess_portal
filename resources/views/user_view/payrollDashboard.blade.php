@@ -85,15 +85,6 @@
                 <div class="tax-trend-card payslip-card">
                 <div class="header d-flex">
                     <h5 class="me-auto mb-0">Income Tax Trend</h5> 
-                        <div> FY   
-                      <select id="financialYearSelect" onchange="updateTaxChart()">
-                            @foreach ($financialYears as $year)
-                                <option value="{{ $year }}" {{ $selectedFY == $year ? 'selected' : '' }}>
-                                    {{ $year }}
-                                </option>
-                            @endforeach
-                        </select>
-                        </div>
                 </div>
                 <hr> 
                 <div class="chart-container">
@@ -258,85 +249,73 @@
             });
         });
     </script>
-    <script>
-    function updateTaxChart() {
-        const selectedFY = document.getElementById('financialYearSelect').value;
-        
-        // Fetch the updated data for the selected financial year
-        fetch(`{{ route('PayRollDashboard') }}?fy=${selectedFY}`)
-            .then(response => response.json())
-            .then(data => {
-                // Update the chart data
-                taxChart.data.datasets[0].data = data.fullYearData;
-                taxChart.update();
-            })
-            .catch(error => console.error('Error loading tax data:', error));
-    }
-
-    document.addEventListener('DOMContentLoaded', function() {
-        const ctx = document.getElementById('taxChart').getContext('2d');  
-        
-        // Use the data from the server
-        const monthlyTaxData = @json($fullYearData);
-        
-        window.taxChart = new Chart(ctx, {
-            type: 'bar',
-            data: {
-                labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
-                datasets: [{
-                    label: 'Monthly Tax',
-                    data: monthlyTaxData,
-                    backgroundColor: '#8A3366',
-                    borderColor: '#8A3366',
-                    borderWidth: 3,
-                    tension: 0.3,
-                    pointBackgroundColor: '#8A3366',
-                    pointRadius: 5,
-                    pointHoverRadius: 7,
-                    fill: true
-                }]
+  <script>
+document.addEventListener('DOMContentLoaded', function() {
+    const ctx = document.getElementById('taxChart').getContext('2d');  
+    
+    // **1. Use the data from the server directly**
+    const monthlyTaxData = @json($fullYearData);
+    
+    // **2. Create the Chart**
+    window.taxChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: ['Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec', 'Jan', 'Feb', 'Mar'],
+            datasets: [{
+                label: 'Monthly Tax',
+                data: monthlyTaxData,
+                backgroundColor: '#8A3366',
+                borderColor: '#8A3366',
+                borderWidth: 3,
+                tension: 0.3,
+                pointBackgroundColor: '#8A3366',
+                pointRadius: 5,
+                pointHoverRadius: 7,
+                fill: true
+            }]
+        },
+        options: {
+            interaction: {
+                mode: 'nearest',
+                intersect: false
             },
-            options: {
-                interaction: {
-                    mode: 'nearest',
-                    intersect: false
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    display: false
                 },
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                    legend: {
-                        display: false
-                    },
-                    tooltip: {
-                        callbacks: {
-                            label: function(context) {
-                                return 'Tax: ₹' + context.raw.toLocaleString();
-                            }
-                        }
-                    }
-                },
-                scales: {
-                    x: {
-                        grid: {
-                            display: false
-                        }
-                    },
-                    y: {
-                        beginAtZero: true,
-                        ticks: {
-                            callback: function(value) {
-                                return '₹' + value.toLocaleString();
-                            }
-                        },
-                        grid: {
-                            color: '#eee'
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            return 'Tax: ₹' + context.raw.toLocaleString();
                         }
                     }
                 }
+            },
+            scales: {
+                x: {
+                    grid: {
+                        display: false
+                    }
+                },
+                y: {
+                    beginAtZero: true,
+                    ticks: {
+                        callback: function(value) {
+                            return '₹' + value.toLocaleString();
+                        }
+                    },
+                    grid: {
+                        color: '#eee'
+                    }
+                }
             }
-        });
+        }
     });
+});
 </script>
+
 
 
     
