@@ -475,7 +475,7 @@ error_reporting(0);
 
     <!-- Reimbursement Modal -->
     <div id="reimbursementModal" class="modal">
-        <div class="modal-dialog modal-lg">
+        <div class="modal-dialog modal-xl">
             <div class="modal-content">
                 <span class="close" onclick="closeReimbursementModal()">&times;</span>
                 <h5>Reimbursement Details</h5>

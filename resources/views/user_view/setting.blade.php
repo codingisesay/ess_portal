@@ -421,10 +421,10 @@
                         <th>Employee Name</th>
                         <th>Employee ID</th>
                         <th>Leave Type</th>
-                        <th>Max Leave</th>
+                        <th>Opening Days</th>
+                        <th>Credited Days</th>
                         <th>Approved Days</th>
-                        <th>Pending for Approval</th>
-                        <th>Total Carry Forward</th>
+                        <th>Pending for Approval</th>                    
                         <th>Total Leave Remaining</th>
                     </tr>
                 </thead>
@@ -443,10 +443,10 @@
                             <td>{{ $leave->employee_name }}</td>
                             <td>{{ $leave->employeeID }}</td>
                             <td>{{ $leave->leave_type_name }}</td>
+                             <td>{{ $leave->total_carry_forward }}</td>
                              <td>{{ $leave->max_leave }}</td> 
                             <td>{{ $leave->approved_days }}</td>
-                            <td>{{ $leave->pending_days }}</td>
-                            <td>{{ $leave->total_carry_forward }}</td>
+                            <td>{{ $leave->pending_days }}</td>                   
                             <td>{{ $leave->total_leave_remaining }}</td>
                         </tr>
 
@@ -463,10 +463,10 @@
                 <tfoot>
                     <tr>
                         <th colspan="3">Total</th>
-                         <th>{{ $totalMaxLeave }}</th>
-                        <th>{{ $totalApproved }}</th>
-                        <th>{{ $totalPending }}</th>
                         <th>{{ $totalCarryForward }}</th>
+                        <th>{{ $totalMaxLeave }}</th>
+                        <th>{{ $totalApproved }}</th>
+                        <th>{{ $totalPending }}</th>                  
                         <th>{{ $totalRemaining }}</th>
                     </tr>
                 </tfoot>

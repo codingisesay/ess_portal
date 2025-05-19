@@ -85,8 +85,14 @@
                 <div class="tax-trend-card payslip-card">
                 <div class="header d-flex">
                     <h5 class="me-auto mb-0">Income Tax Trend</h5> 
+                     <div>
+                    "Financial Year"
+               <select id="financialYearSelect" onchange="updateTaxChart()">
+                
+            </select>
                 </div>
-                <hr> 
+                </div>
+                <hr>  
                 <div class="chart-container">
                     <canvas id="taxChart"></canvas>
                 </div>
@@ -376,6 +382,7 @@ window.onclick = function(event) {
     <div id="leaveModal" class="modal"  >
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
+                <h4>  Salary Slips</h4>
                 <span class="close" onclick="closeSalaryModal()">×</span>
                 <!-- <h5>Salary Details For : EMP001 </h5> -->
                 <div class="tbl-container">
@@ -386,7 +393,7 @@ window.onclick = function(event) {
                             @foreach ($payrollDeductions->groupBy('component_name') as $componentName => $deductions)
                                 <th>{{ $componentName }}</th>
                             @endforeach
-                            <th>Download</th>
+                            <th>Action</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -399,11 +406,11 @@ window.onclick = function(event) {
                                     </td>
                                 @endforeach
                                 <td>
-                                <a href="{{ route('download_payslip', ['payroll_id' => $deductionsByMonth->first()->payroll_id]) }}" download>
-                                        <x-icon name="download" />
-                                    </a>
-                                    <a href="{{ route('load_payslip', ['payroll_id' => $deductionsByMonth->first()->payroll_id]) }}" target="_blank">
-                                        <x-icon name="eye" /> Preview
+                                <a href="{{ route('download_payslip', ['payroll_id' => $deductionsByMonth->first()->payroll_id]) }}" class="me-4 text-decoration-none" download>
+                                        <x-icon name="pdf" />
+                                    </a> 
+                                    <a href="{{ route('load_payslip', ['payroll_id' => $deductionsByMonth->first()->payroll_id]) }}" class="me-4 text-decoration-none" target="_blank">
+                                        <x-icon name="eyefill" /> 
                                     </a>
                                 </td>
                             </tr>
