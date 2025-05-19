@@ -60,27 +60,69 @@ class settingController extends Controller
         $monthsInCycle[] = $date->format('F Y');
         }
 
-   $month = $request->input('month', now()->month);
+
+
+        
+$month = $request->input('month', now()->month);
 $year = $request->input('year', now()->year);
 // Get filters
+// Get the raw input dates
 $startDate = request('start_date');
 $endDate = request('end_date');
 $leaveTypeId = request('leave_type_id'); 
 
-// Base Query
+// Normalize date formats
+if ($startDate) {
+    try {
+        $startDate = Carbon::createFromFormat('d-m-Y', $startDate)->format('Y-m-d');
+    } catch (\Exception $e) {
+        $startDate = Carbon::parse($startDate)->format('Y-m-d');
+    }
+}
+
+if ($endDate) {
+    try {
+        $endDate = Carbon::createFromFormat('d-m-Y', $endDate)->format('Y-m-d');
+    } catch (\Exception $e) {
+        $endDate = Carbon::parse($endDate)->format('Y-m-d');
+    }
+}
+
+// Build the main query
 $leaveSummary = DB::table('leave_applies as la')
     ->join('users as u', 'la.user_id', '=', 'u.id')
     ->join('leave_types as lt', 'la.leave_type_id', '=', 'lt.id')
     ->join('leave_type_restrictions as ltr', 'lt.id', '=', 'ltr.leave_type_id')
+    ->leftJoin('leave_cycles as lc', function($join) use ($startDate, $endDate) {
+        $join->on('lc.organisation_id', '=', 'u.organisation_id')
+             ->where('lc.status', 'ACTIVE');
+
+        // Apply leave cycle date range if provided
+        if ($startDate && $endDate) {
+            $join->where(function($query) use ($startDate, $endDate) {
+                $query->whereBetween('lc.start_date', [$startDate, $endDate])
+                      ->orWhereBetween('lc.end_date', [$startDate, $endDate])
+                      ->orWhere(function($subquery) use ($startDate, $endDate) {
+                          $subquery->where('lc.start_date', '<=', $startDate)
+                                   ->where('lc.end_date', '>=', $endDate);
+                      });
+            });
+        }
+    })
     ->leftJoin('user_leave_encash_carries as ulec', function($join) {
         $join->on('ulec.user_id', '=', 'u.id')
-             ->on('ulec.leave_type_map_with', '=', 'lt.id');
+             ->on('ulec.leave_type_map_with', '=', 'lt.id')
+             ->on('ulec.leave_cycle_id', '=', 'lc.id'); // Map by active cycle
     })
     ->select(
         'u.name as employee_name',
         'u.employeeID',
         'lt.name as leave_type_name',
-        
+        'ltr.max_leave',
+        'lc.name as leave_cycle_name',
+        'lc.start_date as cycle_start_date',
+        'lc.end_date as cycle_end_date',
+
         // Approved Days
         DB::raw("SUM(CASE 
             WHEN la.leave_approve_status = 'Approved' THEN 
@@ -121,33 +163,37 @@ $leaveSummary = DB::table('leave_applies as la')
             ELSE 0
         END) as pending_days"),
 
-        // Max Leave Allowed (Per Leave Type)
-        DB::raw("LTRIM(RTRIM(CAST(
-            ltr.leave_count_per_month AS SIGNED))) as max_leave_per_month"),
+        // Total Carry Forward (Without Summing)
+        DB::raw("IFNULL(ulec.carry_forward, 0) as total_carry_forward"),
         
-        // Total Leave Remaining (Including Carry Forward)
-        DB::raw("GREATEST(
-            0,
-            (LTRIM(RTRIM(CAST(ltr.leave_count_per_month AS SIGNED))) * 12) + 
-            IFNULL(SUM(ulec.carry_forward), 0) - 
-            SUM(CASE 
-                WHEN la.leave_approve_status = 'Approved' THEN 
-                    CASE 
-                        WHEN la.half_day IN ('First Half', 'Second Half') THEN 0.5
-                        ELSE DATEDIFF(la.end_date, la.start_date) + 1
-                    END
-                ELSE 0
-            END)
-        ) as total_leave_remaining"),
-        
-        // Total Carry Forward
-        DB::raw("IFNULL(SUM(ulec.carry_forward), 0) as total_carry_forward")
+        // Total Leave Remaining (Updated Logic)
+        DB::raw("
+            GREATEST(
+                0,
+                (LTRIM(RTRIM(CAST(ltr.max_leave AS SIGNED))) + IFNULL(ulec.carry_forward, 0)) - 
+                SUM(CASE 
+                    WHEN la.leave_approve_status = 'Approved' THEN 
+                        CASE 
+                            WHEN la.half_day IN ('First Half', 'Second Half') THEN 0.5
+                            ELSE DATEDIFF(la.end_date, la.start_date) + 1
+                        END
+                    ELSE 0
+                END)
+            ) as total_leave_remaining
+        ")
     )
     ->where('u.user_status', 'Active');
 
-// Apply Start and End Date Filters
+// Apply Leave Application Date Filters
 if ($startDate && $endDate) {
-    $leaveSummary->whereBetween('la.start_date', [$startDate, $endDate]);
+    $leaveSummary->where(function($query) use ($startDate, $endDate) {
+        $query->whereBetween('la.start_date', [$startDate, $endDate])
+              ->orWhereBetween('la.end_date', [$startDate, $endDate])
+              ->orWhere(function($subquery) use ($startDate, $endDate) {
+                  $subquery->where('la.start_date', '<=', $startDate)
+                           ->where('la.end_date', '>=', $endDate);
+              });
+    });
 }
 
 // Apply Leave Type Filter
@@ -156,7 +202,19 @@ if ($leaveTypeId) {
 }
 
 // Finalize the query
-$leaveSummary = $leaveSummary->groupBy('u.employeeID', 'u.name', 'lt.id', 'lt.name', 'ltr.leave_count_per_month')->get();
+$leaveSummary = $leaveSummary->groupBy(
+    'u.employeeID', 
+    'u.name', 
+    'lt.id', 
+    'lt.name', 
+    'ltr.max_leave', 
+    'ulec.carry_forward', 
+    'lc.id',
+    'lc.name',
+    'lc.start_date',
+    'lc.end_date'
+)->get();
+
 
 $leaveTypes = DB::table('leave_types')->where('status', 'ACTIVE')->get();
 

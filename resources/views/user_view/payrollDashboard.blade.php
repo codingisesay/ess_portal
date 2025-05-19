@@ -85,20 +85,20 @@
                 <div class="tax-trend-card payslip-card">
                 <div class="header d-flex">
                     <h5 class="me-auto mb-0">Income Tax Trend</h5> 
-                        <div> FY   
-                        <select>
-                            <option value="2024-25">2024-25</option>
-                            <option value="2025-26">2025-26</option>
-                        </select>
-                        </div>
+                     <div>
+                    "Financial Year"
+               <select id="financialYearSelect" onchange="updateTaxChart()">
+                
+            </select>
                 </div>
-                <hr> 
+                </div>
+                <hr>  
                 <div class="chart-container">
                     <canvas id="taxChart"></canvas>
                 </div>
                 
                 <div class="month-labels mb-2">
-                    <div class="month-label">Apr-2022</div>
+                    <!-- <div class="month-label">Apr-2022</div>
                     <div class="month-label">May-2022</div>
                     <div class="month-label">Jun-2022</div>
                     <div class="month-label">Jul-2022</div>
@@ -109,7 +109,7 @@
                     <div class="month-label">Dec-2022</div>
                     <div class="month-label">Jan-2023</div>
                     <div class="month-label">Feb-2023</div>
-                    <div class="month-label">Mar-2023</div>
+                    <div class="month-label">Mar-2023</div> -->
                 </div>
                 
             </div>
@@ -255,73 +255,75 @@
             });
         });
     </script>
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const ctx = document.getElementById('taxChart').getContext('2d');            
-            // Sample data - you would replace with actual monthly tax values
-            const monthlyTaxData = [22000, 24000, 26000, 28000, 27000, 25000, 
-                                    23000, 26000, 29000, 31000, 28000, 27000];            
-            const taxChart = new Chart(ctx, {
-                type: 'bar',
-                data: {
-                    labels: ['', '', '', '', '', '', '', '', '', '', '', ''], // Empty labels as we're showing them separately below
-                    datasets: [{
-                        label: 'Monthly Tax',
-                        data: monthlyTaxData,
-                        backgroundColor: '#8A3366',
-                        borderColor: '#8A3366',
-                        borderWidth: 3,
-                        tension: 0.3,
-                        pointBackgroundColor: '#8A3366',
-                        pointRadius: 5,
-                        pointHoverRadius: 7,
-                        fill: true
-                    }]
+  <script>
+document.addEventListener('DOMContentLoaded', function() {
+    const ctx = document.getElementById('taxChart').getContext('2d');  
+    
+    // **1. Use the data from the server directly**
+    const monthlyTaxData = @json($fullYearData);
+    
+    // **2. Create the Chart**
+    window.taxChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: ['Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec', 'Jan', 'Feb', 'Mar'],
+            datasets: [{
+                label: 'Monthly Tax',
+                data: monthlyTaxData,
+                backgroundColor: '#8A3366',
+                borderColor: '#8A3366',
+                borderWidth: 3,
+                tension: 0.3,
+                pointBackgroundColor: '#8A3366',
+                pointRadius: 5,
+                pointHoverRadius: 7,
+                fill: true
+            }]
+        },
+        options: {
+            interaction: {
+                mode: 'nearest',
+                intersect: false
+            },
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    display: false
                 },
-                options: {
-                    interaction: {
-                            mode: 'nearest',
-                            intersect: false
-                        },
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: {
-                            display: false
-                        },
-                        tooltip: {
-                            callbacks: {
-                                label: function(context) {
-                                    return 'Tax: ₹' + context.raw.toLocaleString();
-                                }
-                            }
-                        }
-                    },
-                    scales: {
-                        x: {
-                            display: false,
-                            grid: {
-                                display: false
-                            }
-                        },
-                        y: {
-                            beginAtZero: false,
-                            min: 20000,
-                            max: 35000,
-                            ticks: {
-                                callback: function(value) {
-                                    return '₹' + value.toLocaleString();
-                                }
-                            },
-                            grid: {
-                                color: '#eee'
-                            }
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            return 'Tax: ₹' + context.raw.toLocaleString();
                         }
                     }
                 }
-            });
-        });
-    </script>
+            },
+            scales: {
+                x: {
+                    grid: {
+                        display: false
+                    }
+                },
+                y: {
+                    beginAtZero: true,
+                    ticks: {
+                        callback: function(value) {
+                            return '₹' + value.toLocaleString();
+                        }
+                    },
+                    grid: {
+                        color: '#eee'
+                    }
+                }
+            }
+        }
+    });
+});
+</script>
+
+
+
     
     <script>
     document.addEventListener("DOMContentLoaded", function () {
@@ -380,6 +382,7 @@ window.onclick = function(event) {
     <div id="leaveModal" class="modal"  >
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
+                <h4>  Salary Slips</h4>
                 <span class="close" onclick="closeSalaryModal()">×</span>
                 <!-- <h5>Salary Details For : EMP001 </h5> -->
                 <div class="tbl-container">
@@ -390,7 +393,7 @@ window.onclick = function(event) {
                             @foreach ($payrollDeductions->groupBy('component_name') as $componentName => $deductions)
                                 <th>{{ $componentName }}</th>
                             @endforeach
-                            <th>Download</th>
+                            <th>Action</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -403,11 +406,11 @@ window.onclick = function(event) {
                                     </td>
                                 @endforeach
                                 <td>
-                                <a href="{{ route('download_payslip', ['payroll_id' => $deductionsByMonth->first()->payroll_id]) }}" download>
-                                        <x-icon name="download" />
-                                    </a>
-                                    <a href="{{ route('load_payslip', ['payroll_id' => $deductionsByMonth->first()->payroll_id]) }}" target="_blank">
-                                        <x-icon name="eye" /> Preview
+                                <a href="{{ route('download_payslip', ['payroll_id' => $deductionsByMonth->first()->payroll_id]) }}" class="me-4 text-decoration-none" download>
+                                        <x-icon name="pdf" />
+                                    </a> 
+                                    <a href="{{ route('load_payslip', ['payroll_id' => $deductionsByMonth->first()->payroll_id]) }}" class="me-4 text-decoration-none" target="_blank">
+                                        <x-icon name="eyefill" /> 
                                     </a>
                                 </td>
                             </tr>

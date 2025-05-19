@@ -84,7 +84,8 @@ $id = Auth::guard('superadmin')->user()->id;
             'columns' => [
                 ['header' => 'ID', 'accessor' => 'id'],
                 ['header' => 'Template Name', 'accessor' => 'name'],
-
+                ['header' => 'Type', 'accessor' => 'type'],
+                
                 ['header' => 'Status', 'accessor' => 'status'],
             ], 
             'editModalId' => 'openEditModal',
@@ -96,29 +97,28 @@ $id = Auth::guard('superadmin')->user()->id;
 
 </div>
 
-<div id="editSalaryTemplateModal" class="w3-modal" style="display: none;">
+<div id="editSalaryComponentForm" class="w3-modal" style="display: none;">
     <div class="w3-modal-content w3-animate-top w3-card-4">
         <header class="w3-container w3-teal"> 
-            <span onclick="document.getElementById('editSalaryTemplateModal').style.display='none'" 
+            <span onclick="document.getElementById('editSalaryComponentForm').style.display='none'" 
             class="w3-button w3-display-topright">&times;</span>
             <h2>Edit Salary Template</h2>
         </header>
         <div class="w3-container">
-            <form id="editSalaryTemplateForm" method="POST">
+            <form id="editSalaryComponentForm2" method="POST">
                 @csrf
                 @method('POST')
                 <input type="hidden" name="template_id" id="editSalaryTemplateId">
                 <div class="popup-form-group">
-                    <input type="text" name="template_name" id="editSalaryTemplateName" required>
+                    <input type="text" name="name" id="editSalaryTemplateName" required>
                     <label for="editSalaryTemplateName">Name</label>
                 </div>
                 <div class="popup-form-group">
-                    <input type="number" name="min_ctc" id="editSalaryTemplateMinCTC">
-                    <label for="editSalaryTemplateMinCTC">Min CTC</label>
-                </div>
-                <div class="popup-form-group">
-                    <input type="number" name="max_ctc" id="editSalaryTemplateMaxCTC">
-                    <label for="editSalaryTemplateMaxCTC">Max CTC</label>
+                    <select name="type" id="editType" required>
+                        <option value="Earning">Earning</option>
+                        <option value="Deduction">Deduction</option>
+                    </select>
+                    <label for="editType">Component Type</label>
                 </div>
                 <div class="popup-form-group">
                     <select name="status" id="editSalaryTemplateStatus" required>
@@ -164,20 +164,20 @@ $id = Auth::guard('superadmin')->user()->id;
     
 
     function openEditModal(id, templatedata) {
+        console.log(templatedata);
         if (!id) {
             alert('Invalid template data. Please try again.');
             return;
         } 
-        document.getElementById('editSalaryTemplateId').value = templatedata.id;
+        document.getElementById('editSalaryTemplateId').value = templatedata.id || '';
         document.getElementById('editSalaryTemplateName').value = templatedata.name || '';
-        document.getElementById('editSalaryTemplateMinCTC').value =templatedata.min_ctc || '';
-        document.getElementById('editSalaryTemplateMaxCTC').value = templatedata.max_ctc || '';
+        document.getElementById('editType').value = templatedata.type || '';  // ✅ Match the PHP field
         document.getElementById('editSalaryTemplateStatus').value = templatedata.status || '';
 
-        const formAction = "{{ route('update_salary_template', ['id' => ':id']) }}".replace(':id', templatedata.id);
-        document.getElementById('editSalaryTemplateForm').action = formAction;
+        const formAction = "{{ route('update_component', ['id' => ':id']) }}".replace(':id', templatedata.id);
+        document.getElementById('editSalaryComponentForm2').action = formAction;
 
-        document.getElementById('editSalaryTemplateModal').style.display = 'block';
+        document.getElementById('editSalaryComponentForm').style.display = 'block';
     }
 </script>
 

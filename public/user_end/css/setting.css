@@ -394,6 +394,9 @@ select:focus {
     border-collapse: collapse;
     margin: 0px 0;
     table-layout: auto;
+    scrollbar-width: thin;
+    scrollbar-color: #8A3366 #f1f1f1;
+    overflow: auto;
 }
 
 .custom-table th,
@@ -402,6 +405,7 @@ select:focus {
     padding: 8px;
     text-align: left;
     white-space: nowrap;
+
 }
 
 .custom-table th {
