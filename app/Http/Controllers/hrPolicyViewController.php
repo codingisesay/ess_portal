@@ -155,17 +155,15 @@ class hrPolicyViewController extends Controller
         $loginUserInfo = Auth::user();
         $organisationId = $loginUserInfo->organisation_id;
 
-        // dd($organisationId);
-
         $policies = DB::table('hr_policies')
             ->join('hr_policy_categories', 'hr_policies.policy_categorie_id', '=', 'hr_policy_categories.id')
             ->where('hr_policies.organisation_id', $organisationId)
+            ->where('hr_policies.status', 'Active') // Only bring active policies
+            ->where('hr_policy_categories.status', 'Active') // Only bring active categories
             ->select('hr_policies.*', 'hr_policy_categories.name as category_name')
             ->get();
 
-        // dd($policies); // Debugging statement to check fetched data
-
-        return view('user_view.hr_policy', compact('policies','title'));
+        return view('user_view.hr_policy', compact('policies', 'title'));
     }
 
     public function getPoliciesByCategory($id)
