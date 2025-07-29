@@ -71,53 +71,98 @@ class hrPolicyViewController extends Controller
     public function createHrPolicy()
     {
         $id = Auth::guard('superadmin')->user()->id;
-        $categories = DB::table('hr_policy_categories')->where('organisation_id', $id)->get();
+        // $categories = DB::table('hr_policy_categories')->where('organisation_id', $id)->get();
+        $categories = DB::table('hr_policy_categories')
+    ->where('organisation_id', $id)
+    ->where('status', 'Active')
+    ->get();
         $datas = DB::table('hr_policies')->where('organisation_id', $id)->get();
 
         return view('superadmin_view.create_hr_policy', compact('categories', 'datas'));
     }
 
     // Save a new HR policy
+    // public function saveHrPolicy(Request $request)
+    // {
+    //     $request->validate([
+    //         'policy_title' => 'required',
+    //         'category_id' => 'required',
+    //         'policy_content' => 'required',
+    //         'document' => 'nullable|file',
+    //         'icon' => 'nullable|file',
+    //         'content_image' => 'nullable|file',
+    //         'status' => 'required',
+    //     ]);
+
+    //     $documentPath = $request->file('document') ? $request->file('document')->store('documents', 'public') : null;
+    //     $iconPath = $request->file('icon') ? $request->file('icon')->store('icons', 'public') : null;
+    //     $contentImagePath = $request->file('content_image') ? $request->file('content_image')->store('images', 'public') : null;
+
+    //     $id = Auth::guard('superadmin')->user()->id;
+
+    //     $status = DB::table('hr_policies')->insert([
+    //         'policy_categorie_id' => $request->category_id,
+    //         'organisation_id' => $id,
+    //         'policy_title' => $request->policy_title,
+    //         'policy_content' => $request->policy_content,
+    //         'docName' => $request->file('document') ? $request->file('document')->getClientOriginalName() : null,
+    //         'docLink' => $documentPath,
+    //         'iconName' => $request->file('icon') ? $request->file('icon')->getClientOriginalName() : null,
+    //         'iconLink' => $iconPath,
+    //         'imgName' => $request->file('content_image') ? $request->file('content_image')->getClientOriginalName() : null,
+    //         'imgLink' => $contentImagePath,
+    //         'status' => $request->status,
+    //         'created_at' => now(),
+    //         'updated_at' => now(),
+    //     ]);
+
+    //     if ($status) {
+    //         return redirect()->route('create_hr_policy')->with('success', 'HR Policy saved successfully.');
+    //     } else {
+    //         return redirect()->route('create_hr_policy')->with('error', 'HR Policy not saved successfully.');
+    //     }
+    // }
+
     public function saveHrPolicy(Request $request)
-    {
-        $request->validate([
-            'policy_title' => 'required',
-            'category_id' => 'required',
-            'policy_content' => 'required',
-            'document' => 'nullable|file',
-            'icon' => 'nullable|file',
-            'content_image' => 'nullable|file',
-            'status' => 'required',
-        ]);
+{
+    $request->validate([
+        'policy_title' => 'required',
+        'category_id' => 'required',
+        'policy_content' => 'required',
+        'document' => 'nullable|file',
+        'icon' => 'nullable|file|mimes:jpeg,png,jpg',
+        'content_image' => 'nullable|file|mimes:jpeg,png,jpg',
+        'status' => 'required',
+    ]);
 
-        $documentPath = $request->file('document') ? $request->file('document')->store('documents', 'public') : null;
-        $iconPath = $request->file('icon') ? $request->file('icon')->store('icons', 'public') : null;
-        $contentImagePath = $request->file('content_image') ? $request->file('content_image')->store('images', 'public') : null;
+    $documentPath = $request->file('document') ? $request->file('document')->store('documents', 'public') : null;
+    $iconPath = $request->file('icon') ? $request->file('icon')->store('icons', 'public') : null;
+    $contentImagePath = $request->file('content_image') ? $request->file('content_image')->store('images', 'public') : null;
 
-        $id = Auth::guard('superadmin')->user()->id;
+    $id = Auth::guard('superadmin')->user()->id;
 
-        $status = DB::table('hr_policies')->insert([
-            'policy_categorie_id' => $request->category_id,
-            'organisation_id' => $id,
-            'policy_title' => $request->policy_title,
-            'policy_content' => $request->policy_content,
-            'docName' => $request->file('document') ? $request->file('document')->getClientOriginalName() : null,
-            'docLink' => $documentPath,
-            'iconName' => $request->file('icon') ? $request->file('icon')->getClientOriginalName() : null,
-            'iconLink' => $iconPath,
-            'imgName' => $request->file('content_image') ? $request->file('content_image')->getClientOriginalName() : null,
-            'imgLink' => $contentImagePath,
-            'status' => $request->status,
-            'created_at' => now(),
-            'updated_at' => now(),
-        ]);
+    $status = DB::table('hr_policies')->insert([
+        'policy_categorie_id' => $request->category_id,
+        'organisation_id' => $id,
+        'policy_title' => $request->policy_title,
+        'policy_content' => $request->policy_content,
+        'docName' => $request->file('document') ? $request->file('document')->getClientOriginalName() : null,
+        'docLink' => $documentPath,
+        'iconName' => $request->file('icon') ? $request->file('icon')->getClientOriginalName() : null,
+        'iconLink' => $iconPath,
+        'imgName' => $request->file('content_image') ? $request->file('content_image')->getClientOriginalName() : null,
+        'imgLink' => $contentImagePath,
+        'status' => $request->status,
+        'created_at' => now(),
+        'updated_at' => now(),
+    ]);
 
-        if ($status) {
-            return redirect()->route('create_hr_policy')->with('success', 'HR Policy saved successfully.');
-        } else {
-            return redirect()->route('create_hr_policy')->with('error', 'HR Policy not saved successfully.');
-        }
+    if ($status) {
+        return redirect()->route('create_hr_policy')->with('success', 'HR Policy saved successfully.');
+    } else {
+        return redirect()->route('create_hr_policy')->with('error', 'HR Policy not saved successfully.');
     }
+}
 
     public function updateHrPolicy(Request $request, $id)
     {
@@ -155,13 +200,27 @@ class hrPolicyViewController extends Controller
         $loginUserInfo = Auth::user();
         $organisationId = $loginUserInfo->organisation_id;
 
+        // $policies = DB::table('hr_policies')
+        //     ->join('hr_policy_categories', 'hr_policies.policy_categorie_id', '=', 'hr_policy_categories.id')
+        //     ->where('hr_policy_categories.organisation_id', $organisationId)
+        //     // ->where('hr_policies.status', 'Active') // Only bring active policies
+        //     ->where('hr_policy_categories.status', 'Active') // Only bring active categories
+        //     ->select('hr_policies.*', 'hr_policy_categories.name as category_name')
+        //     ->get();
+
+        // $policies = DB::table('hr_policies')->where('organisation_id', $organisationId)
+        //     ->where('status', 'Active')->get();
+
         $policies = DB::table('hr_policies')
-            ->join('hr_policy_categories', 'hr_policies.policy_categorie_id', '=', 'hr_policy_categories.id')
-            ->where('hr_policies.organisation_id', $organisationId)
-            ->where('hr_policies.status', 'Active') // Only bring active policies
-            ->where('hr_policy_categories.status', 'Active') // Only bring active categories
-            ->select('hr_policies.*', 'hr_policy_categories.name as category_name')
-            ->get();
+    ->join('hr_policy_categories', 'hr_policies.policy_categorie_id', '=', 'hr_policy_categories.id')
+    ->where('hr_policies.organisation_id', $organisationId)
+    ->where('hr_policies.status', 'Active')
+    ->select('hr_policies.*', 'hr_policy_categories.name as category_name')
+    ->get();
+
+   
+
+            // dd($policies);
 
         return view('user_view.hr_policy', compact('policies', 'title'));
     }

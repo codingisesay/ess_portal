@@ -15,6 +15,7 @@ $id = Auth::guard('superadmin')->user()->id;
     
 </head>
 <body>
+
     <div class="container">
         <h3>Create HR Policy</h3>
 
@@ -23,6 +24,16 @@ $id = Auth::guard('superadmin')->user()->id;
         <button onclick="showHRPolicyTable(this)">Show Table</button>
             <button onclick="showHRPolicyForm(this)">Show Form</button>
         </div>
+
+            @if($errors->any())
+    <div class="alert custom-alert-warning">
+        <ul>
+            @foreach($errors->all() as $error)
+                <li class="text-danger">{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+@endif
 
         <!-- Form Section -->
         <div id="formSection">
