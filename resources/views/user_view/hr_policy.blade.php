@@ -2,6 +2,8 @@
 @section('content')
 <?php 
 error_reporting(0);
+
+// dd($policies);
 ?>
 <html lang="en">
 
