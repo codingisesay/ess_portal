@@ -61,8 +61,22 @@ class hrPolicyViewController extends Controller
                 'updated_at' => now(),
             ]);
 
-        if ($status) {
+        // if ($status) {
+        //     return redirect()->route('create_policy_category')->with('success', 'Policy Category updated successfully.');
+        // } else {
+        //     return redirect()->route('create_policy_category')->with('error', 'Failed to update Policy Category.');
+        // }
+
+        if($status) {
+            DB::table('hr_policies')
+            ->where('policy_categorie_id', $policyCategory->id)
+            ->update([
+             'status' => $request->status,
+             'updated_at' => now()
+            ]);
+
             return redirect()->route('create_policy_category')->with('success', 'Policy Category updated successfully.');
+
         } else {
             return redirect()->route('create_policy_category')->with('error', 'Failed to update Policy Category.');
         }
@@ -203,7 +217,7 @@ class hrPolicyViewController extends Controller
         // $policies = DB::table('hr_policies')
         //     ->join('hr_policy_categories', 'hr_policies.policy_categorie_id', '=', 'hr_policy_categories.id')
         //     ->where('hr_policy_categories.organisation_id', $organisationId)
-        //     // ->where('hr_policies.status', 'Active') // Only bring active policies
+        //     ->where('hr_policies.status', 'Active') // Only bring active policies
         //     ->where('hr_policy_categories.status', 'Active') // Only bring active categories
         //     ->select('hr_policies.*', 'hr_policy_categories.name as category_name')
         //     ->get();
