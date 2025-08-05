@@ -37,7 +37,9 @@
             window.location.href = '{{route('leave_request')}}'; // Replace with the actual form URL
         }
     </script>
-
+    <?php
+// dd($appliedLeaves);
+?>
     <div class="main">
         <div class="left-sec">
             <div class="one row mx-auto"> 
@@ -335,14 +337,14 @@
                         
                                         @if(($leave->leave_approve_status == 'Pending' || $leave->leave_approve_status == 'Approved') && \Carbon\Carbon::parse($leave->start_date) > today())
                                             <!-- Form to cancel the leave -->
-                                            <form id="cancelForm" action="{{ route('update_leave_status_by_user',['id' => $leave->id]) }}" method="POST">
-                                                @csrf
-                                                @method('PUT')  <!-- Use DELETE HTTP method for cancellation -->
-                                                <!-- <button class="cancel-btn" type="submit">Cancel</button> -->
-                                                <span class="text-danger mt-4 me-3" type="button" onclick="showConfirmPopup()">
-                                                    <x-icon name="trash" />
-                                                </span>
-                                            </form>
+                                        
+                                            <form id="cancelForm-{{ $leave->id }}" action="{{ route('update_leave_status_by_user',['id' => $leave->id]) }}" method="POST">
+    @csrf
+    @method('PUT')
+    <span class="text-danger mt-4 me-3" type="button" onclick="showConfirmPopup('cancelForm-{{ $leave->id }}')">
+        <x-icon name="trash" />
+    </span>
+</form>
                                         @endif
                                     </div>
                                 @endforeach 
@@ -351,29 +353,29 @@
                     </div>
 
                     <script>
-                        function showConfirmPopup() {
-                            Swal.fire({
-                                title: 'Are you sure?',
-                                text: 'Do you really want to cancel the operation?',
-                                icon: 'warning',
-                                showCancelButton: true,
-                                confirmButtonText: 'Yes, Cancel it!',
-                                cancelButtonText: 'No, Keep it',
-                                reverseButtons: true
-                            }).then((result) => {
-                                if (result.isConfirmed) {
-                                    // Submit the form if the user confirms the cancel action
-                                    document.getElementById('cancelForm').submit();
-                                } else if (result.dismiss === Swal.DismissReason.cancel) {
-                                    // If the user clicks 'No', do nothing and keep the form intact
-                                    Swal.fire(
-                                        'Cancelled',
-                                        'Your operation is safe.',
-                                        'info'
-                                    );
-                                }
-                            });
-                        }
+                     
+
+                        function showConfirmPopup(formId) {
+    Swal.fire({
+        title: 'Are you sure?',
+        text: 'Do you really want to cancel the operation?',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Yes, Cancel it!',
+        cancelButtonText: 'No, Keep it',
+        reverseButtons: true
+    }).then((result) => {
+        if (result.isConfirmed) {
+            document.getElementById(formId).submit();
+        } else if (result.dismiss === Swal.DismissReason.cancel) {
+            Swal.fire(
+                'Cancelled',
+                'Your operation is safe.',
+                'info'
+            );
+        }
+    });
+}
                     </script>
                 </div>
 
