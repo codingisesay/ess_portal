@@ -1108,6 +1108,17 @@ $remaning_leave = $total_leave - $takenLeave;
         // dd($data);
         $loginUserInfo = Auth::user();
 
+         // Check for existing pending leave for same user and date range
+    $existingLeave = DB::table('leave_applies')
+        ->where('user_id', $loginUserInfo->id)
+        ->where('start_date', $data['start_date'])
+        ->where('leave_approve_status', 'Pending')
+        ->first();
+
+    if ($existingLeave) {
+        return redirect()->route('leave_dashboard')->with('error', 'You already have a pending leave application for these dates.');
+    }
+
 
         try {
 
@@ -1115,7 +1126,8 @@ $remaning_leave = $total_leave - $takenLeave;
             ->select('name')
             ->where('id','=',$data['leave_type'])
             ->first();
-            // Try to insert or update the record
+        
+
             $status = DB::table('leave_applies')->insert([
                 'leave_type_id' => $data['leave_type'],
                 'start_date' => $data['start_date'],
@@ -1231,6 +1243,8 @@ if($data['leave_slot'] == 'First Half' || $data['leave_slot'] == 'Second Half'){
     
     public function updateLeaveStatusByUser($id)
     {
+
+        // dd($id);
 
         $loginUserInfo = Auth::user();
         
