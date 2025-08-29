@@ -380,7 +380,7 @@ $(document).ready(function () {
 
         const fetchWithRetries = async () => {
             try {
-                const response = await fetch('https://restcountries.com/v3.1/all', {
+                const response = await fetch('https://restcountries.com/v3.1/all?fields=name', {
                     headers: { "Content-Type": "application/json" },
                 });
 
