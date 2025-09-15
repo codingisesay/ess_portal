@@ -353,12 +353,14 @@ $user_leave_encash_carries = DB::table('user_leave_encash_carries')
     $upcomingBirthdays = DB::table('emp_details')
     ->join('organisation_designations', 'emp_details.designation', '=', 'organisation_designations.id')
     ->leftJoin('user_status_imgs', 'emp_details.user_id', '=', 'user_status_imgs.user_id')
+    ->join('users', 'users.id', '=', 'emp_details.user_id') // ✅ join with users
     ->select(
         'emp_details.employee_name as employee_nme',
         'date_of_birth',
         'organisation_designations.name as designation_name',
         'user_status_imgs.*'
     )
+    ->where('users.user_status', '=', 'Active') // ✅ correct column name
     ->get()
     ->filter(function ($employee) use ($currentDate) {
         $birthDate = Carbon::parse($employee->date_of_birth)->year($currentDate->year);
@@ -447,7 +449,9 @@ $user_leave_encash_carries = DB::table('user_leave_encash_carries')
 $currentDate = Carbon::now();
 
 $anniversaries = DB::table('emp_details')
+    ->join('users', 'users.id', '=', 'emp_details.user_id') // ✅ join users
     ->select('Employee_Name', 'Joining_Date')
+    ->where('users.user_status', '=', 'Active') // ✅ only Active users
     ->get()
     ->filter(function ($employee) use ($currentDate) {
         $joiningDate = Carbon::parse($employee->Joining_Date);
