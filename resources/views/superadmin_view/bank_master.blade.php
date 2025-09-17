@@ -1,138 +1,118 @@
-@extends('superadmin_view.superadmin_layout')
+@extends('superadmin_view/superadmin_layout')
 @section('content')
+
+<html>
+<head>
+<title>Bank Master</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<link rel="stylesheet" href="{{ asset('admin_end/css/admin_form.css') }}">
+<link rel="stylesheet" href="{{ asset('admin_end/css/popup_form.css') }}">
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
 
 <div class="container">
     <h3>Bank Master</h3>
 
-    <!-- Toggle Buttons -->
+    <!-- Toggle -->
     <div class="toggle-buttons">
-        <button onclick="showBankTable(this)">Show Table</button>
-        <button onclick="showBankForm(this)">Show Form</button>
+        <button onclick="showTable(this)" class="active">Show Table</button>
+        <button onclick="showForm(this)">Show Form</button>
     </div>
 
-    <!-- Form Section -->
-    <div id="formSection">
-        @if($errors->any())
-        <div class="alert custom-alert-warning">
-            <ul>
-                @foreach($errors->all() as $error)
-                    <li class="text-danger">{{ $error }}</li>
-                @endforeach
-            </ul>
-        </div>
-        @endif
-
-        <form method="POST" action="{{ route('insert_bank') }}">
+    <!-- Bank Form (hidden by default) -->
+    <div id="formSection" style="display:none;">
+        <form action="{{ route('store_bank') }}" method="POST">
             @csrf
             <div class="form-container row">
-                <div class="col-4 mb-4">
+                <div class="col-4 mb-2">
                     <div class="form-group">
                         <input type="text" name="name" required>
                         <label>Bank Name</label>
                     </div>
                 </div>
-                <div class="col-3 mb-4">
+                <div class="col-4 mb-2">
                     <div class="form-group">
                         <select name="status" required>
-                            <option value="" disabled selected></option>
                             <option value="Active">Active</option>
                             <option value="Inactive">Inactive</option>
                         </select>
                         <label>Status</label>
                     </div>
                 </div>
-                <div class="col-12">
-                    <button class="create-btn" type="submit">Create</button>
+                <div class="col-4">
+                    <button class="create-btn" type="submit">Save</button>
                 </div>
             </div>
         </form>
     </div>
 
-    <!-- Table Section -->
-    <div id="tableSection">
-        @include('partials.data_table', [
-            'items' => $banks,
-            'columns' => [
-                ['header' => 'ID', 'accessor' => 'id'],
-                ['header' => 'Bank Name', 'accessor' => 'name'],
-                ['header' => 'Status', 'accessor' => 'status'],
-            ],
-            'editModalId' => 'openEditModal',
-            'hasActions' => true,
-            'perPage' => 5
-        ])
-    </div>
-</div>
+    <!-- Bank Table (shown by default) -->
+    <div class="table-container" id="tableSection">
+        <table class="table border">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Bank Name</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach($banks as $bank)
+                    <tr>
+                        <td>{{ $bank->id }}</td>
+                        <td>{{ $bank->name }}</td>
+                        <td>{{ $bank->status }}</td>
+                        <td>
+                            <!-- Edit -->
+                            <form action="{{ route('update_bank', $bank->id) }}" method="POST" style="display:inline-block;">
+                                @csrf
+                                <input type="text" name="name" value="{{ $bank->name }}" required>
+                                <select name="status">
+                                    <option value="Active" {{ $bank->status == 'Active' ? 'selected' : '' }}>Active</option>
+                                    <option value="Inactive" {{ $bank->status == 'Inactive' ? 'selected' : '' }}>Inactive</option>
+                                </select>
+                                <button type="submit">Update</button>
+                            </form>
 
-<!-- Edit Modal -->
-<div id="editBankModal" class="w3-modal" style="display:none;">
-    <div class="w3-modal-content w3-animate-top w3-card-4">
-        <header class="w3-container w3-teal">
-            <span onclick="document.getElementById('editBankModal').style.display='none'"
-                class="w3-button w3-display-topright">&times;</span>
-            <h2>Edit Bank</h2>
-        </header>
-        <div class="w3-container">
-            <form id="editBankForm" method="POST">
-                @csrf
-                @method('POST')
-                <input type="hidden" name="id" id="editBankId">
-                <div class="popup-form-group">
-                    <input type="text" name="name" id="editBankName" required>
-                    <label for="editBankName">Bank Name</label>
-                </div>
-                <div class="popup-form-group">
-                    <select name="status" id="editBankStatus" required>
-                        <option value="Active">Active</option>
-                        <option value="Inactive">Inactive</option>
-                    </select>
-                    <label for="editBankStatus">Status</label>
-                </div>
-                <div class="popup-form-group">
-                    <button class="create-btn1" type="submit">Save Changes</button>
-                </div>
-            </form>
-        </div>
+                            <!-- Delete -->
+                            <form action="{{ route('delete_bank', $bank->id) }}" method="POST" style="display:inline-block;">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" onclick="return confirm('Delete this bank?')">Delete</button>
+                            </form>
+                        </td>
+                    </tr>
+                @endforeach
+            </tbody>
+        </table>
     </div>
 </div>
 
 <script>
-    function showBankForm(clickedElement) {
+    function showForm(btn) {
         document.getElementById('formSection').style.display = 'block';
         document.getElementById('tableSection').style.display = 'none';
-        const siblings = clickedElement.parentElement.children;
-        for (let sibling of siblings) sibling.classList.remove('active');
-        clickedElement.classList.add('active');
-    }
 
-    function showBankTable(clickedElement) {
+        let siblings = btn.parentElement.children;
+        for (let s of siblings) s.classList.remove('active');
+        btn.classList.add('active');
+    }
+    function showTable(btn) {
         document.getElementById('formSection').style.display = 'none';
         document.getElementById('tableSection').style.display = 'block';
-        const siblings = clickedElement.parentElement.children;
-        for (let sibling of siblings) sibling.classList.remove('active');
-        clickedElement.classList.add('active');
-    }
 
-    // Default: Show Table
-    document.addEventListener('DOMContentLoaded', () => {
-        const firstButton = document.querySelector('.toggle-buttons button:first-child');
-        showBankTable(firstButton);
-    });
-
-    function openEditModal(id, bankdata) {
-        if (!id) {
-            alert('Invalid bank data. Please try again.');
-            return;
-        }
-        document.getElementById('editBankId').value = bankdata.id || '';
-        document.getElementById('editBankName').value = bankdata.name || '';
-        document.getElementById('editBankStatus').value = bankdata.status || '';
-
-        const formAction = "{{ route('update_bank', ['id' => ':id']) }}".replace(':id', bankdata.id);
-        document.getElementById('editBankForm').action = formAction;
-
-        document.getElementById('editBankModal').style.display = 'block';
+        let siblings = btn.parentElement.children;
+        for (let s of siblings) s.classList.remove('active');
+        btn.classList.add('active');
     }
 </script>
 
+</body>
+</html>
 @endsection
