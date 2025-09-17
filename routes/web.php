@@ -21,6 +21,7 @@ use App\Http\Controllers\leavePolicyController;
 use App\Http\Controllers\editUserController;
 use App\Http\Controllers\salaryBoxController;
 use App\Http\Controllers\ReimbursementController; 
+use App\Http\Controllers\BankController;
 
 
 
@@ -139,6 +140,12 @@ Route::middleware(['auth.superadmin'])->group(function () {
     Route::post('superadmin/insert_reimbursement_validation',[ReimbursementController::class,'insertReimbursementValidation'])->name('insert_reimbursement_validation');
     Route::post('superadmin/update_reimbursement_validation',[ReimbursementController::class,'updateReimbursementValidation'])->name('update_reimbursement_validation');
     Route::post('superadmin/update_reimbursement_type',[ReimbursementController::class,'updateReimbursementType'])->name('update_reimbursement_type');
+
+    //Bank Master
+    Route::get('/banks', [BankController::class, 'index'])->name('bank_master');
+    Route::post('/banks/insert', [BankController::class, 'insert'])->name('insert_bank');
+    Route::post('/banks/update/{id}', [BankController::class, 'update'])->name('update_bank');
+    Route::delete('/banks/delete/{id}', [BankController::class, 'delete'])->name('delete_bank');
     
 });
 

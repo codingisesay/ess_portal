@@ -79,6 +79,16 @@
                                     <span class="error" id="weekOffError"></span>
                                 </div>
 
+                                <!-- Saturday Config (only visible if Saturday is checked) -->
+                                <div id="saturdayConfig" style="display:none;" class="mx-3 my-2">
+                                    <label>Select Saturday Offs:</label><br>
+                                    <input type="checkbox" name="saturday_offs[]" value="1"> 1st Saturday
+                                    <input type="checkbox" name="saturday_offs[]" value="2"> 2nd Saturday
+                                    <input type="checkbox" name="saturday_offs[]" value="3"> 3rd Saturday
+                                    <input type="checkbox" name="saturday_offs[]" value="4"> 4th Saturday
+                                    <input type="checkbox" name="saturday_offs[]" value="5"> 5th Saturday
+                                </div>
+
                                 <!-- Holiday Selection (Date, Name, and Description) -->
                                 <div id="holidayUpdate" style="display:none;">
                                     <div class="row">
@@ -120,6 +130,8 @@
                 <?php 
                 }
                 ?>
+
+
 
 
             <!-- Leave Section (With Link to hr_universal.php) -->
@@ -474,6 +486,29 @@
     </div>
 </div>
 </main>
+
+
+
+   <script>
+                                // show/hide the Saturday config when Saturday checkbox toggles
+            const saturdayCheckbox = document.getElementById('saturday');
+            const saturdayConfig = document.getElementById('saturdayConfig');
+
+            saturdayCheckbox.addEventListener('change', function() {
+                saturdayConfig.style.display = this.checked ? 'block' : 'none';
+            });
+
+            // if user checks any specific saturday boxes, automatically ensure the main Saturday checkbox is checked
+            document.querySelectorAll('input[name="saturday_offs[]"]').forEach(function(el) {
+                el.addEventListener('change', function() {
+                    const anyChecked = document.querySelectorAll('input[name="saturday_offs[]"]:checked').length > 0;
+                    if (anyChecked) {
+                        saturdayCheckbox.checked = true;
+                        saturdayConfig.style.display = 'block';
+                    }
+                });
+            });
+         </script>
 
 <script>
     function toggleEmployeeDetailsDropdown() {

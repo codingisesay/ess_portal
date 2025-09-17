@@ -518,6 +518,20 @@ public function loadPayslip($payroll_id)
      return redirect()->back()->with('error', 'Payslip not found.');
  }
 
+//  Fetch bank details with bank name mapping
+$bankDetails = DB::table('emp_bank_details')
+    ->leftJoin('banks', 'emp_bank_details.sal_bank_name', '=', 'banks.id') // map bank id to bank name
+    ->where('emp_bank_details.user_id', $payroll->user_id)
+    ->select(
+        'emp_bank_details.passport_number',
+        'banks.name as bank_name',          // mapped bank name
+        'emp_bank_details.sal_branch_name',
+        'emp_bank_details.sal_account_number'
+    )
+    ->first();
+
+    
+
  // Fetch payroll deductions and earnings components for the given payroll ID
  $components = DB::table('payroll_deductions')
      ->join('org_salary_components', 'payroll_deductions.salary_components_id', '=', 'org_salary_components.id')
@@ -528,6 +542,40 @@ public function loadPayslip($payroll_id)
      )
      ->where('payroll_deductions.payroll_id', $payroll_id)
      ->get();
+
+
+         // ✅ Parse salary month to find start and end
+    $salaryMonth = \Carbon\Carbon::parse($payroll->salary_month);
+    $monthStart = $salaryMonth->copy()->startOfMonth()->format('Y-m-d');
+    $monthEnd   = $salaryMonth->copy()->endOfMonth()->format('Y-m-d');
+
+    // ✅ Fetch approved leave summary for the payslip month
+    $leaveSummary = DB::table('leave_applies as la')
+        ->join('leave_types as lt', 'la.leave_type_id', '=', 'lt.id')
+        ->select(
+            'lt.name as leave_type_name',
+            DB::raw("
+                SUM(
+                    CASE
+                        WHEN la.half_day IN ('First Half','Second Half') THEN 0.5
+                        ELSE GREATEST(
+                            0,
+                            DATEDIFF(
+                                LEAST(la.end_date, '$monthEnd'),
+                                GREATEST(la.start_date, '$monthStart')
+                            ) + 1
+                        )
+                    END
+                ) as total_days
+            ")
+        )
+        ->where('la.user_id', $payroll->user_id)
+        ->where('la.leave_approve_status', 'Approved')
+        // only include leaves overlapping the payslip month
+        ->whereRaw('la.start_date <= ? AND la.end_date >= ?', [$monthEnd, $monthStart])
+        ->groupBy('lt.name')
+        ->get();
+     
 
  // Prepare data for the view
  $data = [
@@ -546,6 +594,8 @@ public function loadPayslip($payroll_id)
      'totalEarnings' => $payroll->total_earnings,
      'totalDeductions' => $payroll->total_dedcutions,
      'netAmount' => $payroll->net_amount,
+     'bankDetails' => $bankDetails, 
+     'leaveSummary' => $leaveSummary,
  ];
 
  // Return the payslip view
@@ -755,7 +805,7 @@ public function loadMangerClaims($manager_id, $reimbursement_traking_id)
          'bills.*' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048',
          'comments.*' => 'nullable|string'
      ]);
- 
+
      $loginUserInfo = Auth::user();
 
     //  $billCount = count($data['bill_date']);

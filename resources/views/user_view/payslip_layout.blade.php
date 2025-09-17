@@ -77,58 +77,95 @@
     <table > 
         <tr> 
             <td>Employee No:</td>
-            <td> {{ $employee->employee_no }}</td> 
+            <td> {{ $employee->employee_no ?? '-' }}</td> 
             <td>Employee Name:</td> 
-            <td> {{ $employee->employee_name }}</td>
+            <td> {{ $employee->employee_name ?? '-' }}</td>
         </tr>
         <tr> 
             <td>Joining Date:</td>
-            <td> {{ \Carbon\Carbon::parse($employee->joining_date)->format('d-M-Y') }}</td> 
+            <td> {{ \Carbon\Carbon::parse($employee->joining_date)->format('d-M-Y') ?? '-' }}</td> 
             <td>Designation:</td>
-            <td> {{ $employee->designation }}</td>
+            <td> {{ $employee->designation ?? '-' }}</td>
         </tr>
         <tr> 
             <td>Provident Fund:</td>
-            <td> {{ $employee->provident_fund }}</td> 
+            <td> {{ $employee->provident_fund ?? '-' }}</td> 
             <td>ESIC No:</td>
-            <td> {{ $employee->esic_no }}</td>
+            <td> {{ $employee->esic_no ?? '-' }}</td>
         </tr>
         <tr> 
             <td>UAN:</td>
-            <td> {{ $employee->universal_account_number }}</td>
+            <td> {{ $employee->universal_account_number ?? '-' }}</td>
+            <td>Passport Number</td>
+            <td>{{ $bankDetails->passport_number ?? '-' }}</td>
         </tr>
+        <tr> 
+            <td>Bank Name</td>
+        <td>{{ $bankDetails->bank_name ?? '-' }}</td>
+             <td>Branch</td>
+        <td>{{ $bankDetails->sal_branch_name ?? '-' }}</td>
+        </tr>
+        <tr> 
+           <td>Account Number</td>
+        <td>{{ $bankDetails->sal_account_number ?? '-' }}</td>
+         <td>Visa Expiry Date</td>
+         <td>{{ !empty($bankDetails->visa_expiry_date) ? \Carbon\Carbon::parse($bankDetails->visa_expiry_date)->format('d-M-Y') : '-' }}</td>
+        </tr>
+    
     </table>
  
     <table >
         <tr>
-            <td>
-            <table class="border">
-                <thead>
+          <td>
+    <!-- Earnings Table -->
+    <table class="border">
+        <thead>
+            <tr>
+                <th>Earning</th>
+                <th>Amount</th> 
+            </tr>
+        </thead>
+        <tbody>
+            @foreach ($components as $component)
+                @if ($component->component_type === 'Earning')
                     <tr>
-                        <th>Earning</th>
-                        <!-- <th>Type</th> -->
-                        <th>Amount</th> 
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach ($components as $component)
-                    @if  ( $component->component_type   ===  'Earning')
-                        <tr>
-                            <td>{{ $component->component_name }}</td>
-                            <!-- <td>{{ ucfirst($component->component_type) }}</td> -->
-                            <td>₹{{ number_format($component->amount, 2) }}</td>
-                        </tr> 
-                        @endif
-                    @endforeach
-                </tbody>
-                <tfoot>
-                    <tr>
-                        <th >Total Earnings</th>
-                        <th>₹{{ number_format($totalEarnings, 2) }}</th>
+                        <td>{{ $component->component_name }}</td>
+                        <td>₹{{ number_format($component->amount, 2) }}</td>
                     </tr> 
-                </tfoot>
-            </table>
-            </td>
+                @endif
+            @endforeach
+        </tbody>
+        <tfoot>
+            <tr>
+                <th>Total Earnings</th>
+                <th>₹{{ number_format($totalEarnings, 2) }}</th>
+            </tr> 
+        </tfoot>
+    </table>
+
+    <!-- Leave Summary Table (under Earnings) -->
+    <table class="border" style="margin-top:10px;">
+        <thead>
+            <tr>
+                <th>Leave Type</th>
+                <th>Total Days</th>
+            </tr>
+        </thead>
+        <tbody>
+            @forelse ($leaveSummary as $leave)
+                <tr>
+                    <td>{{ $leave->leave_type_name }}</td>
+                    <td>{{ $leave->total_days }}</td>
+                </tr>
+            @empty
+                <tr>
+                    <td colspan="2">No approved leaves</td>
+                </tr>
+            @endforelse
+        </tbody>
+    </table>
+</td>
+            
        
             <td>
                 <table class="border">
@@ -156,9 +193,11 @@
                             <th>₹{{ number_format($totalDeductions, 2) }}</th>
                         </tr> 
                     </tfoot>
+                    
                 </table>
             </td>
         </tr>
+        
     </table>
 
         <table>
