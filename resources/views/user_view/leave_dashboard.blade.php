@@ -15,22 +15,21 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.6.6/dist/sweetalert2.all.min.js"></script>
     <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11.6.6/dist/sweetalert2.min.css" rel="stylesheet">
 
-    
-<div class="m-3">
-@if($errors->any())
-<div class="alert custom-alert-warning">
-<ul>
-@foreach($errors->all() as $error)
-<li style="color: red;">{{ $error }}</li>
+        
+    <div class="m-3">
+    @if($errors->any())
+    <div class="alert custom-alert-warning">
+    <ul>
+    @foreach($errors->all() as $error)
+    <li style="color: red;">{{ $error }}</li>
 
-@endforeach
-</ul>
-</div>
-@endif
-    <div class="d-flex justify-content-between align-items-center">
-        <h2>Leave & Attendance</h2>
+    @endforeach
+    </ul>
+    </div>
+    @endif
+    <!-- <div class="d-flex justify-content-between align-items-center"> 
         <button class="apply-leave" onclick="redirectToForm()">Apply Leave</button>
-    </div><br>
+    </div>  -->
     <script>
 
 
@@ -38,14 +37,16 @@
             window.location.href = '{{route('leave_request')}}'; // Replace with the actual form URL
         }
     </script>
-
+    <?php
+// dd($appliedLeaves);
+?>
     <div class="main">
         <div class="left-sec">
-            <div class="one row"> 
-                <div class="col-md-3 mb-3">
+            <div class="one row mx-auto"> 
+                <div class="col-lg-3 col-md-6 mb-3">
                     <div class="attendance-header p-3">
-                        <h1>Average Working Hours</h1>
-                        <hr>
+                        <h5 class="mb-0">Average Working Hours</h5>
+                        <hr class="my-2"  >
                         <canvas id="attendanceChart" style="width: 600px; height: 450px;"></canvas>
                         <script>
                             // Passing PHP variables into JavaScript using Blade
@@ -99,11 +100,11 @@
                     </div>
                 </div>
                 
-                <div class="col-md-3 mb-3">
+                <div class="col-lg-3 col-md-6 mb-3">
                     <div class="attendance-header p-3">
-                        <h1>Absenteeism Rate</h1><hr>
+                        <h5 class="mb-0">Absenteeism Rate</h5><hr class="my-2"  >
                         <div class="chart-container1" style="width: 100%; text-align: center; background-color:white; ">
-                            <div style="width:65%" class='mx-auto mb-2'> <canvas id="chartContainer"></canvas></div>
+                            <div style="width:65%" class='mx-auto mb-2'> <canvas height="200px" height="200px" id="chartContainer"></canvas></div>
                             <div class="d-flex justify-content-center align-items-center"> 
                                 <small  style="color: #3086FF " class="d-flex justify-content-center align-items-center">
                                     <x-icon name="squarefill" /> <span class="text-secondary">&nbsp;Absent day <span>
@@ -137,7 +138,7 @@
                                         backgroundColor: ['#3086FF', '#2B53C1BF'],
                                     }]
                                 },
-                                options: {
+                                options: {maintainAspectRatio: false, 
                                     responsive: true,
                                     plugins: {
                                         legend: {
@@ -182,9 +183,9 @@
                     </div>
                 </div>
 
-                <div class="col-md-3 mb-3">  
+                <div class="col-lg-3 col-md-6 mb-3">  
                     <div class="attendance-header p-3">
-                        <h1>Leave Type</h1><hr>
+                        <h5 class="mb-0">Leave Type</h5><hr class="my-2"  >
                         <div class="leave-type-collection">
                             @foreach($leaveSummary as $leave)
                                 <button class="button" style="background-color: {{ $loop->index % 2 == 0 ? '#8a3366' : '#2B53C1' }};">
@@ -195,9 +196,9 @@
                     </div>
                 </div>
                  
-                <div class="col-md-3 mb-3">
+                <div class="col-lg-3 col-md-6 mb-3">
                     <div class="attendance-header p-3">
-                        <h1>Upcoming Holidays</h1><hr>
+                        <h5 class="mb-0">Upcoming Holidays</h5><hr class="my-2"  >
                         <div class="holidays">
                             <div class="container-holiday">
                                 <ul class="holiday-list">
@@ -228,8 +229,8 @@
 
                 <div class="col-md-6 mb-3"> 
                     <div class="summary p-3">
-                        <h1>Leave Summary</h1>
-                        <hr>
+                        <h5 class="mb-0">Leave Summary</h5>
+                        <hr class="my-2"  >
                         <div class="leave-summary-container row justify-content-around">
                             <!-- Leave cards will be dynamically inserted here -->
                             @foreach($leaveSummary as $index => $leave)
@@ -258,7 +259,7 @@
                                 <div class="col-md-5">
                                     <div class="leave-card ">
                                         <div class="chart-container-leave">
-                                            <canvas id="chart${index}" style="width: 130px; height: 200px;"></canvas>
+                                            <canvas id="chart${index}"  width="130px" height="200px"></canvas>
                                         </div>
                                         <div class="legend">
                                             <h6>${leave.leave_type}</h6>
@@ -274,7 +275,7 @@
                                 const ctx = document.getElementById(`chart${index}`).getContext('2d');
 
                                 new Chart(ctx, {
-                                    type: 'doughnut',
+                                    type: 'pie',
                                     data: {
                                         datasets: [{
                                             data: [totalLeaves, consumed],
@@ -284,7 +285,7 @@
                                             offset: 20
                                         }]
                                     },
-                                    options: {
+                                    options: {maintainAspectRatio: false, // Add this
                                         responsive: true,
                                         cutout: '50%',
                                         rotation: Math.PI / 2.8,
@@ -317,7 +318,10 @@
                                     
                 <div class="col-md-6 mb-3">
                     <div class="applied-leaves p-3 overflow-auto"  >
-                        <h1>Applied Leave</h1> <hr>
+                        <h5 class="mb-0 d-flex justify-content-between align-items-center">
+                            <span class="me-auto" > Applied Leave</span>
+                            <small class="apply-leave py-1 px-4" onclick="redirectToForm()">Apply Leave</small></h5>  
+                        <hr class="my-2"  >
                         <div style="height:300px; overflow-y:auto" >
                             <div class="container">
                                 @foreach($appliedLeaves as $leave)
@@ -333,14 +337,14 @@
                         
                                         @if(($leave->leave_approve_status == 'Pending' || $leave->leave_approve_status == 'Approved') && \Carbon\Carbon::parse($leave->start_date) > today())
                                             <!-- Form to cancel the leave -->
-                                            <form id="cancelForm" action="{{ route('update_leave_status_by_user',['id' => $leave->id]) }}" method="POST">
-                                                @csrf
-                                                @method('PUT')  <!-- Use DELETE HTTP method for cancellation -->
-                                                <!-- <button class="cancel-btn" type="submit">Cancel</button> -->
-                                                <span class="text-danger mt-4 me-3" type="button" onclick="showConfirmPopup()">
-                                                    <x-icon name="trash" />
-                                                </span>
-                                            </form>
+                                        
+                                            <form id="cancelForm-{{ $leave->id }}" action="{{ route('update_leave_status_by_user',['id' => $leave->id]) }}" method="POST">
+    @csrf
+    @method('PUT')
+    <span class="text-danger mt-4 me-3" type="button" onclick="showConfirmPopup('cancelForm-{{ $leave->id }}')">
+        <x-icon name="trash" />
+    </span>
+</form>
                                         @endif
                                     </div>
                                 @endforeach 
@@ -349,35 +353,35 @@
                     </div>
 
                     <script>
-                        function showConfirmPopup() {
-                            Swal.fire({
-                                title: 'Are you sure?',
-                                text: 'Do you really want to cancel the operation?',
-                                icon: 'warning',
-                                showCancelButton: true,
-                                confirmButtonText: 'Yes, Cancel it!',
-                                cancelButtonText: 'No, Keep it',
-                                reverseButtons: true
-                            }).then((result) => {
-                                if (result.isConfirmed) {
-                                    // Submit the form if the user confirms the cancel action
-                                    document.getElementById('cancelForm').submit();
-                                } else if (result.dismiss === Swal.DismissReason.cancel) {
-                                    // If the user clicks 'No', do nothing and keep the form intact
-                                    Swal.fire(
-                                        'Cancelled',
-                                        'Your operation is safe.',
-                                        'info'
-                                    );
-                                }
-                            });
-                        }
+                     
+
+                        function showConfirmPopup(formId) {
+    Swal.fire({
+        title: 'Are you sure?',
+        text: 'Do you really want to cancel the operation?',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Yes, Cancel it!',
+        cancelButtonText: 'No, Keep it',
+        reverseButtons: true
+    }).then((result) => {
+        if (result.isConfirmed) {
+            document.getElementById(formId).submit();
+        } else if (result.dismiss === Swal.DismissReason.cancel) {
+            Swal.fire(
+                'Cancelled',
+                'Your operation is safe.',
+                'info'
+            );
+        }
+    });
+}
                     </script>
                 </div>
 
                 <div class="col-md-6 mb-3">              
                     <div class="attendance p-3">
-                        <h1>Attendance Overview</h1> <hr>
+                        <h5 class="mb-0">Attendance Overview</h5> <hr class="my-2"  >
                             <canvas id="newAttendanceChart" width="900px" height="430px"></canvas>
 
                             <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -440,7 +444,7 @@
                 
                 <div class="col-md-6 mb-3">  
                     <div class="attendance-header p-3 ">
-                        <h1>Absenteeism Rate</h1> <hr>
+                        <h5 class="mb-0">Absenteeism Rate</h5> <hr class="my-2"  >
                         <div class="container-absent">
                             <div class="controls">
                                 <select id="yearSelect"></select>
@@ -556,7 +560,7 @@
 
                 <div class="col-12 mb-3">  
                     <div class="attendance-header p-3 ">
-                        <h1>Leave Balance Summary</h1><hr>
+                        <h5 class="mb-0">Leave Balance Summary</h5><hr class="my-2"  >
                         <table>
                             <thead>
                                 <tr>
@@ -585,17 +589,8 @@
                         </table>
                     </div>
                 </div>
-
-
-
-
-
-            </div>
-
-       
-
-            
  
+            </div> 
         </div>
     </div>
   

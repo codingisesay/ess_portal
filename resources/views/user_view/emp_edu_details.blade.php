@@ -1,6 +1,7 @@
 @extends('user_view/employee_form_layout') <!-- Extending the layout file -->
 @section('content') <!-- Defining the content section -->
 <!-- <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css"> -->
+<link href="{{ asset('bootstrapcss/bootstrap.min.css') }}" rel="stylesheet"> 
 <link rel="stylesheet" href="{{ asset('errors/error.css') }}">
 
 {{-- @if(session('success'))
@@ -30,16 +31,17 @@
 @endif
 
 <div class="tab-content active" id="tab3">
+<div  class="input-column">
     <form id="educationForm" action="{{ route('education_insert') }}" method="POST">
         @csrf
         <input type="hidden" name="form_step4" value="education_step">
-        <h3>Educational Details</h3>
+        <h4 class="d-flex align-items-center"><x-icon name="educationoutline"/>&nbsp;Educational Details </h4>
         <button type="button" class="add-row-education action-button" onclick="addEducationRow()">Add Educational Information</button>
         <div class="table-container">
             <table>
                 <thead>
                     <tr>
-                        <th>Serial No.</th>
+                        <th class="d-none">Serial No.</th>
                         <th>Course Type</th>
                         <th>Degree</th>
                         <th>University/Board</th>
@@ -58,7 +60,7 @@
                     <!-- Pre-populate existing records from the backend -->
                     @foreach($emp_eduction_details as $index => $detail)
                         <tr>
-                            <td>{{ $index + 1 }}</td>
+                            <td class="d-none">{{ $index + 1 }}</td>
                             <td>
                                 <select name="course_type[]" class="relation-type" onload="toggleLoadFields(this)" required>
                                     <option value="degree" {{ $detail->course_type == 'degree' ? 'selected' : '' }}>Degree</option>
@@ -87,7 +89,7 @@
                             <td><input type="date" name="date_of_certificate[]" class="date-input" value="{{ $detail->date_of_certificate }}" max="{{ date('Y-m-d') }}"></td>
                             {{-- <td><button type="button" onclick="editEducationRow(this)">✏️</button></td> --}}
                             <td>
-                                <button type="button" class="delete-button" data-id="{{ $detail->id }}">❌</button>
+                                <button type="button" class="delete-button btn text-danger" data-id="{{ $detail->id }}"><x-icon name="trash" /></button>
                                 {{-- <form action="{{ route('edu.destroy', $detail->id) }}" method="POST" style="display:inline;">
                                     @csrf
                                     @method('DELETE')
@@ -111,6 +113,7 @@
             </button>
         </div>
     </form>
+</div>
 </div>
 
 <script>
@@ -163,7 +166,7 @@ document.addEventListener('DOMContentLoaded', function () {
         const newRow = document.createElement('tr');
         
         newRow.innerHTML = `
-            <td>${educationCounter}</td>
+            <td class="d-none">${educationCounter}</td>
             <td>
                 <select name="course_type[]" class="relation-type" required onchange="toggleFields(this)">
                     <option value="">Select</option>
@@ -191,7 +194,7 @@ document.addEventListener('DOMContentLoaded', function () {
              <td><input type="text" name="total_marks[]" class="total-marks-input" required placeholder="Enter Total Marks" oninput="validateMarks(this)" maxlength="3"></td>
             <td><input type="text" name="marks_obtained[]" class="marks-input" required placeholder="Enter Marks Obtained" oninput="validateMarks(this)" maxlength="3"></td>
             <td><input type="date" name="date_of_certificate[]" class="date-input" max="<?php echo date('Y-m-d'); ?>"></td>
-            <td><button type="button" onclick="removeEducationRow(this)">❌</button></td>
+            <td><button type="button" onclick="removeEducationRow(this)" class="btn text-danger"><x-icon name="trash" /></button></td>
         `;
         tableBody.appendChild(newRow);
         educationCounter++; // Increment the counter for new rows
@@ -411,14 +414,45 @@ document.addEventListener('DOMContentLoaded', function () {
 
 {{-- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> --}}
 
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
 $(document).on('click', '.delete-button', function () {
     // Get the ID of the record to be deleted
     var educationId = $(this).data('id');
   
 
-    // Confirm delete action
-    if (confirm('Are you sure you want to delete this item?')) {
+    // // Confirm delete action
+    // if (confirm('Are you sure you want to delete this item?')) {
+    //     // Send an AJAX DELETE request to the server
+    //     $.ajax({
+    //         url: '/user/del_education/' + educationId,  // Adjust the route URL if necessary
+    //         type: 'DELETE',
+    //         data: {
+    //             _method: 'DELETE',
+    //             _token: '{{ csrf_token() }}', 
+    //             educationId:educationId,// CSRF token for security
+    //         },
+    //         success: function (response) {
+    //             // On success, remove the row from the table
+    //             $('button[data-id="' + educationId + '"]').closest('tr').remove();
+    //             alert('Education record deleted successfully!');
+    //         },
+    //         error: function (response) {
+    //             alert('Error deleting record. Please try again.');
+    //         }
+    //     });
+    // }
+  // Confirm delete action using SweetAlert
+Swal.fire({
+    title: 'Are you sure?',
+    text: 'You won\'t be able to revert this!',
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonColor: '#3085d6',
+    cancelButtonColor: '#d33',
+    confirmButtonText: 'Yes, delete it!',
+}).then((result) => {
+    if (result.isConfirmed) {
         // Send an AJAX DELETE request to the server
         $.ajax({
             url: '/user/del_education/' + educationId,  // Adjust the route URL if necessary
@@ -426,18 +460,30 @@ $(document).on('click', '.delete-button', function () {
             data: {
                 _method: 'DELETE',
                 _token: '{{ csrf_token() }}', 
-                educationId:educationId,// CSRF token for security
+                educationId: educationId, // CSRF token for security
             },
             success: function (response) {
                 // On success, remove the row from the table
                 $('button[data-id="' + educationId + '"]').closest('tr').remove();
-                alert('Education record deleted successfully!');
+                Swal.fire(
+                    'Deleted!',
+                    'The education record has been deleted.',
+                    'success'
+                );
             },
             error: function (response) {
-                alert('Error deleting record. Please try again.');
+                Swal.fire(
+                    'Error!',
+                    'There was an issue deleting the record. Please try again.',
+                    'error'
+                );
             }
         });
     }
+});
+
+
+
 });
 document.getElementById('previous-btn-link').addEventListener('click', function(event) {
         event.stopPropagation(); // Stop the form submission from being triggered

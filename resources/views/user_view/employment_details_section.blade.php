@@ -13,9 +13,9 @@
         
         <div class="contact-details">
             <h5>Contact Details</h5> 
-            <p><strong>Phone Number</strong> <weak id="emp-phone">{{ ucfirst($userDetails->offical_phone_number ?? '-') }}</weak></p>
-            <p><strong>Alternate Number</strong> <weak id="emp-alternate-phone">{{ ucfirst($userDetails->alternate_phone_number ?? '-') }}</weak></p>
-            <p><strong>Email Address</strong> <weak><a href="mailto:{{ $userDetails->email ?? '-' }}" id="emp-email">{{ ucfirst($userDetails->email ?? '-') }}</a></weak></p>
+            <p ><strong >Phone Number</strong> <weak id="emp-phone">{{ ucfirst($userDetails->offical_phone_number ?? '-') }}</weak></p>
+            <p ><strong >Alternate Number</strong> <weak id="emp-alternate-phone">{{ ucfirst($userDetails->alternate_phone_number ?? '-') }}</weak></p>
+            <p ><strong >Email Address</strong> <weak><a href="mailto:{{ $userDetails->email ?? '-' }}" id="emp-email">{{ ucfirst($userDetails->email ?? '-') }}</a></weak></p>
          
                 <hr>
             <h5>Address</h5>
@@ -30,8 +30,10 @@
             {{ ucfirst(trim($userDetails->per_country) ? $userDetails->per_country . ',' : '') }}
             {{ ucfirst(trim($userDetails->per_pincode) ? $userDetails->per_pincode : '') }}
 
-            </weak></p>
+            </weak></p> 
             <p><strong>Correspondance</strong> <weak id="emp-correspondance-address">
+      
+ 
             {{ ucfirst($userDetails->cor_building_no ? $userDetails->cor_building_no . ',' : '') }}
             {{ ucfirst(trim($userDetails->cor_name_of_premises) ? $userDetails->cor_name_of_premises . ',' : '') }}
             {{ ucfirst(trim($userDetails->cor_nearby_landmark) ? $userDetails->cor_nearby_landmark . ',' : '') }}
@@ -44,11 +46,30 @@
 
             </weak></p>
             <hr>
-             
-            <p><strong>Kin Name</strong> <weak id="emp-contactperson">{{ ucfirst($userDetails->emergency_contact_person ?? '-') }}</weak></p>
-            <p><strong>Kin Contact No.</strong> <weak id="emp-contactnumber">{{ ucfirst($userDetails->emergency_contact_number ?? '-') }}</weak></p>     
+            <h5>Emergency Contacts</h5> 
+            <p><strong>Name</strong> <weak id="emp-contactperson">{{ ucfirst($userDetails->emergency_contact_person ?? '-') }}</weak></p>
+            <p><strong>Contact Number</strong> <weak id="emp-contactnumber">{{ ucfirst($userDetails->emergency_contact_number ?? '-') }}</weak></p>     
                 
         </div>
     </div>
+  
+    <script>
+    window.addEventListener('DOMContentLoaded', function () {
+        const elem = document.getElementById('emp-correspondance-address');
+        if (elem) {
+            let raw = elem.textContent;
+
+            let cleaned = raw
+                .split(',')
+                .map(s => s.trim())
+                .filter(s => s !== '')
+                .join(', ');
+
+            elem.textContent = cleaned;
+            console.log( 'data  :', cleaned)
+        }
+    });
+</script>
+
    
 <!-- </div> -->

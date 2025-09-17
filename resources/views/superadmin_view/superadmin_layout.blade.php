@@ -45,7 +45,7 @@ $name = Auth::guard('superadmin')->user()->name;
                 <li id="orgConfigLi">
                     <strong onclick="toggleDropdown('orgConfigDropdown', this)">
                         <strong>  
-                        <x-icon name="building" />&nbsp;&nbsp;<lable>Organisation&nbsp;Configuration</lable>&nbsp;&nbsp;&nbsp;</strong>
+                        <x-icon name="buildingoutline" />&nbsp;&nbsp;<lable>Organisation&nbsp;Configuration</lable>&nbsp;&nbsp;&nbsp;</strong>
                         <img src="{{ asset('user_end/images/arrow-right.svg') }}" alt="arrow" class="dropdown-arrow">
                     </strong>
                     <ul id="orgConfigDropdown" class="submenu">
@@ -85,6 +85,7 @@ $name = Auth::guard('superadmin')->user()->name;
                         <li><a href="{{ route('create_salary_cycle') }}" class="{{ request()->routeIs('create_salary_cycle') ? 'active' : '' }}">Salary Cycle</a></li>
                         {{-- <li><a href="{{ route('create_salary_configuration') }}" class="{{ request()->routeIs('create_salary_configuration') ? 'active' : '' }}">Salary Configuration</a></li> --}}
                         <li><a href="{{ route('salary_template_form') }}" class="{{ request()->routeIs('salary_template_form') ? 'active' : '' }}">Create Salary Templates</a></li>
+                        <li><a href="{{ route('create_components') }}" class="{{ request()->routeIs('create_components') ? 'active' : '' }}">Create Salary Components</a></li>
                         <li><a href="{{ route('create_salary_components') }}" class="{{ request()->routeIs('create_salary_components') ? 'active' : '' }}">Salary Template Components</a></li>
                     </ul>
                 </li>
@@ -106,7 +107,7 @@ $name = Auth::guard('superadmin')->user()->name;
                 <li id="reimbursementManagementLi">
                     <strong onclick="toggleDropdown('reimbManagementDropdown', this)">
                         <strong>
-                        <x-icon name="tax" />&nbsp;<lable> Reimbursement Management</lable></strong>
+                        <x-icon name="cash" />&nbsp;<lable> Reimbursement Management</lable></strong>
                         <img src="{{ asset('user_end/images/arrow-right.svg') }}" alt="arrow" class="dropdown-arrow">
                     </strong>
                     <ul id="reimbManagementDropdown" class="submenu">

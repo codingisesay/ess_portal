@@ -322,25 +322,73 @@ $user_leave_encash_carries = DB::table('user_leave_encash_carries')
 // dd($leaveUsage);
 
     // Fetch upcoming and today's birthdays
+    // $currentDate = Carbon::now();
+    // $currentMonth = $currentDate->month;
+    // $currentDay = $currentDate->day;
+
+    // $upcomingBirthdays = DB::table('emp_details')
+    //     ->join('organisation_designations','emp_details.designation','=','organisation_designations.id')
+    //     ->leftjoin('user_status_imgs','emp_details.user_id','=','user_status_imgs.user_id')
+    //     ->select('emp_details.employee_name as employee_nme', 'date_of_birth', 'organisation_designations.name as designation_name','user_status_imgs.*')
+    //     ->whereMonth('date_of_birth', '=', $currentMonth)
+    //     ->whereDay('date_of_birth', '>=', $currentDay)
+    //     ->orderByRaw("DATE_FORMAT(date_of_birth, '%m-%d') >= ? DESC, DATE_FORMAT(date_of_birth, '%m-%d') ASC", [$currentDate->format('m-d')]) 
+    //     ->get()
+    //     ->map(function ($employee) use ($currentDay, $currentDate) {
+    //         $birthDate = new Carbon($employee->date_of_birth);
+    //         $birthDay = $birthDate->day;
+    //         $employee->age = $birthDate->age;
+    //         $employee->badgeText = $birthDay === $currentDay ? "Today" : "Upcoming in " . ($birthDay - $currentDay) . " days";
+    //         return $employee;
+    //     });
+
+    // use Carbon\Carbon;
+
+    $currentDate = Carbon::now();
+    // Fetch upcoming and today's birthdays
     $currentDate = Carbon::now();
     $currentMonth = $currentDate->month;
     $currentDay = $currentDate->day;
-
+    
     $upcomingBirthdays = DB::table('emp_details')
-        ->join('organisation_designations','emp_details.designation','=','organisation_designations.id')
-        ->leftjoin('user_status_imgs','emp_details.user_id','=','user_status_imgs.user_id')
-        ->select('emp_details.employee_name as employee_nme', 'date_of_birth', 'organisation_designations.name as designation_name','user_status_imgs.*')
-        ->whereMonth('date_of_birth', '=', $currentMonth)
-        ->whereDay('date_of_birth', '>=', $currentDay)
-        ->orderByRaw("DATE_FORMAT(date_of_birth, '%m-%d') >= ? DESC, DATE_FORMAT(date_of_birth, '%m-%d') ASC", [$currentDate->format('m-d')]) 
-        ->get()
-        ->map(function ($employee) use ($currentDay, $currentDate) {
-            $birthDate = new Carbon($employee->date_of_birth);
-            $birthDay = $birthDate->day;
-            $employee->age = $birthDate->age;
-            $employee->badgeText = $birthDay === $currentDay ? "Today" : "Upcoming in " . ($birthDay - $currentDay) . " days";
-            return $employee;
-        });
+    ->join('organisation_designations', 'emp_details.designation', '=', 'organisation_designations.id')
+    ->leftJoin('user_status_imgs', 'emp_details.user_id', '=', 'user_status_imgs.user_id')
+    ->join('users', 'users.id', '=', 'emp_details.user_id') // ✅ join with users
+    ->select(
+        'emp_details.employee_name as employee_nme',
+        'date_of_birth',
+        'organisation_designations.name as designation_name',
+        'user_status_imgs.*'
+    )
+    ->where('users.user_status', '=', 'Active') // ✅ correct column name
+    ->get()
+    ->filter(function ($employee) use ($currentDate) {
+        $birthDate = Carbon::parse($employee->date_of_birth)->year($currentDate->year);
+        return $birthDate->isToday() || $birthDate->isFuture(); // Only upcoming birthdays this year
+    })
+    ->sortBy(function ($employee) use ($currentDate) {
+        $birthDate = Carbon::parse($employee->date_of_birth)->year($currentDate->year);
+        return $currentDate->diffInDays($birthDate, false); // Sort by soonest
+    })
+    ->take(10) // ✅ Limit to Top 10
+    ->map(function ($employee) use ($currentDate) {
+        $birthDate = new Carbon($employee->date_of_birth);
+        $nextBirthday = $birthDate->copy()->year($currentDate->year);
+
+        if ($nextBirthday->isPast() && !$nextBirthday->isToday()) {
+            $nextBirthday->addYear(); // Push to next year if already passed
+        }
+
+        $employee->age = $birthDate->age;
+
+        $employee->badgeText = $nextBirthday->isToday()
+            ? "Today"
+            : "Upcoming in " . $currentDate->diffInDays($nextBirthday) . " days";
+
+        return $employee;
+    })
+    ->values(); // Reset collection keys
+    
 
         // dd($upcomingBirthdays);
 
@@ -352,6 +400,7 @@ $user_leave_encash_carries = DB::table('user_leave_encash_carries')
         ->select('emp_details.employee_name as employee_nme', 'date_of_birth', 'organisation_designations.name as designation_name', 'user_status_imgs.*')
         ->whereMonth('date_of_birth', '=', now()->month)  // Match the current month
         ->whereDay('date_of_birth', '=', now()->day)    // Match the current day
+        ->whereDate('date_of_birth', now()->format('Y-m-d'))
         ->get()
         ->map(function ($employee) {
             $birthDate = new Carbon($employee->date_of_birth);
@@ -383,19 +432,78 @@ $user_leave_encash_carries = DB::table('user_leave_encash_carries')
         // dd($todayBirthdays);
 
     // Fetch upcoming anniversaries
-    $anniversaries = DB::table('emp_details')
-        ->select('Employee_Name', 'Joining_Date')
-        ->whereMonth('Joining_Date', '=', $currentMonth)
-        ->whereDay('Joining_Date', '>=', $currentDay)
-        ->orderByRaw("DATE_FORMAT(Joining_Date, '%m-%d') >= ? DESC, DATE_FORMAT(Joining_Date, '%m-%d') ASC", [$currentDate->format('m-d')]) 
-        ->get()
-        ->map(function ($employee) use ($currentDay, $currentDate) {
-            $joiningDate = new Carbon($employee->Joining_Date);
-            $joiningDay = $joiningDate->day;
-            $employee->yearsCompleted = $joiningDate->diffInYears($currentDate);
-            $employee->badgeText = $joiningDay === $currentDay ? "Today" : "Upcoming in " . ($joiningDay - $currentDay) . " days";
-            return $employee;
-        });
+    // $anniversaries = DB::table('emp_details')
+    //     ->select('Employee_Name', 'Joining_Date')
+    //     ->whereMonth('Joining_Date', '=', $currentMonth)
+    //     ->whereDay('Joining_Date', '>=', $currentDay)
+    //     ->orderByRaw("DATE_FORMAT(Joining_Date, '%m-%d') >= ? DESC, DATE_FORMAT(Joining_Date, '%m-%d') ASC", [$currentDate->format('m-d')]) 
+    //     ->get()
+    //     ->map(function ($employee) use ($currentDay, $currentDate) {
+    //         $joiningDate = new Carbon($employee->Joining_Date);
+    //         $joiningDay = $joiningDate->day;
+    //         $employee->yearsCompleted = $joiningDate->diffInYears($currentDate);
+    //         $employee->badgeText = $joiningDay === $currentDay ? "Today" : "Upcoming in " . ($joiningDay - $currentDay) . " days";
+    //         return $employee;
+    //     });
+
+$currentDate = Carbon::now();
+
+$anniversaries = DB::table('emp_details')
+    ->join('users', 'users.id', '=', 'emp_details.user_id') // ✅ join users
+    ->select('Employee_Name', 'Joining_Date')
+    ->where('users.user_status', '=', 'Active') // ✅ only Active users
+    ->get()
+    ->filter(function ($employee) use ($currentDate) {
+        $joiningDate = Carbon::parse($employee->Joining_Date);
+
+        // Try to set the anniversary in the current year
+        try {
+            $anniversaryThisYear = $joiningDate->copy()->year($currentDate->year);
+        } catch (\Exception $e) {
+            // Handle leap year issue (e.g., Feb 29)
+            $anniversaryThisYear = $joiningDate->copy()->addYear();
+        }
+
+        // Include if anniversary is today or in the future
+        return $anniversaryThisYear->isToday() || $anniversaryThisYear->isFuture();
+    })
+    ->sortBy(function ($employee) use ($currentDate) {
+        $joiningDate = Carbon::parse($employee->Joining_Date);
+
+        // Try to set the anniversary in the current year
+        try {
+            $anniversary = $joiningDate->copy()->year($currentDate->year);
+        } catch (\Exception $e) {
+            $anniversary = $joiningDate->copy()->addYear();
+        }
+
+        return $currentDate->diffInDays($anniversary, false);
+    })
+    ->take(10)
+    ->map(function ($employee) use ($currentDate) {
+        $joiningDate = Carbon::parse($employee->Joining_Date);
+
+        // Determine next anniversary (adjust if already passed this year)
+        try {
+            $nextAnniversary = $joiningDate->copy()->year($currentDate->year);
+        } catch (\Exception $e) {
+            $nextAnniversary = $joiningDate->copy()->addYear();
+        }
+
+        if ($nextAnniversary->isPast() && !$nextAnniversary->isToday()) {
+            $nextAnniversary->addYear();
+        }
+
+        $employee->yearsCompleted = $joiningDate->diffInYears($currentDate);
+        $employee->badgeText = $nextAnniversary->isToday()
+            ? "Today"
+            : "Upcoming in " . $currentDate->diffInDays($nextAnniversary) . " days";
+
+        $employee->nextAnniversary = $nextAnniversary->toDateString();
+
+        return $employee;
+    })
+    ->values(); // Reset keys for clean array
 
        // Fetch data from emp_details with respect to manager
 $dataOfteamMambers = DB::table('emp_details')->where('reporting_manager', '=', $user->id)->get();
@@ -555,9 +663,48 @@ $reimbursementList = DB::table('reimbursement_trackings')
     )
     ->get();
 
+    // $approvedClaimsByManager = DB::table('reimbursement_trackings')
+    // ->join('emp_details as employees', 'reimbursement_trackings.user_id', '=', 'employees.user_id')
+    // ->join('emp_details as managers', 'employees.reporting_manager', '=', 'managers.user_id')
+    // ->join('reimbursement_form_entries', 'reimbursement_trackings.id', '=', 'reimbursement_form_entries.reimbursement_trackings_id')
+    // ->select(
+    //     'managers.user_id as manager_id',
+    //     'managers.employee_name as manager_name',
+    //     DB::raw('COUNT(DISTINCT reimbursement_trackings.id) as approved_claims') // Count distinct claims
+    // )
+    // ->where('reimbursement_trackings.status', '=', 'Approved') // Filter only approved claims
+    // ->groupBy('managers.user_id', 'managers.employee_name') // Group by manager ID and name
+    // ->get();
 
+    $approvedClaimsByManager = DB::table('reimbursement_trackings')
+    ->join('emp_details as employees', 'reimbursement_trackings.user_id', '=', 'employees.user_id')
+    ->join('emp_details as managers', 'employees.reporting_manager', '=', 'managers.user_id')
+    ->join('reimbursement_form_entries', 'reimbursement_trackings.id', '=', 'reimbursement_form_entries.reimbursement_trackings_id')
+    ->select(
+        'managers.user_id as manager_id',
+        'managers.employee_name as manager_name',
+        'managers.employee_no as manager_employee_no', // Include manager's employee number
+        'employees.employee_no', // Include employee_no
+        'employees.employee_name as employee_name', // Include employee name
+        'reimbursement_trackings.id as reimbursement_traking_id', // Include reimbursement tracking ID
+        DB::raw('SUM(reimbursement_form_entries.amount) as total_amount'), // Sum of all amounts in the bundle
+        DB::raw('GROUP_CONCAT(reimbursement_form_entries.upload_bill SEPARATOR ", ") as upload_bills'), // Concatenate bill URLs
+        DB::raw('GROUP_CONCAT(reimbursement_form_entries.description_by_applicant SEPARATOR "; ") as applicant_descriptions'),
+        DB::raw('GROUP_CONCAT(reimbursement_form_entries.description_by_manager SEPARATOR "; ") as manager_descriptions')
+    )
+    ->where('reimbursement_trackings.status', '=', 'APPROVED BY MANAGER') // Filter only approved claims
+    ->groupBy(
+        'reimbursement_trackings.id', 
+        'managers.user_id', 
+        'managers.employee_name', 
+        'managers.employee_no', 
+        'employees.employee_no', 
+        'employees.employee_name'
+    ) // Group by bundle ID and other unique fields
+    ->get();
+// dd($approvedClaimsByManager);
     // Return a view with the logs and additional data
-    return view('user_view.homepage', compact('title','logs', 'thoughtOfTheDay', 'newsAndEvents', 'upcomingBirthdays','todayBirthdays', 'anniversaries', 'toDoList', 'currentMonth', 'currentDay', 'leaveUsage','leaveLists', 'holidays_upcoming', 'week_offs', 'upcomingHolidays', 'reimbursementList'));
+    return view('user_view.homepage', compact('title','logs', 'thoughtOfTheDay', 'newsAndEvents', 'upcomingBirthdays','todayBirthdays', 'anniversaries', 'toDoList', 'currentMonth', 'currentDay', 'leaveUsage','leaveLists', 'holidays_upcoming', 'week_offs', 'upcomingHolidays', 'reimbursementList', 'approvedClaimsByManager'));
 }
 
     

@@ -43,9 +43,7 @@ label {
     margin-bottom: 5px;
 }
 
-input[type="number"],
-input[type="text"],
-input[type="date"],
+input,
 select,
 button {
     width: 100%;
@@ -70,10 +68,6 @@ select {
     color: #555;
 }
 
-input[type="date"] {
-    background-color: #fff;
-    border: 1px solid #ddd;
-}
 
 /* Styling for the Submit Button */
 button[type="submit"] {

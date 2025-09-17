@@ -256,7 +256,7 @@ strong {
     /* flex-wrap: wrap; */
     justify-content: space-between;
     gap: 10px;
-    height: 150px;
+    /* height: 100px; */
     /* width: 350px; */
 }
 
@@ -268,8 +268,9 @@ strong {
     transition: box-shadow 0.3s;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     padding: 10px;
-    height: 150px;
+    height: 145px;
     overflow-y: auto;
+    justify-content: space-around;
 }
 
 .card i {
@@ -291,7 +292,7 @@ strong {
 .card img {
     height: 40px;
     width: 40px;
-    margin-bottom: 10px;
+    /* margin-bottom: 10px; */
 }
 
 /* Check In & Check Out Cards */
@@ -300,7 +301,6 @@ strong {
 .checkin {
     display: flex;
     flex-direction: column;
-    justify-content: space-evenly;
     background-color: rgba(163, 228, 215, 0.5) !important;
 }
 
@@ -315,9 +315,8 @@ strong {
 .thought {
     /* width: 260px; */
     /* width: min-content;
-    height: 190px; */
-
-    padding: 15px;
+    height: 190px;
+    padding: 15px; */
     overflow: auto;
     background-color: rgba(48, 134, 255, 0.5) !important;
     text-align: left;
@@ -425,7 +424,7 @@ strong {
     background: #E0AFA080;
     border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    padding: 15px;
+    /* padding: 15px; */
     /*  width: 260px; */
     /* max-height: 400px; */
     overflow-y: scroll;
@@ -538,6 +537,10 @@ button {
     cursor: pointer;
 }
 
+table button a {
+    color: #8A3366 !important;
+}
+
 table button {
     color: #8A3366 !important;
     border: 1px solid #8A3366 !important;
@@ -617,7 +620,7 @@ table button {
     background-color: rgba(138, 51, 102, 0.8);
     border-radius: 10px;
     color: #ffffff;
-    padding: 5px 10px;
+    padding: 5px;
     font-weight: 500;
     margin-right: 10px;
     height: 40px;
@@ -716,8 +719,7 @@ table button {
     transition: transform 0.2s;
 }
 
-.card:hover,
-.birthday-cards:hover {
+.card:hover {
     transform: translateY(-1px);
 }
 
@@ -757,7 +759,7 @@ table button {
 /* Upcoming Anniversary */
 .upcoming-anniversary {
     /* max-width: 600px; */
-    margin-top: 13px;
+    /* margin-top: 13px; */
     /* width: 268px; */
     width: 100%;
     /* margin-left: 90px; */
@@ -782,7 +784,7 @@ table button {
 } */
 
 .anniversary {
-    height: 320px;
+    height: 300px;
     overflow: auto;
     background-color: white;
     padding: 15px;
@@ -819,7 +821,7 @@ table button {
     height: 40px;
     border-radius: 50%;
     object-fit: cover;
-    margin-right: 15px;
+    /* margin-right: 15px; */
 }
 
 
@@ -835,6 +837,7 @@ table button {
     right: 0;
     color: #fff;
     padding: 5px 10px;
+    min-width: 100px;
     border-radius: 15px 0 0 0;
 }
 
@@ -864,7 +867,7 @@ table button {
     display: flex;
     flex-direction: column;
     justify-content: space-around;
-    height: 320px;
+    height: 300px;
     overflow-y: auto;
 }
 
@@ -960,10 +963,11 @@ label {
     width: 100%;
     /* max-width: 339px; */
     /* Align with the width of .greeting */
-    margin: 10px auto;
+    /* margin: 10px auto; */
     font-family: Arial, sans-serif;
     box-sizing: border-box;
     flex-basis: auto;
+    overflow-x: auto;
 }
 
 /* Header and controls of the calendar */
@@ -976,8 +980,14 @@ label {
     background: white;
     border-radius: 15px;
     padding: 15px;
-    height: 320px;
+    height: 300px;
+    min-height: max-content;
     overflow-y: auto;
+    width: 100%;
+    /* min-width: max-content; */
+    /* margin: auto; */
+    display: flex;
+    justify-content: center;
 }
 
 /* Controls like prev/next buttons and dropdowns */
@@ -996,13 +1006,12 @@ label {
     border: 1px solid #ccc;
     border-radius: 8px;
     color: white;
-    width: 100px;
 }
 
 /* Dropdown container styling */
 #dropdown-container {
     display: flex;
-    margin: 0 10px;
+    margin: 0 auto;
 }
 
 /* Styling for select elements */
@@ -1010,7 +1019,6 @@ select {
     padding: 5px;
     margin: 0 5px;
     border: 1px solid #ccc;
-    border-radius: 8px;
 }
 
 /* Calendar grid layout */
@@ -1025,7 +1033,7 @@ select {
 
 /* Styling for each day in the calendar */
 #calendar .day {
-    padding: 5px 8px;
+    padding: 3px;
     border: 1px solid #902323;
     border-radius: 5px;
 }
@@ -1033,7 +1041,7 @@ select {
 /* Header days like Sun, Mon, Tue, etc. */
 #calendar .day.header {
     background-color: #f0f0f0;
-    font-weight: bold;
+    font-weight: 500;
 }
 
 /* Empty days styling (for empty cells in the calendar) */
@@ -1066,9 +1074,7 @@ select {
     }
 
     /* Decrease padding for smaller screens */
-    #calendar .day {
-        padding: 8px;
-    }
+
 }
 
 @media screen and (max-width: 480px) {
@@ -1090,8 +1096,25 @@ select {
 
     /* Reduce day padding for compact view */
     #calendar .day {
-        padding: 6px;
+        padding: 2px;
     }
+
+    .to-do-list {
+        margin-top: 15px;
+    }
+}
+
+.clock-timepicker input {
+    min-width: 100%;
+}
+
+.clock-timepicker-mobile-time,
+.clock-timepicker-mobile-time {
+    display: none;
+}
+
+.clock-timepicker-popup {
+    width: max-content !important;
 }
 
 
@@ -1204,7 +1227,7 @@ select {
     margin: 5% auto;
     padding: 20px;
     border-radius: 10px !important;
-    width: 60% !important;
+    width: 60%;
     /* max-width: 1000px; */
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
     position: relative;
@@ -1558,6 +1581,72 @@ video {
 
 .toggle-switch input:checked+.slider::before {
     transform: translateX(16px);
+}
+
+.submit2 {
+    border: 1px solid #8A3366 !important;
+    color: #8A3366;
+    background: white;
+    padding: 7px 12px;
+    border-radius: 8px;
+    margin-left: auto;
+    border: none;
+}
+
+.reimbursement-details {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.file-upload {
+    position: relative;
+    overflow: hidden;
+}
+
+
+.imagePreview {
+    height: 30px;
+    width: 50px;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    border-radius: 4px;
+    display: none;
+}
+
+.profileimg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    opacity: 0;
+    width: 15px;
+    cursor: pointer;
+}
+
+.modal-backdrop.fade.show {
+    display: none
+}
+
+input.form-control.text-end {
+    width: 150px;
+    max-width: max-content;
+    margin-left: auto
+}
+
+input.form-control.text-end:disabled {
+    background-color: transparent;
+    /* Light gray background */
+    text-align: right;
+    /* Enforces right text alignment */
+    cursor: not-allowed;
+    /* Visual cue for disabled state */
+    border: none;
+    padding: 0;
+    width: 100px;
+    max-width: max-content;
+    margin-left: auto
 }
 
 /* reimbursment css above */

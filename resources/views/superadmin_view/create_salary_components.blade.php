@@ -55,7 +55,12 @@ $id = Auth::guard('superadmin')->user()->id;
                 </div>
                 <div class="col-3 mb-4">
                     <div class="form-group">
-                        <input type="component_name" name="component_name" required>
+                        <select name="component_id" required>
+                            <option value="" disabled selected></option>
+                            @foreach ($orgComp as $OC)
+                                <option value="{{ $OC->id }}">{{ $OC->name }}</option>
+                            @endforeach
+                        </select>
                         <label>Component Name</label>
                     </div>
                 </div>
@@ -75,13 +80,15 @@ $id = Auth::guard('superadmin')->user()->id;
                             <option value="" disabled selected></option>
                             <option value="Percentage">Percentage</option>
                             <option value="Fixed">Fixed</option>
+                            <option value="Calculative">Calculative</option>
+                            <option value="Others">Others</option>
                         </select>
                         <label>Calculation Type</label>
                     </div>
                 </div>
                 <div class="col-3 mb-4">
                     <div class="form-group">
-                        <input type="number" name="value" required>
+                        <input type="number" name="value">
                         <label>Value</label>
                     </div>
                 </div>
@@ -136,7 +143,12 @@ $id = Auth::guard('superadmin')->user()->id;
                     <label for="editSalaryComponentTemplate">Salary Template</label>
                 </div>
                 <div class="popup-form-group">
-                    <input type="text" name="component_name" id="editSalaryComponentName" required>
+                    <!-- <input type="text" name="component_name" id="editSalaryComponentName" required> -->
+                    <select name="component_name" id="editSalaryComponentName" required>
+                        @foreach ($orgComp as $comp)
+                            <option value="{{ $comp->id }}">{{ $comp->name }}</option>
+                        @endforeach
+                    </select>
                     <label for="editSalaryComponentName">Component Name</label>
                 </div>
                 <div class="popup-form-group">
@@ -195,7 +207,7 @@ $id = Auth::guard('superadmin')->user()->id;
         console.log(datas);
         document.getElementById('editSalaryComponentId').value = datas.id;
         document.getElementById('editSalaryComponentTemplate').value = datas.salary_template_id;
-        document.getElementById('editSalaryComponentName').value = datas.name;
+        document.getElementById('editSalaryComponentName').value = datas.org_comp_id;
         document.getElementById('editSalaryComponentType').value = datas.type;
         document.getElementById('editSalaryComponentCalculationType').value = datas.calculation_type;
         document.getElementById('editSalaryComponentValue').value = datas.value;

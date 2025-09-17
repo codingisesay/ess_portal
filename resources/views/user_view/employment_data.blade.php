@@ -8,39 +8,27 @@
     <link rel="icon" href="{{ asset('user_end/images/STPLLogo butterfly.png') }}" />
     <link rel="stylesheet" href="{{ asset('/user_end/css/homepage.css') }}">
     <link rel="stylesheet" href="{{ asset('/user_end/css/header.css') }}">
+    <link rel="stylesheet" href="{{ asset('/user_end/css/homepage.css') }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    
-   
-     <style> 
-    .eduction-info-item .info-value {
-            font-size: 1.1rem;
-            color: #333;
-            padding: 8px 12px;
-            background: #f8f9fa;
-            border-radius: 6px;
-            border-left: 3px solid #8A3366;}
-            .eduction-info-item .info-label {
-                font-size: 16px;font-weight: 500;
-            }
-     </style>
+     
 </head>
 <body>
  
     <div class="row mx-3">
-        <h2> Employee Details</h2>
+        <!-- <h2> Employee Detailssss</h2> -->
           <!-- comman component below -->
-        <div class="col-md-4 my-2">
+        <div class="col-lg-4 col-md-12 col-sm-12 my-2">
             <div class="section custom-table h-100">
             @include('user_view.employment_details_top')
             <hr>
             @include('user_view.employment_details_section')
             </div>
         </div>
-        <div class="col-md-8  ">
+        <div class="col-lg-8 col-md-12 ">
             <div class="row my-auto " >    
-                <div class="col-6 my-2">
+                <div class="col-md-6 my-2">
                     <div class="section custom-table h-100">
-                    <h5> Employee Details</h5>
+                    <h5 class="d-flex align-items-center"><x-icon name="empidoutline"/>&nbsp;Employee Details</h5>
                         <table> 
                             
                             <tr>
@@ -59,12 +47,20 @@
                                 <th>Total Experience</th>
                                 <td><b>{{ ucfirst($userDetails->total_experience ?? '-') }}</b></td>
                             </tr>
+                            <tr>
+                                <th>Experience In Current Company</th>
+                                <td>
+                                    <b>
+                                        {{ $userDetails->experience_year }} . {{ $userDetails->experience_month }} months
+                                    </b>
+                                </td>
+                            </tr>
                         </table>
                     </div>
                 </div>
-                <div class="col-6 my-2">
+                <div class="col-md-6 my-2">
                     <div class="section custom-table h-100"> 
-                    <h5>Salary Bank Details</h5>
+                    <h5 class="d-flex align-items-center"><x-icon name="bankoutline"/>&nbsp;Salary Bank Details</h5>
                     <table> 
                     
                         <tr>
@@ -86,9 +82,9 @@
                     </table>
                     </div>
                 </div>
-                <div class="col-6 my-2">
+                <div class="col-md-6 my-2">
                     <div class="section custom-table h-100">
-                        <h5>Personal Information</h5>
+                        <h5 class="d-flex align-items-center"><x-icon name="personalinfooutline"/>&nbsp;Personal Information</h5>
                         <table>
                             <tr>
                                 <th>Date of Birth</th>
@@ -103,6 +99,14 @@
                                 <td><b>{{ ucfirst($userDetails->nationality ?? '-') }}</b></td>
                             </tr>
                             <tr>
+                                <th>Religion</th>
+                                <td><b>{{ ucfirst($userDetails->religion ?? '-') }}</b></td>
+                            </tr>
+                            <tr>
+                                <th>Blood Group</th>
+                                <td><b>{{ ucfirst($userDetails->blood_group ?? '-') }}</b></td>
+                            </tr>
+                            <tr>
                                 <th>Marital Status</th>
                                 <td><b>{{ ucfirst($userDetails->marital_status ?? '-') }}</b></td>
                             </tr>
@@ -110,20 +114,12 @@
                                 <th>Anniversary Date</th>
                                 <td><b>{{ $userDetails->anniversary_date ? \Carbon\Carbon::parse($userDetails->anniversary_date)->format('d-m-Y') : '-' }}</b></td>
                             </tr>
-                            <tr>
-                                <th>Blood Group</th>
-                                <td><b>{{ ucfirst($userDetails->blood_group ?? '-') }}</b></td>
-                            </tr>
-                            <tr>
-                                <th>Religion</th>
-                                <td><b>{{ ucfirst($userDetails->religion ?? '-') }}</b></td>
-                            </tr>
                         </table>
                     </div>
                 </div> 
-                <div class="col-6 my-2">
+                <div class="col-md-6 my-2">
                     <div class="section custom-table h-100"> 
-                    <h5>Passport & Visa Details</h5>
+                    <h5 class="d-flex align-items-center"><x-icon name="passportoutline"/>&nbsp;Passport & Visa Details</h5>
                     <table class="custom-table">             
                         <tr>
                             <th>Passport Number</th>
@@ -142,7 +138,7 @@
                             <td><b>{{ $userDetails->passport_expiry_date ? \Carbon\Carbon::parse($userDetails->passport_expiry_date)->format('d-m-Y') : '-' }}</b></td>
                         </tr>
                         <tr>
-                            <th>Visa</th>
+                            <th>Visa Applicable</th>
                             <td><b>{{ ucfirst($userDetails->active_visa ?? '-') }}</b></td>
                         </tr>
                         <tr>
@@ -154,9 +150,9 @@
 
                     </div>
                 </div>
-                <div class="col-6 my-2">
+                <div class="col-md-6 my-2">
                     <div class="section custom-table h-100"> 
-                    <h5>Welfare Benefits</h5>
+                    <h5 class="d-flex align-items-center"><x-icon name="wellfareoutline"/>&nbsp;Welfare Benefits</h5>
                     <table>                 
                         <tr>
                             <th>UAN</th>
@@ -173,9 +169,9 @@
                     </table> 
                     </div>
                 </div>
-                <div class="col-6 my-2">
+                <div class="col-md-6 my-2">
                     <div class="section custom-table h-100"> 
-                    <h5>Educational Details</h5>
+                    <h5 class="d-flex align-items-center"><x-icon name="educationoutline"/>&nbsp;Educational Details</h5>
                     <table class="">
                         <thead>
                             <tr>
@@ -215,9 +211,9 @@
         <!-- comman component above -->
   
         <!-- table section start below -->
-        <div class="col-6 my-2 ">
+        <div class="col-md-6 my-2 ">
             <div class="section h-100"> 
-                <h3>Family Details</h3>
+                <h5 class="d-flex align-items-center"><x-icon name="useroutline" />&nbsp;Family Details</h5>
                 <div class="table-scroll-container">
                     <table>
                         <thead>
@@ -250,9 +246,9 @@
                 </div>
             </div>
         </div>
-        <div class="col-6 my-2 "> 
+        <div class="col-md-6 my-2 "> 
             <div class="section h-100">
-                <h3>Previous Employment</h3>
+                <h5 class="d-flex align-items-center"><x-icon name="buildingoutline"/>&nbsp;Previous Employment</h5>
                 <div class="table-scroll-container">
                     <table>
                         <thead>
@@ -293,10 +289,10 @@
         </div>
         <div class="col-12 my-2 "> 
             <div class="section h-100"> 
-                <h3 class='d-flex  align-items-center'> <x-icon name="openfolder" />&nbsp; Uploaded Documents</h3>                
+                <h5 class='d-flex align-items-center'> <x-icon name="openfolder" />&nbsp; Uploaded Documents</h5>                
                 <div class="row my-2">  
                     @foreach($documents as $index => $document)
-                        <div class="col-6">
+                        <div class="col-md-6">
                             <div class="border-bottom my-2 pb-2 px-3 d-flex align-items-center">
                                 <span class="text-danger me-2"><x-icon name="pdf" /></span> 
                                 <!-- <td class="tableh-one">{{ $index + 1 }}</td> -->
@@ -331,7 +327,7 @@
     <div id="certificationModal" class="modal">
         <div class="modal-content">
             <!-- <div class="modal-header">  -->
-                <span class="close" onclick="closeModal('certificationModal')">X</span>
+                <span class="close" onclick="closeModal('certificationModal')">&times;</span>
                 <h5>Academic Details</h5> 
             <!-- </div> -->
             <div id="certification-modal-content-details">
@@ -350,30 +346,51 @@
             @foreach($empEducation as $index => $education)
                 if (serialNo === {{ $index }}) {
                     modalContent.innerHTML += `
-                    <div class="row eduction-info-item">
+                        <div class="row eduction-info-item">
                         <div class="col-md-6 my-2">
-                            <div class="info-label">Degree</div>
-                            <div class="info-value">{{ ucfirst($education->degree ?? '-') }}</div>
+                            <div class="form-group">
+                                <div class="floating-label-wrapper">
+                                    <label >Degree</label>
+                                    <input class="input-field" type="text" value=" {{ ucfirst($education->degree ?? '-') }} " />
+                                </div>                                
+                            </div>
                         </div>
                         <div class="col-md-6 my-2">
-                            <div class="info-label">University</div>
-                            <div class="info-value">{{ ucfirst($education->university_board ?? '-') }}</div>
+                            <div class="form-group">
+                                <div class="floating-label-wrapper">
+                                    <label >University</label>
+                                    <input class="input-field" type="text" value=" {{ ucfirst($education->university_board ?? '-') }} " />
+                                </div>                                
+                            </div>
                         </div>
                          
                         <div class="col-md-6 my-2">
-                            <div class="info-label">Institution</div>
-                            <div class="info-value">{{ ucfirst($education->institution ?? '-') }}</div>
+                            <div class="form-group">
+                                <div class="floating-label-wrapper">
+                                    <label >Institution</label>
+                                    <input class="input-field" type="text" value=" {{ ucfirst($education->institution ?? '-') }} " />
+                                </div>                                
+                            </div>
                         </div>
                         <div class="col-md-6 my-2">
-                            <div class="info-label">Passing Year</div>
-                            <div class="info-value">{{ $education->passing_year ? $education->passing_year : '-' }}</div>
+                            <div class="form-group">
+                                <div class="floating-label-wrapper">
+                                    <label >Passing Year</label>
+                                    <input class="input-field" type="text" value=" {{ $education->passing_year ? $education->passing_year : '-' }} " />
+                                </div>                                
+                            </div>
                         </div>
                          
                         <div class="col-md-6 my-2">
-                            <div class="info-label">Percentage</div>
-                            <div class="info-value">{{ ucfirst($education->percentage_cgpa ?? '-') }}</div>
+                            <div class="form-group">
+                                <div class="floating-label-wrapper">
+                                    <label >Percentage</label>
+                                    <input class="input-field" type="text" value=" {{ ucfirst($education->percentage_cgpa ?? '-') }} " />
+                                </div>                                
+                            </div>
                         </div>
                     </div>
+
                     `;
                 }
             @endforeach
@@ -390,21 +407,36 @@
                     modalContent.innerHTML += `
                     <div class="row eduction-info-item">
                         <div class="col-md-6 my-2">
-                            <div class="info-label">Certification Name</div>
-                            <div class="info-value">{{ ucfirst($education->certification_name ?? '-') }}</div>
+                            <div class="form-group">
+                                <div class="floating-label-wrapper">
+                                    <label>Certification Name</label>
+                                    <input type="text" class="input-field" value=" {{ ucfirst($education->certification_name ?? '-') }}" />
+                                </div>
+                            </div>
                         </div>
                         <div class="col-md-6 my-2">
-                            <div class="info-label">Marks Obtained</div>
-                            <div class="info-value">{{ ucfirst($education->marks_obtained ?? '-') }}</div>
-                        </div>
-                         
+                            <div class="form-group">
+                                <div class="floating-label-wrapper">
+                                    <label>Marks Obtained</label>
+                                    <input type="text" class="input-field" value=" {{ ucfirst($education->marks_obtained ?? '-') }} " />
+                                </div>
+                            </div>
+                        </div>                         
                         <div class="col-md-6 my-2">
-                            <div class="info-label">Total Marks</div>
-                            <div class="info-value">{{ ucfirst($education->out_of_marks_total_marks ?? '-') }}</div>
+                            <div class="form-group">
+                                <div class="floating-label-wrapper">
+                                    <label>Total Marks</label>
+                                    <input type="text" class="input-field" value=" {{ ucfirst($education->out_of_marks_total_marks ?? '-') }} " />
+                                </div>
+                            </div>
                         </div>
                         <div class="col-md-6 my-2">
-                            <div class="info-label">Certificate Date</div>
-                            <div class="info-value">{{ $education->date_of_certificate ? \Carbon\Carbon::parse($education->date_of_certificate)->format('d-m-Y') : '-' }}</div>
+                            <div class="form-group">
+                                <div class="floating-label-wrapper">
+                                    <label>Certificate Date</label>
+                                    <input type="text" class="input-field" value=" {{ $education->date_of_certificate ? \Carbon\Carbon::parse($education->date_of_certificate)->format('d-m-Y') : '-' }} " />
+                                </div>
+                            </div>
                         </div> 
                     </div> 
                     `;

@@ -134,16 +134,9 @@ form {
     align-items: center;
 }
 
-label {
-    font-size: 0.9em;
-    color: #555;
-    width: 35%;
-    text-align: left;
-}
-
-input[type="text"],
+input,
 textarea {
-    width: 60%;
+    width: 100%;
     padding: 8px;
     border: 1px solid #ccc;
     border-radius: 5px;
@@ -168,8 +161,13 @@ textarea {
     text-align: center;
 }
 
+input[type="checkbox"] {
+    width: auto;
+}
+
 input[type="radio"] {
     margin-right: 5px;
+    width: auto;
     accent-color: #800080;
 }
 
@@ -205,7 +203,7 @@ input[type="radio"] {
     position: relative;
 }
 
-.input-with-icon {
+/* .input-with-icon {
     position: relative;
     display: flex;
     align-items: center;
@@ -263,7 +261,7 @@ input[type="radio"] {
 
 .input-with-icon input:focus {
     border-color: #007BFF;
-}
+} */
 
 /* Dropdown Styling */
 
@@ -391,12 +389,14 @@ select:focus {
     /* Change background on hover */
 }
 
-
 .custom-table {
     width: 100%;
     border-collapse: collapse;
     margin: 0px 0;
     table-layout: auto;
+    scrollbar-width: thin;
+    scrollbar-color: #8A3366 #f1f1f1;
+    overflow: auto;
 }
 
 .custom-table th,
@@ -405,10 +405,11 @@ select:focus {
     padding: 8px;
     text-align: left;
     white-space: nowrap;
+
 }
 
 .custom-table th {
-    background-color: #E0AFA0;
+    background-color: #8A3366;
     font-weight: normal;
 }
 
@@ -418,4 +419,30 @@ select:focus {
 
 .custom-table tr:nth-child(odd) {
     background-color: #f9f9f9;
+}
+
+.page-item.active .page-link {
+    z-index: 3;
+    color: #fff;
+    border-radius: 8px;
+    background-color: #8A3366;
+    border-color: #8A3366;
+}
+
+.page-link {
+    color: #8A3366;
+    margin-right: 5px;
+    border-radius: 8px;
+}
+
+ul.pagination {
+    justify-content: right;
+}
+
+.d-flex.justify-content-center nav {
+    width: 100%;
+}
+
+.d-flex.justify-content-center nav .page-item {
+    margin-right: 10px;
 }

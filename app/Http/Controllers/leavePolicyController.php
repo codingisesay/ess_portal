@@ -238,9 +238,9 @@ class leavePolicyController extends Controller
             'leave_count_per_month' => 'required',
             'no_of_leaves_per_month' => 'required',
             'is_carry_forward' => 'required',
-            'no_of_carry_forward' => 'required',
+            'no_of_carry_forward' => 'nullable|numeric',
             'leave_encash' => 'required',
-            'leave_encash_count' => 'required',
+            'leave_encash_count' => 'nullable|numeric',
 
             'provision_status' => 'required',
             'max_leave_pp' => 'required',
@@ -268,9 +268,9 @@ class leavePolicyController extends Controller
                 'no_of_time_per_month' =>$data['no_of_leaves_per_month'],
 
                 'carry_forward'=> $data['is_carry_forward'],
-                'no_carry_forward' => $data['no_of_carry_forward'],
+                'no_carry_forward' => $data['no_of_carry_forward']?? null,
                 'leave_encash' => $data['leave_encash'],
-                'no_leave_encash' => $data['leave_encash_count'],
+                'no_leave_encash' => $data['leave_encash_count']?? null,
 
 
                 'provision_status'=> $data['provision_status'],
@@ -310,9 +310,9 @@ class leavePolicyController extends Controller
             'leave_count_per_month' => 'required|numeric',
             'no_of_leaves_per_month' => 'required|numeric',
             'is_carry_forward' => 'required|in:Yes,No',
-            'no_of_carry_forward' => 'required|numeric',
+            'no_of_carry_forward' => 'nullable|numeric',
             'leave_encash' => 'required|in:Yes,No',
-            'leave_encash_count' => 'required|numeric',
+            'leave_encash_count' => 'nullable|numeric',
             'provision_status' => 'required|in:Applicable,Not Applicable',
             'max_leave_pp' => 'required|numeric',
             'probation_period_per_month' => 'required|numeric',
@@ -447,6 +447,7 @@ class leavePolicyController extends Controller
         // Fetch applied leaves for the logged-in user (including approved, pending, and rejected)
         $appliedLeaves = DB::table('leave_applies')
             ->where('user_id', $user->id)
+            ->orderBy('created_at', 'desc') 
             ->get(); 
 
     // dd($appliedLeaves);
@@ -676,24 +677,25 @@ class leavePolicyController extends Controller
 
         //Load upcoming holidays
 
-         // Fetch upcoming and today's birthdays
-         $currentDate = Carbon::now();
-         $currentMonth = $currentDate->month;
-         $currentDay = $currentDate->day;
-         
-         $holidays_upcoming = DB::table('calendra_masters')
-             ->select('date', 'holiday_name', 'day')
-             ->where('holiday', '=', 'Yes')
-             ->whereMonth('date', '=', $currentMonth) // Filter by the current month
-             ->whereDay('date', '>=', $currentDay)   // Filter by day of the month in 'date'
-             ->get();
+                    // Get the current year
+            $currentYear = Carbon::now()->year;
+$today = Carbon::now()->toDateString();
 
-             $holidays_upcoming = $holidays_upcoming->map(function ($holiday) {
-                // Format the date to '19-March'
-                $holiday->formatted_date = Carbon::parse($holiday->date)->format('d F'); 
-                return $holiday;
-            });
-         
+// Fetch upcoming holidays for the current year
+$holidays_upcoming = DB::table('calendra_masters')
+    ->select('date', 'holiday_name', 'day')
+    ->where('holiday', '=', 'Yes')
+    ->whereYear('date', '=', $currentYear)
+    ->whereDate('date', '>=', $today) // ✅ Exclude past holidays
+    ->get();
+
+// Format the date for better display
+$holidays_upcoming = $holidays_upcoming->map(function ($holiday) {
+    // Format the date to '19 March'
+    $holiday->formatted_date = Carbon::parse($holiday->date)->format('d F'); 
+    return $holiday;
+});
+
         //  dd($holidays_upcoming);
 
         // attendence  rate query start
@@ -1106,6 +1108,17 @@ $remaning_leave = $total_leave - $takenLeave;
         // dd($data);
         $loginUserInfo = Auth::user();
 
+         // Check for existing pending leave for same user and date range
+    $existingLeave = DB::table('leave_applies')
+        ->where('user_id', $loginUserInfo->id)
+        ->where('start_date', $data['start_date'])
+        ->where('leave_approve_status', 'Pending')
+        ->first();
+
+    if ($existingLeave) {
+        return redirect()->route('leave_dashboard')->with('error', 'You already have a pending leave application for these dates.');
+    }
+
 
         try {
 
@@ -1113,7 +1126,8 @@ $remaning_leave = $total_leave - $takenLeave;
             ->select('name')
             ->where('id','=',$data['leave_type'])
             ->first();
-            // Try to insert or update the record
+        
+
             $status = DB::table('leave_applies')->insert([
                 'leave_type_id' => $data['leave_type'],
                 'start_date' => $data['start_date'],
@@ -1229,6 +1243,8 @@ if($data['leave_slot'] == 'First Half' || $data['leave_slot'] == 'Second Half'){
     
     public function updateLeaveStatusByUser($id)
     {
+
+        // dd($id);
 
         $loginUserInfo = Auth::user();
         

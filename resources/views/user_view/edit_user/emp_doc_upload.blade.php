@@ -2,6 +2,7 @@
 @extends('user_view/edit_user/employee_form_layout')
 @section('content') 
 <link rel="stylesheet" href="{{ asset('errors/error.css') }}">
+<link rel="stylesheet" href="{{ asset('user_end/css/onboarding_form.css') }}">
 {{-- @if(session('success'))
 <div class="alert custom-alert-success">
     <strong>{{ session('success') }}</strong> 
@@ -35,112 +36,125 @@ $permission_array = session('id');
 <head>
     <meta name="csrf-token" content="{{ csrf_token() }}">
 </head>
-<style>
-/* Reduce the width and height of the Dropzone container */
-.dropzone {
-    width: 100%;  /* Adjust as needed */
-    height: 200px; /* Adjust to the desired height */
-    border: 2px dashed #ccc; /* Optional: Style the border */
-    border-radius: 8px; /* Optional: Rounded corners */
-    padding: 20px; /* Optional: Add some padding */
-}
-
-/* Customize the inner dropzone content (for example the file preview area) */
-.dropzone .dz-preview {
-    max-width: 100%; /* Ensure the preview images don't overflow */
-}
-
-/* Optional: Increase the size of the file input area */
-.dropzone input[type="file"] {
-    width: 100%; /* Adjust width */
-    height: 100%; /* Adjust height */
-    opacity: 0; /* Hide the default file input element */
-}
-</style>
+ 
 
 <div class="tab-content active" id="tab7">
-    <p>Please ensure that all documents are clear and, if possible, converted to PDF format. This will improve file compatibility and readability.</p>
-    
-    <form action="/file-upload" method="POST" enctype="multipart/form-data" id="">
-        @csrf
+    <div  class="input-column">
+        <small class="text-muted">Please ensure that all documents are clear and, if possible, converted to PDF format. This will improve file compatibility and readability.</small>
         
-        <div class="services-container">
-            <!-- Previous Employment Documents -->
-            <div class="service-card">
-                <div class="service-icon">📑</div>
-                <div class="service-title">Previous Employment Documents</div>
-                <div class="service-description">Upload past experience certificates, relieving letters, and last 3 months' pay slips.</div>
-                <div class="dropzone" id="previous-employment-documents"></div>
-            </div>
+        <form action="/file-upload" method="POST" enctype="multipart/form-data" id="">
+            @csrf
+            
+            <div class="services-container">
+                <!-- Previous Employment Documents -->
+                <div class="service-card">
+                    <div class="d-flex align-items-center">
+                        <div class="service-icon">📑</div>
+                        <div >
+                        <div class="service-title">Previous Employment Documents</div>
+                        <small class="service-description">Upload past experience certificates, relieving letters, and last 3 months' pay slips.</small>
+                        </div>
+                    </div>
+                    <div class="dropzone" id="previous-employment-documents"></div>
+                </div>
 
-            <!-- Academic Testimonials (Marks Cards & Certificates) -->
-            <div class="service-card">
-                <div class="service-icon">🎓</div>
-                <div class="service-title">Academic Testimonials (Marks Cards & Certificates)</div>
-                <div class="service-description">Upload documents for X Standard, XII Standard, Graduation, Post-Graduation, and other qualifications.</div>
-                <div class="dropzone" id="academic-documents"></div>
-            </div>
+                <!-- Academic Testimonials (Marks Cards & Certificates) -->
+                <div class="service-card">
+                    <div class="d-flex align-items-center">
+                        <div class="service-icon">🎓</div>
+                        <div >
+                        <div class="service-title">Academic Testimonials (Marks Cards & Certificates)</div>
+                        <small class="service-description">Upload documents for X Standard, XII Standard, Graduation, Post-Graduation, and other qualifications.</small>
+                        </div>
+                    </div>
+                    <div class="dropzone" id="academic-documents"></div>
+                </div>
 
-            <!-- PAN Card -->
-            <div class="service-card">
-                <div class="service-icon">🪪</div>
-                <div class="service-title">PAN Card</div>
-                <div class="service-description">Upload your PAN card</div>
-                <div class="dropzone" id="pan-card"></div>
-            </div>
+                <!-- PAN Card -->
+                <div class="service-card">
+                    <div class="d-flex align-items-center">
+                        <div class="service-icon">🪪</div>
+                        <div >
+                        <div class="service-title">PAN Card</div>
+                        <small class="service-description">Upload your PAN card</small>
+                        </div>
+                    </div>
+                    <div class="dropzone" id="pan-card"></div>
+                </div>
 
-            <!-- Address Proof -->
-            <div class="service-card">
-                <div class="service-icon">🏠</div>
-                <div class="service-title">Address Proof</div>
-                <div class="service-description">Upload your address proof (utility bill, rental agreement, etc.).</div>
-                <div class="dropzone" id="address-proof"></div>
-            </div>
+                <!-- Address Proof -->
+                <div class="service-card">
+                    <div class="d-flex align-items-center">
+                        <div class="service-icon">🏠</div>
+                        <div >
+                        <div class="service-title">Address Proof</div>
+                        <small class="service-description">Upload your address proof (utility bill, rental agreement, etc.).</small>
+                        </div>
+                    </div>
+                    <div class="dropzone" id="address-proof"></div>
+                </div>
 
-            <!-- Passport Size Photographs (Self) -->
-            <div class="service-card">
-                <div class="service-icon">🖼️</div>
-                <div class="service-title">Passport Size Photographs (Self)</div>
-                <div class="service-description">Upload passport size photos of yourself.</div>
-                <div class="dropzone" id="passport-size-self"></div>
-            </div>
+                <!-- Passport Size Photographs (Self) -->
+                <div class="service-card">
+                    <div class="d-flex align-items-center">
+                        <div class="service-icon">🖼️</div>
+                        <div >
+                        <div class="service-title">Passport Size Photographs (Self)</div>
+                        <small class="service-description">Upload passport size photos of yourself.</small>
+                        </div>
+                    </div>
+                    <div class="dropzone" id="passport-size-self"></div>
+                </div>
 
-            <!-- Passport Size Photographs (Dependents) -->
-            <div class="service-card">
-                <div class="service-icon">👪</div>
-                <div class="service-title">Passport Size Photographs (Dependents)</div>
-                <div class="service-description">Upload 1 passport size photograph of each dependent (Parents, Spouse, Children, Sibling, and Other).</div>
-                <div class="dropzone" id="passport-size-dependents"></div>
-            </div>
+                <!-- Passport Size Photographs (Dependents) -->
+                <div class="service-card">
+                    <div class="d-flex align-items-center">
+                        <div class="service-icon">👪</div>
+                        <div >
+                        <div class="service-title">Passport Size Photographs (Dependents)</div>
+                        <small class="service-description">Upload 1 passport size photograph of each dependent (Parents, Spouse, Children, Sibling, and Other).</small>
+                        </div>
+                    </div>
+                    <div class="dropzone" id="passport-size-dependents"></div>
+                </div>
 
-            <!-- Passport Copy -->
-            <div class="service-card">
-                <div class="service-icon">📷</div>
-                <div class="service-title">Passport Copy (if available)</div>
-                <div class="service-description">Upload a scanned copy of your passport.</div>
-                <div class="dropzone" id="passport-copy"></div>
-            </div>
+                <!-- Passport Copy -->
+                <div class="service-card">
+                    <div class="d-flex align-items-center">
+                        <div class="service-icon">📷</div>
+                        <div >
+                        <div class="service-title">Passport Copy (if available)</div>
+                        <small class="service-description">Upload a scanned copy of your passport.</small>
+                        </div>
+                    </div>
+                    <div class="dropzone" id="passport-copy"></div>
+                </div>
 
-            <!-- Additional ID Proof -->
-            <div class="service-card">
-                <div class="service-icon">🆔</div>
-                <div class="service-title">Additional ID Proof</div>
-                <div class="service-description">Upload Additional ID proof (Voter's ID, Driving License, or Passport).</div>
-                <div class="dropzone" id="additional-id-proof"></div>
+                <!-- Additional ID Proof -->
+                <div class="service-card">
+                    <div class="d-flex align-items-center">
+                        <div class="service-icon">🆔</div>
+                        <div >
+                        <div class="service-title">Additional ID Proof</div>
+                        <small class="service-description">Upload Additional ID proof (Voter's ID, Driving License, or Passport).</small>
+                        </div>
+                    </div>
+                    <div class="dropzone" id="additional-id-proof"></div>
+                </div>
             </div>
-        </div>
-    </form>
-        <div class="button-container">
-            <a href="{{ route('user.editpreemp',['id' => $permission_array]) }}" style="text-decoration:none;">
-                <button type="button" class="previous-btn">
-                    <span>&#8249;</span>
-                </button>
-            </a>
-            <form action="{{ route('user.homepage') }}" method="get">
-                @csrf
-            <button type="submit" class="next-btn">Submit</button>
-            </form>
-        </div>
+        </form>
+            <div class="button-container">
+                <a href="{{ route('user.editpreemp',['id' => $permission_array]) }}" style="text-decoration:none;">
+                    <button type="button" class="previous-btn">
+                        <span>&#8249;</span>
+                    </button>
+                </a>
+                <form action="{{ route('user.homepage') }}" method="get">
+                    @csrf
+                <button type="submit" class="next-btn">Submit</button>
+                </form>
+            </div>
+    </div>
     
 </div>
 

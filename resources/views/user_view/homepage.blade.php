@@ -19,34 +19,30 @@ error_reporting(0);
     <link rel="stylesheet" href="{{ asset('/user_end/css/homepage.css') }}">
     <link rel="stylesheet" href="{{ asset('/user_end/css/header.css') }}">
     <link rel="stylesheet" href="{{ asset('errors/error.css') }}"> 
-    <link href="{{ asset('bootstrapcss/bootstrap.min.css') }}" rel="stylesheet"> 
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <link href="{{ asset('bootstrapcss/bootstrap.min.css') }}" rel="stylesheet">  
 </head>
-
-
-    <!-- First main for three sections -->
-     
-    <div class="row mx-3">
-        <div class=" col-lg-4 col-md-6 col-sm-12 p-0">
-            <h2 class="ms-2" id="greeting"></h2> 
-            <div class="row mx-1"> 
+ 
+    <div class="row justify-content-center mx-3">
+        <div class=" col-lg-4 col-md-12 col-sm-12 p-0">
+            <h4 class="ms-2 mb-1 fw-bold" id="greeting"></h4>  
+            <div class="row mx-1 my-2"> 
                 @foreach ($logs as $log)  
                 <div class="col-md-6 col-sm-6">
                     <div class="row ">
-                    <div class="col-md-6 col-sm-6 my-2 px-0">
-                        <div class="card checkin  mx-1">
+                    <div class="col-6 px-0">
+                        <div class="card checkin m-1">
                             <img src="{{ asset('user_end/images/Group490.png'); }}" alt="" />
                             <div >
-                                <p class="fs-6 mb-0">Sign&nbsp;In</p>
+                                <p class="fs-6 mb-0">Log&nbsp;In</p>
                                 <small>{{ date('h:i:s A', strtotime($log->login_time)) }}</small>   
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-6 col-sm-6 my-2 px-0">
-                        <div class="checkout card  mx-1 ">
+                    <div class="col-6 px-0">
+                        <div class="checkout card m-1">
                             <img src="{{ asset('user_end/images/Group491.png'); }}" alt=""/>
                             <div >
-                                <p class="fs-6 mb-0">Sign&nbsp;Out</p>
+                                <p class="fs-6 mb-0">Log&nbsp;Out</p>
                                 <small>{{ $log->logout_time ? date('h:i:s A', strtotime($log->logout_time)) : 'First Login' }}</small>
                             </div>
                         </div>
@@ -54,7 +50,7 @@ error_reporting(0);
                     </div>
                 </div>
                 @endforeach
-                <div class="col-md-6 col-sm-6 my-2 p-0"> 
+                <div class="col-md-6 col-sm-6 p-0"> 
                     <!-- Birthday Card -->
                     <!-- <div class="birthday-carousel-container mx-1"> -->
                         <!-- <div class="birthday-carousel" id="birthdayCarousel"> -->
@@ -63,11 +59,13 @@ error_reporting(0);
                                     return \Carbon\Carbon::parse($birthday->birthdate)->isToday();
                                 });
                             @endphp 
-                            <div class="card birthday mx-1">
+                            <div class="card birthday m-1">
                                 <img src="{{ asset('user_end/images/Group303.png') }}" height="40" width="40" alt="Avatar" class="mb-2">  
                                 @if ($todaysBirthdays->isEmpty())    
-                                        <h6 class="mb-0 " >No birthdays today</h6>
-                                        <small>Check back later!</small> 
+                                        <div>
+                                            <h6 class="mb-0 " >No birthdays today</h6>
+                                            <small>Check back later!</small> 
+                                        </div>
                                 @else  
                                     @foreach ($todaysBirthdays as $birthday)
                                         <div class="slide">
@@ -80,25 +78,25 @@ error_reporting(0);
                         <!-- </div>  -->
                     <!-- </div>    -->
                 </div> 
-                <div class="col-6 p-0">
-                    <div class=" thought card mx-1 ">
-                        <p class="fs-6 mb-0">
-                            <img src="{{ asset('user_end/images/Group326.png'); }}" alt=""> 
+                <div class="col-sm-6 p-0">
+                    <div class=" thought card  m-1">
+                        <p class="fs-6 mb-0 d-flex justify-content-left align-items-center  ">
+                            <img src="{{ asset('user_end/images/Group326.png'); }}" alt=""> &nbsp;
                             Daily Insight
                         </p>
                         @if($thoughtOfTheDay)
-                        <i>{{ $thoughtOfTheDay->thought }}</i>
+                            <i>{{ $thoughtOfTheDay->thought }}</i>
                         @else
                             <small class="text-secondary">No thought for today.</small>
                         @endif 
                     </div> 
                 </div>
-                <div class="col-6 p-0">
+                <div class="col-sm-6 p-0">
                     <!-- Upcoming Holiday Card -->
-                    <div class="card holiday1 mx-1">
-                        <p class="fs-6 mb-0">
-                            <img src="{{ asset('user_end/images/holiday.png'); }}" alt="">
-                            Break Alert
+                    <div class="card holiday1  m-1">
+                        <p class="fs-6 mb-0 d-flex justify-content-left align-items-center ">
+                            <img src="{{ asset('user_end/images/holiday.png'); }}" alt=""> &nbsp;
+                            Upcoming Holiday
                         </p>
                         
                         @if($upcomingHolidays->isNotEmpty())
@@ -128,74 +126,83 @@ error_reporting(0);
                 </div>
             </div>
         </div>
-        <div class=" col-lg-2 col-md-6 col-sm-12 p-1">            
-            <section class="to-do-list"> 
-                <h5 class="mt-3">To-do List</h5>
-                <form id="todo-form" class="to-do-list-container" method="POST" action="{{ route('user.save_todo') }}">
-                    @csrf 
-                        <!-- Project Field -->
-                        <div class="form-group">
-                            <div class="floating-label-wrapper">
-                                <input type="text" id="project" maxlength="200" name="project_name" Placeholder="Project Name" class="input-field" required>
-                                <label for="project">Project</label>
+
+        <div class="col-lg-5 col-md-12 col-sm-12 py-1 row">
+ 
+            <div class=" col-md-6 col-sm-12 p-1">      
+                <section class="upcoming-anniversary ">
+                    <h5 class="">Work Anniversary</h5>
+                    <div class="anniversary">
+                        @forelse ($anniversaries as $anniversary)
+                        <div class=" border rounded-3 shadow-sm mb-2">
+                            <div class="d-flex justify-content-between p-2">
+                                <div class="details mb-3"> 
+                                    <p class="mb-0" ><strong> {{ $anniversary->Employee_Name }}</strong></p>
+                                    <small >{{ $anniversary->yearsCompleted }} Years Completed</small>
+                                    <div class="badge">{{ $anniversary->badgeText }}</div>
+                                </div> 
+                                <!-- <img class="mb-3" src='https://i.pinimg.com/736x/99/4b/51/994b51b05a506a082ea193492a449ca9.jpg' alt="photo" /> -->
                             </div>
                         </div>
-
-                        <!-- Task Field -->
-                        <div class="form-group">
-                            <div class="floating-label-wrapper">
-                                <input type="text" maxlength="200" id="task" name="task_name" placeholder="Task Description" class="input-field" required>
-                                <label for="task">Task</label>
-                            </div>
-                        </div>
-
-                        <!-- Date Field -->
-                        <div class="form-group">
-                            <div class="floating-label-wrapper">
-                                <input type="date" name="task_date" id="task_date" placeholder=" " class="input-field" required>
-                                <label for="task_date">Date</label>
-                            </div>
-                        </div>
-
-                        <!-- Hours Field -->
-                        <div class="form-group">
-                            <div class="floating-label-wrapper">
-                                <input type="time" id="hours" name="hours" class="input-field" value="00:00:00" placeholder=" " required>
-                                <label for="hours">Hours</label>
-                            </div>
-                        </div>
-
-                        <!-- Save Button -->
-                        <button type="submit" class="save-button">Save</button> 
-                </form>
-            </section>
-        </div>
-        <div class=" col-lg-2 col-md-6 col-sm-12 p-1">      
-            <section class="upcoming-anniversary">
-                <h5 class="mt-3">Work Anniversary</h5>
-                <div class="anniversary">
-                    @forelse ($anniversaries as $anniversary)
-                    <div class=" border rounded-3 shadow-sm mb-1">
-                        <div class="d-flex justify-content-between p-2">
-                            <div class="details mb-4"> 
-                                <h6 class="mb-0" >{{ $anniversary->Employee_Name }}</h6>
-                                <small >{{ $anniversary->yearsCompleted }} Years Completed</small>
-                                <div class="badge">{{ $anniversary->badgeText }}</div>
-                            </div> 
-                            <!-- <img class="mb-3" src='https://i.pinimg.com/736x/99/4b/51/994b51b05a506a082ea193492a449ca9.jpg' alt="photo" /> -->
-                        </div>
+                        @empty
+                        <p class="text-muted text-center py-3">No Work Anniversary for the current month.</p>
+                        @endforelse
                     </div>
-                    @empty
-                    <p class="text-muted text-center py-3">No Work Anniversary for the current month.</p>
-                    @endforelse
-                </div>
-            </section>
+                </section>
+            </div>
+            <div class=" col-md-6 col-sm-12 p-1">            
+                <section class="to-do-list "> 
+                    <h5 class="">To-do List</h5>
+                    <form id="todo-form" class="to-do-list-container" method="POST" action="{{ route('user.save_todo') }}">
+                        @csrf 
+                            <!-- Project Field -->
+                            <div class="form-group">
+                                <div class="floating-label-wrapper">
+                                    <input type="text" id="project" maxlength="200" name="project_name" Placeholder="Project Name" class="input-field" required>
+                                    <label for="project">Project</label>
+                                </div>
+                            </div>
+
+                            <!-- Task Field -->
+                            <div class="form-group">
+                                <div class="floating-label-wrapper">
+                                    <input type="text" maxlength="200" id="task" name="task_name" placeholder="Task Description" class="input-field" required>
+                                    <label for="task">Task</label>
+                                </div>
+                            </div>
+
+                            <!-- Date Field -->
+                            <div class="form-group">
+                                <div class="floating-label-wrapper">
+                                    <input type="date" name="task_date" id="task_date" placeholder=" " class="input-field" required>                                
+                                    <label for="task_date">Date</label>
+                                </div>
+                            </div>
+
+                            <!-- Hours Field -->
+                            <div class="form-group">
+                                <div class="floating-label-wrapper">
+                                    
+                                <input class="input-field standard" type="text" placeholder="00.00" id="hours" name="hours"
+                                            onchange="console.log('Time changed to: ' + this.value)" />
+                                    <!-- <input type="time" id="hours" name="hours" class="input-field" value="00:00:00" placeholder=" " required> -->
+                                    <label for="hours">Hours</label>
+                                </div>
+                            </div>
+
+                            <!-- Save Button -->
+                            <button type="submit" class="save-button w-auto mx-auto py-1 px-3">Save</button> 
+                    </form>
+                </section>
+            </div>
+
         </div>
-        <div class=" col-lg-4 col-md-6 col-sm-12 p-1">
-           
-            <section class="calendar-container">
-                <h5 class="calendar-header mt-3">Calendar</h5>
-                <div class="main-cal">
+
+
+        <div class=" col-lg-3 col-md-6 col-sm-12 p-1">           
+            <section class="calendar-container mx-auto">
+                <h5 class="calendar-header ">Calendar</h5>
+                <div class="main-cal px-3">
                     <div id="calendar-controls">
                         <button id="prev-month" class="slider-btn">&lt;</button>
 
@@ -212,9 +219,9 @@ error_reporting(0);
             </section> 
          
         </div>
-    </div> 
+    <!-- </div> 
  
-    <div class="row mx-3">
+    <div class="row mx-3"> -->
         <div class="col-lg-3 col-md-6 col-sm-12 p-1"> 
             <section class="approval-pending">
                 <h5>Approval Pending</h5>
@@ -244,7 +251,7 @@ error_reporting(0);
                         <img src="{{ asset('user_end/images/cake 5.png'); }}" alt="Alert Icon" class="alert-icon">
                     </div>
                 </div> 
-                <div class="approval-card" id="reimbursement-card" onclick="openReimbursementModal()">
+                <div class="approval-card {{ $reimbursementList->isNotEmpty() ? 'glow-effect' : '' }}" id="reimbursement-card" onclick="openReimbursementModal()">
                     <div class="card-left">
                         <div class="leave-approval-icon3"> <x-icon name="reimpay" /></div>
                         <div class="details">
@@ -255,7 +262,7 @@ error_reporting(0);
                         <img src="{{ asset('user_end/images/cake 5.png'); }}" alt="Alert Icon" class="alert-icon">
                     </div>
                 </div>  
-                <div class="approval-card" id="reimbursement-card" onclick="openAccountModal()">
+                <div class="approval-card {{ $approvedClaimsByManager->isNotEmpty() ? 'glow-effect' : '' }}" id="reimbursement-card" onclick="openAccountModal()">
                     <div class="card-left">
                     <div class="leave-approval-icon4">   <x-icon name="reimpay" /></div>
                         <div class="details">
@@ -276,7 +283,7 @@ error_reporting(0);
                     <ul>
                         @foreach ($newsAndEvents as $event)
                         <li>
-                            <div class="d-flex">
+                            <div class="d-flex align-items-center">
                             <span class="date my-auto">{{ \Carbon\Carbon::parse($event->startdate)->format('d M') }}</span>
                             <h6>{{ $event->title }}</h6>
                             </div>
@@ -311,245 +318,253 @@ error_reporting(0);
         <div class="col-lg-3 col-md-6 col-sm-12 p-1"> 
             <section class="upcoming-birthdays">
                 <h5>Upcoming Birthdays</h5>
-                <div class="birthday-cards">
+               
+                <div class=" birthday-cards p-0">
+                    <div class="h-100 anniversary">
+                        @forelse ($upcomingBirthdays as $birthday)
+                        <div class=" border rounded-3 shadow-sm mb-2">
+                            <div class="d-flex  p-2">
+                            <img class="my-auto me-2" height="60" width="60" src="{{ asset('storage/' . ($birthday->imagelink ?: 'user_profile_image/Oqr4VRqo7RpQxnmiZCh12zybbcdsyUin2FhAKD3O.jpg')) }}" alt="photo" />
+                                <div class="details mb-3"> 
+                                    <p class="mb-0" ><strong> {{ $birthday->employee_nme }}</strong></p>
+                                    <small >{{ $birthday->designation_name }}</small>
+                                    <div class="badge">{{ $birthday->badgeText }}</div>
+                                </div> 
+                            </div>
+                        </div>
+                        @empty
+                        <p class="text-muted text-center py-3">No upcoming birthdays this month.</p>
+                        @endforelse
+                    </div>
+                </div>
+
+
+                <!-- <div class="birthday-cards">
                     @forelse ($upcomingBirthdays as $birthday)
-                    <div class="employee-card">
-                        <!-- <img src="{{ asset('storage/'.$birthday->imagelink) }}" alt="Profile Image" class="profile-image"> -->
-                        <!-- Check if the image exists or use the default image -->
+                    <div class="employee-card"> 
                         <img src="{{ asset('storage/' . ($birthday->imagelink ?: 'user_profile_image/Oqr4VRqo7RpQxnmiZCh12zybbcdsyUin2FhAKD3O.jpg')) }}" alt="Profile Image" class="profile-image">
 
-                        <div class="employee-info">
-                            <h6 class="mb-0">{{ $birthday->employee_nme }}</h6>
-                            <p class="text-secondary mb-0">{{ $birthday->designation_name }}</p>
-                            <div class="bdg" >{{ $birthday->badgeText }}</div>
-                        </div>
-                        </div>
+                            <div class="employee-info">
+                                <h6 class="mb-0">{{ $birthday->employee_nme }}</h6>
+                                <p class="text-secondary mb-0">{{ $birthday->designation_name }}</p>
+                                <div class="bdg" >{{ $birthday->badgeText }}</div>
+                            </div>
+                    </div>
                     
                     @empty
                     <p class="text-muted text-center py-3">No upcoming birthdays this month.</p>
                     @endforelse
-                </div>
+                </div> -->
+
+
             </section> 
         </div>
 
     </div>
-
-
-
+ 
     <!-- Popup Modal -->
     <div id="leaveModal" class="modal">
-        <div class="modal-content">
-            <span class="close" onclick="closeLeaveModal()">&times;</span>
-            <h5>Leave Details</h5>
-            <div class="tbl-container">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Employee No.</th>
-                            <th>Employee Name</th>
-                            <th>Leave Type</th>
-                            <th>Start Date</th>
-                            <th>End Date</th>
-                            <th>Days Count</th>
-                            <th>Reason</th>
-                            <th>Approve</th>
-                            <th>Reject</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                    @if (!empty($leaveLists))
-                        @foreach ($leaveLists as $leaveApply)
-                        @foreach ($leaveApply as $leave)
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <span class="close" onclick="closeLeaveModal()">&times;</span>
+                <h5>Leave Details</h5>
+                <div class="tbl-container">
+                    <table>
+                        <thead>
                             <tr>
-                                <td>{{ $leave->employee_no }}</td>
-                                <td>{{ $leave->employee_name }}</td>
-                                <td>{{ $leave->leave_name }}</td>
-                                <td>{{ \Carbon\Carbon::parse($leave->leave_start_date)->format('d-m-Y') }}</td>
-                                <td>{{ \Carbon\Carbon::parse($leave->leave_end_date)->format('d-m-Y') }}</td>
-                                <td>{{ $leave->days_count }}</td>
-                                <td>{{ $leave->leave_resion }}</td>
-                    
-                            
-                                <td>
-                                <form action="{{ route('leave_update_status', ['id' => $leave->leave_appliy_id, 'status' => 'Approved']) }}" method="POST" style="display: inline;">
-                                    @csrf
-                                    @method('PUT')
-                                    <button type="submit"  class="btn text-success"> <x-icon name="done" /> </button>
-                                </form>
-                                </td>
-                                <td>
-                                <form action="{{ route('leave_update_status', ['id' => $leave->leave_appliy_id, 'status' => 'Reject']) }}" method="POST" style="display: inline;">
-                                    @csrf
-                                    @method('PUT')
-                                    <button type="submit" class="btn text-danger"> <x-icon name="cancel" /> </button>
-                                </form>
-                            </td> 
+                                <th>Employee No.</th>
+                                <th>Employee Name</th>
+                                <th>Leave Type</th>
+                                <th>Start Date</th>
+                                <th>End Date</th>
+                                <th>Days Count</th>
+                                <th>Reason</th>
+                                <th>Action</th>                     
                             </tr>
+                        </thead>
+                        <tbody>
+                        @if (!empty($leaveLists))
+                            @foreach ($leaveLists as $leaveApply)
+                            @foreach ($leaveApply as $leave)
+                                <tr>
+                                    <td>{{ $leave->employee_no }}</td>
+                                    <td>{{ $leave->employee_name }}</td>
+                                    <td>{{ $leave->leave_name }}</td>
+                                    <td>{{ \Carbon\Carbon::parse($leave->leave_start_date)->format('d-m-Y') }}</td>
+                                    <td>{{ \Carbon\Carbon::parse($leave->leave_end_date)->format('d-m-Y') }}</td>
+                                    <td>{{ $leave->days_count }}</td>
+                                    <td>{{ $leave->leave_resion }}</td>
+                        
+                                
+                                    <td>
+                                    <form action="{{ route('leave_update_status', ['id' => $leave->leave_appliy_id, 'status' => 'Approved']) }}" method="POST" style="display: inline;">
+                                        @csrf
+                                        @method('PUT')
+                                        <button type="submit"  class="btn text-success"> <x-icon name="done" /> </button>
+                                    </form>
+                                    <form action="{{ route('leave_update_status', ['id' => $leave->leave_appliy_id, 'status' => 'Reject']) }}" method="POST" style="display: inline;">
+                                        @csrf
+                                        @method('PUT')
+                                        <button type="submit" class="btn text-danger"> <x-icon name="cancel" /> </button>
+                                    </form>
+                                    </td>
+                                </tr>
+                            @endforeach
                         @endforeach
-                    @endforeach
-                    @endif
-                    </tbody>
-                </table>
+                        @endif
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </div>
 
     <!-- Task Modal -->
     <div id="taskModal" class="modal">
-        <div class="modal-content">
-            <span class="close" onclick="closeTaskModal()">&times;</span>
-            <h5>Task</h5>
-            <div class="tbl-container">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Date</th>
-                            <th>Project</th>
-                            <th>Task</th>
-                            <th>Hours</th>
-                            <th>Status</th> <!-- New Column for Delete Icon -->
-                            <th>Action</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                    @if ($toDoList->isNotEmpty())
-                        @foreach($toDoList as $task)
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <span class="close" onclick="closeTaskModal()">&times;</span>
+                <h5>Task</h5>
+                <div class="tbl-container">
+                    <table>
+                        <thead>
                             <tr>
-                                <td>{{ date('d-m-Y', strtotime($task->date)) }}</td>
-                                <td>{{ $task->project_name }}</td>
-                                <td>{{ $task->task }}</td>
-                                <td>{{ $task->hours }}</td>
-                                <td>
-                                    <form action="{{ route('update_do_do', $task->id) }}" method="POST">
-                                        @csrf
-                                        @method('PUT')
-                                        <input type="hidden" name="id" value="{{ $task->id }}">
-                                        <select name="status">
-                                            <option value="{{ $task->status }}" selected>{{ $task->status }}</option>
-                                            <option value="Completed">Completed</option>
-                                            <option value="Cancelled">Cancelled</option>
-                                        </select>
-                                    </td>
-                                    <td>
-                                        <button type="submit">Update</button>
-                                    
-                                </td>
-                            </form>
+                                <th>Date</th>
+                                <th>Project</th>
+                                <th>Task</th>
+                                <th>Hours</th>
+                                <th>Status</th> <!-- New Column for Delete Icon -->
+                                <th>Action</th>
                             </tr>
-                        @endforeach
-                        @endif
+                        </thead>
+                        <tbody>
+                        @if ($toDoList->isNotEmpty())
+                            @foreach($toDoList as $task)
+                                <tr>
+                                    <td>{{ date('d-m-Y', strtotime($task->date)) }}</td>
+                                    <td>{{ $task->project_name }}</td>
+                                    <td>{{ $task->task }}</td>
+                                    <td>{{ $task->hours }}</td>
+                                    <td>
+                                        <form action="{{ route('update_do_do', $task->id) }}" method="POST">
+                                            @csrf
+                                            @method('PUT')
+                                            <input type="hidden" name="id" value="{{ $task->id }}">
+                                            <select name="status">
+                                                <option value="{{ $task->status }}" selected>{{ $task->status }}</option>
+                                                <option value="Completed">Completed</option>
+                                                <option value="Cancelled">Cancelled</option>
+                                            </select>
+                                        </td>
+                                        <td>
+                                            <button type="submit">Update</button>
+                                        
+                                    </td>
+                                </form>
+                                </tr>
+                            @endforeach
+                            @endif
 
-                        </form>
-                    </tbody>
-                </table>
+                            </form>
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </div>
 
     <!-- Reimbursement Modal -->
     <div id="reimbursementModal" class="modal">
-        <div class="modal-content">
-            <span class="close" onclick="closeReimbursementModal()">&times;</span>
-            <h5>Reimbursement Details</h5>
-            <div class="tbl-container">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Reference ID</th>
-                            <th>EMP ID</th>
-                            <th>Employee Name</th>
-                            <th>No. of Bills</th>
-                            <th>Total Amount</th>
-                            <th>Status</th>
-                            <th>Action</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @if (!empty($reimbursementList))
-                            @foreach ($reimbursementList as $reimbursement)
-                                <tr>
-                                    <td>{{ $reimbursement->token_number }}</td>
-                                    <td>{{ $reimbursement->employee_no }}</td>
-                                    <td>{{ $reimbursement->employee_name }}</td>
-                                    <td>{{ $reimbursement->no_of_entries }}</td>
-                                    <td>{{ number_format($reimbursement->total_amount, 2) }}</td> <!-- Display total amount -->
-                                    <td>{{ $reimbursement->status }}</td> <!-- Display status -->
-                                    <td>
-                                        <a href="{{ route('user_claims',['user_id' => $reimbursement->user_id, 'reimbursement_traking_id' => $reimbursement->id]) }}">
-                                            <button>View</button>
-                                        </a>
-                                    </td>
-                                </tr>
-                            @endforeach
-                        @else
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <span class="close" onclick="closeReimbursementModal()">&times;</span>
+                <h5>Reimbursement Details</h5>
+                <div class="tbl-container">
+                    <table>
+                        <thead>
                             <tr>
-                                <td colspan="6" class="text-center">No reimbursement details available.</td>
+                                <th>Reference ID</th>
+                                <th>EMP ID</th>
+                                <th>Employee Name</th>
+                                <th>No. of Bills</th>
+                                <th>Total Amount</th>
+                                <th>Status</th>
+                                <th>Action</th>
                             </tr>
-                        @endif
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody>
+                            @if (!empty($reimbursementList))
+                                @foreach ($reimbursementList as $reimbursement)
+                                    <tr>
+                                        <td>{{ $reimbursement->token_number }}</td>
+                                        <td>{{ $reimbursement->employee_no }}</td>
+                                        <td>{{ $reimbursement->employee_name }}</td>
+                                        <td>{{ $reimbursement->no_of_entries }}</td>
+                                        <td>{{ number_format($reimbursement->total_amount, 2) }}</td> <!-- Display total amount -->
+                                        <td>{{ $reimbursement->status }}</td> <!-- Display status -->
+                                        <td>  <button>  
+                                            <a href="{{ route('user_claims',['user_id' => $reimbursement->user_id, 'reimbursement_traking_id' => $reimbursement->id]) }}">
+                                                <x-icon name="newtab" />
+                                            </a> </button>
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            @else
+                                <tr>
+                                    <td colspan="6" class="text-center">No reimbursement details available.</td>
+                                </tr>
+                            @endif
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </div>
 
     <!-- Reimbursement Account Modal -->
     <div id="accountModal" class="modal">
-        <div class="modal-content">
-            <span class="close" onclick="closeAccountModal()">&times;</span>
-            <h5>Account Details</h5>
-            <div class="tbl-container">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Manager ID</th>
-                            <th>Manager Name</th>
-                            <th>Claim of Employee</th>
-                            <th>Action</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @if (!empty($accountList))
-                            @foreach ($accountList as $account)
-                                <tr>
-                                    <td>{{ $account->manager_id }}</td>
-                                    <td>{{ $account->name }}</td>
-                                    <td>{{ $account->approved_claims }}</td>
-                                    <td>
-                                        <button onclick="viewAccountDetails({{ $account->id }})">View</button>
-                                    </td>
-                                </tr>
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <span class="close" onclick="closeAccountModal()">&times;</span>
+                <h5>Reimbursement Details</h5>
+                <div class="tbl-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Manager ID</th>
+                                <th>Manager Name</th>
+                                <th>Claim of Employee</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach ($approvedClaimsByManager as $manager)
+                            <tr>
+                                <td>{{ $manager->manager_employee_no }}</td>
+                                <td>{{ $manager->manager_name }}</td>
+                                <td>{{ $manager->employee_name }}</td>
+                                <td>
+                                    <button>
+                                    <a href="{{ route('manager_claims', ['manager_id' => $manager->manager_id, 'reimbursement_traking_id' => $manager->reimbursement_traking_id]) }}"  >
+                                        <x-icon name="newtab" />
+                                    </a>
+                                    </button>
+                            </td>
+                            </tr>
                             @endforeach
-                        @else
-                            <tr>
-                                <!-- <td colspan="4">No account details available.</td> -->
-                            </tr>
-                            <!-- Dummy Data -->
-                            <tr>
-                                <td>EMP001</td>
-                                <td>Paresh Sir</td>
-                                <td>04</td>
-                                <td>
-                                <a href="{{ route('manager_claims') }}"><button>View</button></a>
-                                </td>
-                            </tr>
-                            <tr>
-                            <td>EMP001</td>
-                                <td>Akash Sir</td>
-                                <td>04</td>
-                                <td>
-                                <a href="{{ route('manager_claims') }}"><button>View</button></a>
-                                </td>
-                                
-                            </tr>
-                        @endif
-                    </tbody>
-                </table>
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </div>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script src="{{ asset('/bootstrapjs/jquery-clock-timepicker.min.js') }}"></script>
+<script src="{{ asset('/bootstrapjs/jquery-clock-timepicker.js') }}"></script>
+<!-- <script src="{{ asset('/bootstrapjs/jquery3.js') }}"></script>/ -->
 <script>
 
     // Leave Model script below
@@ -684,13 +699,13 @@ error_reporting(0);
         let greeting = "";
 
         if (hours >= 5 && hours < 12) {
-            greeting = "Good Morning";
+            greeting = "👋Good Morning";
         } else if (hours >= 12 && hours < 17) {
-            greeting = "Good Afternoon";
+            greeting = "👋Good Afternoon";
         } else if (hours >= 17 && hours < 21) {
-            greeting = "Good Evening";
+            greeting = "👋Good Evening";
         } else {
-            greeting = "Good Night";
+            greeting = "👋Good Night";
         }
 
         document.getElementById("greeting").textContent = greeting;
@@ -701,7 +716,66 @@ error_reporting(0);
     //greeting script above 
 </script>
       
+<script type="text/javascript">
+        $(document).ready(function () {
+            $('.standard').clockTimePicker();
+            $('.required').clockTimePicker({ required: true });
+            $('.separatorTime').clockTimePicker({ separator: '.' });
+            $('.precisionTime5').clockTimePicker({ precision: 5 });
+            $('.precisionTime10').clockTimePicker({ precision: 10 });
+            $('.precisionTime15').clockTimePicker({ precision: 15 });
+            $('.precisionTime30').clockTimePicker({ precision: 30 });
+            $('.precisionTime60').clockTimePicker({ precision: 60 });
+            $('.simpleTime').clockTimePicker({ onlyShowClockOnMobile: true });
+            $('.duration').clockTimePicker({ duration: true, maximum: '80:00' });
+            $('.durationNegative').clockTimePicker({ duration: true, durationNegative: true });
+            $('.durationMinMax').clockTimePicker({ duration: true, minimum: '1:00', maximum: '5:30' });
+            $('.durationNegativeMinMax').clockTimePicker({ duration: true, durationNegative: true, minimum: '-5:00', maximum: '5:00', precision: 5 });
+        });
+    </script>
+    <style type="text/css">
+        h1 {
+            font-size: 20px;
+            margin-bottom: 3px;
+        }
 
+        h2 {
+            margin-top: 40px;
+            margin-bottom: 3px;
+        }
+
+        h3 {
+            font-size: 13px;
+            margin-top: 0px;
+        }
+
+        .main {
+            text-align: center;
+        }
+
+        .example {
+            margin-bottom: 25px;
+        }
+
+        .example table {
+            width: 650px;
+            margin: 0px auto;
+        }
+
+        @media (max-width: 650px) {
+            .example table {
+                width: 100%;
+            }
+
+            .example td {
+                display: block;
+                text-align: center;
+            }
+        }
+
+        .clock-timepicker{width: 100%;}
+    </style>
+  
 <script>
     // PHP data passed to JavaScript for calendar below
     const holidays = <?php echo json_encode($holidays_upcoming); ?>;
@@ -847,4 +921,6 @@ error_reporting(0);
     generateCalendar(currentYear, currentMonth);
     //  calendar script above
 </script>
+
+
  @endsection

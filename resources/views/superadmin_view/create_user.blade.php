@@ -48,10 +48,10 @@ $id = Auth::guard('superadmin')->user()->id;
                 </div>
                 </div>
                 <div class="col-3 mb-2">
-                <div class="form-group">
-                    <input type="email" name="usermailid" required>
-                    <label>Email</label>
-                </div>
+                    <div class="form-group">
+                        <input type="email" name="usermailid" required>
+                        <label>Email</label>
+                    </div>
                 </div>
                 <div class="col-3 mb-2">
                 <div class="form-group">
@@ -61,6 +61,17 @@ $id = Auth::guard('superadmin')->user()->id;
                 <small> <a href="#" onclick="generateAndDisplayPassword()">Generate Password</a></small>
                 </div>
                  
+                <div class="col-3 mb-2">
+                <div class="form-group">
+                        <input type="hidden" name="organisation_id" value="1">
+                        <select name="acct_allow" required="" fdprocessedid="kg1mb">
+                            <option value="" disabled="" selected=""></option>
+                                    <option value="1">Not Allow</option>
+                                    <option value="2">Allowed</option> 
+                            </select>
+                        <label>Account Access</label>
+                    </div>
+                </div>
                 <div class="col-12">
                 <button class="create-btn" type="submit">Create User</button>
             </div>
@@ -76,6 +87,7 @@ $id = Auth::guard('superadmin')->user()->id;
                 ['header' => 'ID', 'accessor' => 'id'],
                 ['header' => 'Name', 'accessor' => 'name'],
                 ['header' => 'Email', 'accessor' => 'email'],
+                ['header' => 'Status', 'accessor' => 'user_status'],
             ],
             'editModalId' => 'openEditModal',
             'hasActions' => true,
@@ -105,6 +117,13 @@ $id = Auth::guard('superadmin')->user()->id;
                 <div class="popup-form-group">
                     <input type="email" name="usermailid" id="editUsermailid" required>
                     <label for="editUsermailid">User Email</label>
+                </div>
+                <div class="popup-form-group">
+                    <select name="user_status" id="editUserStatus" required>
+                        <option value="Active">Active</option>
+                        <option value="Inactive">Inactive</option>
+                    </select>
+                    <label for="editUserStatus">User Status</label>
                 </div>
                 <div class="popup-form-group">
                     <button class="create-btn1" type="submit">Save Changes</button>
@@ -161,6 +180,7 @@ $id = Auth::guard('superadmin')->user()->id;
         document.getElementById('editUsername').value = userdata.name;
         document.getElementById('editEmpid').value = userdata.employeeID;
         document.getElementById('editUsermailid').value = userdata.email;
+        document.getElementById('editUserStatus').value = userdata.user_status; // new line
         document.getElementById('editUserModal').style.display = 'block';
     }
 </script>

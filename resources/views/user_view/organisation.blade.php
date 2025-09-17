@@ -73,8 +73,8 @@ error_reporting(0);
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
  
 <div class="mx-4 mt-3">
-    <div class="header mb-5">
-        <h2>Organization Hierarchy</h2>
+    <div class="header mb-4">
+        <!-- <h4>Organization Hierarchy</h4> -->
         <div class="dropdown">
             <select id="display-option" onchange="changeDisplayMode()">
                 <option value="horizontal">Horizontal Organization Chart</option>
@@ -88,7 +88,7 @@ error_reporting(0);
     </div>
     
     <div class=" row">  
-        <div class="col-md-4">
+        <div class="col-md-4 my-2">
             <div class="employee-list">
                 <ul class="tree">
                     @foreach ($employeeHierarchy as $employee)
@@ -97,14 +97,18 @@ error_reporting(0);
                 </ul>
             </div>  
         </div>
-            <div class="col-md-8"> 
-                <div class="employee-details ">  
-                    <div class="left">  
-                        @include('user_view.employment_details_top')
-                    </div> 
-                    <div class="right"> 
-                        <!-- Include employment details section -->
-                        @include('user_view.employment_details_section')
+            <div class="col-md-8 "> 
+                <div class="employee-details row">  
+                    <div class="col-md-4 my-2">
+                        <div class="left">  
+                            @include('user_view.employment_details_top')
+                        </div> 
+                    </div>
+                    <div class="col-md-8 my-2">
+                        <div class="right"> 
+                            <!-- Include employment details section -->
+                            @include('user_view.employment_details_section')
+                        </div>
                     </div>
 
                 </div>  
@@ -220,6 +224,5 @@ error_reporting(0);
         // Call the function to display the logged-in employee details
         displayEmployeeDetails(empNo, empName, empDesignation, empManager, empDepartment, empCity, empPhone, empAlternatephone, empEmail, empContactperson, empContactnumber, profileImage, permanentAddress, correspondanceAddress);
     };
-</script>
- 
+</script> 
 @endsection

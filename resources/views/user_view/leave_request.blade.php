@@ -36,11 +36,14 @@ error_reporting(0);
 // dd($loginUserInfo);
 
 ?>
-<body>
+<body > 
     <div class="modal d-block" >
-        <div class="modal-content">
+  
+        <div class="modal-content  modal-lg">
             <div class="close" onclick="confirmCancel()">×</div>
-            <h5>Leave Request Form</h5>  
+            <h5>
+                <!-- <span class="back-btn mx-2" onclick="history.back()"> &lt; </span> -->
+                Leave Request Form</h5>  
             <form action="{{ route('insert_leave') }}" method="POST" id="leave_form" class="row">
                 @csrf
                 <div class="col-md-6 my-2">             
@@ -98,7 +101,7 @@ error_reporting(0);
                             <option value="First Half">First Half</option>
                             <option value="Second Half">Second Half</option> 
                         </select>
-                        <label for="leave_slot">Slot</label>
+                        <label style="display: none" for="leave_slot">Slot</label>
                     </div>
                 </div>
          
@@ -107,6 +110,7 @@ error_reporting(0);
                 </div>
             </form>
         </div>
+       
     </div>
 <div id="customAlert" class="custom-alert">
     <div class="alert-box">
@@ -126,6 +130,31 @@ error_reporting(0);
     </div>
 </div> --}} -->
 
+<script>
+// assuming you have input fields for start date and end date
+const startDateInput = document.getElementById('start_date');
+const endDateInput = document.getElementById('end_date');
+const slotField = document.getElementById('leave_slot');
+
+// add an event listener to the end date input field
+endDateInput.addEventListener('change', () => {
+  const startDate = startDateInput.value;
+  const endDate = endDateInput.value;
+
+  if (startDate === endDate) {
+    // show the slot field
+    slotField.style.display = 'block';
+  } else {
+    // hide the slot field
+    slotField.style.display = 'none';
+  }
+});
+</script>
+<style>
+    #leave_slot {
+  display: none;
+}
+</style>
 <script>
 
 $(document).ready(function () {

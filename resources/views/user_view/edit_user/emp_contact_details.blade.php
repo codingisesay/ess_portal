@@ -2,6 +2,7 @@
 @extends('user_view/edit_user/employee_form_layout') <!-- Extending the layout file -->
 @section('content')  <!-- Defining the content section -->
 <!-- <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css"> -->
+<link href="{{ asset('bootstrapcss/bootstrap.min.css') }}" rel="stylesheet"> 
 <link rel="stylesheet" href="{{ asset('errors/error.css') }}">
 
 <link rel="stylesheet" href="{{ asset('user_end/css/onboarding_form.css') }}">
@@ -49,15 +50,15 @@ $permission_array = session('id');
       <!-- <input type="hidden" name="employeeNo" value=""> -->
       <input type="hidden" name="form_step3" value="form_step3">
 
-      <!-- <h3>Address & Contact Details</h3> -->
+      <!-- <h4>Address & Contact Details</h4> -->
       <!-- Address Section -->
       <!-- Address Section -->
-      <div class="column" style="flex: 1; border: 1px solid #ba184e; padding: 20px; border-radius: 8px;">
+      <div class="input-column" >
           <div class="address-container">
               <!-- Permanent Address -->
 
               <div class="address-section">
-                  <h3>Permanent Address</h3>
+                  <h4 class="d-flex align-items-center"><x-icon name="locationfill"/>&nbsp;Permanent Address</h4>
                   <button type="button" class="clear-btn" onclick="clearPermanentAddress()"><i class="fas fa-undo"></i> <!-- Undo Icon --></button>
                   <button type="button" class="clear-btn1" onclick="clearCorrespondenceAddress()"><i class="fas fa-undo"></i> <!-- Undo Icon --></button>
 
@@ -90,8 +91,7 @@ $permission_array = session('id');
                               <label for="permanent_road_street">Road/Street<span
                                   style="color: red;">*</span></label>
                       </div>
-                  </div>
-                  <div class="form-row">
+                  
                       <div class="form-group">
                                 
                                 <span class="error" id="nationalityError"></span>
@@ -109,10 +109,9 @@ $permission_array = session('id');
                           <input type="text" id="pincode_permanent" name="permanent_pincode" onkeyup="fetchLocationDetails('permanent')"
                               class="form-control" placeholder="" minlength="5"
                               maxlength="6" pattern="\d{5,6}" oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 6); 
-       fetchCityAndState('permanent_pincode', 'permanent_city', 'permanent_state', 'permanent_district')" required value="{{ old('permanent_pincode', $emp_contact_datas[0]->per_pincode) }}">
-       {{-- <input type="text" id="pincode_permanent" value="" placeholder="Enter PIN code" class="form-control pincode" name="pincode_permanent" onkeyup="fetchLocationDetails('permanent')" required /> --}}
-       <label for="permanent_pincode">Pincode/Zipcode<span style="color: red;"
-       id="pincode-required">*</span></label>
+                                fetchCityAndState('permanent_pincode', 'permanent_city', 'permanent_state', 'permanent_district')" required value="{{ old('permanent_pincode', $emp_contact_datas[0]->per_pincode) }}"> 
+                                <label for="permanent_pincode">Pincode/Zipcode<span style="color: red;"
+                                id="pincode-required">*</span></label>
                       </div>
                       <div class="form-group">
                          
@@ -145,7 +144,7 @@ $permission_array = session('id');
               
               <div class="address-section">
                   <div class="correspondence-header">
-                      <h3 class="address-title">Correspondence Address</h3>
+                      <h4 class="d-flex align-items-center"><x-icon name="locationfill"/>&nbsp;Correspondence Address</h4>
                       <div class="same-address-container">
                         
                           <input type="checkbox" id="copy_address_checkbox" class="styled-checkbox"
@@ -201,8 +200,8 @@ $permission_array = session('id');
                               class="form-control" placeholder="" minlength="5" 
                               maxlength="6" pattern="\d{5,6}"
                               oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 6); 
-       fetchCityAndState('correspondence_pincode', 'correspondence_city', 'correspondence_state', 'correspondence_district')" value="{{ old('correspondence_pincode', $emp_contact_datas[0]->cor_pincode) }}">
-       <label for="correspondence_pincode">Pincode/Zipcode <span id="pincode-asterisk"></span></label>
+                            fetchCityAndState('correspondence_pincode', 'correspondence_city', 'correspondence_state', 'correspondence_district')" value="{{ old('correspondence_pincode', $emp_contact_datas[0]->cor_pincode) }}">
+                            <label for="correspondence_pincode">Pincode/Zipcode <span id="pincode-asterisk"></span></label>
                       </div>
                       <div class="form-group">
                           
@@ -218,12 +217,8 @@ $permission_array = session('id');
                               <label for="correspondence_city">City/Town/Village
                               </label>
                       </div>
-                  </div>
-                  <div class="form-row">
-                      
-
-                      <div class="form-group">
-                          
+                 
+                      <div class="form-group"> 
                           <input type="text" id="state_correspondence" name="correspondence_state" maxlength="35" 
                               class="form-control" placeholder="" value="{{ old('correspondence_state', $emp_contact_datas[0]->cor_state) }}">
                               <label for="correspondence_state">State/Province
@@ -235,9 +230,9 @@ $permission_array = session('id');
       </div>
      
       <!-- Contact Details -->
-      <div class="column" style="flex: 1; border: 1px solid #ba184e; padding: 20px; border-radius: 8px;">
+      <div class="input-column" >
 
-          <h3>Contact Details</h3>
+          <h4 class="d-flex align-items-center"><x-icon name="empidoutline"/>&nbsp;Contact Details</h4>
           <div class="form-row">
              
               <div class="form-group">
@@ -280,8 +275,8 @@ $permission_array = session('id');
               
                         </div>
       </div>
-      <div class="column" style="flex: 1; border: 1px solid #ba184e; padding: 20px; border-radius: 8px;">
-          <h3>Emergency Contact Details</h3>
+      <div class="input-column" >
+          <h4 class="d-flex align-items-center"><x-icon name="empidoutline"/>&nbsp;Emergency Contact Details</h4>
           <div class="address-form1">
               <div class="form-row1">
                   <div class="form-group">
@@ -312,10 +307,7 @@ $permission_array = session('id');
               </div>
           </div>
       </div>
-
-
-
-    
+ 
       <div class="button-container">
         <a href="{{ route('user.editdashboard',['id' => $permission_array]) }}" style="text-decoration:none;">
             <button type="button" class="previous-btn">

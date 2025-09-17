@@ -18,8 +18,8 @@ header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 12px 15px;
-    gap: 10px
+    padding: 10px 12px;
+    gap: 5px
         /* flex-wrap: wrap; */
 }
 
@@ -29,12 +29,12 @@ header {
     background-color: white;
     /* width: 100px; */
     text-align: center;
-    padding: 5px 5px 10px 5px;
+    padding: 5px;
 }
 
 .logo img {
     height: auto;
-    width: 130px;
+    width: 100px;
 }
 
 /* 🔹 NAVBAR */
@@ -43,9 +43,9 @@ nav {
     background-color: white;
     display: flex;
     align-items: center;
-    width: 80%;
+    width: 85%;
     justify-content: center;
-    padding: 12px 0;
+    padding: 10px 0;
     flex-wrap: wrap;
 }
 
@@ -67,6 +67,7 @@ nav ul li a {
     text-decoration: none;
     transition: color 0.3s ease;
     font-weight: 500;
+    font-size: 14px;
     white-space: nowrap;
     margin: 2px 5px;
 }
@@ -78,10 +79,9 @@ nav ul li a:hover {
 }
 
 .header-profile {
-    height: 30px;
-    width: 30px;
+    height: 40px;
+    width: 40px;
     border-radius: 50%;
-    margin-bottom: 4px;
     vertical-align: middle;
 }
 
@@ -120,7 +120,14 @@ nav ul li a:hover {
 
     /* Show nav when menu is active */
     nav.active {
-        display: flex;
+        display: block;
+        position: absolute;
+        z-index: 1;
+        top: 25%;
+        border-radius: 10px;
+        width: 90%;
+        box-shadow: rgba(0, 0, 0, 0.5) 0px 10px 26px;
+        margin: 0 4%;
     }
 }
 
@@ -132,7 +139,7 @@ nav ul li a:hover {
     border-radius: 60px;
     background-color: white;
     /* height: 60px; */
-    padding: 10px;
+    padding: 7px 5px;
 }
 
 /* CIRCULAR ICONS */

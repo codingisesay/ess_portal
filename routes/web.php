@@ -21,6 +21,7 @@ use App\Http\Controllers\leavePolicyController;
 use App\Http\Controllers\editUserController;
 use App\Http\Controllers\salaryBoxController;
 use App\Http\Controllers\ReimbursementController; 
+use App\Http\Controllers\BankController;
 
 
 
@@ -110,6 +111,7 @@ Route::middleware(['auth.superadmin'])->group(function () {
 //    Route::get('superadmin/create_salary_configuration',[salaryBoxController::class,'loadSalaryConfigurationForm'])->name('create_salary_configuration');
 
     Route::get('superadmin/create_salary_templates',[salaryBoxController::class,'loadInsertForm'])->name('salary_template_form');
+    Route::get('superadmin/create_components',[salaryBoxController::class,'loadCompForm'])->name('create_components');
     Route::get('superadmin/create_salary_components',[salaryBoxController::class,'loadcomponentsForm'])->name('create_salary_components');
 
     Route::get('superadmin/create_tax_cycle',[salaryBoxController::class,'loadTaxCycleForm'])->name('tax_cycle');
@@ -118,6 +120,7 @@ Route::middleware(['auth.superadmin'])->group(function () {
     //routes for insert salary box data
     Route::post('superadmin/insert_salary_cycle',[salaryBoxController::class,'insertSalaryCycle'])->name('insert_salary_cycle');
     Route::post('superadmin/insert_salary_template',[salaryBoxController::class,'insertSalaryTemplate'])->name('insert_salary_template');
+    Route::post('superadmin/insert_Components',[salaryBoxController::class,'insertComponents'])->name('insert_Components');
     Route::post('superadmin/insert_salary_Components',[salaryBoxController::class,'insertSalaryComponents'])->name('insert_salary_Components');
 
     Route::post('superadmin/insert_tax_cycle',[salaryBoxController::class,'insertTaxCycle'])->name('insert_tax_cycle');
@@ -125,6 +128,8 @@ Route::middleware(['auth.superadmin'])->group(function () {
         
     Route::post('superadmin/update_salary_template/{id}', [salaryBoxController::class, 'updateSalaryTemplate'])->name('update_salary_template');
     Route::post('superadmin/update_salary_component/{id}', [salaryBoxController::class, 'updateSalaryComponent'])->name('update_salary_component');
+    Route::post('superadmin/update_component/{id}', [salaryBoxController::class, 'updateComponents'])->name('update_component');
+    Route::post('superadmin/update_salary_cycle/{id}', [salaryBoxController::class, 'updateSalaryCycle'])->name('update_salary_cycle');
     Route::post('superadmin/update_tax_cycle/{id}', [salaryBoxController::class, 'updateTaxCycle'])->name('update_tax_cycle');
     Route::post('superadmin/update_tax_slab/{id}', [salaryBoxController::class, 'updateTaxSlab'])->name('update_tax_slab');
 
@@ -135,6 +140,12 @@ Route::middleware(['auth.superadmin'])->group(function () {
     Route::post('superadmin/insert_reimbursement_validation',[ReimbursementController::class,'insertReimbursementValidation'])->name('insert_reimbursement_validation');
     Route::post('superadmin/update_reimbursement_validation',[ReimbursementController::class,'updateReimbursementValidation'])->name('update_reimbursement_validation');
     Route::post('superadmin/update_reimbursement_type',[ReimbursementController::class,'updateReimbursementType'])->name('update_reimbursement_type');
+
+    //Bank Master
+    Route::get('/banks', [BankController::class, 'index'])->name('bank_master');
+    Route::post('/banks/insert', [BankController::class, 'insert'])->name('insert_bank');
+    Route::post('/banks/update/{id}', [BankController::class, 'update'])->name('update_bank');
+    Route::delete('/banks/delete/{id}', [BankController::class, 'delete'])->name('delete_bank');
     
 });
 
@@ -239,6 +250,7 @@ Route::middleware(['auth'])->group(function () {
     Route::post('user/save_calendra_master', [settingController::class, 'createCalendraMaster'])->name('create_calendra_master');
     Route::post('user/salaryTemCTC',[settingController::class, 'insertSalaryTempCTC'])->name('user.salaryTemCTC');
     Route::post('user/process_slary',[settingController::class, 'processSalary'])->name('process_salary');
+    Route::post('user/process_salary_details', [settingController::class, 'processSalaryDetails'])->name('process_salary_details');
 
        //userend
 
@@ -254,14 +266,19 @@ Route::middleware(['auth'])->group(function () {
  Route::get('user/PayRollDashboard',[salaryBoxController::class,'loadDashboard'])->name('PayRollDashboard');
  Route::get('user/claim_form',[salaryBoxController::class,'loadclaimform'])->name('claim_form');
  Route::get('user/clam_record/{user_id},{reimbursement_traking_id}', [salaryBoxController::class, 'loadUserClaims'])->name('user_claims');
- Route::get('user/manager_clam_record',[salaryBoxController::class,'loadMangerClaims'])->name('manager_claims');
+ Route::get('user/manager_clam_record/{manager_id}/{reimbursement_traking_id}',[salaryBoxController::class,'loadMangerClaims'])->name('manager_claims');
  Route::get('user/review_claim_form/{reimbursement_traking_id}',[salaryBoxController::class,'loadreviewclaimform'])->name('review_claim_form');
  Route::get('user/edit_claim_form/{reimbursement_traking_id}', [salaryBoxController::class, 'loadEditClaimForm'])->name('edit_claim_form');
-
+ 
+ Route::post('user/update_reimbursement_status/{reimbursement_traking_id}', [salaryBoxController::class, 'updateReimbursementStatus'])->name('update_reimbursement_status');
+ Route::put('update-finance-reimbursement/{reimbursement_traking_id}', [salaryBoxController::class, 'updateFinanceReimbursementStatus'])->name('update.finance.reimbursement');
  Route::post('user/insert_Reimbursement_Form',[salaryBoxController::class,'insertReimbursementForm'])->name('insert_Reimbursement_Form');
+ Route::post('user/cancel-reimbursement/{reimbursement_traking_id}', [SalaryBoxController::class, 'cancelReimbursement'])->name('cancel.reimbursement');
 
  Route::get('user/get_max_amount/{rm_id}',[salaryBoxController::class,'loadMaxAmoutRm'])->name('get_max_amount');
  Route::post('user/update_reimbursement_claims/{reimbursement_traking_id}', [salaryBoxController::class, 'updateClaimForm'])->name('update_reimbursement_claims');
-   
+
+ Route::get('user/download-payslip/{payroll_id}', [App\Http\Controllers\salaryBoxController::class, 'downloadPayslip'])->name('download_payslip');
+ Route::get('/load-payslip/{payroll_id}', [App\Http\Controllers\salaryBoxController::class, 'loadPayslip'])->name('load_payslip');
 });
 

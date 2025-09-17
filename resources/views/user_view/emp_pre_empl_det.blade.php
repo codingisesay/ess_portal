@@ -2,6 +2,8 @@
 @section('content')  <!-- Defining the content section -->
 <!-- <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css"> -->
 
+<link href="{{ asset('bootstrapcss/bootstrap.min.css') }}" rel="stylesheet"> 
+<link rel="stylesheet" href="{{ asset('user_end/css/onboarding_form.css') }}">
 <link rel="stylesheet" href="{{ asset('errors/error.css') }}">
 {{-- @if(session('success'))
 <div class="alert custom-alert-success">
@@ -30,17 +32,18 @@
 @endif
 
 <div class="tab-content active" id="tab6">
+<div  class="input-column">
     <form id="employmentForm" action="{{route('preEmp_insert')}}" method="POST">
         @csrf
         <input type="hidden" name="form_step8" value="employment_step">
-        <h3>Previous Employment</h3>
+        <h4 class="d-flex align-items-center"><x-icon name="building"/>&nbsp;Previous Employment </h4>
         <button type="button" class="add-row-employment action-button" onclick="addEmploymentRow()">Add Previous
             Employment</button>
         <div class="table-container">
             <table>
                 <thead>
                     <tr>
-                        <th>Serial No.</th>
+                        <!-- <th>Serial No.</th> -->
                         <!-- <th>Company Name</th> -->
                         <th>Employer Name</th>
                         <th>Country</th>
@@ -59,7 +62,7 @@
                     <!-- Rows will be added dynamically here -->
                     @foreach($emp_preEmp_details as $index => $detail)
                     <tr>
-                        <td class="serial-number">{{ $index + 1 }}</td>
+                        <td class="serial-number d-none">{{ $index + 1 }}</td>
  
 <td>
     <input type="hidden" name="serial_no[]" value="${employmentCounter}">
@@ -96,7 +99,7 @@
 <td><input type="custom-reason" name="reason_for_leaving[]" placeholder="Enter Reason For Leaving"  maxlength="250" value="{{$detail->reason_for_leaving}}" required></td>
 <td><input type="custom-major" name="major_responsibilities[]" placeholder="Enter Major Responsibilities"  maxlength="2000" required value="{{$detail->major_responsibilities}}"></td>
 {{-- <td><button type="button" onclick="editEmploymentRow(this)">✏️</button></td> --}}
-<td><button class="delete-button" data-id="{{ $detail->id }}" type="button" >❌</button></td>
+<td><button class="delete-button btn text-danger" data-id="{{ $detail->id }}" type="button" ><x-icon name="trash" /></button></td>
                     </tr>
                     @endforeach
                 </tbody>
@@ -119,6 +122,7 @@
 
     </form>
 </div>
+</div>
 <!-- uppercase bug -->
 <!-- JavaScript to Handle Adding Employment Rows Dynamically -->
 <script>
@@ -130,7 +134,7 @@
         const newRow = document.createElement('tr');
 
         newRow.innerHTML = `
-<td class="serial-number">${employmentCounter}</td>
+<td class="serial-number d-none">${employmentCounter}</td>
  
 <td>
     <input type="hidden" name="serial_no[]" value="${employmentCounter}">
@@ -168,7 +172,7 @@
 <td><input type="custom-reason" name="reason_for_leaving[]" placeholder="Enter Reason For Leaving"  maxlength="250" required></td>
 <td><input type="custom-major" name="major_responsibilities[]" placeholder="Enter Major Responsibilities"  maxlength="2000" required></td>
 
-<td><button type="button" onclick="removeEmploymentRow(this)">❌</button></td>
+<td><button type="button" onclick="removeEmploymentRow(this)" class='btn text-danger'><x-icon name="trash" /></button></td>
 `;
 
         tableBody.appendChild(newRow);
@@ -213,6 +217,8 @@
     }
 </script>
 <script src="{{ asset('user_end/js/onboarding_form.js') }}"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
     $(document).on('click', '.delete-button', function () {
         // Get the ID of the record to be deleted
@@ -220,27 +226,76 @@
       
     console.log(preEmolyee);
         // Confirm delete action
-        if (confirm('Are you sure you want to delete this item?')) {
-            // Send an AJAX DELETE request to the server
-            $.ajax({
-                url: '/user/pre_emply/' + preEmolyee,  // Adjust the route URL if necessary
-                type: 'DELETE',
-                data: {
-                    _method: 'DELETE',
-                    _token: '{{ csrf_token() }}', 
-                    preEmolyee:preEmolyee,// CSRF token for security
-                },
-                success: function (response) {
-                    // On success, remove the row from the table
-                    $('button[data-id="' + preEmolyee + '"]').closest('tr').remove();
-                    alert('Previous Employment record deleted successfully!');
-                },
-                error: function (response) {
-                    alert('Error deleting record. Please try again.');
-                    console.log(preEmolyee);
-                }
-            });
-        }
+        // if (confirm('Are you sure you want to delete this item?')) {
+        //     // Send an AJAX DELETE request to the server
+        //     $.ajax({
+        //         url: '/user/pre_emply/' + preEmolyee,  // Adjust the route URL if necessary
+        //         type: 'DELETE',
+        //         data: {
+        //             _method: 'DELETE',
+        //             _token: '{{ csrf_token() }}', 
+        //             preEmolyee:preEmolyee,// CSRF token for security
+        //         },
+        //         success: function (response) {
+        //             // On success, remove the row from the table
+        //             $('button[data-id="' + preEmolyee + '"]').closest('tr').remove();
+        //             alert('Previous Employment record deleted successfully!');
+        //         },
+        //         error: function (response) {
+        //             alert('Error deleting record. Please try again.');
+        //             console.log(preEmolyee);
+        //         }
+        //     });
+        // }
+
+// Confirm delete action using SweetAlert
+Swal.fire({
+    title: 'Are you sure?',
+    text: 'You won\'t be able to revert this!',
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonColor: '#3085d6',
+    cancelButtonColor: '#d33',
+    confirmButtonText: 'Yes, delete it!',
+}).then((result) => {
+    if (result.isConfirmed) {
+        // Send an AJAX DELETE request to the server
+        $.ajax({
+            url: '/user/pre_emply/' + preEmolyee,  // Adjust the route URL if necessary
+            type: 'DELETE',
+            data: {
+                _method: 'DELETE',
+                _token: '{{ csrf_token() }}', 
+                preEmolyee: preEmolyee, // CSRF token for security
+            },
+            success: function (response) {
+                // On success, remove the row from the table
+                $('button[data-id="' + preEmolyee + '"]').closest('tr').remove();
+                Swal.fire(
+                    'Deleted!',
+                    'The previous employment record has been deleted.',
+                    'success'
+                );
+            },
+            error: function (response) {
+                Swal.fire(
+                    'Error!',
+                    'There was an issue deleting the record. Please try again.',
+                    'error'
+                );
+                console.log(preEmolyee);
+            }
+        });
+    }
+});
+
+
+
+
+
+
+
+
     });
     document.getElementById('previous-btn-link').addEventListener('click', function(event) {
         event.stopPropagation(); // Stop the form submission from being triggered

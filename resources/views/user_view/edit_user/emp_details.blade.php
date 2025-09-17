@@ -51,9 +51,9 @@ $editUser = $_REQUEST['id'];
         @csrf
         <input type="hidden" name="form_step" value="form_step">
         <!-- Hidden input to identify the step -->
-        <div class="column" style="flex: 1; border: 1px solid #ba184e; padding: 20px; border-radius: 8px;">
+        <div class= "input-column"  >
             <div class="address-form">
-                <h3>Employee Details</h3>
+                <h4 class="d-flex align-items-center"><x-icon name="empidoutline"/>&nbsp;Employee Details</h4>
                 <div class="form-row">
                     <div class="form-group">
                         <select id="employmentType" class="form-control dropdown drop" name="employmentType" placeholder="" required>
@@ -76,8 +76,7 @@ $editUser = $_REQUEST['id'];
                         <input type="date" id="joiningDate" class="form-control" name="joiningDate" placeholder="" value="{{old('joiningDate',$results[0]->Joining_date) }}" max="<?php echo date('Y-m-d'); ?>" required>
                         <label for="joiningDate">Joining Date<span style="color: red;">*</span></label>
                     </div>
-                </div>
-                <div class="form-row">
+             
                 <div class="form-group">
                     <select id="reportingManager" class="form-control dropdown drop" name="reportingManager" placeholder="" required>
                         <option value="{{ old('reportingManager', $results[0]->reporting_manager_id) }}">
@@ -127,9 +126,9 @@ $editUser = $_REQUEST['id'];
                 
             </div>
         </div>
-        <div class="column" style="flex: 1; border: 1px solid #ba184e; padding: 20px; border-radius: 8px;">
+        <div class= "input-column"  >
             <div class="address-form">
-                <h3>Basic Details</h3>
+                <h4 class="d-flex align-items-center"><x-icon name="personline"/>&nbsp;Basic Details</h4>
                 <div class="form-row">
                     <div class="form-group">
                         <select id="gender" class="form-control dropdown drop" name="gender" placeholder="" required>
@@ -164,8 +163,7 @@ $editUser = $_REQUEST['id'];
                         </select>
                         <label for="nationality">Nationality <span style="color: red;">*</span></label>
                     </div>
-                </div>
-                <div class="form-row">
+             
                     <div class="form-group">
                         <select id="religion" class="form-control dropdown drop" name="religion" placeholder="" required>
                             <option value="{{ old('religion',$results[0]->religion) }}" disable Select> {{ old('religion', $results[0]->religion) }}</option>
@@ -199,9 +197,9 @@ $editUser = $_REQUEST['id'];
                 </div>
             </div>
         </div>
-        <div class="column" style="flex: 1; border: 1px solid #ba184e; padding: 20px; border-radius: 8px;">
+        <div class= "input-column"  >
             <div class="address-form">
-                <h3>Welfare Benefits</h3>
+                <h4 class="d-flex align-items-center"><x-icon name="wellfareoutline"/>&nbsp;Welfare Benefits</h4>
                 <div class="form-row">
                     <div class="form-group">
                         <input type="text" id="uan" name="uan" class="form-control" placeholder="Enter Universal Account Number" minlength="12" value='{{old('uan',$results[0]->universal_account_number)}}' maxlength="16" pattern="\d{12,16}" oninput="validateUAN(this)" placeholder="" onkeypress="return isNumberKey(event)">
@@ -382,7 +380,7 @@ $(document).ready(function () {
 
         const fetchWithRetries = async () => {
             try {
-                const response = await fetch('https://restcountries.com/v3.1/all', {
+                const response = await fetch('https://restcountries.com/v3.1/all?fields=name', {
                     headers: { "Content-Type": "application/json" },
                 });
 

@@ -1,9 +1,9 @@
-.employee-info p weak,
-.employee-info p strong {
+.employee-info .key-val-flex-block p weak,
+.employee-info .key-val-flex-block p strong {
     width: 100%;
 }
 
-.employee-info p {
+.employee-info .key-val-flex-block p {
     display: block;
 }
 
@@ -78,14 +78,14 @@ header {
     border-radius: 10px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     overflow-y: auto;
-    height: 70vh;
+    height: 77vh;
     margin: auto;
     /* width: 420px; */
 }
 
 .employee-list ul {
     list-style: none;
-    padding-left: 0;
+    padding-left: 15px;
 }
 
 .employee-list li {
@@ -98,10 +98,7 @@ header {
 }
 
 .employee-details {
-    grid-column: 2 / 3;
     display: flex;
-    flex-direction: row;
-    gap: 20px;
     overflow-y: auto;
     /* height: 70vh;
         margin:auto */
@@ -109,14 +106,14 @@ header {
 
 .employee-details .left {
     /* width: 30%; */
-    width: 50%;
+    /* width: 50%; */
     background-color: #fff;
     padding: 20px;
     border-radius: 10px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     text-align: center;
     font-weight: bold;
-    height: 70vh;
+    height: 77vh;
     overflow: auto
 }
 
@@ -175,11 +172,8 @@ header {
     padding: 20px;
     border-radius: 10px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    height: 70vh;
+    height: 77vh;
     margin: auto;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
     gap: 15px;
     overflow-y: auto;
 }
@@ -233,12 +227,6 @@ header {
     width: 180px;
     margin: 0px;
     height: 37px;
-}
-
-.highlight {
-    background-color: #E0AFA0;
-    font-weight: bold;
-    /* color: white; */
 }
 
 .gender-icon {
@@ -301,18 +289,6 @@ header {
     position: relative;
 }
 
-
-
-/* .tree li::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 10px;
-    height: 100%;
-    border-left: 1px solid #ccc;
-} */
-
 .tree li span {
     cursor: pointer;
     padding: 5px;
@@ -347,7 +323,7 @@ header {
 
 .tree li {
     position: relative;
-    padding-left: 25px;
+    padding-left: 12px;
     margin: 8px 0;
 }
 
@@ -356,10 +332,10 @@ header {
     content: "";
     position: absolute;
     top: -8px;
-    left: 10px;
+    left: -8px;
     height: calc(100% + 15px);
     width: 0;
-    border-left: 2px solid #8A3366;
+    border-left: 1px solid #8A3366;
 }
 
 /* Horizontal connecting line (curved) */
@@ -367,10 +343,10 @@ header {
     content: "";
     position: absolute;
     top: 15px;
-    left: 10px;
-    width: 15px;
+    left: -7px;
+    width: 5px;
     height: 0;
-    border-top: 2px solid #8A3366;
+    border-top: 1px solid #8A3366;
     border-radius: 5px 0 0 0;
 }
 
@@ -393,13 +369,13 @@ header {
 /* Employee name styling */
 .tree li span {
     cursor: pointer;
-    padding: 3px 5px;
+    padding: 0px 5px;
     display: inline-block;
     transition: all 0.3s;
     border-radius: 4px;
     background-color: #f8f9fa;
     border: 1px solid #e9ecef;
-    /* margin-left: 10px; */
+    margin-left: -15px;
 }
 
 .tree li span:hover {
@@ -410,10 +386,10 @@ header {
 /* Toggle button styling */
 .toggle-button {
     position: absolute;
-    left: 5px;
+    left: -12px;
     top: 10px;
-    width: 12px;
-    height: 12px;
+    width: 10px;
+    height: 10px;
     background: #8A3366;
     color: white;
     border: none;
@@ -425,7 +401,7 @@ header {
     font-size: 10px;
     z-index: 1;
     padding: 0;
-    font-weight: 500px
+    font-weight: 500;
 }
 
 
@@ -439,6 +415,176 @@ header {
 /* Highlight for search results */
 .highlight {
     background-color: #FFC107 !important;
-    color: #212529;
-    box-shadow: 0 0 5px rgba(255, 193, 7, 0.5);
+    padding: 1px 5px;
+    border-radius: 6px;
+}
+
+/* css for horizontal chart below */
+.emp-info,
+.emp-designation {
+    font-size: 12px;
+    color: #666;
+}
+
+.scroll-container .profile-container {
+    position: relative;
+    display: inline-block;
+}
+
+.scroll-container .emp-info {
+    display: none;
+    position: absolute;
+    width: max-content;
+    top: 100%;
+    /* or adjust as needed */
+    left: 0;
+    border-radius: 10px;
+    background-color: white;
+    /* optional for visibility */
+    padding: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    z-index: 1;
+}
+
+.scroll-container .profile-container:hover .emp-info {
+    display: block;
+}
+
+.scroll-container .profile-container small.emp-name {
+    background: white;
+    font-size: 12px;
+    padding: 1px 5px;
+    box-shadow: rgba(0, 0, 0, 0.05) 0px 0px 0px 1px;
+    border-radius: 6px
+}
+
+.scroll-container {
+    overflow-y: auto;
+    /* Enable vertical scrolling */
+    overflow-x: auto;
+    /* Disable horizontal scrolling if needed */
+    border: 1px solid #ccc;
+    /* Optional: Add a border for visibility */
+    padding: 10px;
+    height: 77%;
+    min-height: 77%;
+    min-width: 100%;
+    border-radius: 10px
+}
+
+.scroll-container .tree {
+    display: flex;
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+    margin-left: 20px;
+}
+
+.scroll-container .tree ul {
+    padding-top: 20px;
+    position: relative;
+    transition: all 0.5s;
+    margin: auto;
+    padding: 0;
+    display: flex;
+    flex-direction: row;
+    /* Keep employees aligned horizontally */
+    justify-content: center;
+
+}
+
+.scroll-container .tree li {
+    list-style-type: none;
+    position: relative;
+    padding: 10px;
+    text-align: center;
+    transition: all 0.5s;
+}
+
+.scroll-container .tree li::before,
+.scroll-container .tree li::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    /* right: 50%; */
+    left: -5%;
+    border-top: 1px solid #8A3366;
+    /* Color and thickness of the line */
+    width: 55%;
+    height: 12px;
+    transition: all 0.3s ease;
+    border-left: none;
+}
+
+.scroll-container .tree li::after {
+    right: auto;
+    left: 50%;
+    border-left: 1px solid #8A3366;
+    /* Color and thickness of the line */
+}
+
+.scroll-container .tree li:only-child::after,
+.scroll-container .tree li:only-child::before {
+    display: none;
+}
+
+.scroll-container .tree li:only-child {
+    padding-top: 0;
+}
+
+.scroll-container .tree li:first-child::before,
+.scroll-container .tree li:last-child::after {
+    border: 0 none;
+}
+
+.scroll-container .tree li:last-child::before {
+    border-right: 1px solid #8A3366;
+    border-radius: 0 5px 0 0;
+}
+
+.scroll-container .tree li:first-child::after {
+    border-radius: 5px 0 0 0;
+}
+
+.scroll-container .tree li .profile-container img {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background-color: #f0f0f0;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.scroll-container .tree li .employee-box {
+    border: 1px solid #ccc;
+    padding: 5px 10px;
+    text-decoration: none;
+    color: #666;
+    font-family: arial, verdana, tahoma;
+    font-size: 11px;
+    display: inline-block;
+    border-radius: 15px;
+    /* width: 200px;
+    height: 150px; */
+    background-color: #FFF;
+}
+
+.scroll-container .tree li .emp-info {
+    text-align: center;
+}
+
+.scroll-container .tree ul ul {
+    position: relative;
+    margin-top: 5px;
+}
+
+.scroll-container .tree ul ul::before {
+    content: '';
+    position: absolute;
+    top: -3px;
+    left: 50%;
+    border-left: 1px solid #8A3366;
+    /* Vertical connector line */
+    height: 10px;
+    width: 0;
 }

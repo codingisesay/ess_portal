@@ -49,13 +49,13 @@ $id = Auth::guard('superadmin')->user()->id;
                 </div>
                 <div class="col-3 mb-4">
                     <div class="form-group">
-                        <input type="number" name="min_ctc" required>
+                        <input type="number" name="min_ctc" >
                         <label>Min CTC</label>
                     </div>
                 </div>
                 <div class="col-3 mb-4">
                     <div class="form-group">
-                        <input type="number" name="max_ctc" required>
+                        <input type="number" name="max_ctc" >
                         <label>Max CTC</label>
                     </div>
                 </div>
@@ -114,11 +114,11 @@ $id = Auth::guard('superadmin')->user()->id;
                     <label for="editSalaryTemplateName">Name</label>
                 </div>
                 <div class="popup-form-group">
-                    <input type="number" name="min_ctc" id="editSalaryTemplateMinCTC" required>
+                    <input type="number" name="min_ctc" id="editSalaryTemplateMinCTC">
                     <label for="editSalaryTemplateMinCTC">Min CTC</label>
                 </div>
                 <div class="popup-form-group">
-                    <input type="number" name="max_ctc" id="editSalaryTemplateMaxCTC" required>
+                    <input type="number" name="max_ctc" id="editSalaryTemplateMaxCTC">
                     <label for="editSalaryTemplateMaxCTC">Max CTC</label>
                 </div>
                 <div class="popup-form-group">

@@ -1,6 +1,8 @@
 @extends('user_view/employee_form_layout')  <!-- Extending the layout file -->
 @section('content')  <!-- Defining the content section -->
 <!-- <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css"> -->
+<link href="{{ asset('bootstrapcss/bootstrap.min.css') }}" rel="stylesheet"> 
+<link rel="stylesheet" href="{{ asset('user_end/css/onboarding_form.css') }}">
 <link rel="stylesheet" href="{{ asset('errors/error.css') }}">
 {{-- @if(session('success'))
 <div class="alert custom-alert-success">
@@ -28,11 +30,12 @@
 </div>
 @endif
 <div class="tab-content active" id="tab5">
+<div  class="input-column">
     <form id="familyForm" action="{{route('family_insert')}}" method="POST">
         <!-- <input type="hidden" name="employeeNo" value="P111"> -->
        @csrf
         <input type="hidden" name="form_step7" value="family_step">
-        <h3>Family Details</h3>
+        <h4 class="d-flex align-items-center"><x-icon name="usersfill"/>&nbsp;Family Details </h4>
         <button type="button" class="add-row-family action-button" onclick="addFamilyRow()">Add Family
             Information</button>
 
@@ -41,7 +44,7 @@
                 <table>
                     <thead>
                         <tr>
-                            <th>Serial No.</th>
+                            <th class="d-none">Serial No.</th>
                             <th>Name</th>
                             <th>Relation</th>
                             <th>Birth Date</th>
@@ -57,7 +60,7 @@
                         <!-- Rows will be added dynamically here -->
                         @foreach($familyDetails as $index => $detail)
                         <tr>
-                            <td>{{$index +1 }}</td> <!-- Display serial number in the table -->
+                            <td class="d-none">{{$index +1 }}</td> <!-- Display serial number in the table -->
                             <td>
                                 <input type="hidden" name="serial_no[]" value="${familyCounter}">
                                 <input type="text" name="name[]" class="custom-name" placeholder="Enter Name" value="{{$detail->name}}" required maxlength="50"
@@ -97,7 +100,7 @@
                             title="Please enter a 10-digit phone number" 
                             oninput="this.value = this.value.replace(/[^0-9]/g, '')"></td>
                             {{-- <td><button type="button" onclick="editFamilyRow(this)">✏️</button></td> --}}
-                            <td><button type="button" class="delete-button" data-id="{{ $detail->id }}">❌</button></td>
+                            <td><button type="button" class="delete-button btn text-danger" data-id="{{ $detail->id }}"> <x-icon name="trash" /></button></td>
 
                         </tr>
                         @endforeach
@@ -121,6 +124,7 @@
         </div>
 
     </form>
+</div>
 </div>
 <!-- uppercase bug -->
 
@@ -172,7 +176,7 @@ document.addEventListener('DOMContentLoaded', function () {
         const newRow = document.createElement('tr');
 
         newRow.innerHTML = `
-<td>${familyCounter}</td> <!-- Display serial number in the table -->
+<td class="d-none">${familyCounter}</td> <!-- Display serial number in the table -->
 <td>
     <input type="hidden" name="serial_no[]" value="${familyCounter}">
     <input type="text" name="name[]" class="custom-name" placeholder="Enter Name" required maxlength="50"
@@ -211,7 +215,7 @@ document.addEventListener('DOMContentLoaded', function () {
 <td><input type="tel" name="phone_number[]" placeholder="Phone Number"  maxlength="10"  inputmode="numeric" 
 title="Please enter a 10-digit phone number" 
 oninput="this.value = this.value.replace(/[^0-9]/g, '')"></td>
-<td><button type="button" onclick="removeFamilyRow(this)">❌</button></td>
+<td><button type="button" onclick="removeFamilyRow(this)" class='text-danger btn'> <x-icon name="trash" /></button></td>
 `;
 
         tableBody.appendChild(newRow);
@@ -278,6 +282,7 @@ oninput="this.value = this.value.replace(/[^0-9]/g, '')"></td>
     });
 </script>
 {{-- <script src="{{ asset('user_end/js/onboarding_form.js') }}"></script> --}}
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
     $(document).on('click', '.delete-button', function () {
         // Get the ID of the record to be deleted
@@ -285,27 +290,73 @@ oninput="this.value = this.value.replace(/[^0-9]/g, '')"></td>
       
     console.log(familyId);
         // Confirm delete action
-        if (confirm('Are you sure you want to delete this item?')) {
-            // Send an AJAX DELETE request to the server
-            $.ajax({
-                url: '/user/del_family/' + familyId,  // Adjust the route URL if necessary
-                type: 'DELETE',
-                data: {
-                    _method: 'DELETE',
-                    _token: '{{ csrf_token() }}', 
-                    familyId:familyId,// CSRF token for security
-                },
-                success: function (response) {
-                    // On success, remove the row from the table
-                    $('button[data-id="' + familyId + '"]').closest('tr').remove();
-                    alert('Education record deleted successfully!');
-                },
-                error: function (response) {
-                    alert('Error deleting record. Please try again.');
-                    console.log(familyId);
-                }
-            });
-        }
+        // if (confirm('Are you sure you want to delete this item?')) {
+        //     // Send an AJAX DELETE request to the server
+        //     $.ajax({
+        //         url: '/user/del_family/' + familyId,  // Adjust the route URL if necessary
+        //         type: 'DELETE',
+        //         data: {
+        //             _method: 'DELETE',
+        //             _token: '{{ csrf_token() }}', 
+        //             familyId:familyId,// CSRF token for security
+        //         },
+        //         success: function (response) {
+        //             // On success, remove the row from the table
+        //             $('button[data-id="' + familyId + '"]').closest('tr').remove();
+        //             alert('Education record deleted successfully!');
+        //         },
+        //         error: function (response) {
+        //             alert('Error deleting record. Please try again.');
+        //             console.log(familyId);
+        //         }
+        //     });
+        // }
+
+// Confirm delete action using SweetAlert
+Swal.fire({
+    title: 'Are you sure?',
+    text: 'You won\'t be able to revert this!',
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonColor: '#3085d6',
+    cancelButtonColor: '#d33',
+    confirmButtonText: 'Yes, delete it!',
+}).then((result) => {
+    if (result.isConfirmed) {
+        // Send an AJAX DELETE request to the server
+        $.ajax({
+            url: '/user/del_family/' + familyId,  // Adjust the route URL if necessary
+            type: 'DELETE',
+            data: {
+                _method: 'DELETE',
+                _token: '{{ csrf_token() }}', 
+                familyId: familyId, // CSRF token for security
+            },
+            success: function (response) {
+                // On success, remove the row from the table
+                $('button[data-id="' + familyId + '"]').closest('tr').remove();
+                Swal.fire(
+                    'Deleted!',
+                    'The family record has been deleted.',
+                    'success'
+                );
+            },
+            error: function (response) {
+                Swal.fire(
+                    'Error!',
+                    'There was an issue deleting the record. Please try again.',
+                    'error'
+                );
+                console.log(familyId);
+            }
+        });
+    }
+});
+
+
+
+
+
     });
     document.getElementById('previous-btn-link').addEventListener('click', function(event) {
         event.stopPropagation(); // Stop the form submission from being triggered
