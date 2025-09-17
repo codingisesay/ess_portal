@@ -1,5 +1,3 @@
-
-
 <?php
 $name = Auth::guard('superadmin')->user()->name;
 ?>
@@ -23,7 +21,7 @@ $name = Auth::guard('superadmin')->user()->name;
 
 <body class="body">
     <!-- Top container -->
-    <a href="{{ route('superadmin.logout') }}" class="logout-button">Logout</a>
+    <!-- <a href="{{ route('superadmin.logout') }}" class="logout-button">Logout</a> -->
     <script>
         var successMessage = @json(session('success'));
         var errorMessage = @json(session('error'));
@@ -41,6 +39,13 @@ $name = Auth::guard('superadmin')->user()->name;
         </div>
         <div class="sidebar-content">
             <ul class="nav-list">
+                <!-- Super Admin Dashboard -->
+                <li id="superAdminDashboardLi">
+                    <a href="{{ route('superadmin.dashboard') }}" class="{{ request()->routeIs('superadmin.dashboard') ? 'active' : '' }}">
+                        <i class="fa fa-dashboard"></i>&nbsp;<label>Super Admin Dashboard</label>
+                    </a>
+                </li>
+
                 <!-- Organisation Configuration --> 
                 <li id="orgConfigLi">
                     <strong onclick="toggleDropdown('orgConfigDropdown', this)">
@@ -48,6 +53,7 @@ $name = Auth::guard('superadmin')->user()->name;
                         <x-icon name="buildingoutline" />&nbsp;&nbsp;<lable>Organisation&nbsp;Configuration</lable>&nbsp;&nbsp;&nbsp;</strong>
                         <img src="{{ asset('user_end/images/arrow-right.svg') }}" alt="arrow" class="dropdown-arrow">
                     </strong>
+                    
                     <ul id="orgConfigDropdown" class="submenu">
                         <li><a href="{{ route('create_user') }}" class="{{ request()->routeIs('create_user') ? 'active' : '' }}">Create User</a></li>
                         <li><a href="{{ route('create_branch_form') }}" class="{{ request()->routeIs('create_branch_form') ? 'active' : '' }}">Create Branch</a></li>
