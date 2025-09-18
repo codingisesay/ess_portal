@@ -93,6 +93,12 @@ error_reporting(0);
                         <label for="reason">Reason</label>
                     </div>
                 </div>
+               <div class="col-md-6 my-2">
+                <div class="floating-label-wrapper">
+                    <input class="input-field" type="number" id="days_count" readonly disabled>
+                    <label for="days_count">Days Count</label>
+                </div>
+            </div>
                 <div class="col-md-6 my-2">
                     <div class="floating-label-wrapper">
                         <select class="input-field" name="leave_slot" id="leave_slot" >
@@ -130,7 +136,9 @@ error_reporting(0);
     </div>
 </div> --}} -->
 
-<script>
+
+
+<!-- <script>
 // assuming you have input fields for start date and end date
 const startDateInput = document.getElementById('start_date');
 const endDateInput = document.getElementById('end_date');
@@ -149,7 +157,47 @@ endDateInput.addEventListener('change', () => {
     slotField.style.display = 'none';
   }
 });
+</script> -->
+
+
+<script>
+const startDateInput = document.getElementById('start_date');
+const endDateInput = document.getElementById('end_date');
+const slotField = document.getElementById('leave_slot');
+const daysCountInput = document.getElementById('days_count');
+
+// function to update UI
+function updateLeaveUI() {
+  const startDate = startDateInput.value;
+  const endDate = endDateInput.value;
+
+  if (!startDate || !endDate) return;
+
+  const start = new Date(startDate);
+  const end = new Date(endDate);
+
+  // calculate difference in days
+  const diffTime = end - start;
+  const diffDays = diffTime >= 0 ? (diffTime / (1000 * 60 * 60 * 24)) + 1 : 0;
+
+  // update Days Count (frontend only)
+  daysCountInput.value = diffDays;
+
+  // toggle slot field
+  if (startDate === endDate) {
+    slotField.style.display = 'block';
+  } else {
+    slotField.style.display = 'none';
+  }
+}
+
+// listen for changes
+startDateInput.addEventListener('change', updateLeaveUI);
+endDateInput.addEventListener('change', updateLeaveUI);
+
 </script>
+
+
 <style>
     #leave_slot {
   display: none;

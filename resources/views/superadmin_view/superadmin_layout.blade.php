@@ -17,6 +17,8 @@ $name = Auth::guard('superadmin')->user()->name;
     <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script> 
     <script src="{{ asset('user_end/js/toastify-notifications.js') }}"></script>
     <link href="{{ asset('bootstrapcss/bootstrap.min.css') }}" rel="stylesheet"> 
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+
 </head>
 
 <body class="body">
@@ -42,7 +44,7 @@ $name = Auth::guard('superadmin')->user()->name;
                 <!-- Super Admin Dashboard -->
                 <li id="superAdminDashboardLi">
                     <a href="{{ route('superadmin.dashboard') }}" class="{{ request()->routeIs('superadmin.dashboard') ? 'active' : '' }}">
-                        <i class="fa fa-dashboard"></i>&nbsp;<label>Super Admin Dashboard</label>
+                        <i class="bi bi-house"></i>&nbsp;<label>Dashboard</label>
                     </a>
                 </li>
 

@@ -22,6 +22,7 @@ use App\Http\Controllers\editUserController;
 use App\Http\Controllers\salaryBoxController;
 use App\Http\Controllers\ReimbursementController; 
 use App\Http\Controllers\BankController;
+use App\Http\Controllers\superadmindashboardController;
 
 
 
@@ -46,9 +47,15 @@ Route::get('superadmin/account_suspended',function(){
 
 Route::middleware(['auth.superadmin'])->group(function () {
 
-    Route::get('superadmin/dashboard', function () {
-        return view('dashboard.superadmin');
-    })->name('superadmin.dashboard');
+    // Route::get('superadmin/dashboard', function () {
+    //     return view('dashboard.superadmin');
+    // })->name('superadmin.dashboard');
+   
+
+
+Route::get('superadmin/dashboard', [superadmindashboardController::class, 'index'])
+    ->name('superadmin.dashboard');
+
 //User Controller Routes
     Route::get('superadmin/create_user',[userController::class,'index'])->name('create_user');
     Route::post('superadmin/register_user',[userController::class,'register'])->name('register_save');
