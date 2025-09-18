@@ -1,7 +1,7 @@
 <?php
 namespace App\Http\Controllers;
 
-use App\Models\Bank;
+use App\Models\bank;
 use Illuminate\Http\Request;
 
 class BankController extends Controller
@@ -12,7 +12,7 @@ class BankController extends Controller
         return view('superadmin_view.bank_master', compact('banks'));
     }
 
-    public function insert(Request $request)
+    public function store(Request $request)
     {
         $request->validate([
             'name' => 'required|max:100|unique:banks,name',
@@ -21,7 +21,7 @@ class BankController extends Controller
 
         Bank::create($request->only(['name', 'status']));
 
-        return redirect()->route('bank_master')->with('success', 'Bank added successfully.');
+        return redirect()->route('bank_list')->with('success', 'Bank added successfully.');
     }
 
     public function update(Request $request, $id)
@@ -34,14 +34,14 @@ class BankController extends Controller
         $bank = Bank::findOrFail($id);
         $bank->update($request->only(['name', 'status']));
 
-        return redirect()->route('bank_master')->with('success', 'Bank updated successfully.');
+        return redirect()->route('bank_list')->with('success', 'Bank updated successfully.');
     }
 
-    public function delete($id)
+    public function destroy($id)
     {
         $bank = Bank::findOrFail($id);
         $bank->delete();
 
-        return redirect()->route('bank_master')->with('success', 'Bank deleted successfully.');
+        return redirect()->route('bank_list')->with('success', 'Bank deleted successfully.');
     }
 }

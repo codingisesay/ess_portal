@@ -15,7 +15,7 @@ $id = Auth::guard('superadmin')->user()->id;
         <div class="logoo">PV</div>
         <div>
           <h1 class="h-title">Super Admin Dashboard </h1>
-          <div class="h-sub">Human Resource Management System</div>
+          <!-- <div class="h-sub">Human Resource Management System</div> --> 
         </div>
       </div>
 

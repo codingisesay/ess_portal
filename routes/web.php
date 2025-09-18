@@ -142,10 +142,12 @@ Route::middleware(['auth.superadmin'])->group(function () {
     Route::post('superadmin/update_reimbursement_type',[ReimbursementController::class,'updateReimbursementType'])->name('update_reimbursement_type');
 
     //Bank Master
-    Route::get('/banks', [BankController::class, 'index'])->name('bank_master');
-    Route::post('/banks/insert', [BankController::class, 'insert'])->name('insert_bank');
-    Route::post('/banks/update/{id}', [BankController::class, 'update'])->name('update_bank');
-    Route::delete('/banks/delete/{id}', [BankController::class, 'delete'])->name('delete_bank');
+   Route::get('bank_list', [BankController::class, 'index'])->name('bank_list');
+    Route::post('store_bank', [BankController::class, 'store'])->name('store_bank');
+    Route::post('update_bank/{id}', [BankController::class, 'update'])->name('update_bank');
+    Route::delete('delete_bank/{id}', [BankController::class, 'destroy'])->name('delete_bank');
+
+
     
 });
 
