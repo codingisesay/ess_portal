@@ -23,6 +23,7 @@ use App\Http\Controllers\salaryBoxController;
 use App\Http\Controllers\ReimbursementController; 
 use App\Http\Controllers\BankController;
 use App\Http\Controllers\superadmindashboardController;
+use App\Http\Controllers\AttendanceImportController;
 
 
 
@@ -153,6 +154,10 @@ Route::get('superadmin/dashboard', [superadmindashboardController::class, 'index
     Route::post('store_bank', [BankController::class, 'store'])->name('store_bank');
     Route::post('update_bank/{id}', [BankController::class, 'update'])->name('update_bank');
     Route::delete('delete_bank/{id}', [BankController::class, 'destroy'])->name('delete_bank');
+
+     // Attendance Import Routes
+   Route::get('/superadmin/import', [AttendanceImportController::class, 'showForm'])->name('attendance.form');
+   Route::post('/superadmin/import', [AttendanceImportController::class, 'import'])->name('attendance.import');
 
 
     
@@ -289,5 +294,9 @@ Route::middleware(['auth'])->group(function () {
 
  Route::get('user/download-payslip/{payroll_id}', [App\Http\Controllers\salaryBoxController::class, 'downloadPayslip'])->name('download_payslip');
  Route::get('/load-payslip/{payroll_id}', [App\Http\Controllers\salaryBoxController::class, 'loadPayslip'])->name('load_payslip');
+
+
+
+ 
 });
 
