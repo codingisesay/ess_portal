@@ -149,21 +149,25 @@ $('form').on('submit', function() {
 
 <script>
 
-  function updateTotals() {
-      let totalMax = 0;
-      let totalEntry = 0;
+function updateTotals() {
+    let totalMax = 0;
+    let totalEntry = 0;
 
-      $('#billsTable tbody tr').each(function () {
-        const maxAmount = parseFloat($(this).find('input[name="max_amount[]"]').val()) || 0;
-        const entryAmount = parseFloat($(this).find('input[name="entered_amount[]"]').val()) || 0;
+    $('#billsTable tbody tr').each(function () {
+        const maxAmountRaw = $(this).find('input[name="max_amount[]"]').val() || "0";
+        const entryAmountRaw = $(this).find('input[name="entered_amount[]"]').val() || "0";
+
+        // Remove commas before parsing
+        const maxAmount = parseFloat(maxAmountRaw.replace(/,/g, '')) || 0;
+        const entryAmount = parseFloat(entryAmountRaw.replace(/,/g, '')) || 0;
 
         totalMax += maxAmount;
         totalEntry += entryAmount;
-      });
+    });
 
-      $('#totalMaxAmount').text('₹' + totalMax.toFixed(2));
-      $('#totalEntryAmount').text('₹' + totalEntry.toFixed(2));
-    }
+    $('#totalMaxAmount').text('₹' + totalMax.toFixed(2));
+    $('#totalEntryAmount').text('₹' + totalEntry.toFixed(2));
+}
 
     // Update totals when amounts change
     $(document).on('input', 'input[name="entered_amount[]"], input[name="max_amount[]"]', function () {
