@@ -487,7 +487,7 @@ error_reporting(0);
                                 <th>EMP ID</th>
                                 <th>Employee Name</th>
                                 <th>No. of Bills</th>
-                                <th>Total Amount</th>
+                                <th>Total Amount(₹)</th>
                                 <th>Status</th>
                                 <th>Action</th>
                             </tr>
@@ -500,7 +500,7 @@ error_reporting(0);
                                         <td>{{ $reimbursement->employee_no }}</td>
                                         <td>{{ $reimbursement->employee_name }}</td>
                                         <td>{{ $reimbursement->no_of_entries }}</td>
-                                        <td>{{ number_format($reimbursement->total_amount, 2) }}</td> <!-- Display total amount -->
+                                        <td class="text-end">{{ number_format($reimbursement->total_amount, 2) }}</td> <!-- Display total amount -->
                                         <td>{{ $reimbursement->status }}</td> <!-- Display status -->
                                         <td>  <button>  
                                             <a href="{{ route('user_claims',['user_id' => $reimbursement->user_id, 'reimbursement_traking_id' => $reimbursement->id]) }}">

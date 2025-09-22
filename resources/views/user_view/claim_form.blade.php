@@ -80,7 +80,7 @@
                     </select>
                 </td>
                 <td><input type="text" name="max_amount[]" class="form-control text-end" step="0.01" disabled></td>
-                <td><input type="number" name="entered_amount[]" class="form-control text-end" step="0.01" required></td>
+                <td><input type="text" name="entered_amount[]" class="form-control text-end" step="0.01" required></td>
                 <td>
                     <div class="file-upload">
                         <div class="file-select d-flex align-items-center">
@@ -116,6 +116,37 @@
       </div>
 
 <!-- JavaScript -->
+
+<script>
+// --- Auto comma for Entry Amount field ---
+
+function formatNumberWithCommas(x) {
+    if (!x) return '';
+    x = x.replace(/,/g, '');
+    let parts = x.split('.');
+    parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    return parts.join('.');
+}
+
+// Format on input for all entered_amount[] fields
+$(document).on('input', 'input[name="entered_amount[]"]', function () {
+    let val = $(this).val().replace(/,/g, '');
+    if (val === '') return;
+    // Only allow numbers and dot
+    val = val.replace(/[^0-9.]/g, '');
+    let formatted = formatNumberWithCommas(val);
+    $(this).val(formatted);
+    updateTotals();
+});
+
+// Remove commas before form submit (optional, for backend compatibility)
+$('form').on('submit', function() {
+    $('input[name="entered_amount[]"]').each(function() {
+        $(this).val($(this).val().replace(/,/g, ''));
+    });
+});
+</script>
+
 <script>
 
   function updateTotals() {
