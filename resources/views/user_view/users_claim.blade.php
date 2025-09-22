@@ -36,7 +36,7 @@
                                 <th>Date</th>
                                 <th>Claim Type</th>
                                 <th>Max Amount(₹)</th>
-                                <th>Entered Amount</th>
+                                <th>Entered Amount(₹)</th>
                                 <th>Bill</th>
                                 <th>Applicant Comment</th>
                                 <th>Action</th>

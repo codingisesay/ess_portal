@@ -24,7 +24,7 @@
                     <th>Entry Date</th>
                     <th>Type</th>
                     <th>Description by Applicant</th>
-                    <th>Entry Amount</th>
+                    <th>Entry Amount(₹)</th>
                     <th>Status</th>
                     <th>View Bill</th>
                 </tr>
@@ -35,7 +35,7 @@
                         <td>{{ \Carbon\Carbon::parse($claim->entry_date)->format('d/m/Y') }}</td>
                         <td>{{ $claim->type_name }}</td>
                         <td>{{ $claim->description_by_applicant }}</td>
-                        <td class="text-end" >₹{{ number_format($claim->entry_amount, 2) }}</td>
+                        <td class="text-end" >{{ number_format($claim->entry_amount, 2) }}</td>
                         <td>
                             <span class="{{ $claim->status == 'In Review' ? 'review' : '' }}">
                                 {{ $claim->status }}
