@@ -1630,7 +1630,7 @@ video {
 }
 
 input.form-control.text-end {
-    width: 150px;
+    width: 155px;
     max-width: max-content;
     margin-left: auto
 }
