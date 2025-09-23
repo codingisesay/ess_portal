@@ -74,33 +74,39 @@
     <!-- Departments & Policies -->
     <div class="row">
         <!-- Departments -->
-        <section class="card">
-            <div class="section-title">
-                <div class="badge">D</div>
-                <div>
-                    <div style="font-weight:700">Departments</div>
-                    <div class="small">Searchable categories (tap to expand)</div>
-                </div>
+            <section class="card">
+        <div class="section-title">
+            <div class="badge">D</div>
+            <div>
+                <div style="font-weight:700">Departments</div>
+                <div class="small">Searchable categories (tap to expand)</div>
             </div>
-            <div class="shared-search">
-                <input id="dept-search" placeholder="Search departments..." onkeyup="filterList('dept-search','departments-list')"/>
-            </div>
-            <div id="departments-list" class="shared-list">
-                @foreach($departments as $dept)
-                    <div class="shared-card">
-                        <div class="shared-header" onclick="toggleBody(this)">
-                            <div><strong>{{ $dept['name'] }}</strong></div>
-                            <div class="small">+</div>
-                        </div>
-                        <div class="shared-body" style="display:none">
-                            @foreach($dept['items'] as $role)
-                                <div class="designation-card">{{ $role }}</div>
-                            @endforeach
-                        </div>
+        </div>
+        <div class="shared-search">
+            <input id="dept-search" placeholder="Search departments..." onkeyup="filterList('dept-search','departments-list')"/>
+        </div>
+        <div id="departments-list" class="shared-list">
+            @foreach($departments as $dept)
+                <div class="shared-card">
+                    <div class="shared-header" onclick="toggleBody(this)">
+                        <div><strong>{{ $dept['name'] }}</strong></div>
+                        <div class="small">+</div>
                     </div>
-                @endforeach
-            </div>
+                    <div class="shared-body" style="display:none">
+                        @foreach($dept['items'] as $role)
+                            <div class="designation-card">
+                                {{ $role['designation'] }}
+                                <span style="color:green; font-size:0.9em">
+                                    (Active: {{ $role['active'] }})
+                                </span>
+                            </div>
+                        @endforeach
+                    </div>
+                </div>
+            @endforeach
+        </div>
         </section>
+
 
         <!-- Policies -->
         <section class="card">

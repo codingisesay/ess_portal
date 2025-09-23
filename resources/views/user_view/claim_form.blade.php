@@ -70,7 +70,7 @@
             <tr>
               <!-- Default Row -->
                 <td>1</td>
-                <td><input type="date" name="bill_date[]" class="form-control" required></td>
+                <td><input type="date" name="bill_date[]" class="form-control text-end" required></td>
                 <td>
                     <select class="form-control rm_type" name="type[]" required>
                         <option value="">Select One</option>

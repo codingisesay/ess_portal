@@ -9,39 +9,67 @@ class SuperAdminDashboardController extends Controller
 {
     public function index()
     {
-
-        
-        // 🔹 Branch Data (organisations with user counts & dept counts)
-        $branches = DB::table('organisations as o')
+        // 🔹 Branch Data
+        $branches = DB::table('branches as b')
+            ->join('organisations as o', 'o.id', '=', 'b.organisation_id')
             ->select(
-                'o.id',
-                'o.name',
-                DB::raw('(SELECT COUNT(*) FROM users u WHERE u.organisation_id = o.id) as totalEmployees'),
-                DB::raw('(SELECT COUNT(*) FROM users u WHERE u.organisation_id = o.id AND u.user_status = "Active") as activeCount'),
-                DB::raw('(SELECT COUNT(*) FROM users u WHERE u.organisation_id = o.id AND u.user_status = "Inactive") as inactiveCount'),
-                DB::raw('(SELECT COUNT(*) FROM organisation_departments d WHERE d.organisation_id = o.id) as departmentsCount')
+                'b.id',
+                'b.name',
+                'o.name as organisation_name',
+                DB::raw('(SELECT COUNT(*) 
+                          FROM emp_details ed 
+                          JOIN users u ON u.id = ed.user_id 
+                          WHERE ed.branch_id = b.id) as totalEmployees'),
+                DB::raw('(SELECT COUNT(*) 
+                          FROM emp_details ed 
+                          JOIN users u ON u.id = ed.user_id 
+                          WHERE ed.branch_id = b.id AND u.user_status = "Active") as activeCount'),
+                DB::raw('(SELECT COUNT(*) 
+                          FROM emp_details ed 
+                          JOIN users u ON u.id = ed.user_id 
+                          WHERE ed.branch_id = b.id AND u.user_status = "Inactive") as inactiveCount'),
+                DB::raw('(SELECT COUNT(DISTINCT d.id) 
+                          FROM organisation_departments d 
+                          WHERE d.organisation_id = b.organisation_id) as departmentsCount')
             )
             ->get();
-        // 🔹 Departments with their designations
-        $departments = DB::table('organisation_departments as d')
+            // 🔹 Departments → Designations → Active user counts
+            $departments = DB::table('organisation_departments as d')
             ->leftJoin('organisation_designations as g', 'g.department_id', '=', 'd.id')
+            ->leftJoin('emp_details as ed', function($join) {
+                $join->on('ed.department', '=', 'd.id')
+                        ->on('ed.designation', '=', 'g.id');
+            })
+            ->leftJoin('users as u', function($join) {
+                $join->on('u.id', '=', 'ed.user_id')
+                        ->where('u.user_status', '=', 'Active'); // ✅ Only active users
+            })
             ->select(
                 'd.id as department_id',
                 'd.name as department_name',
-                DB::raw('GROUP_CONCAT(g.name ORDER BY g.name SEPARATOR ",") as designations')
+                'g.id as designation_id',
+                'g.name as designation_name',
+                DB::raw('COUNT(DISTINCT u.id) as active_count')
             )
-            ->groupBy('d.id', 'd.name')
+            ->groupBy('d.id', 'd.name', 'g.id', 'g.name')
             ->get()
-            ->map(function ($row) {
+            ->groupBy('department_name')
+            ->map(function ($items, $deptName) {
                 return [
-                    'name' => $row->department_name,
-                    'items' => $row->designations ? explode(',', $row->designations) : []
+                    'name' => $deptName,
+                    'items' => $items->map(function ($row) {
+                        return [
+                            'designation' => $row->designation_name,
+                            'active' => $row->active_count,
+                        ];
+                    })->toArray()
                 ];
-            });
+            })
+            ->values();
 
         // 🔹 Policies grouped by categories
         $policies = DB::table('hr_policy_categories as c')
-            ->leftJoin('hr_policies as p', 'p.policy_categorie_id', '=', 'c.id') // ✅ fixed column name
+            ->leftJoin('hr_policies as p', 'p.policy_categorie_id', '=', 'c.id')
             ->select(
                 'c.id as category_id',
                 'c.name as category_name',
@@ -57,7 +85,7 @@ class SuperAdminDashboardController extends Controller
                 ];
             });
 
-        // Pass data to Blade
+        // ✅ Pass to Blade
         return view('dashboard.superadmin', [
             'branches' => $branches,
             'departments' => $departments,
