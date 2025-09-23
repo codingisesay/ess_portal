@@ -159,8 +159,8 @@ Route::delete('delete_bank/{id}', [BankController::class, 'destroy'])->name('del
     // Attendance Import Routes
 Route::get('/superadmin/import', [AttendanceImportController::class, 'showForm'])->name('attendance.form');
 Route::post('/superadmin/import', [AttendanceImportController::class, 'import'])->name('attendance.import');
-
-
+// pms form cycle and settings
+Route::get('superadmin/org-settings', [PmsController::class, 'orgSettingsForm'])->name('org_settings_form');
 
 });
 
@@ -351,7 +351,10 @@ Route::put('/task-approvals/{id}', [PmsController::class, 'taskApprovalsUpdate']
 Route::get('/task-approvals/{id}', [PmsController::class, 'taskApprovalsShow']);
 Route::delete('/task-approvals/{id}', [PmsController::class, 'taskApprovalsDestroy']);
 
+// pms dashboard 
 
+Route::get('/pms-dashboard', [PmsController::class, 'pmsDashboard'])->name('pms_dashboard');
+Route::get('/manager-dashboard', [PmsController::class, 'managerDashboard'])->name('manager.dashboard');
 
 
 });
