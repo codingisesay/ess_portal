@@ -9,14 +9,10 @@ class Goal extends Model
 {
     use HasFactory;
 
-    protected $fillable = [
-        'org_setting_id',
-        'title',
-        'description',
-        'priority',
-        'status',
-        'created_by',
-    ];
+   protected $fillable = [
+    'org_setting_id', 'title', 'description', 'priority', 'status',
+    'created_by', 'start_date', 'end_date'
+];
 
     public function organizationSetting()
     {

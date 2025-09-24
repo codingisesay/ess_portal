@@ -1,85 +1,93 @@
-
 <div class="container">
     <h2>Manager Dashboard</h2>
 
-    {{-- 1. Organization Goals Assigned --}}
-    <div class="card mb-4">
-        <div class="card-header bg-light"><strong>Organization Goals Assigned</strong></div>
-        <div class="card-body">
-            <table class="table table-bordered table-striped">
+   {{-- ============================
+     1. Goals Created by Organization
+============================= --}}
+<div class="card mb-4">
+    <div class="card-header bg-light"><strong>Goals Created by Organization</strong></div>
+    <div class="card-body">
+        <table class="table table-bordered table-striped">
+            <thead class="table-light">
+                <tr>
+                    <th>Goal</th>
+                    <th>Period</th>
+                    <th>Priority</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach($allOrgGoals as $goal)
+                <tr>
+                    <td>{{ $goal->title }}</td>
+                    <td>{{ $goal->period_name }}</td>
+                    <td>{{ ucfirst($goal->priority) }}</td>
+                    <td>
+                        <button type="button" class="btn btn-sm btn-primary"
+                            onclick="addToBundle({{ $goal->id }}, '{{ addslashes($goal->title) }}', '{{ $goal->org_setting_id }}', 'Organization')">
+                            Add
+                        </button>
+                    </td>
+                </tr>
+                @endforeach
+            </tbody>
+        </table>
+    </div>
+</div>
+
+{{-- ============================
+     2. Additional Goals (Self-Created / Selected Org Goals)
+============================= --}}
+<div class="card mb-4">
+    <div class="card-header bg-light"><strong>Additional Goals / Selected Org Goals</strong></div>
+    <div class="card-body">
+        <form id="bundleForm" method="POST" action="{{ route('goal-bundles.submit') }}">
+            @csrf
+            <table class="table table-bordered" id="bundleTable">
                 <thead class="table-light">
                     <tr>
                         <th>Goal</th>
-                        <th>Period</th>
-                        <th>Status</th>
-                        <th>Add Insight</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {{-- @foreach($assignedGoals as $goal) --}}
-                    <tr>
-                        <td>Goal Title Example</td>
-                        <td>Q1 2025</td>
-                        <td>In Progress</td>
-                        <td>
-                            <form>
-                                <input type="text" class="form-control mb-1" placeholder="Add insight...">
-                                <button class="btn btn-sm btn-primary">Save</button>
-                            </form>
-                        </td>
-                    </tr>
-                    {{-- @endforeach --}}
-                </tbody>
-            </table>
-        </div>
-    </div>
-
-    {{-- 2. Additional Goals/Tasks --}}
-    <div class="card mb-4">
-        <div class="card-header bg-light"><strong>Additional Goals/Tasks (Self/Juniors)</strong></div>
-        <div class="card-body">
-            <form class="mb-3">
-                <div class="row">
-                    <div class="col-md-4">
-                        <input type="text" class="form-control" placeholder="Goal/Task Title">
-                    </div>
-                    <div class="col-md-3">
-                        <select class="form-control">
-                            <option>Assign to Self</option>
-                            <option>Assign to Junior 1</option>
-                            <option>Assign to Junior 2</option>
-                        </select>
-                    </div>
-                    <div class="col-md-3">
-                        <button class="btn btn-success w-100">Add</button>
-                    </div>
-                </div>
-            </form>
-            <table class="table table-bordered table-striped">
-                <thead class="table-light">
-                    <tr>
-                        <th>Title</th>
-                        <th>Assigned To</th>
-                        <th>Status</th>
+                        <th>Type</th>
                         <th>Action</th>
                     </tr>
                 </thead>
                 <tbody>
-                    {{-- @foreach($additionalGoals as $goal) --}}
-                    <tr>
-                        <td>Extra Task Example</td>
-                        <td>Junior 1</td>
-                        <td>Pending</td>
-                        <td>
-                            <button class="btn btn-sm btn-warning">Edit</button>
-                            <button class="btn btn-sm btn-danger">Delete</button>
-                        </td>
-                    </tr>
-                    {{-- @endforeach --}}
+                    {{-- Populated via JS --}}
                 </tbody>
             </table>
+
+            {{-- Submit whole bundle --}}
+            <button type="submit" class="btn btn-success mt-2">Submit Selected Goals for Approval</button>
+        </form>
+
+        {{-- Add Custom Goal --}}
+        <div class="mt-3">
+            <h6>Create Extra Goal</h6>
+            <div class="row g-2">
+                <div class="col-md-4">
+                    <select id="customGoalOrg" class="form-control">
+                        <option value="">Select Period</option>
+                        @foreach($allOrgGoals as $g)
+                            <option value="{{ $g->org_setting_id }}">{{ $g->period_name }}</option>
+                        @endforeach
+                    </select>
+                </div>
+                <div class="col-md-4">
+                    <input type="text" id="customGoalTitle" class="form-control" placeholder="Goal Title">
+                </div>
+                  <div class="col-md-3">
+                    <input type="date" id="customGoalStart" class="form-control" placeholder="Start Date">
+                </div>
+                <div class="col-md-3">
+                    <input type="date" id="customGoalEnd" class="form-control" placeholder="End Date">
+                </div>
+                <div class="col-md-4">
+                    <button type="button" class="btn btn-secondary w-100" onclick="addCustomGoal()">Add Custom Goal</button>
+                </div>
+            </div>
         </div>
     </div>
+</div>
 
     {{-- 3. Task List --}}
     <div class="card mb-4">
@@ -95,14 +103,21 @@
                     </tr>
                 </thead>
                 <tbody>
-                    {{-- @foreach($ownTasks as $task) --}}
+                    @forelse($ownTasks as $task)
                     <tr>
-                        <td>My Task Example</td>
-                        <td>Completed</td>
-                        <td><button class="btn btn-sm btn-warning">Edit</button></td>
-                        <td><button class="btn btn-sm btn-danger">Delete</button></td>
+                        <td>{{ $task->title }}</td>
+                        <td>{{ ucfirst($task->status) }}</td>
+                        <td><a href="{{ url('/tasks/'.$task->id) }}" class="btn btn-sm btn-warning">Edit</a></td>
+                        <td>
+                            <form action="{{ url('/tasks/'.$task->id) }}" method="POST" style="display:inline-block">
+                                @csrf @method('DELETE')
+                                <button class="btn btn-sm btn-danger">Delete</button>
+                            </form>
+                        </td>
                     </tr>
-                    {{-- @endforeach --}}
+                    @empty
+                    <tr><td colspan="4" class="text-center">No tasks yet</td></tr>
+                    @endforelse
                 </tbody>
             </table>
         </div>
@@ -122,16 +137,163 @@
                     </tr>
                 </thead>
                 <tbody>
-                    {{-- @foreach($insights as $insight) --}}
+                    @forelse($insights as $insight)
                     <tr>
-                        <td>Goal Title Example</td>
-                        <td>Insight text example...</td>
-                        <td>Manager Name</td>
-                        <td>2025-09-23</td>
+                        <td>{{ $insight->goal_title }}</td>
+                        <td>{{ $insight->description }}</td>
+                        <td>{{ $insight->user_name }}</td>
+                        <td>{{ $insight->created_at }}</td>
                     </tr>
-                    {{-- @endforeach --}}
+                    @empty
+                    <tr><td colspan="4" class="text-center">No insights available</td></tr>
+                    @endforelse
                 </tbody>
             </table>
         </div>
     </div>
+    {{-- ============================
+     5. Goal Bundle Approval Requests
+============================= --}}
+<div class="card mb-4">
+    <div class="card-header bg-light"><strong>Goal Bundle Approval Requests</strong></div>
+    <div class="card-body">
+        @php
+            $managerId = Auth::id();
+            $pendingBundles = \App\Models\GoalBundleApproval::with('items.goal')
+                                ->where('reporting_manager', $managerId)
+                                ->where('status', 'pending')
+                                ->get();
+        @endphp
+
+        @if($pendingBundles->count() > 0)
+            <table class="table table-bordered table-striped" id="approvalTable">
+                <thead class="table-light">
+                    <tr>
+                        <th>Bundle ID</th>
+                        <th>Requested By</th>
+                        <th>Goals</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach($pendingBundles as $bundle)
+                        <tr data-bundle-id="{{ $bundle->id }}">
+                            <td>{{ $bundle->id }}</td>
+                            <td>{{ $bundle->requestedBy->name ?? 'N/A' }}</td>
+                            <td>
+                                <ul>
+                                    @foreach($bundle->items as $item)
+                                        <li>{{ $item->goal->title ?? 'Custom Goal' }}</li>
+                                    @endforeach
+                                </ul>
+                            </td>
+                            <td>
+                                <button class="btn btn-sm btn-success" onclick="approveBundle({{ $bundle->id }}, 'approved')">Approve</button>
+                                <button class="btn btn-sm btn-danger" onclick="approveBundle({{ $bundle->id }}, 'rejected')">Reject</button>
+                            </td>
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        @else
+            <p class="text-center">No pending goal bundle requests.</p>
+        @endif
+    </div>
 </div>
+</div>
+
+<script>
+function approveBundle(bundleId, status) {
+    if(!confirm(`Are you sure you want to ${status} this bundle?`)) return;
+
+    fetch(`/goal-bundles/${bundleId}/approve`, {
+        method: 'POST',
+        headers: {
+            'X-CSRF-TOKEN': '{{ csrf_token() }}',
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ status })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if(data.success){
+            let row = document.querySelector(`tr[data-bundle-id='${bundleId}']`);
+            row.style.backgroundColor = status === 'approved' ? '#d4edda' : '#f8d7da';
+            row.querySelectorAll('button').forEach(btn => btn.disabled = true);
+        } else {
+            alert(data.message || 'Something went wrong!');
+        }
+    })
+    .catch(err => console.error(err));
+}
+</script>
+
+
+
+{{-- ============================
+     JavaScript for staging bundle
+============================= --}}
+<script>
+    let bundleTableBody = document.querySelector("#bundleTable tbody");
+
+    // Add organization goal to bundle
+    function addToBundle(goalId, title, orgSettingId, type) {
+        if (document.querySelector(`input[value="${goalId}"]`)) {
+            alert("This goal is already added.");
+            return;
+        }
+
+        let row = `<tr>
+            <td>${title}<input type="hidden" name="goal_ids[]" value="${goalId}">
+                <input type="hidden" name="org_setting_ids[${goalId}]" value="${orgSettingId}">
+            </td>
+            <td>${type}</td>
+            <td><button type="button" class="btn btn-sm btn-danger" onclick="this.closest('tr').remove()">Remove</button></td>
+        </tr>`;
+        bundleTableBody.insertAdjacentHTML('beforeend', row);
+    }
+
+  function addCustomGoal() {
+    let title = document.getElementById('customGoalTitle').value.trim();
+    let orgSettingId = document.getElementById('customGoalOrg').value;
+    let startDate = document.getElementById('customGoalStart').value;
+    let endDate = document.getElementById('customGoalEnd').value;
+
+    if (!title) { alert("Enter a goal title."); return; }
+    if (!orgSettingId) { alert("Select a period."); return; }
+    if (!startDate || !endDate) { alert("Select start and end dates."); return; }
+
+    let customId = 'custom-' + Date.now();
+    let row = `<tr>
+        <td>
+            ${title}
+            <input type="hidden" name="goal_ids[]" value="${customId}">
+            <input type="hidden" name="org_setting_ids[${customId}]" value="${orgSettingId}">
+            <input type="hidden" name="custom_titles[${customId}]" value="${title}">
+            <input type="hidden" name="custom_start[${customId}]" value="${startDate}">
+            <input type="hidden" name="custom_end[${customId}]" value="${endDate}">
+        </td>
+        <td>Custom</td>
+        <td><button type="button" class="btn btn-sm btn-danger" onclick="this.closest('tr').remove()">Remove</button></td>
+    </tr>`;
+    bundleTableBody.insertAdjacentHTML('beforeend', row);
+
+    // Reset fields
+    document.getElementById('customGoalTitle').value = '';
+    document.getElementById('customGoalOrg').value = '';
+    document.getElementById('customGoalStart').value = '';
+    document.getElementById('customGoalEnd').value = '';
+
+}
+
+// Update hidden input based on approval/rejection
+function updateGoalStatus(button, status) {
+    let row = button.closest('tr');
+    let hiddenInput = row.querySelector('input[type="hidden"][name^="goal_status"]');
+    hiddenInput.value = status;
+
+    // Optionally, change button colors or disable them
+    row.querySelectorAll('button.btn-success, button.btn-danger').forEach(b => b.disabled = true);
+    row.style.backgroundColor = status === 'approved' ? '#d4edda' : '#f8d7da';
+}
+</script>

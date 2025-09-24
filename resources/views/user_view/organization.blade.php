@@ -43,6 +43,12 @@
                     <div class="col-md-3">
                         <input type="text" id="title" name="title" class="form-control" placeholder="Goal Title" required>
                     </div>
+                      <div class="col-md-2">
+                        <input type="date" id="start_date" name="start_date" class="form-control" placeholder="Start Date" required>
+                    </div>
+                    <div class="col-md-2">
+                        <input type="date" id="end_date" name="end_date" class="form-control" placeholder="End Date" required>
+                    </div>
                     <div class="col-md-3">
                         <select name="priority" id="priority" class="form-control">
                             <option value="low">Low</option>
@@ -59,16 +65,18 @@
             </form>
 
             <table class="table table-bordered table-striped mt-3">
-                <thead class="table-light">
-                    <tr>
-                        <th>Title</th>
-                        <th>Priority</th>
-                        <th>Status</th>
-                        <th>Period</th>
-                        <th>Action</th>
-                    </tr>
-                </thead>
-                <tbody id="goalsTable"></tbody>
+               <thead class="table-light">
+                        <tr>
+                            <th>Title</th>
+                            <th>Priority</th>
+                            <th>Status</th>
+                            <th>Period</th>
+                            <th>Start Date</th>
+                            <th>End Date</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="goalsTable"></tbody>
             </table>
         </div>
     </div>
@@ -95,63 +103,74 @@
 
 {{-- JS --}}
 <script>
-    document.addEventListener("DOMContentLoaded", function () {
+  document.addEventListener("DOMContentLoaded", function () {
+    loadGoals();
+    loadApprovals();
+
+    // Save Goal
+    document.getElementById("goalsForm").addEventListener("submit", async function (e) {
+        e.preventDefault();
+        let formData = new FormData(this);
+
+        await fetch("/goals", { method: "POST", body: formData });
         loadGoals();
-        loadApprovals();
-
-        // Save Goal
-        document.getElementById("goalsForm").addEventListener("submit", async function (e) {
-            e.preventDefault();
-            let formData = new FormData(this);
-
-            await fetch("/goals", { method: "POST", body: formData });
-            loadGoals();
-            this.reset();
-        });
+        this.reset();
     });
+});
 
-    async function loadGoals() {
-        let res = await fetch("/goals");
-        let data = await res.json();
-        let tbody = document.getElementById("goalsTable");
-        document.getElementById("totalGoals").innerText = data.length;
-        tbody.innerHTML = "";
+async function loadGoals() {
+    let res = await fetch("/goals");
+    let data = await res.json();
+    let tbody = document.getElementById("goalsTable");
+    document.getElementById("totalGoals").innerText = data.length;
+    tbody.innerHTML = "";
+
         data.forEach(g => {
             tbody.innerHTML += `<tr>
                 <td>${g.title}</td>
                 <td>${g.priority}</td>
                 <td>${g.status}</td>
-                <td>${g.org_setting_id}</td>
-                <td><button class="btn btn-sm btn-warning">Edit</button></td>
-            </tr>`;
-        });
-
-        // Optionally, update the org_setting_id select with available periods
-        let select = document.getElementById("org_setting_id");
-        let settingsRes = await fetch("/org-settings");
-        let settings = await settingsRes.json();
-        select.innerHTML = "";
-        settings.forEach(s => {
-            select.innerHTML += `<option value="${s.id}">${s.name}</option>`;
-        });
-    }
-
-    async function loadApprovals() {
-        let res = await fetch("/task-approvals");
-        let data = await res.json();
-        let tbody = document.getElementById("approvalsTable");
-        document.getElementById("pendingApprovals").innerText = data.filter(a => a.status === "pending").length;
-        tbody.innerHTML = "";
-        data.forEach(a => {
-            tbody.innerHTML += `<tr>
-                <td>${a.task_id}</td>
-                <td>${a.approved_by}</td>
-                <td>${a.status}</td>
+                <td>${g.period_name || g.org_setting_id}</td>
+                <td>${g.start_date || '-'}</td>
+                <td>${g.end_date || '-'}</td>
                 <td>
-                    <button class="btn btn-sm btn-success">Approve</button>
-                    <button class="btn btn-sm btn-danger">Reject</button>
+                    <button class="btn btn-sm btn-warning" onclick="editGoal(${g.id})">Edit</button>
                 </td>
             </tr>`;
         });
-    }
+
+    // Populate period select
+    let select = document.getElementById("org_setting_id");
+    let settingsRes = await fetch("/org-settings");
+    let settings = await settingsRes.json();
+    select.innerHTML = "";
+    settings.forEach(s => {
+        select.innerHTML += `<option value="${s.id}">${s.name}</option>`;
+    });
+}
+
+async function loadApprovals() {
+    let res = await fetch("/task-approvals");
+    let data = await res.json();
+    let tbody = document.getElementById("approvalsTable");
+    document.getElementById("pendingApprovals").innerText = data.filter(a => a.status === "pending").length;
+    tbody.innerHTML = "";
+    data.forEach(a => {
+        tbody.innerHTML += `<tr>
+            <td>${a.task_title || a.task_id}</td>
+            <td>${a.approved_by_name || a.approved_by}</td>
+            <td>${a.status}</td>
+            <td>
+                <button class="btn btn-sm btn-success">Approve</button>
+                <button class="btn btn-sm btn-danger">Reject</button>
+            </td>
+        </tr>`;
+    });
+}
+
+// Optional edit function
+function editGoal(id) {
+    // Fetch goal by id, populate form fields for editing
+}
+
 </script>

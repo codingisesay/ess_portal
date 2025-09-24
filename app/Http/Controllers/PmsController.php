@@ -11,9 +11,14 @@ use App\Models\GoalAssignment;
 use App\Models\Insight;
 use App\Models\Task;
 // use App\Models\TaskApproval;
+use App\Models\GoalApproval;    
+use App\Models\GoalBundleApproval;
+use App\Models\GoalBundleItem;
 
 class PmsController extends Controller
 {
+
+    
     // ============================
     // ORGANIZATION SETTINGS
     // ============================
@@ -94,9 +99,11 @@ class PmsController extends Controller
             'description' => 'nullable|string',
             'priority' => 'nullable|in:low,medium,high',
             'status' => 'nullable|in:pending,in-progress,completed',
+            'start_date' => 'required|date',
+            'end_date'   => 'required|date',
         ]);
 
-        $goal = Goal::updateOrCreate(
+       $goal = Goal::updateOrCreate(
             ['id' => $request->id],
             [
                 'org_setting_id' => $request->org_setting_id,
@@ -104,10 +111,11 @@ class PmsController extends Controller
                 'description'    => $request->description,
                 'priority'       => $request->priority,
                 'status'         => $request->status ?? 'pending',
+                'start_date'     => $request->start_date,
+                'end_date'       => $request->end_date,
                 'created_by'     => $user->id,
             ]
         );
-
         return response()->json($goal, $request->id ? 200 : 201);
     }
 
@@ -138,54 +146,54 @@ class PmsController extends Controller
     // ============================
     // GOAL ASSIGNMENTS
     // ============================
-    public function goalAssignmentsIndex() {
-        return response()->json(GoalAssignment::all());
-    }
+    // public function goalAssignmentsIndex() {
+    //     return response()->json(GoalAssignment::all());
+    // }
 
-    public function goalAssignmentsStore(Request $request) {
-        $user = Auth::user();
+    // public function goalAssignmentsStore(Request $request) {
+    //     $user = Auth::user();
 
-        $request->validate([
-            'id' => 'nullable|integer',
-            'goal_id' => 'required|integer',
-            'assigned_to' => 'required|integer',
-            'role' => 'required|in:manager,employee',
-        ]);
+    //     $request->validate([
+    //         'id' => 'nullable|integer',
+    //         'goal_id' => 'required|integer',
+    //         'assigned_to' => 'required|integer',
+    //         'role' => 'required|in:manager,employee',
+    //     ]);
 
-        $assignment = GoalAssignment::updateOrCreate(
-            ['id' => $request->id],
-            [
-                'goal_id'     => $request->goal_id,
-                'assigned_to' => $request->assigned_to,
-                'assigned_by' => $user->id,
-                'role'        => $request->role,
-            ]
-        );
+    //     $assignment = GoalAssignment::updateOrCreate(
+    //         ['id' => $request->id],
+    //         [
+    //             'goal_id'     => $request->goal_id,
+    //             'assigned_to' => $request->assigned_to,
+    //             'assigned_by' => $user->id,
+    //             'role'        => $request->role,
+    //         ]
+    //     );
 
-        return response()->json($assignment, $request->id ? 200 : 201);
-    }
+    //     return response()->json($assignment, $request->id ? 200 : 201);
+    // }
 
-    public function goalAssignmentsUpdate(Request $request, $id) {
-        $assignment = GoalAssignment::findOrFail($id);
+    // public function goalAssignmentsUpdate(Request $request, $id) {
+    //     $assignment = GoalAssignment::findOrFail($id);
 
-        $request->validate([
-            'goal_id' => 'sometimes|integer',
-            'assigned_to' => 'sometimes|integer',
-            'role' => 'sometimes|in:manager,employee',
-        ]);
+    //     $request->validate([
+    //         'goal_id' => 'sometimes|integer',
+    //         'assigned_to' => 'sometimes|integer',
+    //         'role' => 'sometimes|in:manager,employee',
+    //     ]);
 
-        $assignment->update($request->all());
-        return response()->json($assignment);
-    }
+    //     $assignment->update($request->all());
+    //     return response()->json($assignment);
+    // }
 
-    public function goalAssignmentsShow($id) {
-        return response()->json(GoalAssignment::findOrFail($id));
-    }
+    // public function goalAssignmentsShow($id) {
+    //     return response()->json(GoalAssignment::findOrFail($id));
+    // }
 
-    public function goalAssignmentsDestroy($id) {
-        GoalAssignment::findOrFail($id)->delete();
-        return response()->json(['message'=>'Goal assignment deleted']);
-    }
+    // public function goalAssignmentsDestroy($id) {
+    //     GoalAssignment::findOrFail($id)->delete();
+    //     return response()->json(['message'=>'Goal assignment deleted']);
+    // }
 
     // ============================
     // INSIGHTS
@@ -300,112 +308,271 @@ class PmsController extends Controller
         return response()->json(['message'=>'Task deleted']);
     }
 
+      // ============================
+    // GOAL ASSIGNMENTS
     // ============================
-    // TASK APPROVALS
+
+ public function submitForApproval(Request $request)
+{
+    $user = Auth::user();
+
+    $request->validate([
+        'goal_ids' => 'required|array',
+    ]);
+
+    // Get reporting manager for this user
+        $reportingManager = \DB::table('emp_details')
+            ->where('user_id', $user->id)
+            ->value('reporting_manager');
+
+        foreach ($request->goal_ids as $goalId) {
+            GoalApproval::create([
+                'goal_id' => $goalId,
+                'requested_by' => $user->id,
+                'reporting_manager' => $reportingManager,
+                'status' => 'pending',
+            ]);
+        }
+
+            return back()->with('success', 'Goals submitted for approval!');
+        }
+
+        public function approveGoal($id)
+        {
+            $approval = GoalApproval::findOrFail($id);
+
+            $approval->update(['status' => 'approved']);
+
+            GoalAssignment::create([
+                'goal_id' => $approval->goal_id,
+                'assigned_to' => $approval->requested_by,
+                'assigned_by' => $approval->reporting_manager,
+                'role' => 'manager',
+            ]);
+
+            return back()->with('success', 'Goal approved and assigned!');
+        }
+
+        public function rejectGoal(Request $request, $id)
+        {
+            $approval = GoalApproval::findOrFail($id);
+
+            $approval->update([
+                'status' => 'rejected',
+                'remarks' => $request->remarks,
+            ]);
+
+            return back()->with('error', 'Goal rejected.');
+        }
+
+
+
+ // ============================
+    // GOAL BUNDLES
     // ============================
-    public function taskApprovalsIndex() {
-        return response()->json(TaskApproval::all());
-    }
+public function submitBundle(Request $request)
+{
+    $user = Auth::user();
 
-    public function taskApprovalsStore(Request $request) {
-        $user = Auth::user();
+    $request->validate([
+        'goal_ids' => 'required|array|min:1',
+    ]);
 
-        $request->validate([
-            'id' => 'nullable|integer',
-            'task_id' => 'required|integer',
-            'status' => 'nullable|in:approved,rejected,pending',
-            'remarks' => 'nullable|string',
+    $reportingManager = \DB::table('emp_details')
+        ->where('user_id', $user->id)
+        ->value('reporting_manager');
+
+    // Create bundle header
+    $bundle = GoalBundleApproval::create([
+        'requested_by'      => $user->id,
+        'reporting_manager' => $reportingManager,
+        'status'            => 'pending'
+    ]);
+
+    foreach ($request->goal_ids as $goalId) {
+        // If it's a custom goal
+        if (str_starts_with($goalId, 'custom-')) {
+            $orgSettingId = $request->org_setting_ids[$goalId] ?? null;
+            $title        = $request->custom_titles[$goalId] ?? 'Custom Goal';
+            $startDate    = $request->custom_start[$goalId] ?? null;
+            $endDate      = $request->custom_end[$goalId] ?? null;
+
+            // Optional: Validate required fields for custom goal
+            if (!$orgSettingId || !$title || !$startDate || !$endDate) {
+                continue; // skip invalid custom goals
+            }
+
+            // Create the goal in DB
+            $goal = Goal::create([
+                'org_setting_id' => $orgSettingId,
+                'title'          => $title,
+                'start_date'     => $startDate,
+                'end_date'       => $endDate,
+                'description'    => null,
+                'priority'       => 'medium',
+                'status'         => 'pending',
+                'created_by'     => $user->id,
+            ]);
+
+            $goalId = $goal->id; // use the new DB ID
+        }
+
+        GoalBundleItem::create([    
+            'bundle_id' => $bundle->id,
+            'goal_id'   => $goalId
         ]);
-
-        $approval = TaskApproval::updateOrCreate(
-            ['id' => $request->id],
-            [
-                'task_id'     => $request->task_id,
-                'approved_by' => $user->id,
-                'status'      => $request->status ?? 'pending',
-                'remarks'     => $request->remarks,
-            ]
-        );
-
-        return response()->json($approval, $request->id ? 200 : 201);
     }
 
-    public function taskApprovalsUpdate(Request $request, $id) {
-        $approval = TaskApproval::findOrFail($id);
+    return back()->with('success', 'Goals bundle submitted for approval!');
+}
 
-        $request->validate([
-            'task_id' => 'sometimes|integer',
-            'status' => 'sometimes|in:approved,rejected,pending',
-            'remarks' => 'nullable|string',
+
+// Fetch pending bundles for manager
+public function pendingBundles()
+{
+    $user = Auth::user();
+
+    $bundles = GoalBundleApproval::with('items.goal', 'requestedBy')
+                ->where('reporting_manager', $user->id)
+                ->where('status', 'pending')
+                ->get();
+
+    return view('manager.approvals', compact('bundles'));
+}
+
+// Approve a bundle
+public function approveBundle($bundleId)
+{
+    $bundle = GoalBundleApproval::findOrFail($bundleId);
+
+    if ($bundle->status !== 'pending') {
+        return back()->with('error', 'Bundle already processed.');
+    }
+
+    // Insert approved goals into goal_assignments
+    foreach ($bundle->items as $item) {
+        $goal = $item->goal;
+        \DB::table('goal_assignments')->insert([
+            'goal_id'      => $goal->id,
+            'assigned_to'  => $bundle->requested_by,
+            'assigned_by'  => auth()->id(),
+            'role'         => 'Manager',
+            'created_at'   => now(),
+            'updated_at'   => now(),
         ]);
-
-        $approval->update($request->all());
-        return response()->json($approval);
     }
 
-    public function taskApprovalsShow($id) {
-        return response()->json(TaskApproval::findOrFail($id));
+    // Mark bundle as approved
+    $bundle->update(['status' => 'approved']);
+
+    return back()->with('success', 'Bundle approved successfully!');
+}
+
+// Reject a bundle
+public function rejectBundle($bundleId)
+{
+    $bundle = GoalBundleApproval::findOrFail($bundleId);
+
+    if ($bundle->status !== 'pending') {
+        return back()->with('error', 'Bundle already processed.');
     }
 
-    public function taskApprovalsDestroy($id) {
-        TaskApproval::findOrFail($id)->delete();
-        return response()->json(['message'=>'Task approval deleted']);
-    }
+    $bundle->update(['status' => 'rejected']);
+
+    return back()->with('success', 'Bundle rejected successfully!');
+}
+
 
     // ============================
-    // PMS DASHBOARD
+    // PMS DASHBOARD (Main Entry)
     // ============================
     public function pmsDashboard()
     {
-        return view('user_view.pms_dashboard');
-    }
 
-    public function managerDashboard()
-    {
+
         $user = Auth::user();
 
-        // 1. Organization Goals Assigned (to this manager)
-        $assignedGoals = \DB::table('goal_assignments')
-            ->join('goals', 'goal_assignments.goal_id', '=', 'goals.id')
-            ->join('organization_settings', 'goals.org_setting_id', '=', 'organization_settings.id')
-            ->select(
-                'goal_assignments.*',
-                'goals.title as goal_title',
-                'goals.status as goal_status',
-                'goals.id as goal_id',
-                'organization_settings.name as period_name'
-            )
-            ->where('goal_assignments.assigned_to', $user->id)
-            ->where('goal_assignments.role', 'manager')
-            ->get();
+            // Check if user is top-level (no reporting manager)
+            $reportingManager = \DB::table('emp_details')
+                ->where('user_id', $user->id)
+                ->value('reporting_manager');
 
-        // 2. Additional Goals/Tasks (created by this manager)
-        $additionalGoals = \DB::table('goals')
-            ->leftJoin('users', 'goals.assigned_to', '=', 'users.id')
-            ->select('goals.*', 'users.name as assigned_to_name')
-            ->where('goals.created_by', $user->id)
-            ->get();
+            $isTopLevel = $reportingManager === null;
 
-        // 3. Task List (own tasks)
-        $ownTasks = \DB::table('tasks')
-            ->where('assigned_to', $user->id)
-            ->get();
+            // Check if user has subordinates (is a manager)
+            $hasSubordinates = \DB::table('emp_details')
+                ->where('reporting_manager', $user->id)
+                ->exists();
 
-        // 4. Insights Section (all insights with goal and user info)
-        $insights = \DB::table('insights')
+        $user = Auth::user();
+
+        // Data for Organization Dashboard
+        // $orgGoals = \DB::table('goals')
+        //     ->join('organization_settings', 'goals.org_setting_id', '=', 'organization_settings.id')
+        //     ->select('goals.*', 'organization_settings.name as period_name')
+        //     ->get();
+         $allOrgGoals = \DB::table('goals')
+        ->join('organization_settings', 'goals.org_setting_id', '=', 'organization_settings.id')
+        ->select('goals.*', 'organization_settings.name as period_name', 'goals.start_date', 'goals.end_date')
+        ->get();
+
+        $orgInsights = \DB::table('insights')
             ->join('goals', 'insights.goal_id', '=', 'goals.id')
             ->join('users', 'insights.user_id', '=', 'users.id')
             ->select('insights.*', 'goals.title as goal_title', 'users.name as user_name')
             ->orderBy('insights.created_at', 'desc')
             ->get();
 
-        // List of juniors (for assigning tasks/goals)
-        $juniors = \DB::table('users')
-            ->where('manager_id', $user->id)
+          // Already assigned goals (to this manager)
+            $assignedGoals = \DB::table('goal_assignments')
+                ->join('goals', 'goal_assignments.goal_id', '=', 'goals.id')
+                ->join('organization_settings', 'goals.org_setting_id', '=', 'organization_settings.id')
+               ->select(
+                        'goal_assignments.*',
+                        'goals.title as goal_title',
+                        'goals.status as goal_status',
+                        'goals.id as goal_id',
+                        'goals.start_date',
+                        'goals.end_date',
+                        'organization_settings.name as period_name'
+                    )
+                ->where('goal_assignments.assigned_to', $user->id)
+                ->where('goal_assignments.role', 'manager')
+                ->get();
+
+        $additionalGoals = \DB::table('goals')
+            ->where('goals.created_by', $user->id)
             ->get();
 
-        return view('user_view.manager_dashboard', compact(
-            'assignedGoals', 'additionalGoals', 'ownTasks', 'insights', 'juniors'
-        ));
+        $ownTasks = \DB::table('tasks')
+            ->where('assigned_to', $user->id)
+            ->get();
+
+        $managerInsights = \DB::table('insights')
+            ->join('goals', 'insights.goal_id', '=', 'goals.id')
+            ->join('users', 'insights.user_id', '=', 'users.id')
+            ->select('insights.*', 'goals.title as goal_title', 'users.name as user_name')
+            ->orderBy('insights.created_at', 'desc')
+            ->get();
+
+        // $juniors = \DB::table('users')
+        //     ->where('manager_id', $user->id)
+        //     ->get();
+
+        return view('user_view.pms_dashboard', [
+            // Organization Dashboard Data
+            'allOrgGoals' => $allOrgGoals,
+            'orgInsights' => $orgInsights,
+            // Manager Dashboard Data
+             'assignedGoals' => $assignedGoals,
+            'additionalGoals' => $additionalGoals,
+            'ownTasks' => $ownTasks,
+            'insights' => $managerInsights,
+            // 'juniors' => $juniors,
+            'user' => $user,
+        ]);
+        
     }
+
+    
 }
