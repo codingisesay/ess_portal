@@ -43,24 +43,82 @@
 <div class="card mb-4">
     <div class="card-header bg-light"><strong>Additional Goals / Selected Org Goals</strong></div>
     <div class="card-body">
-        <form id="bundleForm" method="POST" action="{{ route('goal-bundles.submit') }}">
-            @csrf
-            <table class="table table-bordered" id="bundleTable">
-                <thead class="table-light">
-                    <tr>
-                        <th>Goal</th>
-                        <th>Type</th>
-                        <th>Action</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {{-- Populated via JS --}}
-                </tbody>
-            </table>
+     <form id="bundleForm" method="POST" action="{{ route('goal-bundles.submit') }}">
+    @csrf
 
-            {{-- Submit whole bundle --}}
-            <button type="submit" class="btn btn-success mt-2">Submit Selected Goals for Approval</button>
-        </form>
+    {{-- Always send bundle_id once (if exists) --}}
+    <input type="hidden" name="bundle_id" value="{{ $submittedGoals[0]->bundle_id ?? '' }}">
+
+   <table class="table table-bordered" id="bundleTable">
+    <thead class="table-light">
+        <tr>
+            <th>Goal</th>
+            <th>Type / Status</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach($submittedGoals ?? [] as $goal)
+        <tr>
+            <td>
+                @if($goal->approval_status === 'rejected')
+                    {{-- Pass existing bundle_id for resubmission --}}
+                    <input type="hidden" name="bundle_id" value="{{ $goal->bundle_id ?? '' }}">
+
+                    {{-- Editable fields for rejected goals --}}
+                    <input type="text" 
+                           name="custom_titles[{{ $goal->goal_id }}]" 
+                           value="{{ $goal->title }}" 
+                           class="form-control mb-1" 
+                           placeholder="Goal Title">
+
+                    <textarea name="custom_descriptions[{{ $goal->goal_id }}]" 
+                              class="form-control mb-1" 
+                              placeholder="Goal Description">{{ $goal->description ?? '' }}</textarea>
+
+                    <input type="date" 
+                           name="custom_start[{{ $goal->goal_id }}]" 
+                           value="{{ $goal->start_date }}" 
+                           class="form-control mb-1">
+
+                    <input type="date" 
+                           name="custom_end[{{ $goal->goal_id }}]" 
+                           value="{{ $goal->end_date }}" 
+                           class="form-control">
+
+                    <input type="hidden" name="goal_ids[]" value="{{ $goal->goal_id }}">
+                    <input type="hidden" name="org_setting_ids[{{ $goal->goal_id }}]" value="{{ $goal->org_setting_id }}">
+                @else
+                    {{-- Read-only display for approved / pending goals --}}
+                    <strong>{{ $goal->title }}</strong><br>
+                    @if(!empty($goal->description))
+                        <small>{{ $goal->description }}</small><br>
+                    @endif
+                    <small>{{ $goal->start_date ?? '—' }} → {{ $goal->end_date ?? '—' }}</small>
+
+                    <input type="hidden" name="goal_ids[]" value="{{ $goal->goal_id }}">
+                    <input type="hidden" name="org_setting_ids[{{ $goal->goal_id }}]" value="{{ $goal->org_setting_id }}">
+                @endif
+            </td>
+            <td>{{ ucfirst($goal->approval_status) }}</td>
+            <td>
+                @if($goal->approval_status === 'rejected')
+                    <button type="button" class="btn btn-sm btn-danger" onclick="this.closest('tr').remove()">Remove</button>
+                @endif
+            </td>
+        </tr>
+        @endforeach
+    </tbody>
+</table>
+
+
+    {{-- Submit whole bundle --}}
+    <button type="submit" class="btn btn-success mt-2">
+        Submit Selected Goals for Approval
+    </button>
+</form>
+
+
 
         {{-- Add Custom Goal --}}
         <div class="mt-3">
@@ -359,8 +417,17 @@ document.getElementById('bundleForm').addEventListener('submit', function(e) {
             showConfirmButton: false
         });
 
-        // Clear Additional Goals table
-        bundleTableBody.innerHTML = '';
+        // ❌ Do NOT clear the table — keep rejected/approved visible
+        // bundleTableBody.innerHTML = '';
+        
+        // ✅ Instead, refresh statuses dynamically if needed
+        // e.g., mark them as pending:
+        [...bundleTableBody.querySelectorAll("tr")].forEach(row => {
+            let statusCell = row.querySelector("td:nth-child(2)");
+            if(statusCell) {
+                statusCell.innerText = "Pending";
+            }
+        });
     })
     .catch(err => {
         Swal.fire({
@@ -370,4 +437,5 @@ document.getElementById('bundleForm').addEventListener('submit', function(e) {
         });
     });
 });
+
 </script>
