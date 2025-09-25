@@ -382,7 +382,7 @@ public function submitBundle(Request $request)
         ->where('user_id', $user->id)
         ->value('reporting_manager');
 
-    // Create bundle header
+    // Create a new bundle for approval
     $bundle = GoalBundleApproval::create([
         'requested_by'      => $user->id,
         'reporting_manager' => $reportingManager,
@@ -390,41 +390,51 @@ public function submitBundle(Request $request)
     ]);
 
     foreach ($request->goal_ids as $goalId) {
-        // If it's a custom goal
+
+        // ====== Custom Goals ======
         if (str_starts_with($goalId, 'custom-')) {
             $orgSettingId = $request->org_setting_ids[$goalId] ?? null;
             $title        = $request->custom_titles[$goalId] ?? 'Custom Goal';
             $startDate    = $request->custom_start[$goalId] ?? null;
             $endDate      = $request->custom_end[$goalId] ?? null;
 
-            // Optional: Validate required fields for custom goal
-            if (!$orgSettingId || !$title || !$startDate || !$endDate) {
-                continue; // skip invalid custom goals
-            }
+            if (!$orgSettingId || !$title || !$startDate || !$endDate) continue;
 
-            // Create the goal in DB
             $goal = Goal::create([
                 'org_setting_id' => $orgSettingId,
                 'title'          => $title,
                 'start_date'     => $startDate,
                 'end_date'       => $endDate,
-                'description'    => null,
                 'priority'       => 'medium',
                 'status'         => 'pending',
                 'created_by'     => $user->id,
             ]);
 
-            $goalId = $goal->id; // use the new DB ID
+            $goalId = $goal->id;
+
+        } else {
+            // ====== Resubmitted Rejected Goals ======
+            $goal = Goal::find($goalId);
+            if ($goal && $goal->status === 'rejected') {
+                $goal->update([
+                    'title'      => $request->custom_titles[$goalId] ?? $goal->title,
+                    'start_date' => $request->custom_start[$goalId] ?? $goal->start_date,
+                    'end_date'   => $request->custom_end[$goalId] ?? $goal->end_date,
+                    'status'     => 'pending', // reset for resubmission
+                ]);
+            }
         }
 
+        // Add to bundle items
         GoalBundleItem::create([    
             'bundle_id' => $bundle->id,
             'goal_id'   => $goalId
         ]);
     }
 
-    return back()->with('success', 'Goals bundle submitted for approval!');
+    return response()->json(['message' => 'Goals bundle submitted successfully!']);
 }
+
 
 
 // Fetch pending bundles for manager
@@ -446,7 +456,7 @@ public function approveBundle($bundleId)
     $bundle = GoalBundleApproval::findOrFail($bundleId);
 
     if ($bundle->status !== 'pending') {
-        return back()->with('error', 'Bundle already processed.');
+        return response()->json(['message' => 'Bundle already processed.'], 400);
     }
 
     // Insert approved goals into goal_assignments
@@ -465,7 +475,7 @@ public function approveBundle($bundleId)
     // Mark bundle as approved
     $bundle->update(['status' => 'approved']);
 
-    return back()->with('success', 'Bundle approved successfully!');
+   return response()->json(['message' => 'Bundle approved successfully!']);
 }
 
 // Reject a bundle
@@ -479,8 +489,9 @@ public function rejectBundle($bundleId)
 
     $bundle->update(['status' => 'rejected']);
 
-    return back()->with('success', 'Bundle rejected successfully!');
+    return response()->json(['message' => 'Bundle rejected successfully!']);
 }
+
 
 
     // ============================
@@ -506,15 +517,78 @@ public function rejectBundle($bundleId)
 
         $user = Auth::user();
 
-        // Data for Organization Dashboard
-        // $orgGoals = \DB::table('goals')
-        //     ->join('organization_settings', 'goals.org_setting_id', '=', 'organization_settings.id')
-        //     ->select('goals.*', 'organization_settings.name as period_name')
-        //     ->get();
-         $allOrgGoals = \DB::table('goals')
-        ->join('organization_settings', 'goals.org_setting_id', '=', 'organization_settings.id')
-        ->select('goals.*', 'organization_settings.name as period_name', 'goals.start_date', 'goals.end_date')
-        ->get();
+       $reportingManager = \DB::table('emp_details')
+        ->where('user_id', $user->id)
+        ->value('reporting_manager');
+
+   
+
+    // Get IDs of goals already submitted by this user
+            $submittedGoalIds = \DB::table('goal_bundle_items')
+            ->join('goal_bundle_approvals', 'goal_bundle_items.bundle_id', '=', 'goal_bundle_approvals.id')
+            ->where('goal_bundle_approvals.requested_by', $user->id)
+            ->pluck('goal_bundle_items.goal_id')
+            ->toArray();
+
+            // Only show goals NOT submitted yet
+            $allOrgGoals = \DB::table('goals')
+            ->join('organization_settings', 'goals.org_setting_id', '=', 'organization_settings.id')
+            ->select('goals.*', 'organization_settings.name as period_name', 'goals.start_date', 'goals.end_date')
+            ->whereIn('goals.created_by', [$user->id, $reportingManager])
+            ->whereNotIn('goals.id', $submittedGoalIds) // <- Exclude submitted goals
+            ->get();
+
+// Already assigned / submitted goals
+//   $submittedGoals = \DB::table('goal_bundle_items')
+//     ->join('goal_bundle_approvals', 'goal_bundle_items.bundle_id', '=', 'goal_bundle_approvals.id')
+//     ->join('goals', 'goal_bundle_items.goal_id', '=', 'goals.id')
+//     ->where('goal_bundle_approvals.requested_by', $user->id)
+//     ->where('goal_bundle_approvals.status', 'rejected') // only rejected bundles
+//     ->select(
+//         'goals.id as goal_id',
+//         'goals.title',
+//         'goals.org_setting_id',
+//         'goals.start_date',
+//         'goals.end_date',
+//         'goal_bundle_approvals.status as approval_status'
+//     )
+//     ->get();
+// // dd($submittedGoals);
+
+$individualSubmittedGoals = \DB::table('goal_approvals')
+    ->join('goals', 'goal_approvals.goal_id', '=', 'goals.id')
+    ->where('goal_approvals.requested_by', $user->id)
+    ->select(
+        'goals.id as goal_id',
+        'goals.title',
+        'goals.org_setting_id',
+        'goals.start_date',
+        'goals.end_date',
+        'goal_approvals.status as approval_status'
+    )
+    ->get();
+
+    $bundleSubmittedGoals = \App\Models\GoalBundleItem::with('goal', 'bundle')
+    ->whereHas('bundle', function($q) use ($user) {
+        $q->where('requested_by', $user->id); // only bundles requested by this user
+    })
+    ->get()
+    ->map(function($item) {
+        return (object)[
+            'goal_id' => $item->goal_id,
+            'title' => $item->goal ? $item->goal->title : 'Custom Goal',
+            'org_setting_id' => $item->goal ? $item->goal->org_setting_id : null,
+            'start_date' => $item->goal ? $item->goal->start_date : null,
+            'end_date' => $item->goal ? $item->goal->end_date : null,
+            'approval_status' => $item->bundle->status, // pending/approved/rejected
+        ];
+    });
+
+    $submittedGoals = $individualSubmittedGoals->merge($bundleSubmittedGoals);
+
+    
+
+
 
         $orgInsights = \DB::table('insights')
             ->join('goals', 'insights.goal_id', '=', 'goals.id')
@@ -569,6 +643,7 @@ public function rejectBundle($bundleId)
             'ownTasks' => $ownTasks,
             'insights' => $managerInsights,
             // 'juniors' => $juniors,
+            'submittedGoals' => $submittedGoals,
             'user' => $user,
         ]);
         

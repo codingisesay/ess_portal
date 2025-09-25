@@ -7,7 +7,7 @@
 <div class="card mb-4">
     <div class="card-header bg-light"><strong>Goals Created by Organization</strong></div>
     <div class="card-body">
-        <table class="table table-bordered table-striped">
+       <table class="table table-bordered table-striped" id="orgGoalsTable">
             <thead class="table-light">
                 <tr>
                     <th>Goal</th>
@@ -24,13 +24,15 @@
                     <td>{{ ucfirst($goal->priority) }}</td>
                     <td>
                         <button type="button" class="btn btn-sm btn-primary"
-                            onclick="addToBundle({{ $goal->id }}, '{{ addslashes($goal->title) }}', '{{ $goal->org_setting_id }}', 'Organization')">
+                            onclick="addToBundle({{ $goal->id }}, '{{ addslashes($goal->title) }}', '{{ $goal->org_setting_id }}', 'Organization', this)">
                             Add
                         </button>
                     </td>
                 </tr>
                 @endforeach
             </tbody>
+        </table>
+
         </table>
     </div>
 </div>
@@ -189,7 +191,7 @@
                             </td>
                             <td>
                                 <button class="btn btn-sm btn-success" onclick="approveBundle({{ $bundle->id }}, 'approved')">Approve</button>
-                                <button class="btn btn-sm btn-danger" onclick="approveBundle({{ $bundle->id }}, 'rejected')">Reject</button>
+                               <button class="btn btn-sm btn-danger" onclick="rejectBundle({{ $bundle->id }})">Reject</button>
                             </td>
                         </tr>
                     @endforeach
@@ -201,67 +203,111 @@
     </div>
 </div>
 </div>
-
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
-function approveBundle(bundleId, status) {
-    if(!confirm(`Are you sure you want to ${status} this bundle?`)) return;
-
-    fetch(`/goal-bundles/${bundleId}/approve`, {
+function approveBundle(id) {
+    fetch(`/manager/bundles/${id}/approve`, {
         method: 'POST',
         headers: {
             'X-CSRF-TOKEN': '{{ csrf_token() }}',
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ status })
-    })
-    .then(response => response.json())
-    .then(data => {
-        if(data.success){
-            let row = document.querySelector(`tr[data-bundle-id='${bundleId}']`);
-            row.style.backgroundColor = status === 'approved' ? '#d4edda' : '#f8d7da';
-            row.querySelectorAll('button').forEach(btn => btn.disabled = true);
-        } else {
-            alert(data.message || 'Something went wrong!');
+            'Content-Type': 'application/json',
         }
     })
-    .catch(err => console.error(err));
+    .then(res => res.json())
+    .then(data => {
+        Swal.fire({
+            icon: 'success',
+            title: 'Approved!',
+            text: data.message,
+            timer: 2000,
+            showConfirmButton: false
+        });
+
+        // remove the row from table
+        document.querySelector(`tr[data-bundle-id="${id}"]`).remove();
+    })
+    .catch(err => {
+        Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'Something went wrong!'
+        });
+    });
+}
+
+function rejectBundle(id) {
+    fetch(`/manager/bundles/${id}/reject`, {
+        method: 'POST',
+        headers: {
+            'X-CSRF-TOKEN': '{{ csrf_token() }}',
+            'Content-Type': 'application/json',
+        }
+    })
+    .then(res => res.json())
+    .then(data => {
+        Swal.fire({
+            icon: 'warning',
+            title: 'Rejected!',
+            text: data.message,
+            timer: 2000,
+            showConfirmButton: false
+        });
+
+        // remove the row from table
+        document.querySelector(`tr[data-bundle-id="${id}"]`).remove();
+    })
+    .catch(err => {
+        Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'Something went wrong!'
+        });
+    });
 }
 </script>
 
 
-
-{{-- ============================
-     JavaScript for staging bundle
-============================= --}}
 <script>
     let bundleTableBody = document.querySelector("#bundleTable tbody");
+let orgGoalsTableBody = document.querySelector("#orgGoalsTable tbody");
 
-    // Add organization goal to bundle
-    function addToBundle(goalId, title, orgSettingId, type) {
-        if (document.querySelector(`input[value="${goalId}"]`)) {
-            alert("This goal is already added.");
-            return;
-        }
+// Add organization goal to bundle and remove from Org Goals table
+function addToBundle(goalId, title, orgSettingId, type, button) {
+    if (!bundleTableBody || !orgGoalsTableBody) return;
 
-        let row = `<tr>
-            <td>${title}<input type="hidden" name="goal_ids[]" value="${goalId}">
-                <input type="hidden" name="org_setting_ids[${goalId}]" value="${orgSettingId}">
-            </td>
-            <td>${type}</td>
-            <td><button type="button" class="btn btn-sm btn-danger" onclick="this.closest('tr').remove()">Remove</button></td>
-        </tr>`;
-        bundleTableBody.insertAdjacentHTML('beforeend', row);
+    if (document.querySelector(`input[value="${goalId}"]`)) {
+        alert("This goal is already added.");
+        return;
     }
 
-  function addCustomGoal() {
+    let row = `<tr>
+        <td>
+            ${title}
+            <input type="hidden" name="goal_ids[]" value="${goalId}">
+            <input type="hidden" name="org_setting_ids[${goalId}]" value="${orgSettingId}">
+        </td>
+        <td>${type}</td>
+        <td>
+            <button type="button" class="btn btn-sm btn-danger" onclick="this.closest('tr').remove()">Remove</button>
+        </td>
+    </tr>`;
+    bundleTableBody.insertAdjacentHTML('beforeend', row);
+
+    // Remove from Org Goals table
+    if(button) button.closest('tr').remove();
+}
+
+// Add custom goal
+function addCustomGoal() {
     let title = document.getElementById('customGoalTitle').value.trim();
     let orgSettingId = document.getElementById('customGoalOrg').value;
     let startDate = document.getElementById('customGoalStart').value;
     let endDate = document.getElementById('customGoalEnd').value;
 
-    if (!title) { alert("Enter a goal title."); return; }
-    if (!orgSettingId) { alert("Select a period."); return; }
-    if (!startDate || !endDate) { alert("Select start and end dates."); return; }
+    if (!title || !orgSettingId || !startDate || !endDate) {
+        alert("Please fill all custom goal fields.");
+        return;
+    }
 
     let customId = 'custom-' + Date.now();
     let row = `<tr>
@@ -274,7 +320,9 @@ function approveBundle(bundleId, status) {
             <input type="hidden" name="custom_end[${customId}]" value="${endDate}">
         </td>
         <td>Custom</td>
-        <td><button type="button" class="btn btn-sm btn-danger" onclick="this.closest('tr').remove()">Remove</button></td>
+        <td>
+            <button type="button" class="btn btn-sm btn-danger" onclick="this.closest('tr').remove()">Remove</button>
+        </td>
     </tr>`;
     bundleTableBody.insertAdjacentHTML('beforeend', row);
 
@@ -283,17 +331,43 @@ function approveBundle(bundleId, status) {
     document.getElementById('customGoalOrg').value = '';
     document.getElementById('customGoalStart').value = '';
     document.getElementById('customGoalEnd').value = '';
-
 }
 
-// Update hidden input based on approval/rejection
-function updateGoalStatus(button, status) {
-    let row = button.closest('tr');
-    let hiddenInput = row.querySelector('input[type="hidden"][name^="goal_status"]');
-    hiddenInput.value = status;
+// Submit bundle
+document.getElementById('bundleForm').addEventListener('submit', function(e) {
+    e.preventDefault();
 
-    // Optionally, change button colors or disable them
-    row.querySelectorAll('button.btn-success, button.btn-danger').forEach(b => b.disabled = true);
-    row.style.backgroundColor = status === 'approved' ? '#d4edda' : '#f8d7da';
-}
+    if(bundleTableBody.children.length === 0) {
+        alert("No goals selected to submit!");
+        return;
+    }
+
+    let formData = new FormData(this);
+
+    fetch(this.action, {
+        method: 'POST',
+        headers: { 'X-CSRF-TOKEN': '{{ csrf_token() }}' },
+        body: formData
+    })
+    .then(res => res.json())
+    .then(data => {
+        Swal.fire({
+            icon: 'success',
+            title: 'Submitted!',
+            text: data.message || 'Goals submitted for approval!',
+            timer: 2000,
+            showConfirmButton: false
+        });
+
+        // Clear Additional Goals table
+        bundleTableBody.innerHTML = '';
+    })
+    .catch(err => {
+        Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'Something went wrong!'
+        });
+    });
+});
 </script>

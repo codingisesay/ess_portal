@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SIL Tech</title>
-    <link rel="icon" href="STPLLogo butterfly.png" />
+    <link rel="icon" href="{{ asset('user_end/images/STPLLogo butterfly.png')}} " />
 
     <!-- Custom CSS -->
     <link rel="stylesheet" href="{{ asset('user_end/css/login.css') }}">
