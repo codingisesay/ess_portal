@@ -28,48 +28,55 @@ error_reporting(0);
                 <img src="{{ asset('user_end/images/search (2) 3.png') }}" alt="Search Icon">
             </div>
         </div>
+        <div class="categories-container">
+            @foreach($policies->groupBy('policy_categorie_id') as $categoryId => $categoryPolicies)
+                <div class="category-item" data-category="{{ $categoryId }}">
+                    <div class="category-icon">
+                        <!-- Fetch icon from storage -->
+                        <img src="{{ Storage::url($categoryPolicies->first()->iconLink) }}" alt="Category Icon">
+                    </div>
+                    <div class="category-text">
+                        <span class="">{{ $categoryPolicies->first()->category_name }}</span>
+                    </div>
+                </div>
+            @endforeach
+        </div>
     </div>
 
     <!-- Main Content Container -->
 
     <div class="main-container mx-">
-        <!-- Sidebar -->
-       
-            <div class="sidebar me-2 my-2">
-                @foreach($policies->groupBy('policy_categorie_id') as $categoryId => $categoryPolicies)
-                    <div class="category-item" data-category="{{ $categoryId }}">
-                        <div class="category-icon">
-                            <!-- Fetch icon from storage -->
-                            <img src="{{ Storage::url($categoryPolicies->first()->iconLink) }}" alt="Category Icon">
-                        </div>
-                        <div class="category-text">
-                            <span class="">{{ $categoryPolicies->first()->category_name }}</span>
-                        </div>
-                    </div>
-                @endforeach
-            </div>
-       
         <!-- Content Area -->
         @foreach($policies->groupBy('policy_categorie_id') as $categoryId => $categoryPolicies)
             <div class="content-area  my-2" data-category="{{ $categoryId }}">
-                @foreach($categoryPolicies as $policy)
-                    <a href="{{ Storage::url($policy->docLink) }}" class="download-btn" download>
-                    <img src="{{ asset('user_end/images/download 1.png') }}" alt="Download Icon"> Download
-                    </a>
+                <div class="policy-slider">
+                    <div class="policy-track">
+                        @foreach($categoryPolicies as $policy)
+                            <div class="policy-card">
+                                <a href="{{ Storage::url($policy->docLink) }}" class="download-btn" download>
+                                <img src="{{ asset('user_end/images/download 1.png') }}" alt="Download Icon"> Download
+                                </a>
 
-                    <div class="policy-content">
-                        <div class="content-text">
-                            <div class="content-item">
-                                <h3>{{ $policy->policy_title }}</h3>
-                                <p>{{ $policy->policy_content }}</p>
+                                <div class="policy-content">
+                                    <div class="content-text">
+                                        <div class="content-item">
+                                            <h3>{{ $policy->policy_title }}</h3>
+                                            <p>{{ $policy->policy_content }}</p>
+                                        </div>
+                                    </div>
+                                    <div class="content-image">
+                                        <!-- Fetch content image from storage -->
+                                        <img src="{{ Storage::url($policy->imgLink) }}">
+                                    </div>
+                                </div>
                             </div>
-                        </div>
-                        <div class="content-image">
-                            <!-- Fetch content image from storage -->
-                            <img src="{{ Storage::url($policy->imgLink) }}">
-                        </div>
+                        @endforeach
                     </div>
-                @endforeach
+                    <div class="slider-nav">
+                        <button class="prev" aria-label="Previous">&#10094;</button>
+                        <button class="next" aria-label="Next">&#10095;</button>
+                    </div>
+                </div>
             </div>
         @endforeach
          
@@ -126,6 +133,65 @@ error_reporting(0);
             }
         });
     </script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const sliders = document.querySelectorAll('.policy-slider');
+
+        sliders.forEach((slider) => {
+            const track = slider.querySelector('.policy-track');
+            const slides = slider.querySelectorAll('.policy-card');
+            const prevBtn = slider.querySelector('.slider-nav .prev');
+            const nextBtn = slider.querySelector('.slider-nav .next');
+            let index = 0;
+
+            const update = () => {
+                const offset = -index * 100;
+                track.style.transform = `translateX(${offset}%)`;
+                if (prevBtn) prevBtn.disabled = index <= 0;
+                if (nextBtn) nextBtn.disabled = index >= slides.length - 1;
+            };
+
+            if (prevBtn) prevBtn.addEventListener('click', () => {
+                if (index > 0) { index--; update(); }
+            });
+            if (nextBtn) nextBtn.addEventListener('click', () => {
+                if (index < slides.length - 1) { index++; update(); }
+            });
+
+            // Touch swipe support
+            let startX = 0;
+            let isSwiping = false;
+            const threshold = 40; // px
+
+            track.addEventListener('touchstart', (e) => {
+                if (!e.touches || e.touches.length === 0) return;
+                startX = e.touches[0].clientX;
+                isSwiping = true;
+            }, { passive: true });
+
+            track.addEventListener('touchmove', (e) => {
+                // prevent vertical scroll only if horizontal intent is clear
+            }, { passive: true });
+
+            track.addEventListener('touchend', (e) => {
+                if (!isSwiping) return;
+                const endX = e.changedTouches && e.changedTouches[0] ? e.changedTouches[0].clientX : startX;
+                const deltaX = endX - startX;
+                if (Math.abs(deltaX) > threshold) {
+                    if (deltaX < 0 && index < slides.length - 1) {
+                        index++;
+                    } else if (deltaX > 0 && index > 0) {
+                        index--;
+                    }
+                    update();
+                }
+                isSwiping = false;
+            });
+
+            update();
+        });
+    });
+</script>
 
 
 <script>
