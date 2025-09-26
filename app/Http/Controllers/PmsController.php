@@ -570,20 +570,31 @@ public function rejectBundle($bundleId)
 
    
 
-    // Get IDs of goals already submitted by this user
-            $submittedGoalIds = \DB::table('goal_bundle_items')
-            ->join('goal_bundle_approvals', 'goal_bundle_items.bundle_id', '=', 'goal_bundle_approvals.id')
-            ->where('goal_bundle_approvals.requested_by', $user->id)
-            ->pluck('goal_bundle_items.goal_id')
-            ->toArray();
+   // Get IDs of goals already submitted by this user
+$submittedGoalIds = \DB::table('goal_bundle_items')
+    ->join('goal_bundle_approvals', 'goal_bundle_items.bundle_id', '=', 'goal_bundle_approvals.id')
+    ->where('goal_bundle_approvals.requested_by', $user->id)
+    ->pluck('goal_bundle_items.goal_id')
+    ->toArray();
 
-            // Only show goals NOT submitted yet
-            $allOrgGoals = \DB::table('goals')
-            ->join('organization_settings', 'goals.org_setting_id', '=', 'organization_settings.id')
-            ->select('goals.*', 'organization_settings.name as period_name', 'goals.start_date', 'goals.end_date')
-            ->whereIn('goals.created_by', [$user->id, $reportingManager])
-            ->whereNotIn('goals.id', $submittedGoalIds) // <- Exclude submitted goals
-            ->get();
+// Fetch goals: created by self, created by manager, assigned to self, or assigned to manager
+$allOrgGoals = \DB::table('goals')
+    ->join('organization_settings', 'goals.org_setting_id', '=', 'organization_settings.id')
+    ->leftJoin('goal_assignments', 'goals.id', '=', 'goal_assignments.goal_id')
+    ->select(
+        'goals.*',
+        'organization_settings.name as period_name',
+        'goals.start_date',
+        'goals.end_date'
+    )
+    ->where(function ($query) use ($user, $reportingManager) {
+        $query->whereIn('goals.created_by', [$user->id, $reportingManager])
+              ->orWhere('goal_assignments.assigned_to', $user->id)
+              ->orWhere('goal_assignments.assigned_to', $reportingManager);
+    })
+    ->whereNotIn('goals.id', $submittedGoalIds) // exclude already submitted
+    ->distinct()
+    ->get();
 
 // Already assigned / submitted goals
 //   $submittedGoals = \DB::table('goal_bundle_items')
