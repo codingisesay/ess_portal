@@ -195,26 +195,111 @@ error_reporting(0);
 
 
 <script>
-    // Get references to the search input and category items
-    const searchInput = document.getElementById('searchInput');
-    const categoryItems = document.querySelectorAll('.category-item');
+    // Search functionality for HR Policy page
+    document.addEventListener('DOMContentLoaded', function() {
+        const searchInput = document.getElementById('searchInput');
+        const searchBtn = document.querySelector('.search-icon-circle');
+        const categoryItems = document.querySelectorAll('.category-item');
+        const contentAreas = document.querySelectorAll('.content-area');
 
-    // Event listener for input changes
-    searchInput.addEventListener('input', function() {
-        // Get the search term and convert to lowercase for case-insensitive matching
-        const searchTerm = searchInput.value.toLowerCase();
-
-        // Loop through each category item
-        categoryItems.forEach(function(item) {
-            // Check if the category item contains the search term
-            if (item.textContent.toLowerCase().includes(searchTerm)) {
-                // Highlight the item by adding a 'highlight' class (you can define the style for this class)
-                item.classList.add('highlight');
-            } else {
-                // Remove the highlight if the item doesn't match
-                item.classList.remove('highlight');
+        const resetToDefault = () => {
+            // Clear highlights
+            categoryItems.forEach(it => it.classList.remove('highlight', 'active'));
+            // Show all categories in header (in case future logic hides them)
+            categoryItems.forEach(it => it.style.display = '');
+            // Hide all content areas
+            contentAreas.forEach(area => { area.style.display = 'none'; area.classList.remove('active'); });
+            // Activate first category
+            if (categoryItems.length > 0) {
+                const firstCategory = categoryItems[0];
+                const firstCategoryId = firstCategory.getAttribute('data-category');
+                firstCategory.classList.add('active');
+                // Show content for first
+                contentAreas.forEach(area => {
+                    if (area.getAttribute('data-category') === firstCategoryId) {
+                        area.style.display = 'block';
+                        area.classList.add('active');
+                    }
+                });
             }
-        });
+        };
+
+        const performSearch = () => {
+            const term = (searchInput.value || '').trim().toLowerCase();
+            if (!term) {
+                resetToDefault();
+                return;
+            }
+
+            let firstMatch = null;
+
+            // Highlight matching categories by name
+            categoryItems.forEach(item => {
+                const matches = item.textContent.toLowerCase().includes(term);
+                if (matches) {
+                    item.classList.add('highlight');
+                    if (!firstMatch) firstMatch = item;
+                } else {
+                    item.classList.remove('highlight');
+                }
+            });
+
+            if (!firstMatch) {
+                // No category name matched; try to match any policy title/content in content areas
+                contentAreas.forEach(area => {
+                    const inArea = area.querySelector('.policy-card h3, .policy-card p');
+                    if (!firstMatch && inArea && area.textContent.toLowerCase().includes(term)) {
+                        // Map content-area back to its header category item
+                        const catId = area.getAttribute('data-category');
+                        const catHeader = Array.from(categoryItems).find(ci => ci.getAttribute('data-category') === catId);
+                        if (catHeader) firstMatch = catHeader;
+                    }
+                });
+            }
+
+            if (firstMatch) {
+                const catId = firstMatch.getAttribute('data-category');
+                // Activate this category similar to click handler
+                categoryItems.forEach(it => it.classList.remove('active'));
+                firstMatch.classList.add('active');
+                // Hide all content areas
+                contentAreas.forEach(area => { area.style.display = 'none'; area.classList.remove('active'); });
+                // Show the target content area
+                contentAreas.forEach(area => {
+                    if (area.getAttribute('data-category') === catId) {
+                        area.style.display = 'block';
+                        area.classList.add('active');
+                    }
+                });
+            }
+        };
+
+        // Trigger search on click of the search icon
+        if (searchBtn) {
+            searchBtn.addEventListener('click', performSearch);
+        }
+
+        // Trigger search on Enter key inside the input
+        if (searchInput) {
+            searchInput.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    performSearch();
+                }
+            });
+
+            // Live highlighting as user types (non-destructive)
+            searchInput.addEventListener('input', function() {
+                const term = (searchInput.value || '').trim().toLowerCase();
+                categoryItems.forEach(function(item) {
+                    if (term && item.textContent.toLowerCase().includes(term)) {
+                        item.classList.add('highlight');
+                    } else {
+                        item.classList.remove('highlight');
+                    }
+                });
+            });
+        }
     });
 </script>
 <style>
