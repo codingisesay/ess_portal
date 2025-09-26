@@ -159,8 +159,8 @@ Route::delete('delete_bank/{id}', [BankController::class, 'destroy'])->name('del
     // Attendance Import Routes
 Route::get('/superadmin/import', [AttendanceImportController::class, 'showForm'])->name('attendance.form');
 Route::post('/superadmin/import', [AttendanceImportController::class, 'import'])->name('attendance.import');
-
-
+// pms form cycle and settings
+Route::get('superadmin/org-settings', [PmsController::class, 'orgSettingsForm'])->name('org_settings_form');
 
 });
 
@@ -351,7 +351,27 @@ Route::put('/task-approvals/{id}', [PmsController::class, 'taskApprovalsUpdate']
 Route::get('/task-approvals/{id}', [PmsController::class, 'taskApprovalsShow']);
 Route::delete('/task-approvals/{id}', [PmsController::class, 'taskApprovalsDestroy']);
 
+// pms dashboard 
 
+Route::get('/pms-dashboard', [PmsController::class, 'pmsDashboard'])->name('pms_dashboard');
+
+// Manager Goal Approval Workflow
+Route::post('/goal-approvals/submit', [PmsController::class, 'submitForApproval']);
+Route::post('/goal-approvals/{id}/approve', [PmsController::class, 'approveGoal']);
+Route::post('/goal-approvals/{id}/reject', [PmsController::class, 'rejectGoal']);
+
+// Goal Bundles
+Route::post('/goal-bundles/submit', [PmsController::class, 'submitBundle'])->name('goal-bundles.submit');
+
+Route::get('/task-approvals', [PmsController::class, 'taskApprovalsIndex']);
+
+
+// Goal Bundle Approvals for Manager
+Route::get('/manager/pending-bundles', [PmsController::class, 'pendingBundles'])->name('manager.pending-bundles');
+
+Route::post('/manager/bundles/{bundleId}/approve', [PmsController::class, 'approveBundle'])->name('manager.bundles.approve');
+
+Route::post('/manager/bundles/{bundleId}/reject', [PmsController::class, 'rejectBundle'])->name('manager.bundles.reject');
 
 
 });
