@@ -124,7 +124,7 @@
     height: 50px;
     cursor: pointer;
     margin-left: 15px;
-    border: solid #FFFFFF 5px;
+    border: solid   #FFFFFF 5px;
 }
 
 .search-icon-circle img {
@@ -242,7 +242,7 @@
     background: #FFFFFF;
     border-radius: 16px;
     box-shadow: rgba(50, 50, 93, 0.15) 0px 4px 12px -2px, rgba(0, 0, 0, 0.1) 0px 2px 6px -2px;
-    padding: 24px;
+    padding: 72px 24px 24px 24px; /* extra top space for download button */
     margin-bottom: 18px;
 }
 
@@ -303,20 +303,20 @@
     gap: 16px;
 }
 
-/* Ensure column layout specifically inside slider context */
-.policy-slider .policy-card .policy-content,
-.policy-slider .policy-card:nth-child(even) .policy-content {
-    flex-direction: column;
+/* Ensure column layout inside slider only on small screens */
+@media (max-width: 767px) {
+    .policy-slider .policy-card .policy-content,
+    .policy-slider .policy-card:nth-child(even) .policy-content {
+        flex-direction: column;
+    }
 }
 
  .policy-card .content-text {
-    width: 100%;
     flex: 0 0 auto;
 }
 
  .policy-card .content-image {
     margin: 0;
-    width: 100%;
     flex: 0 0 auto;
 }
 
@@ -337,6 +337,55 @@
          min-width: 0;
      }
  }
+
+/* Desktop: place text and image side-by-side (also inside slider) */
+@media (min-width: 993px) {
+    .policy-card .policy-content,
+    .policy-slider .policy-card .policy-content,
+    .policy-slider .policy-card:nth-child(even) .policy-content {
+        display: flex !important;
+        flex-direction: row !important;
+        align-items: flex-start;
+        flex-wrap: nowrap;
+        gap: 20px;
+    }
+    .policy-card .content-text,
+    .policy-slider .policy-card .content-text {
+        flex: 0 0 60% !important;
+        max-width: 60% !important;
+        min-width: 0 !important;
+    }
+    .policy-card .content-image,
+    .policy-slider .policy-card .content-image {
+        flex: 0 0 40% !important;
+        max-width: 40% !important;
+        min-width: 0 !important;
+        margin: 0 !important;
+    }
+}
+
+/* Tablet: also place text and image side-by-side */
+@media (min-width: 768px) and (max-width: 992px) {
+    .policy-card .policy-content,
+    .policy-slider .policy-card .policy-content {
+        display: flex !important;
+        flex-direction: row !important;
+        align-items: flex-start;
+        flex-wrap: nowrap;
+        gap: 20px;
+    }
+    .policy-card .content-text,
+    .policy-slider .policy-card .content-text {
+        flex: 0 0 60% !important;
+        max-width: 60% !important;
+    }
+    .policy-card .content-image,
+    .policy-slider .policy-card .content-image {
+        flex: 0 0 40% !important;
+        max-width: 40% !important;
+        margin: 0 !important;
+    }
+}
 
 
 
@@ -401,65 +450,45 @@
  }
 
  .content-image {
-     margin-left: 20px;
-     text-align: center;
-     position: relative;
-     margin-top: 50px;
-     flex: 1;
-     min-width: 300px;
-     /* Ensure minimum width for smaller screens */
- }
+    margin-left: 20px;
+    text-align: center;
+    position: relative;
+    margin-top: 50px;
+    flex: 1;
+    min-width: 300px;
+    /* Ensure minimum width for smaller screens */
+}
 
- .content-image img {
-     width: 100%;
-     height: auto;
- }
+/* Override generic margins inside policy cards so image can sit beside text */
+.policy-card .content-image {
+    margin-left: 0;
+    margin-top: 0;
+}
 
- /* Responsive Styles */
- @media (max-width: 1200px) {
-     .main-container {
-         flex-direction: column;
-         width: 100%;
-         margin: 0;
-         padding: 0 20px;
-     }
+@media (max-width: 992px) {
+    .policy-content {
+        flex-direction: column;
+    }
 
-     .sidebar {
-         width: 100%;
-         margin-bottom: 20px;
-         height: auto;
-     }
+    .content-text {
+        max-width: 100%;
+    }
 
-     .content-area {
-         width: 100%;
-         margin: 0;
-     }
+    .content-image {
+        margin-left: 0;
+        margin-top: 20px;
+    }
+}
 
-     .policy-content {
-         flex-direction: column;
-     }
-
-     .content-text {
-         max-width: 100%;
-     }
-
-     .content-image {
-         margin-left: 0;
-         margin-top: 20px;
-     }
- }
-
- @media (max-width: 768px) {
-     .header {
-         flex-direction: column;
-         align-items: flex-start;
-     }
+@media (max-width: 768px) {
+    .header {
+        flex-direction: column;
+    }
 
      .header h1 {
          font-size: 24px;
          margin-bottom: 10px;
      }
-
      .search-bar {
          width: 100%;
          margin-top: 10px;
