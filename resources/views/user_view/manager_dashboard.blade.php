@@ -417,17 +417,10 @@ document.getElementById('bundleForm').addEventListener('submit', function(e) {
             showConfirmButton: false
         });
 
-        // ❌ Do NOT clear the table — keep rejected/approved visible
-        // bundleTableBody.innerHTML = '';
-        
-        // ✅ Instead, refresh statuses dynamically if needed
-        // e.g., mark them as pending:
-        [...bundleTableBody.querySelectorAll("tr")].forEach(row => {
-            let statusCell = row.querySelector("td:nth-child(2)");
-            if(statusCell) {
-                statusCell.innerText = "Pending";
-            }
-        });
+        // Refresh the page once after alert
+        setTimeout(() => {
+            location.reload();
+        }, 2000); // wait 2 seconds for the alert to show
     })
     .catch(err => {
         Swal.fire({
@@ -437,5 +430,6 @@ document.getElementById('bundleForm').addEventListener('submit', function(e) {
         });
     });
 });
+
 
 </script>

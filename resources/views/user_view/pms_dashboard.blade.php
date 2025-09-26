@@ -5,6 +5,11 @@
     @php
         $user = Auth::user();
 
+        // Get "None" user id (assuming username or name column is 'none')
+        $noneUserId = \DB::table('users')
+            ->whereRaw('LOWER(name) = ?', ['none'])
+            ->value('id');
+
         // Get reporting_manager value for the logged-in user
         $reportingManager = \DB::table('emp_details')
             ->where('user_id', $user->id)
@@ -16,8 +21,8 @@
             ->exists();
 
         // Determine which dashboards to show
-        $showOrganization = $reportingManager === null; // Top-level user
-        $showManager = $hasSubordinates;               // Manager
+        $showOrganization = ($reportingManager === null || $reportingManager == $noneUserId);
+        $showManager = $hasSubordinates; // Manager
     @endphp
 
     @if($showOrganization || $showManager)

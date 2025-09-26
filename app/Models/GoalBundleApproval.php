@@ -18,8 +18,15 @@ class GoalBundleApproval extends Model
         'remarks',
     ];
 
+    // Relationship to fetch goals in this bundle
     public function items()
     {
         return $this->hasMany(GoalBundleItem::class, 'bundle_id');
+    }
+
+    // Relationship to fetch the user who requested this bundle
+    public function requestedBy()
+    {
+        return $this->belongsTo(\App\Models\User::class, 'requested_by');
     }
 }

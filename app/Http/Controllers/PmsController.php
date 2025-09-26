@@ -354,16 +354,22 @@ class PmsController extends Controller
         }
 
         public function rejectGoal(Request $request, $id)
-        {
-            $approval = GoalApproval::findOrFail($id);
+            {
+                $approval = GoalApproval::findOrFail($id);
 
-            $approval->update([
-                'status' => 'rejected',
-                'remarks' => $request->remarks,
-            ]);
+                $approval->update([
+                    'status'  => 'rejected',
+                    'remarks' => $request->remarks,
+                ]);
 
-            return back()->with('error', 'Goal rejected.');
-        }
+                // ✅ Also mark the actual Goal as rejected
+                $goal = Goal::find($approval->goal_id);
+                if ($goal) {
+                    $goal->update(['status' => 'rejected']);
+                }
+
+                return back()->with('error', 'Goal rejected.');
+            }
 
 
 
@@ -374,26 +380,26 @@ public function submitBundle(Request $request)
 {
     $user = Auth::user();
 
+    \Log::info('Request payload', $request->all());
+
     $request->validate([
         'goal_ids' => 'required|array|min:1',
     ]);
 
-    $bundleId = $request->bundle_id ?? null; // check if form passed an existing bundle_id
+    $bundleId = $request->bundle_id ?? null;
 
     if ($bundleId) {
-        // Existing bundle -> resubmission case
+        // Existing bundle (resubmission)
         $bundle = GoalBundleApproval::find($bundleId);
 
         if (!$bundle || $bundle->requested_by != $user->id) {
             return response()->json(['error' => 'Invalid bundle.'], 400);
         }
 
-        // Reset status to pending for re-approval
-        $bundle->update([
-            'status' => 'pending',
-        ]);
+        // Reset bundle status for re-approval
+        $bundle->update(['status' => 'pending']);
     } else {
-        // First submission -> create a new bundle
+        // First submission → create new bundle
         $reportingManager = \DB::table('emp_details')
             ->where('user_id', $user->id)
             ->value('reporting_manager');
@@ -406,70 +412,74 @@ public function submitBundle(Request $request)
     }
 
     foreach ($request->goal_ids as $goalId) {
-    // ====== Custom Goals (newly created by employee) ======
-    if (str_starts_with($goalId, 'custom-')) {
-        $orgSettingId = $request->org_setting_ids[$goalId] ?? null;
-        $title        = $request->custom_titles[$goalId] ?? 'Custom Goal';
-        $startDate    = $request->custom_start[$goalId] ?? null;
-        $endDate      = $request->custom_end[$goalId] ?? null;
-        $description  = $request->custom_descriptions[$goalId] ?? null;
+        // ====== Case 1: Custom Goals ======
+        if (str_starts_with($goalId, 'custom-')) {
+            $orgSettingId = $request->org_setting_ids[$goalId] ?? null;
+            $title        = $request->custom_titles[$goalId] ?? 'Custom Goal';
+            $startDate    = $request->custom_start[$goalId] ?? null;
+            $endDate      = $request->custom_end[$goalId] ?? null;
+            $description  = $request->custom_descriptions[$goalId] ?? null;
 
-        if (!$orgSettingId || !$title || !$startDate || !$endDate) continue;
+            if (!$orgSettingId || !$title || !$startDate || !$endDate) {
+                continue;
+            }
 
-        $goal = Goal::create([
-            'org_setting_id' => $orgSettingId,
-            'title'          => $title,
-            'description'    => $description,
-            'start_date'     => $startDate,
-            'end_date'       => $endDate,
-            'priority'       => 'medium',
-            'status'         => 'pending',
-            'created_by'     => $user->id,
-        ]);
+            $goal = Goal::create([
+                'org_setting_id' => $orgSettingId,
+                'title'          => $title,
+                'description'    => $description,
+                'start_date'     => $startDate,
+                'end_date'       => $endDate,
+                'priority'       => 'medium',
+                'status'         => 'pending',
+                'created_by'     => $user->id,
+            ]);
 
-        $goalId = $goal->id;
-    } 
-   // ====== Rejected Goals (only these can be edited) ======
-else {
-    // Find the goal
-    $goal = Goal::find($goalId);
-    $key  = (string)$goalId; // cast to string to match request array keys
+            $goalId = $goal->id;
+        }
 
-    // Only update rejected goals
-    if ($goal && $goal->status === 'rejected') {
+        // ====== Case 2: Existing Goals ======
+        else {
+            $goal = Goal::find($goalId);
+            $key  = (string)$goalId;
 
-        // Log what is going to be updated
-        \Log::info("Updating rejected goal ID {$goalId}", [
-            'old_title'       => $goal->title,
-            'old_description' => $goal->description,
-            'old_start_date'  => $goal->start_date,
-            'old_end_date'    => $goal->end_date,
-            'new_title'       => $request->custom_titles[$key] ?? $goal->title,
-            'new_description' => $request->custom_descriptions[$key] ?? $goal->description,
-            'new_start_date'  => $request->custom_start[$key] ?? $goal->start_date,
-            'new_end_date'    => $request->custom_end[$key] ?? $goal->end_date,
-        ]);
+            if ($goal) {
+                \Log::info("Updating goal {$goalId}", [
+                    'old_title'       => $goal->title,
+                    'old_description' => $goal->description,
+                    'old_start_date'  => $goal->start_date,
+                    'old_end_date'    => $goal->end_date,
+                    'old_org_setting' => $goal->org_setting_id,
+                    'new_title'       => $request->custom_titles[$key] ?? $goal->title,
+                    'new_description' => $request->custom_descriptions[$key] ?? $goal->description,
+                    'new_start_date'  => $request->custom_start[$key] ?? $goal->start_date,
+                    'new_end_date'    => $request->custom_end[$key] ?? $goal->end_date,
+                    'new_org_setting' => $request->org_setting_ids[$key] ?? $goal->org_setting_id,
+                ]);
 
-        // Update goal fields
-        $goal->update([
-            'title'       => $request->custom_titles[$key] ?? $goal->title,
-            'description' => $request->custom_descriptions[$key] ?? $goal->description,
-            'start_date'  => $request->custom_start[$key] ?? $goal->start_date,
-            'end_date'    => $request->custom_end[$key] ?? $goal->end_date,
-            'status'      => 'pending', // reset for re-approval
-        ]);
-    }
+                // Update the goal
+                $goal->update([
+                    'org_setting_id' => $request->org_setting_ids[$key] ?? $goal->org_setting_id,
+                    'title'          => $request->custom_titles[$key] ?? $goal->title,
+                    'description'    => $request->custom_descriptions[$key] ?? $goal->description,
+                    'start_date'     => $request->custom_start[$key] ?? $goal->start_date,
+                    'end_date'       => $request->custom_end[$key] ?? $goal->end_date,
+                    'status'         => 'pending', // reset for re-approval
+                ]);
+            }
+        }
 
-    // Attach to bundle (avoid duplicates)
-    GoalBundleItem::updateOrCreate(
-        ['bundle_id' => $bundle->id, 'goal_id' => $goalId],
-        [] // no additional fields to update
-    );
-}
+        // ====== Attach Goal to Bundle ======
+        GoalBundleItem::updateOrCreate(
+            ['bundle_id' => $bundle->id, 'goal_id' => $goalId],
+            []
+        );
     }
 
     return response()->json(['message' => 'Goals bundle submitted successfully!']);
 }
+
+
 
 
 

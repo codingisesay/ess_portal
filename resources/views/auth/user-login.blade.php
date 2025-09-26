@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SIL Tech</title>
+    <title>PayVance</title>
     <link rel="icon" href="{{ asset('user_end/images/STPLLogo butterfly.png')}} " />
 
     <!-- Custom CSS -->
