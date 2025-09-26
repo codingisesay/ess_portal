@@ -1,48 +1,133 @@
- /* Header */
+/* Header */
  .header {
      display: flex;
-     justify-content: space-between;
+     justify-content: flex-start;
      align-items: center;
      background-color: #F6F5F7;
      color: black;
+     gap: 12px;
      /*  */
  }
-
-
- /* Search Bar */
+/* Search Bar */
  .search-bar {
      display: flex;
      align-items: center;
      background-color: #F6F5F7;
      border-radius: 50px;
-     padding: -1px 20px;
+     padding: 0 20px;
      box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
      border: solid #FFFFFF 3px;
  }
 
- .search-bar input {
+ /* Remove border from the search input inside the pill */
+ .search-bar input[type="text"],
+ .search-bar #searchInput {
      border: none;
      outline: none;
-     font-size: 16px;
-     flex: 1;
-     background-color: #F6F5F7;
-     margin-left: 10px;
+     background: transparent;
+     color: #333;
  }
 
- .search-icon-circle {
-     display: flex;
-     justify-content: center;
-     align-items: center;
-     background-color: #8A3366;
-     border-radius: 50%;
-     width: 50px;
-     height: 50px;
-     cursor: pointer;
-     margin-left: 15px;
-     border: solid #FFFFFF 5px;
- }
+/* Horizontal categories beside search in header */
+.header .categories-container {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-left: 4px;
+    overflow-x: auto;
+    padding: 6px 0;
+}
 
- .search-icon-circle img {
+/* Header category items styled like the search bar (mirrored: circle on the left) */
+.header .category-item {
+    display: flex;
+    align-items: center;
+    background-color: #F6F5F7;
+    border-radius: 50px;
+    padding: 0 20px;
+    box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
+    border: solid #FFFFFF 3px;
+    height: 56px; /* close to search height (50px circle + borders) */
+    background-clip: padding-box;
+    margin-bottom: 0; /* override global spacing used in sidebar */
+    width: auto; /* do not use fixed width in header */
+}
+
+.header .category-item.active {
+    background-color: #8A3366; /* distinct highlight */
+    color: #fff;
+}
+
+.header .category-item.active .category-text {
+    color: #fff;
+}
+
+.header .category-item.active .category-icon {
+    background-color: #FFFFFF; /* contrast circle on purple background */
+    border-color: #8A3366;
+}
+
+.header .category-item .category-icon {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #8A3366; /* match search icon circle */
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    cursor: pointer;
+    margin-right: 15px; /* circle on the left, spacing to text */
+    margin-left: 0;
+    border: solid #FFFFFF 5px;
+    padding: 0; /* override sidebar padding */
+}
+
+.header .category-item .category-icon img {
+    width: 20px;
+    height: 20px;
+}
+
+.header .category-item .category-text {
+    font-size: 14px;
+    font-weight: 500;
+    color: #333;
+    padding: 0; /* tighten inside the pill */
+    width: auto; /* no fixed width in header */
+    white-space: nowrap; /* single-line within the pill */
+}
+
+/* Optional: reverse layout if needed by adding .swap class to item */
+.header .category-item.swap {
+    flex-direction: row-reverse;
+}
+
+.header .category-item.swap .category-icon {
+    margin-right: 0;
+    margin-left: 15px;
+}
+
+.header .categories-container::-webkit-scrollbar {
+    height: 6px;
+}
+.header .categories-container::-webkit-scrollbar-thumb {
+    background: #c7c7c7;
+    border-radius: 3px;
+}
+
+.search-icon-circle {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #8A3366;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    cursor: pointer;
+    margin-left: 15px;
+    border: solid #FFFFFF 5px;
+}
+
+.search-icon-circle img {
      width: 20px;
      height: 20px;
  }
@@ -144,11 +229,113 @@
      margin: 0 10px;
      /* width: calc(100% - 366px); */
      /* Adjust width to fit beside the sidebar */
-     height: 77vh;
+     height: auto; /* let the content define height */
  }
 
  .content-area.active {
      display: block;
+ }
+
+ /* Policy Card Layout */
+.policy-card {
+    position: relative;
+    background: #FFFFFF;
+    border-radius: 16px;
+    box-shadow: rgba(50, 50, 93, 0.15) 0px 4px 12px -2px, rgba(0, 0, 0, 0.1) 0px 2px 6px -2px;
+    padding: 24px;
+    margin-bottom: 18px;
+}
+
+/* Slider container: shows one policy at a time */
+.policy-slider {
+    position: relative;
+    overflow: hidden;
+}
+
+.policy-track {
+    display: flex;
+    transition: transform 0.3s ease-in-out;
+    will-change: transform;
+}
+
+.policy-slider .policy-card {
+    flex: 0 0 100%;
+    width: 100%;
+    margin: 0; /* spacing handled by card padding and outer container */
+}
+
+.slider-nav {
+    display: flex;
+    justify-content: center; /* center the buttons */
+    align-items: center;
+    gap: 12px; /* space between prev and next */
+    margin-top: 10px;
+}
+
+.slider-nav .prev,
+.slider-nav .next {
+    background: #8A3366;
+    color: #fff;
+    border: none;
+    border-radius: 20px;
+    padding: 8px 14px;
+    cursor: pointer;
+}
+
+.slider-nav .prev:disabled,
+.slider-nav .next:disabled {
+    opacity: 0.5;
+    cursor: default;
+}
+
+ /* Reposition the download button within each card */
+ .policy-card .download-btn {
+     position: absolute;
+     top: 16px;
+     right: 16px;
+     z-index: 1;
+ }
+
+ /* Inner content layout */
+ .policy-card .policy-content {
+    display: flex;
+    flex-direction: column; /* column: text then image */
+    gap: 16px;
+}
+
+/* Ensure column layout specifically inside slider context */
+.policy-slider .policy-card .policy-content,
+.policy-slider .policy-card:nth-child(even) .policy-content {
+    flex-direction: column;
+}
+
+ .policy-card .content-text {
+    width: 100%;
+    flex: 0 0 auto;
+}
+
+ .policy-card .content-image {
+    margin: 0;
+    width: 100%;
+    flex: 0 0 auto;
+}
+
+ .policy-card .content-image img {
+     width: 100%;
+     height: auto;
+     border-radius: 12px;
+ }
+
+ /* Responsive adjustments for cards */
+ @media (max-width: 992px) {
+     .policy-card .policy-content {
+         flex-direction: column;
+     }
+     .policy-card .content-text,
+     .policy-card .content-image {
+         max-width: 100%;
+         min-width: 0;
+     }
  }
 
 
