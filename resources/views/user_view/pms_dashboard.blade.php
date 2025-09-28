@@ -1,6 +1,9 @@
 @extends('user_view.header')
 
 @section('content')
+<link rel="stylesheet" href="{{ asset('/user_end/css/pms-dashboard.css') }}">
+
+
 <div class="container mt-4">
     @php
         $user = Auth::user();

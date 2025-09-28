@@ -33,7 +33,7 @@ class PmsController extends Controller
             'id' => 'nullable|integer',
             'name' => 'required|string|max:100',
             'start_date' => 'required|date',
-            'end_date' => 'required|date|after_or_equal:start_date',
+            'end_date' => 'required|date',
         ]);
 
         $setting = OrganizationSetting::updateOrCreate(
@@ -571,47 +571,36 @@ public function rejectBundle($bundleId)
    
 
    // Get IDs of goals already submitted by this user
-$submittedGoalIds = \DB::table('goal_bundle_items')
-    ->join('goal_bundle_approvals', 'goal_bundle_items.bundle_id', '=', 'goal_bundle_approvals.id')
-    ->where('goal_bundle_approvals.requested_by', $user->id)
-    ->pluck('goal_bundle_items.goal_id')
-    ->toArray();
+    $submittedGoalIds = \DB::table('goal_bundle_items')
+        ->join('goal_bundle_approvals', 'goal_bundle_items.bundle_id', '=', 'goal_bundle_approvals.id')
+        ->where('goal_bundle_approvals.requested_by', $user->id)
+        ->pluck('goal_bundle_items.goal_id')
+        ->toArray();
 
-// Fetch goals: created by self, created by manager, assigned to self, or assigned to manager
-$allOrgGoals = \DB::table('goals')
-    ->join('organization_settings', 'goals.org_setting_id', '=', 'organization_settings.id')
-    ->leftJoin('goal_assignments', 'goals.id', '=', 'goal_assignments.goal_id')
-    ->select(
-        'goals.*',
-        'organization_settings.name as period_name',
-        'goals.start_date',
-        'goals.end_date'
-    )
-    ->where(function ($query) use ($user, $reportingManager) {
-        $query->whereIn('goals.created_by', [$user->id, $reportingManager])
-              ->orWhere('goal_assignments.assigned_to', $user->id)
-              ->orWhere('goal_assignments.assigned_to', $reportingManager);
-    })
-    ->whereNotIn('goals.id', $submittedGoalIds) // exclude already submitted
-    ->distinct()
-    ->get();
+    // Fetch goals: created by self, created by manager, assigned to self, or assigned to manager
+    $allOrgGoals = \DB::table('goals')
+        ->join('organization_settings', 'goals.org_setting_id', '=', 'organization_settings.id')
+        ->leftJoin('goal_assignments', 'goals.id', '=', 'goal_assignments.goal_id')
+        ->select(
+            'goals.*',
+            'organization_settings.name as period_name',
+            'goals.start_date',
+            'goals.end_date'
+        )
+        ->where(function ($query) use ($user, $reportingManager) {
+            $query->whereIn('goals.created_by', [$user->id, $reportingManager])
+                ->orWhere('goal_assignments.assigned_to', $user->id)
+                ->orWhere('goal_assignments.assigned_to', $reportingManager);
+        })
+        ->whereNotIn('goals.id', $submittedGoalIds) // exclude already submitted
+        ->distinct()
+        ->get();
 
-// Already assigned / submitted goals
-//   $submittedGoals = \DB::table('goal_bundle_items')
-//     ->join('goal_bundle_approvals', 'goal_bundle_items.bundle_id', '=', 'goal_bundle_approvals.id')
-//     ->join('goals', 'goal_bundle_items.goal_id', '=', 'goals.id')
-//     ->where('goal_bundle_approvals.requested_by', $user->id)
-//     ->where('goal_bundle_approvals.status', 'rejected') // only rejected bundles
-//     ->select(
-//         'goals.id as goal_id',
-//         'goals.title',
-//         'goals.org_setting_id',
-//         'goals.start_date',
-//         'goals.end_date',
-//         'goal_bundle_approvals.status as approval_status'
-//     )
-//     ->get();
-// // dd($submittedGoals);
+    // Get active organization cycle
+        $activeCycle = \DB::table('organization_settings')
+        ->where('is_active', 1) // or whatever flag you use
+        ->first();
+
 
 // ===== Individual submitted goals (old flow) =====
 $individualSubmittedGoals = \DB::table('goal_approvals')
@@ -649,7 +638,7 @@ $bundleSubmittedGoals = \App\Models\GoalBundleItem::with('goal', 'bundle')
 // Merge both into one collection
 $submittedGoals = $individualSubmittedGoals->merge($bundleSubmittedGoals);
 
-// dd($submittedGoals);
+
     
 
 
@@ -709,6 +698,7 @@ $submittedGoals = $individualSubmittedGoals->merge($bundleSubmittedGoals);
             // 'juniors' => $juniors,
             'submittedGoals' => $submittedGoals,
             'user' => $user,
+            'activeCycle' => $activeCycle,
         ]);
         
     }

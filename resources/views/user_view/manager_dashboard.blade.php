@@ -1,3 +1,5 @@
+<link rel="stylesheet" href="{{ asset('/user_end/css/pms-dashboard.css') }}">
+
 <div class="container">
     <h2>Manager Dashboard</h2>
 
@@ -6,9 +8,9 @@
 ============================= --}}
 <div class="card mb-4">
     <div class="card-header bg-light"><strong>Goals Created by Organization</strong></div>
-    <div class="card-body">
-       <table class="table table-bordered table-striped" id="orgGoalsTable">
-            <thead class="table-light">
+    <div class="table-scroll">
+        <table class="table table-bordered table-striped" id="orgGoalsTable">
+            <thead>
                 <tr>
                     <th>Goal</th>
                     <th>Period</th>
@@ -32,10 +34,9 @@
                 @endforeach
             </tbody>
         </table>
-
-        </table>
     </div>
 </div>
+
 
 {{-- ============================
      2. Additional Goals (Self-Created / Selected Org Goals)
