@@ -1,4 +1,10 @@
 <link rel="stylesheet" href="{{ asset('/user_end/css/pms-dashboard.css') }}">
+<!-- Bootstrap 5 CSS -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+<!-- Bootstrap 5 JS (bundle includes Popper) -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
 <div class="container">
 
     {{-- Summary Cards --}}
@@ -101,9 +107,193 @@
         </div>
     </div>
 
+
+<!-- Edit Goal Modal -->
+<div class="modal fade" id="editGoalModal" tabindex="-1" aria-labelledby="editGoalModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header bg-primary text-white">
+        <h5 class="modal-title" id="editGoalModalLabel">Edit Goal</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <form id="editGoalForm">
+        <input type="hidden" id="edit_goal_id">
+        <div class="modal-body">
+          <div class="row mb-3">
+            <div class="col-md-6">
+              <label class="form-label">Period</label>
+              <select id="edit_org_setting_id" class="form-control" required></select>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Title</label>
+              <input type="text" id="edit_title" class="form-control" required>
+            </div>
+          </div>
+          <div class="row mb-3">
+            <div class="col-md-6">
+              <label class="form-label">Start Date</label>
+              <input type="date" id="edit_start_date" class="form-control" required>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">End Date</label>
+              <input type="date" id="edit_end_date" class="form-control" required>
+            </div>
+          </div>
+          <div class="row mb-3">
+            <div class="col-md-6">
+              <label class="form-label">Priority</label>
+              <select id="edit_priority" class="form-control">
+                <option value="low">Low</option>
+                <option value="medium">Medium</option>
+                <option value="high">High</option>
+              </select>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Status</label>
+              <select id="edit_status" class="form-control">
+                <option value="pending">Pending</option>
+                <option value="in-progress">In Progress</option>
+                <option value="completed">Completed</option>
+              </select>
+            </div>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Description</label>
+            <textarea id="edit_description" class="form-control"></textarea>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+          <button type="submit" class="btn btn-primary">Update Goal</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+
+
 </div>
 
 {{-- JS --}}
+
+
+
+<script>
+/* ---------- Helper: CSRF token ---------- */
+const csrfToken = () => {
+    const meta = document.querySelector('meta[name="csrf-token"]');
+    return meta ? meta.getAttribute('content') : '';
+};
+
+/* ---------- Open Edit Modal and populate fields ---------- */
+async function editGoal(id) {
+    try {
+        // load goal data
+        const res = await fetch(`/goals/${id}`);
+        if (!res.ok) throw new Error(`Failed to fetch goal (status ${res.status})`);
+        const goal = await res.json();
+
+        // populate fields
+        document.getElementById("edit_goal_id").value = goal.id;
+        document.getElementById("edit_title").value = goal.title || '';
+        document.getElementById("edit_start_date").value = goal.start_date || '';
+        document.getElementById("edit_end_date").value = goal.end_date || '';
+        document.getElementById("edit_priority").value = goal.priority || 'medium';
+        document.getElementById("edit_status").value = goal.status || 'pending';
+        document.getElementById("edit_description").value = goal.description || '';
+
+        // populate period select
+        const select = document.getElementById("edit_org_setting_id");
+        select.innerHTML = '<option>Loading...</option>';
+        const settingsRes = await fetch('/org-settings');
+        if (!settingsRes.ok) throw new Error('Failed to load organization settings');
+        const settings = await settingsRes.json();
+
+        select.innerHTML = '';
+        settings.forEach(s => {
+            const opt = document.createElement('option');
+            opt.value = s.id;
+            opt.text = s.name;
+            if (String(s.id) === String(goal.org_setting_id)) opt.selected = true;
+            select.appendChild(opt);
+        });
+
+        // show modal
+        const modalEl = document.getElementById("editGoalModal");
+        const modal = new bootstrap.Modal(modalEl);
+        modal.show();
+
+    } catch (err) {
+        console.error(err);
+        alert("Could not load goal details. Open DevTools Console for more info.");
+    }
+}
+
+/* ---------- Submit updated goal via PUT ---------- */
+document.getElementById("editGoalForm").addEventListener("submit", async function (e) {
+    e.preventDefault();
+
+    const id = document.getElementById("edit_goal_id").value;
+    if (!id) {
+        alert("Missing goal id");
+        return;
+    }
+
+    // build payload from form fields
+    const payload = {
+        org_setting_id: document.getElementById("edit_org_setting_id").value,
+        title: document.getElementById("edit_title").value,
+        start_date: document.getElementById("edit_start_date").value,
+        end_date: document.getElementById("edit_end_date").value,
+        priority: document.getElementById("edit_priority").value,
+        status: document.getElementById("edit_status").value,
+        description: document.getElementById("edit_description").value,
+    };
+
+    try {
+        const res = await fetch(`/goals/${id}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': csrfToken()
+            },
+            body: JSON.stringify(payload),
+        });
+
+        if (!res.ok) {
+            // try to read JSON errors
+            let errText = `Request failed (${res.status})`;
+            try {
+                const errJson = await res.json();
+                if (errJson.errors) {
+                    errText = Object.values(errJson.errors).flat().join("\n");
+                } else if (errJson.message) {
+                    errText = errJson.message;
+                }
+            } catch (_) {}
+            throw new Error(errText);
+        }
+
+        // success: hide modal & refresh goals
+        const modalEl = document.getElementById("editGoalModal");
+        const modal = bootstrap.Modal.getInstance(modalEl);
+        if (modal) modal.hide();
+
+        // optional: show a temporary success message
+        // alert('Goal updated successfully');
+
+        // reload goals list
+        if (typeof loadGoals === 'function') loadGoals();
+    } catch (err) {
+        console.error(err);
+        alert("Failed to update goal: " + err.message);
+    }
+});
+</script>
+
+
+
 <script>
   document.addEventListener("DOMContentLoaded", function () {
     loadGoals();
@@ -170,9 +360,5 @@ async function loadApprovals() {
     });
 }
 
-// Optional edit function
-function editGoal(id) {
-    // Fetch goal by id, populate form fields for editing
-}
 
 </script>
