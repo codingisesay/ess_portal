@@ -156,18 +156,21 @@
      border-bottom-right-radius: 30px;
      border-top-left-radius: 30px;
      border-top-right-radius: 30px;
-     overflow-y: scroll;
+     overflow-y: auto;
      /* Enables vertical scrolling */
  }
 
- /* Hide the scrollbar but keep the scrolling functionality */
+ /* Show a visible scrollbar in the sidebar */
  .sidebar::-webkit-scrollbar {
-     width: 0px;
-     background: transparent;
+     width: 8px;
  }
-
+ .sidebar::-webkit-scrollbar-track {
+     background: #f0f0f0;
+     border-radius: 10px;
+ }
  .sidebar::-webkit-scrollbar-thumb {
-     background: transparent;
+     background: #c7c7c7;
+     border-radius: 10px;
  }
 
 
@@ -229,7 +232,8 @@
      margin: 0 10px;
      /* width: calc(100% - 366px); */
      /* Adjust width to fit beside the sidebar */
-     height: auto; /* let the content define height */
+     height: 77vh; /* match sidebar height */
+     overflow-y: auto; /* internal scroll like sidebar */
  }
 
  .content-area.active {
@@ -249,27 +253,24 @@
 /* Slider container: shows one policy at a time */
 .policy-slider {
     position: relative;
-    overflow: hidden;
+    overflow: visible; /* allow stacked cards */
 }
 
 .policy-track {
-    display: flex;
-    transition: transform 0.3s ease-in-out;
-    will-change: transform;
+    display: block; /* stack cards vertically */
+    transition: none;
+    will-change: auto;
+    transform: none !important;
 }
 
 .policy-slider .policy-card {
-    flex: 0 0 100%;
+    flex: 0 0 auto;
     width: 100%;
-    margin: 0; /* spacing handled by card padding and outer container */
+    margin: 0 0 18px 0; /* stacked spacing */
 }
 
 .slider-nav {
-    display: flex;
-    justify-content: center; /* center the buttons */
-    align-items: center;
-    gap: 12px; /* space between prev and next */
-    margin-top: 10px;
+    display: none; /* hide prev/next buttons for stacked view */
 }
 
 .slider-nav .prev,
@@ -297,11 +298,16 @@
  }
 
  /* Inner content layout */
+ /* Collapse policy details by default; expand on click */
  .policy-card .policy-content {
-    display: flex;
-    flex-direction: column; /* column: text then image */
-    gap: 16px;
-}
+     display: none;
+     flex-direction: column; /* column: text then image */
+     gap: 16px;
+ }
+
+ .policy-card.open .policy-content {
+     display: flex !important;
+ }
 
 /* Ensure column layout inside slider only on small screens */
 @media (max-width: 767px) {
