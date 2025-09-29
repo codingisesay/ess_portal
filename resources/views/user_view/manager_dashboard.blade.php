@@ -114,9 +114,11 @@
 
 
     {{-- Submit whole bundle --}}
-    <button type="submit" class="btn btn-success mt-2">
-        Submit Selected Goals for Approval
-    </button>
+    <div class="d-flex justify-content-end">
+        <button type="submit" class="btn btn-success mt-2">
+            Submit Selected Goals for Approval
+        </button>
+    </div>
 </form>
 
 
@@ -124,28 +126,36 @@
         {{-- Add Custom Goal --}}
         <div class="mt-3">
             <h6>Create Extra Goal</h6>
-            <div class="row g-2">
-                <div class="col-md-4">
-                    <select id="customGoalOrg" class="form-control">
-                        <option value="">Select Period</option>
-                        @foreach($allOrgGoals as $g)
-                            <option value="{{ $g->org_setting_id }}">{{ $g->period_name }}</option>
-                        @endforeach
-                    </select>
+            <form onsubmit="addCustomGoal(); return false;">
+                <div class="row g-3 align-items-end">
+                    <div class="col-md-3">
+                        <label for="customGoalOrg" class="form-label">Period</label>
+                        <select id="customGoalOrg" class="form-control" required>
+                            <option value="">Select Period</option>
+                            @foreach($allOrgGoals as $g)
+                                <option value="{{ $g->org_setting_id }}">{{ $g->period_name }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <label for="customGoalTitle" class="form-label">Goal Title</label>
+                        <input type="text" id="customGoalTitle" class="form-control" placeholder="e.g., Improve client onboarding" required>
+                    </div>
+                    <div class="col-md-2">
+                        <label for="customGoalStart" class="form-label">Start Date</label>
+                        <input type="date" id="customGoalStart" class="form-control" required>
+                    </div>
+                    <div class="col-md-2">
+                        <label for="customGoalEnd" class="form-label">End Date</label>
+                        <input type="date" id="customGoalEnd" class="form-control" required>
+                    </div>
                 </div>
-                <div class="col-md-4">
-                    <input type="text" id="customGoalTitle" class="form-control" placeholder="Goal Title">
+                <div class="row mt-2">
+                    <div class="col-12 d-flex justify-content-end">
+                        <button type="submit" class="btn btn-secondary">Add Custom Goal</button>
+                    </div>
                 </div>
-                  <div class="col-md-3">
-                    <input type="date" id="customGoalStart" class="form-control" placeholder="Start Date">
-                </div>
-                <div class="col-md-3">
-                    <input type="date" id="customGoalEnd" class="form-control" placeholder="End Date">
-                </div>
-                <div class="col-md-4">
-                    <button type="button" class="btn btn-secondary w-100" onclick="addCustomGoal()">Add Custom Goal</button>
-                </div>
-            </div>
+            </form>
         </div>
     </div>
 </div>
