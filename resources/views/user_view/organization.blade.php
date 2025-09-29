@@ -1,3 +1,4 @@
+<link rel="stylesheet" href="{{ asset('/user_end/css/pms-dashboard.css') }}">
 <div class="container">
 
     {{-- Summary Cards --}}
@@ -63,7 +64,7 @@
 
                 <textarea id="description" name="description" class="form-control" placeholder="Description"></textarea>
             </form>
-
+            <div class="table-scroll mt-3">
             <table class="table table-bordered table-striped mt-3">
                <thead class="table-light">
                         <tr>
@@ -79,6 +80,7 @@
                     <tbody id="goalsTable"></tbody>
             </table>
         </div>
+    </div>
     </div>
 
     {{-- Task Approvals --}}
