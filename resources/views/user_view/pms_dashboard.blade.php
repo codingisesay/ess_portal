@@ -60,7 +60,7 @@
 
         {{-- Manager Dashboard --}}
         @if($showManager)
-            <div id="managerDash" class="mt-3" style="{{ $showOrganization ? 'display:none;' : '' }}">
+            <div id="managerDash" class="mt-1" style="{{ $showOrganization ? 'display:none;' : '' }}">
                 @include('user_view.manager_dashboard')
             </div>
         @endif
