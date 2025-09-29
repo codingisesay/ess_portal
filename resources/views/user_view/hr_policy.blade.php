@@ -1,60 +1,54 @@
 @extends('user_view.header')
 @section('content')
-<?php 
+<?php
 error_reporting(0);
-
-// dd($policies);
 ?>
-<html lang="en">
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- {{-- <title>Human Resource Policy</title> --}} -->
-    <link rel="stylesheet" href="{{ asset('/user_end/css/hr_policy.css') }}">
-    <link rel="stylesheet" href="{{ asset('/user_end/css/homepage.css') }}">
- 
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-</head>
+ <head>
+     <meta charset="UTF-8">
+     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+     <title>Human Resource Policy</title>
+     <link rel="stylesheet" href="{{ asset('/user_end/css/hr_policy.css') }}">
+     <link rel="stylesheet" href="{{ asset('/user_end/css/homepage.css') }}">
+     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+ </head>
+ <body>
+     <!-- Header Section -->
+     <div class="header mx-4">
+         <div class="search-bar">
+             <input type="text" placeholder="Search Category..." id="searchInput">
+             <div class="search-icon-circle">
+                 <img src="{{ asset('user_end/images/search (2) 3.png') }}" alt="Search Icon">
+             </div>
+         </div>
+     </div>
 
-<body>
-    
-    <!-- Header Section -->
-    <div class="header mx-4">
-        <!-- <h2>Human Resource Policy</h2> -->
-        <div class="search-bar">
-            <input type="text" placeholder="Search Category..." id="searchInput">
-            <div class="search-icon-circle">
-                <img src="{{ asset('user_end/images/search (2) 3.png') }}" alt="Search Icon">
-            </div>
-        </div>
-        <div class="categories-container">
-            @foreach($policies->groupBy('policy_categorie_id') as $categoryId => $categoryPolicies)
-                <div class="category-item" data-category="{{ $categoryId }}">
-                    <div class="category-icon">
-                        <!-- Fetch icon from storage -->
-                        <img src="{{ Storage::url($categoryPolicies->first()->iconLink) }}" alt="Category Icon">
-                    </div>
-                    <div class="category-text">
-                        <span class="">{{ $categoryPolicies->first()->category_name }}</span>
-                    </div>
-                </div>
-            @endforeach
-        </div>
-    </div>
-
-    <!-- Main Content Container -->
-
-    <div class="main-container mx-">
-        <!-- Content Area -->
-        @foreach($policies->groupBy('policy_categorie_id') as $categoryId => $categoryPolicies)
-            <div class="content-area  my-2" data-category="{{ $categoryId }}">
+     <!-- Main Content Container -->
+     <div class="main-container mx-">
+         <!-- Sidebar with Categories -->
+         <div class="sidebar">
+             <div class="categories-container">
+                 @foreach($policies->groupBy('policy_categorie_id') as $categoryId => $categoryPolicies)
+                     <div class="category-item" data-category="{{ $categoryId }}">
+                         <div class="category-icon">
+                             <img src="{{ Storage::url($categoryPolicies->first()->iconLink) }}" alt="Category Icon">
+                         </div>
+                         <div class="category-text">
+                             <span class="">{{ $categoryPolicies->first()->category_name }}</span>
+                         </div>
+                     </div>
+                 @endforeach
+             </div>
+         </div>
+         <!-- Content Area -->
+         @foreach($policies->groupBy('policy_categorie_id') as $categoryId => $categoryPolicies)
+             <div class="content-area  my-2" data-category="{{ $categoryId }}">
                 <div class="policy-slider">
                     <div class="policy-track">
                         @foreach($categoryPolicies as $policy)
                             <div class="policy-card">
                                 <a href="{{ Storage::url($policy->docLink) }}" class="download-btn" download>
-                                <img src="{{ asset('user_end/images/download 1.png') }}" alt="Download Icon"> Download
+                                    <img src="{{ asset('user_end/images/download 1.png') }}" alt="Download Icon"> Download
                                 </a>
 
                                 <div class="policy-content">
@@ -131,6 +125,56 @@ error_reporting(0);
                 firstCategory.classList.add('active'); // Mark the first category as active
                 showCategoryContent(firstCategoryId);
             }
+        });
+    </script>
+    <script>
+        // Toggle open/close of individual policy content on title click
+        document.addEventListener('DOMContentLoaded', function() {
+            function wirePolicyToggles(scope) {
+                const cards = (scope || document).querySelectorAll('.policy-card');
+                cards.forEach(card => {
+                    const title = card.querySelector('.content-item h3');
+                    if (!title) return;
+                    // Avoid double-binding
+                    if (title.dataset.bound === '1') return;
+                    title.dataset.bound = '1';
+                    title.style.cursor = 'pointer';
+                    title.setAttribute('role', 'button');
+                    title.setAttribute('tabindex', '0');
+                    title.addEventListener('click', () => toggleCard(card));
+                    title.addEventListener('keydown', (e) => {
+                        if (e.key === 'Enter' || e.key === ' ') {
+                            e.preventDefault();
+                            toggleCard(card);
+                        }
+                    });
+                });
+            }
+
+            function toggleCard(targetCard) {
+                // Close other open cards within the same content area
+                const contentArea = targetCard.closest('.content-area');
+                if (contentArea) {
+                    contentArea.querySelectorAll('.policy-card.open').forEach(openCard => {
+                        if (openCard !== targetCard) openCard.classList.remove('open');
+                    });
+                }
+                targetCard.classList.toggle('open');
+            }
+
+            // Initial bind for currently rendered cards
+            wirePolicyToggles(document);
+
+            // Re-bind after category switches (content areas hide/show)
+            const categoryItems = document.querySelectorAll('.category-item');
+            categoryItems.forEach(item => {
+                item.addEventListener('click', function () {
+                    // Bind within the newly shown content area
+                    const categoryId = item.getAttribute('data-category');
+                    const shownArea = document.querySelector(`.content-area[data-category="${categoryId}"]`);
+                    if (shownArea) wirePolicyToggles(shownArea);
+                });
+            });
         });
     </script>
 <script>
