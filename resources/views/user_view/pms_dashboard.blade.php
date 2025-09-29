@@ -2,6 +2,12 @@
 
 @section('content')
 <link rel="stylesheet" href="{{ asset('/user_end/css/pms-dashboard.css') }}">
+<meta name="csrf-token" content="{{ csrf_token() }}">
+<!-- Bootstrap 5 CSS -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+<!-- Bootstrap 5 JS (bundle includes Popper) -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
 
 <div class="container mt-4">
@@ -26,6 +32,7 @@
         // Determine which dashboards to show
         $showOrganization = ($reportingManager === null || $reportingManager == $noneUserId);
         $showManager = $hasSubordinates; // Manager
+          $showEmployee = (!$showOrganization && !$showManager); // 👈 employee case
     @endphp
 
     @if($showOrganization || $showManager)
@@ -68,10 +75,16 @@
             </script>
         @endif
 
-    @else
-        <div class="alert alert-warning mt-4">
-            You do not have access to any dashboard.
-        </div>
-    @endif
+
+@elseif($showEmployee)
+    {{-- Employee Dashboard --}}
+    <div id="employeeDash" class="mt-3">
+        @include('user_view.employee_dashboardpms')
+    </div>
+@else
+    <div class="alert alert-warning mt-4">
+        You do not have access to any dashboard.
+    </div>
+@endif
 </div>
 @endsection
