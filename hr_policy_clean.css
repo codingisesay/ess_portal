@@ -1,70 +1,139 @@
+/* Base Styles */
+:root {
+    --primary-color: #8A3366;
+    --secondary-color: #FFC107;
+    --background-color: #F6F5F7;
+    --text-color: #333;
+    --white: #FFFFFF;
+    --shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
+    --transition: all 0.3s ease;
+}
+
 /* Header */
- .header {
-     display: flex;
-     justify-content: flex-start;
-     align-items: center;
-     background-color: #F6F5F7;
-     color: black;
-     gap: 12px;
-     /*  */
- }
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: var(--background-color);
+    color: var(--text-color);
+    padding: 1rem;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
 /* Search Bar */
- .search-bar {
-     display: flex;
-     align-items: center;
-     background-color: #F6F5F7;
-     border-radius: 50px;
-     padding: 0 20px;
-     box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
-     border: solid #FFFFFF 3px;
- }
+.search-container {
+    display: flex;
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 1rem;
+}
+
+.search-bar {
+    display: flex;
+    align-items: center;
+    background-color: var(--white);
+    border-radius: 50px;
+    padding: 0.5rem 1rem;
+    box-shadow: var(--shadow);
+    border: solid var(--white) 3px;
+    flex: 1;
+    max-width: 400px;
+    transition: var(--transition);
+}
+
+.search-bar:focus-within {
+    box-shadow: 0 0 0 2px var(--primary-color);
+}
 
  /* Remove border from the search input inside the pill */
- .search-bar input[type="text"],
- .search-bar #searchInput {
-     border: none;
-     outline: none;
-     background: transparent;
-     color: #333;
- }
+.search-bar input[type="text"],
+.search-bar #searchInput {
+    border: none;
+    outline: none;
+    background: transparent;
+    color: #333;
+}
 
-/* Horizontal categories beside search in header */
-.header .categories-container {
+/* Categories Container */
+.categories-container {
     display: flex;
-    align-items: center;
-    gap: 12px;
-    margin-left: 4px;
+    gap: 1rem;
+    padding: 1rem 0;
     overflow-x: auto;
-    padding: 6px 0;
+    scrollbar-width: thin;
+    scrollbar-color: var(--primary-color) transparent;
+    -webkit-overflow-scrolling: touch;
+    padding-bottom: 0.5rem;
+    margin: 0 -1rem;
+    padding: 0 1rem 0.5rem;
 }
 
-/* Header category items styled like the search bar (mirrored: circle on the left) */
-.header .category-item {
+.categories-container::-webkit-scrollbar {
+    height: 6px;
+}
+
+.categories-container::-webkit-scrollbar-thumb {
+    background-color: var(--primary-color);
+    border-radius: 3px;
+}
+
+.categories-container::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+/* Category Item */
+.category-item {
     display: flex;
     align-items: center;
-    background-color: #F6F5F7;
+    background-color: var(--white);
     border-radius: 50px;
-    padding: 0 20px;
-    box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
-    border: solid #FFFFFF 3px;
-    height: 56px; /* close to search height (50px circle + borders) */
+    padding: 0.5rem 1.5rem 0.5rem 0.5rem;
+    box-shadow: var(--shadow);
+    border: solid var(--white) 3px;
+    min-height: 60px;
     background-clip: padding-box;
-    margin-bottom: 0; /* override global spacing used in sidebar */
-    width: auto; /* do not use fixed width in header */
+    cursor: pointer;
+    transition: var(--transition);
+    flex: 0 0 auto;
+    scroll-snap-align: start;
+    position: relative;
+    overflow: hidden;
 }
 
-.header .category-item.active {
-    background-color: #8A3366; /* distinct highlight */
-    color: #fff;
+.category-item:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
-.header .category-item.active .category-text {
-    color: #fff;
+/* Active State */
+.category-item.active {
+    background-color: var(--primary-color);
+    color: var(--white);
 }
 
-.header .category-item.active .category-icon {
-    background-color: #FFFFFF; /* contrast circle on purple background */
-    border-color: #8A3366;
+.category-item.active .category-text {
+    color: var(--white);
+}
+
+.category-item.active .category-icon {
+    background-color: var(--white);
+    border-color: var(--primary-color);
+    transform: scale(1.1);
+}
+
+/* Loading State */
+.category-item.loading .category-icon {
+    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+    background-size: 200% 100%;
+    animation: loading 1.5s infinite;
+}
+
+@keyframes loading {
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
 }
 
 .header .category-item .category-icon {
@@ -122,25 +191,17 @@
     border-radius: 50%;
     width: 50px;
     height: 50px;
-    cursor: pointer;
-    margin-left: 15px;
-    border: solid   #FFFFFF 5px;
 }
 
-.search-icon-circle img {
-     width: 20px;
-     height: 20px;
- }
+/* Main Container */
+.main-container {
+    margin: 10px auto;
+    display: flex;
+    width: 97%;
+}
 
- /* Main Container */
- .main-container {
-     margin: 10px auto;
-     display: flex;
-     width: 97%;
- }
-
- /* Sidebar */
- .sidebar {
+/* Sidebar */
+.sidebar {
      background-color: #FFFFFF;
      /* width: 316px; */
      padding: 35px 20px;
@@ -160,22 +221,22 @@
      /* Enables vertical scrolling */
  }
 
- /* Show a visible scrollbar in the sidebar */
- .sidebar::-webkit-scrollbar {
-     width: 8px;
- }
- .sidebar::-webkit-scrollbar-track {
-     background: #f0f0f0;
-     border-radius: 10px;
- }
- .sidebar::-webkit-scrollbar-thumb {
-     background: #c7c7c7;
-     border-radius: 10px;
- }
+/* Show a visible scrollbar in the sidebar */
+.sidebar::-webkit-scrollbar {
+    width: 8px;
+}
+.sidebar::-webkit-scrollbar-track {
+    background: #f0f0f0;
+    border-radius: 10px;
+}
+.sidebar::-webkit-scrollbar-thumb {
+    background: #c7c7c7;
+    border-radius: 10px;
+}
 
 
- /* Category Item (Separate Icon and Text Aligned Side-by-Side) */
- .category-item {
+/* Category Item (Separate Icon and Text Aligned Side-by-Side) */
+.category-item {
      display: flex;
      align-items: center;
      padding: 0px;
@@ -220,8 +281,8 @@
      color: #fff;
  }
 
- /* Content Area */
- .content-area {
+/* Content Area */
+.content-area {
      flex: 1;
      background-color: #FFFFFF;
      padding: 30px;
@@ -327,22 +388,22 @@
 }
 
  .policy-card .content-image img {
-     width: 100%;
-     height: auto;
-     border-radius: 12px;
+    width: 100%;
+    height: auto;
+    border-radius: 12px;
  }
 
- /* Responsive adjustments for cards */
- @media (max-width: 992px) {
-     .policy-card .policy-content {
-         flex-direction: column;
-     }
-     .policy-card .content-text,
-     .policy-card .content-image {
-         max-width: 100%;
-         min-width: 0;
-     }
- }
+/* Responsive adjustments for cards */
+@media (max-width: 992px) {
+    .policy-card .policy-content {
+        flex-direction: column;
+    }
+    .policy-card .content-text,
+    .policy-card .content-image {
+        max-width: 100%;
+        min-width: 0;
+    }
+}
 
 /* Desktop: place text and image side-by-side (also inside slider) */
 @media (min-width: 993px) {
@@ -395,29 +456,29 @@
 
 
 
- .download-btn {
-     background-color: #8A3366;
-     color: white;
-     padding: 10px 20px;
-     border-radius: 25px;
-     font-size: 16px;
-     text-decoration: none;
-     display: flex;
-     align-items: center;
-     justify-content: center;
-     position: absolute;
-     top: 20px;
-     right: 20px;
- }
+.download-btn {
+    background-color: #8A3366;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 25px;
+    font-size: 16px;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    top: 20px;
+    right: 20px;
+}
 
- .download-btn img {
-     margin-right: 10px;
-     width: 20px;
-     height: 20px;
- }
+.download-btn img {
+    margin-right: 10px;
+    width: 20px;
+    height: 20px;
+}
 
- /* Policy content */
- .policy-content {
+/* Policy content */
+.policy-content {
      display: flex;
      justify-content: space-between;
      align-items: flex-start;
@@ -425,37 +486,40 @@
      /* Allow content to wrap on smaller screens */
  }
 
- .content-text {
-     max-width: 60%;
-     flex: 1;
-     min-width: 300px;
-     /* Ensure minimum width for smaller screens */
- }
+.content-text {
+    max-width: 60%;
+    flex: 1;
+    min-width: 300px;
+    /* Ensure minimum width for smaller screens */
+}
 
- .content-item h3 {
-     background-color: #FFC107;
-     font-size: 14px;
-     color: #FFFFFF;
-     padding: 1 16px;
-     border-radius: 10px;
-     margin-bottom: 10px;
-     display: inline-block;
-     cursor: pointer;
-     width: fit-content;
-     height: 33px;
-     text-align: left;
- }
+.content-item h3 {
+    background-color: #FFC107;
+    font-size: 14px;
+    color: #FFFFFF;
+    padding: 1px 16px;
+    border-radius: 10px;
+    margin-bottom: 10px;
+    display: inline-block;
+    cursor: pointer;
+    width: fit-content;
+    height: 33px;
+    text-align: left;
+    line-height: 33px;
+}
 
- .content-item p {
-     font-size: 16px;
-     color: #666;
-     line-height: 1.6;
-     width: 100%;
-     height: auto;
-     text-align: justify;
- }
+.content-item p {
+    font-size: 16px;
+    color: #666;
+    line-height: 1.6;
+    width: 100%;
+    height: auto;
+    text-align: justify;
+    margin: 0;
+    padding: 0;
+}
 
- .content-image {
+.content-image {
     margin-left: 20px;
     text-align: center;
     position: relative;
@@ -486,58 +550,127 @@
     }
 }
 
-@media (max-width: 768px) {
-    .header {
+/* Tablet Styles */
+@media (max-width: 1024px) {
+    .content-container {
         flex-direction: column;
     }
+    
+    .content-image {
+        max-height: 300px;
+    }
+}
 
-     .header h1 {
-         font-size: 24px;
-         margin-bottom: 10px;
-     }
-     .search-bar {
-         width: 100%;
-         margin-top: 10px;
-     }
+/* Mobile Styles */
+@media (max-width: 768px) {
+    .header {
+        padding: 0.75rem;
+        position: relative;
+    }
+    
+    .search-container {
+        padding: 0 0.75rem;
+    }
+    
+    .search-bar {
+        max-width: 100%;
+    }
+    
+    .main-container {
+        padding: 0.75rem;
+    }
+    
+    .content-area {
+        padding: 1rem;
+        margin-top: 0.5rem;
+    }
+    
+    .category-item {
+        min-height: 50px;
+        padding: 0.5rem 1rem 0.5rem 0.5rem;
+    }
+    
+    .category-icon {
+        width: 40px !important;
+        height: 40px !important;
+    }
+    
+    .category-text {
+        font-size: 0.9rem !important;
+    }
+    
+    .content-text h3 {
+        font-size: 1.1rem;
+    }
+    
+    .slider-nav button {
+        width: 36px;
+        height: 36px;
+    }
+    
+    /* Hide scrollbar on mobile but keep functionality */
+    .categories-container {
+        -ms-overflow-style: none;  /* IE and Edge */
+        scrollbar-width: none;  /* Firefox */
+    }
+    
+    .categories-container::-webkit-scrollbar {
+        display: none;  /* Chrome, Safari, Opera */
+    }
+    
+    /* Add some padding at the bottom of the page */
+    body {
+        padding-bottom: 60px;
+    }
+}
 
-     .main-container {
-         padding: 0 10px;
-     }
+.header h1 {
+    font-size: 24px;
+    margin-bottom: 10px;
+}
+.search-bar {
+    width: 100%;
+    margin-top: 10px;
+}
 
-     .sidebar {
-         padding: 20px;
-     }
+.main-container {
+    padding: 0 10px;
+}
 
-     .category-item {
-         margin-bottom: 10px;
-         width: 100%;
-     }
+.sidebar {
+    padding: 20px;
+}
 
-     .content-area {
-         padding: 20px;
-     }
+.category-item {
+    margin-bottom: 10px;
+    width: 100%;
+}
 
-     .download-btn {
-         top: 10px;
-         right: 10px;
-         padding: 5px 10px;
-         font-size: 14px;
-     }
+.content-area {
+    padding: 20px;
+}
 
-     .download-btn img {
-         width: 16px;
-         height: 16px;
-     }
+.download-btn {
+    top: 10px;
+    right: 10px;
+    padding: 5px 10px;
+    font-size: 14px;
+}
 
-     .content-item h3 {
-         font-size: 12px;
-         padding: 6px 12px;
-     }
+.download-btn img {
+    width: 16px;
+    height: 16px;
+}
 
-     .content-item p {
-         font-size: 14px;
-         width: 100%;
-     }
+.content-item h3 {
+    font-size: 12px;
+    padding: 6px 12px;
+}
+
+.content-item p {
+    font-size: 14px;
+    width: 100%;
+}
 
      .content-image img {
          width: 100%;
@@ -545,67 +678,67 @@
      }
  }
 
- @media (max-width: 480px) {
-     .header h1 {
-         font-size: 20px;
-     }
+@media (max-width: 480px) {
+    .header h1 {
+        font-size: 20px;
+    }
 
-     .search-bar {
-         flex-direction: column;
-         align-items: flex-start;
-     }
+    .search-bar {
+        flex-direction: column;
+        align-items: flex-start;
+    }
 
-     .search-bar input {
-         width: 100%;
-         margin: 0 0 10px 0;
-     }
+    .search-bar input {
+        width: 100%;
+        margin: 0 0 10px 0;
+    }
 
-     .search-icon-circle {
-         width: 40px;
-         height: 40px;
-     }
+    .search-icon-circle {
+        width: 40px;
+        height: 40px;
+    }
 
-     .search-icon-circle img {
-         width: 16px;
-         height: 16px;
-     }
+    .search-icon-circle img {
+        width: 16px;
+        height: 16px;
+    }
 
-     .main-container {
-         padding: 0 5px;
-     }
+    .main-container {
+        padding: 0 5px;
+    }
 
-     .sidebar {
-         padding: 10px;
-     }
+    .sidebar {
+        padding: 10px;
+    }
 
-     .category-item {
-         padding: 5px;
-     }
+    .category-item {
+        padding: 5px;
+    }
 
-     .content-area {
-         padding: 10px;
-     }
+    .content-area {
+        padding: 10px;
+    }
 
-     .download-btn {
-         top: 5px;
-         right: 5px;
-         padding: 5px;
-         font-size: 12px;
-     }
+    .download-btn {
+        top: 5px;
+        right: 5px;
+        padding: 5px;
+        font-size: 12px;
+    }
 
-     .download-btn img {
-         width: 12px;
-         height: 12px;
-     }
+    .download-btn img {
+        width: 12px;
+        height: 12px;
+    }
 
-     .content-item h3 {
-         font-size: 10px;
-         padding: 4px 8px;
-     }
+    .content-item h3 {
+        font-size: 10px;
+        padding: 4px 8px;
+    }
 
-     .content-item p {
-         font-size: 12px;
-     }
+    .content-item p {
+        font-size: 12px;
+    }
 
      .content-image img {
          width: 100%;

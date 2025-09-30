@@ -138,33 +138,32 @@
 
                 
             </form>
-            <div class="table-fixed-header mt-3">
-                <!-- Header table (outside scroll) -->
-                <table class="table table-bordered table-striped m-0">
-                    <colgroup>
-                        <col style="width:26%">
-                        <col style="width:14%">
-                        <col style="width:12%">
-                        <col style="width:12%">
-                        <col style="width:12%">
-                        <col style="width:12%">
-                        <col style="width:12%">
-                    </colgroup>
-                    <thead class="table-light">
-                        <tr>
-                            <th>Title</th>
-                            <th>Period</th>
-                            <th>Start Date</th>
-                            <th>End Date</th>
-                            <th>Priority</th>
-                            <th>Status</th>
-                            <th>Action</th>
-                        </tr>
-                    </thead>
-                </table>
-
-                <!-- Scrollable body -->
-                <div class="table-scroll">
+            <div class="mt-3">
+                <div class="table-fixed-header">
+                    <table class="table table-bordered table-striped m-0">
+                        <colgroup>
+                            <col style="width:26%">
+                            <col style="width:14%">
+                            <col style="width:12%">
+                            <col style="width:12%">
+                            <col style="width:12%">
+                            <col style="width:12%">
+                            <col style="width:12%">
+                        </colgroup>
+                        <thead>
+                            <tr>
+                                <th>Title</th>
+                                <th>Period</th>
+                                <th>Start Date</th>
+                                <th>End Date</th>
+                                <th>Priority</th>
+                                <th>Status</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+                <div class="table-scroll-container">
                     <table class="table table-bordered table-striped m-0">
                         <colgroup>
                             <col style="width:26%">

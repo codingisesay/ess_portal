@@ -9,9 +9,14 @@
 <div class="card mb-4">
     <div class="card-header bg-light"><strong>Goals Created by Organization</strong></div>
     <div class="table-fixed-header">
-        <!-- Header table (outside scroll) -->
         <table class="table table-bordered table-striped m-0">
-            <thead class="table-light">
+            <colgroup>
+                <col style="width:40%">
+                <col style="width:20%">
+                <col style="width:20%">
+                <col style="width:20%">
+            </colgroup>
+            <thead>
                 <tr>
                     <th>Goal</th>
                     <th>Period</th>
@@ -20,27 +25,32 @@
                 </tr>
             </thead>
         </table>
-
-        <!-- Scrollable body -->
-        <div class="table-scroll org-goals-scroll">
-            <table class="table table-bordered table-striped m-0" id="orgGoalsTable">
-                <tbody>
-                    @foreach($allOrgGoals as $goal)
-                    <tr>
-                        <td>{{ $goal->title }}</td>
-                        <td>{{ $goal->period_name }}</td>
-                        <td>{{ ucfirst($goal->priority) }}</td>
-                        <td>
-                            <button type="button" class="btn btn-sm btn-primary"
-                                onclick="addToBundle({{ $goal->id }}, '{{ addslashes($goal->title) }}', '{{ $goal->org_setting_id }}', 'Organization', this)">
-                                Add
-                            </button>
-                        </td>
-                    </tr>
-                    @endforeach
-                </tbody>
-            </table>
-            </div>
+    </div>
+    <div class="table-scroll-container">
+        <table class="table table-bordered table-striped m-0">
+            <colgroup>
+                <col style="width:40%">
+                <col style="width:20%">
+                <col style="width:20%">
+                <col style="width:20%">
+            </colgroup>
+            <tbody id="orgGoalsTable">
+                @foreach($allOrgGoals as $goal)
+                <tr>
+                    <td>{{ $goal->title }}</td>
+                    <td>{{ $goal->period_name }}</td>
+                    <td>{{ ucfirst($goal->priority) }}</td>
+                    <td>
+                        <button type="button" class="btn btn-sm btn-primary"
+                            onclick="addToBundle({{ $goal->id }}, '{{ addslashes($goal->title) }}', '{{ $goal->org_setting_id }}', 'Organization', this)">
+                            Add
+                        </button>
+                    </td>
+                </tr>
+                @endforeach
+            </tbody>
+        </table>
+    </div>
         </div>
     </div>
 </div>
@@ -108,21 +118,37 @@
 <div class="card mb-4">
     <div class="card-header bg-light"><strong>Additional Goals / Selected Org Goals</strong></div>
     <div class="card-body">
-     <form id="bundleForm" method="POST" action="{{ route('goal-bundles.submit') }}">
     @csrf
 
     {{-- Always send bundle_id once (if exists) --}}
     <input type="hidden" name="bundle_id" value="{{ $submittedGoals[0]->bundle_id ?? '' }}">
 
-   <div class="table-scroll">
-   <table class="table table-bordered m-0" id="bundleTable">
-    <thead class="table-light">
+   <div class="table-fixed-header">
+   <table class="table table-bordered table-striped m-0">
+    <colgroup>
+        <col style="width:40%">
+        <col style="width:15%">
+        <col style="width:15%">
+        <col style="width:30%">
+    </colgroup>
+    <thead>
         <tr>
             <th>Goal</th>
-            <th>Type / Status</th>
-            <th>Action</th>
+            <th>Type</th>
+            <th>Weightage</th>
+            <th>Actions</th>
         </tr>
     </thead>
+   </table>
+   </div>
+   <div class="table-scroll-container">
+   <table class="table table-bordered table-striped m-0" id="bundleTable">
+    <colgroup>
+        <col style="width:40%">
+        <col style="width:15%">
+        <col style="width:15%">
+        <col style="width:30%">
+    </colgroup>
     <tbody>
         @foreach($submittedGoals ?? [] as $goal)
         <tr>
@@ -233,17 +259,33 @@
             <div class="d-flex justify-content-end mb-2">
                 <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#createOwnTaskModal">Create</button>
             </div>
-            <div class="table-scroll">
-            <table class="table table-bordered table-striped m-0">
-                <thead class="table-light">
-                    <tr>
-                        <th>Task</th>
-                        <th>Status</th>
-                        <th>Edit</th>
-                        <th>Delete</th>
-                    </tr>
-                </thead>
-                <tbody>
+            <div class="table-fixed-header">
+                <table class="table table-bordered table-striped m-0">
+                    <colgroup>
+                        <col style="width:40%">
+                        <col style="width:20%">
+                        <col style="width:20%">
+                        <col style="width:20%">
+                    </colgroup>
+                    <thead>
+                        <tr>
+                            <th>Task</th>
+                            <th>Status</th>
+                            <th>Edit</th>
+                            <th>Delete</th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+            <div class="table-scroll-container">
+                <table class="table table-bordered table-striped m-0">
+                    <colgroup>
+                        <col style="width:40%">
+                        <col style="width:20%">
+                        <col style="width:20%">
+                        <col style="width:20%">
+                    </colgroup>
+                    <tbody>
                     @forelse($ownTasks as $task)
                     <tr>
                         <td>{{ $task->title }}</td>
@@ -309,18 +351,37 @@
         @endphp
 
         @if($pendingBundles->count() > 0)
-            <div class="table-scroll">
-            <table class="table table-bordered table-striped m-0" id="approvalTable">
-                <thead class="table-light">
-                    <tr>
-                        <th>Bundle ID</th>
-                        <th>Requested By</th>
-                        <th>Goals</th>
-                        <th>Action</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach($pendingBundles as $bundle)
+            <div class="table-fixed-header">
+                <table class="table table-bordered table-striped m-0">
+                    <colgroup>
+                        <col style="width:15%">
+                        <col style="width:20%">
+                        <col style="width:40%">
+                        <col style="width:15%">
+                        <col style="width:10%">
+                    </colgroup>
+                    <thead>
+                        <tr>
+                            <th>Bundle ID</th>
+                            <th>Requested By</th>
+                            <th>Goals</th>
+                            <th>Date</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+            <div class="table-scroll-container">
+                <table class="table table-bordered table-striped m-0" id="approvalTable">
+                    <colgroup>
+                        <col style="width:15%">
+                        <col style="width:20%">
+                        <col style="width:40%">
+                        <col style="width:15%">
+                        <col style="width:10%">
+                    </colgroup>
+                    <tbody>
+                        @foreach($pendingBundles as $bundle)
                         <tr data-bundle-id="{{ $bundle->id }}">
                             <td>{{ $bundle->id }}</td>
                             <td>{{ $bundle->requestedBy->name ?? 'N/A' }}</td>
