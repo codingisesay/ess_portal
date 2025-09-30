@@ -8,9 +8,10 @@
 ============================= --}}
 <div class="card mb-4">
     <div class="card-header bg-light"><strong>Goals Created by Organization</strong></div>
-    <div class="table-scroll">
-        <table class="table table-bordered table-striped" id="orgGoalsTable">
-            <thead>
+    <div class="table-fixed-header">
+        <!-- Header table (outside scroll) -->
+        <table class="table table-bordered table-striped m-0">
+            <thead class="table-light">
                 <tr>
                     <th>Goal</th>
                     <th>Period</th>
@@ -18,23 +19,86 @@
                     <th>Action</th>
                 </tr>
             </thead>
-            <tbody>
-                @foreach($allOrgGoals as $goal)
-                <tr>
-                    <td>{{ $goal->title }}</td>
-                    <td>{{ $goal->period_name }}</td>
-                    <td>{{ ucfirst($goal->priority) }}</td>
-                    <td>
-                        <button type="button" class="btn btn-sm btn-primary"
-                            onclick="addToBundle({{ $goal->id }}, '{{ addslashes($goal->title) }}', '{{ $goal->org_setting_id }}', 'Organization', this)">
-                            Add
-                        </button>
-                    </td>
-                </tr>
-                @endforeach
-            </tbody>
         </table>
+
+        <!-- Scrollable body -->
+        <div class="table-scroll org-goals-scroll">
+            <table class="table table-bordered table-striped m-0" id="orgGoalsTable">
+                <tbody>
+                    @foreach($allOrgGoals as $goal)
+                    <tr>
+                        <td>{{ $goal->title }}</td>
+                        <td>{{ $goal->period_name }}</td>
+                        <td>{{ ucfirst($goal->priority) }}</td>
+                        <td>
+                            <button type="button" class="btn btn-sm btn-primary"
+                                onclick="addToBundle({{ $goal->id }}, '{{ addslashes($goal->title) }}', '{{ $goal->org_setting_id }}', 'Organization', this)">
+                                Add
+                            </button>
+                        </td>
+                    </tr>
+                    @endforeach
+                </tbody>
+            </table>
+            </div>
+        </div>
     </div>
+</div>
+
+<!-- Create Own Task Modal -->
+<div class="modal fade" id="createOwnTaskModal" tabindex="-1" aria-labelledby="createOwnTaskModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header edit-goal-header text-white">
+        <h5 class="modal-title" id="createOwnTaskModalLabel">Create Task</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <form action="{{ url('/tasks') }}" method="POST">
+        @csrf
+        <div class="modal-body">
+          <!-- Row 1: Title, Priority -->
+          <div class="row g-3 mb-2">
+            <div class="col-md-8">
+              <label for="own_task_title" class="form-label">Title</label>
+              <input type="text" id="own_task_title" name="title" class="form-control" placeholder="Task title" required>
+            </div>
+            <div class="col-md-4">
+              <label for="own_task_priority" class="form-label">Priority</label>
+              <select id="own_task_priority" name="priority" class="form-control">
+                <option value="low">Low</option>
+                <option value="medium" selected>Medium</option>
+                <option value="high">High</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Row 2: Start & End Dates -->
+          <div class="row g-3 mb-2">
+            <div class="col-md-6">
+              <label for="own_task_start" class="form-label">Start Date</label>
+              <input type="date" id="own_task_start" name="start_date" class="form-control" required>
+            </div>
+            <div class="col-md-6">
+              <label for="own_task_end" class="form-label">End Date</label>
+              <input type="date" id="own_task_end" name="end_date" class="form-control" required>
+            </div>
+          </div>
+
+          <!-- Row 3: Description -->
+          <div class="row g-3 mb-2">
+            <div class="col-12">
+              <label for="own_task_description" class="form-label">Description</label>
+              <textarea id="own_task_description" name="description" class="form-control" placeholder="Task description"></textarea>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+          <button type="submit" class="btn btn-primary">Create</button>
+        </div>
+      </form>
+    </div>
+  </div>
 </div>
 
 
@@ -50,7 +114,8 @@
     {{-- Always send bundle_id once (if exists) --}}
     <input type="hidden" name="bundle_id" value="{{ $submittedGoals[0]->bundle_id ?? '' }}">
 
-   <table class="table table-bordered" id="bundleTable">
+   <div class="table-scroll">
+   <table class="table table-bordered m-0" id="bundleTable">
     <thead class="table-light">
         <tr>
             <th>Goal</th>
@@ -111,6 +176,7 @@
         @endforeach
     </tbody>
 </table>
+</div>
 
 
     {{-- Submit whole bundle --}}
@@ -162,9 +228,13 @@
 
     {{-- 3. Task List --}}
     <div class="card mb-4">
-        <div class="card-header bg-light"><strong>Task List (Own Tasks)</strong></div>
+        <div class="card-header bg-light"><strong>Create Own Task</strong></div>
         <div class="card-body">
-            <table class="table table-bordered table-striped">
+            <div class="d-flex justify-content-end mb-2">
+                <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#createOwnTaskModal">Create</button>
+            </div>
+            <div class="table-scroll">
+            <table class="table table-bordered table-striped m-0">
                 <thead class="table-light">
                     <tr>
                         <th>Task</th>
@@ -191,6 +261,7 @@
                     @endforelse
                 </tbody>
             </table>
+            </div>
         </div>
     </div>
 
@@ -198,7 +269,8 @@
     <div class="card mb-4">
         <div class="card-header bg-light"><strong>Insights on Organization Goals</strong></div>
         <div class="card-body">
-            <table class="table table-bordered table-striped">
+            <div class="table-scroll">
+            <table class="table table-bordered table-striped m-0">
                 <thead class="table-light">
                     <tr>
                         <th>Goal</th>
@@ -237,7 +309,8 @@
         @endphp
 
         @if($pendingBundles->count() > 0)
-            <table class="table table-bordered table-striped" id="approvalTable">
+            <div class="table-scroll">
+            <table class="table table-bordered table-striped m-0" id="approvalTable">
                 <thead class="table-light">
                     <tr>
                         <th>Bundle ID</th>

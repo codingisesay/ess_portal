@@ -27,6 +27,72 @@ h2 {
     margin-bottom: 20px;
 }
 
+/* ---------- Switch Dashboard Dropdown ---------- */
+label[for="roleSwitcher"] {
+    margin-right: 10px;
+    color: #0f172a;
+}
+
+#roleSwitcher {
+    width: 100%;               /* allow container to control width */
+    max-width: 360px;          /* cap width on large screens */
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    padding: 10px 40px 10px 12px; /* space for custom chevron */
+    background-color: #fff;
+    color: #1f2937;
+    outline: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%238A3366' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    background-size: 14px 14px;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    box-shadow: 0 0 0 0 rgba(138, 51, 102, 0);
+    transition: box-shadow 0.15s ease, border-color 0.15s ease;
+}
+
+#roleSwitcher:hover {
+    border-color: #c3c8d0;
+}
+
+#roleSwitcher:focus {
+    border-color: #8A3366;
+    box-shadow: 0 0 0 3px rgba(138, 51, 102, 0.15);
+}
+
+/* ---------- Edit Goal Modal ---------- */
+.edit-goal-header {
+    background-color: #8A3366 !important; /* theme button color */
+}
+
+/* Keep 'Add Task' button color stable (modal trigger) */
+button.btn.btn-secondary[data-bs-target="#createTaskModal"],
+button.btn.btn-secondary[data-bs-target="#createTaskModal"]:hover,
+button.btn.btn-secondary[data-bs-target="#createTaskModal"]:focus,
+button.btn.btn-secondary[data-bs-target="#createTaskModal"]:active,
+button.btn.btn-secondary[data-bs-target="#createTaskModal"]:focus:active,
+button.btn.btn-secondary[data-bs-target="#createTaskModal"].show {
+    background-color: #8a3366 !important; /* same as .btn-secondary */
+    border-color: #8a3366!important;
+    color: #fff !important;
+    box-shadow: none !important;
+}
+
+/* Keep 'Create' button color stable (Manager Dashboard modal trigger) */
+button.btn.btn-secondary[data-bs-target="#createOwnTaskModal"],
+button.btn.btn-secondary[data-bs-target="#createOwnTaskModal"]:hover,
+button.btn.btn-secondary[data-bs-target="#createOwnTaskModal"]:focus,
+button.btn.btn-secondary[data-bs-target="#createOwnTaskModal"]:active,
+button.btn.btn-secondary[data-bs-target="#createOwnTaskModal"]:focus:active,
+button.btn.btn-secondary[data-bs-target="#createOwnTaskModal"].show {
+    background-color: #8A3366!important; /* keep Bootstrap secondary color */
+    border-color: #8A3366 !important;
+    color: #fff !important;
+    box-shadow: none !important;
+}
+
 /* ---------- Card Styling ---------- */
 .card {
     border: 1px solid #e5e7eb;
@@ -149,6 +215,45 @@ ul {
     border-collapse: separate;
     border-spacing: 0;
     width: 100%;
+}
+
+/* ---------- Fixed header table (header outside, body scrolls) ---------- */
+.table-fixed-header { width: 100%; }
+.table-fixed-header .table { table-layout: fixed; }
+.table-fixed-header .table thead th,
+.table-fixed-header .table tbody td { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+/* Column widths (match both header and body by nth-child) */
+.table-fixed-header .table thead th:nth-child(1),
+.table-fixed-header .table tbody td:nth-child(1) { width: 26%; }
+.table-fixed-header .table thead th:nth-child(2),
+.table-fixed-header .table tbody td:nth-child(2) { width: 14%; }
+.table-fixed-header .table thead th:nth-child(3),
+.table-fixed-header .table tbody td:nth-child(3) { width: 12%; }
+.table-fixed-header .table thead th:nth-child(4),
+.table-fixed-header .table tbody td:nth-child(4) { width: 12%; }
+.table-fixed-header .table thead th:nth-child(5),
+.table-fixed-header .table tbody td:nth-child(5) { width: 12%; }
+.table-fixed-header .table thead th:nth-child(6),
+.table-fixed-header .table tbody td:nth-child(6) { width: 12%; }
+.table-fixed-header .table thead th:nth-child(7),
+.table-fixed-header .table tbody td:nth-child(7) { width: 12%; }
+
+/* Scroll area height for Goals table (header outside, body scrolls) */
+.table-fixed-header .table-scroll {
+    max-height: 60vh;      /* choose a height or use 400px */
+    overflow-y: auto;
+    overflow-x: hidden;
+    -webkit-overflow-scrolling: touch;
+}
+
+.org-goals-scroll { /* half-screen body scroll for manager org goals table */
+    max-height: 50vh !important;
+}
+
+.table-fixed-header .table-scroll table {
+    width: 100%;
+    table-layout: fixed;
 }
 
 /* ---------- Small Buttons in Table ---------- */
