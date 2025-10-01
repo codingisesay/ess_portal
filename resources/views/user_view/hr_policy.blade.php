@@ -4,6 +4,19 @@
 error_reporting(0);
 ?>
 
+@php
+    $policyCollection = collect($policies ?? []);
+    $policiesByCategory = $policyCollection->groupBy('policy_categorie_id')->map(function ($items) {
+        return $items->map(function ($policy) {
+            return [
+                'id' => $policy->id,
+                'title' => $policy->policy_title,
+                'category_id' => $policy->policy_categorie_id,
+            ];
+        })->values();
+    });
+@endphp
+
  <head>
      <meta charset="UTF-8">
      <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -14,14 +27,20 @@ error_reporting(0);
  </head>
  <body>
      <!-- Header Section -->
-     <div class="header mx-4">
-         <div class="search-bar">
-             <input type="text" placeholder="Search Category..." id="searchInput">
-             <div class="search-icon-circle">
-                 <img src="{{ asset('user_end/images/search (2) 3.png') }}" alt="Search Icon">
+     <!-- <div class="header mx-4"> -->
+         <div class="header-content">
+             <div class="search-bar">
+                 <input type="text" placeholder="Search Category..." id="searchInput">
+                 <div class="search-icon-circle">
+                     <img src="{{ asset('user_end/images/search (2) 3.png') }}" alt="Search Icon">
+                 </div>
+             </div>
+
+             <div class="subpolicies-container" id="subpoliciesContainer" hidden>
+                 <div class="subpolicies-scroll" id="subpoliciesScroll"></div>
              </div>
          </div>
-     </div>
+     <!-- </div> -->
 
      <!-- Main Content Container -->
      <div class="main-container mx-">
@@ -42,33 +61,29 @@ error_reporting(0);
          </div>
          <!-- Content Area -->
          @foreach($policies->groupBy('policy_categorie_id') as $categoryId => $categoryPolicies)
-             <div class="content-area  my-2" data-category="{{ $categoryId }}">
+            <div class="content-area  my-2" data-category="{{ $categoryId }}">
                 <div class="policy-slider">
                     <div class="policy-track">
                         @foreach($categoryPolicies as $policy)
-                            <div class="policy-card">
-                                <a href="{{ Storage::url($policy->docLink) }}" class="download-btn" download>
-                                    <img src="{{ asset('user_end/images/download 1.png') }}" alt="Download Icon"> Download
-                                </a>
-
-                                <div class="policy-content">
-                                    <div class="content-text">
-                                        <div class="content-item">
-                                            <h3>{{ $policy->policy_title }}</h3>
+                            <div class="policy-card" data-policy-id="{{ $policy->id }}" data-category-id="{{ $categoryId }}">
+                                <div class="policy-folder">
+                                    <div class="folder-header">
+                                        <h5 class="folder-title">{{ $policy->policy_title }}</h5>
+                                        <a href="{{ Storage::url($policy->docLink) }}" class="download-btn" download>
+                                            <img src="{{ asset('user_end/images/download 1.png') }}" alt="Download Icon"> Download
+                                        </a>
+                                    </div>
+                                    <div class="folder-content">
+                                        <div class="content-text">
                                             <p>{{ $policy->policy_content }}</p>
                                         </div>
-                                    </div>
-                                    <div class="content-image">
-                                        <!-- Fetch content image from storage -->
-                                        <img src="{{ Storage::url($policy->imgLink) }}">
+                                        <div class="content-image">
+                                            <img src="{{ Storage::url($policy->imgLink) }}" alt="Policy Image">
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         @endforeach
-                    </div>
-                    <div class="slider-nav">
-                        <button class="prev" aria-label="Previous">&#10094;</button>
-                        <button class="next" aria-label="Next">&#10095;</button>
                     </div>
                 </div>
             </div>
@@ -81,6 +96,9 @@ error_reporting(0);
         document.addEventListener("DOMContentLoaded", function () {
             const categoryItems = document.querySelectorAll('.category-item');
             const contentAreas = document.querySelectorAll('.content-area');
+            const subpoliciesContainer = document.getElementById('subpoliciesContainer');
+            const subpoliciesScroll = document.getElementById('subpoliciesScroll');
+            const policiesByCategory = @json($policiesByCategory);
 
             // Function to reset all content areas
             const resetContentAreas = () => {
@@ -100,6 +118,99 @@ error_reporting(0);
                 });
             };
 
+            const showPolicyCard = (policyId) => {
+                const activeArea = document.querySelector('.content-area.active');
+                if (!activeArea) return;
+
+                const cards = activeArea.querySelectorAll('.policy-card');
+                cards.forEach(card => {
+                    const isMatch = card.getAttribute('data-policy-id') === String(policyId);
+
+                    if (isMatch) {
+                        card.classList.remove('policy-card-hidden');
+                        card.classList.add('folder-open');
+
+                        const title = card.querySelector('.folder-title');
+                        const icon = card.querySelector('.folder-icon');
+                        if (title) {
+                            title.setAttribute('aria-expanded', 'true');
+                        }
+                        if (icon) {
+                            icon.style.transform = 'rotate(90deg)';
+                        }
+
+                        card.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    } else {
+                        card.classList.remove('folder-open');
+                        card.classList.add('policy-card-hidden');
+
+                        const otherTitle = card.querySelector('.folder-title');
+                        const otherIcon = card.querySelector('.folder-icon');
+                        if (otherTitle) {
+                            otherTitle.setAttribute('aria-expanded', 'false');
+                        }
+                        if (otherIcon) {
+                            otherIcon.style.transform = 'rotate(0deg)';
+                        }
+                    }
+                });
+            };
+
+            const renderSubpolicies = (categoryId) => {
+                if (!subpoliciesContainer || !subpoliciesScroll) {
+                    return;
+                }
+
+                const items = policiesByCategory[categoryId] || [];
+                const targetArea = document.querySelector(`.content-area[data-category="${categoryId}"]`);
+                const areaCards = targetArea ? targetArea.querySelectorAll('.policy-card') : [];
+
+                areaCards.forEach(card => {
+                    card.classList.remove('policy-card-hidden');
+                    card.classList.remove('folder-open');
+
+                    const title = card.querySelector('.folder-title');
+                    const icon = card.querySelector('.folder-icon');
+                    if (title) {
+                        title.setAttribute('aria-expanded', 'false');
+                    }
+                    if (icon) {
+                        icon.style.transform = 'rotate(0deg)';
+                    }
+                });
+
+                if (!items.length) {
+                    subpoliciesScroll.innerHTML = '';
+                    subpoliciesContainer.setAttribute('hidden', '');
+                    return;
+                }
+
+                subpoliciesScroll.innerHTML = items.map(item => `
+                    <div class="subpolicy-item" data-policy-id="${item.id}" data-category-id="${item.category_id}">
+                        <div class="subpolicy-text">${item.title}</div>
+                    </div>
+                `).join('');
+
+                subpoliciesContainer.removeAttribute('hidden');
+
+                const subpolicyItems = subpoliciesScroll.querySelectorAll('.subpolicy-item');
+                subpolicyItems.forEach(subpolicyItem => {
+                    subpolicyItem.addEventListener('click', () => {
+                        subpolicyItems.forEach(item => item.classList.remove('active'));
+                        subpolicyItem.classList.add('active');
+
+                        const policyId = subpolicyItem.getAttribute('data-policy-id');
+                        showPolicyCard(policyId);
+                    });
+                });
+
+                if (subpolicyItems.length > 0) {
+                    subpolicyItems[0].click();
+                }
+            };
+
+            window.renderSubpolicies = renderSubpolicies;
+
             // Event listener for category selection
             categoryItems.forEach(item => {
                 item.addEventListener('click', function () {
@@ -115,6 +226,8 @@ error_reporting(0);
 
                     // Show content for the selected category
                     showCategoryContent(categoryId);
+
+                    renderSubpolicies(categoryId);
                 });
             });
 
@@ -124,118 +237,98 @@ error_reporting(0);
                 const firstCategoryId = firstCategory.getAttribute('data-category');
                 firstCategory.classList.add('active'); // Mark the first category as active
                 showCategoryContent(firstCategoryId);
+                renderSubpolicies(firstCategoryId);
             }
         });
     </script>
     <script>
-        // Toggle open/close of individual policy content on title click
+        // Enhanced folder-like policy interaction
         document.addEventListener('DOMContentLoaded', function() {
-            function wirePolicyToggles(scope) {
+            function initPolicyFolders(scope) {
                 const cards = (scope || document).querySelectorAll('.policy-card');
                 cards.forEach(card => {
-                    const title = card.querySelector('.content-item h3');
-                    if (!title) return;
+                    const title = card.querySelector('.folder-title');
+                    const content = card.querySelector('.folder-content');
+
+                    if (!title || !content) return;
+
                     // Avoid double-binding
                     if (title.dataset.bound === '1') return;
                     title.dataset.bound = '1';
+
+                    // Style as folder header
                     title.style.cursor = 'pointer';
                     title.setAttribute('role', 'button');
                     title.setAttribute('tabindex', '0');
-                    title.addEventListener('click', () => toggleCard(card));
+                    title.setAttribute('aria-expanded', 'false');
+
+                    // Add folder icon
+                    const folderIcon = document.createElement('span');
+                    folderIcon.className = 'folder-icon';
+                    folderIcon.innerHTML = '▼';
+                    folderIcon.style.marginRight = '0.75rem';
+                    folderIcon.style.fontSize = '1.1rem';
+                    folderIcon.style.transition = 'transform 0.3s ease';
+
+                    title.insertBefore(folderIcon, title.firstChild);
+
+                    // Click handler for folder toggle
+                    const toggleFolder = () => {
+                        const isOpen = card.classList.contains('folder-open');
+                        const allCards = card.closest('.content-area')?.querySelectorAll('.policy-card') || [];
+
+                        if (isOpen) {
+                            // Close folder
+                            card.classList.remove('folder-open');
+                            title.setAttribute('aria-expanded', 'false');
+                            folderIcon.style.transform = 'rotate(0deg)';
+                        } else {
+                            // Close other open folders first
+                            allCards.forEach(otherCard => {
+                                if (otherCard !== card && otherCard.classList.contains('folder-open')) {
+                                    otherCard.classList.remove('folder-open');
+                                    const otherTitle = otherCard.querySelector('.folder-title');
+                                    const otherIcon = otherCard.querySelector('.folder-icon');
+                                    if (otherTitle && otherIcon) {
+                                        otherTitle.setAttribute('aria-expanded', 'false');
+                                        otherIcon.style.transform = 'rotate(0deg)';
+                                    }
+                                }
+                            });
+
+                            // Open current folder
+                            card.classList.add('folder-open');
+                            title.setAttribute('aria-expanded', 'true');
+                            folderIcon.style.transform = 'rotate(90deg)';
+                        }
+                    };
+
+                    title.addEventListener('click', toggleFolder);
                     title.addEventListener('keydown', (e) => {
                         if (e.key === 'Enter' || e.key === ' ') {
                             e.preventDefault();
-                            toggleCard(card);
+                            toggleFolder();
                         }
                     });
                 });
             }
 
-            function toggleCard(targetCard) {
-                // Close other open cards within the same content area
-                const contentArea = targetCard.closest('.content-area');
-                if (contentArea) {
-                    contentArea.querySelectorAll('.policy-card.open').forEach(openCard => {
-                        if (openCard !== targetCard) openCard.classList.remove('open');
-                    });
-                }
-                targetCard.classList.toggle('open');
-            }
+            // Initial binding
+            initPolicyFolders(document);
 
-            // Initial bind for currently rendered cards
-            wirePolicyToggles(document);
-
-            // Re-bind after category switches (content areas hide/show)
+            // Re-bind after category switches
             const categoryItems = document.querySelectorAll('.category-item');
             categoryItems.forEach(item => {
                 item.addEventListener('click', function () {
-                    // Bind within the newly shown content area
                     const categoryId = item.getAttribute('data-category');
                     const shownArea = document.querySelector(`.content-area[data-category="${categoryId}"]`);
-                    if (shownArea) wirePolicyToggles(shownArea);
+                    if (shownArea) {
+                        setTimeout(() => initPolicyFolders(shownArea), 100);
+                    }
                 });
             });
         });
     </script>
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const sliders = document.querySelectorAll('.policy-slider');
-
-        sliders.forEach((slider) => {
-            const track = slider.querySelector('.policy-track');
-            const slides = slider.querySelectorAll('.policy-card');
-            const prevBtn = slider.querySelector('.slider-nav .prev');
-            const nextBtn = slider.querySelector('.slider-nav .next');
-            let index = 0;
-
-            const update = () => {
-                const offset = -index * 100;
-                track.style.transform = `translateX(${offset}%)`;
-                if (prevBtn) prevBtn.disabled = index <= 0;
-                if (nextBtn) nextBtn.disabled = index >= slides.length - 1;
-            };
-
-            if (prevBtn) prevBtn.addEventListener('click', () => {
-                if (index > 0) { index--; update(); }
-            });
-            if (nextBtn) nextBtn.addEventListener('click', () => {
-                if (index < slides.length - 1) { index++; update(); }
-            });
-
-            // Touch swipe support
-            let startX = 0;
-            let isSwiping = false;
-            const threshold = 40; // px
-
-            track.addEventListener('touchstart', (e) => {
-                if (!e.touches || e.touches.length === 0) return;
-                startX = e.touches[0].clientX;
-                isSwiping = true;
-            }, { passive: true });
-
-            track.addEventListener('touchmove', (e) => {
-                // prevent vertical scroll only if horizontal intent is clear
-            }, { passive: true });
-
-            track.addEventListener('touchend', (e) => {
-                if (!isSwiping) return;
-                const endX = e.changedTouches && e.changedTouches[0] ? e.changedTouches[0].clientX : startX;
-                const deltaX = endX - startX;
-                if (Math.abs(deltaX) > threshold) {
-                    if (deltaX < 0 && index < slides.length - 1) {
-                        index++;
-                    } else if (deltaX > 0 && index > 0) {
-                        index--;
-                    }
-                    update();
-                }
-                isSwiping = false;
-            });
-
-            update();
-        });
-    });
-</script>
 
 
 <script>
@@ -291,7 +384,7 @@ error_reporting(0);
             if (!firstMatch) {
                 // No category name matched; try to match any policy title/content in content areas
                 contentAreas.forEach(area => {
-                    const inArea = area.querySelector('.policy-card h3, .policy-card p');
+                    const inArea = area.querySelector('.folder-title, .folder-content p');
                     if (!firstMatch && inArea && area.textContent.toLowerCase().includes(term)) {
                         // Map content-area back to its header category item
                         const catId = area.getAttribute('data-category');
