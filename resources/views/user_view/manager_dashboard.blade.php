@@ -71,35 +71,53 @@
           <div class="row g-3 mb-2">
             <div class="col-md-8">
               <label for="own_task_title" class="form-label">Title</label>
-              <input type="text" id="own_task_title" name="title" class="form-control" placeholder="Task title" required>
+              <input type="text" id="own_task_title" name="title" class="form-control" placeholder="Task title"
+              required minlength="3" maxlength="100"
+              title="Task title must be between 3 and 100 characters" pattern=".*\S.*"   
+              required>
             </div>
             <div class="col-md-4">
               <label for="own_task_priority" class="form-label">Priority</label>
-              <select id="own_task_priority" name="priority" class="form-control">
+              <select id="own_task_priority" name="priority" class="form-control" required>
                 <option value="low">Low</option>
                 <option value="medium" selected>Medium</option>
                 <option value="high">High</option>
               </select>
+                <div class="invalid-feedback">Please select a priority.</div>
             </div>
           </div>
 
           <!-- Row 2: Start & End Dates -->
-          <div class="row g-3 mb-2">
+            <div class="row g-3 mb-2">
             <div class="col-md-6">
-              <label for="own_task_start" class="form-label">Start Date</label>
-              <input type="date" id="own_task_start" name="start_date" class="form-control" required>
+                <label for="own_task_start" class="form-label">Start Date</label>
+                <input type="date" 
+                    id="own_task_start" 
+                    name="start_date" 
+                    class="form-control" 
+                    required
+                    min="{{ $activeCycle->start_date }}"
+                    max="{{ $activeCycle->end_date }}">
             </div>
             <div class="col-md-6">
-              <label for="own_task_end" class="form-label">End Date</label>
-              <input type="date" id="own_task_end" name="end_date" class="form-control" required>
+                <label for="own_task_end" class="form-label">End Date</label>
+                <input type="date" 
+                    id="own_task_end" 
+                    name="end_date" 
+                    class="form-control" 
+                    required
+                    min="{{ $activeCycle->start_date }}"
+                    max="{{ $activeCycle->end_date }}">
             </div>
-          </div>
+            </div>
+
 
           <!-- Row 3: Description -->
           <div class="row g-3 mb-2">
             <div class="col-12">
               <label for="own_task_description" class="form-label">Description</label>
-              <textarea id="own_task_description" name="description" class="form-control" placeholder="Task description"></textarea>
+              <textarea id="own_task_description" name="description" class="form-control" placeholder="Task description"required maxlength="500"
+                        pattern=".*\S.*"></textarea>
             </div>
           </div>
         </div>
@@ -172,12 +190,16 @@
                     <input type="date" 
                            name="custom_start[{{ $goal->goal_id }}]" 
                            value="{{ $goal->start_date }}" 
-                           class="form-control mb-1">
+                           class="form-control mb-1"
+                            min="{{ $activeCycle->start_date }}" 
+                            max="{{ $activeCycle->end_date }}">
 
                     <input type="date" 
                            name="custom_end[{{ $goal->goal_id }}]" 
                            value="{{ $goal->end_date }}" 
-                           class="form-control">
+                           class="form-control"
+                           min="{{ $activeCycle->start_date }}" 
+                           max="{{ $activeCycle->end_date }}">
 
                     <input type="hidden" name="goal_ids[]" value="{{ $goal->goal_id }}">
                     <input type="hidden" name="org_setting_ids[{{ $goal->goal_id }}]" value="{{ $goal->org_setting_id }}">
@@ -243,12 +265,21 @@
                     </div>
                     <div class="col-md-2">
                         <label for="customGoalStart" class="form-label">Start Date</label>
-                        <input type="date" id="customGoalStart" class="form-control" required>
+                        <input type="date" id="customGoalStart" class="form-control" required
+                        min="{{ $activeCycle->start_date }}" 
+                        max="{{ $activeCycle->end_date }}">
                     </div>
                     <div class="col-md-2">
                         <label for="customGoalEnd" class="form-label">End Date</label>
-                        <input type="date" id="customGoalEnd" class="form-control" required>
+                        <input type="date" id="customGoalEnd" class="form-control" required
+                        min="{{ $activeCycle->start_date }}" 
+                        max="{{ $activeCycle->end_date }}">
                     </div>
+                    <div class="col-12">
+                        <label for="description" class="form-label">Description</label>
+                        <textarea id="description" name="description" class="form-control" placeholder="Description"></textarea>
+                    </div>
+                
                 </div>
                 <div class="row mt-2">
                     <div class="col-12 d-flex justify-content-end">
