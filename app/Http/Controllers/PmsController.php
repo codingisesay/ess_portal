@@ -251,21 +251,25 @@ class PmsController extends Controller
         return response()->json(Task::all());
     }
 
-    public function tasksStore(Request $request) {
-        $user = Auth::user();
+// ============================
+// TASKS
+// ============================
+public function tasksStore(Request $request)
+{
+    $user = Auth::user();
 
-        $request->validate([
-            'id' => 'nullable|integer',
-            'title' => 'required|string|max:255',
-            'description' => 'nullable|string',
-            'priority' => 'nullable|in:low,medium,high',
-            'status' => 'nullable|in:pending,in-progress,completed',
-            'assigned_to' => 'required|integer',
-            'start_date' => 'nullable|date',
-            'end_date' => 'nullable|date|after_or_equal:start_date',
-        ]);
+    $request->validate([
+        'id'          => 'nullable|integer',
+        'title'       => 'required|string|max:255',
+        'description' => 'nullable|string',
+        'priority'    => 'nullable|in:low,medium,high',
+        'status'      => 'nullable|in:pending,in-progress,completed',
+        'start_date'  => 'nullable|date',
+        'end_date'    => 'nullable|date|after_or_equal:start_date',
+    ]);
 
-        $task = Task::updateOrCreate(
+    try {
+        Task::updateOrCreate(
             ['id' => $request->id],
             [
                 'title'       => $request->title,
@@ -273,40 +277,49 @@ class PmsController extends Controller
                 'priority'    => $request->priority,
                 'status'      => $request->status ?? 'pending',
                 'created_by'  => $user->id,
-                'assigned_to' => $request->assigned_to ?? $user->id,
+                'assigned_to' => $user->id, // Employee assigns to self
                 'start_date'  => $request->start_date,
                 'end_date'    => $request->end_date,
             ]
         );
 
-        return response()->json($task, $request->id ? 200 : 201);
+        return redirect()->back()->with('success', 'Task created successfully!');
+    } catch (\Exception $e) {
+        return redirect()->back()->with('error', 'Failed to create task. Please try again.');
     }
+}
 
-    public function tasksUpdate(Request $request, $id) {
-        $task = Task::findOrFail($id);
+public function tasksUpdate(Request $request, $id)
+{
+    $task = Task::findOrFail($id);
 
-        $request->validate([
-            'title' => 'sometimes|string|max:255',
-            'description' => 'nullable|string',
-            'priority' => 'sometimes|in:low,medium,high',
-            'status' => 'sometimes|in:pending,in-progress,completed',
-            'assigned_to' => 'sometimes|integer',
-            'start_date' => 'nullable|date',
-            'end_date' => 'nullable|date|after_or_equal:start_date',
-        ]);
+    $request->validate([
+        'title'       => 'sometimes|string|max:255',
+        'description' => 'nullable|string',
+        'priority'    => 'sometimes|in:low,medium,high',
+        'status'      => 'sometimes|in:pending,in-progress,completed',
+        'start_date'  => 'nullable|date',
+        'end_date'    => 'nullable|date|after_or_equal:start_date',
+    ]);
 
+    try {
         $task->update($request->all());
-        return response()->json($task);
+        return redirect()->back()->with('success', 'Task updated successfully!');
+    } catch (\Exception $e) {
+        return redirect()->back()->with('error', 'Failed to update task.');
     }
+}
 
-    public function tasksShow($id) {
-        return response()->json(Task::findOrFail($id));
-    }
-
-    public function tasksDestroy($id) {
+public function tasksDestroy($id)
+{
+    try {
         Task::findOrFail($id)->delete();
-        return response()->json(['message'=>'Task deleted']);
+        return redirect()->back()->with('success', 'Task deleted successfully!');
+    } catch (\Exception $e) {
+        return redirect()->back()->with('error', 'Failed to delete task.');
     }
+}
+
 
       // ============================
     // GOAL ASSIGNMENTS
@@ -609,6 +622,7 @@ $individualSubmittedGoals = \DB::table('goal_approvals')
     ->select(
         'goals.id as goal_id',
         'goals.title',
+        'goals.description',
         'goals.org_setting_id',
         'goals.start_date',
         'goals.end_date',

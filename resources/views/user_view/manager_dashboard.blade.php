@@ -1,4 +1,5 @@
 <link rel="stylesheet" href="{{ asset('/user_end/css/pms-dashboard.css') }}">
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <div class="container">
     <h2>Manager Dashboard</h2>
@@ -8,8 +9,14 @@
 ============================= --}}
 <div class="card mb-4">
     <div class="card-header bg-light"><strong>Goals Created by Organization</strong></div>
-    <div class="table-scroll">
-        <table class="table table-bordered table-striped" id="orgGoalsTable">
+    <div class="table-fixed-header">
+        <table class="table table-bordered table-striped m-0">
+            <colgroup>
+                <col style="width:40%">
+                <col style="width:20%">
+                <col style="width:20%">
+                <col style="width:20%">
+            </colgroup>
             <thead>
                 <tr>
                     <th>Goal</th>
@@ -18,7 +25,17 @@
                     <th>Action</th>
                 </tr>
             </thead>
-            <tbody>
+        </table>
+    </div>
+    <div class="table-scroll-container">
+        <table class="table table-bordered table-striped m-0">
+            <colgroup>
+                <col style="width:40%">
+                <col style="width:20%">
+                <col style="width:20%">
+                <col style="width:20%">
+            </colgroup>
+            <tbody id="orgGoalsTable">
                 @foreach($allOrgGoals as $goal)
                 <tr>
                     <td>{{ $goal->title }}</td>
@@ -35,6 +52,82 @@
             </tbody>
         </table>
     </div>
+        </div>
+    </div>
+</div>
+
+<!-- Create Own Task Modal -->
+<div class="modal fade" id="createOwnTaskModal" tabindex="-1" aria-labelledby="createOwnTaskModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header edit-goal-header text-white">
+        <h5 class="modal-title" id="createOwnTaskModalLabel">Create Task</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <form action="{{ url('/tasks') }}" method="POST">
+        @csrf
+        <div class="modal-body">
+          <!-- Row 1: Title, Priority -->
+          <div class="row g-3 mb-2">
+            <div class="col-md-8">
+              <label for="own_task_title" class="form-label">Title</label>
+              <input type="text" id="own_task_title" name="title" class="form-control" placeholder="Task title"
+              required minlength="3" maxlength="100"
+              title="Task title must be between 3 and 100 characters" pattern=".*\S.*"   
+              required>
+            </div>
+            <div class="col-md-4">
+              <label for="own_task_priority" class="form-label">Priority</label>
+              <select id="own_task_priority" name="priority" class="form-control" required>
+                <option value="low">Low</option>
+                <option value="medium" selected>Medium</option>
+                <option value="high">High</option>
+              </select>
+                <div class="invalid-feedback">Please select a priority.</div>
+            </div>
+          </div>
+
+          <!-- Row 2: Start & End Dates -->
+            <div class="row g-3 mb-2">
+            <div class="col-md-6">
+                <label for="own_task_start" class="form-label">Start Date</label>
+                <input type="date" 
+                    id="own_task_start" 
+                    name="start_date" 
+                    class="form-control" 
+                    required
+                    min="{{ $activeCycle->start_date }}"
+                    max="{{ $activeCycle->end_date }}">
+            </div>
+            <div class="col-md-6">
+                <label for="own_task_end" class="form-label">End Date</label>
+                <input type="date" 
+                    id="own_task_end" 
+                    name="end_date" 
+                    class="form-control" 
+                    required
+                    min="{{ $activeCycle->start_date }}"
+                    max="{{ $activeCycle->end_date }}">
+            </div>
+            </div>
+
+
+          <!-- Row 3: Description -->
+          <div class="row g-3 mb-2">
+            <div class="col-12">
+              <label for="own_task_description" class="form-label">Description</label>
+              <textarea id="own_task_description" name="description" class="form-control" placeholder="Task description"required maxlength="500"
+                        pattern=".*\S.*"></textarea>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+          <button type="submit" class="btn btn-primary">Create</button>
+        </div>
+      </form>
+    </div>
+  </div>
 </div>
 
 
@@ -44,20 +137,37 @@
 <div class="card mb-4">
     <div class="card-header bg-light"><strong>Additional Goals / Selected Org Goals</strong></div>
     <div class="card-body">
-     <form id="bundleForm" method="POST" action="{{ route('goal-bundles.submit') }}">
     @csrf
-
+     <form id="bundleForm" method="POST" action="{{ route('goal-bundles.submit') }}">
     {{-- Always send bundle_id once (if exists) --}}
     <input type="hidden" name="bundle_id" value="{{ $submittedGoals[0]->bundle_id ?? '' }}">
 
-   <table class="table table-bordered" id="bundleTable">
-    <thead class="table-light">
+   <div class="table-fixed-header">
+   <table class="table table-bordered table-striped m-0">
+    <colgroup>
+        <col style="width:40%">
+        <col style="width:15%">
+        <col style="width:15%">
+        <col style="width:30%">
+    </colgroup>
+    <thead>
         <tr>
             <th>Goal</th>
-            <th>Type / Status</th>
-            <th>Action</th>
+            <th>Type</th>
+            <th>Weightage</th>
+            <th>Actions</th>
         </tr>
     </thead>
+   </table>
+   </div>
+   <div class="table-scroll-container">
+   <table class="table table-bordered table-striped m-0" id="bundleTable">
+    <colgroup>
+        <col style="width:40%">
+        <col style="width:15%">
+        <col style="width:15%">
+        <col style="width:30%">
+    </colgroup>
     <tbody>
         @foreach($submittedGoals ?? [] as $goal)
         <tr>
@@ -80,12 +190,16 @@
                     <input type="date" 
                            name="custom_start[{{ $goal->goal_id }}]" 
                            value="{{ $goal->start_date }}" 
-                           class="form-control mb-1">
+                           class="form-control mb-1"
+                            min="{{ $activeCycle->start_date }}" 
+                            max="{{ $activeCycle->end_date }}">
 
                     <input type="date" 
                            name="custom_end[{{ $goal->goal_id }}]" 
                            value="{{ $goal->end_date }}" 
-                           class="form-control">
+                           class="form-control"
+                           min="{{ $activeCycle->start_date }}" 
+                           max="{{ $activeCycle->end_date }}">
 
                     <input type="hidden" name="goal_ids[]" value="{{ $goal->goal_id }}">
                     <input type="hidden" name="org_setting_ids[{{ $goal->goal_id }}]" value="{{ $goal->org_setting_id }}">
@@ -104,13 +218,21 @@
             <td>{{ ucfirst($goal->approval_status) }}</td>
             <td>
                 @if($goal->approval_status === 'rejected')
-                    <button type="button" class="btn btn-sm btn-danger" onclick="this.closest('tr').remove()">Remove</button>
-                @endif
+                <button type="button" class="btn btn-sm btn-danger" onclick="this.closest('tr').remove()">Remove</button>
+            @elseif($goal->approval_status === 'approved')
+                <button type="button" 
+                        class="btn btn-sm btn-primary add-insight-btn" 
+                        data-goal-id="{{ $goal->goal_id }}"
+                        data-goal-title="{{ $goal->title }}">
+                    Add Insight
+                </button>
+            @endif
             </td>
         </tr>
         @endforeach
     </tbody>
 </table>
+</div>
 
 
     {{-- Submit whole bundle --}}
@@ -143,12 +265,21 @@
                     </div>
                     <div class="col-md-2">
                         <label for="customGoalStart" class="form-label">Start Date</label>
-                        <input type="date" id="customGoalStart" class="form-control" required>
+                        <input type="date" id="customGoalStart" class="form-control" required
+                        min="{{ $activeCycle->start_date }}" 
+                        max="{{ $activeCycle->end_date }}">
                     </div>
                     <div class="col-md-2">
                         <label for="customGoalEnd" class="form-label">End Date</label>
-                        <input type="date" id="customGoalEnd" class="form-control" required>
+                        <input type="date" id="customGoalEnd" class="form-control" required
+                        min="{{ $activeCycle->start_date }}" 
+                        max="{{ $activeCycle->end_date }}">
                     </div>
+                    <div class="col-12">
+                        <label for="description" class="form-label">Description</label>
+                        <textarea id="description" name="description" class="form-control" placeholder="Description"></textarea>
+                    </div>
+                
                 </div>
                 <div class="row mt-2">
                     <div class="col-12 d-flex justify-content-end">
@@ -162,43 +293,104 @@
 
     {{-- 3. Task List --}}
     <div class="card mb-4">
-        <div class="card-header bg-light"><strong>Task List (Own Tasks)</strong></div>
+        <div class="card-header bg-light"><strong>Create Own Task</strong></div>
         <div class="card-body">
-            <table class="table table-bordered table-striped">
-                <thead class="table-light">
+            <div class="d-flex justify-content-end mb-2">
+                <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#createOwnTaskModal">Create</button>
+            </div>
+            <div class="table-fixed-header">
+                 <table class="table table-bordered table-striped m-0">
+                <colgroup>
+                    <col style="width:25%">
+                    <col style="width:15%">
+                    <col style="width:20%">
+                    <col style="width:20%">
+                    <col style="width:30%">
+                    <col style="width:10%">
+                </colgroup>
+                <thead>
                     <tr>
                         <th>Task</th>
                         <th>Status</th>
-                        <th>Edit</th>
+                        <th>Start Date</th>
+                        <th>End Date</th>
+                        <th>Description</th>
                         <th>Delete</th>
                     </tr>
                 </thead>
+            </table>
+        </div>
+
+        <div class="table-scroll-container">
+            <table class="table table-bordered table-striped m-0">
+                <colgroup>
+                    <col style="width:25%">
+                    <col style="width:15%">
+                    <col style="width:20%">
+                    <col style="width:20%">
+                    <col style="width:30%">
+                    <col style="width:10%">
+                </colgroup>
                 <tbody>
                     @forelse($ownTasks as $task)
-                    <tr>
-                        <td>{{ $task->title }}</td>
-                        <td>{{ ucfirst($task->status) }}</td>
-                        <td><a href="{{ url('/tasks/'.$task->id) }}" class="btn btn-sm btn-warning">Edit</a></td>
-                        <td>
-                            <form action="{{ url('/tasks/'.$task->id) }}" method="POST" style="display:inline-block">
-                                @csrf @method('DELETE')
-                                <button class="btn btn-sm btn-danger">Delete</button>
-                            </form>
-                        </td>
-                    </tr>
+                        <tr>
+                            <td>{{ $task->title }}</td>
+                            <td>{{ ucfirst($task->status) }}</td>
+                            <td>{{ $task->start_date ? \Carbon\Carbon::parse($task->start_date)->format('d M Y') : '-' }}</td>
+                            <td>{{ $task->start_date ? \Carbon\Carbon::parse($task->end_date)->format('d M Y') : '-' }}</td>
+                            <td>{{ $task->description ?? '-' }}</td>
+                            <td>
+                                <form action="{{ url('/tasks/'.$task->id) }}" method="POST" style="display:inline-block">
+                                    @csrf 
+                                    @method('DELETE')
+                                    <button class="btn btn-sm btn-danger">Delete</button>
+                                </form>
+                            </td>
+                        </tr>
                     @empty
-                    <tr><td colspan="4" class="text-center">No tasks yet</td></tr>
+                        <tr><td colspan="5" class="text-center">No tasks yet</td></tr>
                     @endforelse
                 </tbody>
             </table>
+            </div>
         </div>
     </div>
+
+    <!-- Add Insight Modal -->
+<div class="modal fade" id="insightModal" tabindex="-1" aria-labelledby="insightModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+   <form id="insightForm">
+    @csrf
+    <input type="hidden" name="id" id="insight_id"> <!-- for editing -->
+    <input type="hidden" name="goal_id" id="insight_goal_id">
+    
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Add Insight for <span id="insight_goal_title"></span></h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="mb-3">
+            <label for="insight_description" class="form-label">Insight</label>
+            <textarea name="description" id="insight_description" class="form-control" rows="4" required></textarea>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="submit" class="btn btn-success">Save Insight</button>
+      </div>
+    </div>
+</form>
+
+  </div>
+</div>
+
 
     {{-- 4. Insights Section --}}
     <div class="card mb-4">
         <div class="card-header bg-light"><strong>Insights on Organization Goals</strong></div>
         <div class="card-body">
-            <table class="table table-bordered table-striped">
+            <div class="table-scroll">
+            <table class="table table-bordered table-striped m-0">
                 <thead class="table-light">
                     <tr>
                         <th>Goal</th>
@@ -237,17 +429,37 @@
         @endphp
 
         @if($pendingBundles->count() > 0)
-            <table class="table table-bordered table-striped" id="approvalTable">
-                <thead class="table-light">
-                    <tr>
-                        <th>Bundle ID</th>
-                        <th>Requested By</th>
-                        <th>Goals</th>
-                        <th>Action</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach($pendingBundles as $bundle)
+            <div class="table-fixed-header">
+                <table class="table table-bordered table-striped m-0">
+                    <colgroup>
+                        <col style="width:15%">
+                        <col style="width:20%">
+                        <col style="width:40%">
+                        <col style="width:15%">
+                        <col style="width:10%">
+                    </colgroup>
+                    <thead>
+                        <tr>
+                            <th>Bundle ID</th>
+                            <th>Requested By</th>
+                            <th>Goals</th>
+                            <th>Date</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+            <div class="table-scroll-container">
+                <table class="table table-bordered table-striped m-0" id="approvalTable">
+                    <colgroup>
+                        <col style="width:15%">
+                        <col style="width:20%">
+                        <col style="width:40%">
+                        <col style="width:15%">
+                        <col style="width:10%">
+                    </colgroup>
+                    <tbody>
+                        @foreach($pendingBundles as $bundle)
                         <tr data-bundle-id="{{ $bundle->id }}">
                             <td>{{ $bundle->id }}</td>
                             <td>{{ $bundle->requestedBy->name ?? 'N/A' }}</td>
@@ -272,6 +484,55 @@
     </div>
 </div>
 </div>
+
+
+<script>
+   document.addEventListener("DOMContentLoaded", function () {
+    const insightModal = new bootstrap.Modal(document.getElementById('insightModal'));
+    const form = document.getElementById("insightForm");
+
+    // When "Add Insight" button is clicked
+    document.querySelectorAll(".add-insight-btn").forEach(btn => {
+        btn.addEventListener("click", function () {
+            document.getElementById("insight_id").value = ""; // reset (new)
+            document.getElementById("insight_goal_id").value = this.dataset.goalId;
+            document.getElementById("insight_goal_title").textContent = this.dataset.goalTitle;
+            document.getElementById("insight_description").value = ""; // clear old text
+            insightModal.show();
+        });
+    });
+
+    // Handle submit
+    form.addEventListener("submit", async function (e) {
+        e.preventDefault();
+
+        const formData = new FormData(form);
+
+        const response = await fetch("{{ url('/insights') }}", {
+            method: "POST",
+            headers: {
+                "X-CSRF-TOKEN": document.querySelector('input[name="_token"]').value
+            },
+            body: formData
+        });
+
+        if (response.ok) {
+            const data = await response.json();
+            console.log("Insight saved:", data);
+
+            insightModal.hide();
+
+            // Optional: dynamically update UI without reload
+            alert("Insight saved successfully!");
+        } else {
+            alert("Error saving insight!");
+        }
+    });
+});
+
+
+</script>
+
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
 function approveBundle(id) {
@@ -338,7 +599,7 @@ function rejectBundle(id) {
 
 <script>
     let bundleTableBody = document.querySelector("#bundleTable tbody");
-let orgGoalsTableBody = document.querySelector("#orgGoalsTable tbody");
+let orgGoalsTableBody = document.querySelector("#orgGoalsTable");
 
 // Add organization goal to bundle and remove from Org Goals table
 function addToBundle(goalId, title, orgSettingId, type, button) {
@@ -414,7 +675,7 @@ document.getElementById('bundleForm').addEventListener('submit', function(e) {
     let formData = new FormData(this);
 
     fetch(this.action, {
-        method: 'POST',
+        method: 'POST',                                                                                                                                                                                                                                                 
         headers: { 'X-CSRF-TOKEN': '{{ csrf_token() }}' },
         body: formData
     })
@@ -423,7 +684,7 @@ document.getElementById('bundleForm').addEventListener('submit', function(e) {
         Swal.fire({
             icon: 'success',
             title: 'Submitted!',
-            text: data.message || 'Goals submitted for approval!',
+            text: data.message || 'Goals submitted for approval!',                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              
             timer: 2000,
             showConfirmButton: false
         });
