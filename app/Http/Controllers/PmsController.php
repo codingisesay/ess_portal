@@ -479,6 +479,9 @@ public function submitBundle(Request $request)
                     'end_date'       => $request->custom_end[$key] ?? $goal->end_date,
                     'status'         => 'pending', // reset for re-approval
                 ]);
+            } else {
+                \Log::warning("Goal ID {$goalId} not found. Skipping.");
+                continue;
             }
         }
 
