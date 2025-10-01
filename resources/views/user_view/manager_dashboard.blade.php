@@ -96,8 +96,8 @@
                     name="start_date" 
                     class="form-control" 
                     required
-                    min="{{ $activeCycle->start_date }}"
-                    max="{{ $activeCycle->end_date }}">
+                    min="{{ $activeCycle->start_date ?? '' }}" 
+                    max="{{ $activeCycle->end_date ?? '' }}">
             </div>
             <div class="col-md-6">
                 <label for="own_task_end" class="form-label">End Date</label>
@@ -106,8 +106,8 @@
                     name="end_date" 
                     class="form-control" 
                     required
-                    min="{{ $activeCycle->start_date }}"
-                    max="{{ $activeCycle->end_date }}">
+                    min="{{ $activeCycle->start_date ?? '' }}" 
+                    max="{{ $activeCycle->end_date ?? '' }}">
             </div>
             </div>
 
@@ -191,15 +191,15 @@
                            name="custom_start[{{ $goal->goal_id }}]" 
                            value="{{ $goal->start_date }}" 
                            class="form-control mb-1"
-                            min="{{ $activeCycle->start_date }}" 
-                            max="{{ $activeCycle->end_date }}">
+                            min="{{ $activeCycle->start_date ?? '' }}" 
+                            max="{{ $activeCycle->end_date ?? '' }}">
 
                     <input type="date" 
                            name="custom_end[{{ $goal->goal_id }}]" 
                            value="{{ $goal->end_date }}" 
                            class="form-control"
-                           min="{{ $activeCycle->start_date }}" 
-                           max="{{ $activeCycle->end_date }}">
+                          min="{{ $activeCycle->start_date ?? '' }}" 
+                          max="{{ $activeCycle->end_date ?? '' }}">
 
                     <input type="hidden" name="goal_ids[]" value="{{ $goal->goal_id }}">
                     <input type="hidden" name="org_setting_ids[{{ $goal->goal_id }}]" value="{{ $goal->org_setting_id }}">
@@ -266,14 +266,14 @@
                     <div class="col-md-2">
                         <label for="customGoalStart" class="form-label">Start Date</label>
                         <input type="date" id="customGoalStart" class="form-control" required
-                        min="{{ $activeCycle->start_date }}" 
-                        max="{{ $activeCycle->end_date }}">
+                        min="{{ $activeCycle->start_date ?? '' }}" 
+                        max="{{ $activeCycle->end_date ?? '' }}">
                     </div>
                     <div class="col-md-2">
                         <label for="customGoalEnd" class="form-label">End Date</label>
                         <input type="date" id="customGoalEnd" class="form-control" required
-                        min="{{ $activeCycle->start_date }}" 
-                        max="{{ $activeCycle->end_date }}">
+                        min="{{ $activeCycle->start_date ?? '' }}" 
+                        max="{{ $activeCycle->end_date ?? '' }}">
                     </div>
                     <div class="col-12">
                         <label for="description" class="form-label">Description</label>
