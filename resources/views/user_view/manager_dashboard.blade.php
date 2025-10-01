@@ -1,4 +1,5 @@
 <link rel="stylesheet" href="{{ asset('/user_end/css/pms-dashboard.css') }}">
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <div class="container">
     <h2>Manager Dashboard</h2>
@@ -119,7 +120,7 @@
     <div class="card-header bg-light"><strong>Additional Goals / Selected Org Goals</strong></div>
     <div class="card-body">
     @csrf
-
+     <form id="bundleForm" method="POST" action="{{ route('goal-bundles.submit') }}">
     {{-- Always send bundle_id once (if exists) --}}
     <input type="hidden" name="bundle_id" value="{{ $submittedGoals[0]->bundle_id ?? '' }}">
 
@@ -195,8 +196,15 @@
             <td>{{ ucfirst($goal->approval_status) }}</td>
             <td>
                 @if($goal->approval_status === 'rejected')
-                    <button type="button" class="btn btn-sm btn-danger" onclick="this.closest('tr').remove()">Remove</button>
-                @endif
+                <button type="button" class="btn btn-sm btn-danger" onclick="this.closest('tr').remove()">Remove</button>
+            @elseif($goal->approval_status === 'approved')
+                <button type="button" 
+                        class="btn btn-sm btn-primary add-insight-btn" 
+                        data-goal-id="{{ $goal->goal_id }}"
+                        data-goal-title="{{ $goal->title }}">
+                    Add Insight
+                </button>
+            @endif
             </td>
         </tr>
         @endforeach
@@ -260,52 +268,91 @@
                 <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#createOwnTaskModal">Create</button>
             </div>
             <div class="table-fixed-header">
-                <table class="table table-bordered table-striped m-0">
-                    <colgroup>
-                        <col style="width:40%">
-                        <col style="width:20%">
-                        <col style="width:20%">
-                        <col style="width:20%">
-                    </colgroup>
-                    <thead>
-                        <tr>
-                            <th>Task</th>
-                            <th>Status</th>
-                            <th>Edit</th>
-                            <th>Delete</th>
-                        </tr>
-                    </thead>
-                </table>
-            </div>
-            <div class="table-scroll-container">
-                <table class="table table-bordered table-striped m-0">
-                    <colgroup>
-                        <col style="width:40%">
-                        <col style="width:20%">
-                        <col style="width:20%">
-                        <col style="width:20%">
-                    </colgroup>
-                    <tbody>
-                    @forelse($ownTasks as $task)
+                 <table class="table table-bordered table-striped m-0">
+                <colgroup>
+                    <col style="width:25%">
+                    <col style="width:15%">
+                    <col style="width:20%">
+                    <col style="width:20%">
+                    <col style="width:30%">
+                    <col style="width:10%">
+                </colgroup>
+                <thead>
                     <tr>
-                        <td>{{ $task->title }}</td>
-                        <td>{{ ucfirst($task->status) }}</td>
-                        <td><a href="{{ url('/tasks/'.$task->id) }}" class="btn btn-sm btn-warning">Edit</a></td>
-                        <td>
-                            <form action="{{ url('/tasks/'.$task->id) }}" method="POST" style="display:inline-block">
-                                @csrf @method('DELETE')
-                                <button class="btn btn-sm btn-danger">Delete</button>
-                            </form>
-                        </td>
+                        <th>Task</th>
+                        <th>Status</th>
+                        <th>Start Date</th>
+                        <th>End Date</th>
+                        <th>Description</th>
+                        <th>Delete</th>
                     </tr>
+                </thead>
+            </table>
+        </div>
+
+        <div class="table-scroll-container">
+            <table class="table table-bordered table-striped m-0">
+                <colgroup>
+                    <col style="width:25%">
+                    <col style="width:15%">
+                    <col style="width:20%">
+                    <col style="width:20%">
+                    <col style="width:30%">
+                    <col style="width:10%">
+                </colgroup>
+                <tbody>
+                    @forelse($ownTasks as $task)
+                        <tr>
+                            <td>{{ $task->title }}</td>
+                            <td>{{ ucfirst($task->status) }}</td>
+                            <td>{{ $task->start_date ? \Carbon\Carbon::parse($task->start_date)->format('d M Y') : '-' }}</td>
+                            <td>{{ $task->start_date ? \Carbon\Carbon::parse($task->end_date)->format('d M Y') : '-' }}</td>
+                            <td>{{ $task->description ?? '-' }}</td>
+                            <td>
+                                <form action="{{ url('/tasks/'.$task->id) }}" method="POST" style="display:inline-block">
+                                    @csrf 
+                                    @method('DELETE')
+                                    <button class="btn btn-sm btn-danger">Delete</button>
+                                </form>
+                            </td>
+                        </tr>
                     @empty
-                    <tr><td colspan="4" class="text-center">No tasks yet</td></tr>
+                        <tr><td colspan="5" class="text-center">No tasks yet</td></tr>
                     @endforelse
                 </tbody>
             </table>
             </div>
         </div>
     </div>
+
+    <!-- Add Insight Modal -->
+<div class="modal fade" id="insightModal" tabindex="-1" aria-labelledby="insightModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+   <form id="insightForm">
+    @csrf
+    <input type="hidden" name="id" id="insight_id"> <!-- for editing -->
+    <input type="hidden" name="goal_id" id="insight_goal_id">
+    
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Add Insight for <span id="insight_goal_title"></span></h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="mb-3">
+            <label for="insight_description" class="form-label">Insight</label>
+            <textarea name="description" id="insight_description" class="form-control" rows="4" required></textarea>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="submit" class="btn btn-success">Save Insight</button>
+      </div>
+    </div>
+</form>
+
+  </div>
+</div>
+
 
     {{-- 4. Insights Section --}}
     <div class="card mb-4">
@@ -406,6 +453,55 @@
     </div>
 </div>
 </div>
+
+
+<script>
+   document.addEventListener("DOMContentLoaded", function () {
+    const insightModal = new bootstrap.Modal(document.getElementById('insightModal'));
+    const form = document.getElementById("insightForm");
+
+    // When "Add Insight" button is clicked
+    document.querySelectorAll(".add-insight-btn").forEach(btn => {
+        btn.addEventListener("click", function () {
+            document.getElementById("insight_id").value = ""; // reset (new)
+            document.getElementById("insight_goal_id").value = this.dataset.goalId;
+            document.getElementById("insight_goal_title").textContent = this.dataset.goalTitle;
+            document.getElementById("insight_description").value = ""; // clear old text
+            insightModal.show();
+        });
+    });
+
+    // Handle submit
+    form.addEventListener("submit", async function (e) {
+        e.preventDefault();
+
+        const formData = new FormData(form);
+
+        const response = await fetch("{{ url('/insights') }}", {
+            method: "POST",
+            headers: {
+                "X-CSRF-TOKEN": document.querySelector('input[name="_token"]').value
+            },
+            body: formData
+        });
+
+        if (response.ok) {
+            const data = await response.json();
+            console.log("Insight saved:", data);
+
+            insightModal.hide();
+
+            // Optional: dynamically update UI without reload
+            alert("Insight saved successfully!");
+        } else {
+            alert("Error saving insight!");
+        }
+    });
+});
+
+
+</script>
+
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
 function approveBundle(id) {
@@ -472,7 +568,7 @@ function rejectBundle(id) {
 
 <script>
     let bundleTableBody = document.querySelector("#bundleTable tbody");
-let orgGoalsTableBody = document.querySelector("#orgGoalsTable tbody");
+let orgGoalsTableBody = document.querySelector("#orgGoalsTable");
 
 // Add organization goal to bundle and remove from Org Goals table
 function addToBundle(goalId, title, orgSettingId, type, button) {
@@ -548,7 +644,7 @@ document.getElementById('bundleForm').addEventListener('submit', function(e) {
     let formData = new FormData(this);
 
     fetch(this.action, {
-        method: 'POST',
+        method: 'POST',                                                                                                                                                                                                                                                 
         headers: { 'X-CSRF-TOKEN': '{{ csrf_token() }}' },
         body: formData
     })
@@ -557,7 +653,7 @@ document.getElementById('bundleForm').addEventListener('submit', function(e) {
         Swal.fire({
             icon: 'success',
             title: 'Submitted!',
-            text: data.message || 'Goals submitted for approval!',
+            text: data.message || 'Goals submitted for approval!',                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              
             timer: 2000,
             showConfirmButton: false
         });
