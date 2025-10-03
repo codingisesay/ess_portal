@@ -32,11 +32,29 @@
       orgSummaryChart.update();
       return;
     }
-
     orgSummaryChart = new Chart(ctx, {
-      type: 'pie',
-      data: { labels, datasets: [{ data, backgroundColor: colors }] },
-      options: { plugins: { legend: { position: 'bottom' } }, responsive: true }
+      type: 'bar',
+      data: {
+        labels,
+        datasets: [{
+          label: 'Summary',
+          data,
+          backgroundColor: colors,
+          borderColor: '#ffffff',
+          borderWidth: 1,
+          borderRadius: 4,
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          legend: { display: false }
+        },
+        scales: {
+          y: { beginAtZero: true, ticks: { precision: 0 } },
+          x: { grid: { display: false } }
+        }
+      }
     });
   }
 
@@ -138,46 +156,87 @@
 
                 
             </form>
-            <div class="mt-3">
-                <div class="table-fixed-header">
-                    <table class="table table-bordered table-striped m-0">
-                        <colgroup>
-                            <col style="width:26%">
-                            <col style="width:14%">
-                            <col style="width:12%">
-                            <col style="width:12%">
-                            <col style="width:12%">
-                            <col style="width:12%">
-                            <col style="width:12%">
-                        </colgroup>
-                        <thead>
-                            <tr>
-                                <th>Title</th>
-                                <th>Period</th>
-                                <th>Start Date</th>
-                                <th>End Date</th>
-                                <th>Priority</th>
-                                <th>Status</th>
-                                <th>Action</th>
-                            </tr>
-                        </thead>
-                    </table>
-                </div>
-                <div class="table-scroll-container">
-                    <table class="table table-bordered table-striped m-0">
-                        <colgroup>
-                            <col style="width:26%">
-                            <col style="width:14%">
-                            <col style="width:12%">
-                            <col style="width:12%">
-                            <col style="width:12%">
-                            <col style="width:12%">
-                            <col style="width:12%">
-                        </colgroup>
-                        <tbody id="goalsTable"></tbody>
-                    </table>
-                </div>
-            </div>
+            <style>
+  /* Hide scrollbar but keep scrolling functional */
+  #goalsScroll {
+    max-height: 300px;
+    overflow: auto;
+    scrollbar-gutter: stable;    /* reserve space so header doesn't shift when scrollbar appears */
+    -ms-overflow-style: none;    /* IE and old Edge */
+    scrollbar-width: none;       /* Firefox */
+  }
+  /* WebKit browsers */
+  #goalsScroll::-webkit-scrollbar {
+    display: none;
+    width: 0;
+    height: 0;
+  }
+
+  /* optional small fade at bottom to hint that area is scrollable (uncomment if you want) */
+  /*
+  #goalsScroll::after {
+    content: "";
+    pointer-events: none;
+    position: sticky;
+    display: block;
+    height: 28px;
+    margin-top: -28px;
+    background: linear-gradient(transparent, rgba(255,255,255,0.9));
+    width: 100%;
+  }
+  */
+</style>
+
+<!-- Fixed header + scrollable body (scrollbar hidden visually) -->
+<div style="margin-top:1rem;">
+
+  <!-- Header table (fixed) -->
+  <div style="overflow:hidden;">
+    <table class="table table-bordered table-striped m-0"
+           style="width:100%; table-layout:fixed; border-collapse:collapse; margin-bottom:0;">
+      <colgroup>
+        <col style="width:26%">
+        <col style="width:14%">
+        <col style="width:12%">
+        <col style="width:12%">
+        <col style="width:12%">
+        <col style="width:12%">
+        <col style="width:12%">
+      </colgroup>
+      <thead>
+        <tr>
+          <th style="padding:8px; background:#fff; border:1px solid #dee2e6; box-sizing:border-box;">Title</th>
+          <th style="padding:8px; background:#fff; border:1px solid #dee2e6; box-sizing:border-box;">Period</th>
+          <th style="padding:8px; background:#fff; border:1px solid #dee2e6; box-sizing:border-box;">Start Date</th>
+          <th style="padding:8px; background:#fff; border:1px solid #dee2e6; box-sizing:border-box;">End Date</th>
+          <th style="padding:8px; background:#fff; border:1px solid #dee2e6; box-sizing:border-box;">Priority</th>
+          <th style="padding:8px; background:#fff; border:1px solid #dee2e6; box-sizing:border-box;">Status</th>
+          <th style="padding:8px; background:#fff; border:1px solid #dee2e6; box-sizing:border-box;">Action</th>
+        </tr>
+      </thead>
+    </table>
+  </div>
+
+  <!-- Scrollable table body (visual scrollbar hidden) -->
+  <div id="goalsScroll">
+    <table class="table table-bordered table-striped m-0"
+           style="width:100%; table-layout:fixed; border-collapse:collapse; margin-bottom:0;">
+      <colgroup>
+        <col style="width:26%">
+        <col style="width:14%">
+        <col style="width:12%">
+        <col style="width:12%">
+        <col style="width:12%">
+        <col style="width:12%">
+        <col style="width:12%">
+      </colgroup>
+      <tbody id="goalsTable"></tbody>
+    </table>
+  </div>
+
+</div>
+
+
     </div>
     </div>
 
@@ -478,11 +537,11 @@ async function loadGoals() {
         data.forEach(g => {
             tbody.innerHTML += `<tr>
                 <td>${g.title}</td>
-                <td>${g.priority}</td>
-                <td>${g.status}</td>
                 <td>${g.period_name || g.org_setting_id}</td>
                 <td>${g.start_date || '-'}</td>
                 <td>${g.end_date || '-'}</td>
+                <td>${g.priority}</td>
+                <td>${g.status}</td>
                 <td>
                     <button class="btn btn-sm btn-warning" onclick="editGoal(${g.id})">Edit</button>
                 </td>

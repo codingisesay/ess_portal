@@ -3,14 +3,13 @@
 
 <div class="container">
     <h2>Manager Dashboard</h2>
-
    {{-- ============================
      1. Goals Created by Organization
 ============================= --}}
 <div class="card mb-4">
     <div class="card-header bg-light"><strong>Goals Created by Organization</strong></div>
     <div class="table-fixed-header">
-        <table class="table table-bordered table-striped m-0">
+        <table class="table table-bordered table-striped m-0" style="table-layout:fixed;">
             <colgroup>
                 <col style="width:40%">
                 <col style="width:20%">
@@ -27,8 +26,8 @@
             </thead>
         </table>
     </div>
-    <div class="table-scroll-container">
-        <table class="table table-bordered table-striped m-0">
+    <div class="table-scroll-container no-scrollbar">
+        <table class="table table-bordered table-striped m-0" style="table-layout:fixed;">
             <colgroup>
                 <col style="width:40%">
                 <col style="width:20%">
@@ -53,6 +52,7 @@
         </table>
     </div>
         </div>
+    </div>
     </div>
 </div>
 
@@ -134,6 +134,7 @@
 {{-- ============================
      2. Additional Goals (Self-Created / Selected Org Goals)
 ============================= --}}
+<div class="section-pad-x">
 <div class="card mb-4">
     <div class="card-header bg-light"><strong>Additional Goals / Selected Org Goals</strong></div>
     <div class="card-body">
@@ -292,46 +293,34 @@
 </div>
 
     {{-- 3. Task List --}}
+    <div class="section-pad-x">
     <div class="card mb-4">
         <div class="card-header bg-light"><strong>Create Own Task</strong></div>
         <div class="card-body">
             <div class="d-flex justify-content-end mb-2">
                 <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#createOwnTaskModal">Create</button>
             </div>
-            <div class="table-fixed-header">
-                 <table class="table table-bordered table-striped m-0">
-                <colgroup>
-                    <col style="width:25%">
-                    <col style="width:15%">
-                    <col style="width:20%">
-                    <col style="width:20%">
-                    <col style="width:30%">
-                    <col style="width:10%">
-                </colgroup>
-                <thead>
-                    <tr>
-                        <th>Task</th>
-                        <th>Status</th>
-                        <th>Start Date</th>
-                        <th>End Date</th>
-                        <th>Description</th>
-                        <th>Delete</th>
-                    </tr>
-                </thead>
-            </table>
-        </div>
-
-        <div class="table-scroll-container">
-            <table class="table table-bordered table-striped m-0">
-                <colgroup>
-                    <col style="width:25%">
-                    <col style="width:15%">
-                    <col style="width:20%">
-                    <col style="width:20%">
-                    <col style="width:30%">
-                    <col style="width:10%">
-                </colgroup>
-                <tbody>
+            <div class="table-scroll">
+                <table class="table table-bordered table-striped m-0" style="table-layout:fixed;">
+                    <colgroup>
+                        <col style="width:25%">
+                        <col style="width:15%">
+                        <col style="width:20%">
+                        <col style="width:20%">
+                        <col style="width:30%">
+                        <col style="width:10%">
+                    </colgroup>
+                    <thead>
+                        <tr>
+                            <th>Task</th>
+                            <th>Status</th>
+                            <th>Start Date</th>
+                            <th>End Date</th>
+                            <th>Description</th>
+                            <th>Delete</th>
+                        </tr>
+                    </thead>
+                    <tbody>
                     @forelse($ownTasks as $task)
                         <tr>
                             <td>{{ $task->title }}</td>
@@ -350,10 +339,11 @@
                     @empty
                         <tr><td colspan="5" class="text-center">No tasks yet</td></tr>
                     @endforelse
-                </tbody>
-            </table>
+                    </tbody>
+                </table>
             </div>
         </div>
+    </div>
     </div>
 
     <!-- Add Insight Modal -->
@@ -386,6 +376,7 @@
 
 
     {{-- 4. Insights Section --}}
+    <div class="section-pad-x">
     <div class="card mb-4">
         <div class="card-header bg-light"><strong>Insights on Organization Goals</strong></div>
         <div class="card-body">
@@ -417,6 +408,7 @@
     {{-- ============================
      5. Goal Bundle Approval Requests
 ============================= --}}
+<div class="container">
 <div class="card mb-4">
     <div class="card-header bg-light"><strong>Goal Bundle Approval Requests</strong></div>
     <div class="card-body">
@@ -430,12 +422,11 @@
 
         @if($pendingBundles->count() > 0)
             <div class="table-fixed-header">
-                <table class="table table-bordered table-striped m-0">
+                <table class="table table-bordered table-striped m-0" style="table-layout:fixed;">
                     <colgroup>
                         <col style="width:15%">
                         <col style="width:20%">
-                        <col style="width:40%">
-                        <col style="width:15%">
+                        <col style="width:55%">
                         <col style="width:10%">
                     </colgroup>
                     <thead>
@@ -443,19 +434,17 @@
                             <th>Bundle ID</th>
                             <th>Requested By</th>
                             <th>Goals</th>
-                            <th>Date</th>
                             <th>Actions</th>
                         </tr>
                     </thead>
                 </table>
             </div>
-            <div class="table-scroll-container">
-                <table class="table table-bordered table-striped m-0" id="approvalTable">
+            <div class="table-scroll-container no-scrollbar">
+                <table class="table table-bordered table-striped m-0" id="approvalTable" style="table-layout:fixed;">
                     <colgroup>
                         <col style="width:15%">
                         <col style="width:20%">
-                        <col style="width:40%">
-                        <col style="width:15%">
+                        <col style="width:55%">
                         <col style="width:10%">
                     </colgroup>
                     <tbody>
@@ -471,8 +460,10 @@
                                 </ul>
                             </td>
                             <td>
-                                <button class="btn btn-sm btn-success" onclick="approveBundle({{ $bundle->id }}, 'approved')">Approve</button>
-                               <button class="btn btn-sm btn-danger" onclick="rejectBundle({{ $bundle->id }})">Reject</button>
+                                <div class="d-flex flex-wrap gap-1">
+                                    <button class="btn btn-sm btn-success" onclick="approveBundle({{ $bundle->id }}, 'approved')">Approve</button>
+                                    <button class="btn btn-sm btn-danger" onclick="rejectBundle({{ $bundle->id }})">Reject</button>
+                                </div>
                             </td>
                         </tr>
                     @endforeach
