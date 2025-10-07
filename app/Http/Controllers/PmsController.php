@@ -26,28 +26,44 @@ class PmsController extends Controller
         return response()->json(OrganizationSetting::all());
     }
 
-    public function orgSettingsStore(Request $request) {
-        $user = Auth::user();
+   /**
+ * Stores an organization setting
+ *
+ * @param Request $request
+ * @return \Illuminate\Http\RedirectResponse
+ */
+public function orgSettingsStore(Request $request) {
+    $superAdminId = Auth::guard('superadmin')->user()->id;
 
-        $request->validate([
-            'id' => 'nullable|integer',
-            'name' => 'required|string|max:100',
-            'start_date' => 'required|date',
-            'end_date' => 'required|date',
-        ]);
+    $request->validate([
+        'id'                 => 'nullable|integer',
+        'name'               => 'required|string|max:100',
+        'year'               => 'required|string|max:9',
+        'cycle_type'         => 'required|string|max:20',
+        'cycle_period'       => 'required|string|max:10',
+        'start_date'         => 'required|date',
+        'end_date'           => 'required|date',
+        'process_start_date' => 'required|date',
+        'process_end_date'   => 'required|date',
+    ]);
 
-        $setting = OrganizationSetting::updateOrCreate(
-            ['id' => $request->id],
-            [
-                'name'       => $request->name,
-                'start_date' => $request->start_date,
-                'end_date'   => $request->end_date,
-                'created_by' => $user->id,
-            ]
-        );
+    $setting = OrganizationSetting::updateOrCreate(
+        ['id' => $request->id],
+        [
+            'name'               => $request->name,
+            'year'               => $request->year,
+            'cycle_type'         => $request->cycle_type,
+            'cycle_period'       => $request->cycle_period,
+            'start_date'         => $request->start_date,
+            'end_date'           => $request->end_date,
+            'process_start_date' => $request->process_start_date,
+            'process_end_date'   => $request->process_end_date,
+            'created_by'         => $superAdminId,
+        ]
+    );
 
-        return redirect()->route('org_settings_form')->with('success', 'Organization setting saved successfully!');
-    }
+    return redirect()->route('org_settings_form')->with('success', 'Organization setting saved successfully!');
+}
 
     public function orgSettingsUpdate(Request $request, $id) {
         $user = Auth::user();
@@ -78,9 +94,16 @@ class PmsController extends Controller
         return response()->json(['message'=>'Organization setting deleted']);
     }
 
-    public function orgSettingsForm() {
-        return view('superadmin_view.org_settings');
-    }
+   /**
+ * Returns the organization settings form
+ *
+ * @return \Illuminate\View\View (issue no-(3743))
+ */
+    public function orgSettingsForm()
+{
+    $orgSettings = \App\Models\OrganizationSetting::orderBy('id', 'desc')->get();
+    return view('superadmin_view.org_settings', compact('orgSettings'));
+}
 
     // ============================
     // GOALS
