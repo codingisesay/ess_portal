@@ -81,7 +81,17 @@ $name = Auth::guard('superadmin')->user()->name;
                         <li><a href="{{ route('create_policy') }}" class="{{ request()->routeIs('create_policy') ? 'active' : '' }}">Leave Policy Creation</a></li>
                         <li><a href="{{ route('employee_policy') }}" class="{{ request()->routeIs('employee_policy') ? 'active' : '' }}">Leave Emp Policy</a></li>
                         <li><a href="{{ route('process_leave_policy') }}" class="{{ request()->routeIs('process_leave_policy') ? 'active' : '' }}">Process Leave Cycle</a></li>
-                        <li><a href="{{ route('org_settings_form') }}" class="{{ request()->routeIs('org_settings_form') ? 'active' : '' }}">Org Settings</a></li>
+                    </ul>
+                </li>
+                <!-- PMS Management -->
+                 <li id="pmsLi">
+                    <strong onclick="toggleDropdown('PMSDropdown', this)">
+                        <strong>
+                        <x-icon name="salary" />&nbsp;<lable> PMS Management</lable></strong>
+                        <img src="{{ asset('user_end/images/arrow-right.svg') }}" alt="arrow" class="dropdown-arrow">
+                    </strong>
+                    <ul id="PMSDropdown" class="submenu">
+                       <li><a href="{{ route('org_settings_form') }}" class="{{ request()->routeIs('org_settings_form') ? 'active' : '' }}">Org Settings</a></li>
                     </ul>
                 </li>
 
@@ -163,7 +173,8 @@ $name = Auth::guard('superadmin')->user()->name;
                 'policyManagementDropdown',
                 'salaryManagementDropdown',
                 'taxManagementDropdown',
-                'settingsDropdown'
+                'settingsDropdown',
+                'PMSDropdown'
             ];
             
             dropdownIds.forEach(id => {

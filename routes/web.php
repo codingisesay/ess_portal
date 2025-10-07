@@ -160,6 +160,7 @@ Route::delete('delete_bank/{id}', [BankController::class, 'destroy'])->name('del
 Route::get('/superadmin/import', [AttendanceImportController::class, 'showForm'])->name('attendance.form');
 Route::post('/superadmin/import', [AttendanceImportController::class, 'import'])->name('attendance.import');
 // pms form cycle and settings
+Route::post('/org-settings', [PmsController::class, 'orgSettingsStore']);
 Route::get('superadmin/org-settings', [PmsController::class, 'orgSettingsForm'])->name('org_settings_form');
 
 });
@@ -301,7 +302,6 @@ Route::get('/load-payslip/{payroll_id}', [App\Http\Controllers\salaryBoxControll
 // ORGANIZATION SETTINGS
 // ============================
 Route::get('/org-settings', [PmsController::class, 'orgSettingsIndex']);
-Route::post('/org-settings', [PmsController::class, 'orgSettingsStore']);
 Route::put('/org-settings/{id}', [PmsController::class, 'orgSettingsUpdate']);
 Route::get('/org-settings/{id}', [PmsController::class, 'orgSettingsShow']);
 Route::delete('/org-settings/{id}', [PmsController::class, 'orgSettingsDestroy']);
