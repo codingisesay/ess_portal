@@ -105,7 +105,7 @@
         </form>
     </div>
 
-       <!-- Table Section issue no-(3743) --> 
+       <!-- Table Section issue no--(3743) --> 
 @php
 // Format date fields before sending to table partial
 $formattedOrgSettings = $orgSettings->map(function ($item) {
