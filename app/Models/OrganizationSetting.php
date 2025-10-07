@@ -10,10 +10,15 @@ class OrganizationSetting extends Model
     use HasFactory;
 
     protected $fillable = [
-        'name',
-        'start_date',
-        'end_date',
-        'created_by',
+            'name',
+            'year',
+            'cycle_type',
+            'cycle_period',
+            'start_date',
+            'end_date',
+            'process_start_date',
+            'process_end_date',
+            'created_by',
     ];
 
     public function creator()
