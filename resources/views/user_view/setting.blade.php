@@ -420,10 +420,10 @@
                         </option>
                     @endforeach
                 </select>
-                   <label for="start_date">Start Date:</label>
+                   <!-- <label for="start_date">Start Date:</label> -->
                     <input type="date" name="start_date" id="start_date" value="{{ request('start_date') }}" onchange="this.form.submit()">
                     
-                    <label for="end_date">End Date:</label>
+                    <!-- <label for="end_date">End Date:</label> -->
                     <input type="date" name="end_date" id="end_date" value="{{ request('end_date') }}" onchange="this.form.submit()">
             </form>     
         <!-- Leave Summary Table -->
