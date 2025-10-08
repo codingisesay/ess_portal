@@ -260,7 +260,7 @@
                 <!-- Dropdown content (initially hidden) -->
                 <div id="employeeDetailsDropdown" class="dropdown-content" style="display: none;">
                     <!-- Collapsible Content (Table) -->
-                    <div class="content">
+                    <div class="content" id="employeeTableContainer">
                         <table class="custom-table">
                             <thead>
                                 <tr>
@@ -274,7 +274,8 @@
                             <tbody>
                                 @foreach ($users as $user)
                                     <tr>
-                                        <td>{{ $loop->iteration }}</td>
+                                    <!-- The user serial numbers were repeating from 1–10 twice, so I updated them to continue sequentially as 1, 2, 3 … n. (3823)-->
+                                        <td>{{ $users->firstItem() + $loop->index }}</td>
                                         <td>{{$user->name}}</td>
                                         <td>{{$user->email}}</td>
                                         <td>
@@ -660,6 +661,35 @@
             newsForm.style.display = "block";
         }
     }
+</script>
+
+<script>
+// Fixed page reload issue on Settings page — prevented re-rendering after clicking Next using JavaScript(3823).
+document.addEventListener('click', function (e) {
+    const link = e.target.closest('#employeeDetailsDropdown .pagination a');
+    if (!link) return;
+
+    e.preventDefault();
+    const container = document.getElementById('employeeTableContainer');
+    if (!container) return;
+
+    fetch(link.href, { headers: { 'X-Requested-With': 'XMLHttpRequest' }})
+        .then(res => res.text())
+        .then(html => {
+            const parser = new DOMParser();
+            const doc = parser.parseFromString(html, 'text/html');
+            const newContainer = doc.querySelector('#employeeTableContainer');
+            if (newContainer) {
+                container.innerHTML = newContainer.innerHTML;
+            }
+            // keep accordion open
+            const dd = document.getElementById('employeeDetailsDropdown');
+            if (dd && (dd.style.display === 'none' || dd.style.display === '')) {
+                dd.style.display = 'block';
+            }
+        })
+        .catch(err => console.error('Pagination load failed:', err));
+});
 </script>
 
 @endsection
