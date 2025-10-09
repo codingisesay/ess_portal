@@ -124,8 +124,6 @@
                             <option value="high">High</option>
                             <option value="medium" selected>Medium</option>
                             <option value="low">Low</option>
-                            
-                            CRITICAL	
                         </select>
                     </div>
                 </div>
@@ -553,7 +551,9 @@ async function loadGoals() {
 
         data.forEach(g => {
             tbody.innerHTML += `<tr>
-                <td>${g.title}</td>
+                <td>${g.title}<br>
+                <small>${g.description || '—'}</small>
+                </td>
                 <td>${g.period_name || '-'}</td>
                 <td>${g.start_date ? new Date(g.start_date).toLocaleDateString('en-GB') : '-'}</td>
                 <td>${g.end_date ? new Date(g.end_date).toLocaleDateString('en-GB') : '-'}</td>
