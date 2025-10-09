@@ -135,7 +135,7 @@ public function orgSettingsStore(Request $request) {
             'org_setting_id' => 'required|integer',
             'title' => 'required|string|max:255',
             'description' => 'nullable|string',
-            'priority' => 'nullable|in:low,medium,high',
+            'priority' => 'nullable|in:low,medium,high,Critical',
             'status' => 'nullable|in:pending,in-progress,completed',
             'start_date' => 'required|date',
             'end_date'   => 'required|date',
@@ -682,6 +682,7 @@ $bundleSubmittedGoals = \App\Models\GoalBundleItem::with('goal', 'bundle')
         return (object)[
             'goal_id'        => $item->goal_id,
             'title'          => $item->goal ? $item->goal->title : 'Custom Goal',
+            'description'    => $item->goal ? $item->goal->description : null,
             'org_setting_id' => $item->goal ? $item->goal->org_setting_id : null,
             'start_date'     => $item->goal ? $item->goal->start_date : null,
             'end_date'       => $item->goal ? $item->goal->end_date : null,

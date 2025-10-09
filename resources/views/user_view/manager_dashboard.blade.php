@@ -39,7 +39,11 @@
                 <tr>
                     <td>{{ $goal->title }}<br>
                         <small>{{ $goal->description }}</small><br>
-                        <small>{{ $goal->start_date ?? '—' }} → {{ $goal->end_date ?? '—' }}</small>
+                       <small>
+                            {{ $goal->start_date ? \Carbon\Carbon::parse($goal->start_date)->format('d/m/Y') : '—' }}
+                            →
+                            {{ $goal->end_date ? \Carbon\Carbon::parse($goal->end_date)->format('d/m/Y') : '—' }}
+                        </small>
                     </td>
                     <td>{{ $goal->period_name }}</td>
                     <td>{{ ucfirst($goal->priority) }}</td>
@@ -151,14 +155,13 @@
     <colgroup>
         <col style="width:40%">
         <col style="width:15%">
-        <col style="width:15%">
+        <!-- <col style="width:15%"> -->
         <col style="width:30%">
     </colgroup>
     <thead>
         <tr>
             <th>Goal</th>
             <th>Type</th>
-            <th>Weightage</th>
             <th>Actions</th>
         </tr>
     </thead>
@@ -168,7 +171,6 @@
    <table class="table table-bordered table-striped m-0" id="bundleTable">
     <colgroup>
         <col style="width:40%">
-        <col style="width:15%">
         <col style="width:15%">
         <col style="width:30%">
     </colgroup>
@@ -210,11 +212,12 @@
                 @else
                     {{-- Read-only display for approved / pending goals --}}
                     <strong>{{ $goal->title }}</strong><br>
-                    @if(!empty($goal->description))
-                        <small>{{ $goal->description }}</small><br>
-                    @endif
-                    <small>{{ $goal->start_date ?? '—' }} → {{ $goal->end_date ?? '—' }}</small>
-
+                    <small>{{ $goal->description ?? '—' }}</small><br>
+                    <small>
+                        {{ $goal->start_date ? \Carbon\Carbon::parse($goal->start_date)->format('d/m/Y') : '—' }}
+                        →
+                        {{ $goal->end_date ? \Carbon\Carbon::parse($goal->end_date)->format('d/m/Y') : '—' }}
+                    </small>
                     <input type="hidden" name="goal_ids[]" value="{{ $goal->goal_id }}">
                     <input type="hidden" name="org_setting_ids[{{ $goal->goal_id }}]" value="{{ $goal->org_setting_id }}">
                 @endif
@@ -401,7 +404,7 @@
                         <td>{{ $insight->goal_title }}</td>
                         <td>{{ $insight->description }}</td>
                         <td>{{ $insight->user_name }}</td>
-                        <td>{{ $insight->created_at }}</td>
+                        <td>{{ \Carbon\Carbon::parse($insight->created_at)->format('d/m/Y') }}</td>
                     </tr>
                     @empty
                     <tr><td colspan="4" class="text-center">No insights available</td></tr>
