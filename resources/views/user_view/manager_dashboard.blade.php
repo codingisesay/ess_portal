@@ -37,7 +37,10 @@
             <tbody id="orgGoalsTable">
                 @foreach($allOrgGoals as $goal)
                 <tr>
-                    <td>{{ $goal->title }}</td>
+                    <td>{{ $goal->title }}<br>
+                        <small>{{ $goal->description }}</small><br>
+                        <small>{{ $goal->start_date ?? '—' }} → {{ $goal->end_date ?? '—' }}</small>
+                    </td>
                     <td>{{ $goal->period_name }}</td>
                     <td>{{ ucfirst($goal->priority) }}</td>
                     <td>
@@ -255,7 +258,7 @@
                         <label for="customGoalOrg" class="form-label">Period</label>
                         <select id="customGoalOrg" class="form-control" required>
                             <option value="">Select Period</option>
-                            @foreach($allOrgGoals as $g)
+                            @foreach(collect($allOrgGoals)->unique('org_setting_id') as $g)
                                 <option value="{{ $g->org_setting_id }}">{{ $g->period_name }}</option>
                             @endforeach
                         </select>
@@ -267,12 +270,14 @@
                     <div class="col-md-2">
                         <label for="customGoalStart" class="form-label">Start Date</label>
                         <input type="date" id="customGoalStart" class="form-control" required
+                        value="{{ old('start_date', $activeCycle->start_date ?? '') }}"
                         min="{{ $activeCycle->start_date ?? '' }}" 
                         max="{{ $activeCycle->end_date ?? '' }}">
                     </div>
                     <div class="col-md-2">
                         <label for="customGoalEnd" class="form-label">End Date</label>
                         <input type="date" id="customGoalEnd" class="form-control" required
+                         value="{{ old('end_date', $activeCycle->end_date ?? '') }}"
                         min="{{ $activeCycle->start_date ?? '' }}" 
                         max="{{ $activeCycle->end_date ?? '' }}">
                     </div>

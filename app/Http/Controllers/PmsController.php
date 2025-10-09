@@ -105,12 +105,27 @@ public function orgSettingsStore(Request $request) {
     return view('superadmin_view.org_settings', compact('orgSettings'));
 }
 
-    // ============================
-    // GOALS
-    // ============================
-    public function goalsIndex() {
-        return response()->json(Goal::all());
+    /**
+     * Returns all goals with their associated organization settings
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function goalsIndex()
+    {
+        // Get all goals with their associated organization settings
+        // Select all columns from goals, and the name and cycle period from organization settings
+        $goals = \DB::table('goals')
+            ->leftJoin('organization_settings', 'organization_settings.id', '=', 'goals.org_setting_id')
+            ->select(
+                'goals.*',
+                'organization_settings.name as period_name',
+                'organization_settings.cycle_period',
+            )
+            ->get();
+
+        return response()->json($goals);
     }
+
 
     public function goalsStore(Request $request) {
         $user = Auth::user();
