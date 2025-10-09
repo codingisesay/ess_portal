@@ -105,12 +105,27 @@ public function orgSettingsStore(Request $request) {
     return view('superadmin_view.org_settings', compact('orgSettings'));
 }
 
-    // ============================
-    // GOALS
-    // ============================
-    public function goalsIndex() {
-        return response()->json(Goal::all());
+    /**
+     * Returns all goals with their associated organization settings
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function goalsIndex()
+    {
+        // Get all goals with their associated organization settings
+        // Select all columns from goals, and the name and cycle period from organization settings
+        $goals = \DB::table('goals')
+            ->leftJoin('organization_settings', 'organization_settings.id', '=', 'goals.org_setting_id')
+            ->select(
+                'goals.*',
+                'organization_settings.name as period_name',
+                'organization_settings.cycle_period',
+            )
+            ->get();
+
+        return response()->json($goals);
     }
+
 
     public function goalsStore(Request $request) {
         $user = Auth::user();
@@ -120,7 +135,7 @@ public function orgSettingsStore(Request $request) {
             'org_setting_id' => 'required|integer',
             'title' => 'required|string|max:255',
             'description' => 'nullable|string',
-            'priority' => 'nullable|in:low,medium,high',
+            'priority' => 'nullable|in:low,medium,high,Critical',
             'status' => 'nullable|in:pending,in-progress,completed',
             'start_date' => 'required|date',
             'end_date'   => 'required|date',
@@ -667,6 +682,7 @@ $bundleSubmittedGoals = \App\Models\GoalBundleItem::with('goal', 'bundle')
         return (object)[
             'goal_id'        => $item->goal_id,
             'title'          => $item->goal ? $item->goal->title : 'Custom Goal',
+            'description'    => $item->goal ? $item->goal->description : null,
             'org_setting_id' => $item->goal ? $item->goal->org_setting_id : null,
             'start_date'     => $item->goal ? $item->goal->start_date : null,
             'end_date'       => $item->goal ? $item->goal->end_date : null,

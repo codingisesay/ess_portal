@@ -120,22 +120,31 @@
                     <div class="col-md-3">
                         <label for="priority" class="form-label">Priority</label>
                         <select name="priority" id="priority" class="form-control">
-                            <option value="low">Low</option>
-                            <option value="medium" selected>Medium</option>
+                            <option value="Critical" selected>Critical</option>
                             <option value="high">High</option>
+                            <option value="medium" selected>Medium</option>
+                            <option value="low">Low</option>
+                            
+                            CRITICAL	
                         </select>
                     </div>
                 </div>
 
-                <!-- Row 2: Start & End Dates -->
-                <div class="row g-3 mb-2">
+                <!-- Row 2: Start & End Dates issue no - (3817) startdate enddate validation  -->
+                 <div class="row g-3 mb-2">
                     <div class="col-md-3">
                         <label for="start_date" class="form-label">Start Date</label>
-                        <input type="date" id="start_date" name="start_date" class="form-control" required>
+                        <input type="date" id="start_date" name="start_date" class="form-control" required
+                        value="{{ old('start_date', $activeCycle->start_date ?? '') }}"
+                        min="{{ $activeCycle->start_date ?? '' }}" 
+                        max="{{ $activeCycle->end_date ?? '' }}">
                     </div>
                     <div class="col-md-3">
                         <label for="end_date" class="form-label">End Date</label>
-                        <input type="date" id="end_date" name="end_date" class="form-control" required>
+                        <input type="date" id="end_date" name="end_date" class="form-control" required
+                        value="{{ old('end_date', $activeCycle->end_date ?? '') }}"
+                        min="{{ $activeCycle->start_date ?? '' }}" 
+                        max="{{ $activeCycle->end_date ?? '' }}">
                     </div>
                 </div>
 
@@ -242,10 +251,10 @@
 
     {{-- Task Approvals --}}
     <div class="card mb-4">
-        <div class="card-header bg-light"><strong>Tasks</strong></div>
+        <div class="card-header bg-light"><strong>Tasks Approvals</strong></div>
         <div class="card-body">
             <div class="d-flex justify-content-end mb-2">
-                <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#createTaskModal">Add Task</button>
+                <!-- <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#createTaskModal">Add Task</button> -->
             </div>
             <div class="table-scroll">
                 <table class="table table-bordered table-striped m-0">
@@ -291,15 +300,19 @@
             </div>
           </div>
 
-          <!-- Row 2: Start & End Dates -->
+          <!-- Row 2: Start & End Dates issue no - (3817) startdate enddate validation -->
           <div class="row g-3 mb-2">
             <div class="col-md-6">
               <label for="task_start" class="form-label">Start Date</label>
-              <input type="date" id="task_start" name="start_date" class="form-control" required>
+              <input type="date" id="task_start" name="start_date" class="form-control" required
+              min="{{ $activeCycle->start_date ?? '' }}" 
+              max="{{ $activeCycle->end_date ?? '' }}">
             </div>
             <div class="col-md-6">
               <label for="task_end" class="form-label">End Date</label>
-              <input type="date" id="task_end" name="end_date" class="form-control" required>
+              <input type="date" id="task_end" name="end_date" class="form-control" required
+              min="{{ $activeCycle->start_date ?? '' }}" 
+              max="{{ $activeCycle->end_date ?? '' }}">
             </div>
           </div>
 
@@ -351,15 +364,19 @@
             </div>
           </div>
 
-          <!-- Row 2: Start & End Dates, Status -->
+          <!-- Row 2: Start & End Dates issue no - (3817) startdate enddate validation, Status -->
           <div class="row g-3 mb-2">
             <div class="col-md-3">
               <label for="edit_start_date" class="form-label">Start Date</label>
-              <input type="date" id="edit_start_date" class="form-control" required>
+              <input type="date" id="edit_start_date" class="form-control" required
+               min="{{ $activeCycle->start_date ?? '' }}" 
+              max="{{ $activeCycle->end_date ?? '' }}">
             </div>
             <div class="col-md-3">
               <label for="edit_end_date" class="form-label">End Date</label>
-              <input type="date" id="edit_end_date" class="form-control" required>
+              <input type="date" id="edit_end_date" class="form-control" required
+              min="{{ $activeCycle->start_date ?? '' }}" 
+              max="{{ $activeCycle->end_date ?? '' }}">
             </div>
             <div class="col-md-3">
               <label for="edit_status" class="form-label">Status</label>
@@ -537,9 +554,9 @@ async function loadGoals() {
         data.forEach(g => {
             tbody.innerHTML += `<tr>
                 <td>${g.title}</td>
-                <td>${g.period_name || g.org_setting_id}</td>
-                <td>${g.start_date || '-'}</td>
-                <td>${g.end_date || '-'}</td>
+                <td>${g.period_name || '-'}</td>
+                <td>${g.start_date ? new Date(g.start_date).toLocaleDateString('en-GB') : '-'}</td>
+                <td>${g.end_date ? new Date(g.end_date).toLocaleDateString('en-GB') : '-'}</td>
                 <td>${g.priority}</td>
                 <td>${g.status}</td>
                 <td>
