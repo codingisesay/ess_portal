@@ -402,7 +402,7 @@
                     @forelse($insights as $insight)
                     <tr>
                         <td>{{ $insight->goal_title }}</td>
-                        <td>{{ $insight->description }}</td>
+                        <td style="word-break: break-word;">{{ $insight->description }}</td>
                         <td>{{ $insight->user_name }}</td>
                         <td>{{ \Carbon\Carbon::parse($insight->created_at)->format('d/m/Y') }}</td>
                     </tr>
