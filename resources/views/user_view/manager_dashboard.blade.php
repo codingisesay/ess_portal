@@ -38,7 +38,7 @@
                 @foreach($allOrgGoals as $goal)
                 <tr>
                     <td>{{ $goal->title }}<br>
-                        <small>{{ $goal->description }}</small><br>
+                        <small style="word-break: break-word;">{{ $goal->description }}</small><br>
                        <small>
                             {{ $goal->start_date ? \Carbon\Carbon::parse($goal->start_date)->format('d/m/Y') : '—' }}
                             →
@@ -212,7 +212,7 @@
                 @else
                     {{-- Read-only display for approved / pending goals --}}
                     <strong>{{ $goal->title }}</strong><br>
-                    <small>{{ $goal->description ?? '—' }}</small><br>
+                    <small style="word-break: break-word;">{{ $goal->description ?? '—' }}</small><br>
                     <small>
                         {{ $goal->start_date ? \Carbon\Carbon::parse($goal->start_date)->format('d/m/Y') : '—' }}
                         →
@@ -335,7 +335,7 @@
                             <td>{{ ucfirst($task->status) }}</td>
                             <td>{{ $task->start_date ? \Carbon\Carbon::parse($task->start_date)->format('d M Y') : '-' }}</td>
                             <td>{{ $task->start_date ? \Carbon\Carbon::parse($task->end_date)->format('d M Y') : '-' }}</td>
-                            <td>{{ $task->description ?? '-' }}</td>
+                            <td style="word-break: break-word;">{{ $task->description ?? '-' }}</td>
                             <td>
                                 <form action="{{ url('/tasks/'.$task->id) }}" method="POST" style="display:inline-block">
                                     @csrf 
@@ -460,12 +460,52 @@
                         <tr data-bundle-id="{{ $bundle->id }}">
                             <td>{{ $bundle->id }}</td>
                             <td>{{ $bundle->requestedBy->name ?? 'N/A' }}</td>
-                            <td>
-                                <ul>
-                                    @foreach($bundle->items as $item)
-                                        <li>{{ $item->goal->title ?? 'Custom Goal' }}</li>
-                                    @endforeach
-                                </ul>
+                              <td class="text-center">
+                                <!-- Button to open modal -->
+                                <button class="btn btn-sm btn-info" data-bs-toggle="modal" data-bs-target="#bundleModal{{ $bundle->id }}">
+                                    <i class="bi bi-eye"></i> View
+                                </button>
+
+                                <!-- Modal -->
+                                <div class="modal fade" id="bundleModal{{ $bundle->id }}" tabindex="-1" aria-labelledby="bundleModalLabel{{ $bundle->id }}" aria-hidden="true">
+                                    <div class="modal-dialog modal-lg">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="bundleModalLabel{{ $bundle->id }}">Bundle #{{ $bundle->id }} Details</h5>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <table class="table table-bordered table-striped m-0">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>Title</th>
+                                                            <th>Description</th>
+                                                            <th>Start Date</th>
+                                                            <th>End Date</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        @foreach($bundle->items as $item)
+                                                        <tr>
+                                                            <td>{{ $item->goal->title ?? 'Custom Goal' }}</td>
+                                                            <td style="word-break: break-word;">{{ $item->goal->description ?? $bundle->description ?? 'N/A' }}</td>
+                                                            <td>
+                                                                {{ $item->goal->start_date ? \Carbon\Carbon::parse($item->goal->start_date)->format('d/m/Y') : 'N/A' }}
+                                                            </td>
+                                                            <td>
+                                                                {{ $item->goal->end_date ? \Carbon\Carbon::parse($item->goal->end_date)->format('d/m/Y') : 'N/A' }}
+                                                            </td>
+                                                        </tr>
+                                                        @endforeach
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn  btn-secondary" data-bs-dismiss="modal">Close</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </td>
                             <td>
                                 <div class="d-flex flex-wrap gap-1">
