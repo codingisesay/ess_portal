@@ -32,6 +32,11 @@ class AppServiceProvider extends ServiceProvider
  
     // Pagination setup (choose only one)
     Paginator::useBootstrapFive();
+    
+    // Force paginator to always use correct base path
+    Paginator::currentPathResolver(function () {
+        return url()->current();
+    });
  
     // Override asset() if needed
     URL::macro('asset', function ($path, $secure = null) {
