@@ -87,7 +87,7 @@
                     <h5 class="me-auto mb-0">Income Tax Trend</h5> 
                      <div>
                     "Financial Year"
-               <select id="financialYearSelect" onchange="updateTaxChart()">
+               <!-- <select id="financialYearSelect" onchange="updateTaxChart()"> -->
                 
             </select>
                 </div>
