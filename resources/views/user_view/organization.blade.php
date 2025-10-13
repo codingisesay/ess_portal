@@ -552,7 +552,7 @@ async function loadGoals() {
         data.forEach(g => {
             tbody.innerHTML += `<tr>
                 <td>${g.title}<br>
-                <small>${g.description || '—'}</small>
+                <small class="description">${g.description || '—'}</small>
                 </td>
                 <td>${g.period_name || '-'}</td>
                 <td>${g.start_date ? new Date(g.start_date).toLocaleDateString('en-GB') : '-'}</td>

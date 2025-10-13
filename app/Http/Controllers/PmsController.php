@@ -4,12 +4,15 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use App\Models\User;
 use App\Models\OrganizationSetting;
 use App\Models\Goal;
 use App\Models\GoalAssignment;
 use App\Models\Insight;
 use App\Models\Task;
+use App\Models\InsightBundleApproval;
+use App\Models\InsightBundleItem;
 // use App\Models\TaskApproval;
 use App\Models\GoalApproval;    
 use App\Models\GoalBundleApproval;
@@ -236,9 +239,11 @@ public function orgSettingsStore(Request $request) {
     // ============================
     // INSIGHTS
     // ============================
-    public function insightsIndex() {
-        return response()->json(Insight::all());
-    }
+        public function insightsIndex() {
+            $user = Auth::user();
+            $insights = Insight::where('user_id', $user->id)->get();
+            return response()->json($insights);
+        }
 
     public function insightsStore(Request $request) {
         $user = Auth::user();
@@ -281,6 +286,113 @@ public function orgSettingsStore(Request $request) {
         Insight::findOrFail($id)->delete();
         return response()->json(['message'=>'Insight deleted']);
     }
+
+
+
+    public function submitInsightBundle(Request $request)
+{
+    $user = Auth::user();
+
+    $request->validate([
+        'insight_ids' => 'required|array|min:1',
+        'insight_ids.*' => 'integer|exists:insights,id',
+    ]);
+
+    // find reporting manager from your emp_details table (same as other flows)
+    $reportingManager = DB::table('emp_details')->where('user_id', $user->id)->value('reporting_manager');
+
+    // create bundle
+    $bundle = InsightBundleApproval::create([
+        'requested_by' => $user->id,
+        'reporting_manager' => $reportingManager,
+        'status' => 'pending',
+    ]);
+
+    // attach items
+    foreach ($request->insight_ids as $insightId) {
+        InsightBundleItem::create([
+            'bundle_id' => $bundle->id,
+            'insight_id' => $insightId,
+        ]);
+    }
+
+    return response()->json(['message' => 'Insight bundle submitted', 'bundle_id' => $bundle->id], 201);
+}
+
+public function pendingInsightBundles()
+{
+    $user = Auth::user();
+
+    // manager only: pending bundles assigned to this manager
+    $pending = InsightBundleApproval::with('items.insight', 'requestedBy')
+                ->where('reporting_manager', $user->id)
+                ->where('status', 'pending')
+                ->get();
+
+    return view('manager.insight_bundles_pending', compact('pending'));
+}
+
+public function approveInsightBundle(Request $request, $id)
+{
+    $bundle = InsightBundleApproval::findOrFail($id);
+
+    if ($bundle->status !== 'pending') {
+        return response()->json(['message' => 'Already processed'], 400);
+    }
+
+    // Get status from request (or fallback to 'approved')
+    $status = $request->status ?? 'approved';
+    $rating = $request->rating ?? null; // rating sent from frontend
+
+    // Update bundle status
+    $bundle->update(['status' => $status]);
+
+    // Update all insights related to this bundle
+    $insightIds = \DB::table('insight_bundle_items')
+        ->where('bundle_id', $bundle->id)
+        ->pluck('insight_id');
+
+    \DB::table('insights')
+        ->whereIn('id', $insightIds)
+        ->update([
+            'insights_status' => $status,
+            'insights_rating' => $rating // will be null if not provided
+        ]);
+
+    return response()->json(['message' => 'Bundle approved successfully.']);
+}
+
+public function rejectInsightBundle(Request $request, $id)
+{
+    $bundle = InsightBundleApproval::findOrFail($id);
+
+    if ($bundle->status !== 'pending') {
+        return response()->json(['message' => 'Already processed'], 400);
+    }
+
+    // ✅ Get status from request
+    $status = $request->status ?? 'rejected'; // fallback to 'rejected'
+
+    // Update bundle
+    $bundle->update([
+        'status' => $status,
+        'remarks' => $request->remarks ?? null,
+    ]);
+
+    // Update all insights linked to this bundle
+    \DB::table('insights')
+        ->whereIn('id', function ($query) use ($bundle) {
+            $query->select('insight_id')
+                ->from('insight_bundle_items')
+                ->where('bundle_id', $bundle->id);
+        })
+        ->update(['insights_status' => $status]);
+
+    return response()->json(['message' => 'Bundle rejected successfully.']);
+}
+
+
+    
 
     // ============================
     // TASKS
@@ -734,7 +846,14 @@ $submittedGoals = $individualSubmittedGoals->merge($bundleSubmittedGoals);
         $managerInsights = \DB::table('insights')
             ->join('goals', 'insights.goal_id', '=', 'goals.id')
             ->join('users', 'insights.user_id', '=', 'users.id')
-            ->select('insights.*', 'goals.title as goal_title', 'users.name as user_name')
+            ->join('emp_details', 'users.id', '=', 'emp_details.user_id')
+            ->select(
+                'insights.*',
+                'goals.title as goal_title',
+                'users.name as user_name',
+                'emp_details.reporting_manager'
+            )
+            ->where('insights.user_id', Auth::id())   // 🔹 Filter by logged-in user
             ->orderBy('insights.created_at', 'desc')
             ->get();
 
