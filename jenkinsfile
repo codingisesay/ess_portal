@@ -1,3 +1,4 @@
+@Library('Jenkins-shared-lib') _
 pipeline {
     agent any
 
@@ -48,7 +49,9 @@ pipeline {
                     def commitHash = sh(script: "git rev-parse --short HEAD", returnStdout: true).trim()
                     env.IMAGE_TAG = "${version}.${env.ENV_NAME}.${prNumber}.${commitHash}"
 
-                    echo "Gateway will be deployed with IMAGE_TAG: ${env.IMAGE_TAG} on port ${env.PORT}"
+                    echo "ESS will be deployed with IMAGE_TAG: ${env.IMAGE_TAG} on port ${env.PORT}"
+                    // Set URL based on branch to be used in notifications
+                    url = (BRANCH_NAME == "dev") ? "https://172.16.1.225:9443/" : (BRANCH_NAME == "test") ? "https://172.16.1.225:10443/" : "https://182.70.118.121:7090/"
                 }
             }
         }
@@ -75,7 +78,7 @@ pipeline {
             steps {
                 script {
                     sh """
-                        echo "Building Gateway Docker image..."
+                        echo "Building ESS Docker image..."
                         docker compose -f docker-compose.${env.ENV_NAME}.yml build
                     """
                 }
@@ -86,21 +89,21 @@ pipeline {
             steps {
                 script {
                     sh """
-                        echo "Pushing Gateway image to registry"
+                        echo "Pushing ESS image to registry"
                         docker push ${DOCKER_REGISTRY}/${SERVICE_NAME}:${env.IMAGE_TAG}
                     """
                 }
             }
         }
 
-        stage('Deploy Gateway Container') {
+        stage('Deploy ESS Container') {
             steps {
                 script {
                     def containerName = "${env.ENV_NAME}_${SERVICE_NAME}"
                     sh """
-                        echo "Stopping existing Gateway container if running"
+                        echo "Stopping existing ESS container if running"
                         docker compose -f docker-compose.${env.ENV_NAME}.yml down || true
-                        echo "Running Gateway container on ${env.PORT}"
+                        echo "Running ESS container on ${env.PORT}"
                         docker compose -f docker-compose.${env.ENV_NAME}.yml up -d
                     """
                 }
@@ -109,8 +112,18 @@ pipeline {
     }
 
     post {
-        always {
-            echo "Gateway build & deploy completed."
+        // Notify on build failure
+        failure {
+            script {
+                notifyBuild(
+                    "FAILURE",
+                    "${url}",
+                    ["om.m@payvance.co.in","samidha.l@payvance.co.in"],
+                    "ESS",
+                    "FAILURE",
+                    BRANCH_NAME
+                )
+            }
         }
     }
 }
