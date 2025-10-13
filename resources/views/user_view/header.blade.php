@@ -182,5 +182,7 @@ function previewImage() {
 //     closeModal();
 // }
     </script>
+    
+    <!-- Global footer included for all pages extending this layout -->
+    @include('user_view.footer')
 </body>
-

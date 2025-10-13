@@ -297,6 +297,31 @@ Route::post('user/update_reimbursement_claims/{reimbursement_traking_id}', [sala
 Route::get('user/download-payslip/{payroll_id}', [App\Http\Controllers\salaryBoxController::class, 'downloadPayslip'])->name('download_payslip');
 Route::get('/load-payslip/{payroll_id}', [App\Http\Controllers\salaryBoxController::class, 'loadPayslip'])->name('load_payslip');
 
+// Serve Privacy Policy DOCX from storage
+// Added functionality to make the Copyright Policy link clickable. On click, the associated policy file is automatically downloaded.
+Route::get('/legal/privacy-policy', function() {
+    $path = storage_path('copyrightfile/Privacy Policy for employeeXpert.docx');
+        if (!file_exists($path)) {
+            abort(404);
+        }
+        return response()->file($path, [
+            'Content-Type' => 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+        ]);
+    })->name('privacy_policy');
+
+
+
+// Serve Privacy Policy as PDF inline (opens in new tab)
+Route::get('/legal/privacy-policy/pdf', function() {
+    $pdfPath = storage_path('copyrightfile/privacy_policy.pdf');
+    if (!file_exists($pdfPath)) {
+        abort(404);
+    }
+    return response()->file($pdfPath, [
+        'Content-Type' => 'application/pdf'
+    ]);
+})->name('privacy_policy_pdf');
+
 
 // ============================
 // ORGANIZATION SETTINGS
