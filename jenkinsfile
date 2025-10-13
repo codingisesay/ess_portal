@@ -61,8 +61,8 @@ pipeline {
                        echo "Creating .env file with updated values"
                        cp ${ENV_BASE_PATH}/.env.${BRANCH_NAME} ./.env
 
-                       echo "STORAGE_PATH="${STORAGE_BASE_PATH}${BRANCH_NAME}"" >> .env
-                       echo "IMAGE_TAG="${env.IMAGE_TAG}"" >> .env
+                       echo "STORAGE_PATH=${STORAGE_BASE_PATH}${BRANCH_NAME}" >> .env
+                       echo "IMAGE_TAG=${env.IMAGE_TAG}" >> .env
 
                        echo "Final contents of .env:"
                        cat .env 
