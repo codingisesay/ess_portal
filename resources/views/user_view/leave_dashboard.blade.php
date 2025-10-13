@@ -227,8 +227,8 @@
                     </div>
                 </div>
 
-                <div class="col-md-6 mb-3"> 
-                    <div class="summary p-3">
+                <div class="col-md-6 mb-3 d-flex"> 
+                    <div class="summary p-3 h-100 d-flex flex-column w-100">
                         <h5 class="mb-0">Leave Summary</h5>
                         <hr class="my-2"  >
                         <div class="leave-summary-container row justify-content-around">
@@ -316,13 +316,13 @@
                     </div>
                 </div>
                                     
-                <div class="col-md-6 mb-3">
-                    <div class="applied-leaves p-3 overflow-auto"  >
+                <div class="col-md-6 mb-3 d-flex">
+                    <div class="applied-leaves p-3 d-flex flex-column h-100 w-100">
                         <h5 class="mb-0 d-flex justify-content-between align-items-center">
                             <span class="me-auto" > Applied Leave</span>
                             <small class="apply-leave py-1 px-4" onclick="redirectToForm()">Apply Leave</small></h5>  
                         <hr class="my-2"  >
-                        <div style="height:300px; overflow-y:auto" >
+                        <div class="applied-scroll flex-grow-1 overflow-auto">
                             <div class="container">
                                 @foreach($appliedLeaves as $leave)
                                     <div class="status-item">
