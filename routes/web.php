@@ -297,6 +297,11 @@ Route::post('user/update_reimbursement_claims/{reimbursement_traking_id}', [sala
 Route::get('user/download-payslip/{payroll_id}', [App\Http\Controllers\salaryBoxController::class, 'downloadPayslip'])->name('download_payslip');
 Route::get('/load-payslip/{payroll_id}', [App\Http\Controllers\salaryBoxController::class, 'loadPayslip'])->name('load_payslip');
 
+// Notifications page (bell icon target)
+Route::get('/notifications', function() {
+    return view('user_view.notifications');
+})->name('user.notifications');
+
 // Serve Privacy Policy DOCX from storage
 // Added functionality to make the Copyright Policy link clickable. On click, the associated policy file is automatically downloaded.
 Route::get('/legal/privacy-policy', function() {

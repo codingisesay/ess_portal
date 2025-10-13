@@ -268,7 +268,8 @@ nav ul li a:hover {
     padding: 12px 20px;
     display: none;
     position: absolute;
-    right: 0;
+    right: 10px; /* Adjusted position */
+    top :73px ; /*adjusted he position of notification bar */
     background-color: #f9f9f9;
     min-width: max-content;
     box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
