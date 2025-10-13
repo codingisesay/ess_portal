@@ -392,7 +392,6 @@
             <table class="table table-bordered table-striped m-0">
                 <thead class="table-light">
                         <tr>
-                            <th style="width:4%"><input id="selectAllInsights" type="checkbox"></th>
                             <th>Goal</th>
                             <th>Insight</th>
                             <th>Added By</th>
@@ -401,44 +400,42 @@
                         </tr>
                     </thead>
                     <tbody>
-                    @forelse($insights as $insight)
-                    <tr>
-                        <td><input class="insight-checkbox" type="checkbox" value="{{ $insight->id }}"></td>
-                        <td>{{ $insight->goal_title }}</td>
-                       <td>
-                        <div class="description">
-                            {{ $insight->description }}
-                        </div>
-                    </td>
-                        <td>{{ $insight->user_name }}</td>
-                        <td>{{ \Carbon\Carbon::parse($insight->created_at)->format('d/m/Y') }}</td>
-                         <td>
-                            {{-- ✅ Show status with color badges --}}
-                            @php
-                                $status = $insight->insights_status ?? 'Pending';
-                                $badgeClass = match(strtolower($status)) {
-                                    'approved' => 'success',
-                                    'rejected' => 'danger',
-                                    'pending' => 'warning',
-                                    default => 'secondary'
-                                };
-                            @endphp
-                            <span class="badge bg-{{ $badgeClass }}">
-                                {{ ucfirst($status) }}
-                            </span>
-                        </td>
-                    </tr>
-                    @empty
-                    <tr><td colspan="7" class="text-center">No insights available</td></tr>
-                    @endforelse
-                    </tbody>
-                                
+                        @forelse($insights as $insight)
+                        <tr data-insight-id="{{ $insight->id }}">
+                            <td>{{ $insight->goal_title }}</td>
+                           <td>
+                            @if(strtolower($insight->insights_status) === 'rejected')
+                                <textarea class="form-control insight-edit" data-id="{{ $insight->id }}">{{ $insight->description }}</textarea>
+                                <button class="btn btn-sm btn-success mt-1 save-insight" data-id="{{ $insight->id }}">Save</button>
+                            @else
+                                <div class="description">{{ $insight->description }}</div>
+                            @endif
+                        </td>   
+                            <td>{{ $insight->user_name }}</td>
+                            <td>{{ \Carbon\Carbon::parse($insight->created_at)->format('d/m/Y') }}</td>
+                            <td>
+                                @php
+                                    $status = $insight->insights_status ?? 'Pending';
+                                    $badgeClass = match(strtolower($status)) {
+                                        'approved' => 'success',
+                                        'rejected' => 'danger',
+                                        'pending' => 'warning',
+                                        default => 'secondary'
+                                    };
+                                @endphp
+                                <span class="badge bg-{{ $badgeClass }}">{{ ucfirst($status) }}</span>
+                            </td>
+                        </tr>
+                        @empty
+                        <tr><td colspan="6" class="text-center">No insights available</td></tr>
+                        @endforelse
+                        </tbody>                                                    
                     </table>
-                        <div class="d-flex justify-content-end my-2">
-                <button id="submitSelectedInsights" class="btn btn-primary">Submit Selected Insights for Approval</button>
-            </div>
-        </div>
-    </div>
+                    </div>
+                     <div class="d-flex justify-content-end my-2">
+                         <button id="submitSelectedInsights" class="btn btn-primary">Submit Selected Insights for Approval</button>
+                     </div>
+                </div>
     {{-- ============================
      5. Goal Bundle Approval Requests
 ============================= --}}
@@ -610,7 +607,7 @@
                             <tbody>
                               @foreach($bundle->items as $item)
                               <tr>
-                                <td>{{ $item->insight->goal_title ?? 'N/A' }}</td>
+                                <td>{{ $item->insight->goal->title ?? 'N/A' }}</td>
                                 <td class="description">{{ $item->insight->description }}</td>
                                 <td>{{ \Carbon\Carbon::parse($item->insight->created_at)->format('d/m/Y') }}</td>
                               </tr>
@@ -642,6 +639,63 @@
     </div>
   </div>
 </div>
+
+<!-- added the script for the edit of the insignt when it is rejected  -->
+<script>
+document.addEventListener('click', async function(e) {
+    if (e.target.classList.contains('save-insight')) {
+        const id = e.target.dataset.id;
+        const textarea = document.querySelector(`.insight-edit[data-id="${id}"]`);
+        const description = textarea.value.trim();
+
+        if (!description) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Empty Field',
+                text: 'Description cannot be empty.',
+                confirmButtonText: 'OK'
+            });
+            return;
+        }
+
+        try {
+            const res = await fetch(`/insights/${id}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+                },
+                body: JSON.stringify({ description })
+            });
+
+            if (!res.ok) throw new Error('Failed to update');
+
+            const data = await res.json();
+
+            Swal.fire({
+                icon: 'success',
+                title: 'Updated!',
+                text: 'Insight updated successfully.',
+                timer: 1500,
+                showConfirmButton: false
+            });
+
+            // Reload after success (slight delay to let Swal show)
+            setTimeout(() => {
+                location.reload();
+            }, 1500);
+
+        } catch (err) {
+            console.error(err);
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: err.message || 'Something went wrong!',
+            });
+        }
+    }
+});
+</script>
 
 
 <script>
@@ -773,43 +827,71 @@ function rejectInsightBundle(id) {
 
 
 <script>
-document.getElementById('selectAllInsights')?.addEventListener('change', function(e){
-    document.querySelectorAll('.insight-checkbox').forEach(cb => cb.checked = e.target.checked);
-});
+document.getElementById('submitSelectedInsights')?.addEventListener('click', async function() {
+    // Collect all insight IDs from the table
+    const allInsights = Array.from(document.querySelectorAll('tr[data-insight-id]'))
+        .map(row => row.getAttribute('data-insight-id'));
 
-document.getElementById('submitSelectedInsights')?.addEventListener('click', async function(){
-    const selected = Array.from(document.querySelectorAll('.insight-checkbox:checked')).map(i => i.value);
-    if (!selected.length) { alert('Select at least one insight'); return; }
+    if (!allInsights.length) {
+        Swal.fire({
+            icon: 'warning',
+            title: 'No insights available',
+            text: 'There are no insights to submit.',
+            confirmButtonColor: '#8A3366'
+        });
+        return;
+    }
 
     try {
+        // Disable button to prevent multiple clicks
+        const submitBtn = this;
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'Submitting...';
+
         const res = await fetch('/insights/bundles', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
                 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
             },
-            body: JSON.stringify({ insight_ids: selected })
+            body: JSON.stringify({ insight_ids: allInsights })
         });
 
         if (!res.ok) {
-            const err = await res.json().catch(()=>({}));
+            const err = await res.json().catch(() => ({}));
             throw new Error(err.message || 'Failed to submit');
         }
 
         const data = await res.json();
-        alert('Submitted bundle #' + data.bundle_id);
-        // optionally reload page or refresh table
-        location.reload();
+
+        Swal.fire({
+            icon: 'success',
+            title: 'Submitted!',
+            text: `Bundle #${data.bundle_id} has been sent for approval.`,
+            confirmButtonColor: '#8A3366',
+            timer: 2000,
+            showConfirmButton: false
+        });
+
+        // Optionally reload to refresh table
+        setTimeout(() => location.reload(), 1500);
+
     } catch (err) {
         console.error(err);
-        alert('Submission failed: ' + err.message);
+        Swal.fire({
+            icon: 'error',
+            title: 'Submission failed',
+            text: err.message || 'Something went wrong.',
+            confirmButtonColor: '#8A3366'
+        });
     }
 });
 </script>
 
 
+
 <script>
-   document.addEventListener("DOMContentLoaded", function () {
+document.addEventListener("DOMContentLoaded", function () {
     const insightModal = new bootstrap.Modal(document.getElementById('insightModal'));
     const form = document.getElementById("insightForm");
 
@@ -830,30 +912,44 @@ document.getElementById('submitSelectedInsights')?.addEventListener('click', asy
 
         const formData = new FormData(form);
 
-        const response = await fetch("{{ url('/insights') }}", {
-            method: "POST",
-            headers: {
-                "X-CSRF-TOKEN": document.querySelector('input[name="_token"]').value
-            },
-            body: formData
-        });
+        try {
+            const response = await fetch("{{ url('/insights') }}", {
+                method: "POST",
+                headers: {
+                    "X-CSRF-TOKEN": document.querySelector('input[name="_token"]').value
+                },
+                body: formData
+            });
 
-        if (response.ok) {
+            if (!response.ok) throw new Error('Failed to save insight');
+
             const data = await response.json();
             console.log("Insight saved:", data);
 
             insightModal.hide();
 
-            // Optional: dynamically update UI without reload
-            alert("Insight saved successfully!");
-        } else {
-            alert("Error saving insight!");
+            Swal.fire({
+                icon: 'success',
+                title: 'Saved!',
+                text: 'Insight saved successfully!',
+                confirmButtonColor: '#8A3366',
+                timer: 2000,
+                showConfirmButton: false
+            });
+
+        } catch (err) {
+            console.error(err);
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'Failed to save insight.',
+                confirmButtonColor: '#8A3366'
+            });
         }
     });
 });
-
-
 </script>
+
 
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
