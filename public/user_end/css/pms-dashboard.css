@@ -352,3 +352,11 @@ ul {
     width: 0;
     height: 0;
 }
+
+/* Ensure long descriptions wrap properly */
+td .description {
+    white-space: normal !important;
+    overflow: visible !important;
+    word-break: break-word;
+    overflow-wrap: break-word;
+}

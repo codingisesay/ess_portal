@@ -333,6 +333,17 @@ Route::put('/insights/{id}', [PmsController::class, 'insightsUpdate']);
 Route::get('/insights/{id}', [PmsController::class, 'insightsShow']);
 Route::delete('/insights/{id}', [PmsController::class, 'insightsDestroy']);
 
+// submit an insight bundle
+Route::post('/insights/bundles', [PmsController::class, 'submitInsightBundle']);
+
+// manager: view pending insight bundles
+Route::get('/insights/bundles/pending', [PmsController::class, 'pendingInsightBundles']);
+
+// approve / reject
+Route::post('/insights/bundles/{id}/approve', [PmsController::class, 'approveInsightBundle']);
+Route::post('/insights/bundles/{id}/reject', [PmsController::class, 'rejectInsightBundle']);
+
+
 // ============================
 // TASKS
 // ============================
