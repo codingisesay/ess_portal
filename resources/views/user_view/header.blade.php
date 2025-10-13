@@ -63,7 +63,7 @@ $userDetails = app('App\Http\Controllers\headerController')->getUserDetails();
                 <a href="javascript:void(0)" id="notificationIcon" class="text-dark mx-2">
                   <x-icon name="notification" />
                 </a>
-                <div id="notificationDropdown" class="profile-dropdown-content" style="display:none; min-width:260px;">
+                <div id="notificationDropdown" class="dropdown-content-notifications" style="display:none; min-width:260px;">
                     <div class="px-2 py-2"><strong>Notifications</strong></div>
                     <hr class="my-1"/>
                     <div class="px-2 pb-2 text-muted"><small>No notifications yet.</small></div>
