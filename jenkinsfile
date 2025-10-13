@@ -47,7 +47,7 @@ pipeline {
                         prNumber = "0"
                     }
                     def commitHash = sh(script: "git rev-parse --short HEAD", returnStdout: true).trim()
-                    env.IMAGE_TAG = "${version}.${env.ENV_NAME}.${prNumber}.${commitHash}"
+                    env.IMAGE_TAG = "${version}.${env.ENV_NAME}.${prNumber}.${commitHash}".replaceAll("\\s", "")
 
                     echo "ESS will be deployed with IMAGE_TAG: ${env.IMAGE_TAG} on port ${env.PORT}"
                     // Set URL based on branch to be used in notifications
