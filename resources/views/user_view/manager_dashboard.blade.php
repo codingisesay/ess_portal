@@ -388,9 +388,16 @@
     <div class="card mb-4">
         <div class="card-header bg-light"><strong>Insights on Organization Goals</strong></div>
         <div class="card-body">
-            <div class="table-scroll">
-            <table class="table table-bordered table-striped m-0">
-                <thead class="table-light">
+            <div class="table-fixed-header no-scrollbar-header">
+                <table class="table table-bordered table-striped m-0" style="table-layout:fixed;">
+                    <colgroup>
+                        <col style="width:25%">
+                        <col style="width:35%">
+                        <col style="width:15%">
+                        <col style="width:12%">
+                        <col style="width:13%">
+                    </colgroup>
+                    <thead>
                         <tr>
                             <th>Goal</th>
                             <th>Insight</th>
@@ -399,18 +406,32 @@
                             <th>Status</th>
                         </tr>
                     </thead>
+                </table>
+            </div>
+            <div class="table-scroll-container no-scrollbar org-insights-scroll">
+                <table class="table table-bordered table-striped m-0" style="table-layout:fixed;">
+                    <colgroup>
+                        <col style="width:25%">
+                        <col style="width:35%">
+                        <col style="width:15%">
+                        <col style="width:12%">
+                        <col style="width:13%">
+                    </colgroup>
                     <tbody>
                         @forelse($insights as $insight)
                         <tr data-insight-id="{{ $insight->id }}">
                             <td>{{ $insight->goal_title }}</td>
-                           <td>
-                            @if(strtolower($insight->insights_status) === 'rejected')
-                                <textarea class="form-control insight-edit" data-id="{{ $insight->id }}">{{ $insight->description }}</textarea>
-                                <button class="btn btn-sm btn-success mt-1 save-insight" data-id="{{ $insight->id }}">Save</button>
-                            @else
-                                <div class="description">{{ $insight->description }}</div>
-                            @endif
-                        </td>   
+                            <td>
+                                @if(strtolower($insight->insights_status) === 'rejected')
+                                    <textarea class="form-control insight-edit" data-id="{{ $insight->id }}">{{ $insight->description }}</textarea>
+                                    <!-- Aligned Save button to the right in the "Insights on Organization Goals" section after rejected goals display on Manager Dashboard. -->
+                                    <div class="d-flex justify-content-end mt-1">
+                                        <button class="btn btn-sm btn-success save-insight" data-id="{{ $insight->id }}">Save</button>
+                                    </div>
+                                @else
+                                    <div class="description">{{ $insight->description }}</div>
+                                @endif
+                            </td>
                             <td>{{ $insight->user_name }}</td>
                             <td>{{ \Carbon\Carbon::parse($insight->created_at)->format('d/m/Y') }}</td>
                             <td>
@@ -429,10 +450,10 @@
                         @empty
                         <tr><td colspan="6" class="text-center">No insights available</td></tr>
                         @endforelse
-                        </tbody>                                                    
-                    </table>
-                    </div>
-                     <div class="d-flex justify-content-end my-2">
+                    </tbody>
+                </table>
+            </div>
+                    <div class="d-flex justify-content-end my-2">
                          <button id="submitSelectedInsights" class="btn btn-primary">Submit Selected Insights for Approval</button>
                      </div>
                 </div>
@@ -470,7 +491,7 @@
                     </thead>
                 </table>
             </div>
-            <div class="table-scroll-container no-scrollbar">
+            <div class="table-scroll-container">
                 <table class="table table-bordered table-striped m-0" id="approvalTable" style="table-layout:fixed;">
                     <colgroup>
                         <col style="width:15%">
