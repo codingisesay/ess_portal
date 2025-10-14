@@ -737,6 +737,92 @@ public function rejectBundle($bundleId)
     return response()->json(['message' => 'Bundle rejected successfully!']);
 }
 
+ /**
+     * ================================
+     * 1. Build Recursive Hierarchy
+     * ================================
+     * Returns tree of employees under a given manager (including themselves)
+     */
+    private function buildEmployeeHierarchy($managerId)
+    {
+        // Fetch current user details
+        $manager = DB::table('users')
+            ->join('emp_details', 'users.id', '=', 'emp_details.user_id')
+            ->select('users.id', 'users.name', 'emp_details.designation')
+            ->where('users.id', $managerId)
+            ->first();
+
+        if (!$manager) return null;
+
+        // Fetch subordinates
+        $subordinates = DB::table('users')
+            ->join('emp_details', 'users.id', '=', 'emp_details.user_id')
+            ->select('users.id', 'users.name', 'emp_details.designation')
+            ->where('emp_details.reporting_manager', $managerId)
+            ->get();
+
+        // Recursive structure
+        $children = [];
+        foreach ($subordinates as $sub) {
+            $children[] = $this->buildEmployeeHierarchy($sub->id);
+        }
+
+        return [
+            'id' => $manager->id,
+            'name' => $manager->name,
+            'title' => $manager->designation ?? 'Employee',
+            'children' => $children
+        ];
+    }
+
+    /**
+     * ================================
+     * 2. API: Manager Hierarchy
+     * ================================
+     * Returns JSON for the logged-in manager’s team tree
+     */
+    public function managerHierarchy()
+    {
+        $user = Auth::user();
+        $employeeHierarchy = $this->buildEmployeeHierarchy($user->id);
+
+        return response()->json($employeeHierarchy);
+    }
+
+  /**
+ * ================================
+ * 3. API: User Goals
+ * ================================
+ * Returns detailed goals for a selected user (clicked in chart)
+ */
+public function userGoals($id)
+{
+    try {
+        // Join goal_assignments with goals table to get full goal details
+        $orggoals = DB::table('goal_assignments')
+            ->join('goals', 'goal_assignments.goal_id', '=', 'goals.id')
+            ->where('goal_assignments.assigned_to', $id)
+            ->select(
+                'goals.id',
+                'goals.title',
+                'goals.description',
+                'goals.priority',
+                'goals.status',
+                'goals.start_date',
+                'goals.end_date'
+            )
+            ->get();
+
+        return response()->json($orggoals);
+
+    } catch (\Exception $e) {
+        return response()->json([
+            'error' => 'Failed to load goals',
+            'message' => $e->getMessage()
+        ], 500);
+    }
+}
+
 
 
     // ============================
@@ -892,6 +978,8 @@ $submittedGoals = $individualSubmittedGoals->merge($bundleSubmittedGoals);
         // $juniors = \DB::table('users')
         //     ->where('manager_id', $user->id)
         //     ->get();
+
+        
 
         return view('user_view.pms_dashboard', [
             // Organization Dashboard Data

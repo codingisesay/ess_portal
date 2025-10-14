@@ -1,5 +1,9 @@
 <link rel="stylesheet" href="{{ asset('/user_end/css/pms-dashboard.css') }}">
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<!-- ========== ORGCHART PLUGIN ========== -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/orgchart/2.1.9/css/jquery.orgchart.min.css" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/orgchart/2.1.9/js/jquery.orgchart.min.js"></script>
 
 <div class="container">
     <h2>Manager Dashboard</h2>
@@ -639,6 +643,166 @@
     </div>
   </div>
 </div>
+
+
+<!-- ========== ORG CHART SECTION ========== -->
+<div class="container mt-4">
+    <div class="row">
+        <!-- ========== ORG CHART SECTION (LEFT) ========== -->
+        <div class="col-md-5" id="chart-container" style="height:600px; overflow-y:auto; border-right:1px solid #ddd; padding:10px; background:#f9f9f9; border-radius:8px;"></div>
+
+        <!-- ========== GOALS TABLE SECTION (RIGHT) ========== -->
+        <div class="col-md-7" id="goals-section" style="display:none; overflow-y:auto; max-height:600px;">
+            <h5 id="employee-name" class="mb-3"></h5>
+            <table class="table table-bordered table-hover table-striped">
+                <thead class="table-light">
+                    <tr>
+                        <th>Title</th>
+                        <th>Description</th>
+                        <th>Status</th>
+                        <th>Progress</th>
+                        <th>Priority</th>
+                        <th>Start → End</th>
+                    </tr>
+                </thead>
+                <tbody id="goals-body"></tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+
+
+<style>
+/* Modern org chart styles */
+#chart-container .orgchart {
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    padding: 15px;
+}
+
+#chart-container .orgchart .node {
+    border: 2px solid #007bff;
+    border-radius: 8px;
+    padding: 10px 15px;
+    background: #fff;
+    color: #333;
+    font-weight: 500;
+    transition: transform 0.2s, box-shadow 0.2s;
+    cursor: pointer;
+    min-width: 120px;
+    text-align: center;
+}
+
+#chart-container .orgchart .node:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+    border-color: #0056b3;
+}
+
+.employee-node.selected {
+    background-color: #007bff;
+    color: #fff;
+    border-color: #0056b3;
+}
+
+#chart-container::-webkit-scrollbar {
+    width: 8px;
+}
+
+#chart-container::-webkit-scrollbar-thumb {
+    background: rgba(0,0,0,0.2);
+    border-radius: 4px;
+}
+</style>
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    let loggedInManagerId = {{ Auth::id() }};
+
+    fetch('{{ route('manager.hierarchy') }}')
+        .then(res => res.json())
+        .then(data => {
+            if (!data) {
+                document.getElementById('chart-container').innerHTML =
+                    '<p class="text-muted">No hierarchy data found.</p>';
+                return;
+            }
+            renderChart(data);
+
+            const managerNode = document.querySelector(`.employee-node[data-id='${loggedInManagerId}']`);
+            if (managerNode) {
+                managerNode.click();
+            }
+        })
+        .catch(err => console.error('Error fetching hierarchy:', err));
+
+    function renderChart(data) {
+        $('#chart-container').orgchart({
+            'data': data,
+            'nodeContent': 'title',
+            'verticalLevel': true,
+            'createNode': function($node, nodeData) {
+                $node.addClass('employee-node');
+                $node.attr('data-id', nodeData.id);
+
+                $node.on('click', function(e) {
+                    e.stopPropagation();
+                    $('.employee-node').removeClass('selected');
+                    $node.addClass('selected');
+                    loadUserGoals(nodeData.id, nodeData.name);
+                });
+            }
+        });
+    }
+
+    async function loadUserGoals(userId, name) {
+        try {
+            const url = `{{ url('/manager') }}/${userId}/goals`;
+            const res = await fetch(url);
+
+            if (!res.ok) throw new Error(`Failed to fetch goals (${res.status})`);
+            const goals = await res.json();
+
+            const goalsSection = document.getElementById("goals-section");
+            goalsSection.style.display = 'block';
+            document.getElementById("employee-name").innerText = `${name}'s Goals`;
+
+            const tbody = document.getElementById("goals-body");
+            tbody.innerHTML = '';
+
+            if (!goals.length) {
+                tbody.innerHTML = '<tr><td colspan="6" class="text-center text-muted">No goals found</td></tr>';
+                return;
+            }
+
+            goals.forEach(g => {
+                const startDate = g.start_date ? new Date(g.start_date).toLocaleDateString('en-GB') : '—';
+                const endDate = g.end_date ? new Date(g.end_date).toLocaleDateString('en-GB') : '—';
+                const priority = g.priority ? g.priority.charAt(0).toUpperCase() + g.priority.slice(1) : 'Medium';
+
+                tbody.innerHTML += `
+                    <tr>
+                        <td>${g.title ?? ''}</td>
+                        <td>${g.description ?? ''}</td>
+                        <td>${g.status ?? ''}</td>
+                        <td>${g.progress ?? 0}%</td>
+                        <td>${priority}</td>
+                        <td>${startDate} → ${endDate}</td>
+                    </tr>
+                `;
+            });
+
+        } catch (err) {
+            console.error(err);
+            alert('Error loading goals: ' + err.message);
+        }
+    }
+});
+</script>
+
+
 
 <!-- added the script for the edit of the insignt when it is rejected  -->
 <script>

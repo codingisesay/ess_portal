@@ -337,6 +337,13 @@ Route::get('/org-settings/{id}', [PmsController::class, 'orgSettingsShow']);
 Route::delete('/org-settings/{id}', [PmsController::class, 'orgSettingsDestroy']);
 
 // ============================
+// MANAGER ORG CHART WITH GOALS
+// ============================
+Route::get('/manager/hierarchy', [PmsController::class, 'managerHierarchy'])->name('manager.hierarchy');
+Route::get('/manager/{id}/goals', [PmsController::class, 'userGoals'])->name('manager.user.goals');
+
+
+// ============================
 // GOALS
 // ============================
 Route::get('/goals', [PmsController::class, 'goalsIndex']);
