@@ -289,34 +289,66 @@ public function orgSettingsStore(Request $request) {
 
 
 
-    public function submitInsightBundle(Request $request)
+public function submitInsightBundle(Request $request)
 {
     $user = Auth::user();
 
+    // Validate request
     $request->validate([
         'insight_ids' => 'required|array|min:1',
         'insight_ids.*' => 'integer|exists:insights,id',
     ]);
 
-    // find reporting manager from your emp_details table (same as other flows)
-    $reportingManager = DB::table('emp_details')->where('user_id', $user->id)->value('reporting_manager');
+    // Get reporting manager
+    $reportingManager = DB::table('emp_details')
+        ->where('user_id', $user->id)
+        ->value('reporting_manager');
 
-    // create bundle
-    $bundle = InsightBundleApproval::create([
-        'requested_by' => $user->id,
-        'reporting_manager' => $reportingManager,
-        'status' => 'pending',
-    ]);
+    $insightIds = $request->insight_ids;
 
-    // attach items
-    foreach ($request->insight_ids as $insightId) {
-        InsightBundleItem::create([
-            'bundle_id' => $bundle->id,
-            'insight_id' => $insightId,
+    // Check if there is an existing rejected bundle for these insights
+    $existingBundleId = \DB::table('insight_bundle_items')
+        ->join('insight_bundle_approvals', 'insight_bundle_items.bundle_id', '=', 'insight_bundle_approvals.id')
+        ->whereIn('insight_bundle_items.insight_id', $insightIds)
+        ->where('insight_bundle_approvals.requested_by', $user->id)
+        ->where('insight_bundle_approvals.status', 'rejected')
+        ->pluck('insight_bundle_approvals.id')
+        ->first(); // Get first matching bundle
+
+    if ($existingBundleId) {
+        // If a rejected bundle exists, update its status back to 'pending'
+        InsightBundleApproval::where('id', $existingBundleId)
+            ->update(['status' => 'pending']);
+
+        // Update the insights_status back to 'pending' as well
+        \DB::table('insights')
+            ->whereIn('id', $insightIds)
+            ->update(['insights_status' => 'pending']);
+
+        $bundleId = $existingBundleId;
+    } else {
+        // No rejected bundle exists; create a new one
+        $bundle = InsightBundleApproval::create([
+            'requested_by' => $user->id,
+            'reporting_manager' => $reportingManager,
+            'status' => 'pending',
         ]);
+
+        // Attach the selected insights
+        foreach ($insightIds as $insightId) {
+            InsightBundleItem::create([
+                'bundle_id' => $bundle->id,
+                'insight_id' => $insightId,
+            ]);
+        }
+
+        $bundleId = $bundle->id;
     }
 
-    return response()->json(['message' => 'Insight bundle submitted', 'bundle_id' => $bundle->id], 201);
+    return response()->json([
+        'message' => 'Insight bundle submitted',
+        'bundle_id' => $bundleId
+    ], 201);
 }
 
 public function pendingInsightBundles()
@@ -324,7 +356,7 @@ public function pendingInsightBundles()
     $user = Auth::user();
 
     // manager only: pending bundles assigned to this manager
-    $pending = InsightBundleApproval::with('items.insight', 'requestedBy')
+    $pending = InsightBundleApproval::with('items.insight.goal', 'requestedBy')
                 ->where('reporting_manager', $user->id)
                 ->where('status', 'pending')
                 ->get();
