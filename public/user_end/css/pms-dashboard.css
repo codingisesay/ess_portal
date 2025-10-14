@@ -134,7 +134,7 @@ button.btn.btn-secondary[data-bs-target="#createOwnTaskModal"].show {
 
 /* Scrollable table container */
 .table-scroll-container {
-    max-height: 240px; /* Show exactly 4 rows (60px per row * 4) */
+    max-height: 180px; /* Show up to 3 rows in the Insight Bundle Approval Requests(60px per row * 3) */
     overflow-y: auto;
     scrollbar-gutter: stable; /* reserve space for scrollbar to keep widths aligned */
     border: 1px solid #e5e7eb;
@@ -151,6 +151,11 @@ button.btn.btn-secondary[data-bs-target="#createOwnTaskModal"].show {
     border-radius: 6px 6px 0 0;
     overflow: hidden;
     padding-right: 8px; /* compensate for scrollbar width to align columns */
+}
+
+/* Align header columns when body scrollbar is hidden */
+.no-scrollbar-header {
+    padding-right: 0;
 }
 
 .table-fixed-header table {
@@ -192,6 +197,17 @@ button.btn.btn-secondary[data-bs-target="#createOwnTaskModal"].show {
 
 .table-scroll-container::-webkit-scrollbar-thumb:hover {
     background: #a8a8a8;
+}
+
+/* Scrollable body for Insights on Organization Goals table on manager dashboard with hidden scrollbar */
+.org-insights-scroll {
+    max-height: 180px;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+
+.org-insights-scroll::-webkit-scrollbar {
+    display: none;
 }
 
 .table th {
@@ -264,7 +280,7 @@ ul {
 /* ---------- Scrollable Table Body ---------- */
 .table-scroll {
     max-height: 250px;      /* Set the height of the scrollable area */
-    overflow-y: hidden;       /* Vertical scrolling */
+    overflow-y: auto;       /* Vertical scrolling */
     overflow-x: hidden;     /* Prevent horizontal scroll */
     border: 1px solid #e5e7eb;
     border-radius: 6px;
