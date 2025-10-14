@@ -22,7 +22,8 @@
     min-width: 180px;
     border: 2px solid #d0d8e5; /* visible border around whole search bar */
     transition: all 0.3s ease;
-    margin-left: 10px;
+    margin-left: 14; /* align with the policy sidebar */
+    width: 300px; /* match sidebar width on desktop/tablet */
 }
 
 .search-bar:focus-within {
@@ -228,8 +229,7 @@
      margin-bottom: 5px;
      background-color: #D9D9D9;
      transition: background-color 0.3s ease;
-     width: 186px;
-     /* width: 100%; */
+     width: 100%;
      height: 60px;
  }
 
@@ -256,7 +256,8 @@
      font-size: 12px;
      font-weight: 500;
      color: #333;
-     width: 300px;
+     width: auto;
+     flex: 1;
      padding: 8px;
  }
 
@@ -493,6 +494,10 @@
 
 /* Ensure column layout inside slider only on small screens */
 @media (max-width: 767px) {
+    /* On mobile, make search bar full width for consistency with sidebar */
+    .search-bar {
+        width: 100%;
+    }
     .policy-slider .policy-card .policy-content,
     .policy-slider .policy-card:nth-child(even) .policy-content {
         flex-direction: column;
@@ -663,12 +668,18 @@
     }
 
     .sidebar {
-        width: 246px;
+        /* Changed the side bar width in 243 px to 296px to match the search item width */
+        width: 296px;
         flex-shrink: 0;
         position: sticky;
         top: 2rem;
         height: auto;
         max-height: 75vh;
+    }
+
+    /* Match search bar to sidebar width on large desktops */
+    .search-bar {
+        width: 296px;
     }
 
     .content-area {
