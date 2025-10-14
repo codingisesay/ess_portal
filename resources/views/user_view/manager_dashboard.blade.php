@@ -470,11 +470,19 @@
     <div class="card-body">
         @php
             $managerId = Auth::id();
+
+            // 1️⃣ Get all user IDs whose current reporting manager is this manager
+            $reporteeIds = \DB::table('emp_details')
+                ->where('reporting_manager', $managerId)
+                ->pluck('user_id');
+
+            // 2️⃣ Fetch pending goal bundles submitted by these users
             $pendingBundles = \App\Models\GoalBundleApproval::with('items.goal')
-                                ->where('reporting_manager', $managerId)
-                                ->where('status', 'pending')
-                                ->get();
+                ->whereIn('requested_by', $reporteeIds)
+                ->where('status', 'pending')
+                ->get();
         @endphp
+
 
         @if($pendingBundles->count() > 0)
             <div class="table-fixed-header">
@@ -579,13 +587,21 @@
   <div class="card mb-4">
     <div class="card-header bg-light"><strong>Insight Bundle Approval Requests</strong></div>
     <div class="card-body">
-      @php
-          $managerId = Auth::id();
-          $pendingInsightBundles = \App\Models\InsightBundleApproval::with('items.insight')
-                                  ->where('reporting_manager', $managerId)
-                                  ->where('status', 'pending')
-                                  ->get();
-      @endphp
+     @php
+            $managerId = Auth::id();
+
+            // 1️⃣ Get all user IDs whose current reporting manager is this manager
+            $reporteeIds = \DB::table('emp_details')
+                ->where('reporting_manager', $managerId)
+                ->pluck('user_id');
+
+            // 2️⃣ Fetch pending bundles submitted by these users
+            $pendingInsightBundles = \App\Models\InsightBundleApproval::with('items.insight')
+                ->whereIn('requested_by', $reporteeIds)
+                ->where('status', 'pending')
+                ->get();
+        @endphp
+
 
       @if($pendingInsightBundles->count() > 0)
         <div class="table-fixed-header">
