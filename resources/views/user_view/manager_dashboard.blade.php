@@ -587,22 +587,42 @@
   <div class="card mb-4">
     <div class="card-header bg-light"><strong>Insight Bundle Approval Requests</strong></div>
     <div class="card-body">
-     @php
-            $managerId = Auth::id();
+        @php
+        use Illuminate\Support\Facades\Auth;
+        use Illuminate\Support\Facades\DB;
+        use App\Models\InsightBundleApproval;
 
-            // 1️⃣ Get all user IDs whose current reporting manager is this manager
-            $reporteeIds = \DB::table('emp_details')
-                ->where('reporting_manager', $managerId)
-                ->pluck('user_id');
+        $managerId = Auth::id();
 
-            // 2️⃣ Fetch pending bundles submitted by these users
-            $pendingInsightBundles = \App\Models\InsightBundleApproval::with('items.insight')
-                ->whereIn('requested_by', $reporteeIds)
-                ->where('status', 'pending')
-                ->get();
+        // Fetch all pending bundles
+        $allBundles = InsightBundleApproval::with('items.insight', 'requestedBy')->get();
+
+        // Prepare collections for this manager
+        $pendingInsightBundles = collect();
+        $level1Ids = [];
+        $level2Ids = [];
+
+        foreach ($allBundles as $bundle) {
+            // Step 1: Get requested user's reporting manager
+            $reportingManager = DB::table('emp_details')
+                ->where('user_id', $bundle->requested_by)
+                ->value('reporting_manager');
+
+            // Step 2: Get that manager's manager
+            $managerManager = DB::table('emp_details')
+                ->where('user_id', $reportingManager)
+                ->value('reporting_manager');
+
+            // Step 3: Assign bundles based on logged-in user role
+            if ($reportingManager == $managerId && $bundle->status_level1 == 'pending') {
+                $pendingInsightBundles->push($bundle);
+                $level1Ids[] = $bundle->id;
+            } elseif ($managerManager == $managerId && $bundle->status_level1 == 'approved' && $bundle->status_level2 == 'pending') {
+                $pendingInsightBundles->push($bundle);
+                $level2Ids[] = $bundle->id;
+            }
+        }
         @endphp
-
-
       @if($pendingInsightBundles->count() > 0)
         <div class="table-fixed-header">
           <table class="table table-bordered table-striped m-0">

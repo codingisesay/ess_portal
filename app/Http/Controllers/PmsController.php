@@ -366,62 +366,96 @@ public function pendingInsightBundles()
 
 public function approveInsightBundle(Request $request, $id)
 {
+    $user = Auth::user();
     $bundle = InsightBundleApproval::findOrFail($id);
 
-    if ($bundle->status !== 'pending') {
-        return response()->json(['message' => 'Already processed'], 400);
-    }
+    $rating = $request->rating ?? null;
 
-    // Get status from request (or fallback to 'approved')
-    $status = $request->status ?? 'approved';
-    $rating = $request->rating ?? null; // rating sent from frontend
-
-    // Update bundle status
-    $bundle->update(['status' => $status]);
-
-    // Update all insights related to this bundle
-    $insightIds = \DB::table('insight_bundle_items')
-        ->where('bundle_id', $bundle->id)
-        ->pluck('insight_id');
-
-    \DB::table('insights')
-        ->whereIn('id', $insightIds)
-        ->update([
-            'insights_status' => $status,
-            'insights_rating' => $rating // will be null if not provided
+    // ---- Level 1 Manager Approval ----
+    if ($bundle->reporting_manager == $user->id && $bundle->status_level1 == 'pending') {
+        $bundle->update([
+            'status_level1' => 'approved',
+            'level1_approver' => $user->id,
         ]);
 
-    return response()->json(['message' => 'Bundle approved successfully.']);
+        // ⚠️ Don't touch final status yet, Level 2 still pending
+        return response()->json(['message' => 'Approved at Level 1. Waiting for Level 2 approval.']);
+    }
+
+    // ---- Level 2 Manager Approval ----
+    elseif ($bundle->level2_approver == $user->id && 
+            $bundle->status_level1 == 'approved' && 
+            $bundle->status_level2 == 'pending') {
+
+        $bundle->update([
+            'status_level2' => 'approved',
+            'level2_approver' => $user->id,
+            'status' => 'approved',
+        ]);
+
+        // ✅ Now that both approved, update related insights
+        $insightIds = \DB::table('insight_bundle_items')
+            ->where('bundle_id', $bundle->id)
+            ->pluck('insight_id');
+
+        \DB::table('insights')
+            ->whereIn('id', $insightIds)
+            ->update([
+                'insights_status' => 'approved',
+                'insights_rating' => $rating,
+            ]);
+
+        return response()->json(['message' => 'Bundle fully approved.']);
+    }
+
+    return response()->json(['message' => 'You are not authorized or already processed.'], 403);
 }
+
+
 
 public function rejectInsightBundle(Request $request, $id)
 {
+    $user = Auth::user();
     $bundle = InsightBundleApproval::findOrFail($id);
 
-    if ($bundle->status !== 'pending') {
-        return response()->json(['message' => 'Already processed'], 400);
+    $remarks = $request->remarks ?? null;
+
+    // ---- Level 1 Manager Reject ----
+    if ($bundle->reporting_manager == $user->id && $bundle->status_level1 == 'pending') {
+        $bundle->update([
+            'status_level1' => 'rejected',
+            'status' => 'rejected',
+            'remarks' => $remarks,
+            'level1_approver' => $user->id,
+        ]);
     }
 
-    // ✅ Get status from request
-    $status = $request->status ?? 'rejected'; // fallback to 'rejected'
+    // ---- Level 2 Manager Reject ----
+    elseif ($bundle->level2_approver == $user->id && 
+            $bundle->status_level1 == 'approved' && 
+            $bundle->status_level2 == 'pending') {
+        $bundle->update([
+            'status_level2' => 'rejected',
+            'status' => 'rejected',
+            'remarks' => $remarks,
+            'level2_approver' => $user->id,
+        ]);
+    } else {
+        return response()->json(['message' => 'You are not authorized or already processed.'], 403);
+    }
 
-    // Update bundle
-    $bundle->update([
-        'status' => $status,
-        'remarks' => $request->remarks ?? null,
-    ]);
-
-    // Update all insights linked to this bundle
+    // ❌ Update insights immediately on any rejection
     \DB::table('insights')
         ->whereIn('id', function ($query) use ($bundle) {
             $query->select('insight_id')
-                ->from('insight_bundle_items')
-                ->where('bundle_id', $bundle->id);
+                  ->from('insight_bundle_items')
+                  ->where('bundle_id', $bundle->id);
         })
-        ->update(['insights_status' => $status]);
+        ->update(['insights_status' => 'rejected']);
 
     return response()->json(['message' => 'Bundle rejected successfully.']);
 }
+
 
 
     
