@@ -59,9 +59,15 @@ $userDetails = app('App\Http\Controllers\headerController')->getUserDetails();
                 </a>
             </div>
             <div class="bellcircle"> 
-                <a href="bell.html" class="text-dark mx-2">
+                <!-- Notification dropdown toggled on bell click -->
+                <a href="javascript:void(0)" id="notificationIcon" class="text-dark mx-2">
                   <x-icon name="notification" />
                 </a>
+                <div id="notificationDropdown" class="dropdown-content-notifications" style="display:none; min-width:260px;">
+                    <div class="px-2 py-2"><strong>Notifications</strong></div>
+                    <hr class="my-1"/>
+                    <div class="px-2 pb-2 text-muted"><small>No notifications yet.</small></div>
+                </div>
             </div>
             <div class="profilecircle profile-dropdown">
                 <a href="javascript:void(0)" id="profileIcon" class=" mx-2" > 
@@ -182,5 +188,24 @@ function previewImage() {
 //     closeModal();
 // }
     </script>
+    <script>
+        // toggle notification dropdown and close on outside click
+        (function(){
+            var icon = document.getElementById('notificationIcon');
+            var dd = document.getElementById('notificationDropdown');
+            if(icon && dd){
+                icon.addEventListener('click', function(e){
+                    e.preventDefault();
+                    e.stopPropagation();
+                    dd.style.display = (dd.style.display === 'block') ? 'none' : 'block';
+                });
+                document.addEventListener('click', function(){
+                    dd.style.display = 'none';
+                });
+            }
+        })();
+    </script>
+    
+    <!-- Global footer included for all pages extending this layout -->
+    @include('user_view.footer')
 </body>
-

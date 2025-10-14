@@ -748,3 +748,13 @@ tr:hover {
     margin-left: 30px;
     width: 266px !important;
 }
+
+/* Hiden scrollbar for Upcoming Holidays (cross-browser) */
+.holidays, .container-holiday {
+    -ms-overflow-style: none;      
+    scrollbar-width: none;         
+}
+.holidays::-webkit-scrollbar,
+.container-holiday::-webkit-scrollbar {
+    display: none;                  
+}
