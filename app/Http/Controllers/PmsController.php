@@ -375,7 +375,7 @@ public function pendingInsightBundles()
                 ->where('status', 'pending')
                 ->get();
 
-    Log::info('📦 Pending Insight Bundles fetched', [
+    Log::info('Pending Insight Bundles fetched', [
         'manager_id' => $user->id,
         'count' => $pending->count(),
     ]);
@@ -489,7 +489,7 @@ public function rejectInsightBundle(Request $request, $id)
         return response()->json(['message' => 'You are not authorized or already processed.'], 403);
     }
 
-    // ❌ Update insights immediately on any rejection
+    //  Update insights immediately on any rejection
     DB::table('insights')
         ->whereIn('id', function ($query) use ($bundle) {
             $query->select('insight_id')
