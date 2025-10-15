@@ -922,55 +922,56 @@ document.addEventListener('click', async function(e) {
 <script>
 async function approveInsightBundle(id) {
     try {
-        // 1️⃣ Ask for star rating (1-5 stars)
-        const { value: rating } = await Swal.fire({
-            title: 'Rate these insights',
+        // 1️⃣ Ask for star rating + optional remark
+        const { value: result } = await Swal.fire({
+            title: 'Approve Insights',
             html: `
-                <div id="starRating" style="font-size: 2rem; display: flex; justify-content: center; gap: 5px;">
+                <div style="margin-bottom:10px; font-weight:bold;">Rate these insights:</div>
+                <div id="starRating" style="font-size: 2rem; display: flex; justify-content: center; gap: 5px; margin-bottom:15px;">
                     <span data-value="1" style="cursor:pointer;">☆</span>
                     <span data-value="2" style="cursor:pointer;">☆</span>
                     <span data-value="3" style="cursor:pointer;">☆</span>
                     <span data-value="4" style="cursor:pointer;">☆</span>
                     <span data-value="5" style="cursor:pointer;">☆</span>
                 </div>
+                <textarea id="remarkInput" class="swal2-textarea" placeholder="Add a remark (optional)"></textarea>
             `,
             showCancelButton: true,
-            confirmButtonText: 'Submit Rating',
-            cancelButtonText: 'Skip Rating',
+            confirmButtonText: 'Submit',
+            cancelButtonText: 'Cancel',
             preConfirm: () => {
-                return document.querySelector('#starRating').dataset.selected;
+                const rating = document.querySelector('#starRating').dataset.selected || null;
+                const remark = document.querySelector('#remarkInput').value.trim() || null;
+                return { rating, remark };
             },
             didOpen: () => {
                 const stars = document.querySelectorAll('#starRating span');
                 stars.forEach(star => {
                     star.addEventListener('mouseenter', () => {
                         const val = parseInt(star.dataset.value);
-                        stars.forEach((s, i) => {
-                            s.textContent = i < val ? '★' : '☆';
-                        });
+                        stars.forEach((s, i) => s.textContent = i < val ? '★' : '☆');
                     });
                     star.addEventListener('click', () => {
                         const val = parseInt(star.dataset.value);
                         document.querySelector('#starRating').dataset.selected = val;
-                        stars.forEach((s, i) => {
-                            s.textContent = i < val ? '★' : '☆';
-                        });
+                        stars.forEach((s, i) => s.textContent = i < val ? '★' : '☆');
                     });
                     star.addEventListener('mouseleave', () => {
                         const selected = parseInt(document.querySelector('#starRating').dataset.selected || 0);
-                        stars.forEach((s, i) => {
-                            s.textContent = i < selected ? '★' : '☆';
-                        });
+                        stars.forEach((s, i) => s.textContent = i < selected ? '★' : '☆');
                     });
                 });
             }
         });
 
+        if (!result) return; // Cancelled
+
         // 2️⃣ Prepare payload
         const payload = { status: 'approved' };
-        if (rating) payload.rating = rating;
+        if (result.rating) payload.rating = result.rating;
+        if (result.remark) payload.remarks = result.remark; // send to backend
 
-        // 3️⃣ Send approve + rating to backend
+        // 3️⃣ Send approve + rating + remark to backend
         const res = await fetch(`/insights/bundles/${id}/approve`, {
             method: 'POST',
             headers: {
@@ -1008,6 +1009,7 @@ async function approveInsightBundle(id) {
         });
     }
 }
+
 function rejectInsightBundle(id) {
     Swal.fire({
         title: 'Reject Bundle',
@@ -1175,64 +1177,82 @@ document.addEventListener("DOMContentLoaded", function () {
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
 function approveBundle(id) {
-    fetch(`/manager/bundles/${id}/approve`, {
-        method: 'POST',
-        headers: {
-            'X-CSRF-TOKEN': '{{ csrf_token() }}',
-            'Content-Type': 'application/json',
+    Swal.fire({
+        title: 'Add Remark (optional)',
+        input: 'textarea',
+        inputPlaceholder: 'Enter any remarks...',
+        showCancelButton: true,
+        confirmButtonText: 'Approve',
+        cancelButtonText: 'Cancel',
+        preConfirm: (remark) => {
+            return fetch(`/manager/bundles/${id}/approve`, {
+                method: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                    'Content-Type': 'application/json',
+                },
+               body: JSON.stringify({ remark }) // match PHP input
+            })
+            .then(res => res.json())
+            .catch(() => {
+                Swal.showValidationMessage('Request failed');
+            });
         }
-    })
-    .then(res => res.json())
-    .then(data => {
-        Swal.fire({
-            icon: 'success',
-            title: 'Approved!',
-            text: data.message,
-            timer: 2000,
-            showConfirmButton: false
-        });
-
-        // remove the row from table
-        document.querySelector(`tr[data-bundle-id="${id}"]`).remove();
-    })
-    .catch(err => {
-        Swal.fire({
-            icon: 'error',
-            title: 'Error',
-            text: 'Something went wrong!'
-        });
+    }).then((result) => {
+        if (result.isConfirmed && result.value) {
+            Swal.fire({
+                icon: 'success',
+                title: 'Approved!',
+                text: result.value.message,
+                timer: 2000,
+                showConfirmButton: false
+            });
+            document.querySelector(`tr[data-bundle-id="${id}"]`)?.remove();
+        }
     });
 }
 
 function rejectBundle(id) {
-    fetch(`/manager/bundles/${id}/reject`, {
-        method: 'POST',
-        headers: {
-            'X-CSRF-TOKEN': '{{ csrf_token() }}',
-            'Content-Type': 'application/json',
+    Swal.fire({
+        title: 'Add Remark (required)',
+        input: 'textarea',
+        inputPlaceholder: 'Enter reason for rejection...',
+        showCancelButton: true,
+        confirmButtonText: 'Reject',
+        cancelButtonText: 'Cancel',
+        inputValidator: (value) => {
+            if (!value) {
+                return 'Remark is required to reject';
+            }
+        },
+        preConfirm: (remark) => {
+            return fetch(`/manager/bundles/${id}/reject`, {
+                method: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                    'Content-Type': 'application/json',
+                },
+                 body: JSON.stringify({ remark }) // match PHP input
+            })
+            .then(res => res.json())
+            .catch(() => {
+                Swal.showValidationMessage('Request failed');
+            });
         }
-    })
-    .then(res => res.json())
-    .then(data => {
-        Swal.fire({
-            icon: 'warning',
-            title: 'Rejected!',
-            text: data.message,
-            timer: 2000,
-            showConfirmButton: false
-        });
-
-        // remove the row from table
-        document.querySelector(`tr[data-bundle-id="${id}"]`).remove();
-    })
-    .catch(err => {
-        Swal.fire({
-            icon: 'error',
-            title: 'Error',
-            text: 'Something went wrong!'
-        });
+    }).then((result) => {
+        if (result.isConfirmed && result.value) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Rejected!',
+                text: result.value.message,
+                timer: 2000,
+                showConfirmButton: false
+            });
+            document.querySelector(`tr[data-bundle-id="${id}"]`)?.remove();
+        }
     });
 }
+
 </script>
 
 
@@ -1266,15 +1286,17 @@ function addToBundle(goalId, title, orgSettingId, type, button) {
     if(button) button.closest('tr').remove();
 }
 
+
 // Add custom goal
 function addCustomGoal() {
     let title = document.getElementById('customGoalTitle').value.trim();
     let orgSettingId = document.getElementById('customGoalOrg').value;
     let startDate = document.getElementById('customGoalStart').value;
     let endDate = document.getElementById('customGoalEnd').value;
+    let description = document.getElementById('description').value.trim();
 
-    if (!title || !orgSettingId || !startDate || !endDate) {
-        alert("Please fill all custom goal fields.");
+    if (!title || !orgSettingId || !startDate || !endDate || !description) {
+        alert("Please fill all custom goal fields including description.");
         return;
     }
 
@@ -1287,6 +1309,7 @@ function addCustomGoal() {
             <input type="hidden" name="custom_titles[${customId}]" value="${title}">
             <input type="hidden" name="custom_start[${customId}]" value="${startDate}">
             <input type="hidden" name="custom_end[${customId}]" value="${endDate}">
+            <input type="hidden" name="custom_descriptions[${customId}]" value="${description}">
         </td>
         <td>Custom</td>
         <td>
@@ -1300,7 +1323,9 @@ function addCustomGoal() {
     document.getElementById('customGoalOrg').value = '';
     document.getElementById('customGoalStart').value = '';
     document.getElementById('customGoalEnd').value = '';
+    document.getElementById('description').value = '';
 }
+
 
 // Submit bundle
 document.getElementById('bundleForm').addEventListener('submit', function(e) {
