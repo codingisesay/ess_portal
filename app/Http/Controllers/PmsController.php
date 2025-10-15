@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use App\Models\User;
 use App\Models\OrganizationSetting;
 use App\Models\Goal;
@@ -293,48 +294,54 @@ public function submitInsightBundle(Request $request)
 {
     $user = Auth::user();
 
-    // Validate request
-    $request->validate([
-        'insight_ids' => 'required|array|min:1',
-        'insight_ids.*' => 'integer|exists:insights,id',
-    ]);
+    // Get all insights for this user
+    $insightIds = DB::table('insights')
+        ->where('user_id', $user->id)
+        ->pluck('id')
+        ->toArray();
+
+    if (empty($insightIds)) {
+        return response()->json(['message' => 'No insights available to submit.'], 400);
+    }
 
     // Get reporting manager
     $reportingManager = DB::table('emp_details')
         ->where('user_id', $user->id)
         ->value('reporting_manager');
 
-    $insightIds = $request->insight_ids;
+    // Check for existing bundle with same set of insights
+    $existingBundle = InsightBundleApproval::where('requested_by', $user->id)
+        ->get()
+        ->first(function($bundle) use ($insightIds) {
+            $bundleInsightIds = $bundle->items()->pluck('insight_id')->sort()->values()->toArray();
+            return $bundleInsightIds === collect($insightIds)->sort()->values()->toArray();
+        });
 
-    // Check if there is an existing rejected bundle for these insights
-    $existingBundleId = \DB::table('insight_bundle_items')
-        ->join('insight_bundle_approvals', 'insight_bundle_items.bundle_id', '=', 'insight_bundle_approvals.id')
-        ->whereIn('insight_bundle_items.insight_id', $insightIds)
-        ->where('insight_bundle_approvals.requested_by', $user->id)
-        ->where('insight_bundle_approvals.status', 'rejected')
-        ->pluck('insight_bundle_approvals.id')
-        ->first(); // Get first matching bundle
+    if ($existingBundle) {
+        // Update existing bundle status fields
+        $existingBundle->update([
+            'status' => 'pending',
+            'status_level1' => 'pending',
+            'status_level2' => 'pending',
+            'reporting_manager' => $reportingManager,
+        ]);
 
-    if ($existingBundleId) {
-        // If a rejected bundle exists, update its status back to 'pending'
-        InsightBundleApproval::where('id', $existingBundleId)
-            ->update(['status' => 'pending']);
-
-        // Update the insights_status back to 'pending' as well
-        \DB::table('insights')
+        // Update insights status
+        DB::table('insights')
             ->whereIn('id', $insightIds)
             ->update(['insights_status' => 'pending']);
 
-        $bundleId = $existingBundleId;
+        $bundleId = $existingBundle->id;
     } else {
-        // No rejected bundle exists; create a new one
+        // Create new bundle
         $bundle = InsightBundleApproval::create([
             'requested_by' => $user->id,
             'reporting_manager' => $reportingManager,
             'status' => 'pending',
+            'status_level1' => 'pending',
+            'status_level2' => 'pending',
         ]);
 
-        // Attach the selected insights
         foreach ($insightIds as $insightId) {
             InsightBundleItem::create([
                 'bundle_id' => $bundle->id,
@@ -342,89 +349,157 @@ public function submitInsightBundle(Request $request)
             ]);
         }
 
+        // Update insights status
+        DB::table('insights')
+            ->whereIn('id', $insightIds)
+            ->update(['insights_status' => 'pending']);
+
         $bundleId = $bundle->id;
     }
 
     return response()->json([
-        'message' => 'Insight bundle submitted',
+        'message' => 'Insight bundle submitted successfully',
         'bundle_id' => $bundleId
     ], 201);
 }
+
+
+
 
 public function pendingInsightBundles()
 {
     $user = Auth::user();
 
-    // manager only: pending bundles assigned to this manager
     $pending = InsightBundleApproval::with('items.insight.goal', 'requestedBy')
                 ->where('reporting_manager', $user->id)
                 ->where('status', 'pending')
                 ->get();
+
+    Log::info('📦 Pending Insight Bundles fetched', [
+        'manager_id' => $user->id,
+        'count' => $pending->count(),
+    ]);
 
     return view('manager.insight_bundles_pending', compact('pending'));
 }
 
 public function approveInsightBundle(Request $request, $id)
 {
+    $user = Auth::user();
     $bundle = InsightBundleApproval::findOrFail($id);
+    $rating = $request->rating ?? null;
+    $remark = $request->remarks ?? null; // get remark from frontend
 
-    if ($bundle->status !== 'pending') {
-        return response()->json(['message' => 'Already processed'], 400);
-    }
+    // 🔍 Dynamic hierarchy lookup
+    $reportingManager = DB::table('emp_details')
+        ->where('user_id', $bundle->requested_by)
+        ->value('reporting_manager');
 
-    // Get status from request (or fallback to 'approved')
-    $status = $request->status ?? 'approved';
-    $rating = $request->rating ?? null; // rating sent from frontend
+    $managerManager = DB::table('emp_details')
+        ->where('user_id', $reportingManager)
+        ->value('reporting_manager');
 
-    // Update bundle status
-    $bundle->update(['status' => $status]);
-
-    // Update all insights related to this bundle
-    $insightIds = \DB::table('insight_bundle_items')
-        ->where('bundle_id', $bundle->id)
-        ->pluck('insight_id');
-
-    \DB::table('insights')
-        ->whereIn('id', $insightIds)
-        ->update([
-            'insights_status' => $status,
-            'insights_rating' => $rating // will be null if not provided
+    // ---- Level 1 Manager Approval ----
+    if ($user->id == $reportingManager && $bundle->status_level1 == 'pending') {
+        $bundle->update([
+            'status_level1' => 'approved',
+            'level1_approver' => $user->id,
+            'rating_level1' => $rating,      // save Level 1 rating
+            'remarks' => $remark,              // save remark
+            'status_level2' => 'pending',
+            'level2_approver' => $managerManager, // set for reference
         ]);
 
-    return response()->json(['message' => 'Bundle approved successfully.']);
+        return response()->json(['message' => 'Approved at Level 1. Waiting for Level 2 approval.']);
+    }
+
+    // ---- Level 2 Manager Approval ----
+    elseif (
+        $user->id == $managerManager &&
+        $bundle->status_level1 == 'approved' &&
+        $bundle->status_level2 == 'pending'
+    ) {
+        $bundle->update([
+            'status_level2' => 'approved',
+            'level2_approver' => $user->id,
+            'rating_level2' => $rating,      // save Level 2 rating
+            'remarks' => $remark,              // save remark
+            'status' => 'approved',
+        ]);
+
+        // ✅ Update related insights
+        $insightIds = DB::table('insight_bundle_items')
+            ->where('bundle_id', $bundle->id)
+            ->pluck('insight_id');
+
+        DB::table('insights')
+            ->whereIn('id', $insightIds)
+            ->update([
+                'insights_status' => 'approved',
+                'insights_rating' => $rating,
+            ]);
+
+        return response()->json(['message' => 'Bundle fully approved.']);
+    }
+
+    // ---- Unauthorized / Processed ----
+    return response()->json(['message' => 'You are not authorized or already processed.'], 403);
 }
+
 
 public function rejectInsightBundle(Request $request, $id)
 {
+    $user = Auth::user();
     $bundle = InsightBundleApproval::findOrFail($id);
+    $remarks = $request->remarks ?? null;
 
-    if ($bundle->status !== 'pending') {
-        return response()->json(['message' => 'Already processed'], 400);
+    // 🔍 Dynamic hierarchy lookup
+    $reportingManager = DB::table('emp_details')
+        ->where('user_id', $bundle->requested_by)
+        ->value('reporting_manager');
+
+    $managerManager = DB::table('emp_details')
+        ->where('user_id', $reportingManager)
+        ->value('reporting_manager');
+
+    // ---- Level 1 Manager Rejection ----
+    if ($user->id == $reportingManager && $bundle->status_level1 == 'pending') {
+        $bundle->update([
+            'status_level1' => 'rejected',
+            'status' => 'rejected',
+            'remarks' => $remarks,
+            'level1_approver' => $user->id,
+        ]);
+    }
+    // ---- Level 2 Manager Rejection ----
+    elseif (
+        $user->id == $managerManager &&
+        $bundle->status_level1 == 'approved' &&
+        $bundle->status_level2 == 'pending'
+    ) {
+        $bundle->update([
+            'status_level2' => 'rejected',
+            'status' => 'rejected',
+            'remarks' => $remarks,
+            'level2_approver' => $user->id,
+        ]);
+    }
+    // ---- Unauthorized / Already Processed ----
+    else {
+        return response()->json(['message' => 'You are not authorized or already processed.'], 403);
     }
 
-    // ✅ Get status from request
-    $status = $request->status ?? 'rejected'; // fallback to 'rejected'
-
-    // Update bundle
-    $bundle->update([
-        'status' => $status,
-        'remarks' => $request->remarks ?? null,
-    ]);
-
-    // Update all insights linked to this bundle
-    \DB::table('insights')
+    // ❌ Update insights immediately on any rejection
+    DB::table('insights')
         ->whereIn('id', function ($query) use ($bundle) {
             $query->select('insight_id')
                 ->from('insight_bundle_items')
                 ->where('bundle_id', $bundle->id);
         })
-        ->update(['insights_status' => $status]);
+        ->update(['insights_status' => 'rejected']);
 
     return response()->json(['message' => 'Bundle rejected successfully.']);
 }
-
-
-    
 
     // ============================
     // TASKS
@@ -696,13 +771,16 @@ public function pendingBundles()
 }
 
 // Approve a bundle
-public function approveBundle($bundleId)
+// Approve a bundle with optional remark
+public function approveBundle(Request $request, $bundleId)
 {
     $bundle = GoalBundleApproval::findOrFail($bundleId);
 
     if ($bundle->status !== 'pending') {
         return response()->json(['message' => 'Bundle already processed.'], 400);
     }
+
+    $remark = $request->input('remark', null); // Optional
 
     // Insert approved goals into goal_assignments
     foreach ($bundle->items as $item) {
@@ -717,25 +795,38 @@ public function approveBundle($bundleId)
         ]);
     }
 
-    // Mark bundle as approved
-    $bundle->update(['status' => 'approved']);
+    // Mark bundle as approved and save remark
+    $bundle->update([
+        'status' => 'approved',
+        'remarks' => $remark
+    ]);
 
-   return response()->json(['message' => 'Bundle approved successfully!']);
+    return response()->json(['message' => 'Bundle approved successfully!']);
 }
 
-// Reject a bundle
-public function rejectBundle($bundleId)
+// Reject a bundle with required remark
+public function rejectBundle(Request $request, $bundleId)
 {
     $bundle = GoalBundleApproval::findOrFail($bundleId);
 
     if ($bundle->status !== 'pending') {
-        return back()->with('error', 'Bundle already processed.');
+        return response()->json(['message' => 'Bundle already processed.'], 400);
     }
 
-    $bundle->update(['status' => 'rejected']);
+    $remark = $request->input('remark');
+    if (!$remark) {
+        return response()->json(['message' => 'Remark is required to reject the bundle.'], 400);
+    }
+
+    // Mark bundle as rejected and save remark
+    $bundle->update([
+        'status' => 'rejected',
+        'remarks' => $remark
+    ]);
 
     return response()->json(['message' => 'Bundle rejected successfully!']);
 }
+
 
  /**
      * ================================
