@@ -1,17 +1,122 @@
 <link rel="stylesheet" href="{{ asset('/user_end/css/pms-dashboard.css') }}">
+<link rel="stylesheet" href="{{ asset('/user_end/css/manager-dashboard.css') }}">
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
 <!-- ========== ORGCHART PLUGIN ========== -->
 <link href="https://cdnjs.cloudflare.com/ajax/libs/orgchart/2.1.9/css/jquery.orgchart.min.css" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/orgchart/2.1.9/js/jquery.orgchart.min.js"></script>
+<!-- ========== PMS SIDEBAR ========== -->
 
-<div class="container">
-    <h2>Manager Dashboard</h2>
-   {{-- ============================
-     1. Goals Created by Organization
-============================= --}}
-<div class="card mb-4">
-    <div class="card-header bg-light"><strong>Goals Created by Organization</strong></div>
+
+<!-- <nav class="pms-sidebar">
+    <ul class="pms-sidebar-nav">
+        <li><a href="#pms-org-goals">Goals Created by Organization</a></li>
+        <li><a href="#pms-additional-goals">Additional Goals / Selected Org Goals</a></li>
+        <li><a href="#pms-create-task">Create Own Task</a></li>
+        <li><a href="#pms-insights">Insights on Organization Goals</a></li>
+        <li><a href="#pms-goal-bundle-approvals">Goal Bundle Approval Requests</a></li>
+        <li><a href="#pms-insight-bundle-approvals">Insight Bundle Approval Requests</a></li>
+    </ul>
+</nav> -->
+
+ 
+
+<div class="pms-page">
+    <!-- Sidebar (left, 25%) -->
+  <nav class="pms-sidebar" id="managerSidebar" aria-label="PMS sidebar">
+    <h3>
+        <span class="pms-title-text">Manager Dashboard</span>
+        <span onclick="toggleManagerSidebar()" style="margin-left:auto; cursor:pointer; display:inline-flex; align-items:center;">
+            <img id="managerSidebarIcon" src="{{ asset('admin_end/images/left_ht.png') }}" alt="toggle" style="height:18px; width:auto;" />
+        </span>
+    </h3>
+    <ul class="pms-sidebar-nav">
+        <li>
+            <a href="#pms-org-goals">
+                <i class="bi bi-flag" style="margin-right: 8px;"></i><span>Goals Created by Organization</span>
+            </a>
+        </li>
+        <li>
+            <a href="#pms-additional-goals">
+                <i class="bi bi-list-check" style="margin-right: 8px;"></i><span>Additional Goals / Selected Org Goals</span>
+            </a>
+        </li>
+        <li>
+            <a href="#pms-create-task">
+                <i class="bi bi-clipboard-plus" style="margin-right: 8px;"></i><span>Create Your Own Task</span>
+            </a>
+        </li>
+        <li>
+            <a href="#pms-insights">
+                <i class="bi bi-lightbulb" style="margin-right: 8px;"></i><span>Insights on Organization Goals</span>
+            </a>
+        </li>
+        <li>
+            <a href="#pms-goal-bundle-approvals">
+                <i class="bi bi-box-seam" style="margin-right: 8px;"></i><span>Goal Bundle Approval Requests</span>
+            </a>
+        </li>
+        <li>
+            <a href="#pms-insight-bundle-approvals">
+                <i class="bi bi-inboxes" style="margin-right: 8px;"></i><span>Insight Bundle Approval Requests</span>
+            </a>
+        </li>
+    </ul>
+</nav>
+
+    <script>
+      // Align manager sidebar behavior to superadmin: clickable icon toggles collapsed state with icon swap and persistence
+      document.addEventListener('DOMContentLoaded', function(){
+        const sidebar = document.getElementById('managerSidebar');
+        const icon = document.getElementById('managerSidebarIcon');
+        if (!sidebar || !icon) return;
+
+        // initialize from localStorage
+        const collapsed = localStorage.getItem('managerSidebarCollapsed') === '1';
+        if (collapsed) {
+          sidebar.classList.add('collapsed');
+          icon.setAttribute('src', "{{ asset('admin_end/images/left_ht.png') }}");
+        } else {
+          icon.setAttribute('src', "{{ asset('admin_end/images/right_ht.png') }}");
+        }
+      });
+
+      function toggleManagerSidebar(){
+        const sidebar = document.getElementById('managerSidebar');
+        const icon = document.getElementById('managerSidebarIcon');
+        if (!sidebar || !icon) return;
+
+        sidebar.classList.toggle('collapsed');
+
+        if (sidebar.classList.contains('collapsed')) {
+          icon.setAttribute('src', "{{ asset('admin_end/images/left_ht.png') }}");
+          try { localStorage.setItem('managerSidebarCollapsed', '1'); } catch(e) {}
+        } else {
+          icon.setAttribute('src', "{{ asset('admin_end/images/right_ht.png') }}");
+          try { localStorage.setItem('managerSidebarCollapsed', '0'); } catch(e) {}
+        }
+
+        setTimeout(() => {
+          // reaffirm icon state after animation
+          if (sidebar.classList.contains('collapsed')) {
+            icon.setAttribute('src', "{{ asset('admin_end/images/left_ht.png') }}");
+          } else {
+            icon.setAttribute('src', "{{ asset('admin_end/images/right_ht.png') }}");
+          }
+        }, 4000);
+      }
+    </script>
+
+    <!-- Main content (right, 75%) -->
+    <main class="pms-main" id="pms-main">
+        <div class="pms-panels">
+            <section id="pms-org-goals" class="pms-panel">
+                <div class="container">
+                    <div class="org-header d-flex align-items-center gap-2">
+                        <span class="org-header-icon bi bi-flag-fill" aria-hidden="true"></span>
+                        <h5 class="m-0 org-header-title">Goals Created by Organization</h5>
+                    </div>
     <div class="table-fixed-header">
         <table class="table table-bordered table-striped m-0" style="table-layout:fixed;">
             <colgroup>
@@ -41,13 +146,21 @@
             <tbody id="orgGoalsTable">
                 @foreach($allOrgGoals as $goal)
                 <tr>
-                    <td>{{ $goal->title }}<br>
-                        <small class="description">{{ $goal->description }}</small><br>
-                       <small>
-                            {{ $goal->start_date ? \Carbon\Carbon::parse($goal->start_date)->format('d/m/Y') : '—' }}
-                            →
-                            {{ $goal->end_date ? \Carbon\Carbon::parse($goal->end_date)->format('d/m/Y') : '—' }}
-                        </small>
+                    <td>
+                        <div class="org-goal-cell d-flex align-items-start gap-2">
+                            <span class="goal-icon bi bi-arrow-up-right-square-fill"></span>
+                            <div class="min-w-0">
+                                <div class="goal-title fw-semibold">{{ $goal->title }}</div>
+                                @if(!empty($goal->description))
+                                  <div class="goal-desc text-muted small">{{ $goal->description }}</div>
+                                @endif
+                                <div class="goal-dates small">
+                                  {{ $goal->start_date ? \Carbon\Carbon::parse($goal->start_date)->format('d/m/Y') : '—' }}
+                                  —
+                                  {{ $goal->end_date ? \Carbon\Carbon::parse($goal->end_date)->format('d/m/Y') : '—' }}
+                                </div>
+                            </div>
+                        </div>
                     </td>
                     <td>{{ $goal->period_name }}</td>
                     <td>{{ ucfirst($goal->priority) }}</td>
@@ -62,93 +175,57 @@
             </tbody>
         </table>
     </div>
+                </div>
+            </section>
+
+            <section id="pms-additional-goals" class="pms-panel">
+                <div class="add-header d-flex align-items-center gap-2">
+                    <span class="add-header-icon bi bi-flag-fill" aria-hidden="true"></span>
+                    <h5 class="m-0 add-header-title">Additional Goals / Selected Org Goals</h5>
+                </div>
+        {{-- Add Custom Goal --}}
+        <div class="mt-3">
+            <h6>Create Extra Goal</h6>
+            <form onsubmit="addCustomGoal(); return false;">
+                <div class="row g-3 align-items-end">
+                    <div class="col-md-3">
+                        <label for="customGoalOrg" class="form-label">Period</label>
+                        <select id="customGoalOrg" class="form-control" required>
+                            <option value="">Select Period</option>
+                            @foreach(collect($allOrgGoals)->unique('org_setting_id') as $g)
+                                <option value="{{ $g->org_setting_id }}">{{ $g->period_name }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <label for="customGoalTitle" class="form-label">Goal Title</label>
+                        <input type="text" id="customGoalTitle" class="form-control" placeholder="e.g., Improve client onboarding" required>
+                    </div>
+                    <div class="col-md-2">
+                        <label for="customGoalStart" class="form-label">Start Date</label>
+                        <input type="date" id="customGoalStart" class="form-control" required
+                        value="{{ old('start_date', $activeCycle->start_date ?? '') }}"
+                        min="{{ $activeCycle->start_date ?? '' }}" 
+                        max="{{ $activeCycle->end_date ?? '' }}">
+                    </div>
+                    <div class="col-md-2">
+                        <label for="customGoalEnd" class="form-label">End Date</label>
+                        <input type="date" id="customGoalEnd" class="form-control" required
+                         value="{{ old('end_date', $activeCycle->end_date ?? '') }}"
+                        min="{{ $activeCycle->start_date ?? '' }}" 
+                        max="{{ $activeCycle->end_date ?? '' }}">
+                    </div>
+                    <div class="col-md-9">
+                        <label for="description" class="form-label">Description</label>
+                        <textarea id="description" name="description" class="form-control" rows="2" placeholder="Description"></textarea>
+                    </div>
+                    <div class="col-md-3 d-flex align-items-end justify-content-end">
+                        <button type="submit" class="btn btn-secondary">Add Custom Goal</button>
+                    </div>
+                </div>
+            </form>
         </div>
-    </div>
-    </div>
-</div>
-
-<!-- Create Own Task Modal -->
-<div class="modal fade" id="createOwnTaskModal" tabindex="-1" aria-labelledby="createOwnTaskModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-lg">
-    <div class="modal-content">
-      <div class="modal-header edit-goal-header text-white">
-        <h5 class="modal-title" id="createOwnTaskModalLabel">Create Task</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <form action="{{ url('/tasks') }}" method="POST">
-        @csrf
-        <div class="modal-body">
-          <!-- Row 1: Title, Priority -->
-          <div class="row g-3 mb-2">
-            <div class="col-md-8">
-              <label for="own_task_title" class="form-label">Title</label>
-              <input type="text" id="own_task_title" name="title" class="form-control" placeholder="Task title"
-              required minlength="3" maxlength="100"
-              title="Task title must be between 3 and 100 characters" pattern=".*\S.*"   
-              required>
-            </div>
-            <div class="col-md-4">
-              <label for="own_task_priority" class="form-label">Priority</label>
-              <select id="own_task_priority" name="priority" class="form-control" required>
-                <option value="low">Low</option>
-                <option value="medium" selected>Medium</option>
-                <option value="high">High</option>
-              </select>
-                <div class="invalid-feedback">Please select a priority.</div>
-            </div>
-          </div>
-
-          <!-- Row 2: Start & End Dates -->
-            <div class="row g-3 mb-2">
-            <div class="col-md-6">
-                <label for="own_task_start" class="form-label">Start Date</label>
-                <input type="date" 
-                    id="own_task_start" 
-                    name="start_date" 
-                    class="form-control" 
-                    required
-                    min="{{ $activeCycle->start_date ?? '' }}" 
-                    max="{{ $activeCycle->end_date ?? '' }}">
-            </div>
-            <div class="col-md-6">
-                <label for="own_task_end" class="form-label">End Date</label>
-                <input type="date" 
-                    id="own_task_end" 
-                    name="end_date" 
-                    class="form-control" 
-                    required
-                    min="{{ $activeCycle->start_date ?? '' }}" 
-                    max="{{ $activeCycle->end_date ?? '' }}">
-            </div>
-            </div>
-
-
-          <!-- Row 3: Description -->
-          <div class="row g-3 mb-2">
-            <div class="col-12">
-              <label for="own_task_description" class="form-label">Description</label>
-              <textarea id="own_task_description" name="description" class="form-control" placeholder="Task description"required maxlength="500"
-                        pattern=".*\S.*"></textarea>
-            </div>
-          </div>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-          <button type="submit" class="btn btn-primary">Create</button>
-        </div>
-      </form>
-    </div>
-  </div>
-</div>
-
-
-{{-- ============================
-     2. Additional Goals (Self-Created / Selected Org Goals)
-============================= --}}
-<div class="section-pad-x">
-<div class="card mb-4">
-    <div class="card-header bg-light"><strong>Additional Goals / Selected Org Goals</strong></div>
-    <div class="card-body">
+        <div class="card-body">
     @csrf
      <form id="bundleForm" method="POST" action="{{ route('goal-bundles.submit') }}">
     {{-- Always send bundle_id once (if exists) --}}
@@ -171,7 +248,7 @@
     </thead>
    </table>
    </div>
-   <div class="table-scroll-container">
+   <div class="table-scroll-container add-goals-scroll">
    <table class="table table-bordered table-striped m-0" id="bundleTable">
     <colgroup>
         <col style="width:40%">
@@ -215,13 +292,20 @@
                     <input type="hidden" name="org_setting_ids[{{ $goal->goal_id }}]" value="{{ $goal->org_setting_id }}">
                 @else
                     {{-- Read-only display for approved / pending goals --}}
-                    <strong>{{ $goal->title }}</strong><br>
-                    <small style="word-break: break-word;">{{ $goal->description ?? '—' }}</small><br>
-                    <small>
-                        {{ $goal->start_date ? \Carbon\Carbon::parse($goal->start_date)->format('d/m/Y') : '—' }}
-                        →
-                        {{ $goal->end_date ? \Carbon\Carbon::parse($goal->end_date)->format('d/m/Y') : '—' }}
-                    </small>
+                    <div class="add-goal-cell d-flex align-items-start gap-2">
+                        <span class="goal-icon bi bi-arrow-up-right-square-fill"></span>
+                        <div class="min-w-0">
+                            <div class="goal-title fw-semibold">{{ $goal->title }}</div>
+                            @if(!empty($goal->description))
+                              <div class="goal-desc text-muted small" style="word-break: break-word;">{{ $goal->description }}</div>
+                            @endif
+                            <div class="goal-dates small">
+                                {{ $goal->start_date ? \Carbon\Carbon::parse($goal->start_date)->format('d/m/Y') : '—' }}
+                                —
+                                {{ $goal->end_date ? \Carbon\Carbon::parse($goal->end_date)->format('d/m/Y') : '—' }}
+                            </div>
+                        </div>
+                    </div>
                     <input type="hidden" name="goal_ids[]" value="{{ $goal->goal_id }}">
                     <input type="hidden" name="org_setting_ids[{{ $goal->goal_id }}]" value="{{ $goal->org_setting_id }}">
                 @endif
@@ -243,11 +327,11 @@
         @endforeach
     </tbody>
 </table>
-</div>
+<!-- </div> -->
 
 
     {{-- Submit whole bundle --}}
-    <div class="d-flex justify-content-end">
+    <div class="d-flex justify-content-end submit-sticky">
         <button type="submit" class="btn btn-success mt-2">
             Submit Selected Goals for Approval
         </button>
@@ -256,58 +340,15 @@
 
 
 
-        {{-- Add Custom Goal --}}
-        <div class="mt-3">
-            <h6>Create Extra Goal</h6>
-            <form onsubmit="addCustomGoal(); return false;">
-                <div class="row g-3 align-items-end">
-                    <div class="col-md-3">
-                        <label for="customGoalOrg" class="form-label">Period</label>
-                        <select id="customGoalOrg" class="form-control" required>
-                            <option value="">Select Period</option>
-                            @foreach(collect($allOrgGoals)->unique('org_setting_id') as $g)
-                                <option value="{{ $g->org_setting_id }}">{{ $g->period_name }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-                    <div class="col-md-4">
-                        <label for="customGoalTitle" class="form-label">Goal Title</label>
-                        <input type="text" id="customGoalTitle" class="form-control" placeholder="e.g., Improve client onboarding" required>
-                    </div>
-                    <div class="col-md-2">
-                        <label for="customGoalStart" class="form-label">Start Date</label>
-                        <input type="date" id="customGoalStart" class="form-control" required
-                        value="{{ old('start_date', $activeCycle->start_date ?? '') }}"
-                        min="{{ $activeCycle->start_date ?? '' }}" 
-                        max="{{ $activeCycle->end_date ?? '' }}">
-                    </div>
-                    <div class="col-md-2">
-                        <label for="customGoalEnd" class="form-label">End Date</label>
-                        <input type="date" id="customGoalEnd" class="form-control" required
-                         value="{{ old('end_date', $activeCycle->end_date ?? '') }}"
-                        min="{{ $activeCycle->start_date ?? '' }}" 
-                        max="{{ $activeCycle->end_date ?? '' }}">
-                    </div>
-                    <div class="col-12">
-                        <label for="description" class="form-label">Description</label>
-                        <textarea id="description" name="description" class="form-control" placeholder="Description"></textarea>
-                    </div>
-                
-                </div>
-                <div class="row mt-2">
-                    <div class="col-12 d-flex justify-content-end">
-                        <button type="submit" class="btn btn-secondary">Add Custom Goal</button>
-                    </div>
-                </div>
-            </form>
-        </div>
     </div>
-</div>
 
-    {{-- 3. Task List --}}
-    <div class="section-pad-x">
-    <div class="card mb-4">
-        <div class="card-header bg-light"><strong>Create Own Task</strong></div>
+            </section>
+
+            <section id="pms-create-task" class="pms-panel">
+                <div class="task-header d-flex align-items-center gap-2">
+                    <span class="task-header-icon bi bi-flag-fill" aria-hidden="true"></span>
+                    <h5 class="m-0 task-header-title">Create Own Task</h5>
+                </div>
         <div class="card-body">
             <div class="d-flex justify-content-end mb-2">
                 <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#createOwnTaskModal">Create</button>
@@ -335,7 +376,14 @@
                     <tbody>
                     @forelse($ownTasks as $task)
                         <tr>
-                            <td>{{ $task->title }}</td>
+                            <td>
+                                <div class="task-goal-cell d-flex align-items-start gap-2">
+                                    <span class="goal-icon bi bi-arrow-up-right-square-fill"></span>
+                                    <div class="min-w-0">
+                                        <div class="goal-title fw-semibold">{{ $task->title }}</div>
+                                    </div>
+                                </div>
+                            </td>
                             <td>{{ ucfirst($task->status) }}</td>
                             <td>{{ $task->start_date ? \Carbon\Carbon::parse($task->start_date)->format('d M Y') : '-' }}</td>
                             <td>{{ $task->start_date ? \Carbon\Carbon::parse($task->end_date)->format('d M Y') : '-' }}</td>
@@ -355,10 +403,57 @@
                 </table>
             </div>
         </div>
-    </div>
-    </div>
+        </section>
 
-    <!-- Add Insight Modal -->
+<!-- Create Own Task Modal -->
+<div class="modal fade" id="createOwnTaskModal" tabindex="-1" aria-labelledby="createOwnTaskModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <form action="{{ url('/tasks') }}" method="POST">
+      @csrf
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="createOwnTaskModalLabel">Create Task</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="mb-3">
+            <label class="form-label">Title</label>
+            <input type="text" name="title" class="form-control" required>
+          </div>
+          <div class="row g-2">
+            <div class="col-md-6">
+              <label class="form-label">Start Date</label>
+              <input type="date" name="start_date" class="form-control">
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">End Date</label>
+              <input type="date" name="end_date" class="form-control">
+            </div>
+          </div>
+          <div class="mt-3">
+            <label class="form-label">Priority</label>
+            <select name="priority" class="form-control">
+              <option value="">Select</option>
+              <option value="low">Low</option>
+              <option value="medium">Medium</option>
+              <option value="high">High</option>
+            </select>
+          </div>
+          <div class="mt-3">
+            <label class="form-label">Description</label>
+            <textarea name="description" class="form-control" rows="4"></textarea>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+          <button type="submit" class="btn btn-success">Create</button>
+        </div>
+      </div>
+    </form>
+  </div>
+  </div>
+
+    <!-- Add Insight Modal (kept outside sections to avoid layout issues) -->
 <div class="modal fade" id="insightModal" tabindex="-1" aria-labelledby="insightModalLabel" aria-hidden="true">
   <div class="modal-dialog">
    <form id="insightForm">
@@ -382,15 +477,13 @@
       </div>
     </div>
 </form>
+</div></div>
 
-  </div>
-</div>
-
-
-    {{-- 4. Insights Section --}}
-    <div class="section-pad-x">
-    <div class="card mb-4">
-        <div class="card-header bg-light"><strong>Insights on Organization Goals</strong></div>
+            <section id="pms-insights" class="pms-panel">
+             <div class="ins-header d-flex align-items-center gap-2">
+                <span class="ins-header-icon bi bi-flag-fill" aria-hidden="true"></span>
+                <h5 class="m-0 ins-header-title">Insights on Organization Goals</h5>
+             </div>
         <div class="card-body">
             <div class="table-fixed-header no-scrollbar-header">
                 <table class="table table-bordered table-striped m-0" style="table-layout:fixed;">
@@ -424,7 +517,14 @@
                     <tbody>
                         @forelse($insights as $insight)
                         <tr data-insight-id="{{ $insight->id }}">
-                            <td>{{ $insight->goal_title }}</td>
+                            <td>
+                                <div class="ins-goal-cell d-flex align-items-start gap-2">
+                                    <span class="goal-icon bi bi-arrow-up-right-square-fill"></span>
+                                    <div class="min-w-0">
+                                        <div class="goal-title fw-semibold">{{ $insight->goal_title }}</div>
+                                    </div>
+                                </div>
+                            </td>
                             <td>
                                 @if(strtolower($insight->insights_status) === 'rejected')
                                     <textarea class="form-control insight-edit" data-id="{{ $insight->id }}">{{ $insight->description }}</textarea>
@@ -460,13 +560,14 @@
                     <div class="d-flex justify-content-end my-2">
                          <button id="submitSelectedInsights" class="btn btn-primary">Submit Selected Insights for Approval</button>
                      </div>
+        </div>
+            </section>
+
+            <section id="pms-goal-bundle-approvals" class="pms-panel">
+                <div class="approval-header d-flex align-items-center gap-2">
+                    <span class="approval-header-icon bi bi-flag-fill" aria-hidden="true"></span>
+                    <h5 class="m-0 approval-header-title">Goal Bundle Approval Requests</h5>
                 </div>
-    {{-- ============================
-     5. Goal Bundle Approval Requests
-============================= --}}
-<div class="container">
-<div class="card mb-4">
-    <div class="card-header bg-light"><strong>Goal Bundle Approval Requests</strong></div>
     <div class="card-body">
         @php
             $managerId = Auth::id();
@@ -568,16 +669,16 @@
         @else
             <p class="text-center">No pending goal bundle requests.</p>
         @endif
-    </div>
-</div>
-</div>
 
-{{-- ============================
-     6. Insight Bundle Approval Requests
-============================= --}}
-<div class="container">
-  <div class="card mb-4">
-    <div class="card-header bg-light"><strong>Insight Bundle Approval Requests</strong></div>
+            </section>
+        
+
+           
+            <section id="pms-insight-bundle-approvals" class="pms-panel">
+                <div class="ins-approval-header d-flex align-items-center gap-2">
+                    <span class="ins-approval-header-icon bi bi-flag-fill" aria-hidden="true"></span>
+                    <h5 class="m-0 ins-approval-header-title">Insight Bundle Approval Requests</h5>
+                </div>
     <div class="card-body">
       @php
           $managerId = Auth::id();
@@ -662,17 +763,88 @@
         <p class="text-center">No pending insight bundle requests.</p>
       @endif
     </div>
-  </div>
+
+            </section>
+            </div>
+        
+    </main>
 </div>
 
+<script>
+/*
+  Behavior:
+  - When a sidebar link is clicked, show only the panel with that id.
+  - Update active nav item.
+  - Support deep-links: if URL has a hash on load, show that panel.
+  - If hash doesn't match any panel, fallback to the first panel.
+*/
+
+(function(){
+    const links = document.querySelectorAll('.pms-sidebar-nav a');
+    const panels = Array.from(document.querySelectorAll('.pms-panel'));
+
+    function showPanelById(hash) {
+        // normalize (allow '#id' or 'id')
+        if (!hash) { hash = ''; }
+        if (hash.startsWith('#')) { hash = hash.slice(1); }
+
+        // find panel
+        let target = document.getElementById(hash);
+        if (!target) {
+            // fallback to first panel if none matched
+            target = panels[0];
+        }
+
+        // hide all, show only target
+        panels.forEach(p => p.classList.remove('visible'));
+        target.classList.add('visible');
+
+        // update active link
+        links.forEach(a => {
+            const aHash = (a.getAttribute('href') || '').replace(/^#/, '');
+            if (aHash === target.id) a.classList.add('active');
+            else a.classList.remove('active');
+        });
+
+        // update URL hash without creating history entry
+        if (window.location.hash !== '#' + target.id) {
+            history.replaceState(null, '', '#' + target.id);
+        }
+    }
+
+    // attach click handlers
+    links.forEach(a => {
+        a.addEventListener('click', function(ev){
+            ev.preventDefault();
+            const href = this.getAttribute('href') || '';
+            showPanelById(href);
+            // Optionally set focus to the panel for accessibility
+            const panelId = (href.startsWith('#') ? href.slice(1) : href);
+            const panel = document.getElementById(panelId);
+            if (panel) panel.setAttribute('tabindex','-1'), panel.focus({preventScroll:true});
+        });
+    });
+
+    // support back/forward or manual hash changes
+    window.addEventListener('hashchange', function(){
+        showPanelById(location.hash);
+    });
+
+    // initial display: if hash present, honor it; otherwise show first panel
+    document.addEventListener('DOMContentLoaded', function(){
+        showPanelById(location.hash || panels[0].id);
+    });
+})();
+</script>
 
 <!-- ========== ORG CHART SECTION ========== -->
-<div class="container mt-4">
+ <div class="container mt-4">
+<!-- 
     <div class="row">
-        <!-- ========== ORG CHART SECTION (LEFT) ========== -->
+        ========== ORG CHART SECTION (LEFT) ==========
         <div class="col-md-5" id="chart-container" style="height:600px; overflow-y:auto; border-right:1px solid #ddd; padding:10px; background:#f9f9f9; border-radius:8px;"></div>
 
-        <!-- ========== GOALS TABLE SECTION (RIGHT) ========== -->
+        ========== GOALS TABLE SECTION (RIGHT) ==========
         <div class="col-md-7" id="goals-section" style="display:none; overflow-y:auto; max-height:600px;">
             <h5 id="employee-name" class="mb-3"></h5>
             <table class="table table-bordered table-hover table-striped">
@@ -690,53 +862,11 @@
             </table>
         </div>
     </div>
+</div> -->
+
 </div>
 
-
-
-<style>
-/* Modern org chart styles */
-#chart-container .orgchart {
-    background: #fff;
-    border-radius: 10px;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-    padding: 15px;
-}
-
-#chart-container .orgchart .node {
-    border: 2px solid #007bff;
-    border-radius: 8px;
-    padding: 10px 15px;
-    background: #fff;
-    color: #333;
-    font-weight: 500;
-    transition: transform 0.2s, box-shadow 0.2s;
-    cursor: pointer;
-    min-width: 120px;
-    text-align: center;
-}
-
-#chart-container .orgchart .node:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 8px 20px rgba(0,0,0,0.15);
-    border-color: #0056b3;
-}
-
-.employee-node.selected {
-    background-color: #007bff;
-    color: #fff;
-    border-color: #0056b3;
-}
-
-#chart-container::-webkit-scrollbar {
-    width: 8px;
-}
-
-#chart-container::-webkit-scrollbar-thumb {
-    background: rgba(0,0,0,0.2);
-    border-radius: 4px;
-}
-</style>
+ 
 
 <script>
 document.addEventListener("DOMContentLoaded", function() {
