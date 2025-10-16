@@ -1,0 +1,23 @@
+version: "3.9"
+
+services:
+  demo_ess_portal:
+    container_name: demo_ess_portal
+    image: 172.16.1.225:5000/ess_portal:${IMAGE_TAG}
+    build:
+      context: .
+      dockerfile: dockerfile
+    env_file:
+      - ./.env
+    ports:
+      - "11004:80"
+    networks:
+      - common-services-demo-net
+    volumes:
+      - ${STORAGE_PATH}:/var/www/html/storage
+      # - ./vendor:/var/www/html/vendor
+    restart: always
+
+networks:
+  common-services-demo-net:
+    external: true

@@ -680,8 +680,14 @@ table button {
     border-radius: 30px;
     overflow: hidden;
     height: 20px;
+    width: 100%;
     position: relative;
 }
+
+.leaves .progress-bar-containerr {
+    width: 100%;
+  }
+  
 
 .progress-bar {
     height: 100%;
@@ -689,6 +695,7 @@ table button {
     color: white;
     line-height: 20px;
     transition: width 0.3s ease;
+   
 }
 
 .birthday-cards {
@@ -1382,7 +1389,7 @@ video {
 
 }
 
-.progress-bar-containerr {
+/* .progress-bar-containerr {
     width: 100%;
     height: 7px;
     background-color: #f3f3f3;
@@ -1393,7 +1400,25 @@ video {
 .progress-barr {
     height: 100%;
     border-radius: 10px;
+} */
+
+.progress-bar-containerr {
+    width: 100%;                /* Ensures the container is as wide as its parent */
+    height: 7px;                /* Fixed height for the progress bar */
+    background-color: #f3f3f3;  /* Light gray background for the container */
+    border-radius: 10px;        /* Rounded corners for the container */
+    margin: 4px 0;              /* Some margin around the progress bar */
+    overflow: hidden;           /* Prevent any overflow */
+    position: relative;         /* Ensures child elements are positioned correctly */
 }
+
+.progress-barr {
+    height: 100%;                /* Make the progress bar fill the container */
+    border-radius: 10px;         /* Rounded corners for the progress bar itself */
+    width: 0;                    /* Default width, will be updated dynamically */
+    transition: width 0.3s ease; /* Smooth transition for width changes */
+}
+
 
 .employee-info {
     width: 100%;
@@ -1630,7 +1655,7 @@ video {
 }
 
 input.form-control.text-end {
-    width: 150px;
+    width: 155px;
     max-width: max-content;
     margin-left: auto
 }

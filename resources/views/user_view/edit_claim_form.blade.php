@@ -56,7 +56,7 @@
     <td>{{ $index + 1 }}</td>
     <td>
       <input type="hidden" name="entry_ids[]" value="{{ $claim->id }}" />
-      <input type="date" name="bill_date[{{ $index }}]" class="form-control" value="{{ \Carbon\Carbon::parse($claim->entry_date)->format('Y-m-d') }}" {{ !$claim->editable ? 'readonly' : '' }} required>
+      <input type="date" name="bill_date[{{ $index }}]" class="form-control text-end" value="{{ \Carbon\Carbon::parse($claim->entry_date)->format('Y-m-d') }}" {{ !$claim->editable ? 'readonly' : '' }} required>
     </td>
     <td>
       <select class="form-control rm_type" name="type[{{ $index }}]" {{ !$claim->editable ? 'readonly' : '' }} required>
@@ -67,7 +67,7 @@
       </select>
     </td>
     <td><input type="text" class="form-control text-end" value="{{ $claim->max_amount ?? '' }}" disabled></td>
-    <td><input type="number" name="entered_amount[{{ $index }}]" class="form-control text-end" value="{{ $claim->entry_amount }}" step="0.01" {{ !$claim->editable ? 'readonly' : '' }} required></td>
+    <td><input type="text" name="entered_amount[{{ $index }}]" class="form-control text-end" value="{{ $claim->entry_amount }}" step="0.01" {{ !$claim->editable ? 'readonly' : '' }} required></td>
     <td>
       <div class="file-upload d-flex">
         <div class="file-select d-flex align-items-center">
@@ -217,6 +217,49 @@ document.addEventListener('DOMContentLoaded', function() {
       });
     });
   });
+</script>
+
+<script>
+// Format number with commas
+function formatNumberWithCommas(x) {
+    if (!x) return '';
+    x = x.replace(/,/g, '');
+    let parts = x.split('.');
+    parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    return parts.join('.');
+}
+
+// Auto-comma on input
+$(document).on('input', 'input[name^="entered_amount["]', function () {
+    let val = $(this).val().replace(/,/g, '');
+    if (val === '') return;
+    val = val.replace(/[^0-9.]/g, '');
+    let formatted = formatNumberWithCommas(val);
+    $(this).val(formatted);
+    updateTotals();
+});
+
+// Remove commas before form submit
+$('form').on('submit', function() {
+    $('input[name^="entered_amount["]').each(function() {
+        $(this).val($(this).val().replace(/,/g, ''));
+    });
+});
+
+// Update totals
+function updateTotals() {
+    let totalEntry = 0;
+    $('input[name^="entered_amount["]').each(function() {
+        let val = $(this).val().replace(/,/g, '');
+        totalEntry += parseFloat(val) || 0;
+    });
+    $('#totalEntryAmount').text('₹' + totalEntry.toFixed(2));
+}
+
+// Initial total calculation on page load
+$(document).ready(function() {
+    updateTotals();
+});
 </script>
 
 

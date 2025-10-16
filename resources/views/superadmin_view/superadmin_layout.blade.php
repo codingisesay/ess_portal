@@ -1,5 +1,3 @@
-
-
 <?php
 $name = Auth::guard('superadmin')->user()->name;
 ?>
@@ -19,11 +17,13 @@ $name = Auth::guard('superadmin')->user()->name;
     <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script> 
     <script src="{{ asset('user_end/js/toastify-notifications.js') }}"></script>
     <link href="{{ asset('bootstrapcss/bootstrap.min.css') }}" rel="stylesheet"> 
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+
 </head>
 
 <body class="body">
     <!-- Top container -->
-    <a href="{{ route('superadmin.logout') }}" class="logout-button">Logout</a>
+    <!-- <a href="{{ route('superadmin.logout') }}" class="logout-button">Logout</a> -->
     <script>
         var successMessage = @json(session('success'));
         var errorMessage = @json(session('error'));
@@ -41,6 +41,13 @@ $name = Auth::guard('superadmin')->user()->name;
         </div>
         <div class="sidebar-content">
             <ul class="nav-list">
+                <!-- Super Admin Dashboard -->
+                <li id="superAdminDashboardLi">
+                    <a href="{{ route('superadmin.dashboard') }}" class="{{ request()->routeIs('superadmin.dashboard') ? 'active' : '' }}">
+                        <i class="bi bi-house"></i>&nbsp;<label>Dashboard</label>
+                    </a>
+                </li>
+
                 <!-- Organisation Configuration --> 
                 <li id="orgConfigLi">
                     <strong onclick="toggleDropdown('orgConfigDropdown', this)">
@@ -48,11 +55,14 @@ $name = Auth::guard('superadmin')->user()->name;
                         <x-icon name="buildingoutline" />&nbsp;&nbsp;<lable>Organisation&nbsp;Configuration</lable>&nbsp;&nbsp;&nbsp;</strong>
                         <img src="{{ asset('user_end/images/arrow-right.svg') }}" alt="arrow" class="dropdown-arrow">
                     </strong>
+                    
                     <ul id="orgConfigDropdown" class="submenu">
                         <li><a href="{{ route('create_user') }}" class="{{ request()->routeIs('create_user') ? 'active' : '' }}">Create User</a></li>
                         <li><a href="{{ route('create_branch_form') }}" class="{{ request()->routeIs('create_branch_form') ? 'active' : '' }}">Create Branch</a></li>
                         <li><a href="{{ route('create_department_form') }}" class="{{ request()->routeIs('create_department_form') ? 'active' : '' }}">Create Department</a></li>
                         <li><a href="{{ route('create_designation_form') }}" class="{{ request()->routeIs('create_designation_form') ? 'active' : '' }}">Create Designation</a></li>
+                        <li><a href="{{ route('bank_list') }}" class="{{ request()->routeIs('bank_list') ? 'active' : '' }}">Bank Master</a></li>
+                        <li><a href="{{ route('attendance.import') }}" class="{{ request()->routeIs('attendance.import') ? 'active' : '' }}">Import</a></li>
                     </ul>
                 </li>
 
@@ -71,6 +81,17 @@ $name = Auth::guard('superadmin')->user()->name;
                         <li><a href="{{ route('create_policy') }}" class="{{ request()->routeIs('create_policy') ? 'active' : '' }}">Leave Policy Creation</a></li>
                         <li><a href="{{ route('employee_policy') }}" class="{{ request()->routeIs('employee_policy') ? 'active' : '' }}">Leave Emp Policy</a></li>
                         <li><a href="{{ route('process_leave_policy') }}" class="{{ request()->routeIs('process_leave_policy') ? 'active' : '' }}">Process Leave Cycle</a></li>
+                    </ul>
+                </li>
+                <!-- PMS Management -->
+                 <li id="pmsLi">
+                    <strong onclick="toggleDropdown('PMSDropdown', this)">
+                        <strong>
+                        <x-icon name="salary" />&nbsp;<lable> PMS Management</lable></strong>
+                        <img src="{{ asset('user_end/images/arrow-right.svg') }}" alt="arrow" class="dropdown-arrow">
+                    </strong>
+                    <ul id="PMSDropdown" class="submenu">
+                       <li><a href="{{ route('org_settings_form') }}" class="{{ request()->routeIs('org_settings_form') ? 'active' : '' }}">Org Settings</a></li>
                     </ul>
                 </li>
 
@@ -152,7 +173,8 @@ $name = Auth::guard('superadmin')->user()->name;
                 'policyManagementDropdown',
                 'salaryManagementDropdown',
                 'taxManagementDropdown',
-                'settingsDropdown'
+                'settingsDropdown',
+                'PMSDropdown'
             ];
             
             dropdownIds.forEach(id => {

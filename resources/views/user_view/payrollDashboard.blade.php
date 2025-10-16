@@ -87,7 +87,7 @@
                     <h5 class="me-auto mb-0">Income Tax Trend</h5> 
                      <div>
                     "Financial Year"
-               <select id="financialYearSelect" onchange="updateTaxChart()">
+               <!-- <select id="financialYearSelect" onchange="updateTaxChart()"> -->
                 
             </select>
                 </div>
@@ -137,7 +137,7 @@
                                 <tr>
                                     <th>Claim ID</th>
                                     <th>Date</th>
-                                    <th>Amount</th>
+                                    <th>Amount(₹)</th>
                                     <th>Purpose of Claim</th>
                                     <th>Status</th>
                                     <th>Actions</th>
@@ -149,7 +149,7 @@
 
                                         <td>{{ $claim->token_number }}</td>
                                         <td>{{ \Carbon\Carbon::parse($claim->claim_date)->format('d/m/Y') }}</td>
-                                        <td class="text-end">₹{{ number_format($claim->total_amount, 2) }}</td>
+                                        <td class="text-end">{{ number_format($claim->total_amount, 2) }}</td>
                                         <td>{{ $claim->purpose }}</td>
                                         <td> 
                                             @php

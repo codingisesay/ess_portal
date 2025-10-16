@@ -79,6 +79,16 @@
                                     <span class="error" id="weekOffError"></span>
                                 </div>
 
+                                <!-- Saturday Config (only visible if Saturday is checked) -->
+                                <div id="saturdayConfig" style="display:none;" class="mx-3 my-2">
+                                    <label>Select Saturday Offs:</label><br>
+                                    <input type="checkbox" name="saturday_offs[]" value="1"> 1st Saturday
+                                    <input type="checkbox" name="saturday_offs[]" value="2"> 2nd Saturday
+                                    <input type="checkbox" name="saturday_offs[]" value="3"> 3rd Saturday
+                                    <input type="checkbox" name="saturday_offs[]" value="4"> 4th Saturday
+                                    <input type="checkbox" name="saturday_offs[]" value="5"> 5th Saturday
+                                </div>
+
                                 <!-- Holiday Selection (Date, Name, and Description) -->
                                 <div id="holidayUpdate" style="display:none;">
                                     <div class="row">
@@ -120,6 +130,8 @@
                 <?php 
                 }
                 ?>
+
+
 
 
             <!-- Leave Section (With Link to hr_universal.php) -->
@@ -248,7 +260,7 @@
                 <!-- Dropdown content (initially hidden) -->
                 <div id="employeeDetailsDropdown" class="dropdown-content" style="display: none;">
                     <!-- Collapsible Content (Table) -->
-                    <div class="content">
+                    <div class="content" id="employeeTableContainer">
                         <table class="custom-table">
                             <thead>
                                 <tr>
@@ -262,7 +274,8 @@
                             <tbody>
                                 @foreach ($users as $user)
                                     <tr>
-                                        <td>{{ $loop->iteration }}</td>
+                                    <!-- The user serial numbers were repeating from 1–10 twice, so I updated them to continue sequentially as 1, 2, 3 … n. (3823)-->
+                                        <td>{{ $users->firstItem() + $loop->index }}</td>
                                         <td>{{$user->name}}</td>
                                         <td>{{$user->email}}</td>
                                         <td>
@@ -408,10 +421,10 @@
                         </option>
                     @endforeach
                 </select>
-                   <label for="start_date">Start Date:</label>
+                   <!-- <label for="start_date">Start Date:</label> -->
                     <input type="date" name="start_date" id="start_date" value="{{ request('start_date') }}" onchange="this.form.submit()">
                     
-                    <label for="end_date">End Date:</label>
+                    <!-- <label for="end_date">End Date:</label> -->
                     <input type="date" name="end_date" id="end_date" value="{{ request('end_date') }}" onchange="this.form.submit()">
             </form>     
         <!-- Leave Summary Table -->
@@ -474,6 +487,29 @@
     </div>
 </div>
 </main>
+
+
+
+   <script>
+                                // show/hide the Saturday config when Saturday checkbox toggles
+            const saturdayCheckbox = document.getElementById('saturday');
+            const saturdayConfig = document.getElementById('saturdayConfig');
+
+            saturdayCheckbox.addEventListener('change', function() {
+                saturdayConfig.style.display = this.checked ? 'block' : 'none';
+            });
+
+            // if user checks any specific saturday boxes, automatically ensure the main Saturday checkbox is checked
+            document.querySelectorAll('input[name="saturday_offs[]"]').forEach(function(el) {
+                el.addEventListener('change', function() {
+                    const anyChecked = document.querySelectorAll('input[name="saturday_offs[]"]:checked').length > 0;
+                    if (anyChecked) {
+                        saturdayCheckbox.checked = true;
+                        saturdayConfig.style.display = 'block';
+                    }
+                });
+            });
+         </script>
 
 <script>
     function toggleEmployeeDetailsDropdown() {
@@ -625,6 +661,35 @@
             newsForm.style.display = "block";
         }
     }
+</script>
+
+<script>
+// Fixed page reload issue on Settings page — prevented re-rendering after clicking Next using JavaScript(3823).
+document.addEventListener('click', function (e) {
+    const link = e.target.closest('#employeeDetailsDropdown .pagination a');
+    if (!link) return;
+
+    e.preventDefault();
+    const container = document.getElementById('employeeTableContainer');
+    if (!container) return;
+
+    fetch(link.href, { headers: { 'X-Requested-With': 'XMLHttpRequest' }})
+        .then(res => res.text())
+        .then(html => {
+            const parser = new DOMParser();
+            const doc = parser.parseFromString(html, 'text/html');
+            const newContainer = doc.querySelector('#employeeTableContainer');
+            if (newContainer) {
+                container.innerHTML = newContainer.innerHTML;
+            }
+            // keep accordion open
+            const dd = document.getElementById('employeeDetailsDropdown');
+            if (dd && (dd.style.display === 'none' || dd.style.display === '')) {
+                dd.style.display = 'block';
+            }
+        })
+        .catch(err => console.error('Pagination load failed:', err));
+});
 </script>
 
 @endsection

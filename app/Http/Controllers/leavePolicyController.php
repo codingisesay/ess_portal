@@ -457,6 +457,8 @@ class leavePolicyController extends Controller
     $leaveSummary = [];
         foreach ($leaveTypes as $leaveType) {
 
+            // dd($leaveType);
+
             $leave_single_data['leave_type'] = $leaveType->leave_type;
 
             // $emp_details = DB::table('emp_details')->where('user_id',$user->id)->get();
@@ -493,6 +495,8 @@ class leavePolicyController extends Controller
             ->where('user_id',$user->id)
             ->where('leave_approve_status','Approved')
             ->get();
+
+            // dd($leaveCountArray);
     
     
     $leaveCycleEndDate = Carbon::create($leaveCycleEndDate);  // Cycle End date: 2026-03-31 10:52:00
@@ -540,7 +544,7 @@ class leavePolicyController extends Controller
         ];
 
       
-
+// dd($leaveSummary);
       array_push($leaveSummary,$leave_single_data); 
     }else{
     
@@ -822,7 +826,7 @@ foreach ($workScheduleArray as $date => $details) {
         $attendanceOverview[$month]['absent']++;
     }
 }
-    
+    // dd($appliedLeaves);
         // Pass the leave summary data, applied leaves, and total working hours to the view
         return view('user_view.leave_dashboard', compact('leaveSummary', 'workingHoursData', 'appliedLeaves','title','holidays_upcoming', 'attendanceRate', 'presentDays', 'absentDays', 'totalDaysInMonth', 'attendanceOverview'));
     }

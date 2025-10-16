@@ -277,145 +277,278 @@ $leaveTypes = DB::table('leave_types')->where('status', 'ACTIVE')->get();
     
     }
 
-    public function createCalendraMaster(Request $request){
-        $data = $request->validate([
-            'year' => 'required',
-            'weekOffHolidaySelect' => '',
-            'weekoff' => 'array',
-            'holiday_date' => '',
-            'holiday_name' => '',
-            'holiday_desc' => '',
-            'working_start_time' => '',
-            'working_end_time' => '',
-        ]);
+//     public function createCalendraMaster(Request $request){
+//         $data = $request->validate([
+//             'year' => 'required',
+//             'weekOffHolidaySelect' => '',
+//             'weekoff' => 'array',
+//             'holiday_date' => '',
+//             'holiday_name' => '',
+//             'holiday_desc' => '',
+//             'working_start_time' => '',
+//             'working_end_time' => '',
+//         ]);
 
-        $year = $data['year'];
-        $loginUserInfo = Auth::user();
+//         $year = $data['year'];
+//         $loginUserInfo = Auth::user();
 
-if($data['weekOffHolidaySelect'] == 'weekoff'){
+// if($data['weekOffHolidaySelect'] == 'weekoff'){
 
-    $dataofyearcal = DB::table('calendra_masters')
-    ->where('organisation_id', '=', $loginUserInfo->organisation_id)
-    ->where('year', '=', $year)
-    ->get();  // Correct the typo here
+//     $dataofyearcal = DB::table('calendra_masters')
+//     ->where('organisation_id', '=', $loginUserInfo->organisation_id)
+//     ->where('year', '=', $year)
+//     ->get();  // Correct the typo here
 
-    if($dataofyearcal->count() == 365 || $dataofyearcal->count() == 366){
+//     if($dataofyearcal->count() == 365 || $dataofyearcal->count() == 366){
 
-        return redirect()->route('user.setting')->with('error','Calendra IS Already Created Please Update Leaves');
+//         return redirect()->route('user.setting')->with('error','Calendra IS Already Created Please Update Leaves');
 
-    }
+//     }
 
-$weekoffs = $data['weekoff']; // this contain array
-$weekdaysGlobal = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
-$weekoffsDays = [];
-for($i = 0; $i < count($weekoffs); $i++){
-    for($j = 0; $j <count($weekdaysGlobal); $j++){
-        if($weekoffs[$i] == $j){
+// $weekoffs = $data['weekoff']; // this contain array
+// $weekdaysGlobal = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+// $weekoffsDays = [];
+// for($i = 0; $i < count($weekoffs); $i++){
+//     for($j = 0; $j <count($weekdaysGlobal); $j++){
+//         if($weekoffs[$i] == $j){
 
-            array_push($weekoffsDays,$weekdaysGlobal[$j]);
+//             array_push($weekoffsDays,$weekdaysGlobal[$j]);
 
-        }
+//         }
 
-    }
+//     }
 
-}
+// }
 
 
 
-    if(checkdate(2, 29, $year)){
+//     if(checkdate(2, 29, $year)){
 
-        $loopcount = 366;
+//         $loopcount = 366;
     
-    }else{
+//     }else{
     
-        $loopcount = 365;
+//         $loopcount = 365;
     
-    }
-    // Start with January 1st of that year
-$startDate = new \DateTime("$year-01-01");
+//     }
+//     // Start with January 1st of that year
+// $startDate = new \DateTime("$year-01-01");
 
-for ($i = 0; $i < $loopcount; $i++) {
+// for ($i = 0; $i < $loopcount; $i++) {
 
-    if(in_array($startDate->format('l'),$weekoffsDays)){
+//     if(in_array($startDate->format('l'),$weekoffsDays)){
 
-        $weekOffStaus = "Yes";
+//         $weekOffStaus = "Yes";
 
-    }else{
+//     }else{
 
-        $weekOffStaus = "No";
+//         $weekOffStaus = "No";
 
-    }
+//     }
 
 
-    $status = DB::table('calendra_masters')->insert([
+//     $status = DB::table('calendra_masters')->insert([
 
-        'organisation_id' => $loginUserInfo->organisation_id,
-        'year' => $year,
-        'date' => $startDate->format('Y-m-d'),
-        'day' => $startDate->format('l'),
-        'week_off' => $weekOffStaus,
-        'holiday' => null,
-        'holiday_name' => null,
-        'holiday_desc' => null,
-        'working_start_time' => $data['working_start_time'],
-        'working_end_time' => $data['working_end_time'],
-        'created_at' => NOW(),
-        'updated_at' => NOW(),
+//         'organisation_id' => $loginUserInfo->organisation_id,
+//         'year' => $year,
+//         'date' => $startDate->format('Y-m-d'),
+//         'day' => $startDate->format('l'),
+//         'week_off' => $weekOffStaus,
+//         'holiday' => null,
+//         'holiday_name' => null,
+//         'holiday_desc' => null,
+//         'working_start_time' => $data['working_start_time'],
+//         'working_end_time' => $data['working_end_time'],
+//         'created_at' => NOW(),
+//         'updated_at' => NOW(),
 
+//     ]);
+
+//     $startDate->modify('+1 day');
+// }
+
+// if($status){
+
+//     return redirect()->route('user.setting')->with('success','Calendra Created Successfully!!');
+
+// }
+
+// }elseif($data['weekOffHolidaySelect'] == 'holiday'){
+
+
+// $dataofyearcal = DB::table('calendra_masters')
+//     ->where('organisation_id', '=', $loginUserInfo->organisation_id)
+//     ->where('year', '=', $year)
+//     ->get();  // Correct the typo here
+
+
+// if($dataofyearcal->count() == 365 || $dataofyearcal->count() == 366){
+
+//    $status = DB::table('calendra_masters')
+//     ->where('organisation_id', '=', $loginUserInfo->organisation_id)
+//     ->where('year', '=', $year)
+//     ->where('date', '=', $data['holiday_date'])
+//     ->update([
+        
+//         'holiday' => 'Yes',
+//         'holiday_name' => $data['holiday_name'],
+//         'holiday_desc' => $data['holiday_desc'],
+// ]); 
+
+// if($status){
+
+//     return redirect()->route('user.setting')->with('success','Holiday Updated Successfully!!');
+
+// }
+
+// }
+
+// //route
+
+// return redirect()->route('user.setting')->with('error','Calendra Is Not Created Yet');
+
+// }
+
+
+
+// // echo $loopcount;
+// // exit();
+
+
+//     }
+
+
+public function createCalendraMaster(Request $request){
+    $data = $request->validate([
+        'year' => 'required',
+        'weekOffHolidaySelect' => '',
+        'weekoff' => 'array',
+        'saturday_offs' => 'array', // new
+        'holiday_date' => '',
+        'holiday_name' => '',
+        'holiday_desc' => '',
+        'working_start_time' => '',
+        'working_end_time' => '',
     ]);
 
-    $startDate->modify('+1 day');
-}
+    $year = $data['year'];
+    $loginUserInfo = Auth::user();
 
-if($status){
+    if ($data['weekOffHolidaySelect'] == 'weekoff') {
 
-    return redirect()->route('user.setting')->with('success','Calendra Created Successfully!!');
+        $existingCount = DB::table('calendra_masters')
+            ->where('organisation_id', $loginUserInfo->organisation_id)
+            ->where('year', $year)
+            ->count();
 
-}
+        if ($existingCount == 365 || $existingCount == 366) {
+            return redirect()->route('user.setting')
+                ->with('error','Calendar is already created. Please update leaves.');
+        }
 
-}elseif($data['weekOffHolidaySelect'] == 'holiday'){
+        // Build list of weekly-off names (e.g. ['Sunday','Wednesday',...])
+        $weekoffs = $data['weekoff'] ?? [];
+        $weekdaysGlobal = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+        $weekoffsDays = [];
+        foreach ($weekoffs as $dayIndex) {
+            if (isset($weekdaysGlobal[$dayIndex])) {
+                $weekoffsDays[] = $weekdaysGlobal[$dayIndex];
+            }
+        }
 
+        // Saturday-specific selections (e.g. [2,3] for 2nd & 3rd Saturday)
+        $saturdayOffs = array_map('intval', $data['saturday_offs'] ?? []);
+        $saturdayOffs = array_values(array_unique($saturdayOffs)); // sanitize
+        $hasSpecificSaturdaySelection = !empty($saturdayOffs);
 
-$dataofyearcal = DB::table('calendra_masters')
-    ->where('organisation_id', '=', $loginUserInfo->organisation_id)
-    ->where('year', '=', $year)
-    ->get();  // Correct the typo here
+        $loopcount = checkdate(2, 29, $year) ? 366 : 365;
+        $startDate = new \DateTime("$year-01-01");
 
+        DB::beginTransaction();
+        try {
+            for ($i = 0; $i < $loopcount; $i++) {
+                $dayName = $startDate->format('l');
+                $weekOffStaus = "No";
 
-if($dataofyearcal->count() == 365 || $dataofyearcal->count() == 366){
+                if ($dayName === 'Saturday') {
+                    // If admin picked specific Saturdays (1..5), use those
+                    if ($hasSpecificSaturdaySelection) {
+                        $dayOfMonth = (int) $startDate->format('j');
+                        $weekOfMonth = (int) ceil($dayOfMonth / 7); // 1..5
+                        if (in_array($weekOfMonth, $saturdayOffs)) {
+                            $weekOffStaus = "Yes";
+                        }
+                    } else {
+                        // No specific Saturdays chosen — fallback to generic "Saturday checked" behavior
+                        if (in_array('Saturday', $weekoffsDays)) {
+                            $weekOffStaus = "Yes";
+                        }
+                    }
+                } else {
+                    // Non-Saturday days: use normal weekly offs
+                    if (in_array($dayName, $weekoffsDays)) {
+                        $weekOffStaus = "Yes";
+                    }
+                }
 
-   $status = DB::table('calendra_masters')
-    ->where('organisation_id', '=', $loginUserInfo->organisation_id)
-    ->where('year', '=', $year)
-    ->where('date', '=', $data['holiday_date'])
-    ->update([
-        
-        'holiday' => 'Yes',
-        'holiday_name' => $data['holiday_name'],
-        'holiday_desc' => $data['holiday_desc'],
-]); 
+                DB::table('calendra_masters')->insert([
+                    'organisation_id' => $loginUserInfo->organisation_id,
+                    'year' => $year,
+                    'date' => $startDate->format('Y-m-d'),
+                    'day' => $dayName,
+                    'week_off' => $weekOffStaus,
+                    'holiday' => null,
+                    'holiday_name' => null,
+                    'holiday_desc' => null,
+                    'working_start_time' => $data['working_start_time'],
+                    'working_end_time' => $data['working_end_time'],
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ]);
 
-if($status){
+                $startDate->modify('+1 day');
+            }
 
-    return redirect()->route('user.setting')->with('success','Holiday Updated Successfully!!');
+            DB::commit();
+            return redirect()->route('user.setting')->with('success','Calendar Created Successfully!!');
 
-}
-
-}
-
-//route
-
-return redirect()->route('user.setting')->with('error','Calendra Is Not Created Yet');
-
-}
-
-
-
-// echo $loopcount;
-// exit();
-
-
+        } catch (\Exception $e) {
+            DB::rollBack();
+            // For production hide $e->getMessage(); use logs. For debugging you can show it.
+            \Log::error('Calendar creation failed: '.$e->getMessage());
+            return redirect()->route('user.setting')->with('error','Something went wrong while creating calendar.');
+        }
     }
+
+    // existing holiday update branch (unchanged)
+    elseif ($data['weekOffHolidaySelect'] == 'holiday') {
+        $dataofyearcal = DB::table('calendra_masters')
+            ->where('organisation_id', '=', $loginUserInfo->organisation_id)
+            ->where('year', '=', $year)
+            ->get();
+
+        if ($dataofyearcal->count() == 365 || $dataofyearcal->count() == 366) {
+            $status = DB::table('calendra_masters')
+                ->where('organisation_id', '=', $loginUserInfo->organisation_id)
+                ->where('year', '=', $year)
+                ->where('date', '=', $data['holiday_date'])
+                ->update([
+                    'holiday' => 'Yes',
+                    'holiday_name' => $data['holiday_name'],
+                    'holiday_desc' => $data['holiday_desc'],
+                ]);
+
+            if ($status) {
+                return redirect()->route('user.setting')->with('success','Holiday Updated Successfully!!');
+            }
+        }
+
+        return redirect()->route('user.setting')->with('error','Calendar is not created yet');
+    }
+
+    return redirect()->route('user.setting')->with('error','Invalid request');
+}
+
 
     public function insertSalaryTempCTC(Request $request){
 
@@ -494,6 +627,7 @@ return redirect()->route('user.setting')->with('error','Calendra Is Not Created 
         ->where('user_status', '=', 'Active')
         //    ->where('id', '=', 2) //This is for testing, after function body ready remove this condition
         ->get();
+        
 
         $orgsalaryComponents = DB::table('org_salary_components')->where('organisation_id',$loginUserInfo->organisation_id)->get();
 

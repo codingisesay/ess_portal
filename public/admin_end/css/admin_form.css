@@ -199,7 +199,8 @@ h3 {
 table {
     width: 100%;
     border-collapse: collapse;
-    margin-top: 10px;
+    /*commented code to remove margin from top to avoid the spacing issue*/
+    /* margin-top: 10px; */
     min-width: 600px;
     /* Prevents table from being too small */
     border: 1px solid #ddd;
@@ -400,7 +401,9 @@ tbody tr:nth-child(even) {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin: 15px 5px 0 5px;
+    /* margin: 15px 5px 0 5px; */
+    /* added the margin bottom to remove the spacing issue*/ 
+    margin-bottom : -5px;
 
 }
 

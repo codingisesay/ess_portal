@@ -70,7 +70,7 @@
             <tr>
               <!-- Default Row -->
                 <td>1</td>
-                <td><input type="date" name="bill_date[]" class="form-control" required></td>
+                <td><input type="date" name="bill_date[]" class="form-control text-end" required></td>
                 <td>
                     <select class="form-control rm_type" name="type[]" required>
                         <option value="">Select One</option>
@@ -80,7 +80,7 @@
                     </select>
                 </td>
                 <td><input type="text" name="max_amount[]" class="form-control text-end" step="0.01" disabled></td>
-                <td><input type="number" name="entered_amount[]" class="form-control text-end" step="0.01" required></td>
+                <td><input type="text" name="entered_amount[]" class="form-control text-end" step="0.01" required></td>
                 <td>
                     <div class="file-upload">
                         <div class="file-select d-flex align-items-center">
@@ -116,23 +116,58 @@
       </div>
 
 <!-- JavaScript -->
+
+<script>
+// --- Auto comma for Entry Amount field ---
+
+function formatNumberWithCommas(x) {
+    if (!x) return '';
+    x = x.replace(/,/g, '');
+    let parts = x.split('.');
+    parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    return parts.join('.');
+}
+
+// Format on input for all entered_amount[] fields
+$(document).on('input', 'input[name="entered_amount[]"]', function () {
+    let val = $(this).val().replace(/,/g, '');
+    if (val === '') return;
+    // Only allow numbers and dot
+    val = val.replace(/[^0-9.]/g, '');
+    let formatted = formatNumberWithCommas(val);
+    $(this).val(formatted);
+    updateTotals();
+});
+
+// Remove commas before form submit (optional, for backend compatibility)
+$('form').on('submit', function() {
+    $('input[name="entered_amount[]"]').each(function() {
+        $(this).val($(this).val().replace(/,/g, ''));
+    });
+});
+</script>
+
 <script>
 
-  function updateTotals() {
-      let totalMax = 0;
-      let totalEntry = 0;
+function updateTotals() {
+    let totalMax = 0;
+    let totalEntry = 0;
 
-      $('#billsTable tbody tr').each(function () {
-        const maxAmount = parseFloat($(this).find('input[name="max_amount[]"]').val()) || 0;
-        const entryAmount = parseFloat($(this).find('input[name="entered_amount[]"]').val()) || 0;
+    $('#billsTable tbody tr').each(function () {
+        const maxAmountRaw = $(this).find('input[name="max_amount[]"]').val() || "0";
+        const entryAmountRaw = $(this).find('input[name="entered_amount[]"]').val() || "0";
+
+        // Remove commas before parsing
+        const maxAmount = parseFloat(maxAmountRaw.replace(/,/g, '')) || 0;
+        const entryAmount = parseFloat(entryAmountRaw.replace(/,/g, '')) || 0;
 
         totalMax += maxAmount;
         totalEntry += entryAmount;
-      });
+    });
 
-      $('#totalMaxAmount').text('₹' + totalMax.toFixed(2));
-      $('#totalEntryAmount').text('₹' + totalEntry.toFixed(2));
-    }
+    $('#totalMaxAmount').text('₹' + totalMax.toFixed(2));
+    $('#totalEntryAmount').text('₹' + totalEntry.toFixed(2));
+}
 
     // Update totals when amounts change
     $(document).on('input', 'input[name="entered_amount[]"], input[name="max_amount[]"]', function () {

@@ -1,51 +1,181 @@
- /* Header */
- .header {
-     display: flex;
-     justify-content: space-between;
-     align-items: center;
-     background-color: #F6F5F7;
-     color: black;
-     /*  */
- }
+.header {
+    background-color: #FFFFFF;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+    border-radius: 12px;
+    box-shadow: rgba(50, 50, 93, 0.15) 0px 4px 12px -2px, rgba(0, 0, 0, 0.1) 0px 2px 6px -2px;
+}
 
+.header-content {
+    display: flex;
+    align-items: center;
+    gap: 4rem;
+    flex-wrap: wrap;
+}
 
- /* Search Bar */
- .search-bar {
-     display: flex;
-     align-items: center;
-     background-color: #F6F5F7;
-     border-radius: 50px;
-     padding: -1px 20px;
-     box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
-     border: solid #FFFFFF 3px;
- }
+.search-bar {
+    display: flex;
+    align-items: center;
+    background-color: #f8f9fa;
+    border-radius: 25px;
+    padding: 0 1.5rem;
+    min-width: 180px;
+    border: 2px solid #d0d8e5; /* visible border around whole search bar */
+    transition: all 0.3s ease;
+    margin-left: 14; /* align with the policy sidebar */
+    width: 300px; /* match sidebar width on desktop/tablet */
+}
 
- .search-bar input {
-     border: none;
-     outline: none;
-     font-size: 16px;
-     flex: 1;
-     background-color: #F6F5F7;
-     margin-left: 10px;
- }
+.search-bar:focus-within {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(138, 51, 102, 0.1);
+}
 
- .search-icon-circle {
-     display: flex;
-     justify-content: center;
-     align-items: center;
-     background-color: #8A3366;
-     border-radius: 50%;
-     width: 50px;
-     height: 50px;
-     cursor: pointer;
-     margin-left: 15px;
-     border: solid #FFFFFF 5px;
- }
+.search-bar input {
+    border: none;
+    background: transparent;
+    outline: none;
+    flex: 1;
+    font-size: 1rem;
+    color: #333;
+}
 
- .search-icon-circle img {
-     width: 20px;
-     height: 20px;
- }
+.search-bar input::placeholder {
+    color: #999;
+}
+
+.search-icon-circle {
+    background-color: #8A3366;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    margin-left: 0.75rem;
+    border: solid #FFFFFF 4px; /* inner white ring */
+    box-shadow: 0 0 0 2px #d0d8e5; /* outer subtle border ring */
+    transition: all 0.3s ease;
+}
+
+.search-icon-circle:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 0 2px #d0d8e5, 0 4px 15px rgba(138, 51, 102, 0.3); /* keep border ring + hover shadow */
+}
+
+.search-icon-circle img {
+    width: 20px;
+    height: 20px;
+}
+
+.subpolicies-container {
+    flex: 1;
+    max-width: 955px;
+}
+
+.subpolicies-container[hidden] {
+    display: none !important;
+}
+
+.subpolicies-scroll {
+    display: flex;
+    gap: 1rem;
+    overflow-x: auto;
+    padding: 0.5rem 0;
+    scrollbar-width: thin;
+    scrollbar-color: #8A3366 transparent;
+    background: #ffffff;
+    border-radius: 16px;
+    padding: 0.75rem 0.75rem;
+    box-shadow: 0 6px 18px rgba(20, 20, 20, 0.06);
+}
+
+.subpolicies-scroll::-webkit-scrollbar {
+    height: 6px;
+}
+
+.subpolicies-scroll::-webkit-scrollbar-track {
+    background: #f0f0f0;
+    border-radius: 3px;
+}
+
+.subpolicies-scroll::-webkit-scrollbar-thumb {
+    background: #8A3366;
+    border-radius: 3px;
+}
+
+.subpolicies-scroll::-webkit-scrollbar-thumb:hover {
+    background: #6b2d4f;
+}
+
+.subpolicy-item {
+    display: flex;
+    align-items: center;
+    background-color: #ffffff;
+    border: 1px solid #e6eaf0;
+    border-radius: 14px;
+    padding: 0.6rem 1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    white-space: normal; /* allow wrapping to next line */
+    min-width: 160px;    /* minimum width for readability */
+    max-width: 220px;    /* encourage two-line titles */
+    flex-shrink: 0;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+}
+
+.subpolicy-item:hover {
+    background-color: #f6f8fb;
+    border-color: #d0d8e5;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 18px rgba(0, 0, 0, 0.06);
+}
+
+.subpolicy-item.active {
+    background-color: rgba(138, 51, 102, 0.08);
+    color: var(--primary-color);
+    border-color: rgba(138, 51, 102, 0.25);
+    box-shadow: 0 10px 24px rgba(138, 51, 102, 0.15);
+}
+
+.subpolicy-text {
+    font-size: 0.9rem;
+    font-weight: 500;
+    line-height: 1.2;
+    word-break: break-word;
+}
+
+@media (max-width: 1024px) {
+    .header-content {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 4rem;
+    }
+
+    .search-bar {
+        min-width: 180px;
+    }
+
+    .subpolicies-container {
+        max-width: 460px;
+    }
+}
+
+@media (max-width: 768px) {
+    .header {
+        padding: 1rem;
+    }
+
+    .search-bar {
+        padding: 0.5rem 1rem;
+    }
+
+    .subpolicy-item {
+        padding: 0.5rem 1rem;
+        font-size: 0.85rem;
+    }
+}
 
  /* Main Container */
  .main-container {
@@ -66,23 +196,26 @@
      height: 77vh;
      border-radius: 30px;
      top: 243px;
-     left: 37px;
+     /* left: 37px; */
      border-bottom-left-radius: 30px;
      border-bottom-right-radius: 30px;
      border-top-left-radius: 30px;
      border-top-right-radius: 30px;
-     overflow-y: scroll;
+     overflow-y: auto;
      /* Enables vertical scrolling */
  }
 
- /* Hide the scrollbar but keep the scrolling functionality */
+ /* Show a visible scrollbar in the sidebar */
  .sidebar::-webkit-scrollbar {
-     width: 0px;
-     background: transparent;
+     width: 8px;
  }
-
+ .sidebar::-webkit-scrollbar-track {
+     background: #f0f0f0;
+     border-radius: 10px;
+ }
  .sidebar::-webkit-scrollbar-thumb {
-     background: transparent;
+     background: #c7c7c7;
+     border-radius: 10px;
  }
 
 
@@ -93,12 +226,11 @@
      padding: 0px;
      border-radius: 12px;
      cursor: pointer;
-     margin-bottom: 20px;
+     margin-bottom: 5px;
      background-color: #D9D9D9;
      transition: background-color 0.3s ease;
-     width: 345px;
-     /* width: 100%; */
-     /* height: 35px; */
+     width: 100%;
+     height: 60px;
  }
 
  .category-item.active {
@@ -116,15 +248,16 @@
  }
 
  .category-item .category-icon img {
-     width: 35px;
-     height: 35px;
+     width: 50px;
+     height: 42px;
  }
 
  .category-item .category-text {
      font-size: 12px;
      font-weight: 500;
      color: #333;
-     width: 485px;
+     width: auto;
+     flex: 1;
      padding: 8px;
  }
 
@@ -136,20 +269,316 @@
  .content-area {
      flex: 1;
      background-color: #FFFFFF;
-     padding: 30px;
-     border-radius: 20px;
+     /* padding: 20px; */
+     border-radius: 30px;
      box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
      display: none;
      position: relative;
-     margin: 0 10px;
+     margin: 0 !important;
+
      /* width: calc(100% - 366px); */
      /* Adjust width to fit beside the sidebar */
-     height: 77vh;
+     height: 75vh !important; /* match sidebar height */
+     overflow-y: auto; /* internal scroll like sidebar */
+     overflow-x: hidden; /* prevent horizontal scroll when subpolicy opens */
  }
 
  .content-area.active {
      display: block;
  }
+
+ /* Policy Card Layout */
+.policy-card {
+    position: relative;
+    background: #FFFFFF;
+    border-radius: 16px;
+    box-shadow: none; /* remove outer card shadow */
+    padding: 0; /* extra top space for download button */
+    margin-bottom: 18px;
+}
+
+.policy-card.policy-card-hidden {
+    display: none !important;
+}
+
+.policy-slider {
+    position: static;
+    overflow: visible;
+}
+
+.policy-track {
+    display: block !important;
+    transform: none !important;
+    transition: none !important;
+    will-change: auto;
+}
+
+/* Keep content area scrolling to match clean card layout */
+/* Intentionally remove previous overrides forcing visible overflow */
+
+  .folder-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1.5rem;
+      background: linear-gradient(135deg, rgba(138, 51, 102, 0.05), rgba(178, 77, 128, 0.05));
+      border-radius: 12px;
+      border: 2px solid transparent;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+      cursor: default; /* no dropdown affordance */
+  }
+
+  .folder-header:hover {
+      background: linear-gradient(135deg, rgba(138, 51, 102, 0.08), rgba(178, 77, 128, 0.08));
+      border-color: var(--primary-light);
+      transform: none; /* remove hover lift */
+      box-shadow: none; /* remove hover shadow */
+  }
+
+  .folder-header:focus {
+      outline: none; /* remove focus ring */
+  }
+
+.folder-title {
+    font-size: 1rem;
+    font-weight: 400;
+    color: var(--primary-color);
+    margin: 0;
+    display: flex;
+    align-items: center;
+    transition: all 0.3s ease;
+}
+
+.folder-icon {
+    display: inline-block;
+    margin-right: 0.75rem;
+    font-size: 1.2rem;
+    transition: transform 0.3s ease;
+}
+
+.policy-card.folder-open .folder-icon {
+    transform: rotate(90deg);
+}
+
+.folder-content {
+    display: flex; /* side-by-side layout */
+    flex-direction: row;
+    align-items: flex-start;
+    gap: 2rem;
+    padding: 1.25rem 1.5rem;
+    background: #ffffff;
+    border-radius: 0 0 12px 12px;
+    /* border: 1px solid #e6eaf0; */
+    border-top: none;
+    margin-top: -12px;
+    position: relative;
+    overflow-x: hidden; /* prevent horizontal scroll inside open policy */
+}
+
+.policy-card.folder-open .folder-content {
+    display: flex !important;
+    flex-direction: row;
+    align-items: flex-start;
+    gap: 2rem;
+    animation: folderExpand 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.folder-content .content-text {
+    flex: 1;
+    margin-bottom: 0;
+    padding-right: 1rem;
+}
+
+.folder-content .content-image {
+    width: 300px;
+    flex-shrink: 0;
+    margin-top: 0;
+}
+
+.folder-content::before {
+    content: '';
+    position: absolute;
+    left: -1px;
+    top: 0;
+    bottom: 0;
+    width: 3px;
+    background: linear-gradient(135deg, var(--primary-color), var(--primary-light));
+    border-radius: 2px;
+}
+
+.policy-card.folder-open .folder-content {
+    display: block;
+    animation: folderExpand 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes folderExpand {
+    0% {
+        opacity: 0;
+        transform: translateY(-10px) scale(0.95);
+    }
+    60% {
+        opacity: 0.8;
+        transform: translateY(5px) scale(1.02);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+/* Content layout inside folders */
+.folder-content .content-text {
+    margin-bottom: 2rem;
+}
+
+.folder-content .content-text p {
+    font-size: 1rem;
+    color: #4a5568;
+    line-height: 1.7;
+    padding: 1rem 1.25rem;
+    background: #f9fafb;
+    border-radius: 10px;
+    border-left: 4px solid var(--primary-light);
+}
+
+.folder-content .content-image {
+    width: 100%;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: var(--shadow-md);
+    position: relative;
+}
+
+.folder-content .content-image img {
+    width: 100%;
+    height: auto;
+    display: block;
+    transition: var(--transition);
+}
+
+.folder-content .content-image:hover img {
+    transform: scale(1.03);
+}
+
+ /* Enhanced Download Button within folder header */
+.folder-header .download-btn {
+    position: static !important;
+    margin-left: auto;
+    background-color: #8A3366;
+    color: white;
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-size: 14px;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.3s ease;
+    border: none;
+    white-space: nowrap;
+    box-shadow: 0 6px 14px rgba(138, 51, 102, 0.2);
+}
+
+ /* Inner content layout */
+ /* Collapse policy details by default; expand on click */
+ .policy-card .policy-content {
+     display: none;
+     flex-direction: column; /* column: text then image */
+     gap: 16px;
+ }
+
+ .policy-card.open .policy-content {
+     display: flex !important;
+ }
+
+/* Ensure column layout inside slider only on small screens */
+@media (max-width: 767px) {
+    /* On mobile, make search bar full width for consistency with sidebar */
+    .search-bar {
+        width: 100%;
+    }
+    .policy-slider .policy-card .policy-content,
+    .policy-slider .policy-card:nth-child(even) .policy-content {
+        flex-direction: column;
+    }
+}
+
+ .policy-card .content-text {
+    flex: 0 0 auto;
+}
+
+ .policy-card .content-image {
+    margin: 0;
+    flex: 0 0 auto;
+}
+
+ .policy-card .content-image img {
+     width: 95%;
+     height: auto;
+     border-radius: 12px;
+ }
+
+ /* Responsive adjustments for cards */
+ @media (max-width: 992px) {
+     .policy-card .policy-content {
+         flex-direction: column;
+     }
+     .policy-card .content-text,
+     .policy-card .content-image {
+         max-width: 100%;
+         min-width: 0;
+     }
+ }
+
+/* Desktop: place text and image side-by-side (also inside slider) */
+@media (min-width: 993px) {
+    .policy-card .policy-content,
+    .policy-slider .policy-card .policy-content,
+    .policy-slider .policy-card:nth-child(even) .policy-content {
+        display: flex !important;
+        flex-direction: row !important;
+        align-items: flex-start;
+        flex-wrap: nowrap;
+        gap: 20px;
+    }
+    .policy-card .content-text,
+    .policy-slider .policy-card .content-text {
+        flex: 0 0 60% !important;
+        max-width: 60% !important;
+        min-width: 0 !important;
+    }
+    .policy-card .content-image,
+    .policy-slider .policy-card .content-image {
+        flex: 0 0 40% !important;
+        max-width: 40% !important;
+        min-width: 0 !important;
+        margin: 0 !important;
+    }
+}
+
+/* Tablet: also place text and image side-by-side */
+@media (min-width: 768px) and (max-width: 992px) {
+    .policy-card .policy-content,
+    .policy-slider .policy-card .policy-content {
+        display: flex !important;
+        flex-direction: row !important;
+        align-items: flex-start;
+        flex-wrap: nowrap;
+        gap: 20px;
+    }
+    .policy-card .content-text,
+    .policy-slider .policy-card .content-text {
+        flex: 0 0 60% !important;
+        max-width: 60% !important;
+    }
+    .policy-card .content-image,
+    .policy-slider .policy-card .content-image {
+        flex: 0 0 40% !important;
+        max-width: 40% !important;
+        margin: 0 !important;
+    }
+}
 
 
 
@@ -160,12 +589,11 @@
      border-radius: 25px;
      font-size: 16px;
      text-decoration: none;
-     display: flex;
+     display: inline-flex;
      align-items: center;
      justify-content: center;
-     position: absolute;
-     top: 20px;
-     right: 20px;
+     position: static;
+     box-shadow: 0 6px 14px rgba(138, 51, 102, 0.2);
  }
 
  .download-btn img {
@@ -194,7 +622,7 @@
      background-color: #FFC107;
      font-size: 14px;
      color: #FFFFFF;
-     padding: 8px 16px;
+     padding: 1 16px;
      border-radius: 10px;
      margin-bottom: 10px;
      display: inline-block;
@@ -214,179 +642,324 @@
  }
 
  .content-image {
-     margin-left: 20px;
-     text-align: center;
-     position: relative;
-     margin-top: 50px;
-     flex: 1;
-     min-width: 300px;
-     /* Ensure minimum width for smaller screens */
- }
+    margin-left: 20px;
+    text-align: center;
+    position: relative;
+    margin-top: 50px;
+    flex: 1;
+    min-width: 300px;
+    /* Ensure minimum width for smaller screens */
+}
 
- .content-image img {
-     width: 100%;
-     height: auto;
- }
+/* Override generic margins inside policy cards so image can sit beside text */
+.policy-card .content-image {
+    margin-left: 0;
+    margin-top: 0;
+}
 
- /* Responsive Styles */
- @media (max-width: 1200px) {
-     .main-container {
-         flex-direction: column;
-         width: 100%;
-         margin: 0;
-         padding: 0 20px;
-     }
+/* Enhanced Responsive Design for Folder Structure */
 
-     .sidebar {
-         width: 100%;
-         margin-bottom: 20px;
-         height: auto;
-     }
+/* Large Desktop (1200px+) - Enhanced Layout */
+@media (min-width: 1200px) {
+    .main-container {
+        flex-direction: row;
+        align-items: flex-start;
+        gap: 2rem;
+    }
 
-     .content-area {
-         width: 100%;
-         margin: 0;
-     }
+    .sidebar {
+        /* Changed the side bar width in 243 px to 296px to match the search item width */
+        width: 296px;
+        flex-shrink: 0;
+        position: sticky;
+        top: 2rem;
+        height: auto;
+        max-height: 75vh;
+    }
 
-     .policy-content {
-         flex-direction: column;
-     }
+    /* Match search bar to sidebar width on large desktops */
+    .search-bar {
+        width: 296px;
+    }
 
-     .content-text {
-         max-width: 100%;
-     }
+    .content-area {
+        flex: 1;
+        margin: 0;
+    }
 
-     .content-image {
-         margin-left: 0;
-         margin-top: 20px;
-     }
- }
+    .folder-content {
+        flex-direction: row;
+        align-items: flex-start;
+        gap: 2rem;
+    }
 
- @media (max-width: 768px) {
-     .header {
-         flex-direction: column;
-         align-items: flex-start;
-     }
+    .folder-content .content-text {
+        flex: 1;
+        padding-right: 2rem;
+        margin-bottom: 0;
+    }
 
-     .header h1 {
-         font-size: 24px;
-         margin-bottom: 10px;
-     }
+    .folder-content .content-image {
+        width: 400px;
+        flex-shrink: 0;
+    }
+}
 
-     .search-bar {
-         width: 100%;
-         margin-top: 10px;
-     }
+/* Desktop (768px - 1199px) - Balanced Layout */
+@media (min-width: 768px) and (max-width: 1199px) {
+    .main-container {
+        flex-direction: row;
+        align-items: flex-start;
+        gap: 1.5rem;
+    }
 
-     .main-container {
-         padding: 0 10px;
-     }
+    .sidebar {
+        width: 300px;
+        flex-shrink: 0;
+        position: sticky;
+        top: 2rem;
+        height: auto;
+        max-height: calc(100vh - 4rem);
+    }
 
-     .sidebar {
-         padding: 20px;
-     }
+    .content-area {
+        flex: 1;
+        margin: 0;
+    }
 
-     .category-item {
-         margin-bottom: 10px;
-         width: 100%;
-     }
+    .folder-content {
+        flex-direction: row;
+        align-items: flex-start;
+        gap: 1.5rem;
+    }
 
-     .content-area {
-         padding: 20px;
-     }
+    .folder-content .content-text {
+        flex: 1;
+        padding-right: 1.5rem;
+        margin-bottom: 0;
+    }
 
-     .download-btn {
-         top: 10px;
-         right: 10px;
-         padding: 5px 10px;
-         font-size: 14px;
-     }
+    .folder-content .content-image {
+        width: 350px;
+        flex-shrink: 0;
+    }
+}
 
-     .download-btn img {
-         width: 16px;
-         height: 16px;
-     }
+/* Tablet (480px - 767px) - Adaptive Layout */
+@media (max-width: 767px) {
+    .main-container {
+        flex-direction: column;
+        gap: 1.5rem;
+        padding: 1rem;
+    }
 
-     .content-item h3 {
-         font-size: 12px;
-         padding: 6px 12px;
-     }
+    .sidebar {
+        width: 100%;
+        position: static;
+        height: auto;
+        max-height: 400px;
+        padding: 1.5rem;
+        order: 2;
+    }
 
-     .content-item p {
-         font-size: 14px;
-         width: 100%;
-     }
+    .categories-container {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 1rem;
+    }
 
-     .content-image img {
-         width: 100%;
-         height: auto;
-     }
- }
+    .category-item {
+        width: auto;
+        margin-bottom: 0;
+        padding: 1rem;
+    }
 
- @media (max-width: 480px) {
-     .header h1 {
-         font-size: 20px;
-     }
+    .content-area {
+        order: 1;
+        margin: 0;
+        height: auto;
+        max-height: none;
+        overflow-y: visible;
+    }
 
-     .search-bar {
-         flex-direction: column;
-         align-items: flex-start;
-     }
+    .folder-header {
+        padding: 1.25rem;
+    }
 
-     .search-bar input {
-         width: 100%;
-         margin: 0 0 10px 0;
-     }
+    .folder-content {
+        padding: 1.5rem;
+        flex-direction: column;
+        gap: 1.5rem;
+    }
 
-     .search-icon-circle {
-         width: 40px;
-         height: 40px;
-     }
+    .folder-content .content-text {
+        padding-right: 0;
+        max-width: 100%;
+        margin-bottom: 0;
+    }
 
-     .search-icon-circle img {
-         width: 16px;
-         height: 16px;
-     }
+    .folder-content .content-image {
+        width: 100%;
+        margin-top: 0;
+    }
+}
 
-     .main-container {
-         padding: 0 5px;
-     }
+/* Mobile (up to 479px) - Compact Layout */
+@media (max-width: 479px) {
+    .main-container {
+        padding: 0.75rem;
+        gap: 1rem;
+    }
 
-     .sidebar {
-         padding: 10px;
-     }
+    .sidebar {
+        padding: 1rem;
+        max-height: 300px;
+    }
 
-     .category-item {
-         padding: 5px;
-     }
+    .categories-container {
+        grid-template-columns: 1fr;
+        gap: 0.75rem;
+    }
 
-     .content-area {
-         padding: 10px;
-     }
+    .category-item {
+        padding: 0.75rem;
+    }
 
-     .download-btn {
-         top: 5px;
-         right: 5px;
-         padding: 5px;
-         font-size: 12px;
-     }
+    .category-icon {
+        width: 45px;
+        height: 45px;
+        margin-right: 0.75rem;
+    }
 
-     .download-btn img {
-         width: 12px;
-         height: 12px;
-     }
+    .category-icon img {
+        width: 24px;
+        height: 24px;
+    }
 
-     .content-item h3 {
-         font-size: 10px;
-         padding: 4px 8px;
-     }
+    .category-text {
+        font-size: 11px;
+        padding: 6px;
+        width: auto;
+    }
 
-     .content-item p {
-         font-size: 12px;
-     }
+    .content-area {
+        padding: 1rem;
+    }
 
-     .content-image img {
-         width: 100%;
-         height: auto;
-     }
- }
+    .folder-header {
+        padding: 1rem;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+    }
+
+    .folder-title {
+        font-size: 1.1rem;
+        width: 100%;
+    }
+
+    .download-btn {
+        position: static;
+        margin-top: 0.5rem;
+    }
+
+    .folder-content {
+        padding: 1.25rem;
+        gap: 1.25rem;
+    }
+
+    .folder-content .content-text p {
+        font-size: 0.9rem;
+        padding: 1rem;
+    }
+}
+
+/* Touch Device Optimizations for Folder Structure */
+@media (hover: none) and (pointer: coarse) {
+    .folder-header {
+        padding: 1.5rem;
+        margin-bottom: 1rem;
+    }
+
+    .folder-header:active {
+        transform: scale(0.98);
+        transition: transform 0.15s ease;
+    }
+
+    .policy-card:active {
+        transform: scale(0.98);
+        transition: transform 0.15s ease;
+    }
+
+    .download-btn:active {
+        transform: scale(0.95);
+        transition: transform 0.15s ease;
+    }
+
+    /* Touch feedback for folder structure - no scrolling */
+    .policy-track {
+        touch-action: pan-y; /* Allow vertical scrolling only */
+    }
+}
+
+/* Enhanced Smooth Transitions */
+.category-item {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.category-item:hover {
+    transform: translateX(8px) translateY(-2px);
+    box-shadow: 0 8px 25px rgba(138, 51, 102, 0.15);
+}
+
+.category-item.active {
+    transform: translateX(6px) translateY(-2px);
+    box-shadow: 0 12px 30px rgba(138, 51, 102, 0.25);
+}
+
+.policy-card {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.policy-card:hover {
+    transform: none; /* remove hover lift/shake */
+    box-shadow: none; /* keep no shadow on hover */
+}
+
+.content-area {
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.content-area.active {
+    animation: fadeInUp 0.4s ease-out;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* High DPI / Retina Display Enhancements */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+    .search-icon-circle,
+    .category-icon,
+    .download-btn {
+        image-rendering: -webkit-optimize-contrast;
+        image-rendering: crisp-edges;
+    }
+}
+
+/* Reduced Motion for Accessibility */
+@media (prefers-reduced-motion: reduce) {
+    * {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}

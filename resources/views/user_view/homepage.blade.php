@@ -302,8 +302,8 @@ error_reporting(0);
                     @foreach($leaveUsage as $leave)
                         <li class='mb-2'>
                             <h6>{{ $leave[0] }}</h6> <!-- The first item is the leave type name -->
-                            <div class="progress-bar-containerr">
-                                <div class="progress-barr" style="width: {{ $leave[3] }}%; background-color: 
+                            <div class="progress-bar-containerr" width:100% !important>
+                                <div class="progress-barr" style="width: {{ $leave[3], 100 }}%; background-color: 
                                     @if($leave[3] <= 50) #4caf50
                                     @elseif($leave[3] <= 75) #ff9800
                                     @else #f44336
@@ -487,7 +487,7 @@ error_reporting(0);
                                 <th>EMP ID</th>
                                 <th>Employee Name</th>
                                 <th>No. of Bills</th>
-                                <th>Total Amount</th>
+                                <th>Total Amount(₹)</th>
                                 <th>Status</th>
                                 <th>Action</th>
                             </tr>
@@ -500,7 +500,7 @@ error_reporting(0);
                                         <td>{{ $reimbursement->employee_no }}</td>
                                         <td>{{ $reimbursement->employee_name }}</td>
                                         <td>{{ $reimbursement->no_of_entries }}</td>
-                                        <td>{{ number_format($reimbursement->total_amount, 2) }}</td> <!-- Display total amount -->
+                                        <td class="text-end">{{ number_format($reimbursement->total_amount, 2) }}</td> <!-- Display total amount -->
                                         <td>{{ $reimbursement->status }}</td> <!-- Display status -->
                                         <td>  <button>  
                                             <a href="{{ route('user_claims',['user_id' => $reimbursement->user_id, 'reimbursement_traking_id' => $reimbursement->id]) }}">

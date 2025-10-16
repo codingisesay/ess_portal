@@ -1,0 +1,129 @@
+@Library('Jenkins-shared-lib') _
+pipeline {
+    agent any
+
+    environment {
+        WEBHOOK_TOKEN     = credentials('webhook-token-id')
+        DOCKER_REGISTRY   = "172.16.1.225:5000"
+        SERVICE_NAME      = "ess_portal"
+        HOST_IP           = "172.16.1.225"
+        STORAGE_BASE_PATH = "/opt/cicd/storage/ess/"
+        ENV_BASE_PATH   = "/opt/cicd/env/ess/"
+    }
+
+    triggers {
+        pollSCM('H/5 * * * *')
+    } 
+
+    stages {
+        stage('Checkout') {
+            steps {
+                checkout scm
+            }
+        }
+
+        stage('Set Branch Config') {
+            steps {
+                script {
+                    BRANCH_NAME = env.BRANCH_NAME
+                    echo "Detected branch: ${BRANCH_NAME}"
+
+                    if (BRANCH_NAME == 'dev') {
+                        env.ENV_NAME = "dev"
+                        env.PORT = "9004"
+                    } else if (BRANCH_NAME == 'test') {
+                        env.ENV_NAME = "test"
+                        env.PORT = "10004"
+                    } else if (BRANCH_NAME == 'demo') {
+                        env.ENV_NAME = "demo"
+                        env.PORT = "11004"
+                    } else {
+                        error("Unsupported branch: ${BRANCH_NAME}")
+                    }
+
+                    def version = "1"
+                    def prNumber = sh(script: "git log -1 --pretty=%s | grep -oE '#[0-9]+' | tr -d '#' || true", returnStdout: true).trim()
+                    if (!prNumber) {
+                        prNumber = "0"
+                    }
+                    def commitHash = sh(script: "git rev-parse --short HEAD", returnStdout: true).trim()
+                    env.IMAGE_TAG = "${version}.${env.ENV_NAME}.${prNumber}.${commitHash}".replaceAll("\\s", "")
+
+                    echo "ESS will be deployed with IMAGE_TAG: ${env.IMAGE_TAG} on port ${env.PORT}"
+                    // Set URL based on branch to be used in notifications
+                    url = (BRANCH_NAME == "dev") ? "https://172.16.1.225:9443/" : (BRANCH_NAME == "test") ? "https://172.16.1.225:10443/" : "https://182.70.118.121:7090/"
+                }
+            }
+        }
+
+        stage('Copy Env File') {
+           steps {
+               script {
+                   echo "Copying .env file for branch ${BRANCH_NAME}..."
+                   sh """
+                       echo "Creating .env file with updated values"
+                       cp ${ENV_BASE_PATH}/.env.${BRANCH_NAME} ./.env
+
+                       echo "STORAGE_PATH=${STORAGE_BASE_PATH}${BRANCH_NAME}" >> .env
+                       echo "IMAGE_TAG=${env.IMAGE_TAG}" >> .env
+
+                       echo "Final contents of .env:"
+                       cat .env 
+                   """
+               } 
+           }
+        }
+
+        stage('Build Docker Image') {
+            steps {
+                script {
+                    sh """
+                        echo "Building ESS Docker image..."
+                        docker compose -f docker-compose.${env.ENV_NAME}.yml build
+                    """
+                }
+            }
+        }
+
+        stage('Push Docker Image') {
+            steps {
+                script {
+                    sh """
+                        echo "Pushing ESS image to registry"
+                        docker push ${DOCKER_REGISTRY}/${SERVICE_NAME}:${env.IMAGE_TAG}
+                    """
+                }
+            }
+        }
+
+        stage('Deploy ESS Container') {
+            steps {
+                script {
+                    def containerName = "${env.ENV_NAME}_${SERVICE_NAME}"
+                    sh """
+                        echo "Stopping existing ESS container if running"
+                        docker compose -f docker-compose.${env.ENV_NAME}.yml down || true
+                        echo "Running ESS container on ${env.PORT}"
+                        docker compose -f docker-compose.${env.ENV_NAME}.yml up -d
+                    """
+                }
+            }
+        }
+    }
+
+    post {
+        // Notify on build failure
+        failure {
+            script {
+                notifyBuild(
+                    "FAILURE",
+                    "${url}",
+                    ["om.m@payvance.co.in","samidha.l@payvance.co.in"],
+                    "ESS",
+                    "FAILURE",
+                    BRANCH_NAME
+                )
+            }
+        }
+    }
+}

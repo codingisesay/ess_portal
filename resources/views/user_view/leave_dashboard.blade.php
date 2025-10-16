@@ -227,8 +227,8 @@
                     </div>
                 </div>
 
-                <div class="col-md-6 mb-3"> 
-                    <div class="summary p-3">
+                <div class="col-md-6 mb-3 d-flex"> 
+                    <div class="summary p-3 h-100 d-flex flex-column w-100">
                         <h5 class="mb-0">Leave Summary</h5>
                         <hr class="my-2"  >
                         <div class="leave-summary-container row justify-content-around">
@@ -316,13 +316,13 @@
                     </div>
                 </div>
                                     
-                <div class="col-md-6 mb-3">
-                    <div class="applied-leaves p-3 overflow-auto"  >
+                <div class="col-md-6 mb-3 d-flex">
+                    <div class="applied-leaves p-3 d-flex flex-column h-100 w-100">
                         <h5 class="mb-0 d-flex justify-content-between align-items-center">
                             <span class="me-auto" > Applied Leave</span>
                             <small class="apply-leave py-1 px-4" onclick="redirectToForm()">Apply Leave</small></h5>  
                         <hr class="my-2"  >
-                        <div style="height:300px; overflow-y:auto" >
+                        <div class="applied-scroll flex-grow-1 overflow-auto">
                             <div class="container">
                                 @foreach($appliedLeaves as $leave)
                                     <div class="status-item">
@@ -379,10 +379,12 @@
                     </script>
                 </div>
 
-                <div class="col-md-6 mb-3">              
+                <!-- Full-width: make Attendance Overview span the entire row for better visibility -->
+                <div class="col-12 mb-3">              
                     <div class="attendance p-3">
                         <h5 class="mb-0">Attendance Overview</h5> <hr class="my-2"  >
-                            <canvas id="newAttendanceChart" width="900px" height="430px"></canvas>
+                            <!-- Responsive chart: canvas width set to 100% to fill available horizontal space -->
+                            <canvas id="newAttendanceChart" style="width: 100%; height: 430px;"></canvas>
 
                             <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
                             <script>
@@ -442,121 +444,7 @@
                     </div> 
                 </div>
                 
-                <div class="col-md-6 mb-3">  
-                    <div class="attendance-header p-3 ">
-                        <h5 class="mb-0">Absenteeism Rate</h5> <hr class="my-2"  >
-                        <div class="container-absent">
-                            <div class="controls">
-                                <select id="yearSelect"></select>
-                                <!-- <select id="periodSelect">
-                                    <option value="yearly" selected>Yearly</option>
-                                    <option value="monthly">Monthly</option>
-                                    <option value="weekly">Weekly</option>
-                                </select> -->
-                            </div>
-                            <canvas id="absenteeismChart1" style="width: 800px; height: 350px;"></canvas>
-
-                            <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-                            <script>
-                                document.addEventListener("DOMContentLoaded", function () {
-                                    const absenteeismCtx = document.getElementById('absenteeismChart1').getContext('2d');
-
-                                    // Dynamically populate the year dropdown (Last 5 years)
-                                    const yearSelect = document.getElementById("yearSelect");
-                                    const currentYear = new Date().getFullYear();
-                                    for (let i = 0; i < 5; i++) {
-                                        let startYear = currentYear - i - 1;
-                                        let endYear = currentYear - i;
-                                        let option = document.createElement("option");
-                                        option.value = `${startYear}-${endYear}`;
-                                        option.textContent = `${startYear}-${endYear}`;
-                                        yearSelect.appendChild(option);
-                                    }
-
-                                    // Fetch absenteeism data from Laravel
-                                    const attendanceData = @json($attendanceOverview);
-
-                                    // Function to filter data for a selected year and update the chart
-                                    function updateChartData(yearRange) {
-                                        // Extract start and end years from the selected year range
-                                        const [startYear, endYear] = yearRange.split('-').map(Number);
-                                        
-                                        // Filter months and absenteeism rates based on the selected year
-                                        const months = Object.keys(attendanceData).map(month => {
-                                            return new Date(startYear, month - 1, 1).toLocaleString('en-US', { month: 'long' });
-                                        });
-
-                                        const absenteeismRates = Object.values(attendanceData).map(data => {
-                                            let totalDays = (data.on_time || 0) + (data.late || 0) + (data.absent || 0);
-                                            return totalDays > 0 ? (data.absent / totalDays) : 0;
-                                        });
-
-                                        // Create chart gradient
-                                        const gradient1 = absenteeismCtx.createLinearGradient(0, 0, 0, 400);
-                                        gradient1.addColorStop(0, 'rgba(0, 119, 190, 0.8)');
-                                        gradient1.addColorStop(1, 'rgba(0, 70, 130, 0)');
-
-                                        // Create the chart
-                                        new Chart(absenteeismCtx, {
-                                            type: 'line',
-                                            data: {
-                                                labels: months,
-                                                datasets: [{
-                                                    label: 'Absenteeism Rate (%)',
-                                                    data: absenteeismRates,
-                                                    borderColor: '#0077be',
-                                                    backgroundColor: gradient1,
-                                                    borderWidth: 4,
-                                                    fill: true,
-                                                    pointBackgroundColor: '#006699',
-                                                    pointBorderColor: '#006699',
-                                                    pointRadius: 5,
-                                                    pointHoverRadius: 7,
-                                                    tension: 0.5,
-                                                }]
-                                            },
-                                            options: {
-                                                responsive: true,
-                                                plugins: {
-                                                    title: { display: true, text: 'Absenteeism Rate' },
-                                                    legend: { display: false },
-                                                    tooltip: {
-                                                        callbacks: {
-                                                            label: function (context) {
-                                                                return (context.raw * 100).toFixed(2) + '%';
-                                                            }
-                                                        }
-                                                    }
-                                                },
-                                                scales: {
-                                                    x: { grid: { display: false } },
-                                                    y: {
-                                                        beginAtZero: true,
-                                                        max: Math.max(...absenteeismRates) + 0.05,  // Adjust max dynamically
-                                                        ticks: {
-                                                            callback: function (value) {
-                                                                return (value * 100).toFixed(2) + '%';
-                                                            }
-                                                        }
-                                                    }
-                                                }
-                                            }
-                                        });
-                                    }
-
-                                    // Update chart on year selection change
-                                    yearSelect.addEventListener('change', function () {
-                                        const selectedYear = yearSelect.value;
-                                        updateChartData(selectedYear);
-                                    });
-
-                                    // Initialize with the first option (default)
-                                    updateChartData(yearSelect.value);
-                                });
-                            </script> 
-                        </div>
-                    </div>
-                </div>
+                
 
                 <div class="col-12 mb-3">  
                     <div class="attendance-header p-3 ">
@@ -593,7 +481,8 @@
             </div> 
         </div>
     </div>
-  
+
 
 </div>
+
 @endsection
