@@ -1,9 +1,88 @@
 <link rel="stylesheet" href="{{ asset('/user_end/css/pms-dashboard.css') }}">
+<link rel="stylesheet" href="{{ asset('/user_end/css/manager-dashboard.css') }}">
 <!-- Bootstrap 5 CSS -->
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
 
 <!-- Bootstrap 5 JS (bundle includes Popper) -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+(function(){
+  const nav = document.getElementById('orgNav');
+  const panels = Array.from(document.querySelectorAll('.pms-panels .pms-panel'));
+  if(nav){
+    nav.addEventListener('click', function(e){
+      const a = e.target.closest('a[data-target]');
+      if(!a) return; e.preventDefault();
+      const target = a.getAttribute('data-target');
+      panels.forEach(p=>{
+        if (p.id === target) {
+          p.classList.add('visible');
+        } else {
+          p.classList.remove('visible');
+        }
+      });
+      Array.from(nav.querySelectorAll('a')).forEach(x=>x.classList.remove('active'));
+      a.classList.add('active');
+    });
+    const first = nav.querySelector('a[data-target]');
+    if(first){ first.classList.add('active'); }
+  }
+
+  const sidebar = document.getElementById('orgSidebar');
+  const icon = document.getElementById('orgSidebarIcon');
+  const toggler = document.getElementById('orgSidebarToggle');
+  try{
+    const collapsed = localStorage.getItem('orgSidebarCollapsed')==='1';
+    if(collapsed){ sidebar?.classList.add('collapsed'); icon?.setAttribute('src', "{{ asset('admin_end/images/left_ht.png') }}"); }
+  }catch(e){}
+  toggler?.addEventListener('click', function(){
+    if(!sidebar || !icon) return;
+    sidebar.classList.toggle('collapsed');
+    if(sidebar.classList.contains('collapsed')){
+      icon.setAttribute('src', "{{ asset('admin_end/images/left_ht.png') }}");
+      try{ localStorage.setItem('orgSidebarCollapsed','1'); }catch(e){}
+    } else {
+      icon.setAttribute('src', "{{ asset('admin_end/images/right_ht.png') }}");
+      try{ localStorage.setItem('orgSidebarCollapsed','0'); }catch(e){}
+    }
+  });
+
+  // Auto-collapse on small screens for better viewport usage
+  function applyResponsiveSidebar(){
+    if(!sidebar) return;
+    const isSmall = window.matchMedia('(max-width: 800px)').matches;
+    if(isSmall){
+      sidebar.classList.add('collapsed');
+      icon?.setAttribute('src', "{{ asset('admin_end/images/left_ht.png') }}");
+    } else {
+      const persisted = localStorage.getItem('orgSidebarCollapsed')==='1';
+      if(!persisted){
+        sidebar.classList.remove('collapsed');
+        icon?.setAttribute('src', "{{ asset('admin_end/images/right_ht.png') }}");
+      }
+    }
+  }
+  applyResponsiveSidebar();
+  window.addEventListener('resize', applyResponsiveSidebar);
+
+  // Debounced resize to keep Chart.js responsive across layout changes
+  let __rz;
+  window.addEventListener('resize', function(){
+    clearTimeout(__rz);
+    __rz = setTimeout(function(){
+      try{
+        if(window.orgSummaryChart && typeof window.orgSummaryChart.resize === 'function'){
+          window.orgSummaryChart.resize();
+        } else {
+          // as fallback, re-run render to recalc
+          if(typeof renderOrgSummaryPie === 'function') renderOrgSummaryPie();
+        }
+      }catch(e){}
+    }, 150);
+  });
+})();
+</script>
 
 <!-- Summary Pie Chart Script -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -69,37 +148,75 @@
   });
 </script>
 
-<div class="container">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
 
-    {{-- Summary Pie Chart --}}
-    <div class="card mb-4">
-        <div class="card-header bg-light"><strong>Summary</strong></div>
-        <div class="card-body">
-            <div class="row align-items-center">
-                <div class="col-md-5">
-                    <canvas id="orgSummaryPie" height="160" style="max-width:260px; display:block; margin:auto;"></canvas>
-                </div>
-                <div class="col-md-7">
-                    <ul class="list-unstyled mb-0 small">
-                        <li class="d-flex align-items-center mb-2">
-                            <span class="me-2" style="display:inline-block;width:14px;height:14px;background:#3b82f6;border-radius:3px;"></span>
-                            <strong>Total Goals:</strong>&nbsp;<span id="totalGoals">0</span>
-                        </li>
-                        <li class="d-flex align-items-center mb-2">
-                            <span class="me-2" style="display:inline-block;width:14px;height:14px;background:#10b981;border-radius:3px;"></span>
-                            <strong>Total Tasks:</strong>&nbsp;<span id="totalTasks">0</span>
-                        </li>
-                        <li class="d-flex align-items-center mb-2">
-                            <span class="me-2" style="display:inline-block;width:14px;height:14px;background:#f59e0b;border-radius:3px;"></span>
-                            <strong>Pending Approvals:</strong>&nbsp;<span id="pendingApprovals">0</span>
-                        </li>
-                    </ul>
-                </div>
-            </div>
+<div class="pms-page">
+  <nav class="pms-sidebar" id="orgSidebar" aria-label="Organization sidebar">
+    <h3>
+      <span class="pms-title-text">Organization Dashboard</span>
+      <span id="orgSidebarToggle" style="margin-left:auto; cursor:pointer; display:inline-flex; align-items:center;">
+        <img id="orgSidebarIcon" src="{{ asset('admin_end/images/right_ht.png') }}" alt="toggle" style="height:18px; width:auto;" />
+      </span>
+    </h3>
+    <ul class="pms-sidebar-nav" id="orgNav">
+      <li><a href="#org-summary" data-target="org-summary"><i class="bi bi-pie-chart" style="margin-right:8px;"></i><span>Summary</span></a></li>
+      <li><a href="#org-goals" data-target="org-goals"><i class="bi bi-flag" style="margin-right:8px;"></i><span>Goals</span></a></li>
+      <li><a href="#org-task-approvals" data-target="org-task-approvals"><i class="bi bi-check2-square" style="margin-right:8px;"></i><span>Task Approvals</span></a></li>
+    </ul>
+  </nav>
+  <main class="pms-main" id="org-main">
+    <div class="pms-panels">
+      <section id="org-summary" class="pms-panel visible">
+        <div class="container">
+
+    {{-- Summary metric cards --}}
+    <div class="summary-wrap">
+      <div class="ins-approval-header d-flex align-items-center gap-2">
+        <span class="ins-approval-header-icon bi bi-flag-fill" aria-hidden="true"></span>
+        <h5 class="m-0 ins-approval-header-title">Summary</h5>
+      </div>
+      <div class="summary-grid">
+        <div class="metric-card metric-blue">
+          <div class="metric-title">Total Goals</div>
+          <div class="metric-row">
+            <div class="metric-value" id="totalGoals">0</div>
+            <svg class="metric-spark" viewBox="0 0 120 32" preserveAspectRatio="none" aria-hidden="true">
+              <defs>
+                <linearGradient id="grad-blue" x1="0" x2="0" y1="0" y2="1">
+                  <stop offset="0%" stop-color="#7ba3ff" stop-opacity="1"/>
+                  <stop offset="100%" stop-color="#cfe0ff" stop-opacity="0.2"/>
+                </linearGradient>
+              </defs>
+              <path d="M1 22 C20 10, 40 18, 60 16 C80 14, 100 20, 119 6" stroke="#5b8cff" stroke-width="2" fill="none"/>
+              <rect x="92" y="6" width="18" height="20" rx="3" fill="url(#grad-blue)" />
+            </svg>
+          </div>
         </div>
+        <div class="metric-card metric-green">
+          <div class="metric-title">Total Tasks</div>
+          <div class="metric-row">
+            <div class="metric-value" id="totalTasks">0</div>
+            <svg class="metric-spark" viewBox="0 0 120 32" preserveAspectRatio="none" aria-hidden="true">
+              <path d="M1 22 L40 22 C60 22, 80 22, 100 22 C108 22, 116 22, 119 20" stroke="#10b981" stroke-width="2" fill="none"/>
+            </svg>
+          </div>
+        </div>
+        <div class="metric-card metric-orange">
+          <div class="metric-title">Pending Approvals</div>
+          <div class="metric-row">
+            <div class="metric-value" id="pendingApprovals">0</div>
+            <svg class="metric-spark" viewBox="0 0 120 32" preserveAspectRatio="none" aria-hidden="true">
+              <path d="M1 22 C20 24, 40 20, 60 22 C80 24, 100 20, 119 24" stroke="#f59e0b" stroke-width="2" fill="none"/>
+            </svg>
+          </div>
+        </div>
+      </div>
     </div>
 
-    {{-- Goals --}}
+        </div>
+      </section>
+      <section id="org-goals" class="pms-panel">
+    <h2 class="goals-page-title">Goals</h2>
     <div class="card mb-4">
         <div class="card-header bg-light"><strong>Goals</strong></div>
         <div class="card-body">
@@ -144,61 +261,29 @@
                         min="{{ $activeCycle->start_date ?? '' }}" 
                         max="{{ $activeCycle->end_date ?? '' }}">
                     </div>
-                </div>
-
-                <!-- Row 3: Description -->
-                <div class="row g-3 mb-2">
-                    <div class="col-12">
-                        <label for="description" class="form-label">Description</label>
-                        <textarea id="description" name="description" class="form-control" placeholder="Description"></textarea>
-                    </div>
-                </div>
-
-                <!-- Row 4: Save Button -->
-                <div class="row g-3 mb-2">
-                    <div class="col-12 d-flex justify-content-end">
-                        <button type="submit" class="btn btn-success">Save</button>
+                    <div class="col-md-6">
+                        <div class="row g-2 align-items-end">
+                          <div class="col-md-9">
+                            <label for="description" class="form-label">Description</label>
+                            <textarea id="description" name="description" class="form-control" placeholder="Description"></textarea>
+                          </div>
+                          <div class="col-md-3 d-flex justify-content-end">
+                            <button type="submit" class="btn btn-success" style="margin-top: 31px;">Save</button>
+                          </div>
+                        </div>
                     </div>
                 </div>
 
                 
             </form>
-            <style>
-  /* Hide scrollbar but keep scrolling functional */
-  #goalsScroll {
-    max-height: 300px;
-    overflow: auto;
-    scrollbar-gutter: stable;    /* reserve space so header doesn't shift when scrollbar appears */
-    -ms-overflow-style: none;    /* IE and old Edge */
-    scrollbar-width: none;       /* Firefox */
-  }
-  /* WebKit browsers */
-  #goalsScroll::-webkit-scrollbar {
-    display: none;
-    width: 0;
-    height: 0;
-  }
-
-  /* optional small fade at bottom to hint that area is scrollable (uncomment if you want) */
-  /*
-  #goalsScroll::after {
-    content: "";
-    pointer-events: none;
-    position: sticky;
-    display: block;
-    height: 28px;
-    margin-top: -28px;
-    background: linear-gradient(transparent, rgba(255,255,255,0.9));
-    width: 100%;
-  }
-  */
-</style>
 
 <!-- Fixed header + scrollable body (scrollbar hidden visually) -->
 <div style="margin-top:1rem;">
 
+  <div class="goals-subheader"><span class="flag bi bi-flag-fill" aria-hidden="true"></span><span>Goals Created by Organization</span></div>
+
   <!-- Header table (fixed) -->
-  <div style="overflow:hidden;">
+  <div class="table-fixed-header">
     <table class="table table-bordered table-striped m-0"
            style="width:100%; table-layout:fixed; border-collapse:collapse; margin-bottom:0;">
       <colgroup>
@@ -225,7 +310,7 @@
   </div>
 
   <!-- Scrollable table body (visual scrollbar hidden) -->
-  <div id="goalsScroll">
+  <div class="table-scroll-container no-scrollbar" id="goalsScroll">
     <table class="table table-bordered table-striped m-0"
            style="width:100%; table-layout:fixed; border-collapse:collapse; margin-bottom:0;">
       <colgroup>
@@ -247,7 +332,9 @@
     </div>
     </div>
 
-    {{-- Task Approvals --}}
+        </div>
+      </section>
+      <section id="org-task-approvals" class="pms-panel">
     <div class="card mb-4">
         <div class="card-header bg-light"><strong>Tasks Approvals</strong></div>
         <div class="card-body">
@@ -451,10 +538,23 @@ async function editGoal(id) {
             select.appendChild(opt);
         });
 
-        // show modal
+        // show modal (move to <body> to avoid z-index/overflow contexts)
         const modalEl = document.getElementById("editGoalModal");
-        const modal = new bootstrap.Modal(modalEl);
-        modal.show();
+        if (modalEl && modalEl.parentElement !== document.body) {
+          try { document.body.appendChild(modalEl); } catch(_) {}
+        }
+        // Ensure high z-index in case global CSS overrides were removed
+        if (modalEl) { modalEl.style.zIndex = '3000'; }
+        const ModalCtor = (window.bootstrap && window.bootstrap.Modal) ? window.bootstrap.Modal : null;
+        if (ModalCtor) {
+          const modal = ModalCtor.getOrCreateInstance(modalEl, { backdrop: true, focus: true });
+          modal.show();
+        } else {
+          // Fallback: toggle classes if Bootstrap not available
+          modalEl?.classList.add('show');
+          modalEl?.setAttribute('style', (modalEl?.getAttribute('style')||'') + '; display:block;');
+          const back = document.createElement('div'); back.className = 'modal-backdrop fade show'; back.style.zIndex='2990'; document.body.appendChild(back);
+        }
 
     } catch (err) {
         console.error(err);
@@ -565,6 +665,13 @@ async function loadGoals() {
             </tr>`;
         });
 
+    // Apply 3-row scroll cap ASAP after rows are inserted
+    requestAnimationFrame(() => {
+        setGoalsScrollHeightToThreeRows();
+        // re-run shortly to account for font/layout settling
+        setTimeout(setGoalsScrollHeightToThreeRows, 50);
+    });
+
     // Populate period select
     let select = document.getElementById("org_setting_id");
     let settingsRes = await fetch("/org-settings");
@@ -574,6 +681,24 @@ async function loadGoals() {
         select.innerHTML += `<option value="${s.id}">${s.name}</option>`;
     });
 }
+
+// Helper: set #goalsScroll max-height to exactly 3 rows
+function setGoalsScrollHeightToThreeRows(){
+    const scrollBox = document.getElementById('goalsScroll');
+    const tbody = document.getElementById('goalsTable');
+    if (!scrollBox || !tbody) return;
+    const rows = Array.from(tbody.querySelectorAll('tr'));
+    if (rows.length === 0) { scrollBox.style.maxHeight = '0px'; return; }
+    let sum = 0;
+    for (let i = 0; i < Math.min(3, rows.length); i++) {
+        sum += rows[i].offsetHeight || 0;
+    }
+    // include table borders/padding safety
+    scrollBox.style.maxHeight = (sum + 6) + 'px';
+}
+
+// Recompute on resize in case fonts/layout change row height
+window.addEventListener('resize', () => requestAnimationFrame(setGoalsScrollHeightToThreeRows));
 
 async function loadApprovals() {
     let res = await fetch("/task-approvals");
