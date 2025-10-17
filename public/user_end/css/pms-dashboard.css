@@ -1,9 +1,47 @@
-/* ============================
-   PMS Dashboard Styling
-   Colors: 
-   - Table BG: #E0AFA0
-   - Buttons: #8A3366
-============================ */
+
+/* Org chart styles moved from manager_dashboard.blade.php */
+
+#chart-container .orgchart {
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    padding: 15px;
+}
+
+#chart-container .orgchart .node {
+    border: 2px solid #007bff;
+    border-radius: 8px;
+    padding: 10px 15px;
+    background: #fff;
+    color: #333;
+    font-weight: 500;
+    transition: transform 0.2s, box-shadow 0.2s;
+    cursor: pointer;
+    min-width: 120px;
+    text-align: center;
+}
+
+#chart-container .orgchart .node:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+    border-color: #0056b3;
+}
+
+.employee-node.selected {
+    background-color: #007bff;
+    color: #fff;
+    border-color: #0056b3;
+}
+
+#chart-container::-webkit-scrollbar {
+    width: 8px;
+}
+
+#chart-container::-webkit-scrollbar-thumb {
+    background: rgba(0,0,0,0.2);
+    border-radius: 4px;
+}
+
 
 /* ---------- Body & Container ---------- */
 body {
@@ -12,22 +50,7 @@ body {
     color: #333;
 }
 
-/* ---------- Horizontal spacing wrapper for grouped sections ---------- */
-.section-pad-x {
-    padding-left: 16px;
-    padding-right: 16px;
-}
-@media (min-width: 992px) {
-    .section-pad-x { padding-left: 24px; padding-right: 24px; }
-}
-
-/* Make dashboard containers full-width on PMS pages */
-.container,
-.container-fluid {
-    width: 100% !important;
-    max-width: 100% !important;
-    padding: 20px;
-}
+/* (Removed) section-pad-x and global container overrides to avoid affecting manager layout */
 
 /* ---------- Section Titles ---------- */
 h2 {
