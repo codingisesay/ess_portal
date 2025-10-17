@@ -547,6 +547,10 @@ html,body{height:100%;margin:0;font-family:Arial, Helvetica, sans-serif;backgrou
   #pms-org-goals .goal-dates, #pms-additional-goals .goal-dates, #pms-create-task .goal-dates, #pms-insights .goal-dates { font-size: 12px; }
 }
 
+/* Bring Bootstrap modals above the header and sticky elements */
+.modal { z-index: 3000 !important; }
+.modal-backdrop { z-index: 2990 !important; }
+
 /* ===================== Insights: limit body to ~7 rows before scroll ===================== */
 #pms-insights .org-insights-scroll {
   /* Approximate 7 rows; adjust row height if needed via CSS var */
