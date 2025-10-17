@@ -71,6 +71,9 @@ error_reporting(0);
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
     <link rel="stylesheet" href="{{ asset('/user_end/css/homepage.css') }}">  
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
  
 <div class="mx-4 mt-3">
     <div class="header mb-4">
@@ -117,6 +120,14 @@ error_reporting(0);
 </div>
 
 </div>
+
+<script>
+    // Make employeeGoals available in JS
+    let employeeGoals = @json($employeeGoals);
+    // Logged-in employee ID
+    let loggedInUserId = "{{ $employees_login->user_id }}";
+</script>
+
 <script>  
     // Function to toggle s of employee children  
     // function toggleChildren(button) {
@@ -172,6 +183,60 @@ error_reporting(0);
         document.getElementById('emp-contactnumber').textContent = contactnumber;
         // Update the profile image
         document.getElementById('profile-image').src = profileImage || '{{ asset('storage/' .$profileimahe) }}';
+        // ✅ Update goals dynamically
+    let goalsContainer = document.getElementById('emp-goals');
+    goalsContainer.innerHTML = "";
+
+    let goalsToDisplay = employeeGoals[userId] || [];
+    
+    if (goalsToDisplay.length > 0) {
+    let accordionHTML = `<div class="custom-accordion" id="goalsAccordion_${userId}">`;
+
+    goalsToDisplay.forEach((goal, index) => {
+        const panelId = `panel_${userId}_${index}`;
+        const title = goal.title ?? 'Untitled Goal';
+        const description = goal.description ?? 'No description available';
+        const startDate = goal.start_date ?? '—';
+        const endDate = goal.end_date ?? '—';
+
+        accordionHTML += `
+            <div class="accordion-item">
+                <div class="accordion-header" data-target="${panelId}">
+                    <span><i class="fas fa-bullseye me-2 text-primary"></i> ${title}</span>
+                    <span class="arrow">▼</span>
+                </div>
+                <div class="accordion-panel" id="${panelId}">
+                    <p><strong>Description:</strong> ${description}</p>
+                    <p><strong>Timeline:</strong> ${startDate ? new Date(startDate).toLocaleDateString('en-GB') : '—'} → ${endDate ? new Date(endDate).toLocaleDateString('en-GB') : '—'}</p>
+                </div>
+            </div>
+        `;
+    });
+
+    accordionHTML += `</div>`;
+    goalsContainer.innerHTML = accordionHTML;
+
+    // Add toggle functionality
+    document.querySelectorAll('.accordion-header').forEach(header => {
+        header.addEventListener('click', () => {
+            const panel = document.getElementById(header.getAttribute('data-target'));
+            const isOpen = panel.classList.contains('open');
+            
+            // Close all panels
+            document.querySelectorAll('.accordion-panel').forEach(p => p.classList.remove('open'));
+            document.querySelectorAll('.accordion-header .arrow').forEach(a => a.textContent = '▼');
+
+            if (!isOpen) {
+                panel.classList.add('open');
+                header.querySelector('.arrow').textContent = '▲';
+            }
+        });
+    });
+
+} else {
+    goalsContainer.innerHTML = "<p class='text-muted mb-0'>No goals assigned</p>";
+}
+
     }
 
         function highlightEmployee() {  
@@ -205,6 +270,7 @@ error_reporting(0);
         document.getElementById('display-option').value = 'vertical'; // Set default to Vertical chart  
 
         // Get the employee details from Laravel session
+        const empUserId = "{{ $employees_login->user_id }}";         // Must be first (used for goals)
         const empName = "{{ $employees_login->employee_name }}";
         const empDesignation = "{{ $employees_login->designation }}";
         const empNo = "{{ $employees_login->employee_no }}";
@@ -222,7 +288,44 @@ error_reporting(0);
     // const profileImage = "{{ !empty($employees_login->profile_image) ? asset('storage/' . $employees_login->profile_image) : asset('storage/user_profile_image/default.jpg') }}";
         const profileImage = "{{ !empty($employees_login->profile_image) ? asset('storage/' . $employees_login->profile_image) : '' }}";
         // Call the function to display the logged-in employee details
-        displayEmployeeDetails(empNo, empName, empDesignation, empManager, empDepartment, empCity, empPhone, empAlternatephone, empEmail, empContactperson, empContactnumber, profileImage, permanentAddress, correspondanceAddress);
+        displayEmployeeDetails(empUserId,empName, empDesignation, empManager, empDepartment, empCity, empPhone, empAlternatephone, empEmail, empContactperson, empContactnumber, profileImage, permanentAddress, correspondanceAddress);
     };
 </script> 
+
+<style>
+    .custom-accordion {
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.accordion-item {
+    border-bottom: 1px solid #ccc;
+}
+
+.accordion-header {
+    padding: 12px 16px;
+    cursor: pointer;
+    background-color: #f8f9fa;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-weight: 500;
+}
+
+.accordion-panel {
+    display: none;
+    padding: 12px 16px;
+    background-color: #fff;
+}
+
+.accordion-panel.open {
+    display: block;
+}
+
+.accordion-header .arrow {
+    font-size: 14px;
+    transition: transform 0.2s ease;
+}
+
+</style>
 @endsection
