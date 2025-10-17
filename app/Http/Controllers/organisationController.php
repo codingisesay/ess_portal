@@ -5,6 +5,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use App\Models\Goal;
+use App\Models\GoalAssignment;
 
 class OrganisationController extends Controller
 {
@@ -139,8 +141,25 @@ class OrganisationController extends Controller
 // dd($employees);
         // Build hierarchy
         $employeeHierarchy = $this->buildHierarchy($employees, $noneUserId);
+        // Fetch goals assigned to employees, including manager details
+         $employeeGoals = DB::table('goal_assignments')
+            ->join('goals', 'goal_assignments.goal_id', '=', 'goals.id')
+            ->join('users as manager', 'goal_assignments.assigned_by', '=', 'manager.id') // ✅ Join manager (who assigned goal)
+            ->select(
+                'goal_assignments.assigned_to',
+                'goals.id as goal_id',
+                'goals.title',
+                'goals.description',
+                'goals.start_date',
+                'goals.end_date',
+                'manager.name as assigned_by_name' // ✅ Manager name
+            )
+            ->get()
+            ->groupBy('assigned_to');
 
-        return view('user_view.organisation', compact('user', 'employeeHierarchy', 'title','employees_login'));
+            $showGoals = true;
+
+        return view('user_view.organisation', compact('user', 'employeeHierarchy', 'title','employees_login', 'employeeGoals', 'showGoals'));
     }
 
     private function buildHierarchy($employees, $parentId = null)
