@@ -279,12 +279,12 @@ html,body{height:100%;margin:0;font-family:Arial, Helvetica, sans-serif;backgrou
     border-color: #0b5ed7 !important;
 }
 .pms-panels .btn-secondary {
-    background-color: #64748b !important; /* slate */
-    border-color: #64748b !important;
+    background-color: #8A3366 !important; /* changed the color to match theme*/
+    border-color: #8A3366 !important;/* changed the color to match theme*/
 }
 .pms-panels .btn-secondary:hover {
-    background-color: #475569 !important;
-    border-color: #475569 !important;
+    background-color: #8A3366 !important;/* changed the color to match theme*/
+    border-color: #8A3366 !important;/* changed the color to match theme*/
 }
 
 /* Simple responsive: stack on small screens (reduced threshold to avoid early stacking) */
