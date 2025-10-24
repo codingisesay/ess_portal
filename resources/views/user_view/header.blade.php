@@ -58,16 +58,62 @@ $userDetails = app('App\Http\Controllers\headerController')->getUserDetails();
                    <x-icon name="search" />
                 </a>
             </div>
-            <div class="bellcircle"> 
+            <!-- <div class="bellcircle">  -->
                 <!-- Notification dropdown toggled on bell click -->
-                <a href="javascript:void(0)" id="notificationIcon" class="text-dark mx-2">
+                <!-- <a href="javascript:void(0)" id="notificationIcon" class="text-dark mx-2">
                   <x-icon name="notification" />
+                </a> -->
+                {{-- ===========================================
+     🔔 NOTIFICATIONS DROPDOWN
+     Displays all unread notifications for the logged-in user
+============================================== --}}
+<!-- 
+@php
+    // Fetch unread notifications for the logged-in user
+    $notifications = auth()->user()->unreadNotifications;
+@endphp
+
+<div class="dropdown">
+    {{-- Notification Bell Icon with count --}}
+    <button class="btn btn-outline-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+        🔔 Notifications ({{ $notifications->count() }})
+    </button>
+
+    {{-- Dropdown Menu --}}
+    <ul class="dropdown-menu dropdown-menu-end shadow" style="width: 360px; max-height: 400px; overflow-y: auto;">
+        {{-- Loop through each unread notification --}}
+        @forelse($notifications as $notification)
+            <li class="border-bottom">
+                <a class="dropdown-item d-flex flex-column py-2" 
+                   href="{{ route('notifications.read', $notification->id) }}">
+                    {{-- Notification title --}}
+                    <strong class="text-dark">{{ $notification->data['title'] ?? 'Notification' }}</strong>
+
+                    {{-- Notification message --}}
+                    <small class="text-muted">{{ $notification->data['message'] ?? '' }}</small>
+
+                    {{-- Optional timestamp --}}
+                    <small class="text-secondary mt-1">
+                        {{ $notification->created_at->diffForHumans() }}
+                    </small>
                 </a>
-                <div id="notificationDropdown" class="dropdown-content-notifications" style="display:none; min-width:260px;">
-                    <div class="px-2 py-2"><strong>Notifications</strong></div>
-                    <hr class="my-1"/>
-                    <div class="px-2 pb-2 text-muted"><small>No notifications yet.</small></div>
-                </div>
+            </li>
+        @empty
+            {{-- If there are no unread notifications --}}
+            <li>
+                <span class="dropdown-item text-muted">No new notifications</span>
+            </li>
+        @endforelse
+
+        {{-- Footer section for viewing all notifications --}}
+        <li>
+            <a href="{{ url('/notifications') }}" class="dropdown-item text-center fw-bold text-primary">
+                View All Notifications
+            </a>
+        </li>
+    </ul>
+</div> -->
+
             </div>
             <div class="profilecircle profile-dropdown">
                 <a href="javascript:void(0)" id="profileIcon" class=" mx-2" > 

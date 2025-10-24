@@ -25,6 +25,7 @@ use App\Http\Controllers\BankController;
 use App\Http\Controllers\superadmindashboardController;
 use App\Http\Controllers\AttendanceImportController;
 use App\Http\Controllers\PmsController;
+use App\Http\Controllers\NotificationController;  // Notification Controller 
 
 
 
@@ -420,6 +421,18 @@ Route::get('/manager/pending-bundles', [PmsController::class, 'pendingBundles'])
 Route::post('/manager/bundles/{bundleId}/approve', [PmsController::class, 'approveBundle'])->name('manager.bundles.approve');
 
 Route::post('/manager/bundles/{bundleId}/reject', [PmsController::class, 'rejectBundle'])->name('manager.bundles.reject');
+
+// =====================
+// Notifications Routes
+// =====================
+Route::get('/notifications/read/{id}', [NotificationController::class, 'markAsRead'])
+    ->name('notifications.read');
+
+Route::get('/notifications', [NotificationController::class, 'index'])
+    ->name('notifications.index');
+
+Route::get('/notifications/read-all', [NotificationController::class, 'markAllAsRead'])
+    ->name('notifications.readAll');
 
 
 });
