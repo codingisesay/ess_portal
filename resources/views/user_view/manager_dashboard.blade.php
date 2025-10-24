@@ -225,12 +225,9 @@
                 </div>
             </form>
         </div>
-     {{-- The bundle form starts here so the entire table content and the submit action are part of the same POST.
-          We keep the table inside .card-body for proper scrolling and visual grouping,
-          and place the submit action below .card-body to keep it visible and consistently positioned. --}}
-     <form id="bundleForm" method="POST" action="{{ route('goal-bundles.submit') }}">
         <div class="card-body">
     @csrf
+     <form id="bundleForm" method="POST" action="{{ route('goal-bundles.submit') }}">
     {{-- Always send bundle_id once (if exists) --}}
     <input type="hidden" name="bundle_id" value="{{ $submittedGoals[0]->bundle_id ?? '' }}">
 
@@ -331,15 +328,19 @@
     </tbody>
 </table>
 <!-- </div> -->
-    </div>
-    {{-- Submit whole bundle: kept outside .card-body so it sits directly below the table area,
-        avoids being clipped by the scroll container, and maintains consistent placement. --}}
+
+
+    {{-- Submit whole bundle --}}
     <div class="d-flex justify-content-end submit-sticky">
         <button type="submit" class="btn btn-success mt-2">
             Submit Selected Goals for Approval
         </button>
     </div>
-    </form>
+</form>
+
+
+
+    </div>
 
             </section>
 

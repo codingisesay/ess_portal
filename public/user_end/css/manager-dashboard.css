@@ -240,12 +240,11 @@ html,body{height:100%;margin:0;font-family:Arial, Helvetica, sans-serif;backgrou
     border-radius: 10px;
 }
 
-/* Increase height for 'Goals Created by Organization' list */
+/* Org Goals: enable scroll after ~6 rows */
 #pms-org-goals .table-scroll-container {
-    max-height: 420px;                 /* show more rows */
-    overflow-y: auto !important;       /* force vertical scrolling within list */
-    -ms-overflow-style: auto;          /* IE/Edge show scrollbar */
-    scrollbar-width: thin;             /* Firefox show thin scrollbar */
+    --org-row-h: 75px;                 /* approximate row height */
+    max-height: calc(var(--org-row-h) * 6);
+    overflow-y: auto !important;
 }
 #pms-org-goals .table-scroll-container::-webkit-scrollbar { width: 8px; }
 #pms-org-goals .table-scroll-container::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.25); border-radius: 8px; }
