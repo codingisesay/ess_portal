@@ -338,6 +338,12 @@
   padding: 4px 10px;
   font-weight: 700;
 }
+/* Pending status badges (secondary) use brand purple */
+.badge.bg-secondary {
+  background-color: #8A3366 !important;
+  color: #fff !important;
+  border-color: #8A3366 !important;
+}
 /* Rating cell: emphasize star color */
 #emp-insights + .card tbody td:nth-child(5) { color: #8A3366; }
 #emp-insights + .card tbody td:nth-child(5) .rating-star { color: #F5C542; }
