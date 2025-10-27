@@ -757,78 +757,85 @@ $holidays_upcoming = $holidays_upcoming->map(function ($holiday) {
 
 $userId = auth()->id();  // Get the current authenticated user's ID
 
-// Get the start and end date for the current year
-$startOfYear = now()->startOfYear()->toDateString();
-$endOfYear = now()->endOfYear()->toDateString();
+// Build per-day attendance breakdown grouped by month for the active year
+$activeAttendanceMonth = now()->format('Y-m'); // Track the current month (YYYY-MM) for default selection
 
-// Step 1: Collect all login/logout entries of the user within the year
-$userLogins = DB::table('login_logs')
-    ->where('user_id', $userId)
-    ->whereBetween('login_date', [$startOfYear, $endOfYear])
-    ->select('login_date', 'login_time')
-    ->get();
+$startOfYear = now()->startOfYear();
+$endOfYear = now()->endOfYear();
 
-// Step 2: Collect the working start and end times, holidays, and week offs
-$workSchedule = DB::table('calendra_masters')
-    ->whereBetween('date', [$startOfYear, $endOfYear])
+// Pull the yearly calendar (work schedule) and group it by month key for easy iteration
+$calendarDays = DB::table('calendra_masters')
+    ->whereBetween('date', [$startOfYear->toDateString(), $endOfYear->toDateString()])
     ->select('date', 'working_start_time', 'working_end_time', 'week_off', 'holiday')
-    ->get();
+    ->get()
+    ->groupBy(function ($day) {
+        return Carbon::parse($day->date)->format('Y-m');
+    });
 
-// Convert workSchedule into an associative array for easy lookup
-$workScheduleArray = [];
-foreach ($workSchedule as $workDay) {
-    $workScheduleArray[$workDay->date] = [
-        'working_start_time' => $workDay->working_start_time,
-        'working_end_time' => $workDay->working_end_time,
-        'week_off' => $workDay->week_off,
-        'holiday' => $workDay->holiday,
-    ];
-}
+// Collect login entries for the year and index them by date for quick lookup
+$userLoginsByDay = DB::table('login_logs')
+    ->where('user_id', $userId)
+    ->whereBetween('login_date', [$startOfYear->toDateString(), $endOfYear->toDateString()])
+    ->select('login_date', 'login_time')
+    ->get()
+    ->groupBy('login_date');
 
-// Initialize attendance counters for each month
 $attendanceOverview = [];
-foreach (range(1, 12) as $month) {
-    $attendanceOverview[$month] = [
-        'on_time' => 0,
-        'late' => 0,
-        'absent' => 0,
+
+$attendanceOverview = [];
+
+foreach ($calendarDays as $monthKey => $days) {
+    $monthStats = [
+        'label' => Carbon::createFromFormat('Y-m', $monthKey)->format('F'),
+        'year' => Carbon::createFromFormat('Y-m', $monthKey)->format('Y'),
+        'month_key' => $monthKey,
+        'daily' => [],
     ];
-}
 
-// Convert userLogins into an associative array for quick lookup
-$userLoginArray = [];
-foreach ($userLogins as $login) {
-    $userLoginArray[$login->login_date] = $login->login_time;
-}
+    foreach ($days->sortBy('date') as $day) {
+        // Ignore holidays and week offs to keep the chart focused on working days
+        $date = $day->date;
 
-// Process each day in the work schedule
-foreach ($workScheduleArray as $date => $details) {
-    $month = \Carbon\Carbon::parse($date)->month;
-    
-    // Skip if it's a holiday or week off
-    if ($details['holiday'] == 'YES' || $details['week_off'] == 'YES') {
-        continue;
-    }
-    
-    // Check if user has a login entry for this date
-    if (isset($userLoginArray[$date])) {
-        $loginTime = \Carbon\Carbon::parse($userLoginArray[$date]);
-        $startOfDay = \Carbon\Carbon::parse($date . ' ' . $details['working_start_time']);
-        
-        // Determine if the user was on time or late
-        if ($loginTime <= $startOfDay) {
-            $attendanceOverview[$month]['on_time']++;
-        } else {
-            $attendanceOverview[$month]['late']++;
+        if ($day->holiday === 'YES' || $day->week_off === 'YES') {
+            continue;
         }
-    } else {
-        // User did not log in and it's not a holiday or week off, mark as absent
-        $attendanceOverview[$month]['absent']++;
+
+        $status = 'absent';
+
+        // Evaluate whether there is a login entry for the day and classify it as on-time/late/absent
+        $loginEntry = $userLoginsByDay->get($date)?->first();
+
+        if ($loginEntry) {
+            $loginTime = Carbon::parse($loginEntry->login_time);
+            $expectedStart = Carbon::parse($date . ' ' . $day->working_start_time);
+
+            if ($loginTime->lessThanOrEqualTo($expectedStart)) {
+                $status = 'on_time';
+            } else {
+                $status = 'late';
+            }
+        }
+
+        $monthStats['daily'][] = [
+            'day' => Carbon::parse($date)->day,
+            'status' => $status,
+        ];
     }
+
+    if (!empty($monthStats['daily'])) {
+        $attendanceOverview[$monthKey] = $monthStats;
+    }
+}
+
+ksort($attendanceOverview);
+
+// Fall back to the first available month (if current month has no data)
+if (!array_key_exists($activeAttendanceMonth, $attendanceOverview) && !empty($attendanceOverview)) {
+    $activeAttendanceMonth = array_key_first($attendanceOverview);
 }
     // dd($appliedLeaves);
         // Pass the leave summary data, applied leaves, and total working hours to the view
-        return view('user_view.leave_dashboard', compact('leaveSummary', 'workingHoursData', 'appliedLeaves','title','holidays_upcoming', 'attendanceRate', 'presentDays', 'absentDays', 'totalDaysInMonth', 'attendanceOverview'));
+        return view('user_view.leave_dashboard', compact('leaveSummary', 'workingHoursData', 'appliedLeaves','title','holidays_upcoming', 'attendanceRate', 'presentDays', 'absentDays', 'totalDaysInMonth', 'attendanceOverview', 'activeAttendanceMonth'));
     }
 
 
