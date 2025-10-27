@@ -557,6 +557,7 @@ class leavePolicyController extends Controller
     $workFromHomeTotalDays = array_sum($wfhData);
 
     $emp_details = DB::table('emp_details')->where('user_id',$user->id)->first();
+    $employeeGender = optional($emp_details)->gender;
 
     $leaveSummary = [];
         foreach ($leaveTypes as $leaveType) {
@@ -940,7 +941,25 @@ if (!array_key_exists($activeAttendanceMonth, $attendanceOverview) && !empty($at
     // dd($appliedLeaves);
         // Pass the leave summary data, applied leaves, and total working hours to the view
         // Bundle dashboard datasets for the blade template (leave stats, upcoming items, and attendance summary)
-        return view('user_view.leave_dashboard', compact('leaveSummary', 'workingHoursData', 'appliedLeaves', 'upcomingApprovedLeaves','title','holidays_upcoming', 'attendanceRate', 'presentDays', 'absentDays', 'totalDaysInMonth', 'attendanceOverview', 'activeAttendanceMonth', 'workFromHomeChart', 'workFromHomeTotalDays'));
+        // Tailor the leave summary to the employee's gender so only the relevant parental leave is shown on the dashboard
+        $displayLeaveSummary = collect($leaveSummary);
+
+        if ($employeeGender && strcasecmp($employeeGender, 'Male') === 0) {
+            // Male employees should not see Maternity Leave cards
+            $displayLeaveSummary = $displayLeaveSummary->reject(function ($leave) {
+                return isset($leave['leave_type']) && stripos($leave['leave_type'], 'maternity') !== false;
+            });
+        } elseif ($employeeGender && strcasecmp($employeeGender, 'Female') === 0) {
+            // Female employees should not see Paternity Leave cards
+            $displayLeaveSummary = $displayLeaveSummary->reject(function ($leave) {
+                return isset($leave['leave_type']) && stripos($leave['leave_type'], 'paternity') !== false;
+            });
+        }
+
+        // Reset the array keys to keep front-end loops clean (0..n)
+        $displayLeaveSummary = $displayLeaveSummary->values()->all();
+
+        return view('user_view.leave_dashboard', compact('leaveSummary', 'displayLeaveSummary', 'workingHoursData', 'appliedLeaves', 'upcomingApprovedLeaves','title','holidays_upcoming', 'attendanceRate', 'presentDays', 'absentDays', 'totalDaysInMonth', 'attendanceOverview', 'activeAttendanceMonth', 'workFromHomeChart', 'workFromHomeTotalDays', 'employeeGender'));
     }
 
 

@@ -218,13 +218,14 @@
                         <hr class="my-2"  >
                         <div class="leave-summary-container row justify-content-around">
                             <!-- Leave cards will be dynamically inserted here -->
-                            @foreach($leaveSummary as $index => $leave)
+                            {{-- Only render gender-appropriate leave types (set in controller) --}}
+                            @foreach($displayLeaveSummary as $index => $leave)
                             
                             @endforeach
                         </div>
 
                         <script>
-                            const leaveData = @json($leaveSummary);  // Pass the leave summary data to JavaScript
+                            const leaveData = @json($displayLeaveSummary);  // Already filtered for gender on the server
 
                             // console.log(leaveData); // Check the data in the console to ensure no duplicates
 
