@@ -17,10 +17,10 @@
     @enderror
     <div class="container">
         <div class="left-container">
+
             
-        <!-- <img src="{{ asset('user_end/images/Vector 58.jpg') }}" alt="Login Image"> -->
-            <img src="{{ asset('user_end/images/loginbg.png') }}" class="img-fluid vh-100 w-100 object-fit-cover" alt="Login Image">
-        </div>
+        <img src="{{ asset('user_end/images/Vector 58.jpg') }}" alt="Login Image"> 
+          </div>
         <div class="right-container">
 
             @if(session('success'))
