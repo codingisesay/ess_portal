@@ -198,15 +198,15 @@ button.btn.btn-secondary[data-bs-target="#createOwnTaskModal"].show {
     background-color: #8A3366!important; /* keep Bootstrap secondary color */
     border-color: #8A3366 !important;
     color: #fff !important;
-    box-shadow: none !important;
 }
 
 /* ---------- Card Styling ---------- */
 .card {
-    border: 1px solid #e5e7eb;
-    border-radius: 8px;
-    background: #fff;
-    margin-bottom: 20px;
+/* Slight negative margin to visually pull adjacent cards together on employee dashboard */
+border: 1px solid #e5e7eb;
+border-radius: 8px;
+background: #fff;
+margin-bottom: -14px;
 }
 
 .card-header {

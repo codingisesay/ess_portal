@@ -327,16 +327,17 @@
         @endforeach
     </tbody>
 </table>
-<!-- </div> -->
+</div>
 
 
-    {{-- Submit whole bundle --}}
+    {{-- Submit whole bundle (anchored directly below scroll area for clarity) --}}
     <div class="d-flex justify-content-end submit-sticky">
         <button type="submit" class="btn btn-success mt-2">
             Submit Selected Goals for Approval
         </button>
     </div>
 </form>
+
 
 
 

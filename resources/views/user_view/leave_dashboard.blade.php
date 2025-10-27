@@ -355,37 +355,54 @@
                 <!-- Full-width: make Attendance Overview span the entire row for better visibility -->
                 <div class="col-12 mb-3">              
                     <div class="attendance p-3">
-                        <h5 class="mb-0">Attendance Overview</h5> <hr class="my-2"  >
-                            <!-- Responsive chart: canvas width set to 100% to fill available horizontal space -->
-                            <canvas id="newAttendanceChart" style="width: 100%; height: 430px;"></canvas>
+                        <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
+                            <h5 class="mb-0">Attendance Overview</h5>
+                            <div class="d-flex align-items-center gap-2">
+                                <label for="attendanceMonthSelect" class="mb-0 small text-muted">Month</label>
+                                <select id="attendanceMonthSelect" class="form-select form-select-sm" style="min-width: 160px;">
+                                    @foreach($attendanceOverview as $monthKey => $stats)
+                                        <option value="{{ $monthKey }}" {{ $monthKey === $activeAttendanceMonth ? 'selected' : '' }}>
+                                            {{ $stats['label'] }} {{ $stats['year'] }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+                        <hr class="my-2"  >
+                        <canvas id="newAttendanceChart" style="width: 100%; height: 430px;"></canvas>
 
-                            <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-                            <script>
-                                document.addEventListener("DOMContentLoaded", function() {
-                                    const newCtx = document.getElementById('newAttendanceChart').getContext('2d');
+                        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+                        <script>
+                            document.addEventListener("DOMContentLoaded", function() {
+                                // Attendance dataset ships from the controller keyed by YYYY-MM with daily status entries
+                                const attendanceDataset = @json($attendanceOverview);
+                                const defaultMonth = @json($activeAttendanceMonth);
+                                const monthSelect = document.getElementById('attendanceMonthSelect');
+                                const ctx = document.getElementById('newAttendanceChart').getContext('2d');
 
-                                    // Fetch the attendance data from the Blade variable
-                                    const attendanceData = @json($attendanceOverview);
+                                let attendanceChart;
 
-                                    // Extract month labels
-                                    const months = Object.keys(attendanceData).map(month => {
-                                        return new Date(2025, month - 1, 1).toLocaleString('en-US', { month: 'long' });
-                                    });
+                                function renderAttendanceChart(monthKey) {
+                                    const monthData = attendanceDataset[monthKey];
 
-                                    // Extract on-time, late, and absent data
-                                    const onTimeData = Object.values(attendanceData).map(data => data.on_time || 0);
-                                    const lateData = Object.values(attendanceData).map(data => data.late || 0);
-                                    const absentData = Object.values(attendanceData).map(data => data.absent || 0);
+                                    if (!monthData) {
+                                        return;
+                                    }
 
-                                    // Determine the max y-axis value for better scaling
-                                    const maxDays = Math.max(...Object.values(attendanceData).flatMap(obj =>
-                                        [obj.on_time || 0, obj.late || 0, obj.absent || 0]
-                                    ));
+                                    // Flatten daily status into separate arrays so the chart shows day numbers 1..n
+                                    const dayLabels = monthData.daily.map(entry => entry.day);
+                                    const onTimeData = monthData.daily.map(entry => entry.status === 'on_time' ? 1 : 0);
+                                    const lateData = monthData.daily.map(entry => entry.status === 'late' ? 1 : 0);
+                                    const absentData = monthData.daily.map(entry => entry.status === 'absent' ? 1 : 0);
 
-                                    new Chart(newCtx, {
+                                    if (attendanceChart) {
+                                        attendanceChart.destroy();
+                                    }
+
+                                    attendanceChart = new Chart(ctx, {
                                         type: 'bar',
                                         data: {
-                                            labels: months,
+                                            labels: dayLabels,
                                             datasets: [
                                                 { label: 'On Time', data: onTimeData, backgroundColor: '#8A3366' },
                                                 { label: 'Late', data: lateData, backgroundColor: '#E0AFA0' },
@@ -394,25 +411,59 @@
                                         },
                                         options: {
                                             responsive: true,
+                                            maintainAspectRatio: false,
                                             plugins: {
+                                                legend: { position: 'bottom' },
                                                 tooltip: {
                                                     callbacks: {
-                                                        label: function(tooltipItem) {
-                                                            let datasetLabel = tooltipItem.dataset.label || '';
-                                                            let value = tooltipItem.raw;
-                                                            return `${datasetLabel}: ${value} days`;
+                                                        // Display `Month Day` in the tooltip header (e.g., March 3)
+                                                        title: function(context) {
+                                                            const dayLabel = context[0]?.label ?? '';
+                                                            return `${monthData.label} ${dayLabel}`;
+                                                        },
+                                                        // Each dataset is binary (1/0) so convert it to Yes/No for readability
+                                                        label: function(context) {
+                                                            const datasetLabel = context.dataset.label || '';
+                                                            const value = context.parsed.y;
+                                                            return `${datasetLabel}: ${value ? 'Yes' : 'No'}`;
                                                         }
                                                     }
                                                 }
                                             },
                                             scales: {
-                                                x: { stacked: true },
-                                                y: { stacked: true, beginAtZero: true, suggestedMax: maxDays }
+                                                x: {
+                                                    stacked: true,
+                                                    title: {
+                                                        display: true,
+                                                        text: 'Day of Month'
+                                                    }
+                                                },
+                                                y: {
+                                                    stacked: true,
+                                                    beginAtZero: true,
+                                                    ticks: {
+                                                        precision: 0,
+                                                        stepSize: 1
+                                                    },
+                                                    title: {
+                                                        display: true,
+                                                        text: 'Occurrences'
+                                                    }
+                                                }
                                             }
                                         }
                                     });
+                                }
+
+                                // Re-render whenever the user picks a different month
+                                monthSelect.addEventListener('change', function() {
+                                    renderAttendanceChart(this.value);
                                 });
-                            </script>
+
+                                // Paint the default (current) month on initial load
+                                renderAttendanceChart(defaultMonth);
+                            });
+                        </script>
 
                     </div> 
                 </div>
