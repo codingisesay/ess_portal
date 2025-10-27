@@ -50,6 +50,29 @@
             <p><strong>Name</strong> <weak id="emp-contactperson">{{ ucfirst($userDetails->emergency_contact_person ?? '-') }}</weak></p>
             <p><strong>Contact Number</strong> <weak id="emp-contactnumber">{{ ucfirst($userDetails->emergency_contact_number ?? '-') }}</weak></p>     
                 
+           
+
+            <!-- Other employee details HTML stays the same -->
+
+            @if($showGoals ?? false)
+                <hr>
+                <div class="accordion" id="mainGoalsAccordion">
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="mainGoalsHeader">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#mainGoalsCollapse" aria-expanded="false" aria-controls="mainGoalsCollapse">
+                                <i class="fas fa-bullseye text-primary me-2"></i>
+                                Goals
+                            </button>
+                        </h2>
+                        <div id="mainGoalsCollapse" class="accordion-collapse collapse" aria-labelledby="mainGoalsHeader" data-bs-parent="#mainGoalsAccordion">
+                            <div class="accordion-body">
+                                <div id="emp-goals" class="accordion mt-2"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            @endif
+
         </div>
     </div>
   
@@ -69,7 +92,5 @@
             console.log( 'data  :', cleaned)
         }
     });
-</script>
-
-   
+</script>  
 <!-- </div> -->

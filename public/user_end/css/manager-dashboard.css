@@ -1,0 +1,576 @@
+/* Manager Dashboard layout and panels */
+:root{
+    --sidebar-w: 20%;
+    --gap: 24px; /* tighter gap between columns */
+    --bg: #f8f9fa;
+    --accent: #0d6efd;
+}
+html,body{height:100%;margin:0;font-family:Arial, Helvetica, sans-serif;background:var(--bg);color:#222}
+.pms-page {
+    display: flex;
+    gap: var(--gap);
+    align-items: flex-start; /* prevent vertical stretching that can cause stacking */
+    margin-left: -90px;
+    margin-bottom: -20px
+}
+
+/* Quick icon-only sidebar (far left) */
+.pms-sidebar-quick {
+    width: 56px;
+    flex: 0 0 56px;
+    box-sizing: border-box;
+    padding: 10px 8px;
+    background: #ffffff;
+    border: 1px solid #e8ebef;
+    border-radius: 12px;
+    box-shadow: 0 8px 24px rgba(16,24,40,0.06);
+    position: sticky;
+    top: 0;
+    height: 80vh;        /* full viewport height */
+    max-height: 100vh;    /* ensure full height */
+    overflow-y: auto;
+}
+.pms-sidebar-quick ul { list-style: none; margin: 0; padding: 0; }
+.pms-sidebar-quick li { margin-bottom: 8px; }
+.pms-sidebar-quick a {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 40px;
+    border-radius: 10px;
+    border: 1px solid #e6e9ec;
+    background: linear-gradient(180deg, #ffffff 0%, #f9fbff 100%);
+    color: #334155;
+    text-decoration: none;
+    transition: transform .15s ease, box-shadow .15s ease, background-color .2s ease, border-color .2s ease;
+}
+.pms-sidebar-quick a:hover,
+.pms-sidebar-quick a.active {
+    transform: translateY(-1px);
+    border-color: #bfd6ff;
+    background: linear-gradient(180deg, rgba(13,110,253,0.12) 0%, rgba(13,110,253,0.08) 100%);
+    box-shadow: 0 6px 14px rgba(13,110,253,0.12);
+    color: #0d6efd;
+}
+.pms-sidebar-quick a i { font-size: 20px; line-height: 1; }
+
+/* Sidebar */
+.pms-sidebar {
+    width: var(--sidebar-w);
+    flex: 0 0 var(--sidebar-w); /* fix sidebar width in flex layout */
+    min-width:90px;
+    box-sizing: border-box;
+    padding: 12px; /* reduce sidebar interior spacing */
+    background: rgba(255,255,255,0.92);
+    border: 1px solid #e8ebef;           /* subtle border */
+    border-radius: 14px;                  /* softer corners */
+    box-shadow: 0 10px 30px rgba(16,24,40,0.08); /* elevated look */
+    backdrop-filter: saturate(1.2) blur(6px);    /* modern glassy feel */
+    position: sticky;
+    top: 0;
+    height: 80vh;         /* reduced from full viewport */
+    max-height: 85vh;     /* cap height to keep it shorter */
+    overflow-y: auto;     /* vertical scroll only */
+    overflow-x: hidden;   /* hide horizontal scroll */
+    transition: width .2s ease, padding .2s ease;
+    justify-content: start !important;
+}
+.pms-sidebar h3 {
+    margin: 0 0 4px 0;      /* tight gap under the title */
+    padding: 8px 10px;     /* slightly reduced padding for a tighter header */
+    font-size: 17px;
+    font-weight: 700;
+    color: #0f172a; /* slate-900 */
+    background: linear-gradient(180deg, #ffffff 0%, #f3f7ff 100%);
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    box-shadow: 0 4px 14px rgba(16,24,40,0.08);
+    display: flex;   /* CHANGED: flex for consistent alignment */
+    align-items: center;
+    gap: 10px;
+    box-sizing: border-box;           /* CHANGED: ensure padding included in width calc */
+}
+.pms-sidebar.collapsed {
+    padding: 8px;
+    width: 56px;          /* narrow sidebar */
+    flex-basis: 56px;
+     box-sizing: border-box;           /* CHANGED */
+}
+.pms-sidebar.collapsed h3 { padding: 8px; font-size: 15px; }
+/* When collapsed: keep nav visible, hide only text labels */
+.pms-sidebar.collapsed .pms-sidebar-nav span { display: none; }
+.pms-sidebar.collapsed .pms-title-text { display: none; }
+.pms-sidebar.collapsed .pms-sidebar-nav a { justify-content: flex-start !important; padding-left: 8px; padding-right: 8px; text-align: left !important; }
+.pms-sidebar-nav a { text-align: left !important; width: 230px; }
+.pms-sidebar h3::before{
+    content: "";
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: linear-gradient(180deg, var(--accent), rgba(13,110,253,0.6));
+    box-shadow: 0 0 0 4px rgba(13,110,253,0.08);
+}
+.pms-sidebar-nav { display: flex;  list-style: none; padding: 0; margin: 0; align-items: start !important; }
+.pms-sidebar-nav li { margin-bottom: 6px; } /* slightly tighter spacing between items */
+.pms-sidebar-nav a{
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    text-decoration: none;
+    padding: 10px 12px;                  /* CHANGED: uniform padding so lines start equally */
+    border-radius: 0;               /* no rounded corners */
+    border: none;                   /* remove border */
+    color: #1f2937;
+    background: transparent;        /* remove gradient background */
+    box-shadow: none;               /* remove shadow */
+    transition: transform .15s ease, box-shadow .15s ease, background-color .2s ease, border-color .2s ease;
+    white-space: normal;     /* allow wrapping */
+    word-break: break-word;  /* break long words */
+    max-width: 100%;    
+    text-align: left !important;
+    justify-content: flex-start !important;
+    box-sizing: border-box;           /* CHANGED: include padding in width calc */
+}
+.pms-sidebar-nav a span { text-align: left !important; }
+.pms-sidebar-nav a i { text-align: left !important; }
+.pms-sidebar, .pms-sidebar * { text-align: left !important; }
+
+.pms-panel .card-header { text-align: left !important; }
+.pms-sidebar-nav a i { 
+    font-size: 16px; 
+    width: 24px;              /* CHANGED: wider fixed icon box for consistency */
+    flex: 0 0 24px;            /* CHANGED: prevents icon from changing text offset */
+    display: inline-flex; 
+    align-items: center; 
+    justify-content: center; 
+}
+.pms-sidebar-nav a span { 
+     margin-left: 0;                   /* CHANGED: we use gap on the link, so no extra left margin */
+    display: block;                   /* CHANGED: block makes multi-line wrap predictable */
+    flex: 1 1 auto;                   /* CHANGED: allow label to grow/shrink */
+    line-height: 1.2;                 /* CHANGED: consistent line height for wrapped labels */
+    text-align: left;
+}
+/* uniform inner padding so all buttons start equally */
+.pms-sidebar-nav a { padding-left: 12px; padding-right: 12px; }
+.pms-sidebar-nav a::before{ display: none; }
+.pms-sidebar-nav a:hover{
+    transform: none;                 /* no nudge */
+    border-color: transparent;
+    background: transparent;         /* keep transparent on hover */
+    box-shadow: none;
+}
+.pms-sidebar-nav a.active{
+    background: transparent;         /* no active background */
+    border-color: transparent;       /* no active border */
+    color: #6E284F;                  /* keep active color only */
+    box-shadow: none;
+    font-weight: 600;
+}
+
+/* Specific styling for 'Goals Created by Organization' link */
+/* Remove special box styling for first item as well */
+.pms-sidebar-nav a[href="#pms-org-goals"] { background: transparent; border-color: transparent; }
+.pms-sidebar-nav a[href="#pms-org-goals"].active { background: transparent; border-color: transparent; }
+
+/* Content area */
+.pms-main {
+    flex: 1;
+    padding: 0px;
+    box-sizing: border-box;
+    min-width: 0; /* allow content to shrink to avoid wrapping below sidebar */
+}
+.pms-panels {
+    max-width: 1100px;
+    margin: 0 auto;
+}
+
+/* Panels - only the .visible is shown */
+.pms-panel {
+    display: none;
+    background: #fff;
+    border: 1px solid #e6e9ec;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 2px 6px rgba(16,24,40,0.03);
+    margin-right: -40px;
+        height: 594px
+    
+
+}
+.pms-panel.visible { display: block; }
+
+/* Sidebar scrollbar styling */
+.pms-sidebar::-webkit-scrollbar { width: 10px; }
+.pms-sidebar::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.18); border-radius: 8px; }
+.pms-sidebar { scrollbar-width: thin; }
+
+/* Prevent horizontal scroll in Additional Goals section */
+#pms-additional-goals .table-scroll-container {
+    overflow-x: hidden !important;
+    overflow-y: auto;                 /* vertical scroll only for the table list */
+            max-height: 450px;      /* ~3 rows before scrolling; adjust as needed */
+    -ms-overflow-style: none;         /* IE/Edge hide scrollbar */
+    scrollbar-width: none;            /* Firefox hide scrollbar */
+}
+#pms-additional-goals .table-scroll-container::-webkit-scrollbar { display: none; }
+#pms-additional-goals table { 
+    width: 100%;
+    table-layout: fixed; /* keep columns within container */
+}
+#pms-additional-goals th,
+#pms-additional-goals td {
+    white-space: normal;         /* allow wrapping */
+    word-break: break-word;      /* break long words/URLs */
+}
+#bundleTable { width: 100%; table-layout: fixed; }
+
+/* Emphasized borders for key manager panels */
+#pms-org-goals,
+#pms-additional-goals,
+#pms-create-task,
+#pms-insights,
+#pms-goal-bundle-approvals,
+#pms-insight-bundle-approvals {
+    border: 1px solid #e1e4e8;
+    border-left: 4px solid var(--accent);
+    border-radius: 10px;
+}
+
+/* Increase height for 'Goals Created by Organization' list */
+#pms-org-goals .table-scroll-container {
+    max-height: 420px;                 /* show more rows */
+    overflow-y: auto !important;       /* force vertical scrolling within list */
+    -ms-overflow-style: auto;          /* IE/Edge show scrollbar */
+    scrollbar-width: thin;             /* Firefox show thin scrollbar */
+}
+#pms-org-goals .table-scroll-container::-webkit-scrollbar { width: 8px; }
+#pms-org-goals .table-scroll-container::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.25); border-radius: 8px; }
+
+/* Panel headers: subtle accent background and title color */
+#pms-org-goals .card-header,
+#pms-additional-goals .card-header,
+#pms-create-task .card-header,
+#pms-insights .card-header,
+#pms-goal-bundle-approvals .card-header,
+#pms-insight-bundle-approvals .card-header {
+    background: rgba(13,110,253,0.08) !important;
+    color: var(--accent) !important;
+    border-bottom: 1px solid #e6e9ec;
+}
+
+/* Buttons inside manager panels: align with accent and refine states */
+.pms-panels .btn {
+    border-radius: 8px;
+    transition: background-color .15s ease, box-shadow .15s ease, transform .05s ease;
+}
+.pms-panels .btn:active {
+    transform: translateY(0.5px);
+}
+.pms-panels .btn-primary {
+    background-color: var(--accent) !important;
+    border-color: var(--accent) !important;
+}
+.pms-panels .btn-primary:hover {
+    background-color: #0b5ed7 !important; /* darker blue */
+    border-color: #0b5ed7 !important;
+}
+.pms-panels .btn-secondary {
+    background-color: #64748b !important; /* slate */
+    border-color: #64748b !important;
+}
+.pms-panels .btn-secondary:hover {
+    background-color: #475569 !important;
+    border-color: #475569 !important;
+}
+
+/* Simple responsive: stack on small screens (reduced threshold to avoid early stacking) */
+@media (max-width: 800px) {
+    .pms-page { flex-direction: column; }
+    .pms-sidebar {
+        width: 100%;
+        height: 75vh;
+        position: relative;
+        border-right: none;
+        border-bottom: 1px solid #e1e4e8;
+    }
+    .pms-main { padding-top: 12px; }
+}
+
+/* small helper for headings inside panels */
+.panel-title { font-size: 18px; margin: 0 0 8px 0; }
+.panel-body { color: #444; line-height: 1.5; }
+
+/* ===================== Responsive Enhancements ===================== */
+/* Large tablets/smaller desktops */
+@media (max-width: 1200px) {
+  :root { --sidebar-w: 22%; }
+  .pms-sidebar-nav a { width: auto; max-width: 100%; }
+}
+
+/* Tablets */
+@media (max-width: 992px) {
+  :root { --sidebar-w: 28%; }
+  .pms-page { gap: 16px; }
+  /* Avoid negative offset on small screens */
+  .pms-page { margin-left: 0 !important; }
+  .pms-sidebar { min-width: 140px; }
+  .pms-sidebar h3 { font-size: 16px; padding: 8px 10px; margin-bottom: 6px; }
+  .pms-sidebar-nav a { padding: 8px 10px; gap: 10px; }
+  .pms-sidebar-nav a span { font-size: 14px; }
+  /* Tables become horizontally scrollable */
+  .pms-panels .table, .pms-panels table { display: block; width: 100%; overflow-x: auto; }
+  .pms-panels thead, .pms-panels tbody, .pms-panels th, .pms-panels td, .pms-panels tr { white-space: nowrap; }
+}
+
+/* Small tablets/large phones */
+@media (max-width: 800px) {
+  /* Stack layout */
+  .pms-page { flex-direction: column; gap: 12px; }
+  .pms-sidebar { width: 100%; max-height: 65vh; position: relative; border-right: none; border-bottom: 1px solid #e1e4e8; }
+  .pms-main { padding-top: 8px; }
+  .pms-sidebar h3 { margin-bottom: 4px; }
+  .pms-sidebar-nav { flex-direction: column; }
+  .pms-sidebar-nav a { width: 100%; }
+}
+
+/* Phones */
+@media (max-width: 576px) {
+  :root { --gap: 16px; }
+  .pms-sidebar { padding: 10px; border-radius: 10px; }
+  .pms-sidebar h3 { padding: 6px 8px; font-size: 15px; }
+  .pms-title-text { font-size: 14px; }
+  .pms-sidebar-nav li { margin-bottom: 4px; }
+  .pms-sidebar-nav a { padding: 8px; gap: 8px; }
+  .pms-sidebar-nav a i { width: 20px; flex: 0 0 20px; }
+  /* Ensure tables scroll and don't overflow viewport */
+  .pms-panels .table, .pms-panels table { font-size: 13px; }
+  .table-fixed-header { padding-right: 0; }
+}
+
+/* ===================== Org Goals Custom Title/Header ===================== */
+#pms-org-goals .org-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  margin: 0 0 8px 0;
+  border: 1px solid #e6e9ec;
+  border-radius: 12px;
+  background: linear-gradient(180deg, #f4e9f0 0%, #ffffff 100%);
+  box-shadow: 0 6px 16px rgba(16,24,40,0.06);
+}
+
+#pms-org-goals .org-header-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px; height: 28px;
+  border-radius: 8px;
+  background: #8A3366; /* primary */
+  color: #fff;
+  font-size: 16px;
+  flex: 0 0 28px;
+}
+
+#pms-org-goals .org-header-title {
+  color: #8A3366; /* primary heading */
+  font-weight: 800;
+}
+
+@media (max-width: 576px) {
+  #pms-org-goals .org-header { padding: 8px 10px; }
+  #pms-org-goals .org-header-title { font-size: 16px; }
+}
+
+/* ===================== Additional Goals Custom Title/Header ===================== */
+#pms-additional-goals .add-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  margin: 0 0 8px 0;
+  border: 1px solid #e6e9ec;
+  border-radius: 12px;
+  background: linear-gradient(180deg, #eef6ff 0%, #ffffff 100%);
+  box-shadow: 0 6px 16px rgba(16,24,40,0.06);
+}
+#pms-additional-goals .add-header-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px; height: 28px;
+  border-radius: 8px;
+  background: #8A3366;
+  color: #fff;
+  font-size: 16px;
+  flex: 0 0 28px;
+}
+#pms-additional-goals .add-header-title { color: #8A3366; font-weight: 800; }
+@media (max-width: 576px) { #pms-additional-goals .add-header { padding: 8px 10px; } #pms-additional-goals .add-header-title { font-size: 16px; } }
+
+/* ===================== Create Task Custom Title/Header ===================== */
+#pms-create-task .task-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  margin: 0 0 8px 0;
+  border: 1px solid #e6e9ec;
+  border-radius: 12px;
+  background: linear-gradient(180deg, #eef6ff 0%, #ffffff 100%);
+  box-shadow: 0 6px 16px rgba(16,24,40,0.06);
+}
+#pms-create-task .task-header-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px; height: 28px;
+  border-radius: 8px;
+  background: #8A3366;
+  color: #fff;
+  font-size: 16px;
+  flex: 0 0 28px;
+}
+#pms-create-task .task-header-title { color: #8A3366; font-weight: 800; }
+@media (max-width: 576px) { #pms-create-task .task-header { padding: 8px 10px; } #pms-create-task .task-header-title { font-size: 16px; } }
+
+/* ===================== Insights Custom Title/Header ===================== */
+#pms-insights .ins-header {
+  display: flex; align-items: center; gap: 10px; padding: 10px 14px; margin: 0 0 8px 0;
+  border: 1px solid #e6e9ec; border-radius: 12px; background: linear-gradient(180deg, #f4e9f0 0%, #ffffff 100%);
+  box-shadow: 0 6px 16px rgba(16,24,40,0.06);
+}
+#pms-insights .ins-header-icon { display: inline-flex; align-items: center; justify-content: center; width: 28px; height: 28px; border-radius: 8px; background: #8A3366; color: #fff; font-size: 16px; flex: 0 0 28px; }
+#pms-insights .ins-header-title { color: #8A3366; font-weight: 800; }
+@media (max-width: 576px) { #pms-insights .ins-header { padding: 8px 10px; } #pms-insights .ins-header-title { font-size: 16px; } }
+/* ===================== Approvals Custom Title/Header ===================== */
+#pms-goal-bundle-approvals .approval-header {
+  display: flex; align-items: center; gap: 10px; padding: 10px 14px; margin: 0 0 8px 0;
+  border: 1px solid #e6e9ec; border-radius: 12px; background: linear-gradient(180deg, #f4e9f0 0%, #ffffff 100%);
+  box-shadow: 0 6px 16px rgba(16,24,40,0.06);
+}
+#pms-goal-bundle-approvals .approval-header-icon { display: inline-flex; align-items: center; justify-content: center; width: 28px; height: 28px; border-radius: 8px; background: #8A3366; color: #fff; font-size: 16px; flex: 0 0 28px; }
+#pms-goal-bundle-approvals .approval-header-title { color: #8A3366; font-weight: 800; }
+@media (max-width: 576px) { #pms-goal-bundle-approvals .approval-header { padding: 8px 10px; } #pms-goal-bundle-approvals .approval-header-title { font-size: 16px; } }
+
+/* ===================== Insight Approvals Custom Title/Header ===================== */
+#pms-insight-bundle-approvals .ins-approval-header {
+  display: flex; align-items: center; gap: 10px; padding: 10px 14px; margin: 0 0 8px 0;
+  border: 1px solid #e6e9ec; border-radius: 12px; background: linear-gradient(180deg, #f4e9f0 0%, #ffffff 100%);
+  box-shadow: 0 6px 16px rgba(16,24,40,0.06);
+}
+#pms-insight-bundle-approvals .ins-approval-header-icon { display: inline-flex; align-items: center; justify-content: center; width: 28px; height: 28px; border-radius: 8px; background: #8A3366; color: #fff; font-size: 16px; flex: 0 0 28px; }
+#pms-insight-bundle-approvals .ins-approval-header-title { color: #8A3366; font-weight: 800; }
+@media (max-width: 576px) { #pms-insight-bundle-approvals .ins-approval-header { padding: 8px 10px; } #pms-insight-bundle-approvals .ins-approval-header-title { font-size: 16px; } }
+/* ===================== Org, Additional, Task, Insights & Approvals Tables: Visuals ===================== */
+#pms-org-goals .table, #pms-additional-goals .table, #pms-create-task .table, #pms-insights .table, #pms-goal-bundle-approvals .table, #pms-insight-bundle-approvals .table { border-collapse: separate; border-spacing: 0; }
+#pms-org-goals thead th, #pms-additional-goals thead th, #pms-create-task thead th, #pms-insights thead th, #pms-goal-bundle-approvals thead th, #pms-insight-bundle-approvals thead th {
+  background: #8A3366 !important; /* primary header */
+  color: #ffffff !important;
+  border: none !important;
+  font-weight: 700;
+}
+#pms-org-goals thead th, #pms-additional-goals thead th, #pms-create-task thead th, #pms-insights thead th, #pms-goal-bundle-approvals thead th, #pms-insight-bundle-approvals thead th { border-right: 1px solid rgba(255,255,255,0.35) !important; }
+#pms-org-goals thead th:last-child, #pms-additional-goals thead th:last-child, #pms-create-task thead th:last-child, #pms-insights thead th:last-child, #pms-goal-bundle-approvals thead th:last-child, #pms-insight-bundle-approvals thead th:last-child { border-right: none !important; }
+#pms-org-goals thead th:first-child, #pms-additional-goals thead th:first-child, #pms-create-task thead th:first-child, #pms-insights thead th:first-child, #pms-goal-bundle-approvals thead th:first-child, #pms-insight-bundle-approvals thead th:first-child { border-top-left-radius: 10px; }
+#pms-org-goals thead th:last-child, #pms-additional-goals thead th:last-child, #pms-create-task thead th:last-child, #pms-insights thead th:last-child, #pms-goal-bundle-approvals thead th:last-child, #pms-insight-bundle-approvals thead th:last-child  { border-top-right-radius: 10px; }
+
+#pms-org-goals tbody td, #pms-additional-goals tbody td, #pms-create-task tbody td, #pms-insights tbody td, #pms-goal-bundle-approvals tbody td, #pms-insight-bundle-approvals tbody td {
+  border: none !important;               /* remove grid borders */
+  border-bottom: 1px solid #eef2f7 !important; /* soft separators */
+  padding: 12px !important;
+  vertical-align: middle;
+}
+#pms-org-goals tbody td, #pms-additional-goals tbody td, #pms-create-task tbody td, #pms-insights tbody td, #pms-goal-bundle-approvals tbody td, #pms-insight-bundle-approvals tbody td { border-right: 1px solid #e9edf2 !important; }
+#pms-org-goals tbody td:last-child, #pms-additional-goals tbody td:last-child, #pms-create-task tbody td:last-child, #pms-insights tbody td:last-child, #pms-goal-bundle-approvals tbody td:last-child, #pms-insight-bundle-approvals tbody td:last-child { border-right: none !important; }
+#pms-org-goals tbody tr:last-child td, #pms-additional-goals tbody tr:last-child td, #pms-create-task tbody tr:last-child td, #pms-insights tbody tr:last-child td, #pms-goal-bundle-approvals tbody tr:last-child td, #pms-insight-bundle-approvals tbody tr:last-child td { border-bottom-color: transparent !important; }
+
+/* First cell composition (icon + stacked text) */
+#pms-org-goals .org-goal-cell, #pms-additional-goals .add-goal-cell, #pms-create-task .task-goal-cell, #pms-insights .ins-goal-cell { gap: 10px; }
+#pms-org-goals .goal-icon, #pms-additional-goals .goal-icon, #pms-create-task .goal-icon, #pms-insights .goal-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px; height: 28px;
+  border-radius: 8px;
+  background: #8A3366; /* primary */
+  color: #fff;
+  font-size: 16px;
+  flex: 0 0 28px;
+}
+#pms-org-goals .goal-title, #pms-additional-goals .goal-title, #pms-create-task .goal-title, #pms-insights .goal-title { color: #0f172a; font-weight: 700; line-height: 1.2; }
+#pms-org-goals .goal-desc, #pms-additional-goals .goal-desc, #pms-create-task .goal-desc, #pms-insights .goal-desc { color: #475569; }
+#pms-org-goals .goal-dates, #pms-additional-goals .goal-dates, #pms-create-task .goal-dates, #pms-insights .goal-dates { color: #0f172a; }
+
+/* Period and Priority columns: keep plain text like design */
+#pms-org-goals tbody td:nth-child(2),
+#pms-org-goals tbody td:nth-child(3) { color: #0f172a; font-weight: 500; }
+
+/* Add button as pill */
+#pms-org-goals tbody td:last-child .btn,
+#pms-additional-goals tbody td:last-child .btn,
+#pms-create-task tbody td:last-child .btn,
+#pms-insights tbody td:last-child .btn,
+#pms-goal-bundle-approvals tbody td:last-child .btn,
+#pms-insight-bundle-approvals tbody td:last-child .btn {
+  border-radius: 999px !important;
+  padding: 6px 14px !important;
+  font-weight: 700;
+}
+
+/* Primary button color override scoped to panels */
+#pms-org-goals .btn-primary,
+#pms-additional-goals .btn-primary,
+#pms-create-task .btn-primary,
+#pms-insights .btn-primary {
+  background-color: #8A3366 !important;
+  border-color: #8A3366 !important;
+}
+#pms-org-goals .btn-primary:hover,
+#pms-additional-goals .btn-primary:hover,
+#pms-create-task .btn-primary:hover,
+#pms-insights .btn-primary:hover {
+  background-color: #6E284F !important; /* darker shade */
+  border-color: #6E284F !important;
+}
+
+/* Responsive tweaks */
+@media (max-width: 576px) {
+  #pms-org-goals thead th, #pms-additional-goals thead th, #pms-create-task thead th, #pms-insights thead th, #pms-goal-bundle-approvals thead th, #pms-insight-bundle-approvals thead th { font-size: 13px; }
+  #pms-org-goals tbody td, #pms-additional-goals tbody td, #pms-create-task tbody td, #pms-insights tbody td, #pms-goal-bundle-approvals tbody td, #pms-insight-bundle-approvals tbody td { padding: 10px !important; font-size: 14px; }
+  #pms-org-goals .goal-title, #pms-additional-goals .goal-title, #pms-create-task .goal-title, #pms-insights .goal-title { font-size: 14px; }
+  #pms-org-goals .goal-desc, #pms-additional-goals .goal-desc, #pms-create-task .goal-desc, #pms-insights .goal-desc,
+  #pms-org-goals .goal-dates, #pms-additional-goals .goal-dates, #pms-create-task .goal-dates, #pms-insights .goal-dates { font-size: 12px; }
+}
+
+/* ===================== Insights: limit body to ~7 rows before scroll ===================== */
+#pms-insights .org-insights-scroll {
+  /* Approximate 7 rows; adjust row height if needed via CSS var */
+  --ins-row-h: 64px;
+  max-height: calc(var(--ins-row-h) * 7);
+  overflow-y: auto !important;
+}
+#pms-insights .org-insights-scroll::-webkit-scrollbar { width: 8px; }
+#pms-insights .org-insights-scroll::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.25); border-radius: 8px; }
+
+/* ===================== Additional Goals: limit body to ~2 rows before scroll ===================== */
+#pms-additional-goals .add-goals-scroll {
+  --add-row-h: 64px;                 /* approximate row height */
+  max-height: calc(var(--add-row-h) * 3);
+  overflow-y: auto !important;
+}
+#pms-additional-goals .add-goals-scroll::-webkit-scrollbar { width: 8px; }
+#pms-additional-goals .add-goals-scroll::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.25); border-radius: 8px; }
+
+/* Keep the submit action visible while the table body scrolls */
+#pms-additional-goals .submit-sticky {
+  position: sticky;
+  bottom: 0;
+  background: linear-gradient(180deg, rgba(255,255,255,0) 0%, #ffffff 24%);
+  padding-top: 8px;
+  margin-top: 4px;
+}
