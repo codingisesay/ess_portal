@@ -107,15 +107,11 @@
                             <div style="width:80%" class="mx-auto mb-2">
                                 <canvas id="workFromHomeChartCanvas" height="240"></canvas>
                             </div>
-                            <div class="d-flex flex-column align-items-center">
-                                <small class="text-secondary">
-                                    Total WFH days (last 6 months): <strong>{{ rtrim(rtrim(number_format($workFromHomeTotalDays, 2, '.', ''), '0'), '.') }}</strong>
-                                </small>
-                            </div>
                         </div>
                         <script>
                             // Render the dynamic WFH dataset provided by the controller
                             const workFromHomeChartData = @json($workFromHomeChart);
+                            // Months are aligned to the active cycle (e.g., HY1 starts in April) so labels follow that order
                             const wfhCtx = document.getElementById('workFromHomeChartCanvas').getContext('2d');
                             new Chart(wfhCtx, {
                                 type: 'bar',
@@ -135,6 +131,7 @@
                                         y: {
                                             beginAtZero: true,
                                             ticks: {
+                                                // Include unit suffix to clarify values represent days of WFH
                                                 callback: function(value) {
                                                     return value + ' d';
                                                 }

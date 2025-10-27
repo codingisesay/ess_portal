@@ -454,13 +454,31 @@ class leavePolicyController extends Controller
 
     // dd($appliedLeaves);
 
-    // Build a six-month rolling window to graph Work From Home usage
-    $wfhWindowStart = Carbon::now()->copy()->subMonths(5)->startOfMonth();
-    $wfhWindowEnd = Carbon::now()->copy()->endOfMonth();
+    // Align Work From Home trend with the active leave cycle 
+    $activeCycle = DB::table('leave_cycles')
+        ->where('organisation_id', $user->organisation_id)
+        ->where('status', 'Active')
+        ->orderBy('start_date')
+        ->first();
+
+    if ($activeCycle) {
+        // Anchor the chart to the cycle's first month and constrain display length to available cycle duration
+        $cycleStart = Carbon::parse($activeCycle->start_date)->startOfMonth();
+        $cycleEnd = Carbon::parse($activeCycle->end_date)->endOfMonth();
+        $monthsInCycle = $cycleStart->diffInMonths($cycleEnd) + 1;
+        $monthsToDisplay = min(6, $monthsInCycle); // HY1 spans three to six months; cap chart to six
+        $wfhWindowStart = $cycleStart->copy();
+        $wfhWindowEnd = $cycleStart->copy()->addMonths($monthsToDisplay - 1)->endOfMonth();
+    } else {
+        // Fall back to a trailing six-month window when no active cycle is configured
+        $monthsToDisplay = 6;
+        $wfhWindowStart = Carbon::now()->copy()->subMonths($monthsToDisplay - 1)->startOfMonth();
+        $wfhWindowEnd = Carbon::now()->copy()->endOfMonth();
+    }
 
     $workFromHomeLeaves = DB::table('leave_applies')
         ->join('leave_types', 'leave_applies.leave_type_id', '=', 'leave_types.id')
-        ->where('leave_types.name', 'Work From Home')
+        ->where('leave_types.id', 18) //insteadOf('leave_types.name', 'Work From Home') mapped with  the column id//
         ->where('leave_applies.user_id', $user->id)
         ->where('leave_applies.leave_approve_status', 'Approved')
         ->whereBetween('leave_applies.start_date', [$wfhWindowStart->toDateString(), $wfhWindowEnd->toDateString()])
@@ -475,17 +493,20 @@ class leavePolicyController extends Controller
         $leaveEnd = Carbon::parse($leave->end_date);
 
         if (in_array($leave->half_day, ['First Half', 'Second Half'], true)) {
+            // Half-day entries only contribute 0.5 for the month in question
             $bucketKey = $leaveStart->format('Y-m');
             $wfhBuckets[$bucketKey] = ($wfhBuckets[$bucketKey] ?? 0) + 0.5;
             continue;
         }
 
         if ($leave->half_day === 'Full Day' || $leaveStart->equalTo($leaveEnd)) {
+            // Single-day requests (full-day or same-day start/end) count as 1
             $bucketKey = $leaveStart->format('Y-m');
             $wfhBuckets[$bucketKey] = ($wfhBuckets[$bucketKey] ?? 0) + 1;
             continue;
         }
 
+        // Multi-day spans are expanded via CarbonPeriod and accumulated per month
         $period = CarbonPeriod::create($leaveStart, $leaveEnd);
 
         foreach ($period as $date) {
@@ -502,7 +523,8 @@ class leavePolicyController extends Controller
     $wfhData = [];
     $cursor = $wfhWindowStart->copy();
 
-    for ($i = 0; $i < 6; $i++) {
+    for ($i = 0; $i < $monthsToDisplay; $i++) {
+        // Walk month-by-month from the aligned start, ensuring labels follow HY order
         $bucketKey = $cursor->format('Y-m');
         $wfhLabels[] = $cursor->format('M');
         $wfhData[] = round($wfhBuckets[$bucketKey] ?? 0, 2);
