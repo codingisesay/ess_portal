@@ -26,67 +26,75 @@ error_reporting(0);
      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
  </head>
  <body>
-     <!-- Header Section -->
-     <!-- <div class="header mx-4"> -->
-         <div class="header-content">
-             <div class="search-bar">
-                 <input type="text" placeholder="Search Category..." id="searchInput">
-                 <div class="search-icon-circle">
-                     <img src="{{ asset('user_end/images/search (2) 3.png') }}" alt="Search Icon">
-                 </div>
-             </div>
-
-             <div class="subpolicies-container" id="subpoliciesContainer" hidden>
-                 <div class="subpolicies-scroll" id="subpoliciesScroll"></div>
-             </div>
-         </div>
-     <!-- </div> -->
-
-     <!-- Main Content Container -->
-     <div class="main-container mx-">
-         <!-- Sidebar with Categories -->
-         <div class="sidebar">
-             <div class="categories-container">
-                 @foreach($policies->groupBy('policy_categorie_id') as $categoryId => $categoryPolicies)
-                     <div class="category-item" data-category="{{ $categoryId }}">
-                         <div class="category-icon">
-                             <img src="{{ Storage::url($categoryPolicies->first()->iconLink) }}" alt="Category Icon">
-                         </div>
-                         <div class="category-text">
-                             <span class="">{{ $categoryPolicies->first()->category_name }}</span>
-                         </div>
-                     </div>
-                 @endforeach
-             </div>
-         </div>
-         <!-- Content Area -->
-         @foreach($policies->groupBy('policy_categorie_id') as $categoryId => $categoryPolicies)
-            <div class="content-area  my-2" data-category="{{ $categoryId }}">
-                <div class="policy-slider">
-                    <div class="policy-track">
-                        @foreach($categoryPolicies as $policy)
-                            <div class="policy-card" data-policy-id="{{ $policy->id }}" data-category-id="{{ $categoryId }}">
-                                <div class="policy-folder">
-                                    <div class="folder-header">
-                                        <h5 class="folder-title">{{ $policy->policy_title }}</h5>
-                                        <a href="{{ Storage::url($policy->docLink) }}" class="download-btn" download>
-                                            <img src="{{ asset('user_end/images/download 1.png') }}" alt="Download Icon"> Download
-                                        </a>
-                                    </div>
-                                    <div class="folder-content">
-                                        <div class="content-text">
-                                            <p>{{ $policy->policy_content }}</p>
-                                        </div>
-                                        <div class="content-image">
-                                            <img src="{{ Storage::url($policy->imgLink) }}" alt="Policy Image">
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        @endforeach
+    <!-- Main Content Container -->
+    <div class="main-container mx-">
+        <!-- Sidebar with Categories -->
+        <div class="sidebar">
+            <!-- Search Bar at Top -->
+            <div class="sidebar-search">
+                <div class="search-bar">
+                    <input type="text" placeholder="Search Category..." id="searchInput">
+                    <div class="search-icon-circle">
+                        <img src="{{ asset('user_end/images/search (2) 3.png') }}" alt="Search Icon">
                     </div>
                 </div>
             </div>
+            <!-- Scrollable Categories Container -->
+            <div class="categories-scroll-container">
+                <div class="categories-container">
+                    @foreach($policies->groupBy('policy_categorie_id') as $categoryId => $categoryPolicies)
+                        <div class="category-item" data-category="{{ $categoryId }}">
+                            <div class="category-icon">
+                                <img src="{{ Storage::url($categoryPolicies->first()->iconLink) }}" alt="Category Icon">
+                            </div>
+                            <div class="category-text">
+                                <span class="">{{ $categoryPolicies->first()->category_name }}</span>
+                            </div>
+                        </div>
+                    @endforeach
+                </div>
+            </div>
+        </div>
+        <!-- Content Area -->
+        @foreach($policies->groupBy('policy_categorie_id') as $categoryId => $categoryPolicies)
+           <div class="content-area my-2" data-category="{{ $categoryId }}">
+               <div class="policy-slider">
+                   <div class="policy-track">
+                       @foreach($categoryPolicies as $policy)
+                           <div class="policy-card" data-policy-id="{{ $policy->id }}" data-category-id="{{ $categoryId }}">
+                               <div class="policy-folder">
+                                   <div class="folder-header">
+                                       <div class="subpolicy-dropdown">
+                                           <button class="dropdown-toggle" type="button" data-category="{{ $categoryId }}">
+                                               <span class="dropdown-text">{{ $policy->policy_title }}</span>
+                                               <i class="fas fa-chevron-down dropdown-icon"></i>
+                                           </button>
+                                           <div class="dropdown-menu" data-category="{{ $categoryId }}">
+                                               @foreach($categoryPolicies as $subPolicy)
+                                                   <div class="dropdown-item" data-policy-id="{{ $subPolicy->id }}" data-category-id="{{ $categoryId }}">
+                                                       {{ $subPolicy->policy_title }}
+                                                   </div>
+                                               @endforeach
+                                           </div>
+                                       </div>
+                                       <a href="{{ Storage::url($policy->docLink) }}" class="download-btn" download>
+                                           <img src="{{ asset('user_end/images/download 1.png') }}" alt="Download Icon"> Download
+                                       </a>
+                                   </div>
+                                   <div class="folder-content">
+                                       <div class="content-text">
+                                           <p>{{ $policy->policy_content }}</p>
+                                       </div>
+                                       <div class="content-image">
+                                           <img src="{{ Storage::url($policy->imgLink) }}" alt="Policy Image">
+                                       </div>
+                                   </div>
+                               </div>
+                           </div>
+                       @endforeach
+                   </div>
+               </div>
+           </div>
         @endforeach
          
     </div>
@@ -96,8 +104,6 @@ error_reporting(0);
         document.addEventListener("DOMContentLoaded", function () {
             const categoryItems = document.querySelectorAll('.category-item');
             const contentAreas = document.querySelectorAll('.content-area');
-            const subpoliciesContainer = document.getElementById('subpoliciesContainer');
-            const subpoliciesScroll = document.getElementById('subpoliciesScroll');
             const policiesByCategory = @json($policiesByCategory);
 
             // Search elements
@@ -118,10 +124,8 @@ error_reporting(0);
                             area.classList.add('active');
                         }
                     });
-                    // Render subpolicies for default category
-                    if (typeof renderSubpolicies === 'function') {
-                        renderSubpolicies(firstCategoryId);
-                    }
+                    // Set default dropdown selection
+                    setDefaultDropdownSelection(firstCategoryId);
                 }
             };
 
@@ -169,9 +173,7 @@ error_reporting(0);
                             area.classList.add('active');
                         }
                     });
-                    if (typeof renderSubpolicies === 'function') {
-                        renderSubpolicies(catId);
-                    }
+                    setDefaultDropdownSelection(catId);
                 }
             };
 
@@ -217,6 +219,18 @@ error_reporting(0);
                 });
             };
 
+            // Dropdown functionality
+            const setDefaultDropdownSelection = (categoryId) => {
+                const activeArea = document.querySelector(`.content-area[data-category="${categoryId}"]`);
+                if (!activeArea) return;
+                
+                const firstCard = activeArea.querySelector('.policy-card');
+                if (firstCard) {
+                    // Show only the first policy card
+                    showPolicyCard(firstCard.getAttribute('data-policy-id'));
+                }
+            };
+
             const showPolicyCard = (policyId) => {
                 const activeArea = document.querySelector('.content-area.active');
                 if (!activeArea) return;
@@ -227,60 +241,113 @@ error_reporting(0);
 
                     if (isMatch) {
                         card.classList.remove('policy-card-hidden');
-                        // Do not open dropdown: avoid adding 'folder-open' or rotating icons
                         card.scrollIntoView({ behavior: 'smooth', block: 'start' });
                     } else {
                         card.classList.add('policy-card-hidden');
+                        // Close any open dropdowns in hidden cards
+                        const hiddenDropdowns = card.querySelectorAll('.dropdown-menu');
+                        hiddenDropdowns.forEach(dropdown => {
+                            dropdown.classList.remove('show');
+                        });
+                        const hiddenToggles = card.querySelectorAll('.dropdown-toggle');
+                        hiddenToggles.forEach(toggle => {
+                            toggle.classList.remove('active');
+                        });
                     }
                 });
             };
 
-            const renderSubpolicies = (categoryId) => {
-                if (!subpoliciesContainer || !subpoliciesScroll) {
-                    return;
-                }
-
-                const items = policiesByCategory[categoryId] || [];
-                const targetArea = document.querySelector(`.content-area[data-category="${categoryId}"]`);
-                const areaCards = targetArea ? targetArea.querySelectorAll('.policy-card') : [];
-
-                areaCards.forEach(card => {
-                    // Reset visibility without opening dropdowns
-                    card.classList.remove('policy-card-hidden');
-                    card.classList.remove('folder-open');
+            // Initialize dropdown functionality
+            const initializeDropdowns = () => {
+                // Remove existing event listeners to prevent duplicates
+                document.querySelectorAll('.dropdown-toggle').forEach(toggle => {
+                    toggle.replaceWith(toggle.cloneNode(true));
+                });
+                
+                document.querySelectorAll('.dropdown-item').forEach(item => {
+                    item.replaceWith(item.cloneNode(true));
                 });
 
-                if (!items.length) {
-                    subpoliciesScroll.innerHTML = '';
-                    subpoliciesContainer.setAttribute('hidden', '');
-                    return;
-                }
-
-                subpoliciesScroll.innerHTML = items.map(item => `
-                    <div class="subpolicy-item" data-policy-id="${item.id}" data-category-id="${item.category_id}">
-                        <div class="subpolicy-text">${item.title}</div>
-                    </div>
-                `).join('');
-
-                subpoliciesContainer.removeAttribute('hidden');
-
-                const subpolicyItems = subpoliciesScroll.querySelectorAll('.subpolicy-item');
-                subpolicyItems.forEach(subpolicyItem => {
-                    subpolicyItem.addEventListener('click', () => {
-                        subpolicyItems.forEach(item => item.classList.remove('active'));
-                        subpolicyItem.classList.add('active');
-
-                        const policyId = subpolicyItem.getAttribute('data-policy-id');
-                        showPolicyCard(policyId);
+                const dropdownToggles = document.querySelectorAll('.dropdown-toggle');
+                
+                dropdownToggles.forEach(toggle => {
+                    toggle.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        const categoryId = toggle.getAttribute('data-category');
+                        
+                        // Only work with visible dropdowns (not hidden policy cards)
+                        if (toggle.closest('.policy-card-hidden')) {
+                            return;
+                        }
+                        
+                        const dropdownMenu = toggle.nextElementSibling;
+                        
+                        // Close all other dropdowns in the same category
+                        document.querySelectorAll(`.dropdown-menu[data-category="${categoryId}"]`).forEach(menu => {
+                            if (menu !== dropdownMenu) {
+                                menu.classList.remove('show');
+                            }
+                        });
+                        
+                        document.querySelectorAll(`.dropdown-toggle[data-category="${categoryId}"]`).forEach(t => {
+                            if (t !== toggle) {
+                                t.classList.remove('active');
+                            }
+                        });
+                        
+                        // Toggle current dropdown
+                        dropdownMenu.classList.toggle('show');
+                        toggle.classList.toggle('active');
                     });
                 });
 
-                if (subpolicyItems.length > 0) {
-                    subpolicyItems[0].click();
-                }
+                // Handle dropdown item selection
+                const dropdownItems = document.querySelectorAll('.dropdown-item');
+                dropdownItems.forEach(item => {
+                    item.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        const categoryId = item.getAttribute('data-category-id');
+                        const policyId = item.getAttribute('data-policy-id');
+                        
+                        // Find all dropdowns for this category
+                        const categoryDropdowns = document.querySelectorAll(`.dropdown-menu[data-category="${categoryId}"]`);
+                        const categoryToggles = document.querySelectorAll(`.dropdown-toggle[data-category="${categoryId}"]`);
+                        
+                        // Update all dropdowns in this category
+                        categoryDropdowns.forEach(dropdownMenu => {
+                            dropdownMenu.querySelectorAll('.dropdown-item').forEach(i => i.classList.remove('active'));
+                            item.classList.add('active');
+                            
+                            // Close dropdown
+                            dropdownMenu.classList.remove('show');
+                        });
+                        
+                        categoryToggles.forEach(dropdownToggle => {
+                            const dropdownText = dropdownToggle.querySelector('.dropdown-text');
+                            dropdownText.textContent = item.textContent;
+                            dropdownToggle.classList.remove('active');
+                        });
+                        
+                        // Show selected policy
+                        showPolicyCard(policyId);
+                        
+                        // Re-initialize dropdowns after showing new policy
+                        setTimeout(() => {
+                            initializeDropdowns();
+                        }, 100);
+                    });
+                });
             };
 
-            window.renderSubpolicies = renderSubpolicies;
+            // Close dropdowns when clicking outside
+            document.addEventListener('click', () => {
+                document.querySelectorAll('.dropdown-menu').forEach(menu => {
+                    menu.classList.remove('show');
+                });
+                document.querySelectorAll('.dropdown-toggle').forEach(toggle => {
+                    toggle.classList.remove('active');
+                });
+            });
 
             // Event listener for category selection
             categoryItems.forEach(item => {
@@ -298,9 +365,12 @@ error_reporting(0);
                     // Show content for the selected category
                     showCategoryContent(categoryId);
 
-                    renderSubpolicies(categoryId);
+                    setDefaultDropdownSelection(categoryId);
                 });
             });
+
+            // Initialize dropdowns
+            initializeDropdowns();
 
             // Activate the first category and its content area by default
             if (categoryItems.length > 0) {
@@ -308,14 +378,12 @@ error_reporting(0);
                 const firstCategoryId = firstCategory.getAttribute('data-category');
                 firstCategory.classList.add('active'); // Mark the first category as active
                 showCategoryContent(firstCategoryId);
-                renderSubpolicies(firstCategoryId);
+                setDefaultDropdownSelection(firstCategoryId);
             }
         });
     </script>
     <style>
-        /* Hide the folder icon arrow completely */
-        .folder-icon { display: none !important; }
-        /* Optional: keep highlight style */
+        /* Optional: keep highlight style for search functionality */
         .highlight {
             background-color: #E0AFA0;
             font-weight: bold;
