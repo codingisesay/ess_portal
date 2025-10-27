@@ -320,8 +320,8 @@ body {
     border-radius: 15px;
     padding: 20px;
     /* width: 700px; */
-    /* height: 1200px; */
-
+    height: 400px; /* Keeps monthly attendance card consistent with other dashboard tiles */
+    margin-bottom: 28px; /* Adjusted margin-bottom for spacing */
     /* padding: 20px; */
 
 }
