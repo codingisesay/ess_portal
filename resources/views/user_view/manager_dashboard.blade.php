@@ -6,21 +6,7 @@
 <link href="https://cdnjs.cloudflare.com/ajax/libs/orgchart/2.1.9/css/jquery.orgchart.min.css" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/orgchart/2.1.9/js/jquery.orgchart.min.js"></script>
-<!-- ========== PMS SIDEBAR ========== -->
-
-
-<!-- <nav class="pms-sidebar">
-    <ul class="pms-sidebar-nav">
-        <li><a href="#pms-org-goals">Goals Created by Organization</a></li>
-        <li><a href="#pms-additional-goals">Additional Goals / Selected Org Goals</a></li>
-        <li><a href="#pms-create-task">Create Own Task</a></li>
-        <li><a href="#pms-insights">Insights on Organization Goals</a></li>
-        <li><a href="#pms-goal-bundle-approvals">Goal Bundle Approval Requests</a></li>
-        <li><a href="#pms-insight-bundle-approvals">Insight Bundle Approval Requests</a></li>
-    </ul>
-</nav> -->
-
- 
+<!-- ========== PMS SIDEBAR ========== --> 
 
 <div class="pms-page">
     <!-- Sidebar (left, 25%) -->
@@ -1246,27 +1232,39 @@ document.getElementById('submitSelectedInsights')?.addEventListener('click', asy
 
 <script>
 document.addEventListener("DOMContentLoaded", function () {
+    // Initialize Bootstrap modal for adding/editing insights
     const insightModal = new bootstrap.Modal(document.getElementById('insightModal'));
+
+    // Reference to the form inside the modal
     const form = document.getElementById("insightForm");
 
-    // When "Add Insight" button is clicked
+    //  When "Add Insight" button is clicked (attached to each goal)
     document.querySelectorAll(".add-insight-btn").forEach(btn => {
         btn.addEventListener("click", function () {
-            document.getElementById("insight_id").value = ""; // reset (new)
+            // Reset existing insight details (for new entry)
+            document.getElementById("insight_id").value = ""; 
+            
+            // Set goal-related data from button attributes
             document.getElementById("insight_goal_id").value = this.dataset.goalId;
             document.getElementById("insight_goal_title").textContent = this.dataset.goalTitle;
-            document.getElementById("insight_description").value = ""; // clear old text
+
+            // Clear old description text
+            document.getElementById("insight_description").value = "";
+
+            // Show the modal
             insightModal.show();
         });
     });
 
-    // Handle submit
+    //  Handle form submission for saving new insight
     form.addEventListener("submit", async function (e) {
-        e.preventDefault();
+        e.preventDefault(); // Prevent default form reload
 
+        // Prepare form data for sending via AJAX
         const formData = new FormData(form);
 
         try {
+            // Send POST request to save the insight
             const response = await fetch("{{ url('/insights') }}", {
                 method: "POST",
                 headers: {
@@ -1275,13 +1273,16 @@ document.addEventListener("DOMContentLoaded", function () {
                 body: formData
             });
 
+            // Throw error if response not successful
             if (!response.ok) throw new Error('Failed to save insight');
 
             const data = await response.json();
             console.log("Insight saved:", data);
 
+            // Hide the modal after saving
             insightModal.hide();
 
+            // Show success message
             Swal.fire({
                 icon: 'success',
                 title: 'Saved!',
@@ -1291,8 +1292,15 @@ document.addEventListener("DOMContentLoaded", function () {
                 showConfirmButton: false
             });
 
+            // 🔄 Refresh the page after short delay to reflect changes immediately
+            setTimeout(() => {
+                location.reload();
+            }, 2000);
+
         } catch (err) {
-            console.error(err);
+            console.error("Error while saving insight:", err);
+
+            // Show error message
             Swal.fire({
                 icon: 'error',
                 title: 'Error',
@@ -1303,6 +1311,7 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 });
 </script>
+
 
 
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
