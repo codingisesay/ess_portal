@@ -957,7 +957,7 @@ public function userGoals($id)
         ->where('is_active', 1) // or whatever flag you use
         ->first();
 
-     // Fetch goals: created by self, created by manager, assigned to self, or assigned to manager
+     // Fetch goals: created by self, created by manager, assigned to self, or assigned to manager (brought the old code back)
     $allOrgGoals = \DB::table('goals')
         ->join('organization_settings', 'goals.org_setting_id', '=', 'organization_settings.id')
         ->leftJoin('goal_assignments', 'goals.id', '=', 'goal_assignments.goal_id')
