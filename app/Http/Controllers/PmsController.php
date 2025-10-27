@@ -957,22 +957,29 @@ public function userGoals($id)
         ->where('is_active', 1) // or whatever flag you use
         ->first();
 
-    // Fetch organization goals: include active cycle goals regardless of creator/assignment
+     // Fetch goals: created by self, created by manager, assigned to self, or assigned to manager
     $allOrgGoals = \DB::table('goals')
         ->join('organization_settings', 'goals.org_setting_id', '=', 'organization_settings.id')
+        ->leftJoin('goal_assignments', 'goals.id', '=', 'goal_assignments.goal_id')
         ->select(
             'goals.*',
             'organization_settings.name as period_name',
             'goals.start_date',
             'goals.end_date'
         )
-        ->when(isset($activeCycle->id), function ($q) use ($activeCycle) {
-            // Prefer goals from the active organization cycle if available
-            $q->where('goals.org_setting_id', $activeCycle->id);
+        ->where(function ($query) use ($user, $reportingManager) {
+            $query->whereIn('goals.created_by', [$user->id, $reportingManager])
+                ->orWhere('goal_assignments.assigned_to', $user->id)
+                ->orWhere('goal_assignments.assigned_to', $reportingManager);
         })
         ->whereNotIn('goals.id', $submittedGoalIds) // exclude already submitted
-        ->orderByDesc('goals.id')
+        ->distinct()
         ->get();
+
+    // Get active organization cycle
+        $activeCycle = \DB::table('organization_settings')
+        ->where('is_active', 1) // or whatever flag you use
+        ->first();
 
 
 // ===== Individual submitted goals (old flow) =====
