@@ -157,15 +157,27 @@
                 </div>
 
                 <div class="col-lg-3 col-md-6 mb-3">  
-                    <div class="attendance-header p-3">
-                        <h5 class="mb-0">Leave Type</h5><hr class="my-2"  >
-                        <div class="leave-type-collection">
-                            @foreach($leaveSummary as $leave)
-                                <button class="button" style="background-color: {{ $loop->index % 2 == 0 ? '#8a3366' : '#2B53C1' }};">
-                                    {{ $leave['leave_type'] }}
-                                </button>
-                            @endforeach
-                        </div>
+                    <div class="attendance-header p-3 upcoming-approved">
+                        <h5 class="mb-0">Upcoming Approved Leaves</h5><hr class="my-2"  >
+                        <ul class="upcoming-approved__list">
+                            @forelse($upcomingApprovedLeaves as $upcoming)
+                                <li class="upcoming-approved__item">
+                                    {{-- Date range for the approved leave window --}}
+                                    <span class="upcoming-approved__date">
+                                        {{ \Carbon\Carbon::parse($upcoming->start_date)->format('d M') }} – {{ \Carbon\Carbon::parse($upcoming->end_date)->format('d M') }}
+                                    </span>
+                                    {{-- Leave type name --}}
+                                    <span class="upcoming-approved__type">{{ $upcoming->leave_type_name }}</span>
+                                    @if(!empty($upcoming->description))
+                                        {{-- Optional note/description added during leave apply --}}
+                                        <span class="upcoming-approved__note">{{ $upcoming->description }}</span>
+                                    @endif
+                                </li>
+                            @empty
+                                {{-- Empty state if no future approved leaves --}}
+                                <li class="upcoming-approved__empty">No upcoming approved leaves.</li>
+                            @endforelse
+                        </ul>
                     </div>
                 </div>
                  

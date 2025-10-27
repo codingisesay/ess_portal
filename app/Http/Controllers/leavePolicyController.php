@@ -452,6 +452,23 @@ class leavePolicyController extends Controller
             ->orderBy('created_at', 'desc') 
             ->get(); 
 
+        // Upcoming approved leaves (next five future-dated approvals for quick dashboard glance)
+        $upcomingApprovedLeaves = DB::table('leave_applies')
+            ->join('leave_types', 'leave_applies.leave_type_id', '=', 'leave_types.id')
+            ->select(
+                'leave_applies.id',
+                'leave_applies.start_date',
+                'leave_applies.end_date',
+                'leave_applies.description',
+                'leave_types.name as leave_type_name'
+            )
+            ->where('leave_applies.user_id', $user->id)
+            ->where('leave_applies.leave_approve_status', 'Approved')
+            ->whereDate('leave_applies.start_date', '>=', Carbon::today())
+            ->orderBy('leave_applies.start_date')
+            ->limit(5)
+            ->get();
+
     // dd($appliedLeaves);
 
     // Align Work From Home trend with the active leave cycle 
@@ -922,7 +939,8 @@ if (!array_key_exists($activeAttendanceMonth, $attendanceOverview) && !empty($at
 }
     // dd($appliedLeaves);
         // Pass the leave summary data, applied leaves, and total working hours to the view
-        return view('user_view.leave_dashboard', compact('leaveSummary', 'workingHoursData', 'appliedLeaves','title','holidays_upcoming', 'attendanceRate', 'presentDays', 'absentDays', 'totalDaysInMonth', 'attendanceOverview', 'activeAttendanceMonth', 'workFromHomeChart', 'workFromHomeTotalDays'));
+        // Bundle dashboard datasets for the blade template (leave stats, upcoming items, and attendance summary)
+        return view('user_view.leave_dashboard', compact('leaveSummary', 'workingHoursData', 'appliedLeaves', 'upcomingApprovedLeaves','title','holidays_upcoming', 'attendanceRate', 'presentDays', 'absentDays', 'totalDaysInMonth', 'attendanceOverview', 'activeAttendanceMonth', 'workFromHomeChart', 'workFromHomeTotalDays'));
     }
 
 
