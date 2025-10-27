@@ -9,6 +9,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 // use Carbon\Carbon;
+// Used for rolling Work From Home window calculations
+use Carbon\CarbonPeriod;
 use App\Services\EmailService;
 use App\Models\User;
 use App\Mail\UserRegistrationMail;
@@ -452,6 +454,91 @@ class leavePolicyController extends Controller
 
     // dd($appliedLeaves);
 
+    // Align Work From Home trend with the active leave cycle 
+    $activeCycle = DB::table('leave_cycles')
+        ->where('organisation_id', $user->organisation_id)
+        ->where('status', 'Active')
+        ->orderBy('start_date')
+        ->first();
+
+    if ($activeCycle) {
+        // Anchor the chart to the cycle's first month and constrain display length to available cycle duration
+        $cycleStart = Carbon::parse($activeCycle->start_date)->startOfMonth();
+        $cycleEnd = Carbon::parse($activeCycle->end_date)->endOfMonth();
+        $monthsInCycle = $cycleStart->diffInMonths($cycleEnd) + 1;
+        $monthsToDisplay = min(6, $monthsInCycle); // HY1 spans three to six months; cap chart to six
+        $wfhWindowStart = $cycleStart->copy();
+        $wfhWindowEnd = $cycleStart->copy()->addMonths($monthsToDisplay - 1)->endOfMonth();
+    } else {
+        // Fall back to a trailing six-month window when no active cycle is configured
+        $monthsToDisplay = 6;
+        $wfhWindowStart = Carbon::now()->copy()->subMonths($monthsToDisplay - 1)->startOfMonth();
+        $wfhWindowEnd = Carbon::now()->copy()->endOfMonth();
+    }
+
+    $workFromHomeLeaves = DB::table('leave_applies')
+        ->join('leave_types', 'leave_applies.leave_type_id', '=', 'leave_types.id')
+        ->where('leave_types.id', 18) //insteadOf('leave_types.name', 'Work From Home') mapped with  the column id//
+        ->where('leave_applies.user_id', $user->id)
+        ->where('leave_applies.leave_approve_status', 'Approved')
+        ->whereBetween('leave_applies.start_date', [$wfhWindowStart->toDateString(), $wfhWindowEnd->toDateString()])
+        ->select('leave_applies.start_date', 'leave_applies.end_date', 'leave_applies.half_day')
+        ->orderBy('leave_applies.start_date')
+        ->get();
+
+    $wfhBuckets = [];
+
+    foreach ($workFromHomeLeaves as $leave) {
+        $leaveStart = Carbon::parse($leave->start_date);
+        $leaveEnd = Carbon::parse($leave->end_date);
+
+        if (in_array($leave->half_day, ['First Half', 'Second Half'], true)) {
+            // Half-day entries only contribute 0.5 for the month in question
+            $bucketKey = $leaveStart->format('Y-m');
+            $wfhBuckets[$bucketKey] = ($wfhBuckets[$bucketKey] ?? 0) + 0.5;
+            continue;
+        }
+
+        if ($leave->half_day === 'Full Day' || $leaveStart->equalTo($leaveEnd)) {
+            // Single-day requests (full-day or same-day start/end) count as 1
+            $bucketKey = $leaveStart->format('Y-m');
+            $wfhBuckets[$bucketKey] = ($wfhBuckets[$bucketKey] ?? 0) + 1;
+            continue;
+        }
+
+        // Multi-day spans are expanded via CarbonPeriod and accumulated per month
+        $period = CarbonPeriod::create($leaveStart, $leaveEnd);
+
+        foreach ($period as $date) {
+            if ($date->lt($wfhWindowStart) || $date->gt($wfhWindowEnd)) {
+                continue;
+            }
+
+            $bucketKey = $date->format('Y-m');
+            $wfhBuckets[$bucketKey] = ($wfhBuckets[$bucketKey] ?? 0) + 1;
+        }
+    }
+
+    $wfhLabels = [];
+    $wfhData = [];
+    $cursor = $wfhWindowStart->copy();
+
+    for ($i = 0; $i < $monthsToDisplay; $i++) {
+        // Walk month-by-month from the aligned start, ensuring labels follow HY order
+        $bucketKey = $cursor->format('Y-m');
+        $wfhLabels[] = $cursor->format('M');
+        $wfhData[] = round($wfhBuckets[$bucketKey] ?? 0, 2);
+        $cursor->addMonth();
+    }
+
+    // Structure data for the dashboard chart component
+        $workFromHomeChart = [
+        'labels' => $wfhLabels,
+        'data' => $wfhData,
+    ];
+
+    $workFromHomeTotalDays = array_sum($wfhData);
+
     $emp_details = DB::table('emp_details')->where('user_id',$user->id)->first();
 
     $leaveSummary = [];
@@ -835,7 +922,7 @@ if (!array_key_exists($activeAttendanceMonth, $attendanceOverview) && !empty($at
 }
     // dd($appliedLeaves);
         // Pass the leave summary data, applied leaves, and total working hours to the view
-        return view('user_view.leave_dashboard', compact('leaveSummary', 'workingHoursData', 'appliedLeaves','title','holidays_upcoming', 'attendanceRate', 'presentDays', 'absentDays', 'totalDaysInMonth', 'attendanceOverview', 'activeAttendanceMonth'));
+        return view('user_view.leave_dashboard', compact('leaveSummary', 'workingHoursData', 'appliedLeaves','title','holidays_upcoming', 'attendanceRate', 'presentDays', 'absentDays', 'totalDaysInMonth', 'attendanceOverview', 'activeAttendanceMonth', 'workFromHomeChart', 'workFromHomeTotalDays'));
     }
 
 

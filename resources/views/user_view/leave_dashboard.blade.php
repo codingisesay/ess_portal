@@ -102,82 +102,55 @@
                 
                 <div class="col-lg-3 col-md-6 mb-3">
                     <div class="attendance-header p-3">
-                        <h5 class="mb-0">Absenteeism Rate</h5><hr class="my-2"  >
+                        <h5 class="mb-0">Work From Home Trend</h5><hr class="my-2"  >
                         <div class="chart-container1" style="width: 100%; text-align: center; background-color:white; ">
-                            <div style="width:65%" class='mx-auto mb-2'> <canvas height="200px" height="200px" id="chartContainer"></canvas></div>
-                            <div class="d-flex justify-content-center align-items-center"> 
-                                <small  style="color: #3086FF " class="d-flex justify-content-center align-items-center">
-                                    <x-icon name="squarefill" /> <span class="text-secondary">&nbsp;Absent day <span>
-                                </small> &ensp;&emsp;
-                                <small style="color: #2B53C1BF " class="d-flex justify-content-center align-items-center">
-                                    <x-icon name="squarefill"  />  <span class="text-secondary">&nbsp;Present day </span>
-                                </small>
+                            <div style="width:80%" class="mx-auto mb-2">
+                                <canvas id="workFromHomeChartCanvas" height="240"></canvas>
                             </div>
                         </div>
                         <script>
-                            // The data passed from the Laravel controller
-                            const attendanceRateData = {
-                                present_days: {{ $presentDays }},
-                                absent_days: {{ $absentDays }}
-                            };
-
-                            const presentDays = attendanceRateData.present_days;
-                            const absentDays = attendanceRateData.absent_days;
-                            const totalDays = presentDays + absentDays;
-
-                            // Calculate the attendance rate
-                            const attendanceRate = totalDays ? ((presentDays / totalDays) * 100).toFixed(2) : 0;
-
-                            // Initialize the chart
-                            const ctxs = document.getElementById('chartContainer').getContext('2d');
-                            const chartContainer = new Chart(ctxs, {
-                                type: 'doughnut',
+                            // Render the dynamic WFH dataset provided by the controller
+                            const workFromHomeChartData = @json($workFromHomeChart);
+                            // Months are aligned to the active cycle (e.g., HY1 starts in April) so labels follow that order
+                            const wfhCtx = document.getElementById('workFromHomeChartCanvas').getContext('2d');
+                            new Chart(wfhCtx, {
+                                type: 'bar',
                                 data: {
+                                    labels: workFromHomeChartData.labels,
                                     datasets: [{
-                                        data: [presentDays, absentDays],
-                                        backgroundColor: ['#3086FF', '#2B53C1BF'],
+                                        label: 'WFH Days',
+                                        data: workFromHomeChartData.data,
+                                        backgroundColor: '#8a3366',
+                                        borderRadius: 6,
                                     }]
                                 },
-                                options: {maintainAspectRatio: false, 
+                                options: {
+                                    maintainAspectRatio: false,
                                     responsive: true,
+                                    scales: {
+                                        y: {
+                                            beginAtZero: true,
+                                            ticks: {
+                                                // Include unit suffix to clarify values represent days of WFH
+                                                callback: function(value) {
+                                                    return value + ' d';
+                                                }
+                                            }
+                                        }
+                                    },
                                     plugins: {
                                         legend: {
-                                            position: 'top',
-                                            labels: {
-                                                font: { size: 14 }
-                                            }
+                                            display: false
                                         },
                                         tooltip: {
                                             callbacks: {
-                                                label: function (tooltipItem) {
-                                                    const label = tooltipItem.label || '';
-                                                    const value = tooltipItem.raw;
-                                                    const percentage = ((value / totalDays) * 100).toFixed(2);
-                                                    return `${label}: ${value} (${percentage}%)`;
+                                                label: function(context) {
+                                                    return context.parsed.y + ' days';
                                                 }
                                             }
-                                        },
+                                        }
                                     }
-                                },
-                                plugins: [{
-                                    id: 'centerText',
-                                    beforeDraw: function (chart) {
-                                        const { width, height } = chart;
-                                        const ctx = chart.ctx;
-                                        ctx.restore();
-                                        const fontSize = (height / 150).toFixed(2);
-                                        ctx.font = `${fontSize}em sans-serif`;
-                                        ctx.textBaseline = 'middle';
-                                        ctx.textAlign = 'center';
-
-                                        const text = `${attendanceRate}%`;
-                                        const textX = width / 2;
-                                        const textY = height / 2;
-
-                                        ctx.fillText(text, textX, textY);
-                                        ctx.save();
-                                    }
-                                }]
+                                }
                             });
                         </script>
                     </div>
