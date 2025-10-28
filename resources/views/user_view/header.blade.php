@@ -58,62 +58,16 @@ $userDetails = app('App\Http\Controllers\headerController')->getUserDetails();
                    <x-icon name="search" />
                 </a>
             </div>
-            <!-- <div class="bellcircle">  -->
+            <div class="bellcircle"> 
                 <!-- Notification dropdown toggled on bell click -->
-                <!-- <a href="javascript:void(0)" id="notificationIcon" class="text-dark mx-2">
+                <a href="javascript:void(0)" id="notificationIcon" class="text-dark mx-2">
                   <x-icon name="notification" />
-                </a> -->
-                {{-- ===========================================
-     🔔 NOTIFICATIONS DROPDOWN
-     Displays all unread notifications for the logged-in user
-============================================== --}}
-<!-- 
-@php
-    // Fetch unread notifications for the logged-in user
-    $notifications = auth()->user()->unreadNotifications;
-@endphp
-
-<div class="dropdown">
-    {{-- Notification Bell Icon with count --}}
-    <button class="btn btn-outline-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-        🔔 Notifications ({{ $notifications->count() }})
-    </button>
-
-    {{-- Dropdown Menu --}}
-    <ul class="dropdown-menu dropdown-menu-end shadow" style="width: 360px; max-height: 400px; overflow-y: auto;">
-        {{-- Loop through each unread notification --}}
-        @forelse($notifications as $notification)
-            <li class="border-bottom">
-                <a class="dropdown-item d-flex flex-column py-2" 
-                   href="{{ route('notifications.read', $notification->id) }}">
-                    {{-- Notification title --}}
-                    <strong class="text-dark">{{ $notification->data['title'] ?? 'Notification' }}</strong>
-
-                    {{-- Notification message --}}
-                    <small class="text-muted">{{ $notification->data['message'] ?? '' }}</small>
-
-                    {{-- Optional timestamp --}}
-                    <small class="text-secondary mt-1">
-                        {{ $notification->created_at->diffForHumans() }}
-                    </small>
                 </a>
-            </li>
-        @empty
-            {{-- If there are no unread notifications --}}
-            <li>
-                <span class="dropdown-item text-muted">No new notifications</span>
-            </li>
-        @endforelse
-
-        {{-- Footer section for viewing all notifications --}}
-        <li>
-            <a href="{{ url('/notifications') }}" class="dropdown-item text-center fw-bold text-primary">
-                View All Notifications
-            </a>
-        </li>
-    </ul>
-</div> -->
-
+                <div id="notificationDropdown" class="dropdown-content-notifications" style="display:none; min-width:260px;">
+                    <div class="px-2 py-2"><strong>Notifications</strong></div>
+                    <hr class="my-1"/>
+                    <div class="px-2 pb-2 text-muted"><small>No notifications yet.</small></div>
+                </div>
             </div>
             <div class="profilecircle profile-dropdown">
                 <a href="javascript:void(0)" id="profileIcon" class=" mx-2" > 
@@ -234,23 +188,145 @@ function previewImage() {
 //     closeModal();
 // }
     </script>
-    <script>
-        // toggle notification dropdown and close on outside click
-        (function(){
-            var icon = document.getElementById('notificationIcon');
-            var dd = document.getElementById('notificationDropdown');
-            if(icon && dd){
-                icon.addEventListener('click', function(e){
-                    e.preventDefault();
-                    e.stopPropagation();
-                    dd.style.display = (dd.style.display === 'block') ? 'none' : 'block';
-                });
-                document.addEventListener('click', function(){
-                    dd.style.display = 'none';
-                });
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const bellIcon = document.getElementById('notificationIcon');
+    const dropdown = document.getElementById('notificationDropdown');
+
+    let autoRefreshInterval = null;
+
+    // ✅ Function to fetch and render notifications
+    async function loadNotifications(showDropdown = false) {
+        try {
+            const response = await fetch("{{ route('notifications.fetch') }}");
+            const data = await response.json();
+
+            dropdown.innerHTML = '';
+
+            let headerHTML = `
+                <div class="px-2 py-2 d-flex justify-content-between align-items-center">
+                    <strong>Notifications</strong>
+                    <div class="d-flex align-items-center gap-2">
+                        <a href="#" id="markAllRead" class="text-decoration-none"><small>Mark all read</small></a> |
+                        <a href="#" id="clearAll" class="text-danger text-decoration-none"><small>Clear all</small></a>
+                    </div>
+                </div>
+                <hr class="my-1"/>
+            `;
+            dropdown.insertAdjacentHTML('beforeend', headerHTML);
+
+            if (!data.notifications.length) {
+                dropdown.insertAdjacentHTML('beforeend', `
+                    <div class="px-2 pb-2 text-muted"><small>No notifications.</small></div>
+                `);
+                return;
             }
-        })();
-    </script>
+
+            data.notifications.forEach(n => {
+                dropdown.insertAdjacentHTML('beforeend', `
+                    <div class="px-2 py-2 border-bottom d-flex justify-content-between align-items-start ${n.read_at ? 'bg-light' : 'bg-white'}">
+                        <div class="notification-item flex-grow-1" 
+                             data-id="${n.id}" 
+                             data-link="${n.link || ''}" 
+                             style="cursor:pointer;">
+                            <strong>${n.title}</strong><br>
+                            <small class="text-muted">${n.message}</small><br>
+                            <small class="text-secondary">${n.created_at}</small>
+                        </div>
+                        <button class="btn btn-sm btn-outline-danger ms-2 clear-btn" data-id="${n.id}" title="Clear this notification">×</button>
+                    </div>
+                `);
+            });
+
+            // ✅ Mark all as read
+            document.getElementById('markAllRead')?.addEventListener('click', async function (e) {
+                e.preventDefault();
+                await fetch("{{ route('notifications.readAll') }}");
+                loadNotifications();
+            });
+
+            // ✅ Clear all
+            document.getElementById('clearAll')?.addEventListener('click', async function (e) {
+                e.preventDefault();
+                if (confirm("Clear all notifications?")) {
+                    await fetch("{{ route('notifications.clearAll') }}");
+                    loadNotifications();
+                }
+            });
+
+            // ✅ Handle individual notification click
+            document.querySelectorAll('.notification-item').forEach(item => {
+                item.addEventListener('click', function () {
+                    const id = this.dataset.id;
+                    const link = this.dataset.link;
+                    markNotificationAsRead(id, link);
+                });
+            });
+
+            // ✅ Handle clear button click
+            document.querySelectorAll('.clear-btn').forEach(btn => {
+                btn.addEventListener('click', async function (e) {
+                    e.stopPropagation();
+                    const id = this.dataset.id;
+                    await clearNotification(id);
+                });
+            });
+
+            if (showDropdown) {
+                dropdown.style.display = 'block';
+            }
+
+        } catch (error) {
+            console.error("Error fetching notifications:", error);
+        }
+    }
+
+    // ✅ Mark single notification as read
+    async function markNotificationAsRead(id, link) {
+        try {
+            await fetch(`/notifications/read/${id}`);
+            if (link) {
+                window.location.href = link;
+            } else {
+                loadNotifications();
+            }
+        } catch (error) {
+            console.error("Error marking notification as read:", error);
+        }
+    }
+
+    // ✅ Clear (delete) single notification
+    async function clearNotification(id) {
+        try {
+            await fetch(`/notifications/clear/${id}`);
+            loadNotifications();
+        } catch (error) {
+            console.error("Error clearing notification:", error);
+        }
+    }
+
+    // 🔔 Toggle dropdown on click
+    bellIcon.addEventListener('click', async function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        const isOpen = dropdown.style.display === 'block';
+        dropdown.style.display = isOpen ? 'none' : 'block';
+        if (!isOpen) {
+            await loadNotifications(true);
+        }
+    });
+
+    // 🕒 Auto-refresh every 30 seconds
+    autoRefreshInterval = setInterval(() => loadNotifications(), 30000);
+
+    // Close dropdown when clicking outside
+    document.addEventListener('click', function () {
+        dropdown.style.display = 'none';
+    });
+});
+</script>
+
+
     
     <!-- Global footer included for all pages extending this layout -->
     @include('user_view.footer')

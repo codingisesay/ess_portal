@@ -7,20 +7,23 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
+/**
+ * 🔔 SystemNotification
+ * ------------------------------------------------
+ * Handles all system-wide notifications such as
+ * approval, rejection, leave updates, etc.
+ */
 class SystemNotification extends Notification implements ShouldQueue
 {
     use Queueable;
 
-    protected $title;
-    protected $message;
-    protected $link;
-    protected $type; // e.g., approval, leave, revert
+    public $title;
+    public $message;
+    public $link;
+    public $type;
 
     /**
-     * @param string $title - Title of the notification
-     * @param string $message - Message shown to user
-     * @param string|null $link - Optional link for action
-     * @param string|null $type - Type of notification (approve/reject/leave)
+     * Create a new notification instance.
      */
     public function __construct($title, $message, $link = null, $type = null)
     {
@@ -31,37 +34,36 @@ class SystemNotification extends Notification implements ShouldQueue
     }
 
     /**
-     * Channels used
+     * Get the notification's delivery channels.
+     * You can add 'mail' if you also want emails.
      */
     public function via($notifiable)
     {
-        return ['database', 'mail']; // can add 'broadcast' later
+        return ['database'];
     }
 
     /**
-     * Database structure
+     * Store data in the notifications table
      */
-    public function toDatabase($notifiable)
+    public function toArray($notifiable)
     {
         return [
-            'title' => $this->title,
+            'title'   => $this->title,
             'message' => $this->message,
-            'link' => $this->link,
-            'type' => $this->type,
-            'sent_by' => auth()->user()->name ?? 'System',
+            'link'    => $this->link,
+            'type'    => $this->type,
         ];
     }
 
     /**
-     * Mail structure
+     * (Optional) Define how it looks in email.
      */
     public function toMail($notifiable)
     {
         return (new MailMessage)
             ->subject($this->title)
-            ->greeting('Hello ' . $notifiable->name . '!')
             ->line($this->message)
             ->action('View Details', $this->link ?? url('/'))
-            ->line('Thank you for using the Employee Self Service System.');
+            ->line('Thank you for using our system!');
     }
 }

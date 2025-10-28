@@ -434,6 +434,25 @@ Route::get('/notifications', [NotificationController::class, 'index'])
 Route::get('/notifications/read-all', [NotificationController::class, 'markAllAsRead'])
     ->name('notifications.readAll');
 
+    // ✅ Fetch latest notifications (AJAX call)
+Route::get('/notifications/fetch', [App\Http\Controllers\NotificationController::class, 'fetchNotifications'])
+    ->name('notifications.fetch');
+
+    // ✅ Mark all notifications as read
+Route::get('/notifications/read-all', [App\Http\Controllers\NotificationController::class, 'markAllAsRead'])
+    ->name('notifications.readAll');
+
+    // ✅ Clear a single notification
+Route::get('/notifications/clear/{id}', [App\Http\Controllers\NotificationController::class, 'clearNotification'])
+    ->name('notifications.clear');
+
+// ✅ Clear all notifications
+Route::get('/notifications/clear-all', [App\Http\Controllers\NotificationController::class, 'clearAllNotifications'])
+    ->name('notifications.clearAll');
+
+
+
+
 
 });
 

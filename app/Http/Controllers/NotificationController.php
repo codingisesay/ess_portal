@@ -50,4 +50,70 @@ class NotificationController extends Controller
         auth()->user()->unreadNotifications->markAsRead();
         return redirect()->back()->with('success', 'All notifications marked as read.');
     }
+
+/**
+ * ✅ Fetch latest notifications via AJAX
+ * Returns a JSON response for dynamic header updates
+ */
+public function fetchNotifications()
+{
+    $user = auth()->user();
+
+    // Fetch 10 latest notifications (unread first)
+    $notifications = $user->notifications()
+        ->latest()
+        ->take(10)
+        ->get()
+        ->map(function ($notification) {
+            return [
+                'id'         => $notification->id,
+                'title'      => $notification->data['title'] ?? 'Notification',
+                'message'    => $notification->data['message'] ?? '',
+                'link'       => $notification->data['link'] ?? null,
+                'type'       => $notification->data['type'] ?? null,
+                'read_at'    => $notification->read_at,
+                'created_at' => $notification->created_at->diffForHumans(),
+            ];
+        });
+
+    // Return as JSON for frontend
+    return response()->json([
+        'success' => true,
+        'notifications' => $notifications,
+        'unread_count' => $user->unreadNotifications->count(),
+    ]);
+}
+
+
+/**
+ * ✅ Clear (delete) a single notification
+ */
+public function clearNotification($id)
+{
+    $user = auth()->user();
+
+    // Find the notification belonging to the logged-in user
+    $notification = $user->notifications()->find($id);
+
+    if ($notification) {
+        $notification->delete();
+        return response()->json(['success' => true, 'message' => 'Notification cleared.']);
+    }
+
+    return response()->json(['success' => false, 'message' => 'Notification not found.'], 404);
+}
+
+/**
+ * ✅ Clear all notifications for the logged-in user
+ */
+public function clearAllNotifications()
+{
+    $user = auth()->user();
+
+    $user->notifications()->delete();
+
+    return response()->json(['success' => true, 'message' => 'All notifications cleared.']);
+}
+
+
 }
