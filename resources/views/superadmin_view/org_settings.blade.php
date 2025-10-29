@@ -122,6 +122,8 @@ $formattedOrgSettings = $orgSettings->map(function ($item) {
     // Add formatted status
     $item->status = $item->is_active == 1 ? 'Active' : 'Inactive';
     // Format year as financial year (e.g., 2023-24)
+    // Converts a base year (e.g., 2023) to financial year format (e.g., 2023-24)
+    // by appending a hyphen and the last two digits of the next year
     $item->financial_year = $item->year . '-' . substr(($item->year + 1), -2);
     return $item;
 });
@@ -230,48 +232,65 @@ function calculateDates() {
     if (cycleType === "monthly") {
         const monthIndex = parseInt(cyclePeriod.replace("M", "")) - 1; // 0 = Jan ... 11 = Dec
         let actualYear = (monthIndex >= 3) ? fyStartYear : fyEndYear; // Apr-Dec in start year, Jan-Mar in next year
+        
+        // Set start date to 1st of the month
         startDate = new Date(actualYear, monthIndex, 1);
-        endDate = new Date(actualYear, monthIndex + 1, 0); // last day of that month (handles Feb 28/29 automatically)
+        
+        // Set end date to last day of the month
+        endDate = new Date(actualYear, monthIndex + 1, 0);
     }
 
     // ========== Quarterly ==========
     else if (cycleType === "quarterly") {
         if (cyclePeriod === "Q1") {
-            startDate = new Date(fyStartYear, 3, 1);  // Apr 1
-            endDate   = new Date(fyStartYear, 6, 0);  // Jun 30
+            startDate = new Date(fyStartYear, 3, 1);   // Apr 1
+            endDate = new Date(fyStartYear, 5, 30);    // Jun 30
         } else if (cyclePeriod === "Q2") {
-            startDate = new Date(fyStartYear, 6, 1);  // Jul 1
-            endDate   = new Date(fyStartYear, 9, 0);  // Sep 30
+            startDate = new Date(fyStartYear, 6, 1);   // Jul 1
+            endDate = new Date(fyStartYear, 8, 30);    // Sep 30
         } else if (cyclePeriod === "Q3") {
-            startDate = new Date(fyStartYear, 9, 1);  // Oct 1
-            endDate   = new Date(fyStartYear, 12, 0); // Dec 31
+            startDate = new Date(fyStartYear, 9, 1);   // Oct 1
+            endDate = new Date(fyStartYear, 11, 31);   // Dec 31
         } else if (cyclePeriod === "Q4") {
-            startDate = new Date(fyEndYear, 0, 1);    // Jan 1
-            endDate   = new Date(fyEndYear, 3, 0);    // Mar 31
+            startDate = new Date(fyEndYear, 0, 1);     // Jan 1
+            endDate = new Date(fyEndYear, 2, 31);      // Mar 31
         }
     }
 
     // ========== Half-Yearly ==========
     else if (cycleType === "half-yearly") {
         if (cyclePeriod === "H1") {
-            startDate = new Date(fyStartYear, 3, 1);  // Apr 1
-            endDate   = new Date(fyStartYear, 9, 0);  // Sep 30
+            startDate = new Date(fyStartYear, 3, 1);   // Apr 1
+            endDate = new Date(fyStartYear, 8, 30);    // Sep 30
         } else if (cyclePeriod === "H2") {
-            startDate = new Date(fyStartYear, 9, 1);  // Oct 1
-            endDate   = new Date(fyEndYear, 3, 0);    // Mar 31
+            startDate = new Date(fyStartYear, 9, 1);   // Oct 1
+            endDate = new Date(fyEndYear, 2, 31);      // Mar 31
         }
     }
 
     // ========== Yearly ==========
     else if (cycleType === "yearly") {
-        startDate = new Date(fyStartYear, 3, 1);  // Apr 1
-        endDate   = new Date(fyEndYear, 3, 0);    // Mar 31
+        startDate = new Date(fyStartYear, 3, 1);   // Apr 1
+        endDate = new Date(fyEndYear, 2, 31);      // Mar 31
     }
 
-    // Fill input fields
+    // Format dates to YYYY-MM-DD for input fields
+    function formatDate(date) {
+        const d = new Date(date);
+        let month = '' + (d.getMonth() + 1);
+        let day = '' + d.getDate();
+        const year = d.getFullYear();
+
+        if (month.length < 2) month = '0' + month;
+        if (day.length < 2) day = '0' + day;
+
+        return [year, month, day].join('-');
+    }
+
+    // Fill input fields with properly formatted dates
     if (startDate && endDate) {
-        startInput.value = startDate.toISOString().split('T')[0];
-        endInput.value   = endDate.toISOString().split('T')[0];
+        startInput.value = formatDate(startDate);
+        endInput.value = formatDate(endDate);
     }
 }
 
