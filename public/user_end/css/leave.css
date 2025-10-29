@@ -5,7 +5,22 @@ body {
     color: #333;
     font-family: poppins;
     width: 100%;
-    padding: 5px;
+    min-height: 100vh;
+    position: relative;
+    padding: 5px 5px 70px 5px; /* Added bottom padding for footer */
+}
+
+/* Fixed Footer Styles */
+.fixed-footer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background-color: #fff;
+    padding: 8px 0;
+    z-index: 1000;
+    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+    border-top: 1px solid #e0e0e0;
 }
 
 
