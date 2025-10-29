@@ -119,6 +119,10 @@ $formattedOrgSettings = $orgSettings->map(function ($item) {
                                   : null;
     // Add formatted status
     $item->status = $item->is_active == 1 ? 'Active' : 'Inactive';
+    // Format year as financial year (e.g., 2023-24)
+    // Converts a base year (e.g., 2023) to financial year format (e.g., 2023-24)
+    // by appending a hyphen and the last two digits of the next year
+    $item->financial_year = $item->year . '-' . substr(($item->year + 1), -2);
     return $item;
 });
 @endphp
@@ -129,7 +133,7 @@ $formattedOrgSettings = $orgSettings->map(function ($item) {
         'columns' => [
             ['header' => 'ID', 'accessor' => 'id'],
             ['header' => 'Name', 'accessor' => 'name'],
-            ['header' => 'Year', 'accessor' => 'year'],
+            ['header' => 'Year', 'accessor' => 'financial_year'],
             ['header' => 'Cycle Type', 'accessor' => 'cycle_type'],
             ['header' => 'Cycle Period', 'accessor' => 'cycle_period'],
             ['header' => 'Start Date', 'accessor' => 'start_date'],
