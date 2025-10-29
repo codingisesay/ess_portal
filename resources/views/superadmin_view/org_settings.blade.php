@@ -117,11 +117,11 @@ $formattedOrgSettings = $orgSettings->map(function ($item) {
     $item->process_end_date    = $item->process_end_date 
                                   ? \Carbon\Carbon::parse($item->process_end_date)->format('d/m/Y') 
                                   : null;
+    // Format cycle type to have first letter capitalized
+    $item->cycle_type = ucfirst($item->cycle_type);
     // Add formatted status
     $item->status = $item->is_active == 1 ? 'Active' : 'Inactive';
     // Format year as financial year (e.g., 2023-24)
-    // Converts a base year (e.g., 2023) to financial year format (e.g., 2023-24)
-    // by appending a hyphen and the last two digits of the next year
     $item->financial_year = $item->year . '-' . substr(($item->year + 1), -2);
     return $item;
 });
