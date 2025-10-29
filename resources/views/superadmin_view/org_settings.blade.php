@@ -117,6 +117,8 @@ $formattedOrgSettings = $orgSettings->map(function ($item) {
     $item->process_end_date    = $item->process_end_date 
                                   ? \Carbon\Carbon::parse($item->process_end_date)->format('d/m/Y') 
                                   : null;
+    // Add formatted status
+    $item->status = $item->is_active == 1 ? 'Active' : 'Inactive';
     return $item;
 });
 @endphp
@@ -134,7 +136,7 @@ $formattedOrgSettings = $orgSettings->map(function ($item) {
             ['header' => 'End Date', 'accessor' => 'end_date'],
             ['header' => 'Process Start Date', 'accessor' => 'process_start_date'],
             ['header' => 'Process End Date', 'accessor' => 'process_end_date'],
-            ['header' => 'Active', 'accessor' => 'is_active'],
+            ['header' => 'Status', 'accessor' => 'status'],
         ],
         'editModalId' => 'editOrgSettingsModal',
         'hasActions' => true,
