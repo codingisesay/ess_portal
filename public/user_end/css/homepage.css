@@ -12,10 +12,31 @@
 body {
     background-color: #f6f6f6;
     color: #333 !important;
+    padding-bottom: 70px; /* Add padding to prevent content from being hidden behind the fixed footer */
+    min-height: 100vh;
+    position: relative;
 }
 
 strong {
     font-weight: 600;
+}
+
+/* Fixed Footer Styles */
+.fixed-footer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background-color: #fff;
+    padding: 8px 0;  /* Reduced from 12px to 8px */
+    z-index: 1000;
+    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+    border-top: 1px solid #e0e0e0;
+}
+
+/* Ensure content doesn't hide behind the fixed footer */
+.main-content {
+    padding-bottom: 60px;
 }
 
 /* ===========================
