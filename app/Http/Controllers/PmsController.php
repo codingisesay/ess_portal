@@ -75,18 +75,35 @@ public function orgSettingsStore(Request $request) {
 
         $request->validate([
             'name' => 'sometimes|string|max:100',
+            'year' => 'sometimes|string|max:10',
+            'cycle_type' => 'sometimes|string|in:monthly,quarterly,half-yearly,yearly',
+            'cycle_period' => 'sometimes|string',
             'start_date' => 'sometimes|date',
             'end_date' => 'sometimes|date|after_or_equal:start_date',
+            'process_start_date' => 'sometimes|date',
+            'process_end_date' => 'sometimes|date|after_or_equal:process_start_date',
+            'is_active' => 'sometimes|boolean',
         ]);
 
-        $setting->update([
-            'name'       => $request->name ?? $setting->name,
+        $data = [
+            'name' => $request->name ?? $setting->name,
+            'year' => $request->year ?? $setting->year,
+            'cycle_type' => $request->cycle_type ?? $setting->cycle_type,
+            'cycle_period' => $request->cycle_period ?? $setting->cycle_period,
             'start_date' => $request->start_date ?? $setting->start_date,
-            'end_date'   => $request->end_date ?? $setting->end_date,
-            'created_by' => $user->id,
-        ]);
+            'end_date' => $request->end_date ?? $setting->end_date,
+            'process_start_date' => $request->process_start_date ?? $setting->process_start_date,
+            'process_end_date' => $request->process_end_date ?? $setting->process_end_date,
+            'is_active' => $request->has('is_active') ? $request->is_active : $setting->is_active,
+            'updated_by' => $user->id,
+        ];
 
-        return response()->json($setting);
+        $setting->update($data);
+
+        return response()->json([
+            'message' => 'Organization setting updated successfully',
+            'data' => $setting->fresh()
+        ]);
     }
 
     public function orgSettingsShow($id) {

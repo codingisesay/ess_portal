@@ -211,14 +211,14 @@
                 </div>
             </form>
         </div>
-        <div class="card-body">
+        <div class="card-body w-100 p-0 pt-3">
     @csrf
-     <form id="bundleForm" method="POST" action="{{ route('goal-bundles.submit') }}">
+     <form id="bundleForm" method="POST" action="{{ route('goal-bundles.submit') }}" class="w-100">
     {{-- Always send bundle_id once (if exists) --}}
     <input type="hidden" name="bundle_id" value="{{ $submittedGoals[0]->bundle_id ?? '' }}">
 
-   <div class="table-fixed-header">
-   <table class="table table-bordered table-striped m-0">
+   <div class="table-fixed-header w-100" style="padding-right: 0 !important;">
+   <table class="table table-bordered table-striped m-0 w-100" style="margin-right: 0 !important; padding-right: 0 !important;">
     <colgroup>
         <col style="width:40%">
         <col style="width:15%">
@@ -234,8 +234,8 @@
     </thead>
    </table>
    </div>
-   <div class="table-scroll-container add-goals-scroll">
-   <table class="table table-bordered table-striped m-0" id="bundleTable">
+   <div class="table-scroll-container add-goals-scroll w-100" style="padding-right: 0 !important;">
+   <table class="table table-bordered table-striped m-0 w-100" id="bundleTable" style="margin-right: 0 !important; padding-right: 0 !important;">
     <colgroup>
         <col style="width:40%">
         <col style="width:15%">
@@ -861,7 +861,7 @@
 </script>
 
 <!-- ========== ORG CHART SECTION ========== -->
- <div class="container mt-4">
+ <div class="container" style="margin-top: 0.5rem !important;">
 <!-- 
     <div class="row">
         ========== ORG CHART SECTION (LEFT) ==========

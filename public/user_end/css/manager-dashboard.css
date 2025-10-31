@@ -1,3 +1,31 @@
+/* Modal styles */
+.modal {
+    z-index: 9999 !important;
+    background-color: transparent !important;
+}
+
+.modal-dialog {
+    z-index: 10000 !important;
+    margin: 1.75rem auto;
+}
+
+.modal-backdrop {
+    z-index: 9998 !important;
+    background-color: rgba(0, 0, 0, 0.5) !important;
+}
+
+/* Ensure header is below modal but above other content */
+header {
+    position: relative;
+    z-index: 9000 !important;
+}
+
+/* When modal is shown */
+.modal.show ~ header {
+    filter: brightness(0.8);
+    transition: filter 0.15s linear;
+}
+
 /* Manager Dashboard layout and panels */
 :root{
     --sidebar-w: 20%;
@@ -6,6 +34,12 @@
     --accent: #0d6efd;
 }
 html,body{height:100%;margin:0;font-family:Arial, Helvetica, sans-serif;background:var(--bg);color:#222}
+
+/* Custom margin utility */
+.mt-4 {
+    margin-top: 0.5rem !important;
+}
+
 .pms-page {
     display: flex;
     gap: var(--gap);
@@ -197,10 +231,12 @@ html,body{height:100%;margin:0;font-family:Arial, Helvetica, sans-serif;backgrou
     padding: 20px;
     box-shadow: 0 2px 6px rgba(16,24,40,0.03);
     margin-right: -40px;
-        height: 594px
-    
+    height: 80vh;
+    overflow-y: auto;
+    overflow-x: hidden;
+    position: relative;
+}    
 
-}
 .pms-panel.visible { display: block; }
 
 /* Sidebar scrollbar styling */

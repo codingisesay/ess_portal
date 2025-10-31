@@ -280,10 +280,8 @@ margin-bottom: -14px;
 /* Fixed header for scrollable tables */
 .table-fixed-header {
     position: relative;
-    margin-bottom: 0;
-    border-radius: 6px 6px 0 0;
-    overflow: hidden;
-    padding-right: 8px; /* compensate for scrollbar width to align columns */
+    border-radius: 6px 0 0 0;
+    padding-right: 0;
 }
 
 /* Align header columns when body scrollbar is hidden */
@@ -438,7 +436,10 @@ ul {
 }
 
 /* ---------- Fixed header table (header outside, body scrolls) ---------- */
-.table-fixed-header { width: 100%; }
+.table-fixed-header { 
+    width: 100%;
+    padding-right: 0;
+}
 .table-fixed-header .table { table-layout: fixed; }
 .table-fixed-header .table thead th,
 .table-fixed-header .table tbody td { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
@@ -563,18 +564,18 @@ td .description {
 
 /* Fixed height for Organization Task Approvals panel */
 #org-task-approvals {
-  height: 550px;
+  height: 80vh;
   overflow-y: auto;
 }
 
 /* Fixed height for Organization Summary and Goals panels */
 #org-summary
 {
-  height: 550px;
+  height: 80vh;
   overflow-y: auto;
 }
 #org-goals {
-  height: 580px;
+  height: 80vh;
   
 }
 

@@ -226,7 +226,7 @@
 
                 <!-- Row 1: Title, Period, Priority -->
                 <div class="row g-3 mb-2">
-                    <div class="col-md-5">
+                    <div class="col-md-4">
                         <label for="title" class="form-label">Title</label>
                         <input type="text" id="title" name="title" class="form-control" placeholder="Goal Title" required>
                     </div>
@@ -234,7 +234,7 @@
                         <label for="org_setting_id" class="form-label">Period</label>
                         <select name="org_setting_id" id="org_setting_id" class="form-control" required></select>
                     </div>
-                    <div class="col-md-3">
+                    <div class="col-md-4">
                         <label for="priority" class="form-label">Priority</label>
                         <select name="priority" id="priority" class="form-control">
                             <option value="Critical" selected>Critical</option>
@@ -261,16 +261,16 @@
                         min="{{ $activeCycle->start_date ?? '' }}" 
                         max="{{ $activeCycle->end_date ?? '' }}">
                     </div>
-                    <div class="col-md-6">
-                        <div class="row g-2 align-items-end">
-                          <div class="col-md-9">
-                            <label for="description" class="form-label">Description</label>
-                            <textarea id="description" name="description" class="form-control" placeholder="Description"></textarea>
-                          </div>
-                          <div class="col-md-3 d-flex justify-content-end">
-                            <button type="submit" class="btn btn-success" style="margin-top: 31px;">Save</button>
-                          </div>
-                        </div>
+                </div>
+
+                <!-- Row 3: Description and Save Button -->
+                <div class="row g-3 mb-2">
+                    <div class="col-md-9">
+                        <label for="description" class="form-label">Description</label>
+                        <textarea id="description" name="description" class="form-control" placeholder="Description"></textarea>
+                    </div>
+                    <div class="col-md-3 d-flex align-items-end">
+                        <button type="submit" class="btn btn-success w-100">Save</button>
                     </div>
                 </div>
 
