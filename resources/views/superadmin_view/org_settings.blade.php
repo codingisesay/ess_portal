@@ -17,84 +17,68 @@
        <form action="{{ url('/org-settings') }}" method="POST">
             @csrf
             <div class="form-container row">
-
-            
-                <div class="col-3 mb-2">
-                    <div class="form-group">
-                        <input type="text" name="name" class="form-control" 
-                            value="{{ old('name', $setting->name ?? '') }}" required>
-                        <label for="name">Organization Name</label>
-                    </div>
+                <div class="col-3 mb-3">
+                    <label for="name" class="form-label fw-bold mb-1">Organization Name</label>
+                    <input type="text" name="name" id="name" class="form-control" 
+                        value="{{ old('name', $setting->name ?? '') }}" required
+                        placeholder="Enter organization name">
                 </div>
+
                 {{-- Financial Year --}}
-                <div class="col-3 mb-2">
-                    <div class="form-group">
-                        <select name="year" id="year" class="form-control" required>
-                            @php
-                                $currentYear = date('Y');
-                                for ($i = $currentYear - 2; $i <= $currentYear + 5; $i++) {
-                                    echo "<option value='$i' " . ($i == $currentYear ? "selected" : "") . ">$i - ".($i+1)."</option>";
-                                }
-                            @endphp
-                        </select>
-                        <label for="year">Financial Year</label>
-                    </div>
+                <div class="col-3 mb-3">
+                    <label for="year" class="form-label fw-bold mb-1">Financial Year</label>
+                    <select name="year" id="year" class="form-select" required>
+                        @php
+                            $currentYear = date('Y');
+                            for ($i = $currentYear - 2; $i <= $currentYear + 5; $i++) {
+                                echo "<option value='$i' " . ($i == $currentYear ? "selected" : "") . ">$i - ".($i+1)."</option>";
+                            }
+                        @endphp
+                    </select>
                 </div>
 
                 {{-- Cycle Type --}}
-                <div class="col-3 mb-2">
-                    <div class="form-group">
-                        <select name="cycle_type" id="cycle_type" class="form-control" required>
-                            <option value="">Select Cycle Type</option>
-                            <option value="monthly">Monthly</option>
-                            <option value="quarterly">Quarterly</option>
-                            <option value="half-yearly">Half Yearly</option>
-                            <option value="yearly">Yearly</option>
-                        </select>
-                        <label for="cycle_type">Cycle Type</label>
-                    </div>
+                <div class="col-3 mb-3">
+                    <label for="cycle_type" class="form-label fw-bold mb-1">Cycle Type</label>
+                    <select name="cycle_type" id="cycle_type" class="form-select" required>
+                        <option value="">Select Cycle Type</option>
+                        <option value="monthly">Monthly</option>
+                        <option value="quarterly">Quarterly</option>
+                        <option value="half-yearly">Half Yearly</option>
+                        <option value="yearly">Yearly</option>
+                    </select>
                 </div>
 
-                {{-- Dynamic Cycle Dropdown (changes based on type) --}}
-                <div class="col-3 mb-2" id="cycleWrapper" style="display:none;">
-                    <div class="form-group">
-                        <select name="cycle_period" id="cycle_period" class="form-control" required>
-                            <option value="">Select Period</option>
-                        </select>
-                        <label for="cycle_period">Cycle Period</label>
-                    </div>
+                {{-- Dynamic Cycle Dropdown --}}
+                <div class="col-3 mb-3" id="cycleWrapper" style="display:none;">
+                    <label for="cycle_period" class="form-label fw-bold mb-1">Cycle Period</label>
+                    <select name="cycle_period" id="cycle_period" class="form-select" required>
+                        <option value="">Select Period</option>
+                    </select>
                 </div>
 
                 {{-- Start Date --}}
-                <div class="col-3 mb-2">
-                    <div class="form-group">
-                        <input type="date" name="start_date" id="start_date" class="form-control" required>
-                        <label for="start_date">Start Date</label>
-                    </div>
+                <div class="col-3 mb-3">
+                    <label for="start_date" class="form-label fw-bold mb-1">Start Date</label>
+                    <input type="date" name="start_date" id="start_date" class="form-control" required>
                 </div>
 
                 {{-- End Date --}}
-                <div class="col-3 mb-2">
-                    <div class="form-group">
-                        <input type="date" name="end_date" id="end_date" class="form-control" required>
-                        <label for="end_date">End Date</label>
-                    </div>
+                <div class="col-3 mb-3">
+                    <label for="end_date" class="form-label fw-bold mb-1">End Date</label>
+                    <input type="date" name="end_date" id="end_date" class="form-control" required>
                 </div>
 
-                 {{-- Process Start Date --}}
-                <div class="col-3 mb-2">
-                    <div class="form-group">
-                        <input type="date" name="process_start_date" id="process_start_date" class="form-control" required>
-                        <label for="process_start_date">Process Start Date</label>
-                    </div>
+                {{-- Process Start Date --}}
+                <div class="col-3 mb-3">
+                    <label for="process_start_date" class="form-label fw-bold mb-1">Process Start Date</label>
+                    <input type="date" name="process_start_date" id="process_start_date" class="form-control" required>
                 </div>
 
                 {{-- Process End Date --}}
-                <div class="col-3 mb-2">
-                    <div class="form-group">
-                        <input type="date" name="process_end_date" id="process_end_date" class="form-control" required>
-                        <label for="process_end_date">Process End Date</label>
-                    </div>
+                <div class="col-3 mb-3">
+                    <label for="process_end_date" class="form-label fw-bold mb-1">Process End Date</label>
+                    <input type="date" name="process_end_date" id="process_end_date" class="form-control" required>
                 </div>
 
 
