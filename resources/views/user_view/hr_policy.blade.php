@@ -87,19 +87,7 @@ error_reporting(0);
                            <div class="policy-card" data-policy-id="{{ $policy->id }}" data-category-id="{{ $categoryId }}">
                                <div class="policy-folder">
                                    <div class="folder-header">
-                                       <div class="subpolicy-dropdown">
-                                           <button class="dropdown-toggle" type="button" data-category="{{ $categoryId }}">
-                                               <span class="dropdown-text">{{ $policy->policy_title }}</span>
-                                               <i class="fas fa-chevron-down dropdown-icon"></i>
-                                           </button>
-                                           <div class="dropdown-menu" data-category="{{ $categoryId }}">
-                                               @foreach($categoryPolicies as $subPolicy)
-                                                   <div class="dropdown-item" data-policy-id="{{ $subPolicy->id }}" data-category-id="{{ $categoryId }}">
-                                                       {{ $subPolicy->policy_title }}
-                                                   </div>
-                                               @endforeach
-                                           </div>
-                                       </div>
+                                       <h2 class="policy-title">{{ $policy->policy_title }}</h2>
                                        <a href="{{ Storage::url($policy->docLink) }}" class="download-btn" download>
                                            <img src="{{ asset('user_end/images/download 1.png') }}" alt="Download Icon"> Download
                                        </a>
@@ -205,14 +193,26 @@ error_reporting(0);
                 btn.classList.remove('active');
             });
 
+            // Remove active class from all dropdown options
+            const allOptions = document.querySelectorAll('.dropdown-option');
+            allOptions.forEach(opt => opt.classList.remove('active'));
+
             // Toggle current dropdown
             const button = event.target.closest('.sidebar-button');
             if (dropdown.style.display === 'none' || !dropdown.style.display) {
                 dropdown.style.display = 'flex';
                 button.classList.add('active');
                 
-                // Show category content
+                // Show category content (which will hide all cards by default)
                 showCategoryContent(categoryId);
+                
+                // Show first sub-policy by default
+                const firstOption = dropdown.querySelector('.dropdown-option');
+                if (firstOption) {
+                    const firstPolicyId = firstOption.getAttribute('data-policy-id');
+                    firstOption.classList.add('active');
+                    showPolicyCard(firstPolicyId, categoryId);
+                }
             } else {
                 dropdown.style.display = 'none';
                 button.classList.remove('active');
@@ -237,6 +237,11 @@ error_reporting(0);
                 if (area.getAttribute('data-category') === String(categoryId)) {
                     area.style.display = 'block';
                     area.classList.add('active');
+                    // Hide all policy cards by default - they will be shown when clicking dropdown options
+                    const cards = area.querySelectorAll('.policy-card');
+                    cards.forEach(card => {
+                        card.classList.add('policy-card-hidden');
+                    });
                 } else {
                     area.style.display = 'none';
                     area.classList.remove('active');
@@ -359,80 +364,6 @@ error_reporting(0);
                 });
             }
 
-            // Initialize dropdown functionality for policy cards
-            const initializeDropdowns = () => {
-                document.querySelectorAll('.dropdown-toggle').forEach(toggle => {
-                    if (toggle.closest('.policy-card')) {
-                        toggle.addEventListener('click', (e) => {
-                            e.stopPropagation();
-                            const categoryId = toggle.getAttribute('data-category');
-                            const dropdownMenu = toggle.nextElementSibling;
-                            
-                            if (toggle.closest('.policy-card-hidden')) {
-                                return;
-                            }
-                            
-                            document.querySelectorAll(`.dropdown-menu[data-category="${categoryId}"]`).forEach(menu => {
-                                if (menu !== dropdownMenu) {
-                                    menu.classList.remove('show');
-                                }
-                            });
-                            
-                            document.querySelectorAll(`.dropdown-toggle[data-category="${categoryId}"]`).forEach(t => {
-                                if (t !== toggle) {
-                                    t.classList.remove('active');
-                                }
-                            });
-                            
-                            dropdownMenu.classList.toggle('show');
-                            toggle.classList.toggle('active');
-                        });
-                    }
-                });
-
-                document.querySelectorAll('.dropdown-item').forEach(item => {
-                    if (item.closest('.policy-card')) {
-                        item.addEventListener('click', (e) => {
-                            e.stopPropagation();
-                            const categoryId = item.getAttribute('data-category-id');
-                            const policyId = item.getAttribute('data-policy-id');
-                            
-                            const categoryDropdowns = document.querySelectorAll(`.dropdown-menu[data-category="${categoryId}"]`);
-                            const categoryToggles = document.querySelectorAll(`.dropdown-toggle[data-category="${categoryId}"]`);
-                            
-                            categoryDropdowns.forEach(dropdownMenu => {
-                                dropdownMenu.querySelectorAll('.dropdown-item').forEach(i => i.classList.remove('active'));
-                                item.classList.add('active');
-                                dropdownMenu.classList.remove('show');
-                            });
-                            
-                            categoryToggles.forEach(dropdownToggle => {
-                                const dropdownText = dropdownToggle.querySelector('.dropdown-text');
-                                dropdownText.textContent = item.textContent;
-                                dropdownToggle.classList.remove('active');
-                            });
-                            
-                            showPolicyCard(policyId, categoryId);
-                            
-                            setTimeout(() => {
-                                initializeDropdowns();
-                            }, 100);
-                        });
-                    }
-                });
-            };
-
-            // Close dropdowns when clicking outside
-            document.addEventListener('click', (e) => {
-                if (!e.target.closest('.dropdown-toggle') && !e.target.closest('.dropdown-menu')) {
-                    document.querySelectorAll('.dropdown-menu').forEach(menu => {
-                        menu.classList.remove('show');
-                    });
-                    document.querySelectorAll('.dropdown-toggle').forEach(toggle => {
-                        toggle.classList.remove('active');
-                    });
-                }
-            });
 
             // Activate the first category by default
             const firstCategoryButton = document.querySelector('.sidebar-button');
@@ -452,9 +383,6 @@ error_reporting(0);
                     showPolicyCard(firstPolicyId, firstCategoryId);
                 }
             }
-
-            // Initialize policy card dropdowns
-            initializeDropdowns();
         });
     </script>
     <style>

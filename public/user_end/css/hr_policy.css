@@ -200,45 +200,66 @@
      border-radius: 0px 25px 25px 25px;
  }
 
- .sidebar-button {
-     display: flex;
-     align-items: center;
-     gap: 10px;
-     border-radius: 30px;
-     background-color: var(--background-color);
-     color: black;
-     text-decoration: none;
-     transition: all 0.3s ease;
-     box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
-     border: none;
-     cursor: pointer;
-     padding: 10px 15px;
-     width: 98%;
-     text-align: left;
- }
+.sidebar-button {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    border-radius: 30px;
+    background-color: #ffffff !important;
+    color: black;
+    text-decoration: none;
+    transition: background-color 0.3s ease, color 0.3s ease;
+    box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
+    border: none;
+    cursor: pointer;
+    padding: 10px 15px;
+    width: 98%;
+    text-align: left;
+    box-sizing: border-box;
+}
 
- .sidebar-button:hover,
- .sidebar-button.active,
- .dropdown-section:has(.dropdown-option.active) .sidebar-button {
-     background-color: var(--primary-color);
-     color: white;
-     font-weight: 700;
-     box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
- }
+.sidebar-button:hover {
+    background-color: var(--primary-color) !important;
+    color: white;
+    box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
+    border: none;
+    padding: 10px 15px;
+}
 
- .sidebar-button.active .sidebar-icon img,
- .sidebar-button:hover .sidebar-icon img,
- .dropdown-section:has(.dropdown-option:hover) .sidebar-button .sidebar-icon img,
- .dropdown-section:has(.dropdown-option.active) .sidebar-button .sidebar-icon img {
-     filter: invert(1);
- }
+.sidebar-button:hover .sidebar-button-text {
+    color: white;
+}
 
- .sidebar-button.active .sidebar-icon,
- .sidebar-button:hover .sidebar-icon,
- .dropdown-section:has(.dropdown-option:hover) .sidebar-button .sidebar-icon,
- .dropdown-section:has(.dropdown-option.active) .sidebar-button .sidebar-icon {
-     background-color: var(--sidbar-name-hover) !important;
- }
+.sidebar-button.active,
+.dropdown-section:has(.dropdown-option.active) .sidebar-button {
+    background-color: var(--primary-color) !important;
+    color: white;
+    box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
+    border: none;
+    padding: 10px 15px;
+}
+
+.sidebar-button.active .sidebar-button-text,
+.dropdown-section:has(.dropdown-option.active) .sidebar-button .sidebar-button-text {
+    color: white;
+}
+
+.sidebar-button.active .sidebar-icon img,
+.dropdown-section:has(.dropdown-option:hover) .sidebar-button .sidebar-icon img,
+.dropdown-section:has(.dropdown-option.active) .sidebar-button .sidebar-icon img {
+    filter: none;
+}
+
+.sidebar-button:hover .sidebar-icon img {
+    filter: invert(1);
+}
+
+.sidebar-button.active .sidebar-icon,
+.sidebar-button:hover .sidebar-icon,
+.dropdown-section:has(.dropdown-option:hover) .sidebar-button .sidebar-icon,
+.dropdown-section:has(.dropdown-option.active) .sidebar-button .sidebar-icon {
+    background-color: var(--primary-color) !important;
+}
 
  .sidebar-icon {
      width: 50px;
@@ -270,6 +291,8 @@
      flex-direction: column;
      width: 100%;
      align-items: flex-start;
+     border-radius: 30px;
+     overflow: hidden;
  }
 
  .dropdown-toggle {
@@ -292,31 +315,37 @@
      margin-top: 4px;
  }
 
- .dropdown-option {
-     padding: 8px 15px 8px 33px;
-     font-size: 14px;
-     margin-left: 0;
-     text-decoration: none;
-     color: black;
-     background-color: #f9f9f9;
-     border-radius: 30px;
-     width: 100%;
-     margin-top: 4px;
-     transition: all 0.3s ease;
-     box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
-     cursor: pointer;
-     box-sizing: border-box;
- }
+.dropdown-option {
+    padding: 8px 15px 8px 33px;
+    font-size: 14px;
+    margin-left: 0;
+    text-decoration: none;
+    color: black;
+    background-color: white;
+    border-radius: 30px;
+    width: 100%;
+    margin-top: 4px;
+    transition: background-color 0.3s ease, color 0.3s ease;
+    box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+    cursor: pointer;
+    box-sizing: border-box;
+    border: none;
+    line-height: 1.4;
+}
 
- .dropdown-option:hover {
-     background-color: var(--primary-color);
-     color: var(--background-color);
- }
+.dropdown-option:hover {
+    background-color: white;
+    color: var(--primary-color);
+    box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+    padding: 8px 15px 8px 33px;
+    border: none;
+}
 
- .dropdown-option.active {
-     background: var(--primary-color);
-     color: white;
- }
+.dropdown-option.active {
+    background: white;
+    color: var(--primary-color);
+    font-weight: 600;
+}
 
 /* Old sidebar styles removed - replaced with new FingoldZ-FE style sidebar above */
 
@@ -346,6 +375,7 @@
 }
 
 .dropdown-toggle {
+    width: 100%;
     background: transparent;
     border: none;
     padding: 0;
@@ -495,34 +525,32 @@
       padding: 1.25rem 1.5rem;
       background: #ffffff;
       border-radius: 30px 30px 0 0;
-      border: 3px solid #8A3366;
+      border: none;
       transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
       margin-bottom: 0;
       box-sizing: border-box;
       width: 100%;
-      height: var(--panel-header-height);
+      min-height: auto;
       gap: 1rem;
   }
 
   .folder-header:hover {
       background: linear-gradient(135deg, rgba(138, 51, 102, 0.08), rgba(178, 77, 128, 0.08));
-      border-color: #8A3366; /* keep purple border on hover */
-      transform: none; /* remove hover lift */
-      box-shadow: none; /* remove hover shadow */
+      transform: none;
+      box-shadow: none;
   }
 
   .folder-header:focus {
       outline: none; /* remove focus ring */
   }
 
-.folder-title {
-    font-size: 1rem;
-    font-weight: 400;
+.policy-title {
+    font-size: 1.2rem;
+    font-weight: 700;
     color: var(--primary-color);
     margin: 0;
-    display: flex;
-    align-items: center;
-    transition: all 0.3s ease;
+    flex: 1;
+    line-height: 1.4;
 }
 
 .folder-icon {
@@ -537,54 +565,41 @@
 }
 
 .folder-content {
-    display: flex; /* side-by-side layout */
-    flex-direction: row;
+    display: flex;
+    flex-direction: column;
     align-items: flex-start;
     gap: 2rem;
     padding: 1.25rem 1.5rem;
     background: #ffffff;
-    border-radius: 0 0 16px 16px; /* match .folder-header and .policy-card */
-    /* border: 1px solid #e6eaf0; */
-    border-top: none;
-    margin-top: 0; /* avoid overlapping header corners/border */
+    border-radius: 0 0 30px 30px;
+    border: none;
+    margin-top: 0;
     position: relative;
-    overflow-x: hidden; /* prevent horizontal scroll inside open policy */
+    overflow-x: hidden;
 }
 
 .policy-card.folder-open .folder-content {
     display: flex !important;
-    flex-direction: row;
+    flex-direction: column;
     align-items: flex-start;
     gap: 2rem;
     animation: folderExpand 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .folder-content .content-text {
-    flex: 1;
+    width: 100%;
     margin-bottom: 0;
-    padding-right: 1rem;
+    padding-right: 0;
 }
 
 .folder-content .content-image {
-    width: 300px;
-    flex-shrink: 0;
+    width: 100%;
+    max-width: 600px;
     margin-top: 0;
 }
 
 .folder-content::before {
-    content: '';
-    position: absolute;
-    left: -1px;
-    top: 0;
-    bottom: 0;
-    width: 3px;
-    background: linear-gradient(135deg, var(--primary-color), var(--primary-light));
-    border-radius: 2px;
-}
-
-.policy-card.folder-open .folder-content {
-    display: block;
-    animation: folderExpand 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    display: none;
 }
 
 @keyframes folderExpand {
@@ -604,24 +619,27 @@
 
 /* Content layout inside folders */
 .folder-content .content-text {
-    margin-bottom: 2rem;
+    margin-bottom: 0;
+    width: 100%;
 }
 
   .folder-content .content-text p {
       font-size: 1rem;
       color: #4a5568;
       line-height: 1.7;
-      padding: 1rem 1.25rem;
-      background: #ffffff;
-      border-radius: 10px;
-      border-left: 4px solid var(--primary-light);
+      padding: 0;
+      background: transparent;
+      border-radius: 0;
+      border: none;
+      margin: 0;
   }
 
 .folder-content .content-image {
     width: 100%;
+    max-width: 600px;
     border-radius: 12px;
     overflow: hidden;
-    box-shadow: var(--shadow-md);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
     position: relative;
 }
 
