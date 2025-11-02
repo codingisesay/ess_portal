@@ -97,7 +97,7 @@ error_reporting(0);
                                            <p>{{ $policy->policy_content }}</p>
                                        </div>
                                        <div class="content-image">
-                                           <img src="{{ Storage::url($policy->imgLink) }}" alt="Policy Image">
+                                           <img src="{{ asset('user_end/images/polocies-compliance-operation-method-system.jpg') }}" alt="Policy Image">
                                        </div>
                                    </div>
                                </div>
@@ -118,6 +118,7 @@ error_reporting(0);
         function toggleSidebar() {
             sidebarCollapsed = !sidebarCollapsed;
             const sidebarMain = document.getElementById('sidebarMain');
+            const sidebarTop = document.querySelector('.sidebar_top');
             const logoMain = document.getElementById('logoMain');
             const searchBar = document.querySelector('.search-bar');
             const searchInput = document.getElementById('searchInput');
@@ -126,47 +127,163 @@ error_reporting(0);
             const sidebarButtons = document.querySelectorAll('.sidebar-button');
             const buttonTexts = document.querySelectorAll('.sidebar-button-text');
             const dropdownOptions = document.querySelectorAll('.dropdown-options');
+            const sidebarTopLeft = document.querySelector('.sidebar_top_left');
+            const sidebarTopRight = document.querySelector('.sidebar_top_right');
+            const topButtonContainer = document.querySelector('.top_button_container');
+            const sidebarBottom = document.querySelector('.sidebar_bottom');
 
             if (sidebarCollapsed) {
+                // Collapse sidebar to 75px width
                 sidebarMain.style.width = '75px';
-                logoMain.style.width = '50px';
-                logoMain.style.height = '50px';
-                logoMain.style.marginLeft = '15px';
-                logoMain.style.marginRight = '15px';
+                sidebarMain.style.minWidth = '75px';
+                
+                // Hide search bar and logo completely
+                if (logoMain) {
+                    logoMain.style.display = 'none';
+                }
                 if (searchBar) {
                     searchBar.style.display = 'none';
                 }
                 if (searchInput) {
                     searchInput.style.display = 'none';
                 }
+                if (sidebarTopLeft) {
+                    sidebarTopLeft.style.display = 'none';
+                }
+                
+                // Adjust sidebar top to center button only
+                if (sidebarTop) {
+                    sidebarTop.style.justifyContent = 'center';
+                    sidebarTop.style.alignItems = 'center';
+                    sidebarTop.style.padding = '10px 0';
+                }
+                
+                // Center the collapse button
+                if (sidebarTopRight) {
+                    sidebarTopRight.style.width = '100%';
+                    sidebarTopRight.style.display = 'flex';
+                    sidebarTopRight.style.justifyContent = 'center';
+                    sidebarTopRight.style.alignItems = 'center';
+                    sidebarTopRight.style.borderRadius = '30px 30px 0 0';
+                }
+                if (topButtonContainer) {
+                    topButtonContainer.style.padding = '10px';
+                    topButtonContainer.style.margin = '0 auto';
+                }
+                
+                // Rotate collapse icon
                 collapseIcon.style.transform = 'rotate(180deg)';
-                buttonList.style.borderRadius = '0px 0px 25px 25px';
+                
+                // Adjust sidebar bottom for icons only
+                if (sidebarBottom) {
+                    sidebarBottom.style.paddingTop = '5px';
+                }
+                
+                // Adjust button list for icons only
+                if (buttonList) {
+                    buttonList.style.borderRadius = '0px 0px 25px 25px';
+                    buttonList.style.paddingTop = '5px';
+                    buttonList.style.gap = '8px';
+                }
+                
+                // Show only icons, hide text - properly centered
                 sidebarButtons.forEach(btn => {
-                    btn.style.width = '67%';
+                    btn.style.width = '60px';
+                    btn.style.height = '60px';
+                    btn.style.justifyContent = 'center';
+                    btn.style.alignItems = 'center';
+                    btn.style.padding = '0';
+                    btn.style.margin = '0 auto';
                 });
+                
+                // Hide icon backgrounds when collapsed, show just icons
+                document.querySelectorAll('.sidebar-icon').forEach(icon => {
+                    icon.style.margin = '0';
+                    icon.style.width = '50px';
+                    icon.style.height = '50px';
+                });
+                
                 buttonTexts.forEach(text => {
                     text.style.display = 'none';
                 });
+                
+                // Hide all dropdowns
                 dropdownOptions.forEach(dropdown => {
                     dropdown.style.display = 'none';
                 });
             } else {
+                // Expand sidebar back
                 sidebarMain.style.width = '22%';
-                logoMain.style.width = '75%';
-                logoMain.style.height = '70px';
-                logoMain.style.marginLeft = '10px';
-                logoMain.style.marginRight = '10px';
+                sidebarMain.style.minWidth = 'auto';
+                
+                // Restore sidebar top layout
+                if (sidebarTop) {
+                    sidebarTop.style.justifyContent = 'space-between';
+                    sidebarTop.style.alignItems = 'flex-start';
+                    sidebarTop.style.padding = '0';
+                }
+                
+                // Show search bar and logo
+                if (logoMain) {
+                    logoMain.style.display = 'flex';
+                    logoMain.style.width = '75%';
+                    logoMain.style.height = '70px';
+                    logoMain.style.marginLeft = '10px';
+                    logoMain.style.marginRight = '10px';
+                }
                 if (searchBar) {
                     searchBar.style.display = 'flex';
                 }
                 if (searchInput) {
                     searchInput.style.display = 'block';
                 }
+                if (sidebarTopLeft) {
+                    sidebarTopLeft.style.display = 'block';
+                }
+                
+                // Restore top right layout
+                if (sidebarTopRight) {
+                    sidebarTopRight.style.width = '30%';
+                    sidebarTopRight.style.justifyContent = 'flex-end';
+                    sidebarTopRight.style.borderRadius = '45px 45px 45px 0';
+                }
+                if (topButtonContainer) {
+                    topButtonContainer.style.padding = '20px';
+                    topButtonContainer.style.margin = '0';
+                }
+                
+                // Rotate collapse icon back
                 collapseIcon.style.transform = 'rotate(0deg)';
-                buttonList.style.borderRadius = '0px 25px 25px 25px';
+                
+                // Restore sidebar bottom
+                if (sidebarBottom) {
+                    sidebarBottom.style.paddingTop = '0';
+                }
+                
+                // Restore button list
+                if (buttonList) {
+                    buttonList.style.borderRadius = '0px 25px 25px 25px';
+                    buttonList.style.paddingTop = '10px';
+                    buttonList.style.gap = '6px';
+                }
+                
+                // Show text with icons - restore full layout
                 sidebarButtons.forEach(btn => {
                     btn.style.width = '98%';
+                    btn.style.height = 'auto';
+                    btn.style.justifyContent = 'flex-start';
+                    btn.style.alignItems = 'center';
+                    btn.style.padding = '10px 15px';
+                    btn.style.margin = '0';
                 });
+                
+                // Restore icon sizes
+                document.querySelectorAll('.sidebar-icon').forEach(icon => {
+                    icon.style.width = '50px';
+                    icon.style.height = '50px';
+                    icon.style.margin = '0';
+                });
+                
                 buttonTexts.forEach(text => {
                     text.style.display = 'inline';
                 });
@@ -206,12 +323,12 @@ error_reporting(0);
                 // Show category content (which will hide all cards by default)
                 showCategoryContent(categoryId);
                 
-                // Show first sub-policy by default
+                // Show first sub-policy by default (without scrolling on initial load)
                 const firstOption = dropdown.querySelector('.dropdown-option');
                 if (firstOption) {
                     const firstPolicyId = firstOption.getAttribute('data-policy-id');
                     firstOption.classList.add('active');
-                    showPolicyCard(firstPolicyId, categoryId);
+                    showPolicyCard(firstPolicyId, categoryId, false); // Don't scroll on initial load
                 }
             } else {
                 dropdown.style.display = 'none';
@@ -226,8 +343,8 @@ error_reporting(0);
             allOptions.forEach(opt => opt.classList.remove('active'));
             event.target.classList.add('active');
 
-            // Show the policy card
-            showPolicyCard(policyId, categoryId);
+            // Show the policy card with scrolling (user clicked)
+            showPolicyCard(policyId, categoryId, true);
         }
 
         // Show content for selected category
@@ -250,7 +367,7 @@ error_reporting(0);
         }
 
         // Show specific policy card
-        function showPolicyCard(policyId, categoryId) {
+        function showPolicyCard(policyId, categoryId, shouldScroll = true) {
             const activeArea = document.querySelector(`.content-area[data-category="${categoryId}"]`);
             if (!activeArea) return;
 
@@ -260,7 +377,25 @@ error_reporting(0);
 
                 if (isMatch) {
                     card.classList.remove('policy-card-hidden');
-                    card.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    // Scroll to card accounting for header height to prevent navbar clipping
+                    // Only scroll if shouldScroll is true (i.e., user clicked, not initial load)
+                    if (shouldScroll) {
+                        setTimeout(() => {
+                            const header = document.querySelector('header');
+                            const headerHeight = header ? header.offsetHeight + 20 : 100; // Add 20px padding
+                            const cardRect = card.getBoundingClientRect();
+                            const cardTop = cardRect.top + window.pageYOffset;
+                            
+                            // Only scroll if card is not already visible below header
+                            const viewportTop = window.pageYOffset;
+                            if (cardTop < viewportTop + headerHeight || cardRect.top < headerHeight) {
+                                window.scrollTo({
+                                    top: Math.max(0, cardTop - headerHeight),
+                                    behavior: 'smooth'
+                                });
+                            }
+                        }, 100); // Small delay to ensure layout is stable
+                    }
                 } else {
                     card.classList.add('policy-card-hidden');
                 }
@@ -336,6 +471,9 @@ error_reporting(0);
 
         // Initialize on page load
         document.addEventListener("DOMContentLoaded", function () {
+            // Ensure page starts at top to prevent navbar clipping
+            window.scrollTo(0, 0);
+            
             const contentAreas = document.querySelectorAll('.content-area');
             const policiesByCategory = @json($policiesByCategory);
             const searchInput = document.getElementById('searchInput');
@@ -376,11 +514,11 @@ error_reporting(0);
                 }
                 showCategoryContent(firstCategoryId);
                 
-                // Show first policy
+                // Show first policy (without scrolling on initial page load)
                 const firstPolicy = firstDropdown?.querySelector('.dropdown-option');
                 if (firstPolicy) {
                     const firstPolicyId = firstPolicy.getAttribute('data-policy-id');
-                    showPolicyCard(firstPolicyId, firstCategoryId);
+                    showPolicyCard(firstPolicyId, firstCategoryId, false); // Don't scroll on initial load
                 }
             }
         });
@@ -390,6 +528,11 @@ error_reporting(0);
         .highlight {
             background-color: #E0AFA0;
             font-weight: bold;
+        }
+        
+        /* Make top_button (sidebar collapse button) circular */
+        .top_button {
+            border-radius: 50% !important; /* Perfect circle */
         }
     </style>
 

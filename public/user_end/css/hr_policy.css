@@ -7,6 +7,12 @@
      --sidbar-name-hover: #bd99ff; /* Sidebar hover color */
  }
 
+/* Add soft purple border and shadow to navbar */
+header nav {
+    border: 2px solid rgba(138, 51, 102, 0.2); /* Soft purple border */
+    box-shadow: 0px 4px 15px rgba(138, 51, 102, 0.15), 0px 2px 8px rgba(0, 0, 0, 0.1); /* Border shadow */
+}
+
  /* Main Container */
  .main-container {
      margin: 10px auto;
@@ -29,7 +35,8 @@
      margin-left: 0;
      margin-top: 0;
      margin-bottom: 15px;
-     box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
+     border: 1px solid rgba(138, 51, 102, 0.1); /* Soft purple border */
+     box-shadow: 0px 4px 15px rgba(138, 51, 102, 0.15), 0px 2px 8px rgba(0, 0, 0, 0.1); /* Enhanced border shadow */
      transition: width 0.5s ease-in-out;
      flex-shrink: 0;
  }
@@ -48,6 +55,7 @@
      display: flex;
      align-items: center;
      justify-content: space-between;
+     transition: all 0.5s ease-in-out;
  }
 
  .sidebar_top_left {
@@ -60,6 +68,10 @@
      background-color: var(--main-color);
      border-radius: 45px 45px 45px 0;
      width: 30%;
+     display: flex;
+     align-items: center;
+     justify-content: flex-end;
+     transition: all 0.5s ease-in-out;
  }
 
  .Logo_main {
@@ -135,20 +147,24 @@
      background-color: white;
      padding: 20px;
      border-radius: 50px;
- }
-
- .top_button {
-     height: 50px;
-     width: 50px;
-     border: 1px solid var(--primary-color);
-     border-radius: 25px;
-     background-color: var(--primary-color);
-     cursor: pointer;
      display: flex;
      align-items: center;
      justify-content: center;
-     transition: all 0.3s ease;
+     transition: all 0.5s ease-in-out;
  }
+
+.top_button {
+    height: 50px;
+    width: 50px;
+    border: 1px solid var(--primary-color);
+    border-radius: 50%; /* Perfect circle */
+    background-color: var(--primary-color);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+}
 
  .top_button:hover {
      background-color: #B24D80;
@@ -167,6 +183,7 @@
      overflow-x: hidden;
      max-height: calc(100vh - 130px);
      padding-bottom: 30px;
+     transition: all 0.5s ease-in-out;
  }
 
  .sidebar_bottom::-webkit-scrollbar {
@@ -198,6 +215,7 @@
      align-items: center;
      overflow: auto;
      border-radius: 0px 25px 25px 25px;
+     transition: all 0.5s ease-in-out;
  }
 
 .sidebar-button {
@@ -208,7 +226,7 @@
     background-color: #ffffff !important;
     color: black;
     text-decoration: none;
-    transition: background-color 0.3s ease, color 0.3s ease;
+    transition: all 0.3s ease;
     box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
     border: none;
     cursor: pointer;
@@ -354,7 +372,8 @@
       flex: 1;
       background-color: #FFFFFF;
       border-radius: 30px;
-      box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
+      border: 1px solid rgba(138, 51, 102, 0.1); /* Soft purple border */
+      box-shadow: 0px 4px 15px rgba(138, 51, 102, 0.15), 0px 2px 8px rgba(0, 0, 0, 0.1); /* Enhanced border shadow */
       display: none;
       position: relative;
       margin: 0 !important;
@@ -632,6 +651,11 @@
       border-radius: 0;
       border: none;
       margin: 0;
+      text-align: justify; /* Fill entire width */
+      width: 100%; /* Use full width */
+      word-break: break-word; /* Break long words if needed */
+      overflow-wrap: break-word; /* Handle long words */
+      hyphens: auto; /* Auto-hyphenate words if needed */
   }
 
 .folder-content .content-image {
@@ -1080,6 +1104,10 @@
     .folder-content .content-text p {
         font-size: 0.9rem;
         padding: 1rem;
+        text-align: justify; /* Fill entire width */
+        width: 100%; /* Use full width */
+        word-break: break-word; /* Break long words if needed */
+        overflow-wrap: break-word; /* Handle long words */
     }
 }
 
