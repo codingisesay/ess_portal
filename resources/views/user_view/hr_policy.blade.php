@@ -402,71 +402,59 @@ error_reporting(0);
             });
         }
 
-        // Search functionality
+        // Search functionality - only highlights, doesn't open dropdowns
         function performSearch() {
             const searchInput = document.getElementById('searchInput');
-            const term = (searchInput?.value || '').trim().toLowerCase();
+            if (!searchInput) return;
+            
+            const term = (searchInput.value || '').trim().toLowerCase();
             const sidebarButtons = document.querySelectorAll('.sidebar-button');
-            const contentAreas = document.querySelectorAll('.content-area');
+            const dropdownOptions = document.querySelectorAll('.dropdown-option');
 
-            // Remove active and highlight classes
-            sidebarButtons.forEach(btn => btn.classList.remove('active', 'highlight'));
-            contentAreas.forEach(area => {
-                area.style.display = 'none';
-                area.classList.remove('active');
-            });
+            // Remove highlight classes only
+            sidebarButtons.forEach(btn => btn.classList.remove('highlight'));
+            dropdownOptions.forEach(opt => opt.classList.remove('highlight'));
 
             if (!term) {
-                // Reset to default - show first category
-                const firstButton = sidebarButtons[0];
-                if (firstButton) {
-                    const firstCategoryId = firstButton.getAttribute('data-category');
-                    firstButton.classList.add('active');
-                    showCategoryContent(firstCategoryId);
-                    const firstDropdown = document.getElementById(`dropdown-${firstCategoryId}`);
-                    if (firstDropdown) {
-                        firstDropdown.style.display = 'flex';
-                    }
-                }
+                // Reset - remove all highlights
                 return;
             }
 
-            // Search in category names
-            let firstMatch = null;
+            // Search in category names and highlight matching categories
             sidebarButtons.forEach(button => {
-                const categoryName = button.querySelector('.sidebar-button-text')?.textContent.toLowerCase() || '';
-                if (categoryName.includes(term)) {
-                    button.classList.add('highlight');
-                    if (!firstMatch) {
-                        firstMatch = button;
+                const categoryNameEl = button.querySelector('.sidebar-button-text');
+                if (categoryNameEl) {
+                    const categoryName = categoryNameEl.textContent.toLowerCase().trim();
+                    if (categoryName.includes(term)) {
+                        button.classList.add('highlight');
                     }
                 }
             });
 
-            // Also search in policy titles
-            if (!firstMatch) {
-                const dropdownOptions = document.querySelectorAll('.dropdown-option');
-                dropdownOptions.forEach(option => {
-                    if (option.textContent.toLowerCase().includes(term)) {
-                        const categoryId = option.getAttribute('data-category-id');
-                        firstMatch = document.querySelector(`.sidebar-button[data-category="${categoryId}"]`);
-                        if (firstMatch) {
-                            return;
-                        }
+            // Search in policy titles and highlight matching policies
+            // Only highlight policies within already-open dropdowns, don't auto-expand
+            dropdownOptions.forEach(option => {
+                const policyTitle = (option.textContent || '').toLowerCase().trim();
+                const parentDropdown = option.closest('.dropdown-options');
+                
+                // Check if dropdown is visible
+                let isDropdownVisible = false;
+                if (parentDropdown) {
+                    // Check inline style first
+                    const inlineDisplay = parentDropdown.style.display;
+                    if (inlineDisplay === 'flex' || inlineDisplay === 'block') {
+                        isDropdownVisible = true;
+                    } else if (!inlineDisplay || inlineDisplay === '') {
+                        // If no inline style, check computed style
+                        const computedDisplay = window.getComputedStyle(parentDropdown).display;
+                        isDropdownVisible = computedDisplay !== 'none';
                     }
-                });
-            }
-
-            // Show matched category
-            if (firstMatch) {
-                const categoryId = firstMatch.getAttribute('data-category');
-                firstMatch.classList.add('active');
-                showCategoryContent(categoryId);
-                const dropdown = document.getElementById(`dropdown-${categoryId}`);
-                if (dropdown) {
-                    dropdown.style.display = 'flex';
                 }
-            }
+                
+                if (policyTitle.includes(term) && isDropdownVisible) {
+                    option.classList.add('highlight');
+                }
+            });
         }
 
         // Initialize on page load
@@ -480,26 +468,17 @@ error_reporting(0);
 
             // Add search event listeners
             if (searchInput) {
-                searchInput.addEventListener('keydown', function(e) {
-                    if (e.key === 'Enter') {
-                        e.preventDefault();
-                        performSearch();
-                    }
+                // Real-time search as user types
+                searchInput.addEventListener('input', function(e) {
+                    performSearch();
                 });
-
-                searchInput.addEventListener('input', function() {
-                    const term = (searchInput.value || '').trim().toLowerCase();
-                    const sidebarButtons = document.querySelectorAll('.sidebar-button');
-                    
-                    sidebarButtons.forEach(button => {
-                        const categoryName = button.querySelector('.sidebar-button-text')?.textContent.toLowerCase() || '';
-                        if (term && categoryName.includes(term)) {
-                            button.classList.add('highlight');
-                        } else {
-                            button.classList.remove('highlight');
-                        }
-                    });
+                
+                // Also trigger on keyup for better responsiveness
+                searchInput.addEventListener('keyup', function(e) {
+                    performSearch();
                 });
+            } else {
+                console.error('Search input not found!');
             }
 
 
@@ -525,9 +504,14 @@ error_reporting(0);
     </script>
     <style>
         /* Optional: keep highlight style for search functionality */
-        .highlight {
-            background-color: #E0AFA0;
-            font-weight: bold;
+        .sidebar-button.highlight {
+            background-color: #E0AFA0 !important;
+            font-weight: bold !important;
+        }
+        
+        .dropdown-option.highlight {
+            background-color: #E0AFA0 !important;
+            font-weight: bold !important;
         }
         
         /* Make top_button (sidebar collapse button) circular */

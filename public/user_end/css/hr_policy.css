@@ -237,21 +237,21 @@ header nav {
 }
 
 .sidebar-button:hover {
-    background-color: var(--primary-color) !important;
-    color: white;
+    background-color: #B3E5FC !important; /* Light soft blue */
+    color: #1976D2;
     box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
     border: none;
     padding: 10px 15px;
 }
 
 .sidebar-button:hover .sidebar-button-text {
-    color: white;
+    color: #1976D2;
 }
 
 .sidebar-button.active,
 .dropdown-section:has(.dropdown-option.active) .sidebar-button {
-    background-color: var(--primary-color) !important;
-    color: white;
+    background-color: #B3E5FC !important; /* Light soft blue - same as hover */
+    color: #1976D2;
     box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
     border: none;
     padding: 10px 15px;
@@ -259,7 +259,7 @@ header nav {
 
 .sidebar-button.active .sidebar-button-text,
 .dropdown-section:has(.dropdown-option.active) .sidebar-button .sidebar-button-text {
-    color: white;
+    color: #1976D2;
 }
 
 .sidebar-button.active .sidebar-icon img,
@@ -269,14 +269,17 @@ header nav {
 }
 
 .sidebar-button:hover .sidebar-icon img {
-    filter: invert(1);
+    filter: none; /* Keep original image color on hover */
 }
 
 .sidebar-button.active .sidebar-icon,
-.sidebar-button:hover .sidebar-icon,
-.dropdown-section:has(.dropdown-option:hover) .sidebar-button .sidebar-icon,
 .dropdown-section:has(.dropdown-option.active) .sidebar-button .sidebar-icon {
-    background-color: var(--primary-color) !important;
+    background-color: #81D4FA !important; /* Slightly darker soft blue for icon background */
+}
+
+.sidebar-button:hover .sidebar-icon,
+.dropdown-section:has(.dropdown-option:hover) .sidebar-button .sidebar-icon {
+    background-color: #81D4FA !important; /* Slightly darker soft blue for icon background */
 }
 
  .sidebar-icon {
@@ -352,16 +355,16 @@ header nav {
 }
 
 .dropdown-option:hover {
-    background-color: white;
-    color: var(--primary-color);
+    background-color: #B3E5FC !important; /* Light soft blue */
+    color: #1976D2;
     box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
     padding: 8px 15px 8px 33px;
     border: none;
 }
 
 .dropdown-option.active {
-    background: white;
-    color: var(--primary-color);
+    background-color: #B3E5FC !important; /* Light soft blue - same as hover */
+    color: #1976D2;
     font-weight: 600;
 }
 
