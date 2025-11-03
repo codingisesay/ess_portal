@@ -303,7 +303,7 @@ header nav {
  }
 
  .sidebar-button-text {
-     font-size: 15px;
+     font-size: 13px;
      font-weight: 600;
  }
 
@@ -338,7 +338,7 @@ header nav {
 
 .dropdown-option {
     padding: 8px 15px 8px 33px;
-    font-size: 14px;
+    font-size: 11px;
     margin-left: 0;
     text-decoration: none;
     color: black;
