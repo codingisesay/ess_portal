@@ -222,6 +222,11 @@ html,body{height:100%;margin:0;font-family:Arial, Helvetica, sans-serif;backgrou
     margin: 0 auto;
 }
 
+/* Dashboard switch */
+.dashboard-switch {
+    margin-left: 20px;
+}
+
 /* Panels - only the .visible is shown */
 .pms-panel {
     display: none;
