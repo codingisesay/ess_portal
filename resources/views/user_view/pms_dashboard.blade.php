@@ -10,7 +10,7 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
 
-<div class="container mt-4">
+<div class="container" style="margin: 0 !important; padding: 0 !important;">
     @php
         $user = Auth::user();
 
@@ -72,7 +72,7 @@
 
         {{-- Manager Dashboard --}}
         @if($showManager)
-            <div id="managerDash" class="mt-1" style="{{ $showOrganization ? 'display:none;' : '' }}">
+            <div id="managerDash" style="{{ $showOrganization ? 'display:none;' : '' }}">
                 @include('user_view.manager_dashboard')
             </div>
         @endif

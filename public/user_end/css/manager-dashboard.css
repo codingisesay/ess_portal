@@ -222,6 +222,11 @@ html,body{height:100%;margin:0;font-family:Arial, Helvetica, sans-serif;backgrou
     margin: 0 auto;
 }
 
+/* Dashboard switch */
+.dashboard-switch {
+    margin-left: 20px;
+}
+
 /* Panels - only the .visible is shown */
 .pms-panel {
     display: none;
@@ -238,6 +243,25 @@ html,body{height:100%;margin:0;font-family:Arial, Helvetica, sans-serif;backgrou
 }    
 
 .pms-panel.visible { display: block; }
+
+/* Highlight for search results - matches HR policy style */
+.sidebar-button.highlight {
+    background-color: #E0AFA0 !important;
+    font-weight: bold !important;
+}
+
+/* Style inner panels */
+#pms-org-goals,
+#pms-additional-goals,
+#pms-create-task,
+#pms-insights,
+#pms-goal-bundle-approvals,
+#pms-insight-bundle-approvals {
+    height: 100% !important;
+    border-radius: 30px !important;
+    padding: 20px;
+    overflow-y: auto;
+}
 
 /* Sidebar scrollbar styling */
 .pms-sidebar::-webkit-scrollbar { width: 10px; }

@@ -6,98 +6,105 @@
 <link href="https://cdnjs.cloudflare.com/ajax/libs/orgchart/2.1.9/css/jquery.orgchart.min.css" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/orgchart/2.1.9/js/jquery.orgchart.min.js"></script>
-<!-- ========== PMS SIDEBAR ========== --> 
+<!-- ========== PMS SIDEBAR - HR Policy Style ========== --> 
 
-<div class="pms-page">
-    <!-- Sidebar (left, 25%) -->
-  <nav class="pms-sidebar" id="managerSidebar" aria-label="PMS sidebar">
-    <h3>
-        <span class="pms-title-text">Manager Dashboard</span>
-        <span onclick="toggleManagerSidebar()" style="margin-left:auto; cursor:pointer; display:inline-flex; align-items:center;">
-            <img id="managerSidebarIcon" src="{{ asset('admin_end/images/left_ht.png') }}" alt="toggle" style="height:18px; width:auto;" />
-        </span>
-    </h3>
-    <ul class="pms-sidebar-nav">
-        <li>
-            <a href="#pms-org-goals">
-                <i class="bi bi-flag" style="margin-right: 8px;"></i><span>Goals Created by Organization</span>
-            </a>
-        </li>
-        <li>
-            <a href="#pms-additional-goals">
-                <i class="bi bi-list-check" style="margin-right: 8px;"></i><span>Additional Goals / Selected Org Goals</span>
-            </a>
-        </li>
-        <li>
-            <a href="#pms-create-task">
-                <i class="bi bi-clipboard-plus" style="margin-right: 8px;"></i><span>Create Your Own Task</span>
-            </a>
-        </li>
-        <li>
-            <a href="#pms-insights">
-                <i class="bi bi-lightbulb" style="margin-right: 8px;"></i><span>Insights on Organization Goals</span>
-            </a>
-        </li>
-        <li>
-            <a href="#pms-goal-bundle-approvals">
-                <i class="bi bi-box-seam" style="margin-right: 8px;"></i><span>Goal Bundle Approval Requests</span>
-            </a>
-        </li>
-        <li>
-            <a href="#pms-insight-bundle-approvals">
-                <i class="bi bi-inboxes" style="margin-right: 8px;"></i><span>Insight Bundle Approval Requests</span>
-            </a>
-        </li>
-    </ul>
-</nav>
+<link rel="stylesheet" href="{{ asset('/user_end/css/hr_policy.css') }}">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 
-    <script>
-      // Align manager sidebar behavior to superadmin: clickable icon toggles collapsed state with icon swap and persistence
-      document.addEventListener('DOMContentLoaded', function(){
-        const sidebar = document.getElementById('managerSidebar');
-        const icon = document.getElementById('managerSidebarIcon');
-        if (!sidebar || !icon) return;
+    <!-- Main Content Container -->
+    <div class="main-container mx-">
+        <!-- New Sidebar based on HR Policy design -->
+        <div class="sidebar_main" id="sidebarMain">
+            <div class="sidebar_internal">
+                <!-- Top Section with Search Bar and Toggle -->
+                <div class="sidebar_top">
+                    <div class="sidebar_top_left">
+                        <div class="Logo_main sidebar-search" id="logoMain">
+                            <div class="search-bar">
+                                <input type="text" placeholder="Search..." id="searchInput">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="sidebar_top_right">
+                        <div class="top_button_container">
+                            <button type="button" class="top_button" id="collapseButton" onclick="toggleSidebar()">
+                                <i class="fas fa-chevron-right" id="collapseIcon"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
 
-        // initialize from localStorage
-        const collapsed = localStorage.getItem('managerSidebarCollapsed') === '1';
-        if (collapsed) {
-          sidebar.classList.add('collapsed');
-          icon.setAttribute('src', "{{ asset('admin_end/images/left_ht.png') }}");
-        } else {
-          icon.setAttribute('src', "{{ asset('admin_end/images/right_ht.png') }}");
-        }
-      });
+                <!-- Sidebar Bottom with Navigation Options -->
+                <div class="sidebar_bottom">
+                    <div class="button-list" id="buttonList">
+                        <div class="dropdown-section">
+                            <button class="sidebar-button dropdown-toggle" 
+                                    onclick="showPanel('pms-org-goals', event)"
+                                    data-panel="pms-org-goals">
+                                <div class="sidebar-icon" style="display: flex; align-items: center; justify-content: center;">
+                                    <i class="bi bi-flag" style="font-size: 24px; color: white;"></i>
+                                </div>
+                                <span class="sidebar-button-text">Goals Created by Organization</span>
+                            </button>
+                        </div>
+                        <div class="dropdown-section">
+                            <button class="sidebar-button dropdown-toggle" 
+                                    onclick="showPanel('pms-additional-goals', event)"
+                                    data-panel="pms-additional-goals">
+                                <div class="sidebar-icon" style="display: flex; align-items: center; justify-content: center;">
+                                    <i class="bi bi-list-check" style="font-size: 24px; color: white;"></i>
+                                </div>
+                                <span class="sidebar-button-text">Additional Goals / Selected Org Goals</span>
+                            </button>
+                        </div>
+                        <div class="dropdown-section">
+                            <button class="sidebar-button dropdown-toggle" 
+                                    onclick="showPanel('pms-create-task', event)"
+                                    data-panel="pms-create-task">
+                                <div class="sidebar-icon" style="display: flex; align-items: center; justify-content: center;">
+                                    <i class="bi bi-clipboard-plus" style="font-size: 24px; color: white;"></i>
+                                </div>
+                                <span class="sidebar-button-text">Create Your Own Task</span>
+                            </button>
+                        </div>
+                        <div class="dropdown-section">
+                            <button class="sidebar-button dropdown-toggle" 
+                                    onclick="showPanel('pms-insights', event)"
+                                    data-panel="pms-insights">
+                                <div class="sidebar-icon" style="display: flex; align-items: center; justify-content: center;">
+                                    <i class="bi bi-lightbulb" style="font-size: 24px; color: white;"></i>
+                                </div>
+                                <span class="sidebar-button-text">Insights on Organization Goals</span>
+                            </button>
+                        </div>
+                        <div class="dropdown-section">
+                            <button class="sidebar-button dropdown-toggle" 
+                                    onclick="showPanel('pms-goal-bundle-approvals', event)"
+                                    data-panel="pms-goal-bundle-approvals">
+                                <div class="sidebar-icon" style="display: flex; align-items: center; justify-content: center;">
+                                    <i class="bi bi-box-seam" style="font-size: 24px; color: white;"></i>
+                                </div>
+                                <span class="sidebar-button-text">Goal Bundle Approval Requests</span>
+                            </button>
+                        </div>
+                        <div class="dropdown-section">
+                            <button class="sidebar-button dropdown-toggle" 
+                                    onclick="showPanel('pms-insight-bundle-approvals', event)"
+                                    data-panel="pms-insight-bundle-approvals">
+                                <div class="sidebar-icon" style="display: flex; align-items: center; justify-content: center;">
+                                    <i class="bi bi-inboxes" style="font-size: 24px; color: white;"></i>
+                                </div>
+                                <span class="sidebar-button-text">Insight Bundle Approval Requests</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-      function toggleManagerSidebar(){
-        const sidebar = document.getElementById('managerSidebar');
-        const icon = document.getElementById('managerSidebarIcon');
-        if (!sidebar || !icon) return;
-
-        sidebar.classList.toggle('collapsed');
-
-        if (sidebar.classList.contains('collapsed')) {
-          icon.setAttribute('src', "{{ asset('admin_end/images/left_ht.png') }}");
-          try { localStorage.setItem('managerSidebarCollapsed', '1'); } catch(e) {}
-        } else {
-          icon.setAttribute('src', "{{ asset('admin_end/images/right_ht.png') }}");
-          try { localStorage.setItem('managerSidebarCollapsed', '0'); } catch(e) {}
-        }
-
-        setTimeout(() => {
-          // reaffirm icon state after animation
-          if (sidebar.classList.contains('collapsed')) {
-            icon.setAttribute('src', "{{ asset('admin_end/images/left_ht.png') }}");
-          } else {
-            icon.setAttribute('src', "{{ asset('admin_end/images/right_ht.png') }}");
-          }
-        }, 4000);
-      }
-    </script>
-
-    <!-- Main content (right, 75%) -->
-    <main class="pms-main" id="pms-main">
-        <div class="pms-panels">
-            <section id="pms-org-goals" class="pms-panel">
+        <!-- Content Area -->
+        <main class="pms-main" id="pms-main">
+            <div id="pms-org-goals" class="pms-panel">
                 <div class="container">
                     <div class="org-header d-flex align-items-center gap-2">
                         <span class="org-header-icon bi bi-flag-fill" aria-hidden="true"></span>
@@ -162,9 +169,9 @@
         </table>
     </div>
                 </div>
-            </section>
+            </div>
 
-            <section id="pms-additional-goals" class="pms-panel">
+            <div id="pms-additional-goals" class="pms-panel">
                 <div class="add-header d-flex align-items-center gap-2">
                     <span class="add-header-icon bi bi-flag-fill" aria-hidden="true"></span>
                     <h5 class="m-0 add-header-title">Additional Goals / Selected Org Goals</h5>
@@ -329,9 +336,9 @@
 
     </div>
 
-            </section>
+            </div>
 
-            <section id="pms-create-task" class="pms-panel">
+            <div id="pms-create-task" class="pms-panel">
                 <div class="task-header d-flex align-items-center gap-2">
                     <span class="task-header-icon bi bi-flag-fill" aria-hidden="true"></span>
                     <h5 class="m-0 task-header-title">Create Own Task</h5>
@@ -390,7 +397,7 @@
                 </table>
             </div>
         </div>
-        </section>
+        </div>
 
 <!-- Create Own Task Modal -->
 <div class="modal fade" id="createOwnTaskModal" tabindex="-1" aria-labelledby="createOwnTaskModalLabel" aria-hidden="true">
@@ -466,7 +473,7 @@
 </form>
 </div></div>
 
-            <section id="pms-insights" class="pms-panel">
+            <div id="pms-insights" class="pms-panel">
              <div class="ins-header d-flex align-items-center gap-2">
                 <span class="ins-header-icon bi bi-flag-fill" aria-hidden="true"></span>
                 <h5 class="m-0 ins-header-title">Insights on Organization Goals</h5>
@@ -548,9 +555,9 @@
                          <button id="submitSelectedInsights" class="btn btn-primary">Submit Selected Insights for Approval</button>
                      </div>
         </div>
-            </section>
+            </div>
 
-            <section id="pms-goal-bundle-approvals" class="pms-panel">
+            <div id="pms-goal-bundle-approvals" class="pms-panel">
                 <div class="approval-header d-flex align-items-center gap-2">
                     <span class="approval-header-icon bi bi-flag-fill" aria-hidden="true"></span>
                     <h5 class="m-0 approval-header-title">Goal Bundle Approval Requests</h5>
@@ -665,11 +672,11 @@
             <p class="text-center">No pending goal bundle requests.</p>
         @endif
 
-            </section>
+            </div>
         
 
            
-            <section id="pms-insight-bundle-approvals" class="pms-panel">
+            <div id="pms-insight-bundle-approvals" class="pms-panel">
                 <div class="ins-approval-header d-flex align-items-center gap-2">
                     <span class="ins-approval-header-icon bi bi-flag-fill" aria-hidden="true"></span>
                     <h5 class="m-0 ins-approval-header-title">Insight Bundle Approval Requests</h5>
@@ -787,78 +794,335 @@
       @endif
     </div>
 
-            </section>
             </div>
         
-    </main>
-</div>
+        </main>
+    </div>
 
 <script>
-/*
-  Behavior:
-  - When a sidebar link is clicked, show only the panel with that id.
-  - Update active nav item.
-  - Support deep-links: if URL has a hash on load, show that panel.
-  - If hash doesn't match any panel, fallback to the first panel.
-*/
+    // Sidebar collapse/expand functionality
+    let sidebarCollapsed = false;
 
-(function(){
-    const links = document.querySelectorAll('.pms-sidebar-nav a');
-    const panels = Array.from(document.querySelectorAll('.pms-panel'));
+    function toggleSidebar() {
+        sidebarCollapsed = !sidebarCollapsed;
+        const sidebarMain = document.getElementById('sidebarMain');
+        const sidebarTop = document.querySelector('.sidebar_top');
+        const logoMain = document.getElementById('logoMain');
+        const searchBar = document.querySelector('.search-bar');
+        const searchInput = document.getElementById('searchInput');
+        const collapseIcon = document.getElementById('collapseIcon');
+        const buttonList = document.getElementById('buttonList');
+        const sidebarButtons = document.querySelectorAll('.sidebar-button');
+        const buttonTexts = document.querySelectorAll('.sidebar-button-text');
+        const sidebarTopLeft = document.querySelector('.sidebar_top_left');
+        const sidebarTopRight = document.querySelector('.sidebar_top_right');
+        const topButtonContainer = document.querySelector('.top_button_container');
+        const sidebarBottom = document.querySelector('.sidebar_bottom');
 
-    function showPanelById(hash) {
-        // normalize (allow '#id' or 'id')
-        if (!hash) { hash = ''; }
-        if (hash.startsWith('#')) { hash = hash.slice(1); }
-
-        // find panel
-        let target = document.getElementById(hash);
-        if (!target) {
-            // fallback to first panel if none matched
-            target = panels[0];
-        }
-
-        // hide all, show only target
-        panels.forEach(p => p.classList.remove('visible'));
-        target.classList.add('visible');
-
-        // update active link
-        links.forEach(a => {
-            const aHash = (a.getAttribute('href') || '').replace(/^#/, '');
-            if (aHash === target.id) a.classList.add('active');
-            else a.classList.remove('active');
-        });
-
-        // update URL hash without creating history entry
-        if (window.location.hash !== '#' + target.id) {
-            history.replaceState(null, '', '#' + target.id);
+        if (sidebarCollapsed) {
+            sidebarMain.style.width = '75px';
+            sidebarMain.style.minWidth = '75px';
+            if (logoMain) logoMain.style.display = 'none';
+            if (searchBar) searchBar.style.display = 'none';
+            if (searchInput) searchInput.style.display = 'none';
+            if (sidebarTopLeft) sidebarTopLeft.style.display = 'none';
+            if (sidebarTop) {
+                sidebarTop.style.justifyContent = 'center';
+                sidebarTop.style.alignItems = 'center';
+                sidebarTop.style.padding = '10px 0';
+            }
+            if (sidebarTopRight) {
+                sidebarTopRight.style.width = '100%';
+                sidebarTopRight.style.display = 'flex';
+                sidebarTopRight.style.justifyContent = 'center';
+                sidebarTopRight.style.alignItems = 'center';
+                sidebarTopRight.style.borderRadius = '30px 30px 0 0';
+            }
+            if (topButtonContainer) {
+                topButtonContainer.style.padding = '10px';
+                topButtonContainer.style.margin = '0 auto';
+            }
+            collapseIcon.style.transform = 'rotate(180deg)';
+            if (sidebarBottom) sidebarBottom.style.paddingTop = '5px';
+            if (buttonList) {
+                buttonList.style.borderRadius = '0px 0px 25px 25px';
+                buttonList.style.paddingTop = '5px';
+                buttonList.style.gap = '8px';
+            }
+            sidebarButtons.forEach(btn => {
+                btn.style.width = '60px';
+                btn.style.height = '60px';
+                btn.style.justifyContent = 'center';
+                btn.style.alignItems = 'center';
+                btn.style.padding = '0';
+                btn.style.margin = '0 auto';
+            });
+            document.querySelectorAll('.sidebar-icon').forEach(icon => {
+                icon.style.margin = '0';
+                icon.style.width = '50px';
+                icon.style.height = '50px';
+            });
+            buttonTexts.forEach(text => text.style.display = 'none');
+        } else {
+            sidebarMain.style.width = '22%';
+            sidebarMain.style.minWidth = 'auto';
+            if (sidebarTop) {
+                sidebarTop.style.justifyContent = 'space-between';
+                sidebarTop.style.alignItems = 'flex-start';
+                sidebarTop.style.padding = '0';
+            }
+            if (logoMain) {
+                logoMain.style.display = 'flex';
+                logoMain.style.width = '75%';
+                logoMain.style.height = '70px';
+                logoMain.style.marginLeft = '10px';
+                logoMain.style.marginRight = '10px';
+            }
+            if (searchBar) searchBar.style.display = 'flex';
+            if (searchInput) searchInput.style.display = 'block';
+            if (sidebarTopLeft) sidebarTopLeft.style.display = 'block';
+            if (sidebarTopRight) {
+                sidebarTopRight.style.width = '30%';
+                sidebarTopRight.style.justifyContent = 'flex-end';
+                sidebarTopRight.style.borderRadius = '45px 45px 45px 0';
+            }
+            if (topButtonContainer) {
+                topButtonContainer.style.padding = '20px';
+                topButtonContainer.style.margin = '0';
+            }
+            collapseIcon.style.transform = 'rotate(0deg)';
+            if (sidebarBottom) sidebarBottom.style.paddingTop = '0';
+            if (buttonList) {
+                buttonList.style.borderRadius = '0px 25px 25px 25px';
+                buttonList.style.paddingTop = '10px';
+                buttonList.style.gap = '6px';
+            }
+            sidebarButtons.forEach(btn => {
+                btn.style.width = '98%';
+                btn.style.height = 'auto';
+                btn.style.justifyContent = 'flex-start';
+                btn.style.alignItems = 'center';
+                btn.style.padding = '10px 15px';
+                btn.style.margin = '0';
+            });
+            document.querySelectorAll('.sidebar-icon').forEach(icon => {
+                icon.style.width = '50px';
+                icon.style.height = '50px';
+                icon.style.margin = '0';
+            });
+            buttonTexts.forEach(text => text.style.display = 'inline');
         }
     }
 
-    // attach click handlers
-    links.forEach(a => {
-        a.addEventListener('click', function(ev){
-            ev.preventDefault();
-            const href = this.getAttribute('href') || '';
-            showPanelById(href);
-            // Optionally set focus to the panel for accessibility
-            const panelId = (href.startsWith('#') ? href.slice(1) : href);
-            const panel = document.getElementById(panelId);
-            if (panel) panel.setAttribute('tabindex','-1'), panel.focus({preventScroll:true});
+    // Panel navigation
+    let panels = [];
+
+    function showPanel(panelId, event) {
+        if (sidebarCollapsed) return;
+        
+        // Hide all panels
+        panels.forEach(p => {
+            p.classList.remove('visible');
+            p.style.display = 'none';
         });
-    });
 
-    // support back/forward or manual hash changes
-    window.addEventListener('hashchange', function(){
-        showPanelById(location.hash);
-    });
+        // Show selected panel
+        const targetPanel = document.getElementById(panelId);
+        if (targetPanel) {
+            targetPanel.classList.add('visible');
+            targetPanel.style.display = 'block';
+        }
 
-    // initial display: if hash present, honor it; otherwise show first panel
-    document.addEventListener('DOMContentLoaded', function(){
-        showPanelById(location.hash || panels[0].id);
+        // Update active button
+        const sidebarButtons = document.querySelectorAll('.sidebar-button');
+        sidebarButtons.forEach(btn => {
+            if (btn.getAttribute('data-panel') === panelId) {
+                btn.classList.add('active');
+            } else {
+                btn.classList.remove('active');
+            }
+        });
+
+        // Update URL hash
+        if (window.location.hash !== '#' + panelId) {
+            history.replaceState(null, '', '#' + panelId);
+        }
+    }
+
+    // Search functionality
+    function performSearch() {
+        const searchInput = document.getElementById('searchInput');
+        if (!searchInput) return;
+        
+        const term = (searchInput.value || '').trim().toLowerCase();
+        const sidebarButtons = document.querySelectorAll('.sidebar-button');
+
+        sidebarButtons.forEach(btn => btn.classList.remove('highlight'));
+
+        if (!term) return;
+
+        sidebarButtons.forEach(button => {
+            const buttonText = button.querySelector('.sidebar-button-text');
+            if (buttonText) {
+                const text = buttonText.textContent.toLowerCase().trim();
+                if (text.includes(term)) {
+                    button.classList.add('highlight');
+                }
+            }
+        });
+    }
+
+    // Initialize on page load
+    document.addEventListener("DOMContentLoaded", function () {
+        window.scrollTo(0, 0);
+        
+        // Initialize panels array
+        panels = Array.from(document.querySelectorAll('.pms-panel'));
+        
+        const searchInput = document.getElementById('searchInput');
+        if (searchInput) {
+            searchInput.addEventListener('input', function() {
+                performSearch();
+            });
+        }
+
+        // Show first panel by default
+        if (panels.length > 0) {
+            const firstPanel = panels[0];
+            firstPanel.classList.add('visible');
+            firstPanel.style.display = 'block';
+            
+            const firstButton = document.querySelector('.sidebar-button[data-panel="' + firstPanel.id + '"]');
+            if (firstButton) {
+                firstButton.classList.add('active');
+            }
+        }
+
+        // Support hash-based navigation
+        window.addEventListener('hashchange', function(){
+            const hash = location.hash.replace('#', '');
+            if (hash) {
+                const panel = document.getElementById(hash);
+                if (panel) {
+                    showPanel(hash);
+                }
+            }
+        });
+
+        // Check for initial hash
+        if (location.hash) {
+            const hash = location.hash.replace('#', '');
+            showPanel(hash);
+        }
     });
-})();
 </script>
+
+<style>
+    /* Remove margins from outer wrapper containers */
+    .container,
+    #managerDash,
+    body > div:has(.main-container),
+    body > div[class*="container"]:has(.main-container) {
+        margin: 0 !important;
+        margin-top: 0 !important;
+        margin-bottom: 0 !important;
+        padding: 0 !important;
+        padding-top: 0 !important;
+        padding-bottom: 0 !important;
+        width: 100% !important;
+        max-width: 100% !important;
+    }
+    
+    /* Override existing pms styles to work with HR policy structure */
+    .main-container {
+        display: flex !important;
+        gap: 2rem !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        margin: 0 !important;
+        padding-left: 16px !important;
+        padding-right: 16px !important;
+        box-sizing: border-box !important;
+    }
+    
+    /* Ensure full width - override any parent container restrictions */
+    body > div,
+    body > div > div,
+    body > div > div > div.main-container {
+        max-width: 100% !important;
+        width: 100% !important;
+    }
+    
+    /* Panel visibility - hide by default, show when visible class is added */
+    .pms-panel {
+        display: none !important;
+        width: 100% !important;
+    }
+    
+    .pms-panel.visible {
+        display: block !important;
+        width: 100% !important;
+    }
+    
+    /* Content area styling - override pms-main styles */
+    .pms-main {
+        flex: 1 !important;
+        background-color: #FFFFFF !important;
+        border-radius: 30px !important;
+        border: 1px solid rgba(138, 51, 102, 0.1) !important;
+        box-shadow: 0px 4px 15px rgba(138, 51, 102, 0.15), 0px 2px 8px rgba(0, 0, 0, 0.1) !important;
+        padding: 0 !important;
+        height: 85vh !important;
+        min-height: 85vh !important;
+        overflow-y: auto !important;
+        overflow-x: hidden !important;
+        position: relative !important;
+        margin: 0 !important;
+    }
+    
+    
+    /* Icon styling in sidebar */
+    .sidebar-icon {
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+    }
+    
+    .sidebar-icon i {
+        font-size: 24px !important;
+        color: white !important;
+    }
+    
+    /* Ensure sidebar matches pms-main height exactly */
+    .sidebar_main {
+        background-color: #ffffff !important;
+        padding: 5px !important;
+        height: 85vh !important;
+        min-height: 85vh !important;
+        width: 22% !important;
+        border-radius: 30px !important;
+        overflow: hidden !important;
+        margin-left: 0 !important;
+        margin-top: 0 !important;
+        margin-bottom: 15px !important;
+        border: 1px solid rgba(138, 51, 102, 0.1) !important;
+        box-shadow: 0px 4px 15px rgba(138, 51, 102, 0.15), 0px 2px 8px rgba(0, 0, 0, 0.1) !important;
+        transition: width 0.5s ease-in-out !important;
+        flex-shrink: 0 !important;
+    }
+    
+    /* Ensure sidebar internal also expands */
+    .sidebar_internal {
+        height: 100% !important;
+    }
+    
+    /* Ensure sidebar bottom can scroll if needed */
+    .sidebar_bottom {
+        flex-grow: 1 !important;
+        overflow-y: auto !important;
+        overflow-x: hidden !important;
+    }
+</style>
 
 <!-- ========== ORG CHART SECTION ========== -->
  <div class="container" style="margin-top: 0.5rem !important;">
