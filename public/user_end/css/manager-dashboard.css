@@ -244,6 +244,12 @@ html,body{height:100%;margin:0;font-family:Arial, Helvetica, sans-serif;backgrou
 
 .pms-panel.visible { display: block; }
 
+/* Highlight for search results - matches HR policy style */
+.sidebar-button.highlight {
+    background-color: #E0AFA0 !important;
+    font-weight: bold !important;
+}
+
 /* Style inner panels */
 #pms-org-goals,
 #pms-additional-goals,
