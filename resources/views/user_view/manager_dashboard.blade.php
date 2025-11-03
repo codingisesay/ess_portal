@@ -1071,7 +1071,7 @@
         border-radius: 30px !important;
         border: 1px solid rgba(138, 51, 102, 0.1) !important;
         box-shadow: 0px 4px 15px rgba(138, 51, 102, 0.15), 0px 2px 8px rgba(0, 0, 0, 0.1) !important;
-        padding: 20px !important;
+        padding: 0 !important;
         height: 85vh !important;
         min-height: 85vh !important;
         overflow-y: auto !important;

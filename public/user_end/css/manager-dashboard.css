@@ -239,6 +239,19 @@ html,body{height:100%;margin:0;font-family:Arial, Helvetica, sans-serif;backgrou
 
 .pms-panel.visible { display: block; }
 
+/* Style inner panels */
+#pms-org-goals,
+#pms-additional-goals,
+#pms-create-task,
+#pms-insights,
+#pms-goal-bundle-approvals,
+#pms-insight-bundle-approvals {
+    height: 100% !important;
+    border-radius: 30px !important;
+    padding: 20px;
+    overflow-y: auto;
+}
+
 /* Sidebar scrollbar styling */
 .pms-sidebar::-webkit-scrollbar { width: 10px; }
 .pms-sidebar::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.18); border-radius: 8px; }
