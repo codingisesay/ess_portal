@@ -1,65 +1,131 @@
 <link rel="stylesheet" href="{{ asset('/user_end/css/pms-dashboard.css') }}">
 <link rel="stylesheet" href="{{ asset('/user_end/css/manager-dashboard.css') }}">
+<link rel="stylesheet" href="{{ asset('/user_end/css/hr_policy.css') }}">
 <!-- Bootstrap 5 CSS -->
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+<!-- Bootstrap Icons -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+<!-- Font Awesome -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 
 <!-- Bootstrap 5 JS (bundle includes Popper) -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
 <script>
-(function(){
-  const nav = document.getElementById('orgNav');
-  const panels = Array.from(document.querySelectorAll('.pms-panels .pms-panel'));
-  if(nav){
-    nav.addEventListener('click', function(e){
-      const a = e.target.closest('a[data-target]');
-      if(!a) return; e.preventDefault();
-      const target = a.getAttribute('data-target');
-      panels.forEach(p=>{
-        if (p.id === target) {
-          p.classList.add('visible');
-        } else {
-          p.classList.remove('visible');
-        }
-      });
-      Array.from(nav.querySelectorAll('a')).forEach(x=>x.classList.remove('active'));
-      a.classList.add('active');
-    });
-    const first = nav.querySelector('a[data-target]');
-    if(first){ first.classList.add('active'); }
-  }
+// Sidebar collapse/expand functionality (namespaced to avoid conflicts with other pages)
+window.orgSidebarCollapsed = window.orgSidebarCollapsed || false;
 
-  const sidebar = document.getElementById('orgSidebar');
-  const icon = document.getElementById('orgSidebarIcon');
-  const toggler = document.getElementById('orgSidebarToggle');
-  try{
-    const collapsed = localStorage.getItem('orgSidebarCollapsed')==='1';
-    if(collapsed){ sidebar?.classList.add('collapsed'); icon?.setAttribute('src', "{{ asset('admin_end/images/left_ht.png') }}"); }
-  }catch(e){}
-  toggler?.addEventListener('click', function(){
-    if(!sidebar || !icon) return;
-    sidebar.classList.toggle('collapsed');
-    if(sidebar.classList.contains('collapsed')){
-      icon.setAttribute('src', "{{ asset('admin_end/images/left_ht.png') }}");
-      try{ localStorage.setItem('orgSidebarCollapsed','1'); }catch(e){}
-    } else {
-      icon.setAttribute('src', "{{ asset('admin_end/images/right_ht.png') }}");
-      try{ localStorage.setItem('orgSidebarCollapsed','0'); }catch(e){}
+// Keep a dedicated function for org page and expose it globally so the inline onclick works
+window.toggleOrgSidebar = function() {
+  console.log('[organization] toggleOrgSidebar invoked, current:', window.orgSidebarCollapsed);
+  window.orgSidebarCollapsed = !window.orgSidebarCollapsed;
+  const sidebarMain = document.getElementById('orgSidebar');
+  const collapseIcon = document.getElementById('collapseIcon');
+  const orgMainEl = document.getElementById('org-main');
+
+  if (!sidebarMain) return;
+
+  if (window.orgSidebarCollapsed) {
+    // add class-based collapsed state
+    sidebarMain.classList.add('collapsed');
+    if (orgMainEl) orgMainEl.classList.add('collapsed-adjust');
+    if (collapseIcon) {
+      collapseIcon.style.transform = 'rotate(180deg)';
+      collapseIcon.classList.remove('fa-chevron-right');
+      collapseIcon.classList.add('fa-chevron-left');
     }
-  });
+    try { localStorage.setItem('orgSidebarCollapsed', '1'); } catch (e) {}
+  } else {
+    // remove collapsed state
+    sidebarMain.classList.remove('collapsed');
+    if (orgMainEl) orgMainEl.classList.remove('collapsed-adjust');
+    if (collapseIcon) {
+      collapseIcon.style.transform = 'rotate(0deg)';
+      collapseIcon.classList.remove('fa-chevron-left');
+      collapseIcon.classList.add('fa-chevron-right');
+    }
+    try { localStorage.setItem('orgSidebarCollapsed', '0'); } catch (e) {}
+  }
+}
+
+// Panel switching functionality
+document.addEventListener('DOMContentLoaded', function() {
+    const nav = document.querySelector('.sidebar_bottom');
+    // panels may be directly under .pms-main or marked with .pms-panel
+    const panels = Array.from(document.querySelectorAll('.pms-main .pms-panel, .pms-panel'));
+
+    if (nav) {
+        nav.addEventListener('click', function(e) {
+            const link = e.target.closest('a[data-target]');
+            if (!link) return;
+
+            e.preventDefault();
+            const target = link.getAttribute('data-target');
+
+            // Update panel visibility
+            panels.forEach(panel => {
+                if (panel.id === target) {
+                    panel.classList.add('visible');
+                } else {
+                    panel.classList.remove('visible');
+                }
+            });
+
+            // Update active state
+            document.querySelectorAll('.sidebar-button').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            link.classList.add('active');
+        });
+
+        // Set first item as active by default and show its panel
+        const firstLink = nav.querySelector('a[data-target]');
+        if (firstLink) {
+            const firstTarget = firstLink.getAttribute('data-target');
+            document.querySelectorAll('.sidebar-button').forEach(btn => btn.classList.remove('active'));
+            firstLink.classList.add('active');
+            panels.forEach(panel => {
+                if (panel.id === firstTarget) panel.classList.add('visible'); else panel.classList.remove('visible');
+            });
+        }
+    }
+
+  // Load saved sidebar state
+  try {
+    const collapsed = localStorage.getItem('orgSidebarCollapsed') === '1';
+    const sidebarMain = document.getElementById('orgSidebar');
+    const orgMainEl = document.getElementById('org-main');
+    if (collapsed && sidebarMain) {
+      sidebarMain.classList.add('collapsed');
+      if (orgMainEl) orgMainEl.classList.add('collapsed-adjust');
+      const collapseIcon = document.getElementById('collapseIcon');
+      if (collapseIcon) {
+        collapseIcon.style.transform = 'rotate(180deg)';
+        collapseIcon.classList.remove('fa-chevron-right');
+        collapseIcon.classList.add('fa-chevron-left');
+      }
+  window.orgSidebarCollapsed = true;
+    }
+  } catch(e) {}
+});
 
   // Auto-collapse on small screens for better viewport usage
   function applyResponsiveSidebar(){
+    const sidebar = document.getElementById('orgSidebar');
+    const orgMainEl = document.getElementById('org-main');
     if(!sidebar) return;
     const isSmall = window.matchMedia('(max-width: 800px)').matches;
     if(isSmall){
-      sidebar.classList.add('collapsed');
-      icon?.setAttribute('src', "{{ asset('admin_end/images/left_ht.png') }}");
+      try { localStorage.setItem('orgSidebarCollapsed', '1'); } catch(e) {}
+  if(!sidebar.classList.contains('collapsed')) sidebar.classList.add('collapsed');
+  if (orgMainEl && !orgMainEl.classList.contains('collapsed-adjust')) orgMainEl.classList.add('collapsed-adjust');
+  window.orgSidebarCollapsed = true;
     } else {
       const persisted = localStorage.getItem('orgSidebarCollapsed')==='1';
       if(!persisted){
-        sidebar.classList.remove('collapsed');
-        icon?.setAttribute('src', "{{ asset('admin_end/images/right_ht.png') }}");
+  sidebar.classList.remove('collapsed');
+  if (orgMainEl) orgMainEl.classList.remove('collapsed-adjust');
+  window.orgSidebarCollapsed = false;
       }
     }
   }
@@ -81,7 +147,6 @@
       }catch(e){}
     }, 150);
   });
-})();
 </script>
 
 <!-- Summary Pie Chart Script -->
@@ -150,23 +215,129 @@
 
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
 
-<div class="pms-page">
-  <nav class="pms-sidebar" id="orgSidebar" aria-label="Organization sidebar">
-    <h3>
-      <span class="pms-title-text">Organization Dashboard</span>
-      <span id="orgSidebarToggle" style="margin-left:auto; cursor:pointer; display:inline-flex; align-items:center;">
-        <img id="orgSidebarIcon" src="{{ asset('admin_end/images/right_ht.png') }}" alt="toggle" style="height:18px; width:auto;" />
-      </span>
-    </h3>
-    <ul class="pms-sidebar-nav" id="orgNav">
-      <li><a href="#org-summary" data-target="org-summary"><i class="bi bi-pie-chart" style="margin-right:8px;"></i><span>Summary</span></a></li>
-      <li><a href="#org-goals" data-target="org-goals"><i class="bi bi-flag" style="margin-right:8px;"></i><span>Goals</span></a></li>
-      <li><a href="#org-task-approvals" data-target="org-task-approvals"><i class="bi bi-check2-square" style="margin-right:8px;"></i><span>Task Approvals</span></a></li>
-    </ul>
-  </nav>
-  <main class="pms-main" id="org-main">
-    <div class="pms-panels">
-      <section id="org-summary" class="pms-panel visible">
+<style>
+  /* Collapsed sidebar (class-based) - keeps only icons + collapse button visible */
+  #orgSidebar.collapsed {
+    width: 75px !important;
+    min-width: 75px !important;
+    overflow: visible;
+  }
+
+  #orgSidebar.collapsed .Logo_main,
+  #orgSidebar.collapsed .search-bar,
+  #orgSidebar.collapsed .sidebar_top_left {
+    display: none !important;
+  }
+
+  #orgSidebar.collapsed .sidebar_top {
+    justify-content: center !important;
+    align-items: center !important;
+    padding: 10px 0 !important;
+  }
+
+  #orgSidebar.collapsed .sidebar_top_right {
+    width: 100% !important;
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    border-radius: 30px 30px 0 0 !important;
+  }
+
+  #orgSidebar.collapsed .button-list {
+    border-radius: 0 0 25px 25px !important;
+    padding-top: 5px !important;
+    gap: 8px !important;
+  }
+
+  #orgSidebar.collapsed .sidebar-button {
+    width: 60px !important;
+    height: 60px !important;
+    justify-content: center !important;
+    align-items: center !important;
+    padding: 0 !important;
+    margin: 0 auto !important;
+  }
+
+  #orgSidebar.collapsed .sidebar-icon {
+    margin: 0 !important;
+    width: 50px !important;
+    height: 50px !important;
+  }
+
+  #orgSidebar.collapsed .sidebar-button-text {
+    display: none !important;
+  }
+
+  /* Adjust main content to occupy remaining space when collapsed */
+  #org-main.collapsed-adjust {
+    margin-left: 1.5rem !important;
+    width: calc(100% - 75px - 3rem) !important;
+  }
+
+  /* Smooth transitions */
+  #orgSidebar,
+  #org-main {
+    transition: width 0.22s ease, margin-left 0.22s ease;
+  }
+</style>
+
+<div class="pms-page org-dashboard">
+  <!-- New Sidebar based on HR Policy design -->
+  <div class="sidebar_main" id="orgSidebar">
+    <div class="sidebar_internal">
+      <!-- Top Section with Search Bar and Toggle -->
+      <div class="sidebar_top">
+        <div class="sidebar_top_left">
+          <div class="Logo_main sidebar-search" id="logoMain">
+            <div class="search-bar">
+              <input type="text" placeholder="Search..." id="searchInput">
+            </div>
+          </div>
+        </div>
+        <div class="sidebar_top_right">
+          <div class="top_button_container">
+            <button type="button" class="top_button" id="collapseButton" onclick="toggleOrgSidebar()">
+              <i class="fas fa-chevron-right" id="collapseIcon"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Sidebar Navigation -->
+      <div class="sidebar_bottom">
+        <div class="button-list" id="buttonList">
+          <div class="dropdown-section">
+            <a href="#org-summary" class="sidebar-button" data-target="org-summary">
+              <div class="sidebar-icon">
+                <i class="bi bi-pie-chart"></i>
+              </div>
+              <span class="sidebar-button-text">Summary</span>
+            </a>
+          </div>
+          
+          <div class="dropdown-section">
+            <a href="#org-goals" class="sidebar-button" data-target="org-goals">
+              <div class="sidebar-icon">
+                <i class="bi bi-flag"></i>
+              </div>
+              <span class="sidebar-button-text">Goals</span>
+            </a>
+          </div>
+          
+          <div class="dropdown-section">
+            <a href="#org-task-approvals" class="sidebar-button" data-target="org-task-approvals">
+              <div class="sidebar-icon">
+                <i class="bi bi-check2-square"></i>
+              </div>
+              <span class="sidebar-button-text">Task Approvals</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <main class="pms-main" id="org-main" style="margin-left: 1.5rem; width: calc(100% - 22% - 3rem); transition: margin-left 0.3s ease, width 0.3s ease;">
+    <section id="org-summary" class="pms-panel visible">
         <div class="container">
 
     {{-- Summary metric cards --}}

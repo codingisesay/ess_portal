@@ -2,6 +2,32 @@
 <link rel="stylesheet" href="{{ asset('/user_end/css/manager-dashboard.css') }}">
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+<style>
+    /* Manager sidebar collapsed state (icons-only) */
+    #sidebarMain.collapsed {
+        width: 75px !important;
+        min-width: 75px !important;
+        overflow: visible;
+    }
+    #sidebarMain.collapsed .Logo_main,
+    #sidebarMain.collapsed .search-bar,
+    #sidebarMain.collapsed .sidebar_top_left {
+        display: none !important;
+    }
+    #sidebarMain.collapsed .sidebar_top {
+        justify-content: center !important;
+        align-items: center !important;
+        padding: 10px 0 !important;
+    }
+    #sidebarMain.collapsed .sidebar_top_right { width:100% !important; display:flex !important; justify-content:center !important; align-items:center !important; }
+    #sidebarMain.collapsed .button-list { border-radius: 0 0 25px 25px !important; padding-top:5px !important; gap:8px !important; }
+    #sidebarMain.collapsed .sidebar-button { width:60px !important; height:60px !important; justify-content:center !important; align-items:center !important; padding:0 !important; margin:0 auto !important; }
+    #sidebarMain.collapsed .sidebar-icon { margin:0 !important; width:50px !important; height:50px !important; }
+    #sidebarMain.collapsed .sidebar-button-text { display:none !important; }
+    /* main area adjust */
+    #pms-main.collapsed-adjust { margin-left:1.5rem !important; width: calc(100% - 75px - 3rem) !important; }
+    #sidebarMain, #pms-main { transition: width 0.22s ease, margin-left 0.22s ease; }
+</style>
 <!-- ========== ORGCHART PLUGIN ========== -->
 <link href="https://cdnjs.cloudflare.com/ajax/libs/orgchart/2.1.9/css/jquery.orgchart.min.css" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
@@ -800,126 +826,47 @@
     </div>
 
 <script>
-    // Sidebar collapse/expand functionality
-    let sidebarCollapsed = false;
+    // Sidebar collapse/expand functionality (class-based)
+    // use a global window property to avoid redeclaration errors across multiple views
+    window.sidebarCollapsed = window.sidebarCollapsed || false;
 
-    function toggleSidebar() {
-        sidebarCollapsed = !sidebarCollapsed;
+    // expose as a window property so inline onclick="toggleSidebar()" works
+    window.toggleSidebar = function() {
+        console.log('[manager_dashboard] toggleSidebar invoked');
         const sidebarMain = document.getElementById('sidebarMain');
-        const sidebarTop = document.querySelector('.sidebar_top');
-        const logoMain = document.getElementById('logoMain');
-        const searchBar = document.querySelector('.search-bar');
-        const searchInput = document.getElementById('searchInput');
+        const main = document.getElementById('pms-main');
         const collapseIcon = document.getElementById('collapseIcon');
-        const buttonList = document.getElementById('buttonList');
-        const sidebarButtons = document.querySelectorAll('.sidebar-button');
-        const buttonTexts = document.querySelectorAll('.sidebar-button-text');
-        const sidebarTopLeft = document.querySelector('.sidebar_top_left');
-        const sidebarTopRight = document.querySelector('.sidebar_top_right');
-        const topButtonContainer = document.querySelector('.top_button_container');
-        const sidebarBottom = document.querySelector('.sidebar_bottom');
 
-        if (sidebarCollapsed) {
-            sidebarMain.style.width = '75px';
-            sidebarMain.style.minWidth = '75px';
-            if (logoMain) logoMain.style.display = 'none';
-            if (searchBar) searchBar.style.display = 'none';
-            if (searchInput) searchInput.style.display = 'none';
-            if (sidebarTopLeft) sidebarTopLeft.style.display = 'none';
-            if (sidebarTop) {
-                sidebarTop.style.justifyContent = 'center';
-                sidebarTop.style.alignItems = 'center';
-                sidebarTop.style.padding = '10px 0';
-            }
-            if (sidebarTopRight) {
-                sidebarTopRight.style.width = '100%';
-                sidebarTopRight.style.display = 'flex';
-                sidebarTopRight.style.justifyContent = 'center';
-                sidebarTopRight.style.alignItems = 'center';
-                sidebarTopRight.style.borderRadius = '30px 30px 0 0';
-            }
-            if (topButtonContainer) {
-                topButtonContainer.style.padding = '10px';
-                topButtonContainer.style.margin = '0 auto';
-            }
-            collapseIcon.style.transform = 'rotate(180deg)';
-            if (sidebarBottom) sidebarBottom.style.paddingTop = '5px';
-            if (buttonList) {
-                buttonList.style.borderRadius = '0px 0px 25px 25px';
-                buttonList.style.paddingTop = '5px';
-                buttonList.style.gap = '8px';
-            }
-            sidebarButtons.forEach(btn => {
-                btn.style.width = '60px';
-                btn.style.height = '60px';
-                btn.style.justifyContent = 'center';
-                btn.style.alignItems = 'center';
-                btn.style.padding = '0';
-                btn.style.margin = '0 auto';
-            });
-            document.querySelectorAll('.sidebar-icon').forEach(icon => {
-                icon.style.margin = '0';
-                icon.style.width = '50px';
-                icon.style.height = '50px';
-            });
-            buttonTexts.forEach(text => text.style.display = 'none');
+        if (!sidebarMain) {
+            console.warn('[manager_dashboard] #sidebarMain not found');
+            return;
+        }
+
+        const isCollapsed = sidebarMain.classList.contains('collapsed');
+        console.log('[manager_dashboard] current collapsed state:', isCollapsed);
+
+        if (!isCollapsed) {
+            sidebarMain.classList.add('collapsed');
+            if (main) main.classList.add('collapsed-adjust');
+            if (collapseIcon) collapseIcon.style.transform = 'rotate(180deg)';
+            try { localStorage.setItem('managerSidebarCollapsed', '1'); } catch (e) {}
+            window.sidebarCollapsed = true;
         } else {
-            sidebarMain.style.width = '22%';
-            sidebarMain.style.minWidth = 'auto';
-            if (sidebarTop) {
-                sidebarTop.style.justifyContent = 'space-between';
-                sidebarTop.style.alignItems = 'flex-start';
-                sidebarTop.style.padding = '0';
-            }
-            if (logoMain) {
-                logoMain.style.display = 'flex';
-                logoMain.style.width = '75%';
-                logoMain.style.height = '70px';
-                logoMain.style.marginLeft = '10px';
-                logoMain.style.marginRight = '10px';
-            }
-            if (searchBar) searchBar.style.display = 'flex';
-            if (searchInput) searchInput.style.display = 'block';
-            if (sidebarTopLeft) sidebarTopLeft.style.display = 'block';
-            if (sidebarTopRight) {
-                sidebarTopRight.style.width = '30%';
-                sidebarTopRight.style.justifyContent = 'flex-end';
-                sidebarTopRight.style.borderRadius = '45px 45px 45px 0';
-            }
-            if (topButtonContainer) {
-                topButtonContainer.style.padding = '20px';
-                topButtonContainer.style.margin = '0';
-            }
-            collapseIcon.style.transform = 'rotate(0deg)';
-            if (sidebarBottom) sidebarBottom.style.paddingTop = '0';
-            if (buttonList) {
-                buttonList.style.borderRadius = '0px 25px 25px 25px';
-                buttonList.style.paddingTop = '10px';
-                buttonList.style.gap = '6px';
-            }
-            sidebarButtons.forEach(btn => {
-                btn.style.width = '98%';
-                btn.style.height = 'auto';
-                btn.style.justifyContent = 'flex-start';
-                btn.style.alignItems = 'center';
-                btn.style.padding = '10px 15px';
-                btn.style.margin = '0';
-            });
-            document.querySelectorAll('.sidebar-icon').forEach(icon => {
-                icon.style.width = '50px';
-                icon.style.height = '50px';
-                icon.style.margin = '0';
-            });
-            buttonTexts.forEach(text => text.style.display = 'inline');
+            sidebarMain.classList.remove('collapsed');
+            if (main) main.classList.remove('collapsed-adjust');
+            if (collapseIcon) collapseIcon.style.transform = '';
+            try { localStorage.removeItem('managerSidebarCollapsed'); } catch (e) {}
+            window.sidebarCollapsed = false;
         }
     }
 
     // Panel navigation
     let panels = [];
 
-    function showPanel(panelId, event) {
-        if (sidebarCollapsed) return;
-        
+    // expose as a window property so inline onclick handlers find it
+    window.showPanel = function(panelId, event) {
+        console.log('[manager_dashboard] showPanel called for', panelId);
+
         // Hide all panels
         panels.forEach(p => {
             p.classList.remove('visible');
@@ -978,6 +925,24 @@
         
         // Initialize panels array
         panels = Array.from(document.querySelectorAll('.pms-panel'));
+
+        // Restore sidebar collapsed state from localStorage (if set)
+        try {
+            const managerCollapsed = localStorage.getItem('managerSidebarCollapsed');
+            const sidebarMain = document.getElementById('sidebarMain');
+            const main = document.getElementById('pms-main');
+            const collapseIcon = document.getElementById('collapseIcon');
+            if (managerCollapsed && sidebarMain) {
+                sidebarMain.classList.add('collapsed');
+                if (main) main.classList.add('collapsed-adjust');
+                if (collapseIcon) collapseIcon.style.transform = 'rotate(180deg)';
+                sidebarCollapsed = true;
+            } else {
+                sidebarCollapsed = false;
+            }
+        } catch (e) {
+            // ignore storage errors
+        }
         
         const searchInput = document.getElementById('searchInput');
         if (searchInput) {
@@ -985,6 +950,19 @@
                 performSearch();
             });
         }
+
+        // Ensure collapse button and sidebar buttons have event listeners (avoid relying solely on inline onclick)
+        const collapseBtn = document.getElementById('collapseButton');
+        if (collapseBtn) collapseBtn.addEventListener('click', function(e){ e.preventDefault(); toggleSidebar(); });
+
+        // Attach click handlers to sidebar buttons to robustly open panels
+        document.querySelectorAll('.sidebar-button[data-panel]').forEach(btn => {
+            btn.addEventListener('click', function(ev) {
+                ev.preventDefault();
+                const panelId = this.getAttribute('data-panel');
+                if (panelId) showPanel(panelId, ev);
+            });
+        });
 
         // Show first panel by default
         if (panels.length > 0) {
@@ -1167,7 +1145,7 @@ document.addEventListener("DOMContentLoaded", function() {
                     '<p class="text-muted">No hierarchy data found.</p>';
                 return;
             }
-            renderChart(data);
+                renderChart(data);
 
             const managerNode = document.querySelector(`.employee-node[data-id='${loggedInManagerId}']`);
             if (managerNode) {
@@ -1177,22 +1155,33 @@ document.addEventListener("DOMContentLoaded", function() {
         .catch(err => console.error('Error fetching hierarchy:', err));
 
     function renderChart(data) {
-        $('#chart-container').orgchart({
-            'data': data,
-            'nodeContent': 'title',
-            'verticalLevel': true,
-            'createNode': function($node, nodeData) {
-                $node.addClass('employee-node');
-                $node.attr('data-id', nodeData.id);
+        const $chart = $('#chart-container');
+        if (!$chart || $chart.length === 0) {
+            console.warn('[manager_dashboard] #chart-container not found, skipping orgchart init');
+            return;
+        }
 
-                $node.on('click', function(e) {
-                    e.stopPropagation();
-                    $('.employee-node').removeClass('selected');
-                    $node.addClass('selected');
-                    loadUserGoals(nodeData.id, nodeData.name);
-                });
-            }
-        });
+        // Defensive: ensure plugin receives a DOM node
+        try {
+            $chart.orgchart({
+                'data': data,
+                'nodeContent': 'title',
+                'verticalLevel': true,
+                'createNode': function($node, nodeData) {
+                    $node.addClass('employee-node');
+                    $node.attr('data-id', nodeData.id);
+
+                    $node.on('click', function(e) {
+                        e.stopPropagation();
+                        $('.employee-node').removeClass('selected');
+                        $node.addClass('selected');
+                        loadUserGoals(nodeData.id, nodeData.name);
+                    });
+                }
+            });
+        } catch (err) {
+            console.error('[manager_dashboard] orgchart init error:', err);
+        }
     }
 
     async function loadUserGoals(userId, name) {
