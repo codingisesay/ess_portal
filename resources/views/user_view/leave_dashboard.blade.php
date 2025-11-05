@@ -102,97 +102,82 @@
                 
                 <div class="col-lg-3 col-md-6 mb-3">
                     <div class="attendance-header p-3">
-                        <h5 class="mb-0">Absenteeism Rate</h5><hr class="my-2"  >
+                        <h5 class="mb-0">Work From Home Trend</h5><hr class="my-2"  >
                         <div class="chart-container1" style="width: 100%; text-align: center; background-color:white; ">
-                            <div style="width:65%" class='mx-auto mb-2'> <canvas height="200px" height="200px" id="chartContainer"></canvas></div>
-                            <div class="d-flex justify-content-center align-items-center"> 
-                                <small  style="color: #3086FF " class="d-flex justify-content-center align-items-center">
-                                    <x-icon name="squarefill" /> <span class="text-secondary">&nbsp;Absent day <span>
-                                </small> &ensp;&emsp;
-                                <small style="color: #2B53C1BF " class="d-flex justify-content-center align-items-center">
-                                    <x-icon name="squarefill"  />  <span class="text-secondary">&nbsp;Present day </span>
-                                </small>
+                            <div style="width:80%" class="mx-auto mb-2">
+                                <canvas id="workFromHomeChartCanvas" height="240"></canvas>
                             </div>
                         </div>
                         <script>
-                            // The data passed from the Laravel controller
-                            const attendanceRateData = {
-                                present_days: {{ $presentDays }},
-                                absent_days: {{ $absentDays }}
-                            };
-
-                            const presentDays = attendanceRateData.present_days;
-                            const absentDays = attendanceRateData.absent_days;
-                            const totalDays = presentDays + absentDays;
-
-                            // Calculate the attendance rate
-                            const attendanceRate = totalDays ? ((presentDays / totalDays) * 100).toFixed(2) : 0;
-
-                            // Initialize the chart
-                            const ctxs = document.getElementById('chartContainer').getContext('2d');
-                            const chartContainer = new Chart(ctxs, {
-                                type: 'doughnut',
+                            // Render the dynamic WFH dataset provided by the controller
+                            const workFromHomeChartData = @json($workFromHomeChart);
+                            // Months are aligned to the active cycle (e.g., HY1 starts in April) so labels follow that order
+                            const wfhCtx = document.getElementById('workFromHomeChartCanvas').getContext('2d');
+                            new Chart(wfhCtx, {
+                                type: 'bar',
                                 data: {
+                                    labels: workFromHomeChartData.labels,
                                     datasets: [{
-                                        data: [presentDays, absentDays],
-                                        backgroundColor: ['#3086FF', '#2B53C1BF'],
+                                        label: 'WFH Days',
+                                        data: workFromHomeChartData.data,
+                                        backgroundColor: '#8a3366',
+                                        borderRadius: 6,
                                     }]
                                 },
-                                options: {maintainAspectRatio: false, 
+                                options: {
+                                    maintainAspectRatio: false,
                                     responsive: true,
+                                    scales: {
+                                        y: {
+                                            beginAtZero: true,
+                                            ticks: {
+                                                // Include unit suffix to clarify values represent days of WFH
+                                                callback: function(value) {
+                                                    return value + ' d';
+                                                }
+                                            }
+                                        }
+                                    },
                                     plugins: {
                                         legend: {
-                                            position: 'top',
-                                            labels: {
-                                                font: { size: 14 }
-                                            }
+                                            display: false
                                         },
                                         tooltip: {
                                             callbacks: {
-                                                label: function (tooltipItem) {
-                                                    const label = tooltipItem.label || '';
-                                                    const value = tooltipItem.raw;
-                                                    const percentage = ((value / totalDays) * 100).toFixed(2);
-                                                    return `${label}: ${value} (${percentage}%)`;
+                                                label: function(context) {
+                                                    return context.parsed.y + ' days';
                                                 }
                                             }
-                                        },
+                                        }
                                     }
-                                },
-                                plugins: [{
-                                    id: 'centerText',
-                                    beforeDraw: function (chart) {
-                                        const { width, height } = chart;
-                                        const ctx = chart.ctx;
-                                        ctx.restore();
-                                        const fontSize = (height / 150).toFixed(2);
-                                        ctx.font = `${fontSize}em sans-serif`;
-                                        ctx.textBaseline = 'middle';
-                                        ctx.textAlign = 'center';
-
-                                        const text = `${attendanceRate}%`;
-                                        const textX = width / 2;
-                                        const textY = height / 2;
-
-                                        ctx.fillText(text, textX, textY);
-                                        ctx.save();
-                                    }
-                                }]
+                                }
                             });
                         </script>
                     </div>
                 </div>
 
                 <div class="col-lg-3 col-md-6 mb-3">  
-                    <div class="attendance-header p-3">
-                        <h5 class="mb-0">Leave Type</h5><hr class="my-2"  >
-                        <div class="leave-type-collection">
-                            @foreach($leaveSummary as $leave)
-                                <button class="button" style="background-color: {{ $loop->index % 2 == 0 ? '#8a3366' : '#2B53C1' }};">
-                                    {{ $leave['leave_type'] }}
-                                </button>
-                            @endforeach
-                        </div>
+                    <div class="attendance-header p-3 upcoming-approved">
+                        <h5 class="mb-0">Upcoming Approved Leaves</h5><hr class="my-2"  >
+                        <ul class="upcoming-approved__list">
+                            @forelse($upcomingApprovedLeaves as $upcoming)
+                                <li class="upcoming-approved__item">
+                                    {{-- Date range for the approved leave window --}}
+                                    <span class="upcoming-approved__date">
+                                        {{ \Carbon\Carbon::parse($upcoming->start_date)->format('d M') }} – {{ \Carbon\Carbon::parse($upcoming->end_date)->format('d M') }}
+                                    </span>
+                                    {{-- Leave type name --}}
+                                    <span class="upcoming-approved__type">{{ $upcoming->leave_type_name }}</span>
+                                    @if(!empty($upcoming->description))
+                                        {{-- Optional note/description added during leave apply --}}
+                                        <span class="upcoming-approved__note">{{ $upcoming->description }}</span>
+                                    @endif
+                                </li>
+                            @empty
+                                {{-- Empty state if no future approved leaves --}}
+                                <li class="upcoming-approved__empty">No upcoming approved leaves.</li>
+                            @endforelse
+                        </ul>
                     </div>
                 </div>
                  
@@ -233,13 +218,14 @@
                         <hr class="my-2"  >
                         <div class="leave-summary-container row justify-content-around">
                             <!-- Leave cards will be dynamically inserted here -->
-                            @foreach($leaveSummary as $index => $leave)
+                            {{-- Only render gender-appropriate leave types (set in controller) --}}
+                            @foreach($displayLeaveSummary as $index => $leave)
                             
                             @endforeach
                         </div>
 
                         <script>
-                            const leaveData = @json($leaveSummary);  // Pass the leave summary data to JavaScript
+                            const leaveData = @json($displayLeaveSummary);  // Already filtered for gender on the server
 
                             // console.log(leaveData); // Check the data in the console to ensure no duplicates
 
@@ -382,37 +368,54 @@
                 <!-- Full-width: make Attendance Overview span the entire row for better visibility -->
                 <div class="col-12 mb-3">              
                     <div class="attendance p-3">
-                        <h5 class="mb-0">Attendance Overview</h5> <hr class="my-2"  >
-                            <!-- Responsive chart: canvas width set to 100% to fill available horizontal space -->
-                            <canvas id="newAttendanceChart" style="width: 100%; height: 430px;"></canvas>
+                        <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
+                            <h5 class="mb-0">Attendance Overview</h5>
+                            <div class="d-flex align-items-center gap-2">
+                                <label for="attendanceMonthSelect" class="mb-0 small text-muted">Month</label>
+                                <select id="attendanceMonthSelect" class="form-select form-select-sm" style="min-width: 160px;">
+                                    @foreach($attendanceOverview as $monthKey => $stats)
+                                        <option value="{{ $monthKey }}" {{ $monthKey === $activeAttendanceMonth ? 'selected' : '' }}>
+                                            {{ $stats['label'] }} {{ $stats['year'] }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+                        <hr class="my-2"  >
+                        <canvas id="newAttendanceChart" style="width: 100%; height: 430px;"></canvas>
 
-                            <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-                            <script>
-                                document.addEventListener("DOMContentLoaded", function() {
-                                    const newCtx = document.getElementById('newAttendanceChart').getContext('2d');
+                        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+                        <script>
+                            document.addEventListener("DOMContentLoaded", function() {
+                                // Attendance dataset ships from the controller keyed by YYYY-MM with daily status entries
+                                const attendanceDataset = @json($attendanceOverview);
+                                const defaultMonth = @json($activeAttendanceMonth);
+                                const monthSelect = document.getElementById('attendanceMonthSelect');
+                                const ctx = document.getElementById('newAttendanceChart').getContext('2d');
 
-                                    // Fetch the attendance data from the Blade variable
-                                    const attendanceData = @json($attendanceOverview);
+                                let attendanceChart;
 
-                                    // Extract month labels
-                                    const months = Object.keys(attendanceData).map(month => {
-                                        return new Date(2025, month - 1, 1).toLocaleString('en-US', { month: 'long' });
-                                    });
+                                function renderAttendanceChart(monthKey) {
+                                    const monthData = attendanceDataset[monthKey];
 
-                                    // Extract on-time, late, and absent data
-                                    const onTimeData = Object.values(attendanceData).map(data => data.on_time || 0);
-                                    const lateData = Object.values(attendanceData).map(data => data.late || 0);
-                                    const absentData = Object.values(attendanceData).map(data => data.absent || 0);
+                                    if (!monthData) {
+                                        return;
+                                    }
 
-                                    // Determine the max y-axis value for better scaling
-                                    const maxDays = Math.max(...Object.values(attendanceData).flatMap(obj =>
-                                        [obj.on_time || 0, obj.late || 0, obj.absent || 0]
-                                    ));
+                                    // Flatten daily status into separate arrays so the chart shows day numbers 1..n
+                                    const dayLabels = monthData.daily.map(entry => entry.day);
+                                    const onTimeData = monthData.daily.map(entry => entry.status === 'on_time' ? 1 : 0);
+                                    const lateData = monthData.daily.map(entry => entry.status === 'late' ? 1 : 0);
+                                    const absentData = monthData.daily.map(entry => entry.status === 'absent' ? 1 : 0);
 
-                                    new Chart(newCtx, {
+                                    if (attendanceChart) {
+                                        attendanceChart.destroy();
+                                    }
+
+                                    attendanceChart = new Chart(ctx, {
                                         type: 'bar',
                                         data: {
-                                            labels: months,
+                                            labels: dayLabels,
                                             datasets: [
                                                 { label: 'On Time', data: onTimeData, backgroundColor: '#8A3366' },
                                                 { label: 'Late', data: lateData, backgroundColor: '#E0AFA0' },
@@ -421,25 +424,59 @@
                                         },
                                         options: {
                                             responsive: true,
+                                            maintainAspectRatio: false,
                                             plugins: {
+                                                legend: { position: 'bottom' },
                                                 tooltip: {
                                                     callbacks: {
-                                                        label: function(tooltipItem) {
-                                                            let datasetLabel = tooltipItem.dataset.label || '';
-                                                            let value = tooltipItem.raw;
-                                                            return `${datasetLabel}: ${value} days`;
+                                                        // Display `Month Day` in the tooltip header (e.g., March 3)
+                                                        title: function(context) {
+                                                            const dayLabel = context[0]?.label ?? '';
+                                                            return `${monthData.label} ${dayLabel}`;
+                                                        },
+                                                        // Each dataset is binary (1/0) so convert it to Yes/No for readability
+                                                        label: function(context) {
+                                                            const datasetLabel = context.dataset.label || '';
+                                                            const value = context.parsed.y;
+                                                            return `${datasetLabel}: ${value ? 'Yes' : 'No'}`;
                                                         }
                                                     }
                                                 }
                                             },
                                             scales: {
-                                                x: { stacked: true },
-                                                y: { stacked: true, beginAtZero: true, suggestedMax: maxDays }
+                                                x: {
+                                                    stacked: true,
+                                                    title: {
+                                                        display: true,
+                                                        text: 'Day of Month'
+                                                    }
+                                                },
+                                                y: {
+                                                    stacked: true,
+                                                    beginAtZero: true,
+                                                    ticks: {
+                                                        precision: 0,
+                                                        stepSize: 1
+                                                    },
+                                                    title: {
+                                                        display: true,
+                                                        text: 'Occurrences'
+                                                    }
+                                                }
                                             }
                                         }
                                     });
+                                }
+
+                                // Re-render whenever the user picks a different month
+                                monthSelect.addEventListener('change', function() {
+                                    renderAttendanceChart(this.value);
                                 });
-                            </script>
+
+                                // Paint the default (current) month on initial load
+                                renderAttendanceChart(defaultMonth);
+                            });
+                        </script>
 
                     </div> 
                 </div>

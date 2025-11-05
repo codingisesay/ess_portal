@@ -3,8 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PayVance</title>
-    <link rel="icon" href="{{ asset('user_end/images/STPLLogo butterfly.png')}} " />
+    <!-- Updated title and favicon for PayVance - Start -->
+    <title>PayVance Innovations Pvt. Ltd.</title>
+    <link rel="icon" href="{{ asset('user_end/images/STPLLogo.png') }}" type="image/png">
+    <!-- Updated title and favicon for PayVance - End -->
 
     <!-- Custom CSS -->
     <link rel="stylesheet" href="{{ asset('user_end/css/login.css') }}">
@@ -17,10 +19,10 @@
     @enderror
     <div class="container">
         <div class="left-container">
+
             
-        <!-- <img src="{{ asset('user_end/images/Vector 58.jpg') }}" alt="Login Image"> -->
-            <img src="{{ asset('user_end/images/loginbg.png') }}" class="img-fluid vh-100 w-100 object-fit-cover" alt="Login Image">
-        </div>
+        <img src="{{ asset('user_end/images/Vector 58.jpg') }}" alt="Login Image"> 
+          </div>
         <div class="right-container">
 
             @if(session('success'))

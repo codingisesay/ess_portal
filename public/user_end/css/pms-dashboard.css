@@ -1,9 +1,81 @@
-/* ============================
-   PMS Dashboard Styling
-   Colors: 
-   - Table BG: #E0AFA0
-   - Buttons: #8A3366
-============================ */
+
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    position: relative;
+    padding-bottom: 70px; /* Space for fixed footer */
+}
+
+.main-content {
+    flex: 1 0 auto;
+    width: 100%;
+    overflow-y: auto;
+    padding: 20px;
+}
+
+.fixed-footer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background-color: #fff;
+    padding: 4px 0; /* Reduced from 8px to 4px to halve the height */
+    z-index: 1000;
+    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+    border-top: 1px solid #e0e0e0;
+}
+
+/* Org chart styles moved from manager_dashboard.blade.php */
+
+#chart-container .orgchart {
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    padding: 15px;
+}
+
+#chart-container .orgchart .node {
+    border: 2px solid #007bff;
+    border-radius: 8px;
+    padding: 10px 15px;
+    background: #fff;
+    color: #333;
+    font-weight: 500;
+    transition: transform 0.2s, box-shadow 0.2s;
+    cursor: pointer;
+    min-width: 120px;
+    text-align: center;
+}
+
+#chart-container .orgchart .node:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+    border-color: #0056b3;
+}
+
+.employee-node.selected {
+    background-color: #007bff;
+    color: #fff;
+    border-color: #0056b3;
+}
+
+#chart-container::-webkit-scrollbar {
+    width: 8px;
+}
+
+#chart-container::-webkit-scrollbar-thumb {
+    background: rgba(0,0,0,0.2);
+    border-radius: 4px;
+}
+
 
 /* ---------- Body & Container ---------- */
 body {
@@ -12,22 +84,7 @@ body {
     color: #333;
 }
 
-/* ---------- Horizontal spacing wrapper for grouped sections ---------- */
-.section-pad-x {
-    padding-left: 16px;
-    padding-right: 16px;
-}
-@media (min-width: 992px) {
-    .section-pad-x { padding-left: 24px; padding-right: 24px; }
-}
-
-/* Make dashboard containers full-width on PMS pages */
-.container,
-.container-fluid {
-    width: 100% !important;
-    max-width: 100% !important;
-    padding: 20px;
-}
+/* (Removed) section-pad-x and global container overrides to avoid affecting manager layout */
 
 /* ---------- Section Titles ---------- */
 h2 {
@@ -71,6 +128,82 @@ label[for="roleSwitcher"] {
     box-shadow: 0 0 0 3px rgba(138, 51, 102, 0.15);
 }
 
+.dashboard-switch { 
+    display: flex; 
+    align-items: center; 
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.switcher-label{ 
+    margin: 0; 
+    color: #0f172a; 
+    align-self: center; 
+    display: inline-flex;
+    align-items: center;
+    padding: 6px 12px;
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 9999px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.06);
+}
+
+.ds-pill {
+    display: inline-flex;
+    gap: 8px;
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 9999px;
+    padding: 6px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.06);
+}
+
+.ds-option {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 14px;
+    border-radius: 9999px;
+    background: #f6f7fb;
+    color: #1f2937;
+    border: none;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 14px;
+    line-height: 1;
+    transition: background .2s ease, color .2s ease, box-shadow .2s ease, transform .05s ease;
+}
+
+.ds-option .ds-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    border-radius: 9999px;
+    color: #8A3366;
+    background: #f1e7f0;
+}
+
+.ds-option:hover { background: #eef2ff; }
+.ds-option:active { transform: translateY(1px); }
+
+.ds-option.active {
+    background: linear-gradient(90deg, #8A52FF 0%, #6A6CF6 100%);
+    color: #ffffff;
+    box-shadow: 0 6px 18px rgba(106, 108, 246, 0.35);
+}
+
+.ds-option.active .ds-icon {
+    background: rgba(255,255,255,0.25);
+    color: #ffffff;
+}
+
+.ds-option:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(138, 51, 102, 0.25);
+}
+
 /* ---------- Edit Goal Modal ---------- */
 .edit-goal-header {
     background-color: #8A3366 !important; /* theme button color */
@@ -99,15 +232,15 @@ button.btn.btn-secondary[data-bs-target="#createOwnTaskModal"].show {
     background-color: #8A3366!important; /* keep Bootstrap secondary color */
     border-color: #8A3366 !important;
     color: #fff !important;
-    box-shadow: none !important;
 }
 
 /* ---------- Card Styling ---------- */
 .card {
-    border: 1px solid #e5e7eb;
-    border-radius: 8px;
-    background: #fff;
-    margin-bottom: 20px;
+/* Slight negative margin to visually pull adjacent cards together on employee dashboard */
+border: 1px solid #e5e7eb;
+border-radius: 8px;
+background: #fff;
+margin-bottom: -14px;
 }
 
 .card-header {
@@ -147,10 +280,8 @@ button.btn.btn-secondary[data-bs-target="#createOwnTaskModal"].show {
 /* Fixed header for scrollable tables */
 .table-fixed-header {
     position: relative;
-    margin-bottom: 0;
-    border-radius: 6px 6px 0 0;
-    overflow: hidden;
-    padding-right: 8px; /* compensate for scrollbar width to align columns */
+    border-radius: 6px 0 0 0;
+    padding-right: 0;
 }
 
 /* Align header columns when body scrollbar is hidden */
@@ -272,6 +403,27 @@ textarea.form-control:focus {
 }
 
 /* ---------- Lists inside tables ---------- */
+/* Organization Page Sidebar Buttons */
+.org-dashboard .sidebar-button {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    border-radius: 30px;
+    background-color: #ffffff !important;
+    color: black;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
+    border: none;
+    cursor: pointer;
+    padding: 0 !important;
+    width: 100% !important;
+    text-align: left;
+    box-sizing: border-box;
+    height: 50px;
+    justify-content: flex-start;
+}
+
 ul {
     padding-left: 20px;
     margin: 0;
@@ -305,7 +457,10 @@ ul {
 }
 
 /* ---------- Fixed header table (header outside, body scrolls) ---------- */
-.table-fixed-header { width: 100%; }
+.table-fixed-header { 
+    width: 100%;
+    padding-right: 0;
+}
 .table-fixed-header .table { table-layout: fixed; }
 .table-fixed-header .table thead th,
 .table-fixed-header .table tbody td { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
@@ -376,3 +531,195 @@ td .description {
     word-break: break-word;
     overflow-wrap: break-word;
 }
+
+/* ================= Organization Dashboard Responsive (migrated from Blade) ================= */
+/* Goals table body scroll area */
+#goalsScroll {
+  max-height: 55vh;
+  overflow: auto;
+  scrollbar-gutter: stable; /* keep header aligned when scrollbar appears */
+  -ms-overflow-style: none; /* IE/Edge */
+  scrollbar-width: none;    /* Firefox */
+}
+#goalsScroll::-webkit-scrollbar { display: none; width: 0; height: 0; }
+
+/* ================= Organization Goals: Visuals (match mock) ================= */
+/* Big page title */
+#org-goals .goals-page-title {
+  font-size: 32px; font-weight: 800; color: #8A3366; margin: 0 0 12px 0;
+}
+
+/* Hide default card header and style form card */
+#org-goals .card-header { display: none; }
+#org-goals .card {
+  border-radius: 14px; border: 1px solid #e6e9ec; box-shadow: 0 8px 18px rgba(16,24,40,0.06);
+}
+#org-goals .card-body { padding: 16px; }
+
+/* Save button as brand pill, positioned to right via existing layout */
+#org-goals .btn-success {
+  background-color: #8A3366 !important; border-color: #8A3366 !important;
+  border-radius: 12px; padding: 8px 16px; font-weight: 600;
+}
+
+/* Subheader 'Goals Created by Organization' */
+#org-goals .goals-subheader {
+  display: inline-flex; align-items: center; gap: 10px; padding: 8px 12px; margin: 12px 0 8px 0;
+  color: #8A3366; font-weight: 800; font-size: 18px;
+}
+#org-goals .goals-subheader .flag {
+  display: inline-flex; align-items: center; justify-content: center; width: 28px; height: 28px; border-radius: 8px; background: #8A3366; color: #fff;
+}
+
+/* Table header maroon with rounded top */
+#org-goals .table-fixed-header thead th { background: #6E284F !important; color: #fff !important; border: none; }
+#org-goals .table-fixed-header thead th:first-child { border-top-left-radius: 10px; }
+#org-goals .table-fixed-header thead th:last-child { border-top-right-radius: 10px; }
+
+/* Body alternate rows & fonts */
+#org-goals .table-scroll-container tbody tr:nth-child(odd) { background: #f7f7fb; }
+#org-goals .table td, #org-goals .table th { font-size: 14px; }
+
+/* Edit action pill */
+#org-goals .btn-warning { background: #8A3366; border-color: #8A3366; color: #fff; border-radius: 12px; padding: 6px 12px; }
+
+/* Fixed height for Organization Task Approvals panel */
+#org-task-approvals {
+  height: 80vh;
+  overflow-y: auto;
+}
+
+/* Fixed height for Organization Summary and Goals panels */
+#org-summary
+{
+  height: 80vh;
+  overflow-y: auto;
+}
+#org-goals {
+  height: 80vh;
+  
+}
+
+/* 1200–1439px: slightly wider panels and comfortable paddings */
+@media (min-width: 1200px) and (max-width: 1439.98px) {
+  .pms-panels { max-width: 1160px; margin: 0 auto; padding: 0 12px; }
+  .pms-panel { padding: 18px; }
+  .pms-sidebar { max-height: 80vh; }
+  .pms-sidebar-nav a { width: auto; max-width: 100%; }
+}
+
+/* ≥1440px: expand panel width and spacing for large displays */
+@media (min-width: 1440px) {
+  :root { --gap: 28px; }
+  .pms-panels { max-width: 1320px; }
+  .pms-panel { padding: 22px; }
+  #goalsScroll { max-height: 62vh; }
+  .pms-sidebar { height: 82vh; }
+}
+
+/* <= 1200px: tighter paddings and full-width panels */
+@media (max-width: 1200px) {
+  :root { --sidebar-w: 24%; }
+  .pms-panels { max-width: 100%; padding: 0 12px; }
+  .pms-panel { padding: 16px; }
+  #goalsScroll { max-height: 52vh; }
+}
+
+/* <= 992px: tablet; enable horizontal scroll for wide tables */
+@media (max-width: 992px) {
+  :root { --sidebar-w: 28%; --gap: 16px; }
+  .pms-sidebar { min-width: 140px; max-height: 70vh; }
+  .pms-page { gap: 16px; }
+  .pms-panels .table, .pms-panels table { display: block; width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  .pms-panels thead, .pms-panels tbody, .pms-panels th, .pms-panels td, .pms-panels tr { white-space: nowrap; }
+  #goalsScroll { max-height: 48vh; }
+}
+
+/* Organization dashboard specific styles */
+.org-dashboard {
+  margin: 0 !important;
+  padding: 0 16px !important;
+  box-sizing: border-box;
+  width: 100%;
+}
+
+/* <= 800px: stack layout and reduce paddings */
+@media (max-width: 800px) {
+  .pms-page { flex-direction: column; gap: 12px; }
+  .pms-sidebar { width: 100%; position: relative; border-right: none; border-bottom: 1px solid #e1e4e8; }
+  .pms-main { padding-top: 8px; }
+  .pms-panel { padding: 14px; }
+  #goalsScroll { max-height: 44vh; }
+}
+
+/* <= 576px: phone; compact UI */
+@media (max-width: 576px) {
+  :root { --gap: 14px; }
+  .pms-sidebar { padding: 10px; border-radius: 10px; }
+  .pms-sidebar h3 { padding: 6px 8px; font-size: 15px; }
+  .pms-sidebar-nav a { padding: 8px; gap: 8px; }
+  .pms-sidebar-nav a i { width: 20px; }
+  .pms-panels .table, .pms-panels table { font-size: 13px; }
+  #goalsScroll { max-height: 40vh; }
+}
+
+/* ================= Summary Metric Cards ================= */
+.summary-wrap { margin-bottom: 16px; }
+.summary-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0,1fr));
+  gap: 16px;
+}
+@media (max-width: 992px) {
+  .summary-grid { grid-template-columns: repeat(2, minmax(0,1fr)); }
+}
+@media (max-width: 576px) {
+  .summary-grid { grid-template-columns: 1fr; }
+}
+
+.metric-card {
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 16px;
+  box-shadow: 0 12px 30px rgba(16,24,40,0.06);
+  border: 1px solid rgba(226,232,240,0.7);
+  position: relative;
+  overflow: hidden;
+}
+.metric-card::after{
+  content: "";
+  position: absolute; inset: 0;
+  background: radial-gradient(120px 60px at 90% 20%, rgba(138,51,102,0.18), transparent 60%);
+  pointer-events: none;
+}
+.metric-title{ font-weight: 600; color: #111827; margin-bottom: 8px; }
+.metric-row{ display: flex; align-items: flex-end; justify-content: space-between; gap: 8px; }
+.metric-value{ font-size: 40px; line-height: 1; font-weight: 700; color: #0f172a; }
+.metric-spark{ width: 96px; height: 32px; opacity: .9; }
+
+/* color accents */
+.metric-blue { background: linear-gradient(180deg, rgba(138,51,102,0.10) 0%, #ffffff 60%); }
+.metric-green { background: linear-gradient(180deg, rgba(138,51,102,0.08) 0%, #ffffff 60%); }
+.metric-orange { background: linear-gradient(180deg, rgba(138,51,102,0.06) 0%, #ffffff 60%); }
+
+/* Ensure spark lines inside metric cards use brand stroke if not specified inline */
+.metric-card .metric-spark path { stroke: #8A3366; }
+.metric-card .metric-spark rect { fill: rgba(138,51,102,0.18); }
+
+/* ================= Org Summary Header (match manager header style) ================= */
+.ins-approval-header {
+  display: flex; align-items: center; gap: 10px; padding: 10px 14px; margin: 0 0 8px 0;
+  border: 1px solid #e6e9ec; border-radius: 12px; background: linear-gradient(180deg, #f4e9f0 0%, #ffffff 100%);
+  box-shadow: 0 6px 16px rgba(16,24,40,0.06);
+}
+.ins-approval-header-icon {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 28px; height: 28px; border-radius: 8px; background: #8A3366; color: #fff; font-size: 16px; flex: 0 0 28px;
+}
+.ins-approval-header-title { color: #8A3366; font-weight: 800; }
+@media (max-width: 576px) {
+  .ins-approval-header { padding: 8px 10px; }
+  .ins-approval-header-title { font-size: 16px; }
+}
+
+/* ================= Organization Dashboard Responsive (migrated from Blade) ================= */

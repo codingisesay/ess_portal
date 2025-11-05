@@ -9,6 +9,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 // use Carbon\Carbon;
+// Used for rolling Work From Home window calculations
+use Carbon\CarbonPeriod;
 use App\Services\EmailService;
 use App\Models\User;
 use App\Mail\UserRegistrationMail;
@@ -450,9 +452,112 @@ class leavePolicyController extends Controller
             ->orderBy('created_at', 'desc') 
             ->get(); 
 
+        // Upcoming approved leaves (next five future-dated approvals for quick dashboard glance)
+        $upcomingApprovedLeaves = DB::table('leave_applies')
+            ->join('leave_types', 'leave_applies.leave_type_id', '=', 'leave_types.id')
+            ->select(
+                'leave_applies.id',
+                'leave_applies.start_date',
+                'leave_applies.end_date',
+                'leave_applies.description',
+                'leave_types.name as leave_type_name'
+            )
+            ->where('leave_applies.user_id', $user->id)
+            ->where('leave_applies.leave_approve_status', 'Approved')
+            ->whereDate('leave_applies.start_date', '>=', Carbon::today())
+            ->orderBy('leave_applies.start_date')
+            ->limit(5)
+            ->get();
+
     // dd($appliedLeaves);
 
+    // Align Work From Home trend with the active leave cycle 
+    $activeCycle = DB::table('leave_cycles')
+        ->where('organisation_id', $user->organisation_id)
+        ->where('status', 'Active')
+        ->orderBy('start_date')
+        ->first();
+
+    if ($activeCycle) {
+        // Anchor the chart to the cycle's first month and constrain display length to available cycle duration
+        $cycleStart = Carbon::parse($activeCycle->start_date)->startOfMonth();
+        $cycleEnd = Carbon::parse($activeCycle->end_date)->endOfMonth();
+        $monthsInCycle = $cycleStart->diffInMonths($cycleEnd) + 1;
+        $monthsToDisplay = min(6, $monthsInCycle); // HY1 spans three to six months; cap chart to six
+        $wfhWindowStart = $cycleStart->copy();
+        $wfhWindowEnd = $cycleStart->copy()->addMonths($monthsToDisplay - 1)->endOfMonth();
+    } else {
+        // Fall back to a trailing six-month window when no active cycle is configured
+        $monthsToDisplay = 6;
+        $wfhWindowStart = Carbon::now()->copy()->subMonths($monthsToDisplay - 1)->startOfMonth();
+        $wfhWindowEnd = Carbon::now()->copy()->endOfMonth();
+    }
+
+    $workFromHomeLeaves = DB::table('leave_applies')
+        ->join('leave_types', 'leave_applies.leave_type_id', '=', 'leave_types.id')
+        ->where('leave_types.id', 18) //insteadOf('leave_types.name', 'Work From Home') mapped with  the column id//
+        ->where('leave_applies.user_id', $user->id)
+        ->where('leave_applies.leave_approve_status', 'Approved')
+        ->whereBetween('leave_applies.start_date', [$wfhWindowStart->toDateString(), $wfhWindowEnd->toDateString()])
+        ->select('leave_applies.start_date', 'leave_applies.end_date', 'leave_applies.half_day')
+        ->orderBy('leave_applies.start_date')
+        ->get();
+
+    $wfhBuckets = [];
+
+    foreach ($workFromHomeLeaves as $leave) {
+        $leaveStart = Carbon::parse($leave->start_date);
+        $leaveEnd = Carbon::parse($leave->end_date);
+
+        if (in_array($leave->half_day, ['First Half', 'Second Half'], true)) {
+            // Half-day entries only contribute 0.5 for the month in question
+            $bucketKey = $leaveStart->format('Y-m');
+            $wfhBuckets[$bucketKey] = ($wfhBuckets[$bucketKey] ?? 0) + 0.5;
+            continue;
+        }
+
+        if ($leave->half_day === 'Full Day' || $leaveStart->equalTo($leaveEnd)) {
+            // Single-day requests (full-day or same-day start/end) count as 1
+            $bucketKey = $leaveStart->format('Y-m');
+            $wfhBuckets[$bucketKey] = ($wfhBuckets[$bucketKey] ?? 0) + 1;
+            continue;
+        }
+
+        // Multi-day spans are expanded via CarbonPeriod and accumulated per month
+        $period = CarbonPeriod::create($leaveStart, $leaveEnd);
+
+        foreach ($period as $date) {
+            if ($date->lt($wfhWindowStart) || $date->gt($wfhWindowEnd)) {
+                continue;
+            }
+
+            $bucketKey = $date->format('Y-m');
+            $wfhBuckets[$bucketKey] = ($wfhBuckets[$bucketKey] ?? 0) + 1;
+        }
+    }
+
+    $wfhLabels = [];
+    $wfhData = [];
+    $cursor = $wfhWindowStart->copy();
+
+    for ($i = 0; $i < $monthsToDisplay; $i++) {
+        // Walk month-by-month from the aligned start, ensuring labels follow HY order
+        $bucketKey = $cursor->format('Y-m');
+        $wfhLabels[] = $cursor->format('M');
+        $wfhData[] = round($wfhBuckets[$bucketKey] ?? 0, 2);
+        $cursor->addMonth();
+    }
+
+    // Structure data for the dashboard chart component
+        $workFromHomeChart = [
+        'labels' => $wfhLabels,
+        'data' => $wfhData,
+    ];
+
+    $workFromHomeTotalDays = array_sum($wfhData);
+
     $emp_details = DB::table('emp_details')->where('user_id',$user->id)->first();
+    $employeeGender = optional($emp_details)->gender;
 
     $leaveSummary = [];
         foreach ($leaveTypes as $leaveType) {
@@ -757,78 +862,104 @@ $holidays_upcoming = $holidays_upcoming->map(function ($holiday) {
 
 $userId = auth()->id();  // Get the current authenticated user's ID
 
-// Get the start and end date for the current year
-$startOfYear = now()->startOfYear()->toDateString();
-$endOfYear = now()->endOfYear()->toDateString();
+// Build per-day attendance breakdown grouped by month for the active year
+$activeAttendanceMonth = now()->format('Y-m'); // Track the current month (YYYY-MM) for default selection
 
-// Step 1: Collect all login/logout entries of the user within the year
-$userLogins = DB::table('login_logs')
-    ->where('user_id', $userId)
-    ->whereBetween('login_date', [$startOfYear, $endOfYear])
-    ->select('login_date', 'login_time')
-    ->get();
+$startOfYear = now()->startOfYear();
+$endOfYear = now()->endOfYear();
 
-// Step 2: Collect the working start and end times, holidays, and week offs
-$workSchedule = DB::table('calendra_masters')
-    ->whereBetween('date', [$startOfYear, $endOfYear])
+// Pull the yearly calendar (work schedule) and group it by month key for easy iteration
+$calendarDays = DB::table('calendra_masters')
+    ->whereBetween('date', [$startOfYear->toDateString(), $endOfYear->toDateString()])
     ->select('date', 'working_start_time', 'working_end_time', 'week_off', 'holiday')
-    ->get();
+    ->get()
+    ->groupBy(function ($day) {
+        return Carbon::parse($day->date)->format('Y-m');
+    });
 
-// Convert workSchedule into an associative array for easy lookup
-$workScheduleArray = [];
-foreach ($workSchedule as $workDay) {
-    $workScheduleArray[$workDay->date] = [
-        'working_start_time' => $workDay->working_start_time,
-        'working_end_time' => $workDay->working_end_time,
-        'week_off' => $workDay->week_off,
-        'holiday' => $workDay->holiday,
-    ];
-}
+// Collect login entries for the year and index them by date for quick lookup
+$userLoginsByDay = DB::table('login_logs')
+    ->where('user_id', $userId)
+    ->whereBetween('login_date', [$startOfYear->toDateString(), $endOfYear->toDateString()])
+    ->select('login_date', 'login_time')
+    ->get()
+    ->groupBy('login_date');
 
-// Initialize attendance counters for each month
 $attendanceOverview = [];
-foreach (range(1, 12) as $month) {
-    $attendanceOverview[$month] = [
-        'on_time' => 0,
-        'late' => 0,
-        'absent' => 0,
+
+$attendanceOverview = [];
+
+foreach ($calendarDays as $monthKey => $days) {
+    $monthStats = [
+        'label' => Carbon::createFromFormat('Y-m', $monthKey)->format('F'),
+        'year' => Carbon::createFromFormat('Y-m', $monthKey)->format('Y'),
+        'month_key' => $monthKey,
+        'daily' => [],
     ];
-}
 
-// Convert userLogins into an associative array for quick lookup
-$userLoginArray = [];
-foreach ($userLogins as $login) {
-    $userLoginArray[$login->login_date] = $login->login_time;
-}
+    foreach ($days->sortBy('date') as $day) {
+        // Ignore holidays and week offs to keep the chart focused on working days
+        $date = $day->date;
 
-// Process each day in the work schedule
-foreach ($workScheduleArray as $date => $details) {
-    $month = \Carbon\Carbon::parse($date)->month;
-    
-    // Skip if it's a holiday or week off
-    if ($details['holiday'] == 'YES' || $details['week_off'] == 'YES') {
-        continue;
-    }
-    
-    // Check if user has a login entry for this date
-    if (isset($userLoginArray[$date])) {
-        $loginTime = \Carbon\Carbon::parse($userLoginArray[$date]);
-        $startOfDay = \Carbon\Carbon::parse($date . ' ' . $details['working_start_time']);
-        
-        // Determine if the user was on time or late
-        if ($loginTime <= $startOfDay) {
-            $attendanceOverview[$month]['on_time']++;
-        } else {
-            $attendanceOverview[$month]['late']++;
+        if ($day->holiday === 'YES' || $day->week_off === 'YES') {
+            continue;
         }
-    } else {
-        // User did not log in and it's not a holiday or week off, mark as absent
-        $attendanceOverview[$month]['absent']++;
+
+        $status = 'absent';
+
+        // Evaluate whether there is a login entry for the day and classify it as on-time/late/absent
+        $loginEntry = $userLoginsByDay->get($date)?->first();
+
+        if ($loginEntry) {
+            $loginTime = Carbon::parse($loginEntry->login_time);
+            $expectedStart = Carbon::parse($date . ' ' . $day->working_start_time);
+
+            if ($loginTime->lessThanOrEqualTo($expectedStart)) {
+                $status = 'on_time';
+            } else {
+                $status = 'late';
+            }
+        }
+
+        $monthStats['daily'][] = [
+            'day' => Carbon::parse($date)->day,
+            'status' => $status,
+        ];
     }
+
+    if (!empty($monthStats['daily'])) {
+        $attendanceOverview[$monthKey] = $monthStats;
+    }
+}
+
+ksort($attendanceOverview);
+
+// Fall back to the first available month (if current month has no data)
+if (!array_key_exists($activeAttendanceMonth, $attendanceOverview) && !empty($attendanceOverview)) {
+    $activeAttendanceMonth = array_key_first($attendanceOverview);
 }
     // dd($appliedLeaves);
         // Pass the leave summary data, applied leaves, and total working hours to the view
-        return view('user_view.leave_dashboard', compact('leaveSummary', 'workingHoursData', 'appliedLeaves','title','holidays_upcoming', 'attendanceRate', 'presentDays', 'absentDays', 'totalDaysInMonth', 'attendanceOverview'));
+        // Bundle dashboard datasets for the blade template (leave stats, upcoming items, and attendance summary)
+        // Tailor the leave summary to the employee's gender so only the relevant parental leave is shown on the dashboard
+        $displayLeaveSummary = collect($leaveSummary);
+
+        if ($employeeGender && strcasecmp($employeeGender, 'Male') === 0) {
+            // Male employees should not see Maternity Leave cards
+            $displayLeaveSummary = $displayLeaveSummary->reject(function ($leave) {
+                return isset($leave['leave_type']) && stripos($leave['leave_type'], 'maternity') !== false;
+            });
+        } elseif ($employeeGender && strcasecmp($employeeGender, 'Female') === 0) {
+            // Female employees should not see Paternity Leave cards
+            $displayLeaveSummary = $displayLeaveSummary->reject(function ($leave) {
+                return isset($leave['leave_type']) && stripos($leave['leave_type'], 'paternity') !== false;
+            });
+        }
+
+        // Reset the array keys to keep front-end loops clean (0..n)
+        $displayLeaveSummary = $displayLeaveSummary->values()->all();
+
+        return view('user_view.leave_dashboard', compact('leaveSummary', 'displayLeaveSummary', 'workingHoursData', 'appliedLeaves', 'upcomingApprovedLeaves','title','holidays_upcoming', 'attendanceRate', 'presentDays', 'absentDays', 'totalDaysInMonth', 'attendanceOverview', 'activeAttendanceMonth', 'workFromHomeChart', 'workFromHomeTotalDays', 'employeeGender'));
     }
 
 

@@ -1,0 +1,409 @@
+/* Goals title bar (matches screenshot) */
+.emp-goals-bar {
+  width: 100%;
+  background: linear-gradient(180deg, #F7EAF3 0%, #F9F2F7 100%);
+  border-radius: 1 14px 14px 1;
+  padding: 10px 14px;
+  font-weight: 800;
+  color: #5B2142;
+  margin-bottom: 12px;
+}
+.emp-goals-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px; height: 28px;
+  border-radius: 8px;
+  background: #7C2C57;
+  color: #fff;
+  box-shadow: 0 2px 6px rgba(124, 44, 87, 0.25);
+}
+.emp-goals-title { line-height: 1; }
+/* =====================
+   Equal-height layout for Employee dashboard
+   Stretches both columns and their cards so sidebar matches main content height
+===================== */
+.row.align-items-stretch > [class*="col-"] { display: flex; }
+.row.align-items-stretch > [class*="col-"] > .card { flex: 1 1 auto; height: 100%; }
+.emp-sidebar { display: flex; flex-direction: column; }
+.emp-sidebar .list-group { overflow-y: auto; }
+/* Sidebar header look to match manager/org dashboards */
+.emp-sidebar-header {
+  background: linear-gradient(180deg, #FAF6FB 0%, #F4ECF7 100%);
+  border: 1px solid #E9E3ED;
+  border-radius: 8px;
+  padding: 36px 12px;
+}
+/* Employee Dashboard sidebar customizations (keeps functionality unchanged) */
+
+/* Title row: blue dot + title text */
+.pms-sidebar h3 {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 18px;
+  font-weight: 700;
+  margin: 0 0 12px 0;
+}
+.pms-sidebar h3 .emp-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #3C7EFF; /* blue indicator */
+  display: inline-block;
+}
+
+/* List nav look-and-feel */
+.pms-sidebar .pms-sidebar-nav {
+  list-style: none;
+  padding-left: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.pms-sidebar .pms-sidebar-nav li a {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border-radius: 12px;
+  color: #1b1c1e;
+  text-decoration: none;
+  font-weight: 600;
+}
+.pms-sidebar .pms-sidebar-nav li a:hover {
+  background: #f6f7fb;
+}
+.pms-sidebar .pms-sidebar-nav li a.active {
+  background: #F1E8FF; /* light purple */
+  color: #5A1C85; /* deep purple text */
+}
+.pms-sidebar .pms-sidebar-nav li a i {
+  font-size: 18px;
+  color: inherit;
+}
+
+/* Keep manager-dashboard base sizing but allow collapse */
+.pms-sidebar.collapsed .pms-sidebar-nav li a span { display: none; }
+.pms-sidebar.collapsed h3 .pms-title-text { display: none; }
+.pms-sidebar.collapsed { width: 56px; }
+
+/* Main area alignment like manager */
+.pms-main { width: 100%; }
+
+/* Provide pleasant focus ring for accessibility */
+.pms-sidebar .pms-sidebar-nav li a:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(60, 126, 255, 0.25);
+}
+
+/* ============= Current markup (row/col with card.list-group) fallback ============= */
+.emp-sidebar .emp-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #3C7EFF;
+  display: inline-block;
+}
+.emp-sidebar .list-group a.list-group-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 12px;
+  border: none;
+  border-radius: 12px;
+  margin-bottom: 6px;
+  color: #1b1c1e;
+  font-weight: 600;
+}
+.emp-sidebar .list-group a.list-group-item:hover {
+  background: #f6f7fb;
+}
+.emp-sidebar .list-group a.list-group-item.active {
+  background: #E8F1FF; /* light blue */
+  color: #0E3A5E;      /* dark navy text */
+  border-radius: 12px; /* rounded active pill */
+}
+.emp-sidebar .list-group a.list-group-item i {
+  font-size: 20px;
+  margin-right: 10px;
+  color: #0E3A5E;
+}
+.emp-sidebar .list-group {
+  gap: 6px;
+}
+.emp-sidebar .list-group a.list-group-item {
+  display: flex;
+  align-items: center;
+  border: none;
+  padding: 10px 12px;
+}
+.emp-sidebar .list-group a.list-group-item .link-text {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.1;
+}
+.emp-sidebar .list-group a.list-group-item .title {
+  font-weight: 700;
+}
+.emp-sidebar .list-group a.list-group-item .subtitle {
+  font-size: 12px;
+  color: #6b7b8f;
+  margin-top: 4px;
+}
+
+/* =====================
+   Goals table styling
+   Scope: the .mb-4 immediately after #emp-goals
+===================== */
+#emp-goals + .mb-4 table {
+  width: 100%;
+  border-collapse: separate !important;
+  border-spacing: 0;
+  border: 1px solid #eee;
+  border-radius: 10px;
+  overflow: hidden; /* helps with rounded corners in most browsers */
+  background: #fff;
+}
+/* Header styling (applies to both the original table and split fixed header table) */
+#emp-goals + .mb-4 thead th {
+  background: linear-gradient(90deg, #6f2c8f 0%, #a34a86 50%, #d37480 100%);
+  color: #fff;
+  text-transform: uppercase;
+  font-weight: 700;
+  border: 0 !important;
+  padding-top: 12px;
+  padding-bottom: 12px;
+}
+#emp-goals + .mb-4 thead th:first-child {
+  border-top-left-radius: 10px;
+}
+#emp-goals + .mb-4 thead th:last-child {
+  border-top-right-radius: 10px;
+}
+#emp-goals + .mb-4 .goals-scroll {
+  /* Scroll body after ~9 rows, keep header visible */
+  max-height: 445px; /* ~9 rows depending on padding/line-height */
+  overflow-y: auto;
+  /* Hide scrollbar while preserving scroll (cross-browser) */
+  scrollbar-width: none;        /* Firefox */
+  -ms-overflow-style: none;     /* IE/Edge legacy */
+}
+#emp-goals + .mb-4 .goals-scroll::-webkit-scrollbar { /* Chrome/Safari */
+  width: 0;
+  height: 0;
+}
+#emp-goals + .mb-4 thead th {
+  position: sticky;
+  top: 0;
+  z-index: 3; /* above scrolling cells; does not affect global header fixes */
+  /* background already purple above; reinforce to avoid transparency while sticky */
+  background: linear-gradient(90deg, #8A3366  100%);
+}
+#emp-goals + .mb-4 tbody td {
+  /* Increase vertical rhythm for comfortable row height */
+  padding-top: 12px !important;
+  padding-bottom: 12px !important;
+}
+/* Align body top border under header without double line */
+#emp-goals + .mb-4 .goals-scroll tbody tr:first-child td {
+  border-top: 0 !important;
+}
+#emp-goals + .mb-4 tbody td {
+  vertical-align: middle;
+  border-top: 1px solid #eee !important;
+  border-right: 1px solid #f4f4f4 !important;
+}
+#emp-goals + .mb-4 tbody td:last-child {
+  border-right: 0 !important;
+}
+#emp-goals + .mb-4 tbody tr:hover td {
+  background: #faf7fc; /* subtle hover */
+}
+
+/* First column: leading arrow-in-circle icon like the design */
+#emp-goals + .mb-4 .goals-scroll tbody td:first-child {
+  position: relative;
+  padding-left: 44px !important; /* room for icon */
+}
+#emp-goals + .mb-4 .goals-scroll tbody td:first-child::before {
+  content: '↗'; /* directional arrow */
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  line-height: 1;
+  color: #ffffff;
+  background: #8A3366; /* purple circle */
+  box-shadow: 0 2px 6px rgba(122, 46, 141, 0.25);
+}
+
+/* Goal title/description formatting inside the first column */
+#emp-goals + .mb-4 tbody td strong {
+  font-weight: 700;
+}
+#emp-goals + .mb-4 tbody td small.text-muted {
+  display: block;
+}
+
+/* Action buttons: pill-shaped purple buttons */
+#emp-goals + .mb-4 .btn {
+  background-color: #8A3366 !important; /* purple */
+  border-color: #8A3366 !important;
+  color: #fff !important;
+  border-radius: 9999px !important; /* pill */
+  padding: 6px 12px !important;
+  font-weight: 600;
+}
+#emp-goals + .mb-4 .btn:hover {
+  background-color: #6f2750 !important; /* darker on hover */
+  border-color: #6f2750 !important;
+}
+#emp-goals + .mb-4 .btn + .btn {
+  margin-left: 10px;
+}
+
+/* =====================
+   Insights table styling (Your Submitted Insights)
+   Scope: the .card immediately after #emp-insights
+===================== */
+/* Tables (both fixed header and scroll body) */
+#emp-insights + .card .table-fixed-header table,
+#emp-insights + .card .org-insights-scroll table {
+  width: 100%;
+  border-collapse: separate !important;
+  border-spacing: 0;
+  border: 1px solid #eee;
+  background: #fff;
+}
+/* Rounded corners: top on header table, bottom on body table */
+#emp-insights + .card .table-fixed-header table {
+  border-radius: 12px 12px 0 0;
+  overflow: hidden;
+  border-bottom: 0;
+}
+#emp-insights + .card .org-insights-scroll table {
+  border-radius: 0 0 12px 12px;
+  border-top: 0;
+}
+/* Gradient header */
+#emp-insights + .card .table-fixed-header thead th {
+  background: linear-gradient(90deg, #8A3366 0% 100%);
+  color: #fff;
+  text-transform: uppercase;
+  font-weight: 700;
+  border: 0 !important;
+  padding-top: 12px;
+  padding-bottom: 12px;
+}
+#emp-insights + .card .table-fixed-header thead th:first-child {
+  border-top-left-radius: 12px;
+}
+#emp-insights + .card .table-fixed-header thead th:last-child {
+  border-top-right-radius: 12px;
+}
+/* Body rows */
+#emp-insights + .card .org-insights-scroll tbody td {
+  vertical-align: middle;
+  border-top: 1px solid #EFEAF5 !important; /* softer separator */
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+#emp-insights + .card .org-insights-scroll tbody tr:hover td {
+  background: #F7F3FB; /* subtle hover */
+}
+/* Scroll behavior: sticky header is handled via split tables; hide scrollbars */
+#emp-insights + .card .org-insights-scroll {
+  max-height: 360px; /* adjust as needed */
+  overflow-y: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+#emp-insights + .card .org-insights-scroll::-webkit-scrollbar {
+  width: 0; height: 0;
+}
+/* Status badge: yellow pill like design */
+#emp-insights + .card .badge.bg-warning {
+  background-color: #FFD970 !important;
+  color: #6B4E00 !important;
+  border-radius: 9999px;
+  padding: 4px 10px;
+  font-weight: 700;
+}
+/* Pending status badges (secondary) use brand purple */
+.badge.bg-secondary {
+  background-color: #8A3366 !important;
+  color: #fff !important;
+  border-color: #8A3366 !important;
+}
+/* Rating cell: emphasize star color */
+#emp-insights + .card tbody td:nth-child(5) { color: #8A3366; }
+#emp-insights + .card tbody td:nth-child(5) .rating-star { color: #F5C542; }
+/* Center and style the submit button as a gradient pill */
+#emp-insights + .card .d-flex.justify-content-end {
+  justify-content: center !important;
+}
+#emp-insights + .card #submitSelectedInsights {
+  background: linear-gradient(90deg, #8A3366 100%);
+  color: #fff;
+  border: 0;
+  border-radius: 9999px;
+  padding: 10px 18px;
+  font-weight: 700;
+  box-shadow: 0 6px 20px rgba(138, 51, 102, 0.25);
+}
+#emp-insights + .card #submitSelectedInsights:hover {
+  filter: brightness(0.98);
+}
+
+/* Goal icon pill in first column */
+#emp-insights + .card .insight-goal-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px; height: 18px;
+  border-radius: 9999px;
+  background: #EFEAF5; /* light lavender */
+  color: #8A3366; /* purple icon */
+  font-size: 10px;
+  vertical-align: -2px;
+}
+
+/* Rounded corners at bottom of scrolling table when last row visible */
+#emp-insights + .card .org-insights-scroll table {
+  border-bottom-left-radius: 12px;
+  border-bottom-right-radius: 12px;
+}
+
+/* Keep Create Task modal below the header (top offset set via --emp-header-offset) */
+#taskModal .modal-dialog {
+  margin: calc(var(--emp-header-offset, 0px)) auto 0 auto;
+}
+/* Keep Add Insight modal below the header (same offset) */
+#insightModal .modal-dialog {
+  margin: calc(var(--emp-header-offset, 0px)) auto 0 auto;
+}
+
+/* =====================
+   Tasks list: show 8 items, scroll hidden beyond
+   Scope: the .mb-4 following #emp-tasks
+===================== */
+#emp-tasks + .mb-4 ul.list-group {
+  /* Adjust this if your list items are taller/shorter */
+  --emp-task-li-height: 60px;
+  max-height: calc(var(--emp-task-li-height) * 8);
+  overflow-y: auto;
+  scrollbar-width: none;        /* Firefox */
+  -ms-overflow-style: none;     /* IE/Edge */
+}
+#emp-tasks + .mb-4 ul.list-group::-webkit-scrollbar { /* Chrome/Safari */
+  width: 0; height: 0;
+}

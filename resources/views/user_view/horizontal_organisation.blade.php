@@ -7,11 +7,26 @@ function renderEmployeeTree($employees) {
     foreach ($employees as $employee) { 
 
         echo '<li class="employee" data-emp-id="' . $employee->user_id . '" data-manager-id="' . ($employee->reporting_manager ?? '') . '">';
+        // choose gender icon to display in place of profile image
+        $genderIcon = asset('user_end/images/male-and-female.png');
+        if (isset($employee->gender)) {
+            if ($employee->gender === 'Male') {
+                $genderIcon = asset('user_end/images/man2.png');
+            } elseif ($employee->gender === 'Female') {
+                $genderIcon = asset('user_end/images/woman.png');
+            }
+        }
+
         echo '<div class="profile-container"> ';
+        // original profile image (kept as comment for easy restore)
+        /*
         echo '    <img class=" profile-img" src="' 
             . (isset($employee->profile_image) && !empty($employee->profile_image) 
             ? asset('storage/' . $employee->profile_image) : '/storage/user_profile_image/Oqr4VRqo7RpQxnmiZCh12zybbcdsyUin2FhAKD3O.jpg') 
             . '" alt="Profile Image"> <br/>';
+        */
+        // show gender icon in the image spot (above the name)
+        echo '    <img class=" profile-img" src="' . $genderIcon . '" alt="Gender Icon" style="width:50px; height:50px; border-radius:50%;"> <br/>';
         echo ' <small class="emp-name">' . $employee->employee_name . '</small>';
         echo '    <div class="emp-info"> ';
         echo '        <div class=""> Dept - ' . $employee->department . '</div> ';
