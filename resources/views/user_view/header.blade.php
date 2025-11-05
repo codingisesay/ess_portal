@@ -69,19 +69,47 @@ $userDetails = app('App\Http\Controllers\headerController')->getUserDetails();
                     <div class="px-2 pb-2 text-muted"><small>No notifications yet.</small></div>
                 </div>
             </div>
+            <!-- Profile Circle - Displays user's profile picture or default icon -->
             <div class="profilecircle profile-dropdown">
-                <a href="javascript:void(0)" id="profileIcon" class=" mx-2" > 
-                    <img src="{{ asset('user_end/images/profile.png') }}" alt="Profile Picture" class="header-profile" >
+                <a href="javascript:void(0)" id="profileIcon" class="mx-2" > 
+                    {{-- Check if user has a profile image and it exists in storage --}}
+                    @if(!empty($userDetails->profile_image) && file_exists(public_path('storage/' . $userDetails->profile_image)))
+                        {{-- Display user's profile image --}}
+                        <img src="{{ asset('storage/' . $userDetails->profile_image) }}" 
+                             alt="Profile Picture" 
+                             class="header-profile" 
+                             style="border-radius: 50%; object-fit: cover; width: 40px; height: 40px;">
+                    @else
+                        {{-- Fallback: Display default user icon if no profile image exists --}}
+                        <div class="d-flex align-items-center justify-content-center bg-primary text-white rounded-circle" 
+                             style="width: 40px; height: 40px;">
+                            <i class="fas fa-user"></i>
+                        </div>
+                    @endif
                 </a>
+                <!-- Profile Dropdown Content -->
                 <div class="profile-dropdown-content"> 
-                    <div class="d-flex"> 
-                    <img src="{{ asset('storage/'.$profileimahe) }}" alt="Profile Picture" class="profile-in-dd" >                   
-                 
-                    <div >
-                        <p class="mb-0">{{ $userDetails->name }}</p>
-                        <small class="text-muted"><small>
-                            Emp. Code: {{ $userDetails->employeeID }}
-                        </small></small>
+                    <div class="d-flex align-items-center">
+                        {{-- Profile picture in dropdown --}}
+                        @if(!empty($userDetails->profile_image) && file_exists(public_path('storage/' . $userDetails->profile_image)))
+                            <img src="{{ asset('storage/' . $userDetails->profile_image) }}" 
+                                 alt="Profile Picture" 
+                                 class="profile-in-dd" 
+                                 style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover;">
+                        @else
+                            {{-- Fallback: Default user icon --}}
+                            <div class="d-flex align-items-center justify-content-center bg-primary text-white rounded-circle me-2" 
+                                 style="width: 40px; height: 40px;">
+                                <i class="fas fa-user"></i>
+                            </div>
+                        @endif
+                        
+                        {{-- User details section --}}
+                        <div class="ms-2">
+                            <p class="mb-0">{{ $userDetails->name }}</p>
+                            <small class="text-muted">
+                                <small>Emp. Code: {{ $userDetails->employeeID }}</small>
+                            </small>
                     </div>
                     </div>
                     <hr class="my-2"/>                         
