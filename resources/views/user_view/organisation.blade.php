@@ -78,19 +78,46 @@ error_reporting(0);
 <div class="mx-4 mt-3">
     <div class="header mb-4">
         <!-- <h4>Organization Hierarchy</h4> -->
-        <div class="dropdown">
-            <select id="display-option" onchange="changeDisplayMode()">
-                <option value="horizontal">Horizontal Organization Chart</option>
-                <option value="vertical">Vertical Organization Chart</option>
-            </select>
+        <div class="ds-pill">
+            <button id="switchOrg" class="ds-option active" type="button" aria-pressed="true" onclick="changeChartView('vertical')">
+                <span class="ds-icon ds-icon-org" aria-hidden="true">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12 12a4 4 0 1 0-4-4 4 4 0 0 0 4 4Zm0 2c-4.42 0-8 2.24-8 5v1h16v-1c0-2.76-3.58-5-8-5Z"></path>
+                    </svg>
+                </span>
+                <span>Vertical</span>
+            </button>
+            <button id="switchMgr" class="ds-option" type="button" aria-pressed="false" onclick="changeChartView('horizontal')">
+                <span class="ds-icon ds-icon-mgr" aria-hidden="true">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M3 21V5a2 2 0 0 1 2-2h7a2 2 0 0 1 2 2v6h3a2 2 0 0 1 2 2v8h-4v-5h-2v5H7v-5H5v5H3Zm6-7H7v2h2v-2Zm0-4H7v2h2V10Zm4 4h-2v2h2v-2Zm0-4h-2v2h2V10Zm0-4H7v2h6V6Z"></path>
+                    </svg>
+                </span>
+                <span>Horizontal</span>
+            </button>
         </div>
         <div class="search-bar-container">
             <input type="text" id="search-bar" placeholder="Search Employee Name..." onkeyup="highlightEmployee()">
             <span class="search-icon"> <img src="{{ asset('user_end/images/search (2) 3.png') }}" alt="Search Icon"></span>
         </div> 
-    </div>
-    
-    <div class=" row">  
+        </div>
+
+        <!-- Modal to show Horizontal Organization Chart -->
+                <div class="modal fade" id="horizontalChartModal" tabindex="-1" aria-labelledby="horizontalChartModalLabel" aria-hidden="true" data-bs-backdrop="true">
+                    <div class="modal-dialog modal-xl" style="max-width:1200px; width:90vw;">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="horizontalChartModalLabel">Horizontal Organization Chart</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body" id="horizontal-modal-body">
+                        <div class="text-center py-4" id="horizontal-modal-loading">Loading chart…</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class=" row">  
         <div class="col-md-4 my-2">
             <div class="employee-list">
                 <ul class="tree">
@@ -253,21 +280,149 @@ error_reporting(0);
             });  
         }  
 
-        // Function to change display mode  
-        function changeDisplayMode() {  
-            const displayOption = document.getElementById('display-option').value;  
+        // Function to change chart view
+        function changeChartView(view) {
+            const switchOrg = document.getElementById('switchOrg');
+            const switchMgr = document.getElementById('switchMgr');
+            
+            if (view === 'horizontal') {
+                switchOrg.classList.remove('active');
+                switchMgr.classList.add('active');
+                openHorizontalModal();
+            } else {
+                resetToggleToVertical();
+                // Close modal if open
+                const modal = document.getElementById('horizontalChartModal');
+                if (modal) {
+                    const bsModal = bootstrap.Modal.getInstance(modal);
+                    if (bsModal) {
+                        bsModal.hide();
+                    }
+                }
+            }
+        }
 
-            if (displayOption === 'horizontal') {  
-                // Redirect to org.php when horizontal chart is selected  
-                window.location.href = "{{ route('user.view.horizontal.organisation') }}"; 
-                
-            }  
-            // Default behavior for vertical chart can be handled without alert  
-        }  
+        // Function to reset toggle to Vertical
+        function resetToggleToVertical() {
+            const switchOrg = document.getElementById('switchOrg');
+            const switchMgr = document.getElementById('switchMgr');
+            
+            switchOrg.classList.add('active');
+            switchMgr.classList.remove('active');
+        }
 
-        // Set default selected option to "Vertical" and display employee details on load
+        // Open modal and load horizontal chart HTML via AJAX
+        async function openHorizontalModal() {
+            const modalEl = document.getElementById('horizontalChartModal');
+            const modalBody = document.getElementById('horizontal-modal-body');
+            const loading = document.getElementById('horizontal-modal-loading');
+
+            // Add event listener for when the modal is hidden
+            modalEl.addEventListener('hidden.bs.modal', function () {
+                resetToggleToVertical();
+            });
+
+            // show bootstrap modal
+            const ModalCtor = (window.bootstrap && window.bootstrap.Modal) ? window.bootstrap.Modal : null;
+            let modalInstance = null;
+            // ensure modal lives under document.body so Bootstrap backdrop covers full page (including header)
+            try {
+                if (modalEl && modalEl.parentElement !== document.body) {
+                    document.body.appendChild(modalEl);
+                }
+            } catch (err) { /* ignore */ }
+
+                if (ModalCtor) {
+                // increase z-index to be above any header/navbar
+                modalEl.style.zIndex = '99999';
+                modalInstance = ModalCtor.getOrCreateInstance(modalEl, { backdrop: true, focus: true });
+                modalInstance.show();
+            } else {
+                // fallback: show modal and create backdrop
+                modalEl.classList.add('show');
+                modalEl.style.display = 'block';
+                modalEl.style.zIndex = '99999';
+                const back = document.createElement('div'); back.className = 'modal-backdrop fade show'; back.style.zIndex='99990'; document.body.appendChild(back);
+            }
+
+            if (modalBody) {
+                modalBody.innerHTML = '<div class="text-center py-4">Loading chart…</div>';
+            }
+
+            try {
+                const res = await fetch("{{ route('user.view.horizontal.organisation') }}", { credentials: 'same-origin' });
+                if (!res.ok) throw new Error('Failed to load horizontal chart');
+                const html = await res.text();
+
+                // Parse returned HTML and try to extract the chart container
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(html, 'text/html');
+
+                // Prefer the element with class 'scroll-container' so horizontal CSS rules apply.
+                let fragment = doc.querySelector('.scroll-container') || doc.getElementById('employee-tree') || doc.querySelector('.tree');
+
+                if (fragment && modalBody) {
+                    modalBody.innerHTML = '';
+
+                    // If fragment is the inner .tree (without .scroll-container), wrap it so CSS selectors apply
+                    if (!fragment.classList.contains('scroll-container') && fragment.classList.contains('tree')) {
+                        const wrapper = document.createElement('div');
+                        wrapper.className = 'scroll-container';
+                        wrapper.appendChild(fragment.cloneNode(true));
+                        modalBody.appendChild(wrapper);
+                    } else {
+                        modalBody.appendChild(fragment.cloneNode(true));
+                    }
+
+                    // ensure modal body has enough height for horizontal layout to render
+                    modalBody.style.minHeight = '70vh';
+                    modalBody.style.overflow = 'auto';
+
+                    // initialize simple behaviors inside modal
+                    initHorizontalModalScripts(modalBody);
+                } else if (modalBody) {
+                    // fallback: inject entire response (may include extra markup)
+                    modalBody.innerHTML = html;
+                    modalBody.style.minHeight = '70vh';
+                    modalBody.style.overflow = 'auto';
+                    initHorizontalModalScripts(modalBody);
+                }
+
+            } catch (err) {
+                console.error(err);
+                if (modalBody) modalBody.innerHTML = '<div class="text-danger">Could not load chart.</div>';
+            }
+        }
+
+        // Wire up basic toggle/search behaviors for content injected into modalBody
+        function initHorizontalModalScripts(container) {
+            // container can be document or an element
+            const root = container || document;
+
+            // Toggle visibility for items that have nested lists
+            root.querySelectorAll('.employee').forEach(emp => {
+                const profile = emp.querySelector('.profile-container') || emp.querySelector('.employee-box') || emp;
+                const childUl = emp.querySelector('ul');
+                if (profile && childUl) {
+                    profile.style.cursor = 'pointer';
+                    profile.addEventListener('click', function (e) {
+                        e.preventDefault();
+                        childUl.style.display = (childUl.style.display === 'none') ? 'block' : 'none';
+                    });
+                }
+            });
+
+            // Ensure search in main page filters modal content as well
+            const searchInput = document.getElementById('search-bar');
+            if (searchInput) {
+                searchInput.removeEventListener('input', highlightEmployee);
+                searchInput.addEventListener('input', highlightEmployee);
+            }
+        }
+
+        // Set default view and display employee details on load
     window.onload = function() {  
-        document.getElementById('display-option').value = 'vertical'; // Set default to Vertical chart  
+        // Default to vertical view (toggle off)  
 
         // Get the employee details from Laravel session
         const empUserId = "{{ $employees_login->user_id }}";         // Must be first (used for goals)
@@ -293,6 +448,50 @@ error_reporting(0);
 </script> 
 
 <style>
+    /* Pill Style Toggle Switch */
+    .ds-pill {
+        display: inline-flex;
+        background-color: #f1f1f1;
+        border-radius: 20px;
+        padding: 2px;
+        margin-right: 15px;
+    }
+    
+    .ds-option {
+        display: inline-flex;
+        align-items: center;
+        padding: 6px 16px;
+        border: none;
+        background: none;
+        cursor: pointer;
+        font-size: 14px;
+        font-weight: 500;
+        color: #666;
+        border-radius: 16px;
+        transition: all 0.3s ease;
+    }
+    
+    .ds-option:hover {
+        background-color: rgba(0, 0, 0, 0.05);
+    }
+    
+    .ds-option.active {
+        background-color: #fff;
+        color: #1a73e8;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
+    }
+    
+    .ds-option .ds-icon {
+        display: inline-flex;
+        align-items: center;
+        margin-right: 8px;
+    }
+    
+    .ds-option svg {
+        width: 16px;
+        height: 16px;
+    }
+    
     .custom-accordion {
     border: 1px solid #ccc;
     border-radius: 4px;
@@ -325,6 +524,48 @@ error_reporting(0);
 .accordion-header .arrow {
     font-size: 14px;
     transition: transform 0.2s ease;
+}
+
+/* Ensure modal backdrop covers header/navbar which may have high z-index */
+.modal-backdrop {
+    z-index: 99990 !important;
+}
+.modal {
+    z-index: 99999 !important;
+}
+
+/* Position the horizontalChartModal dialog with no top margin */
+#horizontalChartModal .modal-dialog {
+    margin: 0 auto 0 auto !important;
+}
+
+/* Remove top margin from modal content */
+#horizontalChartModal .modal-content {
+    margin-top: 0 !important;
+    border: none !important;
+}
+
+/* Remove header padding inside horizontal modal and tighten close button */
+#horizontalChartModal .modal-header {
+    padding: 0 !important;
+    align-items: center;
+}
+#horizontalChartModal .modal-header {
+    border-bottom: none !important;
+}
+#horizontalChartModal .modal-title {
+    margin: 0.5rem 1rem;
+    font-size: 1.125rem;
+}
+#horizontalChartModal .modal-header .btn-close {
+    margin: 0.25rem 0.5rem;
+}
+
+/* Remove bottom border from modal-content h5 specifically inside the horizontal modal */
+#horizontalChartModal .modal-content h5 {
+    border-bottom: none !important;
+    margin-bottom: 0 !important;
+    padding-bottom: 0 !important;
 }
 
 </style>
