@@ -70,8 +70,8 @@ $userDetails = app('App\Http\Controllers\headerController')->getUserDetails();
                 </div>
             </div>
             <div class="profilecircle profile-dropdown">
-                <a href="javascript:void(0)" id="profileIcon" class=" mx-2" > 
-                    <img src="{{ asset('user_end/images/profile.png') }}" alt="Profile Picture" class="header-profile" >
+                <a href="javascript:void(0)" id="profileIcon" class="mx-2" > 
+                    <img src="{{ asset('storage/'.$profileimahe) }}" alt="Profile Picture" class="header-profile">
                 </a>
                 <div class="profile-dropdown-content"> 
                     <div class="d-flex"> 

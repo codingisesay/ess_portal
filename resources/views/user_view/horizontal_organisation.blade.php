@@ -19,14 +19,12 @@ function renderEmployeeTree($employees) {
 
         echo '<div class="profile-container"> ';
         // original profile image (kept as comment for easy restore)
-        /*
         echo '    <img class=" profile-img" src="' 
             . (isset($employee->profile_image) && !empty($employee->profile_image) 
             ? asset('storage/' . $employee->profile_image) : '/storage/user_profile_image/Oqr4VRqo7RpQxnmiZCh12zybbcdsyUin2FhAKD3O.jpg') 
             . '" alt="Profile Image"> <br/>';
-        */
         // show gender icon in the image spot (above the name)
-        echo '    <img class=" profile-img" src="' . $genderIcon . '" alt="Gender Icon" style="width:50px; height:50px; border-radius:50%;"> <br/>';
+        // echo '    <img class=" profile-img" src="' . $genderIcon . '" alt="Gender Icon" style="width:50px; height:50px; border-radius:50%;"> <br/>';
         echo ' <small class="emp-name">' . $employee->employee_name . '</small>';
         echo '    <div class="emp-info"> ';
         echo '        <div class=""> Dept - ' . $employee->department . '</div> ';

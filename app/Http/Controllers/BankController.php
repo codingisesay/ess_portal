@@ -6,10 +6,19 @@ use Illuminate\Http\Request;
 
 class BankController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $banks = Bank::orderBy('id', 'desc')->get();
-        return view('superadmin_view.bank_master', compact('banks'));
+        // Get sort parameters from URL or use defaults
+        // 'id' is the default sort column if none specified
+        // 'desc' is the default sort order if none specified
+        $sort = $request->get('sort', 'id');
+        $order = $request->get('order', 'desc');
+        
+        // Fetch banks with dynamic sorting based on the parameters
+        $banks = Bank::orderBy($sort, $order)->get();
+        
+        // Pass banks and sort parameters to the view
+        return view('superadmin_view.bank_master', compact('banks', 'sort', 'order'));
     }
 
     public function store(Request $request)
