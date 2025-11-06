@@ -17,8 +17,8 @@
     <div class="container">
        
         <div class="left-container">
-        <!-- <img src="{{ asset('user_end/images/Vector 58.jpg') }}" class="img-fluid vh-100 w-100 object-fit-cover" alt="Login Image"> -->
-            <img src="https://cdn.pixabay.com/photo/2023/04/18/17/14/ai-generated-7935610_1280.jpg" class="img-fluid vh-100 w-100 object-fit-cover" alt="Login Image">
+            <img src="{{ asset('user_end/images/Vector 58.jpg') }}" class="img-fluid vh-100 w-100 object-fit-cover" alt="Login Image">
+            <!-- <img src="https://cdn.pixabay.com/photo/2023/04/18/17/14/ai-generated-7935610_1280.jpg" class="img-fluid vh-100 w-100 object-fit-cover" alt="Login Image"> -->
         </div>
         <div class="right-container">
             @if($errors->has('email'))
