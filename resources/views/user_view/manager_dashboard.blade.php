@@ -699,9 +699,11 @@
         @endif
 
             </div>
-        
 
-           
+
+            </div>
+
+                       
             <div id="pms-insight-bundle-approvals" class="pms-panel">
                 <div class="ins-approval-header d-flex align-items-center gap-2">
                     <span class="ins-approval-header-icon bi bi-flag-fill" aria-hidden="true"></span>
@@ -819,8 +821,6 @@
         <p class="text-center">No pending insight bundle requests.</p>
       @endif
     </div>
-
-            </div>
         
         </main>
     </div>
