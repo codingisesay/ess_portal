@@ -51,7 +51,8 @@
             <form class="signup-form" method="POST" action="{{ route('superadmin.login') }}">
                 @csrf
                 <div class="form-group">
-                    <input type="email" id="email" name="email" placeholder=" " value="info@siltech.co.in" required>
+                    {{-- Updated email from info@siltech.co.in to info@payvance.co.in on 2025-11-06 --}}
+                    <input type="email" id="email" name="email" placeholder=" " value="info@payvance.co.in" required>
                     <label for="email">Username</label>
                 </div>
                 <div class="form-group password-container">
