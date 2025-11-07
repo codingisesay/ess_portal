@@ -24,12 +24,12 @@ $id = Auth::guard('superadmin')->user()->id;
 
     <!-- Toggle Buttons -->
     <div class="toggle-buttons">
-    <button onclick="showMailConfigTable(this)">Show Table</button>
-        <button onclick="showMailConfigForm(this)">Show Form</button>
+        <button class="active" onclick="showMailConfigForm(this)">Show Form</button>
+        <button onclick="showMailConfigTable(this)">Show Table</button>
     </div>
 
     <!-- Form Section -->
-    <div id="formSection" >
+    <div id="formSection">
         <form action="{{ route('insert_configuration') }}" method="POST">
             @csrf
             <div class="form-container row">
@@ -91,7 +91,7 @@ $id = Auth::guard('superadmin')->user()->id;
     </div>
 
     <!-- Table Section -->
-    <div id="tableSection">
+    <div id="tableSection" style="display: none;">
         @include('partials.data_table', [
             'items' => $mailDatas,
             'columns' => [
@@ -186,10 +186,10 @@ $id = Auth::guard('superadmin')->user()->id;
         clickedElement.classList.add('active');
     }
 
-    // Ensure the first button (Show Form) is active by default on page load
+    // Show form by default on page load
     document.addEventListener('DOMContentLoaded', () => {
         const firstButton = document.querySelector('.toggle-buttons button:first-child');
-        showMailConfigTable(firstButton);
+        showMailConfigForm(firstButton);
     });
  
     function openEditModal(mailer, datas) {

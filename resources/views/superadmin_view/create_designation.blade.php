@@ -21,8 +21,8 @@ $id = Auth::guard('superadmin')->user()->id;
 
     <!-- Toggle Buttons -->
     <div class="toggle-buttons">
-    <button onclick="showDesignationTable(this)">Show Table</button>
-        <button onclick="showDesignationForm(this)">Show Form</button>
+        <button class="active" onclick="showDesignationForm(this)">Show Form</button>
+        <button onclick="showDesignationTable(this)">Show Table</button>
     </div>
 
     <!-- Form Section -->
@@ -118,7 +118,7 @@ $id = Auth::guard('superadmin')->user()->id;
     // Ensure the first button (Show Form) is active by default on page load
     document.addEventListener('DOMContentLoaded', () => {
         const firstButton = document.querySelector('.toggle-buttons button:first-child');
-        showDesignationTable(firstButton);
+        showDesignationForm(firstButton);
     });
  
  

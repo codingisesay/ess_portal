@@ -17,12 +17,12 @@ $id = Auth::guard('superadmin')->user()->id;
 
         <!-- Toggle Buttons -->
         <div class="toggle-buttons">
-        <button onclick="showEmployeePolicyTable(this)">Show Table</button>
-            <button onclick="showEmployeePolicyForm(this)">Show Form</button>
+            <button class="active" onclick="showEmployeePolicyForm(this)">Show Form</button>
+            <button onclick="showEmployeePolicyTable(this)">Show Table</button>
         </div>
 
         <!-- Form Section -->
-        <div id="formSection" >
+        <div id="formSection">
             <form action="{{route('insert_emp_restriction')}}" method="POST">
                 @csrf
                 <div  class="form-container row">
@@ -68,7 +68,7 @@ $id = Auth::guard('superadmin')->user()->id;
         </div>
  
     <!-- Table Section -->
-    <div id="tableSection">
+    <div id="tableSection" style="display: none;">
         @include('partials.data_table', [
             'items' => $dataFroms,
             'columns' => [
@@ -115,10 +115,10 @@ $id = Auth::guard('superadmin')->user()->id;
         }
 
         
-    // Ensure the first button (Show Form) is active by default on page load
+    // Show form by default
     document.addEventListener('DOMContentLoaded', () => {
         const firstButton = document.querySelector('.toggle-buttons button:first-child');
-        showEmployeePolicyTable(firstButton);
+        showEmployeePolicyForm(firstButton);
     });
     
     </script>

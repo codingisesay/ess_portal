@@ -11,12 +11,12 @@
 
     <!-- Toggle Buttons -->
     <div class="toggle-buttons">
-        <button class="active" onclick="showDepartmentTable(this)">Show Table</button>
-        <button onclick="showDepartmentForm(this)">Show Form</button>
+        <button class="active" onclick="showDepartmentForm(this)">Show Form</button>
+        <button onclick="showDepartmentTable(this)">Show Table</button>
     </div>
 
     <!-- Form Section -->
-    <div id="formSection" style="display: none;">
+    <div id="formSection">
         <form method="POST" action="{{ route('insert_department') }}">
             @csrf
             <div class="form-container row">
@@ -35,7 +35,7 @@
     </div>
 
     <!-- Table Section -->
-    <div id="tableSection">
+    <div id="tableSection" style="display: none;">
         @include('partials.data_table', [
             'items' => $departments,
             'columns' => [
@@ -102,9 +102,9 @@
         }
     }
 
-    // Initialize on page load
-    document.addEventListener('DOMContentLoaded', () => {
-        showDepartmentTable(document.querySelector('.toggle-buttons button:first-child'));
+    // Ensure the form is shown by default
+    document.addEventListener('DOMContentLoaded', function() {
+        showDepartmentForm(document.querySelector('.toggle-buttons button:first-child'));
     });
 </script>
 @endsection

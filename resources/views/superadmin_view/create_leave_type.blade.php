@@ -18,8 +18,8 @@ $id = Auth::guard('superadmin')->user()->id;
 
         <!-- Toggle Buttons -->
         <div class="toggle-buttons">
-        <button onclick="showLeaveTypeTable(this)">Show Table</button>
-            <button onclick="showLeaveTypeForm(this)">Show Form</button>
+            <button class="active" onclick="showLeaveTypeForm(this)">Show Form</button>
+            <button onclick="showLeaveTypeTable(this)">Show Table</button>
         </div>
 
         <!-- Form Section -->
@@ -81,7 +81,7 @@ $id = Auth::guard('superadmin')->user()->id;
         </div>
     
         <!-- Table Section -->
-        <div id="tableSection">
+        <div id="tableSection" style="display: none;">
             @include('partials.data_table', [
                 'items' => $results,
                 'columns' => [  
@@ -147,6 +147,11 @@ $id = Auth::guard('superadmin')->user()->id;
         </div>
 
         <script>
+            // Show form by default
+            document.addEventListener('DOMContentLoaded', function() {
+                showLeaveTypeForm(document.querySelector('.toggle-buttons button:first-child'));
+            });
+
             function showLeaveTypeForm(clickedElement) {
                 document.getElementById('formSection').style.display = 'block';
                 document.getElementById('tableSection').style.display = 'none';
@@ -167,11 +172,7 @@ $id = Auth::guard('superadmin')->user()->id;
                 clickedElement.classList.add('active');
             }
 
-            // Ensure the first button (Show Table) is active by default on page load
-            document.addEventListener('DOMContentLoaded', () => {
-                const firstButton = document.querySelector('.toggle-buttons button:first-child');
-                showLeaveTypeTable(firstButton);
-            });
+            
 
             function openEditModal(results, levtyps) {
                 document.getElementById('editLeaveTypeId').value = levtyps.leave_type_id; // Set the leave_type_id

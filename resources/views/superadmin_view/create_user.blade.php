@@ -25,8 +25,8 @@ $id = Auth::guard('superadmin')->user()->id;
 <h3>Create User Of Your Organisation</h2>
     <!-- Toggle Buttons -->
     <div class="toggle-buttons">
-    <button onclick="showUserTable(this)">Show Table</button>
-        <button onclick="showUserForm(this)">Show Form</button>
+        <button onclick="showUserForm(this)" class="active">Show Form</button>
+        <button onclick="showUserTable(this)">Show Table</button>
     </div>
 
     <!-- Form Section -->
@@ -160,7 +160,7 @@ $id = Auth::guard('superadmin')->user()->id;
     // Ensure the first button (Show Form) is active by default on page load
     document.addEventListener('DOMContentLoaded', () => {
         const firstButton = document.querySelector('.toggle-buttons button:first-child');
-        showUserTable(firstButton);
+        showUserForm(firstButton);
     });
     
     function generateSecurePassword(length = 12) {

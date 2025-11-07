@@ -21,8 +21,8 @@ $id = Auth::guard('superadmin')->user()->id;
 
         <!-- Toggle Buttons -->
         <div class="toggle-buttons">
-        <button onclick="showHRPolicyTable(this)">Show Table</button>
-            <button onclick="showHRPolicyForm(this)">Show Form</button>
+            <button class="active" onclick="showHRPolicyForm(this)">Show Form</button>
+            <button onclick="showHRPolicyTable(this)">Show Table</button>
         </div>
 
             @if($errors->any())
@@ -110,7 +110,7 @@ $id = Auth::guard('superadmin')->user()->id;
 
      
     <!-- Table Section -->
-    <div id="tableSection">
+    <div id="tableSection" style="display: none;">
         @include('partials.data_table', [
             'items' => $datas,
             'columns' => [
@@ -167,6 +167,11 @@ $id = Auth::guard('superadmin')->user()->id;
     </div>
 
     <script>
+        // Show form by default
+        document.addEventListener('DOMContentLoaded', function() {
+            showHRPolicyForm(document.querySelector('.toggle-buttons button:first-child'));
+        });
+
         function showHRPolicyForm(clickedElement) {
             document.getElementById('formSection').style.display = 'block';
             document.getElementById('tableSection').style.display = 'none';
@@ -187,14 +192,6 @@ $id = Auth::guard('superadmin')->user()->id;
             clickedElement.classList.add('active');
         }
 
-        // Ensure the form is visible by default on page load
-        
-    // Ensure the first button (Show Form) is active by default on page load
-    document.addEventListener('DOMContentLoaded', () => {
-        const firstButton = document.querySelector('.toggle-buttons button:first-child');
-        showHRPolicyTable(firstButton);
-    });
-      
 
         function openEditModal(id, title,) { 
             document.getElementById('editHRPolicyId').value = title.id;

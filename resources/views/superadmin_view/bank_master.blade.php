@@ -79,12 +79,12 @@
 
     <!-- Toggle -->
     <div class="toggle-buttons">
-        <button onclick="showTable(this)" class="active">Show Table</button>
-        <button onclick="showForm(this)">Show Form</button>
+        <button onclick="showForm(this)" class="active">Show Form</button>
+        <button onclick="showTable(this)">Show Table</button>
     </div>
 
-    <!-- Bank Form (hidden by default) -->
-    <div id="formSection" style="display:none;">
+    <!-- Bank Form (shown by default) -->
+    <div id="formSection">
         <form action="{{ route('store_bank') }}" method="POST">
             @csrf
             <div class="form-container row">
@@ -110,8 +110,8 @@
         </form>
     </div>
 
-    <!-- Bank Table (shown by default) -->
-    <div class="table-container" id="tableSection">
+    <!-- Bank Table (hidden by default) -->
+    <div class="table-container" id="tableSection" style="display:none;">
         <table class="table border">
             <thead>
                 <tr>
@@ -182,6 +182,11 @@
         for (let s of siblings) s.classList.remove('active');
         btn.classList.add('active');
     }
+
+    // Show form by default
+    document.addEventListener('DOMContentLoaded', function() {
+        showForm(document.querySelector('.toggle-buttons button:first-child'));
+    });
 </script>
 
 </body>

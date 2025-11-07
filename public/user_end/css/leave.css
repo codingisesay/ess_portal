@@ -57,16 +57,73 @@ body {
     display: flex;
     flex-direction: column;
 }
+/*first 4 cards*/
 
+/* Target only the first four containers */
 .one {
-
     display: flex;
-    flex-direction: row;
-    /* gap: 30px; */
-    /* justify-content: flex-start; */
-    /* width: fit-content; */
-
+    flex-wrap: wrap;
     width: 100%;
+    margin: -8px; /* Counteract column padding */
+}
+
+/* Only target the first four .col-lg-3 elements */
+.one > .col-lg-3:nth-child(-n+4) {
+    padding: 8px; /* Add consistent spacing */
+    display: flex;
+    flex-direction: column;
+}
+
+/* Only style the first four attendance headers */
+.one > .col-lg-3:nth-child(-n+4) .attendance-header {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    background-color: white;
+    border-radius: 15px;
+    padding: 15px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+/* Only target chart containers within the first four items */
+.one > .col-lg-3:nth-child(-n+4) .attendance-header {
+    position: relative;
+    overflow: hidden;
+}
+
+.one > .col-lg-3:nth-child(-n+4) .chart-container,
+.one > .col-lg-3:nth-child(-n+4) .chart-container1,
+.one > .col-lg-3:nth-child(-n+4) .upcoming-approved,
+.one > .col-lg-3:nth-child(-n+4) .holidays {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-height: 200px; /* Minimum height for charts */
+    width: 100%;
+    position: relative;
+}
+
+/* Specific fix for the first chart */
+.one > .col-lg-3:first-child .attendance-header {
+    padding: 15px; /* Restore padding */
+    display: flex;
+    flex-direction: column;
+}
+
+.one > .col-lg-3:first-child canvas {
+    width: 100% !important;
+    max-height: 300px; /* Set a max height to prevent stretching */
+    margin: 0 auto; /* Center the chart */
+    padding: 10px;
+    box-sizing: border-box;
+    object-fit: contain; /* Ensure aspect ratio is maintained */
+}
+
+/* Only target canvas elements within the first four items */
+.one > .col-lg-3:nth-child(-n+4) canvas {
+    width: 100% !important;
+    height: 100% !important;
+    flex: 1;
 }
 
 .two {
