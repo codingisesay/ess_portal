@@ -12,38 +12,32 @@
 <link rel="stylesheet" href="{{ asset('admin_end/css/admin_form.css') }}">
 <link rel="stylesheet" href="{{ asset('admin_end/css/popup_form.css') }}">
 <style>
-    /* Container for sort buttons - keeps them together */
+    /* Sort buttons container */
     .sort-buttons {
         display: flex;
-        gap: 4px;
+        flex-direction: row;
         margin-left: 8px;
+        gap: 2px;
     }
-    /* Individual sort button styling */
+    /* Sort button styling - only show arrows */
     .sort-button {
-        background: #f0f0f0;  /* Light gray background */
-        border: 1px solid #ddd;  /* Light border */
-        border-radius: 3px;  /* Rounded corners */
-        padding: 2px 6px;  /* Internal spacing */
-        cursor: pointer;  /* Pointer cursor on hover */
-        transition: all 0.2s;  /* Smooth transitions */
-        font-size: 14px;  /* Button text size */
-        color: #000;  /* Black text/arrows */
+        background: none;
+        border: none;
+        padding: 0 2px;
+        margin: 0;
+        cursor: pointer;
+        color: white;
+        line-height: 1;
+        font-size: 16px;
+        transition: all 0.2s;
     }
     /* Hover state for sort buttons */
     .sort-button:hover {
-        background: #e0e0e0;  /* Slightly darker on hover */
+        color: #000;
     }
-    
     /* Active sort button state */
     .sort-button.active {
-        background: #f0f0f0;  /* Same as default */
-        color: #000;  /* Keep text black */
-        border-color: #007bff;  /* Blue border for active state */
-    }
-    
-    /* Ensure sort icons are always black */
-    .sort-button i {
-        color: #000;
+        color: #007bff;
     }
     .sort-icon {
         display: inline-flex;
@@ -121,28 +115,16 @@
         <table class="table border">
             <thead>
                 <tr>
-                    <th>
-                        <div class="sort-container">
-                            ID
-                            <div class="sort-buttons">
-                                <a href="?sort=id&order=asc" class="sort-button {{ $sort === 'id' && $order === 'asc' ? 'active' : '' }}" title="Sort ascending">
-                                    <i class="fa fa-sort-up"></i>
-                                </a>
-                                <a href="?sort=id&order=desc" class="sort-button {{ $sort === 'id' && $order === 'desc' ? 'active' : '' }}" title="Sort descending">
-                                    <i class="fa fa-sort-down"></i>
-                                </a>
-                            </div>
-                        </div>
-                    </th>
-                    <th>
-                        <div class="sort-container">
+                    <th>Sr.no</th>
+                    <th class="sortable" style="position: relative; white-space: nowrap;">
+                        <div style="display: inline-flex; align-items: center;">
                             Bank Name
-                            <div class="sort-buttons">
+                            <div class="sort-buttons" style="margin-left: 8px;">
                                 <a href="?sort=name&order=asc" class="sort-button {{ $sort === 'name' && $order === 'asc' ? 'active' : '' }}" title="Sort A-Z">
-                                    <i class="fa fa-sort-up"></i>
+                                    <i class="fa fa-caret-up"></i>
                                 </a>
                                 <a href="?sort=name&order=desc" class="sort-button {{ $sort === 'name' && $order === 'desc' ? 'active' : '' }}" title="Sort Z-A">
-                                    <i class="fa fa-sort-down"></i>
+                                    <i class="fa fa-caret-down"></i>
                                 </a>
                             </div>
                         </div>

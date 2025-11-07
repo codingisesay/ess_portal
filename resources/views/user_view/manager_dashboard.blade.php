@@ -826,11 +826,7 @@
     </div>
 
 <script>
-    // Sidebar collapse/expand functionality (class-based)
-    // use a global window property to avoid redeclaration errors across multiple views
-    window.sidebarCollapsed = window.sidebarCollapsed || false;
-
-    // expose as a window property so inline onclick="toggleSidebar()" works
+    // Manager Dashboard specific sidebar toggle function
     window.toggleSidebar = function() {
         console.log('[manager_dashboard] toggleSidebar invoked');
         const sidebarMain = document.getElementById('sidebarMain');
@@ -845,18 +841,18 @@
         const isCollapsed = sidebarMain.classList.contains('collapsed');
         console.log('[manager_dashboard] current collapsed state:', isCollapsed);
 
-        if (!isCollapsed) {
+        if (isCollapsed) {
+            // Expand the sidebar
+            sidebarMain.classList.remove('collapsed');
+            if (main) main.classList.remove('collapsed-adjust');
+            if (collapseIcon) collapseIcon.style.transform = 'rotate(0deg)';
+            try { localStorage.removeItem('managerSidebarCollapsed'); } catch (e) {}
+        } else {
+            // Collapse the sidebar
             sidebarMain.classList.add('collapsed');
             if (main) main.classList.add('collapsed-adjust');
             if (collapseIcon) collapseIcon.style.transform = 'rotate(180deg)';
             try { localStorage.setItem('managerSidebarCollapsed', '1'); } catch (e) {}
-            window.sidebarCollapsed = true;
-        } else {
-            sidebarMain.classList.remove('collapsed');
-            if (main) main.classList.remove('collapsed-adjust');
-            if (collapseIcon) collapseIcon.style.transform = '';
-            try { localStorage.removeItem('managerSidebarCollapsed'); } catch (e) {}
-            window.sidebarCollapsed = false;
         }
     }
 
@@ -926,25 +922,52 @@
         // Initialize panels array
         panels = Array.from(document.querySelectorAll('.pms-panel'));
 
-        // Restore sidebar collapsed state from localStorage (if set)
-        try {
-            const managerCollapsed = localStorage.getItem('managerSidebarCollapsed');
-            const sidebarMain = document.getElementById('sidebarMain');
-            const main = document.getElementById('pms-main');
-            const collapseIcon = document.getElementById('collapseIcon');
-            if (managerCollapsed && sidebarMain) {
-                sidebarMain.classList.add('collapsed');
-                if (main) main.classList.add('collapsed-adjust');
-                if (collapseIcon) collapseIcon.style.transform = 'rotate(180deg)';
-                sidebarCollapsed = true;
-            } else {
-                sidebarCollapsed = false;
-            }
-        } catch (e) {
-            // ignore storage errors
-        }
-        
+        // Get all necessary elements
+        const sidebarMain = document.getElementById('sidebarMain');
+        const main = document.getElementById('pms-main');
+        const collapseButton = document.getElementById('collapseButton');
+        const collapseIcon = document.getElementById('collapseIcon');
         const searchInput = document.getElementById('searchInput');
+
+        // Initialize sidebar state on page load
+        function initializeSidebar() {
+            try {
+                if (sidebarMain) {
+                    const isCollapsed = localStorage.getItem('managerSidebarCollapsed') === '1';
+                    
+                    if (isCollapsed) {
+                        sidebarMain.classList.add('collapsed');
+                        if (main) main.classList.add('collapsed-adjust');
+                        if (collapseIcon) collapseIcon.style.transform = 'rotate(180deg)';
+                    } else {
+                        sidebarMain.classList.remove('collapsed');
+                        if (main) main.classList.remove('collapsed-adjust');
+                        if (collapseIcon) collapseIcon.style.transform = 'rotate(0deg)';
+                    }
+                }
+            } catch (e) {
+                console.error('Error initializing sidebar:', e);
+            }
+        }
+
+        // Add click event listener to the collapse button
+        if (collapseButton) {
+            // Remove any existing click handlers to avoid duplicates
+            const newButton = collapseButton.cloneNode(true);
+            collapseButton.parentNode.replaceChild(newButton, collapseButton);
+            
+            // Add new click handler
+            newButton.addEventListener('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                window.toggleSidebar();
+            });
+        }
+
+        // Initialize the sidebar
+        initializeSidebar();
+        
+        // Initialize search input if it exists
         if (searchInput) {
             searchInput.addEventListener('input', function() {
                 performSearch();
