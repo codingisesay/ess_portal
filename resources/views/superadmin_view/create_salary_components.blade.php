@@ -23,12 +23,12 @@ $id = Auth::guard('superadmin')->user()->id;
 
     <!-- Toggle Buttons -->
     <div class="toggle-buttons">
-    <button onclick="showSalaryComponentTable(this)">Show Table</button>
-        <button onclick="showSalaryComponentForm(this)">Show Form</button>
+        <button class="active" onclick="showSalaryComponentForm(this)">Show Form</button>
+        <button onclick="showSalaryComponentTable(this)">Show Table</button>
     </div>
 
     <!-- Form Section -->
-    <div id="formSection" >
+    <div id="formSection">
         @if($errors->any())
         <div class="alert custom-alert-warning">
             <ul>
@@ -101,7 +101,7 @@ $id = Auth::guard('superadmin')->user()->id;
     </div>
 
     <!-- Table Section -->
-    <div id="tableSection">
+    <div id="tableSection" style="display: none;">
         @include('partials.data_table', [
             'items' => $componentdata,
             'columns' => [
@@ -198,9 +198,10 @@ $id = Auth::guard('superadmin')->user()->id;
         clickedElement.classList.add('active');
     }
 
+    // Show form by default on page load
     document.addEventListener('DOMContentLoaded', () => {
         const firstButton = document.querySelector('.toggle-buttons button:first-child');
-        showSalaryComponentTable(firstButton);
+        showSalaryComponentForm(firstButton);
     });
 
     function openEditModal(id, datas) {

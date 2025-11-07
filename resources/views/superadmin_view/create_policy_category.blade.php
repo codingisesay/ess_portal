@@ -17,12 +17,12 @@ $id = Auth::guard('superadmin')->user()->id;
         <h3>Create Policy Category</h3>
         <!-- Toggle Buttons -->
         <div class="toggle-buttons">
-        <button onclick="showPolicyCategoryTable(this)">Show Table</button>
-            <button onclick="showPolicyCategoryForm(this)">Show Form</button>
+            <button class="active" onclick="showPolicyCategoryForm(this)">Show Form</button>
+            <button onclick="showPolicyCategoryTable(this)">Show Table</button>
         </div>
 
         <!-- Form Section -->
-        <div id="formSection" >
+        <div id="formSection">
             <form action="{{ route('save_policy_category') }}" method="POST" enctype="multipart/form-data" >
                 @csrf
                 <div class="form-container row">
@@ -49,7 +49,7 @@ $id = Auth::guard('superadmin')->user()->id;
         </div>
  
     <!-- Table Section -->
-    <div id="tableSection">
+    <div id="tableSection" style="display: none;">
         @include('partials.data_table', [
             'items' => $datas,
             'columns' => [
@@ -97,6 +97,11 @@ $id = Auth::guard('superadmin')->user()->id;
     </div>
 
     <script>
+        // Show form by default
+        document.addEventListener('DOMContentLoaded', function() {
+            showPolicyCategoryForm(document.querySelector('.toggle-buttons button:first-child'));
+        });
+
         function showPolicyCategoryForm(clickedElement) {
             // Show the form section and hide the table section
             document.getElementById('formSection').style.display = 'block';
@@ -123,18 +128,7 @@ $id = Auth::guard('superadmin')->user()->id;
             clickedElement.classList.add('active');
         }
 
-        // Ensure only the table section is visible by default on page load
-        document.addEventListener('DOMContentLoaded', () => {
-            const firstButton = document.querySelector('.toggle-buttons button:first-child');
-            if (firstButton) {
-                firstButton.classList.add('active');
-                showPolicyCategoryTable(firstButton); // Show only the table section by default
-            } else {
-                // Fallback: Hide both sections if no button is found
-                document.getElementById('formSection').style.display = 'none';
-                document.getElementById('tableSection').style.display = 'none';
-            }
-        });
+        // Form is shown by default via the first DOMContentLoaded listener
 
         function openEditModal(id, item) {
             document.getElementById('editPolicyCategoryId').value = id;

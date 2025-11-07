@@ -8,8 +8,8 @@
     <h3>Organization Settings</h3>
     <!-- Toggle Buttons -->
     <div class="toggle-buttons">
+        <button class="active" onclick="showOrgSettingsForm(this)">Show Form</button>
         <button onclick="showOrgSettingsTable(this)">Show Table</button>
-        <button onclick="showOrgSettingsForm(this)">Show Form</button>
     </div>
 
     <!-- Form Section -->
@@ -89,7 +89,8 @@
         </form>
     </div>
 
-       <!-- Table Section issue no--(3743) --> 
+    <!-- Table Section -->
+    <div id="tableSection" style="display: none;">
 @php
 // Format date fields before sending to table partial
 $formattedOrgSettings = $orgSettings->map(function ($item) {
@@ -113,7 +114,6 @@ $formattedOrgSettings = $orgSettings->map(function ($item) {
 });
 @endphp
 
-<div id="tableSection">
     @include('partials.data_table', [
         'items' => $formattedOrgSettings ?? [],
         'columns' => [
@@ -687,10 +687,9 @@ document.getElementById("cycle_period").addEventListener("change", calculateDate
         clickedElement.classList.add('active');
     }
 
-    // Show table by default on page load
-    document.addEventListener('DOMContentLoaded', () => {
-        const firstButton = document.querySelector('.toggle-buttons button:first-child');
-        showOrgSettingsTable(firstButton);
+    // Show form by default on page load
+    document.addEventListener('DOMContentLoaded', function() {
+        showOrgSettingsForm(document.querySelector('.toggle-buttons button:first-child'));
     });
 </script>
 @endsection

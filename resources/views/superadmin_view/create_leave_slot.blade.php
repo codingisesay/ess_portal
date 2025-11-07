@@ -19,12 +19,12 @@ $id = Auth::guard('superadmin')->user()->id;
 
         <!-- Toggle Buttons -->
         <div class="toggle-buttons">
-        <button onclick="showLeaveSlotTable(this)">Show Table</button>
-            <button onclick="showLeaveSlotForm(this)">Show Form</button>
+            <button class="active" onclick="showLeaveSlotForm(this)">Show Form</button>
+            <button onclick="showLeaveSlotTable(this)">Show Table</button>
         </div>
 
         <!-- Form Section -->
-        <div id="formSection" >
+        <div id="formSection">
             <form action="{{ route('insert_policy_slot') }}" method="POST" >
                 @csrf
                 <div class="form-container row">
@@ -60,7 +60,7 @@ $id = Auth::guard('superadmin')->user()->id;
         </div>
   
     <!-- Table Section -->
-    <div id="tableSection">
+    <div id="tableSection" style="display: none;">
         @include('partials.data_table', [
             'items' => $leaveCycleDatas,
             'columns' => [
@@ -116,6 +116,11 @@ $id = Auth::guard('superadmin')->user()->id;
     </div>
 
     <script>
+        // Show form by default
+        document.addEventListener('DOMContentLoaded', function() {
+            showLeaveSlotForm(document.querySelector('.toggle-buttons button:first-child'));
+        });
+
         function showLeaveSlotForm(clickedElement) {
             document.getElementById('formSection').style.display = 'block';
             document.getElementById('tableSection').style.display = 'none';
@@ -136,11 +141,6 @@ $id = Auth::guard('superadmin')->user()->id;
             clickedElement.classList.add('active');
         }
 
-        // Ensure the table is visible by default on page load 
-        document.addEventListener('DOMContentLoaded', () => {
-            const firstButton = document.querySelector('.toggle-buttons button:first-child');
-            showLeaveSlotTable(firstButton);
-        }); 
         function openEditModal(id, leavs) {
             if (!id) {
                 alert('Invalid leave slot data. Please try again.');

@@ -18,11 +18,11 @@ $id = Auth::guard('superadmin')->user()->id;
 <link rel="stylesheet" href="{{ asset('admin_end/css/admin_form.css') }}">
 <link rel="stylesheet" href="{{ asset('admin_end/css/popup_form.css') }}">
 <div class="container">
-    <h3>Creates Salary Tax Slot</h3>
- <!-- Toggle Buttons -->
- <div class="toggle-buttons">
- <button onclick="showTaxTable(this)">Show Table</button>
-        <button onclick="showTaxForm(this)">Show Form</button>
+    <h3>Create Salary Tax Slot</h3>
+    <!-- Toggle Buttons -->
+    <div class="toggle-buttons">
+        <button class="active" onclick="showTaxForm(this)">Show Form</button>
+        <button onclick="showTaxTable(this)">Show Table</button>
     </div>
     @if($errors->any())
     <div class="alert custom-alert-warning">
@@ -36,7 +36,7 @@ $id = Auth::guard('superadmin')->user()->id;
 @endif
 
     <!-- Form Section -->
-    <div id="formSection" >
+    <div id="formSection">
     <form method="POST" action="{{ route('insert_tax_cycle') }}">
         @csrf
         <div class="form-container row">
@@ -79,7 +79,7 @@ $id = Auth::guard('superadmin')->user()->id;
     </div>
  
     <!-- Table Section -->
-    <div id="tableSection">
+    <div id="tableSection" style="display: none;">
         @include('partials.data_table', [
             'items' => $orgTaxRegim,
             'columns' => [
@@ -158,10 +158,10 @@ $id = Auth::guard('superadmin')->user()->id;
         clickedElement.classList.add('active');
     }
 
-// Ensure the first button (Show Form) is active by default on page load
+// Show form by default on page load
 document.addEventListener('DOMContentLoaded', () => {
     const firstButton = document.querySelector('.toggle-buttons button:first-child');
-    showTaxTable(firstButton);
+    showTaxForm(firstButton);
 });
   
 </script>

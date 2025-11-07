@@ -19,8 +19,8 @@ $id = Auth::guard('superadmin')->user()->id;
 
         <!-- Toggle Buttons -->
         <div class="toggle-buttons">
-        <button onclick="showLeavePolicyTable(this)">Show Table</button>
-        <button onclick="showLeavePolicyForm(this)">Show Form</button>
+            <button class="active" onclick="showLeavePolicyForm(this)">Show Form</button>
+            <button onclick="showLeavePolicyTable(this)">Show Table</button>
         </div>
     {{-- @endif --}}
     
@@ -43,7 +43,7 @@ $id = Auth::guard('superadmin')->user()->id;
 @endif
 
          <!-- Form Section -->
-        <div id="formSection" style="display: none;">
+        <div id="formSection">
             <form action="{{ route('insertPolicyConf') }}" method="POST" enctype="multipart/form-data" >
                 @csrf
                 <div class="form-container row">
@@ -157,7 +157,7 @@ $id = Auth::guard('superadmin')->user()->id;
         </div>
  
     <!-- Table Section -->
-    <div id="tableSection">
+    <div id="tableSection" style="display: none;">
         @include('partials.data_table', [
             'items' => $dataFromLeaveRestctions,
             'columns' => [
@@ -346,6 +346,11 @@ $id = Auth::guard('superadmin')->user()->id;
     </script>
 
     <script>
+        // Show form by default
+        document.addEventListener('DOMContentLoaded', function() {
+            showLeavePolicyForm(document.querySelector('.toggle-buttons button:first-child'));
+        });
+
         function showLeavePolicyForm(clickedElement) {
             document.getElementById('formSection').style.display = 'block';
             document.getElementById('tableSection').style.display = 'none';
@@ -366,12 +371,6 @@ $id = Auth::guard('superadmin')->user()->id;
             clickedElement.classList.add('active');
         }
 
-        // Ensure the first button (Show Form) is active by default on page load
-        document.addEventListener('DOMContentLoaded', () => {
-            const firstButton = document.querySelector('.toggle-buttons button:first-child');
-            showLeavePolicyTable(firstButton);
-        });
-       
 
         function openEditModal(id, leavedata) {
             document.getElementById('editLeavePolicyId').value = leavedata.id;
