@@ -120,7 +120,7 @@ h3 {
 .form-group input,
 .form-group select {
     width: 100%;
-    padding: 7px 10px;
+    padding: 7px 10px !important;
     border: none;
     font-size: 16px;
     background: transparent;
@@ -178,8 +178,7 @@ input[type="datetime-local"] + label {
 #process_end_date,
 input[type="date"],
 input[type="datetime-local"] {
-    padding-top: 12px !important;
-    padding-bottom: 8px !important;
+    padding: 7px 10px !important;
 }
 
 .form-group select {
