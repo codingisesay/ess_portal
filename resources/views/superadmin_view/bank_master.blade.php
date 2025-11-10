@@ -144,9 +144,10 @@
                         <label>Bank Name</label>
                     </div>
                 </div>
-                <div class="col-4 mb-2">
+                <div class="col-4 mb-4">
                     <div class="form-group">
                         <select name="status" required>
+                            <option value="" disabled selected></option>
                             <option value="Active">Active</option>
                             <option value="Inactive">Inactive</option>
                         </select>

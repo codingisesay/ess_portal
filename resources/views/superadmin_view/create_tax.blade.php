@@ -240,9 +240,21 @@ $id = Auth::guard('superadmin')->user()->id;
             alert('Invalid Tax Slab data. Please try again.');
             return;
         }
-        console.log('Editing Tax Slab ID:', datas); // Debugging: Log the ID to the console
+        
         document.getElementById('editTaxSlabId').value = datas.id;
-        document.getElementById('editTaxCycle').value = datas.org_tax_regime_years_name || '';
+        // document.getElementById('editTaxCycle').value = datas.org_tax_regime_years_name ;
+        
+        // Find the tax regime by name and set the select value
+        const taxRegimeName = datas.org_tax_regime_years_name; 
+        const taxCycleSelect = document.getElementById('editTaxCycle');
+        
+        // Loop through options to find a match
+        for (let i = 0; i < taxCycleSelect.options.length; i++) {
+            if (taxCycleSelect.options[i].text === taxRegimeName) {
+                taxCycleSelect.value = taxCycleSelect.options[i].value;
+                break;
+            }
+        }
         document.getElementById('editTaxType').value = datas.tax_type || '';
         document.getElementById('editMinIncome').value = datas.min_income || '';
         document.getElementById('editMaxIncome').value = datas.max_income || '';
