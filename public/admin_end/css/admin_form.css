@@ -152,6 +152,36 @@ h3 {
     color: #000000;
 }
 
+/* Date and datetime fields with always-visible labels */
+#start_date + label,
+#end_date + label,
+#process_start_date + label,
+#process_end_date + label,
+input[type="date"] + label,
+input[type="datetime-local"] + label {
+    top: -10px !important;
+    left: 10px !important;
+    font-size: 13px !important;
+    color: #000000 !important;
+    transition: none !important;
+    background-color: #fff !important;
+    padding: 0 5px !important;
+    transform: none !important;
+    pointer-events: none;
+    z-index: 1;
+}
+
+/* Adjust input padding to prevent text overlap */
+#start_date,
+#end_date,
+#process_start_date,
+#process_end_date,
+input[type="date"],
+input[type="datetime-local"] {
+    padding-top: 12px !important;
+    padding-bottom: 8px !important;
+}
+
 .form-group select {
     -webkit-appearance: auto;
     -moz-appearance: auto;

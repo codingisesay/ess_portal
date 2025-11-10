@@ -109,13 +109,13 @@ $id = Auth::guard('superadmin')->user()->id;
                 </div>
                 <div class="col-3 mb-4">
                     <div class="form-group">
-                        <input type="number" name="min_ctc" >
+                        <input type="number" name="min_ctc" class="form-control" required>
                         <label>Min CTC</label>
                     </div>
                 </div>
                 <div class="col-3 mb-4">
                     <div class="form-group">
-                        <input type="number" name="max_ctc" >
+                        <input type="number" name="max_ctc" class="form-control" required>
                         <label>Max CTC</label>
                     </div>
                 </div>

@@ -148,7 +148,7 @@ $id = Auth::guard('superadmin')->user()->id;
                 </div>
                 <div class="col-3 mb-4">
                     <div class="form-group">
-                        <input type="number" name="value">
+                        <input type="number" name="value" class="form-control" required>
                         <label>Value</label>
                     </div>
                 </div>
