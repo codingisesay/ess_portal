@@ -1,10 +1,6 @@
 @props(['items', 'columns', 'editModalId' => null, 'perPage' => 10, 'hasActions' => false, 'hasPermision' => false])
  
 <div class="table-container">
-    <!-- Add search input -->
-    <div class="table-search mb-3">
-        <input type="text" id="tableSearch" placeholder="Search..." class="form-control">
-    </div>
     <div class="table-bordered sm-edit-td">
     <table id="dataTable" class="table ">
         <thead>

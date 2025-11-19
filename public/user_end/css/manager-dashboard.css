@@ -1,3 +1,31 @@
+/* Modal styles */
+.modal {
+    z-index: 9999 !important;
+    background-color: transparent !important;
+}
+
+.modal-dialog {
+    z-index: 10000 !important;
+    margin: 1.75rem auto;
+}
+
+.modal-backdrop {
+    z-index: 9998 !important;
+    background-color: rgba(0, 0, 0, 0.5) !important;
+}
+
+/* Ensure header is below modal but above other content */
+header {
+    position: relative;
+    z-index: 9000 !important;
+}
+
+/* When modal is shown */
+.modal.show ~ header {
+    filter: brightness(0.8);
+    transition: filter 0.15s linear;
+}
+
 /* Manager Dashboard layout and panels */
 :root{
     --sidebar-w: 20%;
@@ -6,6 +34,12 @@
     --accent: #0d6efd;
 }
 html,body{height:100%;margin:0;font-family:Arial, Helvetica, sans-serif;background:var(--bg);color:#222}
+
+/* Custom margin utility */
+.mt-4 {
+    margin-top: 0.5rem !important;
+}
+
 .pms-page {
     display: flex;
     gap: var(--gap);
@@ -188,6 +222,11 @@ html,body{height:100%;margin:0;font-family:Arial, Helvetica, sans-serif;backgrou
     margin: 0 auto;
 }
 
+/* Dashboard switch */
+.dashboard-switch {
+    margin-left: 20px;
+}
+
 /* Panels - only the .visible is shown */
 .pms-panel {
     display: none;
@@ -197,11 +236,32 @@ html,body{height:100%;margin:0;font-family:Arial, Helvetica, sans-serif;backgrou
     padding: 20px;
     box-shadow: 0 2px 6px rgba(16,24,40,0.03);
     margin-right: -40px;
-        height: 594px
-    
+    height: 80vh;
+    overflow-y: auto;
+    overflow-x: hidden;
+    position: relative;
+}    
 
-}
 .pms-panel.visible { display: block; }
+
+/* Highlight for search results - matches HR policy style */
+.sidebar-button.highlight {
+    background-color: #E0AFA0 !important;
+    font-weight: bold !important;
+}
+
+/* Style inner panels */
+#pms-org-goals,
+#pms-additional-goals,
+#pms-create-task,
+#pms-insights,
+#pms-goal-bundle-approvals,
+#pms-insight-bundle-approvals {
+    height: 100% !important;
+    border-radius: 30px !important;
+    padding: 20px;
+    overflow-y: auto;
+}
 
 /* Sidebar scrollbar styling */
 .pms-sidebar::-webkit-scrollbar { width: 10px; }
@@ -240,12 +300,11 @@ html,body{height:100%;margin:0;font-family:Arial, Helvetica, sans-serif;backgrou
     border-radius: 10px;
 }
 
-/* Increase height for 'Goals Created by Organization' list */
+/* Org Goals: enable scroll after ~6 rows */
 #pms-org-goals .table-scroll-container {
-    max-height: 420px;                 /* show more rows */
-    overflow-y: auto !important;       /* force vertical scrolling within list */
-    -ms-overflow-style: auto;          /* IE/Edge show scrollbar */
-    scrollbar-width: thin;             /* Firefox show thin scrollbar */
+    --org-row-h: 75px;                 /* approximate row height */
+    max-height: calc(var(--org-row-h) * 6);
+    overflow-y: auto !important;
 }
 #pms-org-goals .table-scroll-container::-webkit-scrollbar { width: 8px; }
 #pms-org-goals .table-scroll-container::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.25); border-radius: 8px; }
@@ -279,12 +338,12 @@ html,body{height:100%;margin:0;font-family:Arial, Helvetica, sans-serif;backgrou
     border-color: #0b5ed7 !important;
 }
 .pms-panels .btn-secondary {
-    background-color: #64748b !important; /* slate */
-    border-color: #64748b !important;
+    background-color: #8A3366 !important; /* changed the color to match theme*/
+    border-color: #8A3366 !important;/* changed the color to match theme*/
 }
 .pms-panels .btn-secondary:hover {
-    background-color: #475569 !important;
-    border-color: #475569 !important;
+    background-color: #8A3366 !important;/* changed the color to match theme*/
+    border-color: #8A3366 !important;/* changed the color to match theme*/
 }
 
 /* Simple responsive: stack on small screens (reduced threshold to avoid early stacking) */

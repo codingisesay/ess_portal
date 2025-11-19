@@ -15,6 +15,7 @@
     </ul>
     
     {{-- <p><strong>Your Password:</strong> {{ $data['password'] }}</p> --}}
-    <p>Please log in and update your profile at your earliest convenience. For any assistance, contact <b>info@siltech.co.in</b>.</p>
+    {{-- Updated contact email from info@siltech.co.in to info@payvance.co.in on 2025-11-06 --}}
+    <p>Please log in and update your profile at your earliest convenience. For any assistance, contact <b>info@payvance.co.in</b>.</p>
 </body>
 </html>

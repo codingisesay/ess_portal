@@ -17,17 +17,77 @@ $id = Auth::guard('superadmin')->user()->id;
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <link rel="stylesheet" href="{{ asset('admin_end/css/admin_form.css') }}">
 <link rel="stylesheet" href="{{ asset('admin_end/css/popup_form.css') }}">
+<style>
+    .search-container {
+        position: relative;
+        margin-left: 10px;
+    }
+    .search-box {
+        display: flex;
+        align-items: center;
+        position: relative;
+        transition: all 0.3s ease;
+        width: 40px;
+        overflow: hidden;
+    }
+    .search-box.expanded {
+        width: 250px;
+    }
+    .search-icon {
+        position: absolute;
+        left: 10px;
+        cursor: pointer;
+        z-index: 2;
+        width: 20px;
+        height: 20px;
+    }
+    .search-input {
+        padding-left: 40px;
+        width: 100%;
+        height: 40px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        outline: none;
+        transition: all 0.3s ease;
+        opacity: 0;
+        visibility: hidden;
+    }
+    .search-box.expanded .search-input {
+        opacity: 1;
+        visibility: visible;
+    }
+    .d-flex {
+        display: flex !important;
+        align-items: center;
+        gap: 15px;
+        margin-bottom: 1.5rem;
+    }
+    .toggle-buttons {
+        display: flex;
+        gap: 10px;
+    }
+</style>
 <div class="container">
     <h3>Creates Salary Cycle</h3>
 
-    <!-- Toggle Buttons -->
-    <div class="toggle-buttons">
-    <button onclick="showSalaryCycleTable(this)">Show Table</button>
-        <button onclick="showSalaryCycleForm(this)">Show Form</button>
+    <div class="d-flex">
+        <!-- Toggle Buttons -->
+        <div class="toggle-buttons">
+            <button class="active" onclick="showSalaryCycleForm(this)">Show Form</button>
+            <button onclick="showSalaryCycleTable(this)">Show Table</button>
+        </div>
+        
+        <!-- Search Box with Icon (initially hidden) -->
+        <div class="search-container" id="tableSearchContainer" style="display: none;">
+            <div class="search-box">
+                <img src="{{ asset('user_end/images/search (1).png') }}" alt="Search" class="search-icon" id="searchIcon">
+                <input type="text" id="tableSearch" placeholder="Search..." class="search-input">
+            </div>
+        </div>
     </div>
 
     <!-- Form Section -->
-    <div id="formSection" >
+    <div id="formSection">
         @if($errors->any())
         <div class="alert custom-alert-warning">
             <ul>
@@ -90,7 +150,7 @@ $id = Auth::guard('superadmin')->user()->id;
     </div>
  
     <!-- Table Section -->
-     <div id="tableSection">
+    <div id="tableSection" style="display: none;">
         @include('partials.data_table', [
             'items' => $cycle_datas,
             'columns' => [
@@ -162,29 +222,82 @@ $id = Auth::guard('superadmin')->user()->id;
     function showSalaryCycleForm(clickedElement) {
         document.getElementById('formSection').style.display = 'block';
         document.getElementById('tableSection').style.display = 'none';
-            const siblings = clickedElement.parentElement.children;
-            for (let sibling of siblings) {
-                sibling.classList.remove('active');
-            } 
-            clickedElement.classList.add('active');
+        
+        document.getElementById('tableSearchContainer').style.display = 'none';
+        
+        const searchBox = document.querySelector('.search-box');
+        if (searchBox) {
+            searchBox.classList.remove('expanded');
+        }
+        
+        updateActiveButton(clickedElement);
     }
 
     function showSalaryCycleTable(clickedElement) {
         document.getElementById('formSection').style.display = 'none';
         document.getElementById('tableSection').style.display = 'block';
-            const siblings = clickedElement.parentElement.children;
-            for (let sibling of siblings) {
-                sibling.classList.remove('active');
-            } 
-            clickedElement.classList.add('active');
+        
+        document.getElementById('tableSearchContainer').style.display = 'block';
+        
+        updateActiveButton(clickedElement);
+    }
+    
+    function updateActiveButton(clickedElement) {
+        const siblings = clickedElement.parentElement.children;
+        for (let sibling of siblings) {
+            sibling.classList.remove('active');
+        }
+        clickedElement.classList.add('active');
     }
  
-    // Ensure the first button (Show Form) is active by default on page load
-    document.addEventListener('DOMContentLoaded', () => {
-        const firstButton = document.querySelector('.toggle-buttons button:first-child');
-        showSalaryCycleTable(firstButton);
-    });
-    
+    document.addEventListener('DOMContentLoaded', function() {
+        const searchBox = document.querySelector('.search-box');
+        const searchIcon = document.getElementById('searchIcon');
+        const searchInput = document.getElementById('tableSearch');
+        
+        if (searchIcon && searchInput) {
+            searchIcon.addEventListener('click', function() {
+                searchBox.classList.toggle('expanded');
+                if (searchBox.classList.contains('expanded')) {
+                    setTimeout(() => {
+                        searchInput.focus();
+                    }, 300);
+                }
+            });
+            
+            document.addEventListener('click', function(event) {
+                if (!searchBox.contains(event.target) && searchBox.classList.contains('expanded')) {
+                    searchBox.classList.remove('expanded');
+                }
+            });
+            
+            searchInput.addEventListener('click', function(event) {
+                event.stopPropagation();
+            });
+            
+            searchInput.addEventListener('input', function() {
+                const searchTerm = this.value.toLowerCase();
+                const rows = document.querySelectorAll('#tableSection tbody tr');
+                
+                rows.forEach(row => {
+                    const cells = row.querySelectorAll('td');
+                    let rowMatches = false;
+                    
+                    for (let i = 0; i < cells.length - 1; i++) {
+                        const cellText = cells[i].textContent.toLowerCase();
+                        if (cellText.includes(searchTerm)) {
+                            rowMatches = true;
+                            break;
+                        }
+                    }
+                    
+                    row.style.display = rowMatches ? '' : 'none';
+                });
+            });
+        }
+        
+        showSalaryCycleForm(document.querySelector('.toggle-buttons button:first-child'));
+    });    
 
     function openEditModal(id, cycleData) {
     if (!id || !cycleData) {

@@ -19,23 +19,28 @@ header {
     justify-content: space-between;
     align-items: center;
     padding: 10px 12px;
-    gap: 5px
-        /* flex-wrap: wrap; */
-    ;position: relative; z-index: 2100; /* keep header overlays above page content */
+    gap: 5px;
+    position: relative; z-index: 2100; /* keep header overlays above page content */
 }
 
 /* LOGO */
 .logo {
     border-radius: 60px;
     background-color: white;
-    /* width: 100px; */
     text-align: center;
     padding: 5px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    width: 10%;
 }
 
 .logo img {
     height: auto;
-    width: 100px;
+    max-height: 50px;
+    width: auto;
+    object-fit: contain;
 }
 
 /* 🔹 NAVBAR */
@@ -43,11 +48,13 @@ nav {
     border-radius: 60px;
     background-color: white;
     display: flex;
-    /* align-items: center; */
-    width: 85%;
+    width: 80%;
     justify-content: center;
     padding: 10px 0;
     flex-wrap: wrap;
+    margin-left: 10px;
+    min-height: 60px;
+    align-items: center;
 }
 
 nav ul {
@@ -111,6 +118,7 @@ nav ul li a:hover {
         width: 100%;
         text-align: center;
         border-radius: 0;
+        min-height: auto;
     }
 
     nav ul {
@@ -141,6 +149,8 @@ nav ul li a:hover {
     background-color: white;
     /* height: 60px; */
     padding: 7px 5px;
+    width: 10%;
+    flex-shrink: 0;
 }
 
 /* CIRCULAR ICONS */

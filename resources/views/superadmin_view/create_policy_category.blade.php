@@ -9,20 +9,80 @@ $id = Auth::guard('superadmin')->user()->id;
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{{ asset('admin_end/css/admin_form.css') }}">
-    <link rel="stylesheet" href="{{ asset('admin_end/css/popup_form.css') }}"> 
+    <link rel="stylesheet" href="{{ asset('admin_end/css/popup_form.css') }}">
+    <style>
+        .search-container {
+            position: relative;
+            margin-left: 10px;
+        }
+        .search-box {
+            display: flex;
+            align-items: center;
+            position: relative;
+            transition: all 0.3s ease;
+            width: 40px;
+            overflow: hidden;
+        }
+        .search-box.expanded {
+            width: 250px;
+        }
+        .search-icon {
+            position: absolute;
+            left: 10px;
+            cursor: pointer;
+            z-index: 2;
+            width: 20px;
+            height: 20px;
+        }
+        .search-input {
+            padding-left: 40px;
+            width: 100%;
+            height: 40px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            outline: none;
+            transition: all 0.3s ease;
+            opacity: 0;
+            visibility: hidden;
+        }
+        .search-box.expanded .search-input {
+            opacity: 1;
+            visibility: visible;
+        }
+        .d-flex {
+            display: flex !important;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 1.5rem;
+        }
+        .toggle-buttons {
+            display: flex;
+            gap: 10px;
+        }
+    </style>
     
 </head>
 <body>
     <div class="container">
         <h3>Create Policy Category</h3>
-        <!-- Toggle Buttons -->
-        <div class="toggle-buttons">
-        <button onclick="showPolicyCategoryTable(this)">Show Table</button>
-            <button onclick="showPolicyCategoryForm(this)">Show Form</button>
+        <div class="d-flex">
+            <!-- Toggle Buttons -->
+            <div class="toggle-buttons">
+                <button class="active" onclick="showPolicyCategoryForm(this)">Show Form</button>
+                <button onclick="showPolicyCategoryTable(this)">Show Table</button>
+            </div>
+            
+            <!-- Search Box with Icon (initially hidden) -->
+            <div class="search-container" id="tableSearchContainer" style="display: none;">
+                <div class="search-box">
+                    <img src="{{ asset('user_end/images/search (1).png') }}" alt="Search" class="search-icon" id="searchIcon">
+                    <input type="text" id="tableSearch" placeholder="Search..." class="search-input">
+                </div>
+            </div>
         </div>
 
         <!-- Form Section -->
-        <div id="formSection" >
+        <div id="formSection">
             <form action="{{ route('save_policy_category') }}" method="POST" enctype="multipart/form-data" >
                 @csrf
                 <div class="form-container row">
@@ -49,7 +109,7 @@ $id = Auth::guard('superadmin')->user()->id;
         </div>
  
     <!-- Table Section -->
-    <div id="tableSection">
+    <div id="tableSection" style="display: none;">
         @include('partials.data_table', [
             'items' => $datas,
             'columns' => [
@@ -97,25 +157,92 @@ $id = Auth::guard('superadmin')->user()->id;
     </div>
 
     <script>
+        // Search box toggle functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const searchBox = document.querySelector('.search-box');
+            const searchIcon = document.getElementById('searchIcon');
+            const searchInput = document.getElementById('tableSearch');
+            
+            if (searchIcon && searchInput) {
+                // Toggle search box on icon click
+                searchIcon.addEventListener('click', function() {
+                    searchBox.classList.toggle('expanded');
+                    if (searchBox.classList.contains('expanded')) {
+                        // Focus the input when expanding
+                        setTimeout(() => {
+                            searchInput.focus();
+                        }, 300);
+                    }
+                });
+                
+                // Close search when clicking outside
+                document.addEventListener('click', function(event) {
+                    if (!searchBox.contains(event.target) && searchBox.classList.contains('expanded')) {
+                        searchBox.classList.remove('expanded');
+                    }
+                });
+                
+                // Prevent search box from closing when clicking inside it
+                searchInput.addEventListener('click', function(event) {
+                    event.stopPropagation();
+                });
+                
+                // Handle search input
+                searchInput.addEventListener('input', function() {
+                    const searchTerm = this.value.toLowerCase();
+                    const rows = document.querySelectorAll('#tableSection tbody tr');
+                    
+                    rows.forEach(row => {
+                        const cells = row.querySelectorAll('td');
+                        let rowMatches = false;
+                        
+                        // Skip the action column (last cell)
+                        for (let i = 0; i < cells.length - 1; i++) {
+                            const cellText = cells[i].textContent.toLowerCase();
+                            if (cellText.includes(searchTerm)) {
+                                rowMatches = true;
+                                break;
+                            }
+                        }
+                        
+                        row.style.display = rowMatches ? '' : 'none';
+                    });
+                });
+            }
+            
+            // Show form by default
+            showPolicyCategoryForm(document.querySelector('.toggle-buttons button:first-child'));
+        });
+
         function showPolicyCategoryForm(clickedElement) {
-            // Show the form section and hide the table section
+            // Show form section and hide table section
             document.getElementById('formSection').style.display = 'block';
             document.getElementById('tableSection').style.display = 'none';
-
-            // Update the active state of the buttons
-            const siblings = clickedElement.parentElement.children;
-            for (let sibling of siblings) {
-                sibling.classList.remove('active');
+            
+            // Hide search container
+            document.getElementById('tableSearchContainer').style.display = 'none';
+            
+            // Collapse search box if it's expanded
+            const searchBox = document.querySelector('.search-box');
+            if (searchBox) {
+                searchBox.classList.remove('expanded');
             }
-            clickedElement.classList.add('active');
+            
+            updateActiveButton(clickedElement);
         }
 
         function showPolicyCategoryTable(clickedElement) {
-            // Show the table section and hide the form section
+            // Show table section and hide form section
             document.getElementById('formSection').style.display = 'none';
             document.getElementById('tableSection').style.display = 'block';
-
-            // Update the active state of the buttons
+            
+            // Show search container when table is shown
+            document.getElementById('tableSearchContainer').style.display = 'block';
+            
+            updateActiveButton(clickedElement);
+        }
+        
+        function updateActiveButton(clickedElement) {
             const siblings = clickedElement.parentElement.children;
             for (let sibling of siblings) {
                 sibling.classList.remove('active');
@@ -123,18 +250,7 @@ $id = Auth::guard('superadmin')->user()->id;
             clickedElement.classList.add('active');
         }
 
-        // Ensure only the table section is visible by default on page load
-        document.addEventListener('DOMContentLoaded', () => {
-            const firstButton = document.querySelector('.toggle-buttons button:first-child');
-            if (firstButton) {
-                firstButton.classList.add('active');
-                showPolicyCategoryTable(firstButton); // Show only the table section by default
-            } else {
-                // Fallback: Hide both sections if no button is found
-                document.getElementById('formSection').style.display = 'none';
-                document.getElementById('tableSection').style.display = 'none';
-            }
-        });
+        // Form is shown by default via the first DOMContentLoaded listener
 
         function openEditModal(id, item) {
             document.getElementById('editPolicyCategoryId').value = id;
