@@ -261,7 +261,7 @@
     <thead>
         <tr>
             <th>Goal</th>
-            <th>Type</th>
+            <th>Pending to Approvel</th>
             <th>Actions</th>
         </tr>
     </thead>

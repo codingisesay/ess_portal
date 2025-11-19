@@ -163,6 +163,7 @@ Route::post('/superadmin/import', [AttendanceImportController::class, 'import'])
 // pms form cycle and settings
 Route::post('/org-settings', [PmsController::class, 'orgSettingsStore']);
 Route::get('superadmin/org-settings', [PmsController::class, 'orgSettingsForm'])->name('org_settings_form');
+Route::put('/org-settings/{id}', [PmsController::class, 'orgSettingsUpdate']);
 
 });
 
@@ -333,7 +334,7 @@ Route::get('/legal/privacy-policy/pdf', function() {
 // ORGANIZATION SETTINGS
 // ============================
 Route::get('/org-settings', [PmsController::class, 'orgSettingsIndex']);
-Route::put('/org-settings/{id}', [PmsController::class, 'orgSettingsUpdate']);
+
 Route::get('/org-settings/{id}', [PmsController::class, 'orgSettingsShow']);
 Route::delete('/org-settings/{id}', [PmsController::class, 'orgSettingsDestroy']);
 
