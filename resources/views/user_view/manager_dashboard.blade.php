@@ -519,7 +519,6 @@
                     <colgroup>
                         <col style="width:25%">
                         <col style="width:35%">
-                        <col style="width:15%">
                         <col style="width:12%">
                         <col style="width:13%">
                     </colgroup>
@@ -527,7 +526,6 @@
                         <tr>
                             <th>Goal</th>
                             <th>Insight</th>
-                            <th>Added By</th>
                             <th>Date</th>
                             <th>Status</th>
                         </tr>
@@ -539,7 +537,6 @@
                     <colgroup>
                         <col style="width:25%">
                         <col style="width:35%">
-                        <col style="width:15%">
                         <col style="width:12%">
                         <col style="width:13%">
                     </colgroup>
@@ -565,7 +562,6 @@
                                     <div class="description">{{ $insight->description }}</div>
                                 @endif
                             </td>
-                            <td>{{ $insight->user_name }}</td>
                             <td>{{ \Carbon\Carbon::parse($insight->created_at)->format('d/m/Y') }}</td>
                             <td>
                                 @php

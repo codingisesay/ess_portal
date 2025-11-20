@@ -171,8 +171,8 @@ $id = Auth::guard('superadmin')->user()->id;
                 </div>
                 <div class="popup-form-group">
                     <select name="user_status" id="editUserStatus" required>
-                        <option value="Active">Active</option>
-                        <option value="Inactive">Inactive</option>
+                        <option value="active">Active</option>
+                        <option value="inactive">Inactive</option>
                     </select>
                     <label for="editUserStatus">User Status</label>
                 </div>
