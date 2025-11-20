@@ -353,6 +353,10 @@ Route::post('/goals', [PmsController::class, 'goalsStore']);
 Route::put('/goals/{id}', [PmsController::class, 'goalsUpdate']);
 Route::get('/goals/{id}', [PmsController::class, 'goalsShow']);
 Route::delete('/goals/{id}', [PmsController::class, 'goalsDestroy']);
+// delete bundle item for delete button
+Route::post('/delete-bundle-item', [PmsController::class, 'deleteBundleItem'])
+     ->name('bundle.item.delete');
+
 
 // ============================
 // GOAL ASSIGNMENTS
