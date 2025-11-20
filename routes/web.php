@@ -25,6 +25,7 @@ use App\Http\Controllers\BankController;
 use App\Http\Controllers\superadmindashboardController;
 use App\Http\Controllers\AttendanceImportController;
 use App\Http\Controllers\PmsController;
+use App\Http\Controllers\NotificationController;  // Notification Controller 
 
 
 
@@ -162,6 +163,7 @@ Route::post('/superadmin/import', [AttendanceImportController::class, 'import'])
 // pms form cycle and settings
 Route::post('/org-settings', [PmsController::class, 'orgSettingsStore']);
 Route::get('superadmin/org-settings', [PmsController::class, 'orgSettingsForm'])->name('org_settings_form');
+Route::put('/org-settings/{id}', [PmsController::class, 'orgSettingsUpdate']);
 
 });
 
@@ -332,7 +334,7 @@ Route::get('/legal/privacy-policy/pdf', function() {
 // ORGANIZATION SETTINGS
 // ============================
 Route::get('/org-settings', [PmsController::class, 'orgSettingsIndex']);
-Route::put('/org-settings/{id}', [PmsController::class, 'orgSettingsUpdate']);
+
 Route::get('/org-settings/{id}', [PmsController::class, 'orgSettingsShow']);
 Route::delete('/org-settings/{id}', [PmsController::class, 'orgSettingsDestroy']);
 
@@ -351,6 +353,10 @@ Route::post('/goals', [PmsController::class, 'goalsStore']);
 Route::put('/goals/{id}', [PmsController::class, 'goalsUpdate']);
 Route::get('/goals/{id}', [PmsController::class, 'goalsShow']);
 Route::delete('/goals/{id}', [PmsController::class, 'goalsDestroy']);
+// delete bundle item for delete button
+Route::post('/delete-bundle-item', [PmsController::class, 'deleteBundleItem'])
+     ->name('bundle.item.delete');
+
 
 // ============================
 // GOAL ASSIGNMENTS
@@ -420,6 +426,37 @@ Route::get('/manager/pending-bundles', [PmsController::class, 'pendingBundles'])
 Route::post('/manager/bundles/{bundleId}/approve', [PmsController::class, 'approveBundle'])->name('manager.bundles.approve');
 
 Route::post('/manager/bundles/{bundleId}/reject', [PmsController::class, 'rejectBundle'])->name('manager.bundles.reject');
+
+// =====================
+// Notifications Routes
+// =====================
+Route::get('/notifications/read/{id}', [NotificationController::class, 'markAsRead'])
+    ->name('notifications.read');
+
+Route::get('/notifications', [NotificationController::class, 'index'])
+    ->name('notifications.index');
+
+Route::get('/notifications/read-all', [NotificationController::class, 'markAllAsRead'])
+    ->name('notifications.readAll');
+
+    // ✅ Fetch latest notifications (AJAX call)
+Route::get('/notifications/fetch', [App\Http\Controllers\NotificationController::class, 'fetchNotifications'])
+    ->name('notifications.fetch');
+
+    // ✅ Mark all notifications as read
+Route::get('/notifications/read-all', [App\Http\Controllers\NotificationController::class, 'markAllAsRead'])
+    ->name('notifications.readAll');
+
+    // ✅ Clear a single notification
+Route::get('/notifications/clear/{id}', [App\Http\Controllers\NotificationController::class, 'clearNotification'])
+    ->name('notifications.clear');
+
+// ✅ Clear all notifications
+Route::get('/notifications/clear-all', [App\Http\Controllers\NotificationController::class, 'clearAllNotifications'])
+    ->name('notifications.clearAll');
+
+
+
 
 
 });

@@ -188,23 +188,145 @@ function previewImage() {
 //     closeModal();
 // }
     </script>
-    <script>
-        // toggle notification dropdown and close on outside click
-        (function(){
-            var icon = document.getElementById('notificationIcon');
-            var dd = document.getElementById('notificationDropdown');
-            if(icon && dd){
-                icon.addEventListener('click', function(e){
-                    e.preventDefault();
-                    e.stopPropagation();
-                    dd.style.display = (dd.style.display === 'block') ? 'none' : 'block';
-                });
-                document.addEventListener('click', function(){
-                    dd.style.display = 'none';
-                });
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const bellIcon = document.getElementById('notificationIcon');
+    const dropdown = document.getElementById('notificationDropdown');
+
+    let autoRefreshInterval = null;
+
+    // ✅ Function to fetch and render notifications
+    async function loadNotifications(showDropdown = false) {
+        try {
+            const response = await fetch("{{ route('notifications.fetch') }}");
+            const data = await response.json();
+
+            dropdown.innerHTML = '';
+
+            let headerHTML = `
+                <div class="px-2 py-2 d-flex justify-content-between align-items-center">
+                    <strong>Notifications</strong>
+                    <div class="d-flex align-items-center gap-2">
+                        <a href="#" id="markAllRead" class="text-decoration-none"><small>Mark all read</small></a> |
+                        <a href="#" id="clearAll" class="text-danger text-decoration-none"><small>Clear all</small></a>
+                    </div>
+                </div>
+                <hr class="my-1"/>
+            `;
+            dropdown.insertAdjacentHTML('beforeend', headerHTML);
+
+            if (!data.notifications.length) {
+                dropdown.insertAdjacentHTML('beforeend', `
+                    <div class="px-2 pb-2 text-muted"><small>No notifications.</small></div>
+                `);
+                return;
             }
-        })();
-    </script>
+
+            data.notifications.forEach(n => {
+                dropdown.insertAdjacentHTML('beforeend', `
+                    <div class="px-2 py-2 border-bottom d-flex justify-content-between align-items-start ${n.read_at ? 'bg-light' : 'bg-white'}">
+                        <div class="notification-item flex-grow-1" 
+                             data-id="${n.id}" 
+                             data-link="${n.link || ''}" 
+                             style="cursor:pointer;">
+                            <strong>${n.title}</strong><br>
+                            <small class="text-muted">${n.message}</small><br>
+                            <small class="text-secondary">${n.created_at}</small>
+                        </div>
+                        <button class="btn btn-sm btn-outline-danger ms-2 clear-btn" data-id="${n.id}" title="Clear this notification">×</button>
+                    </div>
+                `);
+            });
+
+            // ✅ Mark all as read
+            document.getElementById('markAllRead')?.addEventListener('click', async function (e) {
+                e.preventDefault();
+                await fetch("{{ route('notifications.readAll') }}");
+                loadNotifications();
+            });
+
+            // ✅ Clear all
+            document.getElementById('clearAll')?.addEventListener('click', async function (e) {
+                e.preventDefault();
+                if (confirm("Clear all notifications?")) {
+                    await fetch("{{ route('notifications.clearAll') }}");
+                    loadNotifications();
+                }
+            });
+
+            // ✅ Handle individual notification click
+            document.querySelectorAll('.notification-item').forEach(item => {
+                item.addEventListener('click', function () {
+                    const id = this.dataset.id;
+                    const link = this.dataset.link;
+                    markNotificationAsRead(id, link);
+                });
+            });
+
+            // ✅ Handle clear button click
+            document.querySelectorAll('.clear-btn').forEach(btn => {
+                btn.addEventListener('click', async function (e) {
+                    e.stopPropagation();
+                    const id = this.dataset.id;
+                    await clearNotification(id);
+                });
+            });
+
+            if (showDropdown) {
+                dropdown.style.display = 'block';
+            }
+
+        } catch (error) {
+            console.error("Error fetching notifications:", error);
+        }
+    }
+
+    // ✅ Mark single notification as read
+    async function markNotificationAsRead(id, link) {
+        try {
+            await fetch(`/notifications/read/${id}`);
+            if (link) {
+                window.location.href = link;
+            } else {
+                loadNotifications();
+            }
+        } catch (error) {
+            console.error("Error marking notification as read:", error);
+        }
+    }
+
+    // ✅ Clear (delete) single notification
+    async function clearNotification(id) {
+        try {
+            await fetch(`/notifications/clear/${id}`);
+            loadNotifications();
+        } catch (error) {
+            console.error("Error clearing notification:", error);
+        }
+    }
+
+    // 🔔 Toggle dropdown on click
+    bellIcon.addEventListener('click', async function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        const isOpen = dropdown.style.display === 'block';
+        dropdown.style.display = isOpen ? 'none' : 'block';
+        if (!isOpen) {
+            await loadNotifications(true);
+        }
+    });
+
+    // 🕒 Auto-refresh every 30 seconds
+    autoRefreshInterval = setInterval(() => loadNotifications(), 30000);
+
+    // Close dropdown when clicking outside
+    document.addEventListener('click', function () {
+        dropdown.style.display = 'none';
+    });
+});
+</script>
+
+
     
     <!-- Global footer included for all pages extending this layout -->
     @include('user_view.footer')

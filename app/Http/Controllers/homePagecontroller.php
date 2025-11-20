@@ -708,34 +708,60 @@ $reimbursementList = DB::table('reimbursement_trackings')
 }
 
     
-    public function saveToDoList(Request $request)
-    {
-        $user = Auth::user(); // Get the logged-in user
+public function saveToDoList(Request $request)
+{
+    // ✅ Get the currently logged-in user
+    $user = Auth::user();
 
-        $request->validate([
-            'task_date' => 'required|date',
-            'project_name' => 'required|string|max:255',
-            'task_name' => 'required|string|max:255',
-            'hours' => 'required|string|max:255',
-        ]);
+    // ✅ Validate the input data
+    $request->validate([
+        'task_date'     => 'required|date',
+        'project_name'  => 'required|string|max:255',
+        'task_name'     => 'required|string|max:255',
+        'hours'         => 'required|string|max:255',
+    ]);
 
+    try {
+        // ✅ Insert task record into the to_do_lists table
         $insert_status = DB::table('to_do_lists')->insert([
-            'user_id' => $user->id,
-            'date' => $request->input('task_date'),
-            'project_name' => $request->input('project_name'),
-            'task' => $request->input('task_name'),
-            'hours' => $request->input('hours'),
-            'created_at' => now(),
-            'updated_at' => now(),
+            'user_id'       => $user->id,
+            'date'          => $request->input('task_date'),
+            'project_name'  => $request->input('project_name'),
+            'task'          => $request->input('task_name'),
+            'hours'         => $request->input('hours'),
+            'created_at'    => now(),
+            'updated_at'    => now(),
         ]);
-        
 
+        // ✅ If successfully inserted
         if ($insert_status) {
-            return redirect()->route('user.homepage')->with('success', 'Task saved successfully!');
-        } else {
-            return redirect()->route('user.homepage')->with('error', 'Task not saved successfully!');
+
+            // 🔔 Send system notification to the logged-in user
+            // Title, message, redirect link, and type are customizable
+            sendSystemNotification(
+                $user->id, 
+                'To-Do Task Added', 
+                'You added a new task "' . $request->input('task_name') . '" to your To-Do list for ' . $request->input('task_date') . '.', 
+                '/to-do-list',      // you can change this route to your to-do page
+                'todo'              // custom type for identification
+            );
+
+            // ✅ Redirect with success message (Toastify will show this)
+            return redirect()->route('user.homepage')->with('success', 'Task saved successfully and notification sent!');
         }
+
+        // ⚠️ If insertion failed
+        return redirect()->route('user.homepage')->with('error', 'Task not saved successfully!');
+
+    } catch (\Exception $e) {
+        // 🧾 Log error for debugging
+        \Log::error('ToDo Save Error: ' . $e->getMessage());
+
+        // ⚠️ Return a user-friendly error
+        return redirect()->route('user.homepage')->with('error', 'Something went wrong. Please try again.');
     }
+}
+
 
     public function updateToDo(Request $request, $id){
 

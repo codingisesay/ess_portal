@@ -66,13 +66,12 @@
                         </h2>
                         <div id="mainGoalsCollapse" class="accordion-collapse collapse" aria-labelledby="mainGoalsHeader" data-bs-parent="#mainGoalsAccordion">
                             <div class="accordion-body">
-                                <div id="emp-goals" class="accordion mt-2"></div>
+                                <div id="emp-goals" class="accordion mt-2" style="max-height: 260px; overflow-y: auto;"></div>  <!-- Added scroll for overflow -->
                             </div>
                         </div>
                     </div>
                 </div>
             @endif
-
         </div>
     </div>
   

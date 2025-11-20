@@ -771,7 +771,39 @@ public function submitBundle(Request $request)
 
 
 
+ public function deleteBundleItem(Request $request)
+    {
+        $request->validate([
+            'bundle_id' => 'required|integer',
+            'goal_id'   => 'required|integer',
+        ]);
 
+        $bundleId = $request->bundle_id;
+        $goalId = $request->goal_id;
+
+        $user = Auth::user();
+        if (!$user) {
+            return response()->json(['message' => 'Unauthenticated.'], 401);
+        }
+
+        // Ensure the bundle belongs to the requesting user (prevent others from removing items)
+        $bundle = GoalBundleApproval::find($bundleId);
+        if (!$bundle || $bundle->requested_by != $user->id) {
+            return response()->json(['message' => 'Unauthorized to modify this bundle.'], 403);
+        }
+
+        // Delete the bundle item
+        $deleted = DB::table('goal_bundle_items')
+            ->where('bundle_id', $bundleId)
+            ->where('goal_id', $goalId)
+            ->delete();
+
+        if ($deleted) {
+            return response()->json(['message' => 'Item removed from bundle.']);
+        }
+
+        return response()->json(['message' => 'Item not found or already removed.'], 404);
+    }
 
 
 // Fetch pending bundles for manager

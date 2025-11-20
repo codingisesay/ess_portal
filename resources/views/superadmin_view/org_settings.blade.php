@@ -323,6 +323,32 @@ $formattedOrgSettings = $orgSettings->map(function ($item) {
 }
 </style>
 
+<!-- Toast container for success/error messages -->
+<div id="orgSettingsToast" class="org-toast" role="status" aria-live="polite" style="display:none;">
+    <div id="orgSettingsToastMessage" class="org-toast-message"></div>
+</div>
+
+<style>
+/* Simple toast styles */
+.org-toast {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 10000;
+    min-width: 220px;
+    max-width: 360px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    border-radius: 6px;
+    overflow: hidden;
+    transition: transform 220ms ease, opacity 220ms ease;
+}
+.org-toast.show { display: block; opacity: 1; transform: translateY(0); }
+.org-toast.hide { opacity: 0; transform: translateY(-10px); }
+.org-toast-message { padding: 12px 16px; font-size: 14px; color: #fff; }
+.org-toast-message.success { background-color: #198754; }
+.org-toast-message.error { background-color: #dc3545; }
+</style>
+
 <script>
 // Function to open edit modal and populate form
 function openEditModal(modalId, data) {
@@ -385,62 +411,71 @@ function closeEditModal(modalId) {
     }, 300);
 }
 
-// Handle form submission with AJAX
+// Minimal AJAX submit handler (no console/alert calls)
 async function handleFormSubmit(event) {
     event.preventDefault();
-    
+
     const form = event.target;
-    const formData = new FormData(form);
     const submitButton = form.querySelector('button[type="submit"]');
-    
+
+    // Simple UX feedback
+    submitButton.disabled = true;
+    submitButton.innerHTML = 'Saving...';
+
     try {
-        // Disable submit button to prevent double submission
-        submitButton.disabled = true;
-        submitButton.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Saving...';
-        
-        // Get CSRF token from the form
-        const csrfToken = form.querySelector('input[name="_token"]').value;
-        
-        // Log form data for debugging
-        const formData = new FormData(form);
-        console.log('Form Data:');
-        for (let [key, value] of formData.entries()) {
-            console.log(`${key}: ${value}`);
-        }
-        
         const response = await fetch(form.action, {
             method: 'POST',
+            credentials: 'same-origin', // send cookies so Laravel can read the session
             headers: {
-                'X-CSRF-TOKEN': csrfToken,
                 'X-Requested-With': 'XMLHttpRequest',
                 'Accept': 'application/json',
                 'Content-Type': 'application/x-www-form-urlencoded',
             },
             body: new URLSearchParams(new FormData(form))
         });
-        
-        const data = await response.json();
-        
+
+        // parse JSON safely
+        const data = await response.json().catch(() => ({}));
+
         if (response.ok) {
-            // Show success message
-            alert('Settings updated successfully!');
-            // Close the modal with animation
+            // Show success toast, close modal and reload after short delay
+            showOrgToast('Settings updated successfully!', 'success');
             closeEditModal('editOrgSettingsModal');
-            // Reload the page to show updated data
-            window.location.reload();
+            setTimeout(() => window.location.reload(), 900);
         } else {
-            // Show error message from server or default message
-            const errorMessage = data.errors ? Object.values(data.errors).join('\n') : (data.message || 'An error occurred while updating settings.');
-            alert(errorMessage);
+            // Show error toast (message may be empty)
+            const msg = data.message || (data.errors ? Object.values(data.errors).join('\n') : 'Failed to update settings.');
+            showOrgToast(msg, 'error');
         }
-    } catch (error) {
-        console.error('Error:', error);
-        alert('An error occurred. Please check the console for details.');
+    } catch (err) {
+        // Show generic error toast
+        showOrgToast('An unexpected error occurred.', 'error');
     } finally {
-        // Re-enable submit button
         submitButton.disabled = false;
         submitButton.innerHTML = 'Save changes';
     }
+}
+
+// Toast helper
+function showOrgToast(message, type = 'success') {
+    const container = document.getElementById('orgSettingsToast');
+    const msgEl = document.getElementById('orgSettingsToastMessage');
+    if (!container || !msgEl) return;
+
+    msgEl.textContent = message;
+    msgEl.classList.remove('success', 'error');
+    msgEl.classList.add(type === 'error' ? 'error' : 'success');
+
+    container.classList.remove('hide');
+    container.style.display = 'block';
+    container.classList.add('show');
+
+    // auto hide after 3s
+    setTimeout(() => {
+        container.classList.remove('show');
+        container.classList.add('hide');
+        setTimeout(() => container.style.display = 'none', 250);
+    }, 3000);
 }
 
 // Close modal when clicking outside
