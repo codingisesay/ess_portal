@@ -70,7 +70,7 @@ public function orgSettingsStore(Request $request) {
 }
 
     public function orgSettingsUpdate(Request $request, $id) {
-        $user = Auth::user();
+        $user = Auth::guard('superadmin')->user();
         $setting = OrganizationSetting::findOrFail($id);
 
         $request->validate([
