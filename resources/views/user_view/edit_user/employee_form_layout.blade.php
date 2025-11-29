@@ -4,8 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SIL Technologies Employee Portal</title>
-    <link rel="icon" href="{{ asset('user_end/images/STPLLogo butterfly.png')}} " />
+    <link rel="icon" href="{{ asset('user_end/images/STPLLogo butterfly.png')}}" />
     <link rel="stylesheet" href="{{ asset('user_end/css/onboarding_form.css') }}">
+    <!-- Styles for the user footer component -->
+    <link rel="stylesheet" href="{{ asset('user_end/css/footer.css') }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
     
@@ -16,7 +18,8 @@
     <script src="{{ asset('user_end/js/toastify-notifications.js') }}"></script>
 </head>
 
-<body>
+<!-- just chnaged the class name to give matching css  -->
+<body class="has-fixed-footer">
     {{-- <header>
         <div class="logo">
             <img src="{{asset('user_end/images/STPL Logo with TagLine HD Transparent.png')}}">
@@ -210,5 +213,15 @@ $permission_array = session('id');
             transition: background-color 0.3s ease;
         }
     </style>
+    
+    <!-- Footer Section -->
+    <footer class="page-footer">
+        <a href="{{ route('privacy_policy_pdf') }}" target="_blank" class="footer-link" title="Open Privacy Policy">
+            <div class="footer-content">
+                <img src="{{ asset('user_end/images/STPLLogo.png') }}" alt="Logo" class="footer-logo">
+                <span class="footer-text">© {{ date('Y') }} Payvance Innovations Pvt Ltd. All rights reserved.</span>
+            </div>
+        </a>
+    </footer>
 </body>
 </html>

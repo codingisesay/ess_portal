@@ -328,6 +328,14 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
     
-    <!-- Global footer included for all pages extending this layout -->
-    @include('user_view.footer')
+    <!-- Global footer included for non-edit pages 
+     removed the footer whixh is in employee_form_layout.blade.php on the top-->
+     
+    @php
+        $currentRoute = request()->route()->getName();
+        $isEditPage = str_contains($currentRoute, 'edit') || str_contains($currentRoute, 'update');
+    @endphp
+    @if(!$isEditPage)
+        @include('user_view.footer')
+    @endif
 </body>
