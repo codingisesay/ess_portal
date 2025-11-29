@@ -6,7 +6,7 @@
     <title>SIL Technologies Employee Portal</title>
     <link rel="icon" href="{{ asset('user_end/images/STPLLogo butterfly.png')}}" />
     <link rel="stylesheet" href="{{ asset('user_end/css/onboarding_form.css') }}">
-    <!-- Styles for the footer component -->
+    <!-- Styles for the user footer component -->
     <link rel="stylesheet" href="{{ asset('user_end/css/footer.css') }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
