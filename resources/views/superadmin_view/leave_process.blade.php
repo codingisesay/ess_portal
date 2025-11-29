@@ -80,9 +80,9 @@ $id = Auth::guard('superadmin')->user()->id;
             @csrf
             <div class="col-3 mb-4">
             <div class="form-group">
-                <select id="category_id" name="cycle_slot_id" class="form-control">
-                    <option value="" disabled selected></option> 
-                    <option value="{{$leaveCycleDatas->id}}">{{ $leaveCycleDatas->name }}</option> 
+                <select id="category_id" name="cycle_slot_id" class="form-control" required>
+                    <option value="" disabled selected></option>
+                    <option value="{{ $leaveCycleDatas->id }}">{{ $leaveCycleDatas->name }}</option>
                 </select>
                 <label for="category_id">Select Cycle</label>
             </div>

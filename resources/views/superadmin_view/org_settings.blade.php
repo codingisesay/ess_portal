@@ -3,13 +3,73 @@
 <link rel="stylesheet" href="{{ asset('errors/error.css') }}">
 <link rel="stylesheet" href="{{ asset('admin_end/css/admin_form.css') }}">
 <link rel="stylesheet" href="{{ asset('admin_end/css/popup_form.css') }}">
+<style>
+    .search-container {
+        position: relative;
+        margin-left: 10px;
+    }
+    .search-box {
+        display: flex;
+        align-items: center;
+        position: relative;
+        transition: all 0.3s ease;
+        width: 40px;
+        overflow: hidden;
+    }
+    .search-box.expanded {
+        width: 250px;
+    }
+    .search-icon {
+        position: absolute;
+        left: 10px;
+        cursor: pointer;
+        z-index: 2;
+        width: 20px;
+        height: 20px;
+    }
+    .search-input {
+        padding-left: 40px;
+        width: 100%;
+        height: 40px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        outline: none;
+        transition: all 0.3s ease;
+        opacity: 0;
+        visibility: hidden;
+    }
+    .search-box.expanded .search-input {
+        opacity: 1;
+        visibility: visible;
+    }
+    .d-flex {
+        display: flex !important;
+        align-items: center;
+        gap: 15px;
+        margin-bottom: 1.5rem;
+    }
+    .toggle-buttons {
+        display: flex;
+        gap: 10px;
+    }
+</style>
 
 <div class="container">
     <h3>Organization Settings</h3>
-    <!-- Toggle Buttons -->
-    <div class="toggle-buttons">
-        <button onclick="showOrgSettingsTable(this)">Show Table</button>
-        <button onclick="showOrgSettingsForm(this)">Show Form</button>
+    <div class="d-flex">
+        <!-- Toggle Buttons -->
+        <div class="toggle-buttons">
+            <button class="active" onclick="showOrgSettingsForm(this)">Show Form</button>
+            <button onclick="showOrgSettingsTable(this)">Show Table</button>
+        </div>
+        
+        <!-- Search Box with Icon (initially hidden) -->
+        <div class="search-container" id="tableSearchContainer" style="display: none;">
+            <div class="search-box">
+                <img src="{{ asset('user_end/images/search (1).png') }}" alt="Search" class="search-icon" id="searchIcon">
+                <input type="text" id="tableSearch" placeholder="Search..." class="search-input">
+            </div>
+        </div>
     </div>
 
     <!-- Form Section -->
@@ -17,68 +77,92 @@
        <form action="{{ url('/org-settings') }}" method="POST">
             @csrf
             <div class="form-container row">
-                <div class="col-3 mb-3">
-                    <label for="name" class="form-label fw-bold mb-1">Organization Name</label>
-                    <input type="text" name="name" id="name" class="form-control" 
-                        value="{{ old('name', $setting->name ?? '') }}" required
-                        placeholder="Enter organization name">
+                <div class="col-3 mb-4">
+                    <div class="form-group">
+                        <input type="text" name="name" id="name" class="form-control" 
+                            value="{{ old('name', $setting->name ?? '') }}" required
+                            placeholder=" "
+                            onfocus="this.placeholder = 'Enter organization name'"
+                            onblur="this.placeholder = ' '">
+                        <label for="name">Organization Name</label>
+                    </div>
                 </div>
 
                 {{-- Financial Year --}}
-                <div class="col-3 mb-3">
-                    <label for="year" class="form-label fw-bold mb-1">Financial Year</label>
-                    <select name="year" id="year" class="form-select" required>
-                        @php
-                            $currentYear = date('Y');
-                            for ($i = $currentYear - 2; $i <= $currentYear + 5; $i++) {
-                                echo "<option value='$i' " . ($i == $currentYear ? "selected" : "") . ">$i - ".($i+1)."</option>";
-                            }
-                        @endphp
-                    </select>
+                <div class="col-3 mb-4">
+                    <div class="form-group">
+                        <select name="year" id="year" class="form-control" required>
+                            <option value="" disabled selected></option>
+                            @php
+                                $currentYear = date('Y');
+                                for ($i = $currentYear - 2; $i <= $currentYear + 5; $i++) {
+                                    $selected = old('year') == $i ? 'selected' : '';
+                                    echo "<option value='$i' $selected>$i - ".($i+1)."</option>";
+                                }
+                            @endphp
+                        </select>
+                        <label for="year">Financial Year</label>
+                    </div>
                 </div>
 
                 {{-- Cycle Type --}}
-                <div class="col-3 mb-3">
-                    <label for="cycle_type" class="form-label fw-bold mb-1">Cycle Type</label>
-                    <select name="cycle_type" id="cycle_type" class="form-select" required>
-                        <option value="">Select Cycle Type</option>
-                        <option value="monthly">Monthly</option>
-                        <option value="quarterly">Quarterly</option>
-                        <option value="half-yearly">Half Yearly</option>
-                        <option value="yearly">Yearly</option>
-                    </select>
+                <div class="col-3 mb-4">
+                    <div class="form-group">
+                        <select name="cycle_type" id="cycle_type" class="form-control" required
+                                onfocus="this.querySelector('option[value=\'\']').textContent='Select Cycle Type'"
+                                onblur="if(!this.value) this.querySelector('option[value=\'\']').textContent=''">
+                            <option value="" disabled selected></option>
+                            <option value="monthly">Monthly</option>
+                            <option value="quarterly">Quarterly</option>
+                            <option value="half-yearly">Half Yearly</option>
+                            <option value="yearly">Yearly</option>
+                        </select>
+                        <label for="cycle_type">Cycle Type</label>
+                    </div>
                 </div>
 
                 {{-- Dynamic Cycle Dropdown --}}
                 <div class="col-3 mb-3" id="cycleWrapper" style="display:none;">
-                    <label for="cycle_period" class="form-label fw-bold mb-1">Cycle Period</label>
-                    <select name="cycle_period" id="cycle_period" class="form-select" required>
-                        <option value="">Select Period</option>
-                    </select>
+                    <div class="form-group">
+                        <select name="cycle_period" id="cycle_period" class="form-control" required
+                                onfocus="this.querySelector('option[value=\'\']').textContent='Select Period'"
+                                onblur="if(!this.value) this.querySelector('option[value=\'\']').textContent=''">
+                            <option value="" disabled selected></option>
+                        </select>
+                        <label for="cycle_period">Cycle Period</label>
+                    </div>
                 </div>
 
                 {{-- Start Date --}}
                 <div class="col-3 mb-3">
-                    <label for="start_date" class="form-label fw-bold mb-1">Start Date</label>
-                    <input type="date" name="start_date" id="start_date" class="form-control" required>
+                    <div class="form-group">
+                        <input type="date" name="start_date" id="start_date" class="form-control" required>
+                        <label for="start_date">Start Date</label>
+                    </div>
                 </div>
 
                 {{-- End Date --}}
                 <div class="col-3 mb-3">
-                    <label for="end_date" class="form-label fw-bold mb-1">End Date</label>
-                    <input type="date" name="end_date" id="end_date" class="form-control" required>
+                    <div class="form-group">
+                        <input type="date" name="end_date" id="end_date" class="form-control" required>
+                        <label for="end_date">End Date</label>
+                    </div>
                 </div>
 
                 {{-- Process Start Date --}}
                 <div class="col-3 mb-3">
-                    <label for="process_start_date" class="form-label fw-bold mb-1">Process Start Date</label>
-                    <input type="date" name="process_start_date" id="process_start_date" class="form-control" required>
+                    <div class="form-group">
+                        <input type="date" name="process_start_date" id="process_start_date" class="form-control" required>
+                        <label for="process_start_date">Process Start Date</label>
+                    </div>
                 </div>
 
                 {{-- Process End Date --}}
                 <div class="col-3 mb-3">
-                    <label for="process_end_date" class="form-label fw-bold mb-1">Process End Date</label>
-                    <input type="date" name="process_end_date" id="process_end_date" class="form-control" required>
+                    <div class="form-group">
+                        <input type="date" name="process_end_date" id="process_end_date" class="form-control" required>
+                        <label for="process_end_date">Process End Date</label>
+                    </div>
                 </div>
 
 
@@ -89,7 +173,8 @@
         </form>
     </div>
 
-       <!-- Table Section issue no--(3743) --> 
+    <!-- Table Section -->
+    <div id="tableSection" style="display: none;">
 @php
 // Format date fields before sending to table partial
 $formattedOrgSettings = $orgSettings->map(function ($item) {
@@ -113,7 +198,6 @@ $formattedOrgSettings = $orgSettings->map(function ($item) {
 });
 @endphp
 
-<div id="tableSection">
     @include('partials.data_table', [
         'items' => $formattedOrgSettings ?? [],
         'columns' => [
@@ -239,6 +323,32 @@ $formattedOrgSettings = $orgSettings->map(function ($item) {
 }
 </style>
 
+<!-- Toast container for success/error messages -->
+<div id="orgSettingsToast" class="org-toast" role="status" aria-live="polite" style="display:none;">
+    <div id="orgSettingsToastMessage" class="org-toast-message"></div>
+</div>
+
+<style>
+/* Simple toast styles */
+.org-toast {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 10000;
+    min-width: 220px;
+    max-width: 360px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    border-radius: 6px;
+    overflow: hidden;
+    transition: transform 220ms ease, opacity 220ms ease;
+}
+.org-toast.show { display: block; opacity: 1; transform: translateY(0); }
+.org-toast.hide { opacity: 0; transform: translateY(-10px); }
+.org-toast-message { padding: 12px 16px; font-size: 14px; color: #fff; }
+.org-toast-message.success { background-color: #198754; }
+.org-toast-message.error { background-color: #dc3545; }
+</style>
+
 <script>
 // Function to open edit modal and populate form
 function openEditModal(modalId, data) {
@@ -301,62 +411,71 @@ function closeEditModal(modalId) {
     }, 300);
 }
 
-// Handle form submission with AJAX
+// Minimal AJAX submit handler (no console/alert calls)
 async function handleFormSubmit(event) {
     event.preventDefault();
-    
+
     const form = event.target;
-    const formData = new FormData(form);
     const submitButton = form.querySelector('button[type="submit"]');
-    
+
+    // Simple UX feedback
+    submitButton.disabled = true;
+    submitButton.innerHTML = 'Saving...';
+
     try {
-        // Disable submit button to prevent double submission
-        submitButton.disabled = true;
-        submitButton.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Saving...';
-        
-        // Get CSRF token from the form
-        const csrfToken = form.querySelector('input[name="_token"]').value;
-        
-        // Log form data for debugging
-        const formData = new FormData(form);
-        console.log('Form Data:');
-        for (let [key, value] of formData.entries()) {
-            console.log(`${key}: ${value}`);
-        }
-        
         const response = await fetch(form.action, {
             method: 'POST',
+            credentials: 'same-origin', // send cookies so Laravel can read the session
             headers: {
-                'X-CSRF-TOKEN': csrfToken,
                 'X-Requested-With': 'XMLHttpRequest',
                 'Accept': 'application/json',
                 'Content-Type': 'application/x-www-form-urlencoded',
             },
             body: new URLSearchParams(new FormData(form))
         });
-        
-        const data = await response.json();
-        
+
+        // parse JSON safely
+        const data = await response.json().catch(() => ({}));
+
         if (response.ok) {
-            // Show success message
-            alert('Settings updated successfully!');
-            // Close the modal with animation
+            // Show success toast, close modal and reload after short delay
+            showOrgToast('Settings updated successfully!', 'success');
             closeEditModal('editOrgSettingsModal');
-            // Reload the page to show updated data
-            window.location.reload();
+            setTimeout(() => window.location.reload(), 900);
         } else {
-            // Show error message from server or default message
-            const errorMessage = data.errors ? Object.values(data.errors).join('\n') : (data.message || 'An error occurred while updating settings.');
-            alert(errorMessage);
+            // Show error toast (message may be empty)
+            const msg = data.message || (data.errors ? Object.values(data.errors).join('\n') : 'Failed to update settings.');
+            showOrgToast(msg, 'error');
         }
-    } catch (error) {
-        console.error('Error:', error);
-        alert('An error occurred. Please check the console for details.');
+    } catch (err) {
+        // Show generic error toast
+        showOrgToast('An unexpected error occurred.', 'error');
     } finally {
-        // Re-enable submit button
         submitButton.disabled = false;
         submitButton.innerHTML = 'Save changes';
     }
+}
+
+// Toast helper
+function showOrgToast(message, type = 'success') {
+    const container = document.getElementById('orgSettingsToast');
+    const msgEl = document.getElementById('orgSettingsToastMessage');
+    if (!container || !msgEl) return;
+
+    msgEl.textContent = message;
+    msgEl.classList.remove('success', 'error');
+    msgEl.classList.add(type === 'error' ? 'error' : 'success');
+
+    container.classList.remove('hide');
+    container.style.display = 'block';
+    container.classList.add('show');
+
+    // auto hide after 3s
+    setTimeout(() => {
+        container.classList.remove('show');
+        container.classList.add('hide');
+        setTimeout(() => container.style.display = 'none', 250);
+    }, 3000);
 }
 
 // Close modal when clicking outside
@@ -372,7 +491,7 @@ document.getElementById("cycle_type").addEventListener("change", function() {
     const cycleWrapper = document.getElementById("cycleWrapper");
     const cycleSelect = document.getElementById("cycle_period");
 
-    cycleSelect.innerHTML = '<option value="">Select Period</option>';
+    cycleSelect.innerHTML = '<option value="" disabled selected></option>';
     cycleSelect.disabled = true; // reset
 
     if (!type) {
@@ -521,7 +640,7 @@ document.getElementById("edit_cycle_type").addEventListener("change", function()
     const cycleWrapper = document.getElementById("edit_cycleWrapper");
     const cycleSelect = document.getElementById("edit_cycle_period");
 
-    cycleSelect.innerHTML = '<option value="">Select Period</option>';
+    cycleSelect.innerHTML = '<option value="" disabled selected></option>';
     cycleSelect.disabled = true;
 
     if (!type) {
@@ -667,30 +786,97 @@ document.getElementById("cycle_period").addEventListener("change", calculateDate
 
 
 <script>
+    // Search box toggle functionality
+    document.addEventListener('DOMContentLoaded', function() {
+        const searchBox = document.querySelector('.search-box');
+        const searchIcon = document.getElementById('searchIcon');
+        const searchInput = document.getElementById('tableSearch');
+        
+        if (searchIcon && searchInput) {
+            // Toggle search box on icon click
+            searchIcon.addEventListener('click', function() {
+                searchBox.classList.toggle('expanded');
+                if (searchBox.classList.contains('expanded')) {
+                    // Focus the input when expanding
+                    setTimeout(() => {
+                        searchInput.focus();
+                    }, 300);
+                }
+            });
+            
+            // Close search when clicking outside
+            document.addEventListener('click', function(event) {
+                if (!searchBox.contains(event.target) && searchBox.classList.contains('expanded')) {
+                    searchBox.classList.remove('expanded');
+                }
+            });
+            
+            // Prevent search box from closing when clicking inside it
+            searchInput.addEventListener('click', function(event) {
+                event.stopPropagation();
+            });
+            
+            // Handle search input
+            searchInput.addEventListener('input', function() {
+                const searchTerm = this.value.toLowerCase();
+                const rows = document.querySelectorAll('#tableSection tbody tr');
+                
+                rows.forEach(row => {
+                    const cells = row.querySelectorAll('td');
+                    let rowMatches = false;
+                    
+                    // Skip the action column (last cell)
+                    for (let i = 0; i < cells.length - 1; i++) {
+                        const cellText = cells[i].textContent.toLowerCase();
+                        if (cellText.includes(searchTerm)) {
+                            rowMatches = true;
+                            break;
+                        }
+                    }
+                    
+                    row.style.display = rowMatches ? '' : 'none';
+                });
+            });
+        }
+        
+        // Show form by default on page load
+        showOrgSettingsForm(document.querySelector('.toggle-buttons button:first-child'));
+    });
+
     function showOrgSettingsForm(clickedElement) {
+        // Show form section and hide table section
         document.getElementById('formSection').style.display = 'block';
         document.getElementById('tableSection').style.display = 'none';
-        const siblings = clickedElement.parentElement.children;
-        for (let sibling of siblings) {
-            sibling.classList.remove('active');
+        
+        // Hide search container
+        document.getElementById('tableSearchContainer').style.display = 'none';
+        
+        // Collapse search box if it's expanded
+        const searchBox = document.querySelector('.search-box');
+        if (searchBox) {
+            searchBox.classList.remove('expanded');
         }
-        clickedElement.classList.add('active');
+        
+        updateActiveButton(clickedElement);
     }
 
     function showOrgSettingsTable(clickedElement) {
+        // Show table section and hide form section
         document.getElementById('formSection').style.display = 'none';
         document.getElementById('tableSection').style.display = 'block';
+        
+        // Show search container when table is shown
+        document.getElementById('tableSearchContainer').style.display = 'block';
+        
+        updateActiveButton(clickedElement);
+    }
+    
+    function updateActiveButton(clickedElement) {
         const siblings = clickedElement.parentElement.children;
         for (let sibling of siblings) {
             sibling.classList.remove('active');
         }
         clickedElement.classList.add('active');
     }
-
-    // Show table by default on page load
-    document.addEventListener('DOMContentLoaded', () => {
-        const firstButton = document.querySelector('.toggle-buttons button:first-child');
-        showOrgSettingsTable(firstButton);
-    });
 </script>
 @endsection

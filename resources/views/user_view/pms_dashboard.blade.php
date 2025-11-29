@@ -40,7 +40,6 @@
         @if($showOrganization && $showManager)
             <div class="mb-3">
                 <div class="dashboard-switch">
-                    <label class="switcher-label"><strong>Switch Dashboard:</strong></label>
                     <div class="ds-pill">
                         <button id="switchOrg" class="ds-option active" type="button" aria-pressed="true">
                             <span class="ds-icon ds-icon-org" aria-hidden="true">

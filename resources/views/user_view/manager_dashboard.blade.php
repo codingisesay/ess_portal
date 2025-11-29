@@ -261,7 +261,7 @@
     <thead>
         <tr>
             <th>Goal</th>
-            <th>Type</th>
+            <th>Pending to Approvel</th>
             <th>Actions</th>
         </tr>
     </thead>
@@ -332,7 +332,12 @@
             <td>{{ ucfirst($goal->approval_status) }}</td>
             <td>
                 @if($goal->approval_status === 'rejected')
-                <button type="button" class="btn btn-sm btn-danger" onclick="this.closest('tr').remove()">Remove</button>
+                        <!-- DELETE BUTTON -->
+                <button type="button"
+                        class="btn btn-sm btn-danger"
+                        onclick="deleteBundleItem({{ $goal->bundle_id }}, {{ $goal->goal_id }}, this)">
+                    Delete
+                </button>
             @elseif($goal->approval_status === 'approved')
                 <button type="button" 
                         class="btn btn-sm btn-primary add-insight-btn" 
@@ -340,7 +345,11 @@
                         data-goal-title="{{ $goal->title }}">
                     Add Insight
                 </button>
-            @endif
+            @else
+                <!-- REMOVE BUTTON -->
+                <button type="button" class="btn btn-sm btn-danger"
+                   @if($goal->approval_status === 'pending') disabled @else onclick="this.closest('tr').remove()"@endif>Remove</button>
+             @endif
             </td>
         </tr>
         @endforeach
@@ -510,7 +519,6 @@
                     <colgroup>
                         <col style="width:25%">
                         <col style="width:35%">
-                        <col style="width:15%">
                         <col style="width:12%">
                         <col style="width:13%">
                     </colgroup>
@@ -518,7 +526,6 @@
                         <tr>
                             <th>Goal</th>
                             <th>Insight</th>
-                            <th>Added By</th>
                             <th>Date</th>
                             <th>Status</th>
                         </tr>
@@ -530,7 +537,6 @@
                     <colgroup>
                         <col style="width:25%">
                         <col style="width:35%">
-                        <col style="width:15%">
                         <col style="width:12%">
                         <col style="width:13%">
                     </colgroup>
@@ -556,7 +562,6 @@
                                     <div class="description">{{ $insight->description }}</div>
                                 @endif
                             </td>
-                            <td>{{ $insight->user_name }}</td>
                             <td>{{ \Carbon\Carbon::parse($insight->created_at)->format('d/m/Y') }}</td>
                             <td>
                                 @php
@@ -1785,3 +1790,57 @@ document.getElementById('bundleForm').addEventListener('submit', function(e) {
 
 
 </script>
+<!-- Delete button script -->
+<script>
+function deleteBundleItem(bundleId, goalId, btn) {
+
+    Swal.fire({
+        title: "Are you sure?",
+        text: "This item will be permanently deleted.",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#d33",
+        cancelButtonColor: "#3085d6",
+        confirmButtonText: "Yes, delete it"
+    }).then((result) => {
+
+        if (result.isConfirmed) {
+
+            $.ajax({
+                url: "{{ route('bundle.item.delete') }}",
+                type: "POST",
+                data: {
+                    _token: "{{ csrf_token() }}",
+                    bundle_id: bundleId,
+                    goal_id: goalId
+                },
+                success: function (res) {
+
+                    Swal.fire({
+                        title: "Deleted!",
+                        text: res.message,
+                        icon: "success",
+                        timer: 1500,
+                        showConfirmButton: false
+                    });
+
+                    $(btn).closest('tr').fadeOut(300, function() {
+                        $(this).remove();
+                    });
+                },
+                error: function (err) {
+
+                    Swal.fire({
+                        title: "Error!",
+                        text: err.responseJSON.message || "Something went wrong",
+                        icon: "error"
+                    });
+                }
+            });
+        }
+
+    });
+
+}
+</script>
+

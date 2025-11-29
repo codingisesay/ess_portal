@@ -20,13 +20,64 @@ $id = Auth::guard('superadmin')->user()->id;
 <link rel="stylesheet" href="{{ asset('admin_end/css/popup_form.css') }}">
 <!-- <link rel="stylesheet" href="{{ asset('bootstrapcss/bootstrap.min.css') }}"> -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<style>
+    .search-container {
+        position: relative;
+        margin-left: 10px;
+    }
+    .search-box {
+        display: flex;
+        align-items: center;
+        position: relative;
+        transition: all 0.3s ease;
+        width: 40px;
+        overflow: hidden;
+    }
+    .search-box.expanded {
+        width: 250px;
+    }
+    .search-icon {
+        position: absolute;
+        left: 10px;
+        cursor: pointer;
+        z-index: 2;
+        width: 20px;
+        height: 20px;
+    }
+    .search-input {
+        padding-left: 40px;
+        width: 100%;
+        height: 40px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        outline: none;
+        transition: all 0.3s ease;
+        opacity: 0;
+        visibility: hidden;
+    }
+    .search-box.expanded .search-input {
+        opacity: 1;
+        visibility: visible;
+    }
+</style>
 
 <div class="container">
-<h3>Create User Of Your Organisation</h2>
-    <!-- Toggle Buttons -->
-    <div class="toggle-buttons">
-    <button onclick="showUserTable(this)">Show Table</button>
-        <button onclick="showUserForm(this)">Show Form</button>
+    <h3 class="mb-4">Create User Of Your Organisation</h3>
+    
+    <div class="d-flex justify-content-start align-items-center mb-4" style="gap: 15px;">
+        <!-- Toggle Buttons -->
+        <div class="toggle-buttons">
+            <button onclick="showUserForm(this)" class="active">Show Form</button>
+            <button onclick="showUserTable(this)">Show Table</button>
+        </div>
+        
+        <!-- Search Box with Icon (initially hidden) -->
+        <div class="search-container" id="tableSearchContainer" style="display: none;">
+            <div class="search-box">
+                <img src="{{ asset('user_end/images/search (1).png') }}" alt="Search" class="search-icon" id="searchIcon">
+                <input type="text" id="tableSearch" placeholder="Search..." class="search-input">
+            </div>
+        </div>
     </div>
 
     <!-- Form Section -->
@@ -120,8 +171,8 @@ $id = Auth::guard('superadmin')->user()->id;
                 </div>
                 <div class="popup-form-group">
                     <select name="user_status" id="editUserStatus" required>
-                        <option value="Active">Active</option>
-                        <option value="Inactive">Inactive</option>
+                        <option value="active">Active</option>
+                        <option value="inactive">Inactive</option>
                     </select>
                     <label for="editUserStatus">User Status</label>
                 </div>
@@ -136,10 +187,45 @@ $id = Auth::guard('superadmin')->user()->id;
 </div>
 
 <script>
+    // Search box toggle functionality
+    document.addEventListener('DOMContentLoaded', function() {
+        const searchBox = document.querySelector('.search-box');
+        const searchIcon = document.getElementById('searchIcon');
+        const searchInput = document.getElementById('tableSearch');
+        
+        // Toggle search box on icon click
+        searchIcon.addEventListener('click', function() {
+            searchBox.classList.toggle('expanded');
+            if (searchBox.classList.contains('expanded')) {
+                // Focus the input when expanding
+                setTimeout(() => {
+                    searchInput.focus();
+                }, 300);
+            }
+        });
+        
+        // Close search when clicking outside
+        document.addEventListener('click', function(event) {
+            if (!searchBox.contains(event.target) && searchBox.classList.contains('expanded')) {
+                searchBox.classList.remove('expanded');
+            }
+        });
+        
+        // Prevent search box from closing when clicking inside it
+        searchInput.addEventListener('click', function(event) {
+            event.stopPropagation();
+        });
+    });
+
     function showUserForm(clickedElement) {
         // Show form section and hide table section
         document.getElementById('formSection').style.display = 'block';
         document.getElementById('tableSection').style.display = 'none'; 
+        // Hide search container
+        document.getElementById('tableSearchContainer').style.display = 'none';
+        // Collapse search box if it's expanded
+        document.querySelector('.search-box').classList.remove('expanded');
+        
         const siblings = clickedElement.parentElement.children;
         for (let sibling of siblings) {
             sibling.classList.remove('active');
@@ -150,6 +236,9 @@ $id = Auth::guard('superadmin')->user()->id;
     function showUserTable(clickedElement) {
         document.getElementById('formSection').style.display = 'none';
         document.getElementById('tableSection').style.display = 'block';
+        // Show search container when table is shown
+        document.getElementById('tableSearchContainer').style.display = 'block';
+        
         const siblings = clickedElement.parentElement.children;
         for (let sibling of siblings) {
             sibling.classList.remove('active');
@@ -160,7 +249,7 @@ $id = Auth::guard('superadmin')->user()->id;
     // Ensure the first button (Show Form) is active by default on page load
     document.addEventListener('DOMContentLoaded', () => {
         const firstButton = document.querySelector('.toggle-buttons button:first-child');
-        showUserTable(firstButton);
+        showUserForm(firstButton);
     });
     
     function generateSecurePassword(length = 12) {

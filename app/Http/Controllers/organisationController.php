@@ -154,11 +154,11 @@ class OrganisationController extends Controller
                 'goals.end_date',
                 'manager.name as assigned_by_name' // ✅ Manager name
             )
+            ->distinct() // Remove duplicates
             ->get()
             ->groupBy('assigned_to');
 
             $showGoals = true;
-
         return view('user_view.organisation', compact('user', 'employeeHierarchy', 'title','employees_login', 'employeeGoals', 'showGoals'));
     }
 

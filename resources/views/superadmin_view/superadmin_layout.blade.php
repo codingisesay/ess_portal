@@ -174,7 +174,8 @@ $name = Auth::guard('superadmin')->user()->name;
                 'salaryManagementDropdown',
                 'taxManagementDropdown',
                 'settingsDropdown',
-                'PMSDropdown'
+                'PMSDropdown',
+                'reimbManagementDropdown'
             ];
             
             dropdownIds.forEach(id => {

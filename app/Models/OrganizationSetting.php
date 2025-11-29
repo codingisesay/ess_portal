@@ -19,6 +19,7 @@ class OrganizationSetting extends Model
             'process_start_date',
             'process_end_date',
             'created_by',
+            'is_active'
     ];
 
     public function creator()
