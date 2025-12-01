@@ -89,101 +89,144 @@ $permission_array = session('id');
      <!-- Include the section for the current step -->
      @stack('step')  <!-- Push the current step to be used in JavaScript -->
 
-     <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const steps = document.querySelectorAll('.step');
-        
-        // Get the current route (current page URL)
-        const currentRoute = window.location.pathname;
+<!--script start-->
+<script> 
+document.addEventListener('DOMContentLoaded', function () {
+    // Collect all step elements into an array
+    const steps = Array.from(document.querySelectorAll('.step'));
+    // Get the Next button
+    const nextBtn = document.querySelector('.next-btn');
+    // Get the Submit button
+    const submitBtn = document.getElementById('form-submit');
 
-        // Track the index of the active step
-        let activeStepIndex = -1;
+// normalizeHref() is used to make all URLs consistent so the url can correctly identify,
+// the active step and navigate between steps without mistakes
 
-        // Loop through the steps to initialize them based on the current route
-        steps.forEach((step, index) => {
-            const route = step.getAttribute('data-route');
+     // Function to Normalize any URL 
+    const normalizeHref = (href) => {
+        try {
+            // Create a URL object from the href
+            const url = new URL(href, window.location.origin);
+           // Remove trailing slashes from pathname
+            const pathname = url.pathname.replace(/\/+$/, '');
+            // Keep query string as is
+            const search = url.search || '';
+             // Rebuild normalized URL
+            return url.origin + pathname + search;
+        } catch (e) {
+            // Fallback when URL() fails
+            return (href || '').replace(/\/+$/, '');
+        }
+    };
 
-            // If the current route matches the step's route, mark it as active
-            if (currentRoute === new URL(route, window.location.origin).pathname) {
-                step.classList.add('active');
-                activeStepIndex = index; // Track the index of the active step
-            } else if (index < activeStepIndex) {
-                // If the step is before the active one, mark it as completed
-                step.classList.add('completed');
+
+    //It converts the data-route into a safe, correct, 
+    // normalized URL so step progress bar always works correctly.
+    const getStepHref = (step) => {
+         // Build full URL relative to current origin
+        const route = step.getAttribute('data-route') || '';
+        try {
+        // Convert the route into a full absolute URL based on the current site origin
+        // Normalize the URl
+            return normalizeHref(new URL(route, window.location.origin).href);
+        } catch (e) {
+            // If URL construction fails (bad or incomplete route),
+            // simply normalize the route string itself
+            return normalizeHref(route);
+        }
+    };
+
+     // Get the current page URL in normalized form
+    const currentHref = normalizeHref(window.location.href);
+
+    // Find active step by matching:
+    // 1. Exact URL match
+    // 2. Current page starts with step URL 
+    // 3. Step URL starts with current page 
+    let activeStepIndex = steps.findIndex(step => {
+        const sh = getStepHref(step);
+        return sh === currentHref || currentHref.startsWith(sh) || sh.startsWith(currentHref);
+    });
+
+     // If no match found
+    if (activeStepIndex === -1) {
+        // Normalize current page's path
+        const currentPath = (new URL(window.location.href, window.location.origin)).pathname.replace(/\/+$/, '');
+        activeStepIndex = steps.findIndex(step => {
+            try {
+                 // Extract normalized pathname from each step
+                const p = (new URL(step.getAttribute('data-route'), window.location.origin)).pathname.replace(/\/+$/, '');
+                return p === currentPath;
+            } catch (e) {
+                // If URL constructor fails, compare raw strings
+                return (step.getAttribute('data-route') || '').replace(/\/+$/, '') === currentPath;
             }
         });
+    }
 
-        // Update the progress when a step is clicked
-        steps.forEach((step, index) => {
-            step.addEventListener('click', function() {
-                const route = step.getAttribute('data-route');
-
-                // Remove 'active' class from all steps
-                steps.forEach(s => {
-                    s.classList.remove('active');
-                    s.classList.remove('completed');
-                });
-
-                // Add 'active' class to the clicked step
-                step.classList.add('active');
-
-                // Mark the clicked step and all previous steps as completed
-                steps.forEach((s, i) => {
-                    if (i <= index) {
-                        s.classList.add('completed');
-                    }
-                });
-
-                // Update the activeStepIndex to the clicked step's index
-                activeStepIndex = index;
-
-                // Redirect to the corresponding route (page)
-                window.location.href = route;
-            });
+     // Default to the first step 
+    if (activeStepIndex === -1) activeStepIndex = 0;
+    // Function that apply CSS classes and toggle buttons based on active step
+    const renderSteps = () => {
+        steps.forEach((s, i) => {
+            // Remove previous visual states
+            s.classList.remove('active', 'completed');
+            // Mark all previous steps as completed
+            if (i < activeStepIndex) s.classList.add('completed');
+            // Mark the current step as active
+            if (i === activeStepIndex) s.classList.add('active', 'completed');
         });
-
-        // // Handle programmatic next step navigation when the next button is clicked
-        // const nextButton = document.querySelector('.next-btn'); // Your "next" button
-
-        // if (nextButton) {
-        //     nextButton.addEventListener('click', function(event) {
-        //         event.preventDefault(); // Prevent form submission (if it's inside a form)
-
-        //         // Move to the next step if possible
-        //         if (activeStepIndex >= 0 && activeStepIndex < steps.length - 1) {
-        //             const nextStep = steps[activeStepIndex + 1];
-        //             const nextStepRoute = nextStep.getAttribute('data-route');
-
-        //             // Remove the 'active' class from all steps
-        //             steps.forEach(s => s.classList.remove('active'));
-
-        //             // Add the 'active' class to the next step
-        //             nextStep.classList.add('active');
-
-        //             // Mark the previous steps as completed
-        //             steps.forEach((s, i) => {
-        //                 if (i <= activeStepIndex + 1) {
-        //                     s.classList.add('completed');
-        //                 }
-        //             });
-
-        //             // Update the activeStepIndex
-        //             activeStepIndex++;
-
-        //             // Redirect to the next step route
-        //             window.location.href = nextStepRoute;
-        //         }
-        //     });
-        // }
-
-        // Ensure the previous steps are marked as completed when navigating programmatically
-        if (activeStepIndex > -1) {
-            for (let i = 0; i < activeStepIndex; i++) {
-                steps[i].classList.add('completed');
+        // Handle the visibility of Next vs Submit buttons
+        if (submitBtn) {
+            // Show submit button for last step, hide next button
+            if (activeStepIndex === steps.length - 1) {
+                submitBtn.style.display = 'inline-block';
+                if (nextBtn) nextBtn.style.display = 'none';
+            } else {
+                // Show next button only when not on last step
+                submitBtn.style.display = 'none';
+                if (nextBtn) nextBtn.style.display = 'inline-block';
             }
         }
+    };
+
+    renderSteps();
+
+    // Click-to-navigate on steps
+    // like to click on any step in the progress bar and jump directly to that page
+    steps.forEach((step, index) => {
+        step.addEventListener('click', () => {
+            activeStepIndex = index;
+            renderSteps();
+            // Navigate to the selected step's URL
+            const route = step.getAttribute('data-route');
+            if (route) window.location.href = route;
+        });
     });
-</script>
+
+    // Function executed when the Next button is clicked
+    window.updateProgressBar = function () {
+        if (activeStepIndex < steps.length - 1) {
+            activeStepIndex++;
+            renderSteps();
+            // Navigate to the next step's route
+            const nextRoute = steps[activeStepIndex].getAttribute('data-route');
+            if (nextRoute) {
+                window.location.href = nextRoute;
+                return true;
+            }
+            return false;
+        } else {
+             // If already on final step,
+            if (submitBtn) {
+                submitBtn.click();
+                return true;
+            }
+            return false;
+        }
+    };
+});
+</script>  <!--script end-->
 
 
 
