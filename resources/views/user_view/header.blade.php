@@ -102,29 +102,109 @@ $userDetails = app('App\Http\Controllers\headerController')->getUserDetails();
             </div>  
         </div>
     </header>
-     <!-- Modal -->
-     <div id="myModall" class="modall">
-    <form id="profile-upload-form" action="{{ route('user.uploadProfilePhoto') }}" method="POST" enctype="multipart/form-data">
-        @csrf
-        <div class="modal-content8">
-            <span class="close1" onclick="closeModall()">&times;</span>
+
+<!-- Image Upload Modal -->
+<div id="myModall" class="modall">
+    <div class="modal-content8">
+        <div class="modal-header">
             <h2>Upload your image</h2>
-
-            <!-- Image Container with Camera Icon -->
-            <div class="image-container8" onclick="document.getElementById('fileInput').click();">
-                <img id="imagePreview" class="image-preview" 
-                     src="/storage/user_profile_image/Oqr4VRqo7RpQxnmiZCh12zybbcdsyUin2FhAKD3O.jpg" 
-                     alt="User Profile Image" />
-                <i class="camera-ico fas fa-camera"></i>  <!-- Camera Icon -->
-            </div>
-
-            <!-- Hidden File Input -->
-            <input type="file" id="fileInput" name="profile_image" accept="image/*" onchange="previewImage()" class="d-none"/>
-
-            <button class="buttonn" id="uploadButton" onclick="uploadImage()">Upload</button>
+            <span class="close1" onclick="closeModall()">&times;</span>
         </div>
-    </form>
-</div>  
+        
+        <!-- Image Preview Container -->
+        <div class="image-container8" id="imageContainer">
+            <img id="imagePreview" class="image-preview"
+                 src="{{ $profileimahe ? asset('storage/'.$profileimahe) : asset('user_end/images/default-avatar.png') }}"
+                 >
+            <div class="camera-overlay">
+                <i class="fas fa-camera"></i>
+                <span>Click to select image</span>
+            </div>
+        </div>
+        
+        <!-- Hidden File Input -->
+        <form id="profile-upload-form" action="{{ route('user.uploadProfilePhoto') }}" method="POST" enctype="multipart/form-data">
+            @csrf
+            <input type="file" id="fileInput" name="profile_image" accept="image/*" class="d-none" required>
+            <button type="submit" class="buttonn mt-3" id="uploadBtn" disabled>Upload</button>
+        </form>
+    </div>
+</div>
+
+<script>
+// Open the modal
+function openModall() {
+    document.getElementById("myModall").style.display = "block";
+    // Reset form and preview when modal is opened
+    document.getElementById('profile-upload-form').reset();
+    document.getElementById('imagePreview').src = '{{ $profileimahe ? asset("storage/".$profileimahe) : asset("user_end/images/default-avatar.png") }}';
+    document.getElementById('uploadBtn').disabled = true;
+}
+
+// Close the modal
+function closeModall() {
+    document.getElementById("myModall").style.display = "none";
+}
+
+// Close modal when clicking outside of it
+window.onclick = function(event) {
+    const modal = document.getElementById('myModall');
+    if (event.target == modal) {
+        closeModall();
+    }
+}
+
+// Handle file selection
+const fileInput = document.getElementById('fileInput');
+const imageContainer = document.getElementById('imageContainer');
+const imagePreview = document.getElementById('imagePreview');
+const uploadBtn = document.getElementById('uploadBtn');
+
+// Open file dialog when clicking on the image container
+imageContainer.addEventListener('click', function() {
+    fileInput.click();
+});
+
+// Handle file selection
+fileInput.addEventListener('change', function(e) {
+    const file = e.target.files[0];
+    if (file) {
+        // Check if file is an image
+        if (!file.type.match('image.*')) {
+            alert('Please select an image file (JPEG, PNG, etc.)');
+            return;
+        }
+        
+        // Check file size (max 2MB)
+        if (file.size > 2 * 1024 * 1024) {
+            alert('Image size should be less than 2MB');
+            return;
+        }
+        
+        // Create a preview of the selected image
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            imagePreview.src = e.target.result;
+            uploadBtn.disabled = false;
+        }
+        reader.readAsDataURL(file);
+    }
+});
+
+// Handle form submission
+const form = document.getElementById('profile-upload-form');
+form.addEventListener('submit', function(e) {
+    if (!fileInput.files.length) {
+        e.preventDefault();
+        alert('Please select an image to upload');
+        return false;
+    }
+    // Show loading state
+    uploadBtn.disabled = true;
+    uploadBtn.innerHTML = 'Uploading...';
+});
+</script>
+
 
 
     @yield('content')
