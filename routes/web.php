@@ -456,6 +456,10 @@ Route::get('/notifications/clear-all', [App\Http\Controllers\NotificationControl
     ->name('notifications.clearAll');
 
 
+// salary details creation route 
+
+Route::get('/salary-details/{user_id}', [salaryBoxController::class, 'salaryDetailsCreation'])
+     ->name('salary.details.creation');
 
 
 

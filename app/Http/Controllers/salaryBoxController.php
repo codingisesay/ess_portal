@@ -1319,6 +1319,25 @@ public function updateComponents(Request $request, $id) {
 }
 
 
+public function salaryDetailsCreation($user_id)
+{   
+    // Fetch the user record based on the given user_id.
+    $user = DB::table('users')
+    ->where('id', $user_id) // Match the user by primary key
+    ->select('id', 'name', 'employeeID')
+    ->first();
+
+     // If no matching user is found, redirect back with an error message
+    if (!$user) {
+        return redirect()->back()->with('error', 'User not found');
+    }
+     // Return the salaryDetailsCreation view with the user details
+    return view('user_view.salaryDetailsCreation', [
+        'user' => $user,
+        'user_id' => $user_id
+    ]);
+}
+
 
 }
 
