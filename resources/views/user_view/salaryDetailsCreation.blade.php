@@ -341,3 +341,15 @@ document.addEventListener('DOMContentLoaded', function() {
 </script>
 </div> 
 <!-- end of container -->
+
+<script>
+// cursor to the Payhead input field when the page loads
+document.addEventListener('DOMContentLoaded', function() {
+    const payheadInput = document.querySelector('.payhead-input');
+    if (payheadInput) {
+        setTimeout(() => {
+            payheadInput.focus();
+        }, 100); // Small delay to ensure everything is loaded
+    }
+});
+</script>
