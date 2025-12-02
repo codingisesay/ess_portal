@@ -68,7 +68,7 @@ $id = Auth::guard('superadmin')->user()->id;
     }
 </style>
 <div class="container">
-    <h3>Create Salary Component</h3>
+    <h3>Pay Heads Master</h3>
 
     <div class="d-flex">
         <!-- Toggle Buttons -->
