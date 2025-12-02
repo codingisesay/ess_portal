@@ -107,18 +107,81 @@ $id = Auth::guard('superadmin')->user()->id;
                         <label>Components Name</label>
                     </div>
                 </div>
-             
+             <!-- component type -->
                 <div class="col-3 mb-4">
                     <div class="form-group">
                         <select name="component_type" required>
                             <option value="" disabled selected></option>
-                            <option value="Earning">Earning</option>
-                            <option value="Deduction">Deduction</option>
-                        </select>
+                            <option value="Bonus">Bonus</option>
+                            <option value="Earnings for Employees">Earnings for Employees</option>
+                            <option value="Deduction from Employees">Deduction from Employees</option>
+                            <option value="Loans & Advances">Loans & Advances</option>
+                        </select>   
                         <label>Type</label>
                     </div>
                 </div>
-                
+                <!-- income type -->
+                  <div class="col-3 mb-4">
+                    <div class="form-group">
+                        <select name="income_type" required>
+                            <option value="" disabled selected></option>
+                            <option value="Fixed">Fixed</option>
+                            <option value="Variable">Variable</option>
+                        </select>
+                        <label>Income Type</label>
+                    </div>
+                </div>
+               <!-- affect net salary -->
+                <div class="col-3 mb-4">
+                    <div class="form-group">
+                        <select name="affect_net_salary" required>
+                            <option value="" disabled selected></option>
+                            <option value="Yes">Yes</option>
+                            <option value="No">No</option>
+                        </select>
+                        <label>Affect net salary</label>
+                    </div>
+                </div>
+                <!-- calculate of gratuity -->
+                 <div class="col-3 mb-4">
+                    <div class="form-group">
+                        <select name="calculate_of_gratuity" required>
+                            <option value="" disabled selected></option>
+                            <option value="Yes">Yes</option>
+                            <option value="No">No</option>
+                        </select>
+                        <label>Calculate of Gratuity</label>
+                    </div>
+                </div>
+               <!-- calculation type -->
+                 <div class="col-3 mb-4">
+                    <div class="form-group">
+                        <select name="calculation_type" required>
+                            <option value="" disabled selected></option>
+                            <option value="Flat Rate">Flat Rate</option>
+                            <option value="On Attendance">On Attendance</option>
+                        </select>
+                        <label>Calculation Type</label>
+                    </div>
+                </div>
+               <!-- calculation period -->
+                <div class="col-3 mb-4">
+                    <div class="form-group">
+                        <select name="calculation_period" id="calculationPeriodSelect" required>
+                            <option value="" disabled selected></option>
+                            <option value="User Defined">User Defined</option>
+                            <option value="Monthly">Monthly</option>
+                        </select>
+                        <label>Calculation Period</label>
+                        <!-- Hidden input to store the custom days value -->
+                        <input type="hidden" name="user_define_days" id="calculationPeriodDays" value="">
+                        <!-- Display saved custom days below the select -->
+                        <div id="customDaysDisplay" style="margin-top: 8px; font-size: 13px; color: #666; display: none;">
+                            <strong>Custom Days:</strong> <span id="customDaysValue">—</span>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="col-3 mb-4">
                     <div class="form-group">
                         <select name="status" required>
@@ -145,7 +208,12 @@ $id = Auth::guard('superadmin')->user()->id;
                 ['header' => 'ID', 'accessor' => 'id'],
                 ['header' => 'Template Name', 'accessor' => 'name'],
                 ['header' => 'Type', 'accessor' => 'type'],
-                
+                ['header' => 'Income Type', 'accessor' => 'income_type'],
+                ['header' => 'Affect Net Salary', 'accessor' => 'affect_net_salary'],
+                ['header' => 'Calculate of Gratuity', 'accessor' => 'calculate_of_gratuity'],
+                ['header' => 'Calculation Type', 'accessor' => 'calculation_type'],
+                ['header' => 'Calculation Period', 'accessor' => 'calculation_period'],
+                ['header' => 'User Define Days', 'accessor' => 'user_define_days'],
                 ['header' => 'Status', 'accessor' => 'status'],
             ], 
             'editModalId' => 'openEditModal',
@@ -153,8 +221,27 @@ $id = Auth::guard('superadmin')->user()->id;
             'perPage' => 5
         ])
     </div>
+</div>
 
-
+<!-- Modal for Custom Days Input -->
+<div id="customDaysModal" class="w3-modal" style="display: none;">
+    <div class="w3-modal-content w3-animate-top w3-card-4" style="width: 400px;">
+        <header class="w3-container w3-teal"> 
+            <span onclick="closeCustomDaysModal()" 
+            class="w3-button w3-display-topright">&times;</span>
+            <h2>Define Custom Calculation Period</h2>
+        </header>
+        <div class="w3-container" style="padding: 20px;">
+            <div class="popup-form-group">
+                <input type="number" id="customDaysInput" min="1" max="31" placeholder="Enter days (1-31)" required>
+                <label for="customDaysInput">How many days?</label>
+            </div>
+            <div style="display: flex; gap: 10px; margin-top: 20px;">
+                <button type="button" class="create-btn" onclick="saveCustomDays()" style="flex: 1;">Save</button>
+                <button type="button" class="create-btn" style="background-color: #6c757d; flex: 1;" onclick="closeCustomDaysModal()">Cancel</button>
+            </div>
+        </div>
+    </div>
 </div>
 
 <div id="editSalaryComponentForm" class="w3-modal" style="display: none;">
@@ -173,13 +260,68 @@ $id = Auth::guard('superadmin')->user()->id;
                     <input type="text" name="name" id="editSalaryTemplateName" required>
                     <label for="editSalaryTemplateName">Name</label>
                 </div>
+                <!-- Component Type -->
                 <div class="popup-form-group">
-                    <select name="type" id="editType" required>
-                        <option value="Earning">Earning</option>
-                        <option value="Deduction">Deduction</option>
+                    <select name="type" id="editComponentType" required>
+                        <option value="Bonus">Bonus</option>
+                        <option value="Earnings for Employees">Earnings for Employees</option>
+                        <option value="Deduction from Employees">Deduction from Employees</option>
+                        <option value="Loans & Advances">Loans & Advances</option>
                     </select>
-                    <label for="editType">Component Type</label>
+                    <label for="editComponentType">Type</label>
                 </div>
+
+               <!-- Income Type -->
+                <div class="popup-form-group">
+                    <select name="income_type" id="editIncomeType" required>
+                        <option value="Fixed">Fixed</option>
+                        <option value="Variable">Variable</option>
+                    </select>
+                    <label for="editIncomeType">Income Type</label>
+                </div>
+
+                 <!-- Affect Net Salary -->
+                <div class="popup-form-group">
+                    <select name="affect_net_salary" id="editAffectNetSalary" required>
+                        <option value="Yes">Yes</option>
+                        <option value="No">No</option>
+                    </select>
+                    <label for="editAffectNetSalary">Affect Net Salary</label>
+                </div>
+
+                <!-- Calculate Of Gratuity -->
+                <div class="popup-form-group">
+                    <select name="calculate_of_gratuity" id="editCalculateOfGratuity" required>
+                        <option value="Yes">Yes</option>
+                        <option value="No">No</option>
+                    </select>
+                    <label for="editCalculateOfGratuity">Calculate Of Gratuity</label>
+                </div>
+
+                 <!-- Calculation Type -->
+                <div class="popup-form-group">
+                    <select name="calculation_type" id="editCalculationType" required>
+                        <option value="Flat Rate">Flat Rate</option>
+                        <option value="On Attendance">On Attendance</option>
+                    </select>
+                    <label for="editCalculationType">Calculation Type</label>
+                </div>
+
+                 <!-- Calculation Period -->
+                <div class="popup-form-group">
+                    <select name="calculation_period" id="editCalculationPeriod" required>
+                        <option value="User Defined">User Defined</option>
+                        <option value="Monthly">Monthly</option>
+                    </select>
+                    <label for="editCalculationPeriod">Calculation Period</label>
+                </div>
+
+                <!-- User Defined Days (Visible only when User Defined is selected) -->
+                <div class="popup-form-group" id="editUserDaysContainer" style="display:none;">
+                    <input type="number" min="1" name="user_define_days" id="editUserDefineDays" placeholder="Enter Days">
+                    <label for="editUserDefineDays">User Defined Days</label>
+                </div>
+
                 <div class="popup-form-group">
                     <select name="status" id="editSalaryTemplateStatus" required>
                         <option value="Active">Active</option>
@@ -194,6 +336,66 @@ $id = Auth::guard('superadmin')->user()->id;
         </div>
     </div>
 </div>
+
+
+
+<script>
+    /* ----------------------- CUSTOM DAYS MODAL ----------------------- */
+
+function openCustomDaysModal() {
+    document.getElementById('customDaysModal').style.display = 'block';
+    document.getElementById('customDaysInput').focus();
+}
+
+function closeCustomDaysModal() {
+    document.getElementById('customDaysModal').style.display = 'none';
+    document.getElementById('customDaysInput').value = '';
+}
+
+function saveCustomDays() {
+    const daysInput = document.getElementById('customDaysInput');
+    const days = daysInput.value.trim();
+
+    if (!days || isNaN(days) || days < 1 || days > 31) {
+        alert("Please enter a valid number between 1 and 31");
+        daysInput.focus();
+        return;
+    }
+
+    document.getElementById('calculationPeriodDays').value = days;
+    document.getElementById('customDaysDisplay').style.display = 'block';
+    document.getElementById('customDaysValue').textContent = days;
+
+    closeCustomDaysModal();
+}
+
+/* ----------------------- INITIALIZATION ----------------------- */
+
+document.addEventListener('DOMContentLoaded', function () {
+
+    /* Handle Calculation Period change */
+    const calculationPeriodSelect = document.getElementById('calculationPeriodSelect');
+
+    if (calculationPeriodSelect) {
+        calculationPeriodSelect.addEventListener('change', function () {
+            if (this.value === 'User Defined') {
+                openCustomDaysModal();
+            } else {
+                document.getElementById('customDaysDisplay').style.display = 'none';
+                document.getElementById('calculationPeriodDays').value = '';
+            }
+        });
+    }
+
+    /* Close custom modal when clicking outside */
+    window.addEventListener('click', function (event) {
+        const modal = document.getElementById('customDaysModal');
+        if (event.target === modal) {
+            closeCustomDaysModal();
+        }
+    });
+});
+</script>
 
 <script>
     // Search box toggle functionality
@@ -300,23 +502,90 @@ $id = Auth::guard('superadmin')->user()->id;
 </script>
 
 <script>
-    function openEditModal(id, templatedata) {
-        console.log(templatedata);
-        if (!id) {
-            alert('Invalid template data. Please try again.');
-            return;
-        } 
-        document.getElementById('editSalaryTemplateId').value = templatedata.id || '';
-        document.getElementById('editSalaryTemplateName').value = templatedata.name || '';
-        document.getElementById('editType').value = templatedata.type || '';  // ✅ Match the PHP field
-        document.getElementById('editSalaryTemplateStatus').value = templatedata.status || '';
+document.addEventListener("DOMContentLoaded", function () {
 
-        const formAction = "{{ route('update_component', ['id' => ':id']) }}".replace(':id', templatedata.id);
-        document.getElementById('editSalaryComponentForm2').action = formAction;
-
-        document.getElementById('editSalaryComponentForm').style.display = 'block';
+    // Helper to safely access element
+    function $id(id) {
+        const el = document.getElementById(id);
+        if (!el) console.warn("Missing element:", id);
+        return el;
     }
+
+    const calcPeriod = $id("editCalculationPeriod");
+    const userDaysContainer = $id("editUserDaysContainer");
+    const userDaysInput = $id("editUserDefineDays");
+
+    // On-change (inside modal)
+    if (calcPeriod) {
+        calcPeriod.addEventListener("change", function () {
+            if (this.value === "User Defined") {
+                if (userDaysContainer) userDaysContainer.style.display = "block";
+            } else {
+                if (userDaysContainer) userDaysContainer.style.display = "none";
+                if (userDaysInput) userDaysInput.value = "";
+            }
+        });
+    }
+
+    // -------------------------
+    // OPEN EDIT MODAL FUNCTION
+    // -------------------------
+    window.openEditModal = function (id, templatedata) {
+
+        if (!templatedata) {
+            alert("Invalid data passed");
+            return;
+        }
+
+        // Field references
+        const idField = $id("editSalaryTemplateId");
+        const nameField = $id("editSalaryTemplateName");
+        const compType = $id("editComponentType");
+        const incomeType = $id("editIncomeType");
+        const affectNet = $id("editAffectNetSalary");
+        const gratuity = $id("editCalculateOfGratuity");
+        const calcType = $id("editCalculationType");
+        const calcPeriodF = $id("editCalculationPeriod");
+        const statusField = $id("editSalaryTemplateStatus");
+        const formEl = $id("editSalaryComponentForm2");
+        const modalEl = $id("editSalaryComponentForm");
+
+        // Fill values
+        if (idField) idField.value = templatedata.id || "";
+        if (nameField) nameField.value = templatedata.name || "";
+
+        if (compType) compType.value = templatedata.component_type || templatedata.type || "";
+        if (incomeType) incomeType.value = templatedata.income_type || "";
+        if (affectNet) affectNet.value = templatedata.affect_net_salary || "";
+        if (gratuity) gratuity.value = templatedata.calculate_of_gratuity || "";
+        if (calcType) calcType.value = templatedata.calculation_type || "";
+        if (calcPeriodF) calcPeriodF.value = templatedata.calculation_period || "";
+        if (statusField) statusField.value = templatedata.status || "";
+
+        // Handle User Defined days
+        if (templatedata.calculation_period === "User Defined") {
+            if (userDaysContainer) userDaysContainer.style.display = "block";
+            if (userDaysInput) userDaysInput.value = templatedata.user_define_days || "";
+        } else {
+            if (userDaysContainer) userDaysContainer.style.display = "none";
+            if (userDaysInput) userDaysInput.value = "";
+        }
+
+        // Set action URL
+        try {
+            const actionUrl = "{{ route('update_component', ['id' => ':id']) }}".replace(":id", templatedata.id);
+            if (formEl) formEl.action = actionUrl;
+        } catch (e) {
+            console.warn("Form action route not replaced:", e);
+        }
+
+        // Show modal
+        if (modalEl) modalEl.style.display = "block";
+    };
+});
 </script>
+
+
 
 @endsection
 
