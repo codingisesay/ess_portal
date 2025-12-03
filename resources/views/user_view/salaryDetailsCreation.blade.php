@@ -1,129 +1,148 @@
-{{-- Load page-specific CSS --}}
+{{-- Page-specific CSS and Font Awesome icons (keeps styles and icons loading) --}}
 <link rel="stylesheet" href="{{ asset('/user_end/css/salaryDetailsCreation.css') }}">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 
-<!-- container div  -->
-<div class="container mt-4">
-
-{{-- Page Title --}}
-    <h2 class="mb-3">Create Salary Details</h2>
-     {{-- Employee Information --}}
-     <!-- div start -->
-    <div class="employee-info">
-        <p>
-             {{-- Employee ID Display --}}
-            <strong>Employee ID:</strong>
-            <span id="employee_id">{{ $user->employeeID ?? 'N/A' }}</span>
-        </p>
-        <p>
-            {{-- Employee Name Display --}}
-            <strong>Employee Name:</strong>
-            <span id="employee_name">{{ $user->name ?? 'N/A' }}</span>
-        </p>
-    </div> 
-    <!-- div end -->
-
-    <!-- Salary Table Section -->
-    <div class="salary-section">
-        <!-- Sticky Header -->
-        <div class="salary-table-header">
-            <div>Effective From</div>
-            <div>Payhead</div>
-            <div>Rate</div>
-            <div>Per</div>
-            <div>Pay Head Type</div>
-            <div>Calculation Type</div>
-            <div>Computed On</div>
-            <div>Action</div>
+<div class="page-hero">
+    <div class="hero-icon">
+        <i class="fas fa-money-bill-wave"></i>
+    </div>
+    <div class="hero-body">
+        <h1 class="hero-title">Salary Details Page</h1>
+        <p class="hero-sub">Manage employee salary components and details</p>
+        
+        <div class="employee-pill">
+            <div class="meta">
+                <strong>ID:</strong>
+                <span id="employee_id">{{ $user->employeeID ?? 'N/A' }}</span>
+            </div>
+            <div class="meta">
+                <strong>Name:</strong>
+                <span id="employee_name">{{ $user->name ?? 'N/A' }}</span>
+            </div>
         </div>
-        
-        <!-- Table Container -->
-        <div class="salary-table-container">
-            <table class="salary-table" id="salaryTable">
-                <tbody id="salaryRows">
-                    <tr>
-                        <td>
-                            <input type="date" 
-                                   name="effective_from[]" 
-                                   class="salary-input" 
-                                   required>
-                        </td>
-                        <td>
-                            <input type="text" 
-                                   name="payhead[]" 
-                                   class="salary-input payhead-input" 
-                                   placeholder="e.g. Basic, HRA" 
-                                   list="payheadOptions"
-                                   autocomplete="off"
-                                   required>
-                        </td>
-                        <td>
-                            <input type="number" 
-                                   name="rate[]" 
-                                   class="salary-input rate-input"
-                                   step="0.01"
-                                   required>
-                        </td>
-                        <td>
-                            <select name="per[]" class="salary-input" disabled>
-                                <option value="Month">Month</option>
-                                <option value="Day">Day</option>
-                                <option value="Hour">Hour</option>
-                            </select>
-                        </td>
-                        <td>
-                            <select name="pay_head_type[]" class="salary-input" disabled>
-                                <option value="Earnings">Earnings</option>
-                                <option value="Deductions">Deductions</option>
-                            </select>
-                        </td>
-                        <td>
-                            <select name="calculation_type[]" class="salary-input" disabled>
-                                <option value="Flat Amount">Flat Amount</option>
-                                <option value="Percentage">Percentage</option>
-                                <option value="As Per Attendance">As Per Attendance</option>
-                            </select>
-                        </td>
-                        <td>
-                            <input type="text" 
-                                   name="computed_on[]" 
-                                   class="salary-input" 
-                                   placeholder="e.g. Basic"
-                                   required>
-                        </td>
-                        <td class="text-center">
-                            <button type="button" class="deleteRow">×</button>
-                        </td>
-                    </tr>
-                </tbody>
-        
-        <!-- Add this datalist for payhead autocomplete -->
-        <datalist id="payheadOptions">
-            <option value="Basic">
-            <option value="HRA">
-            <option value="DA">
-            <option value="TA">
-            <option value="Medical">
-            <option value="PF">
-            <option value="TDS">
-        </datalist>
-    </table>
+    </div>
+</div>
 
-
+<div class="card">
+    <!-- Table Header -->
+    <div class="table-head">
+        <div class="col">Effective From</div>
+        <div class="col">Payhead</div>
+        <div class="col">Rate</div>
+        <div class="col">Per</div>
+        <div class="col">Type</div>
+        <div class="col">Calculation</div>
+        <div class="col">Action</div>
+    </div>
+    <!-- Table Body -->
+    <div class="table-body">
+        <div class="salary-row">
+            <div class="col date">
+                <input type="date" 
+                       name="effective_from[]" 
+                       class="salary-input" 
+                       required>
+            </div>
+            <div class="col payhead">
+                <select name="payhead[]" class="salary-input" required>
+                    <option value="">Select Payhead</option>
+                    <option value="Basic">Basic</option>
+                    <option value="HRA">HRA</option>
+                    <option value="DA">DA</option>
+                    <option value="Medical">Medical</option>
+                    <option value="Special Allowance">Special Allowance</option>
+                </select>
+            </div>
+            <div class="col rate">
+                <input type="number" 
+                       name="rate[]" 
+                       class="salary-input"
+                       step="0.01"
+                       placeholder="0.00"
+                       required>
+            </div>
+            <div class="col per">
+                <input type="text" 
+                       name="per[]" 
+                       class="salary-input" 
+                       value="Month" 
+                       readonly 
+                       style="background-color: #f5f5f5; cursor: not-allowed; color: #999;">
+            </div>
+            <div class="col type">
+                <input type="text" 
+                       name="per[]" 
+                       class="salary-input" 
+                       value="Month" 
+                       readonly 
+                       style="background-color: #f5f5f5; cursor: not-allowed; color: #999;">
+           
+            </div>
+            <div class="col calc">
+               <input type="text" 
+                       name="per[]" 
+                       class="salary-input" 
+                       value="Month" 
+                       readonly 
+                       style="background-color: #f5f5f5; cursor: not-allowed; color: #999;">
+           
+            </div>
+            <div class="col action">
+                <button type="button" class="delete-btn">
+                    <i class="fas fa-trash"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    
+    <!-- how many component added it show count -->
+    <div class="footer-bar">
+        <div class="footer-left">
+            <button type="button" class="add-row-btn">
+                <i class="fas fa-plus"></i> Add Component
+            </button>
+            <div class="components-count">1 component added</div>
+        </div>
+        <div class="footer-right">
+            <button type="button" class="btn-ghost" id="resetForm">Reset</button>
+            <button type="submit" class="btn-primary">
+                <i class="fas fa-save"></i> Save Configuration
+            </button>
+        </div>
+    </div>
+        
+    <!-- quick list for payhead autocomplete -->
+    <datalist id="payheadOptions">
+        <option value="Basic">
+        <option value="HRA">
+        <option value="DA">
+        <option value="TA">
+        <option value="Medical">
+        <option value="PF">
+        <option value="TDS">
+    </datalist>
 
 </div> 
-<!-- div end -->
+<!-- card end -->
+
 <script>
+/*
+  Page script:
+  - Saves rows to localStorage for the current user
+  - Restores saved rows on load
+  - Auto-fills Type/Per/Calculation fields based on selected payhead
+  - Adds/removes rows and wire up interactions
+*/
 document.addEventListener('DOMContentLoaded', function() {
     const tableBody = document.getElementById('salaryRows');
-    const firstRow = tableBody.querySelector('tr');
+    const firstRow = tableBody ? tableBody.querySelector('tr') : null;
     const form = document.querySelector('form') || document.createElement('div');
     const STORAGE_KEY = 'salaryFormData_' + '{{ $user->id ?? "" }}';
 
-    // Function to save form data to localStorage
+    // Save the whole form to localStorage so user won't lose progress
     function saveFormData() {
-        const formData = {
-            rows: []
-        };
+        const formData = { rows: [] };
         
         document.querySelectorAll('#salaryRows tr').forEach(row => {
             const inputs = row.querySelectorAll('input, select');
@@ -141,7 +160,7 @@ document.addEventListener('DOMContentLoaded', function() {
         localStorage.setItem(STORAGE_KEY, JSON.stringify(formData));
     }
 
-    // Function to load form data from localStorage
+    // Load saved form from localStorage (if any) and populate rows
     function loadFormData() {
         const savedData = localStorage.getItem(STORAGE_KEY);
         if (!savedData) return;
@@ -149,20 +168,20 @@ document.addEventListener('DOMContentLoaded', function() {
         try {
             const formData = JSON.parse(savedData);
             
-            // Clear existing rows except the first one
-            while (tableBody.rows.length > 1) {
+            // remove all rows except the first template row
+            while (tableBody && tableBody.rows.length > 1) {
                 tableBody.deleteRow(1);
             }
             
-            // Add saved rows
+            // create rows from saved data and fill inputs
             formData.rows.forEach((rowData, index) => {
-                const row = index === 0 ? tableBody.rows[0] : addNewRow();
+                const row = index === 0 ? (tableBody ? tableBody.rows[0] : null) : addNewRow();
                 
                 Object.entries(rowData).forEach(([name, value]) => {
-                    const input = row.querySelector(`[name^="${name}"]`);
+                    const input = row && row.querySelector(`[name^="${name}"]`);
                     if (input) {
                         input.value = value;
-                        // Trigger change event for autofill to work
+                        // when payhead is filled, fire change so dependent fields update
                         if (input.classList.contains('payhead-input')) {
                             input.dispatchEvent(new Event('change'));
                         }
@@ -176,46 +195,18 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    // Payhead configuration with default values
+    // Default config for payheads — used to populate related fields automatically
     const payheadConfig = {
-        'Basic': { 
-            type: 'Earnings', 
-            per: 'Month', 
-            calculation: 'Flat Amount' 
-        },
-        'HRA': { 
-            type: 'Earnings', 
-            per: 'Month', 
-            calculation: 'Percentage' 
-        },
-        'DA': { 
-            type: 'Earnings', 
-            per: 'Month', 
-            calculation: 'Percentage' 
-        },
-        'TA': { 
-            type: 'Earnings', 
-            per: 'Month', 
-            calculation: 'Flat Amount' 
-        },
-        'Medical': { 
-            type: 'Earnings', 
-            per: 'Month', 
-            calculation: 'Flat Amount' 
-        },
-        'PF': { 
-            type: 'Deductions', 
-            per: 'Month', 
-            calculation: 'Percentage' 
-        },
-        'TDS': { 
-            type: 'Deductions', 
-            per: 'Month', 
-            calculation: 'Percentage' 
-        }
+        'Basic': { type: 'Earnings', per: 'Month', calculation: 'Flat Amount' },
+        'HRA':   { type: 'Earnings', per: 'Month', calculation: 'Percentage' },
+        'DA':    { type: 'Earnings', per: 'Month', calculation: 'Percentage' },
+        'TA':    { type: 'Earnings', per: 'Month', calculation: 'Flat Amount' },
+        'Medical': { type: 'Earnings', per: 'Month', calculation: 'Flat Amount' },
+        'PF':    { type: 'Deductions', per: 'Month', calculation: 'Percentage' },
+        'TDS':   { type: 'Deductions', per: 'Month', calculation: 'Percentage' }
     };
 
-    // Function to fill row based on payhead
+    // Given a row and a payhead name, update the Type/Per/Calculation fields
     function fillRow(row, payhead) {
         const config = payheadConfig[payhead] || {};
         if (config.type) row.querySelector('[name="pay_head_type[]"]').value = config.type;
@@ -223,30 +214,28 @@ document.addEventListener('DOMContentLoaded', function() {
         if (config.calculation) row.querySelector('[name="calculation_type[]"]').value = config.calculation;
     }
 
-    // Function to add a new row
+    // clone the first row to add a new blank row and wire it up
     function addNewRow() {
+        if (!firstRow || !firstRow.parentNode) return null;
         const newRow = firstRow.cloneNode(true);
         
-        // Clear all input values in the new row
+        // reset any non-readonly inputs in the clone
         newRow.querySelectorAll('input, select').forEach(input => {
             if (input.type !== 'button' && !input.hasAttribute('readonly')) {
                 input.value = '';
             }
         });
         
-        tableBody.appendChild(newRow);
-        
-        // Add event listeners to the new row
+        firstRow.parentNode.appendChild(newRow);
         addRowEventListeners(newRow);
         
-        // Focus on the payhead input of the new row
         const payheadInput = newRow.querySelector('.payhead-input');
         if (payheadInput) payheadInput.focus();
         
         return newRow;
     }
     
-    // Add event listeners to a row
+    // Attach listeners for payhead, rate, and delete inside a row
     function addRowEventListeners(row) {
         const payheadInput = row.querySelector('.payhead-input');
         const rateInput = row.querySelector('.rate-input');
@@ -267,17 +256,18 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    // Event handlers
+    // When payhead changes, auto-fill other fields and save progress
     function handlePayheadChange(e) {
         const row = e.target.closest('tr');
         fillRow(row, e.target.value);
         saveFormData();
         
-        // Move focus to rate input
+        // move focus to rate field for quick entry
         const rateInput = row.querySelector('.rate-input');
         if (rateInput) rateInput.focus();
     }
     
+    // pressing Enter while in Rate should add a new row (quick data entry)
     function handleRateKeydown(e) {
         if (e.key === 'Enter') {
             e.preventDefault();
@@ -285,13 +275,14 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
     
+    // remove a row, or clear it if it's the last one
     function handleDeleteRow(e) {
         e.preventDefault();
         const row = e.target.closest('tr');
-        if (tableBody.querySelectorAll('tr').length > 1) {
+        if (tableBody && tableBody.querySelectorAll('tr').length > 1) {
             row.remove();
         } else {
-            // If it's the last row, just clear the inputs
+            // clear inputs if only template row remains
             const inputs = row.querySelectorAll('input, select');
             inputs.forEach(input => {
                 if (input.type !== 'button' && !input.hasAttribute('readonly') && !input.disabled) {
@@ -306,22 +297,20 @@ document.addEventListener('DOMContentLoaded', function() {
         saveFormData();
     }
     
-    // Add event listeners to the form
+    // Wire up listeners on page load and setup form hooks
     function setupEventListeners() {
-        // Add event listeners to existing rows
         document.querySelectorAll('#salaryRows tr').forEach(row => {
             addRowEventListeners(row);
         });
         
-        // Add form submit handler
         if (form) {
             form.addEventListener('submit', function() {
-                // Clear saved data on successful form submission
+                // clear saved draft on successful submit
                 localStorage.removeItem(STORAGE_KEY);
             });
         }
         
-        // Save form data on input changes
+        // save on any input change (safe guard)
         document.addEventListener('input', function(e) {
             if (e.target.matches('input, select') && 
                 !e.target.hasAttribute('readonly') && 
@@ -330,26 +319,294 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
         
-        // Handle page unload to save data
+        // also save before leaving the page
         window.addEventListener('beforeunload', saveFormData);
     }
     
-    // Initialize the page
+    // start up
     setupEventListeners();
     loadFormData();
 });
 </script>
-</div> 
-<!-- end of container -->
+
+<!-- Global click handler: add rows, delete rows, update counts -->
+<script>
+document.addEventListener('click', function(e) {
+    // Add a new salary row when Add Component is clicked
+    if (e.target.closest('.add-row-btn')) {
+        const rowsContainer = document.querySelector('.table-body');
+        const firstRow = document.querySelector('.salary-row');
+        
+        if (rowsContainer && firstRow) {
+            const newRow = firstRow.cloneNode(true);
+            
+            // clear values and ensure inputs are enabled
+            newRow.querySelectorAll('input, select').forEach(input => {
+                if (input.type !== 'button') {
+                    input.value = input.tagName === 'SELECT' ? input.querySelector('option').value : '';
+                    input.disabled = false;
+                }
+            });
+            
+            rowsContainer.appendChild(newRow);
+            handleDropdownChanges(); // re-bind dropdown logic for the new row
+            updateComponentsCount();
+        }
+    }
+    
+    // Delete a salary row or clear it if it's the last row
+    if (e.target.closest('.delete-btn')) {
+        const row = e.target.closest('.salary-row');
+        const rows = document.querySelectorAll('.salary-row');
+        
+        if (rows.length > 1) {
+            row.remove();
+            updateComponentsCount();
+        } else {
+            row.querySelectorAll('input, select').forEach(input => {
+                if (input.type !== 'button') {
+                    input.value = input.tagName === 'SELECT' ? input.querySelector('option').value : '';
+                }
+            });
+        }
+    }
+});
+</script>
+
+<!-- Reset button: keep a single blank row and clear it -->
+<script>
+document.getElementById('resetForm')?.addEventListener('click', function() {
+    const rows = document.querySelectorAll('.salary-row');
+    
+    // remove all except first
+    if (rows.length > 1) {
+        rows.forEach((row, index) => {
+            if (index > 0) row.remove();
+        });
+    }
+    
+    // clear the first/template row
+    const firstRow = document.querySelector('.salary-row');
+    if (firstRow) {
+        firstRow.querySelectorAll('input, select').forEach(input => {
+            if (input.type !== 'button') {
+                input.value = input.tagName === 'SELECT' ? input.querySelector('option').value : '';
+                input.disabled = false;
+            }
+        });
+    }
+    
+    updateComponentsCount();
+    handleDropdownChanges();
+});
+</script>
 
 <script>
-// cursor to the Payhead input field when the page loads
+/*
+  handleDropdownChanges:
+  - Disables the "Per" dropdown when the payhead is a deduction or calculated as percentage.
+  - Adds listeners only once per select (uses dataset flag to avoid duplicate bindings).
+*/
+function handleDropdownChanges() {
+    const rows = document.querySelectorAll('.salary-row');
+    
+    rows.forEach(row => {
+        const perSelect = row.querySelector('select[name="per[]"]');
+        const payHeadTypeSelect = row.querySelector('select[name="pay_head_type[]"]');
+        const calculationTypeSelect = row.querySelector('select[name="calculation_type[]"]');
+        
+        function updatePerDropdownState() {
+            if (!perSelect) return;
+            
+            const isDeduction = payHeadTypeSelect && payHeadTypeSelect.value === 'Deductions';
+            const isPercentage = calculationTypeSelect && calculationTypeSelect.value === 'Percentage';
+            
+            if (isDeduction || isPercentage) {
+                perSelect.disabled = true;
+                perSelect.value = 'Month';
+            } else {
+                perSelect.disabled = false;
+            }
+        }
+        
+        // bind change listeners once
+        if (payHeadTypeSelect && !payHeadTypeSelect.dataset.hasListener) {
+            payHeadTypeSelect.addEventListener('change', updatePerDropdownState);
+            payHeadTypeSelect.dataset.hasListener = 'true';
+        }
+        
+        if (calculationTypeSelect && !calculationTypeSelect.dataset.hasListener) {
+            calculationTypeSelect.addEventListener('change', updatePerDropdownState);
+            calculationTypeSelect.dataset.hasListener = 'true';
+        }
+        
+        // set initial state
+        updatePerDropdownState();
+    });
+}
+</script>
+
+<script>
+// Keep the component counter up to date in the footer
+function updateComponentsCount() {
+    const count = document.querySelectorAll('.salary-row').length;
+    const countElement = document.querySelector('.components-count');
+    if (countElement) {
+        countElement.textContent = `${count} component${count !== 1 ? 's' : ''} added`;
+    }
+}
+
+// initial run
+handleDropdownChanges();
+updateComponentsCount();
+</script>
+
+<!-- small helper: focus the payhead input on page load for quick entry -->
+<script>
 document.addEventListener('DOMContentLoaded', function() {
     const payheadInput = document.querySelector('.payhead-input');
     if (payheadInput) {
-        setTimeout(() => {
-            payheadInput.focus();
-        }, 100); // Small delay to ensure everything is loaded
+        setTimeout(() => payheadInput.focus(), 100);
     }
+});
+</script>
+
+<!-- keyboard UX: Enter on payhead moves to Rate -->
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    function attachPayheadEnterBehavior(row) {
+        const payheadSelect = row.querySelector(".col.payhead select");
+        if (payheadSelect && !payheadSelect.dataset.bound) {
+            payheadSelect.addEventListener("keydown", function (e) {
+                if (e.key === "Enter") {
+                    e.preventDefault();
+                    const rateInput = row.querySelector(".col.rate input");
+                    if (rateInput) {
+                        rateInput.focus();
+                        try { rateInput.select(); } catch (_) {}
+                    }
+                }
+            });
+            payheadSelect.dataset.bound = "true";
+        }
+    }
+
+    document.querySelectorAll(".salary-row").forEach(row => attachPayheadEnterBehavior(row));
+
+    // make sure dynamically added rows get the same behavior
+    const originalAppendChild = Element.prototype.appendChild;
+    Element.prototype.appendChild = function (child) {
+        const result = originalAppendChild.call(this, child);
+        if (child.classList && child.classList.contains("salary-row")) {
+            attachPayheadEnterBehavior(child);
+        }
+        return result;
+    };
+});
+</script>
+
+<!-- keyboard UX: Enter on Rate moves to next row's Payhead or creates a new row -->
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    function attachRateEnterBehavior(row) {
+        if (!row) return;
+        const rateInput = row.querySelector('.col.rate input');
+        if (!rateInput) return;
+        if (rateInput.dataset.rateEnterBound) return;
+
+        rateInput.addEventListener('keydown', function (e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+
+                const currentRow = row;
+                let nextRow = currentRow.nextElementSibling;
+                while (nextRow && !nextRow.classList.contains('salary-row')) {
+                    nextRow = nextRow.nextElementSibling;
+                }
+
+                function focusPayheadIn(r) {
+                    if (!r) return;
+                    const payheadSelect = r.querySelector('.col.payhead select');
+                    if (payheadSelect) {
+                        payheadSelect.focus();
+                        try { payheadSelect.select && payheadSelect.select(); } catch(_) {}
+                    }
+                }
+
+                if (nextRow) {
+                    focusPayheadIn(nextRow);
+                    return;
+                }
+
+                const addBtn = document.querySelector('.add-row-btn');
+                if (addBtn) {
+                    addBtn.click();
+                    setTimeout(function () {
+                        const allRows = document.querySelectorAll('.salary-row');
+                        const lastRow = allRows[allRows.length - 1];
+                        focusPayheadIn(lastRow);
+                        try { 
+                            if (typeof handleDropdownChanges === 'function') handleDropdownChanges();
+                            if (typeof updateComponentsCount === 'function') updateComponentsCount();
+                        } catch(_) {}
+                    }, 50);
+                } else {
+                    // fallback clone if add button isn't available
+                    const firstRow = document.querySelector('.salary-row');
+                    const rowsContainer = document.querySelector('.table-body');
+                    if (firstRow && rowsContainer) {
+                        const newRow = firstRow.cloneNode(true);
+                        newRow.querySelectorAll('input, select').forEach(input => {
+                            if (input.type !== 'button' && !input.hasAttribute('readonly')) {
+                                if (input.tagName === 'SELECT') input.selectedIndex = 0;
+                                else input.value = '';
+                                input.disabled = false;
+                            }
+                        });
+                        rowsContainer.appendChild(newRow);
+                        setTimeout(() => {
+                            focusPayheadIn(newRow);
+                            try { if (typeof handleDropdownChanges === 'function') handleDropdownChanges(); } catch(_) {}
+                        }, 30);
+                    }
+                }
+            }
+        });
+
+        rateInput.dataset.rateEnterBound = 'true';
+    }
+
+    document.querySelectorAll('.salary-row').forEach(r => attachRateEnterBehavior(r));
+
+    const container = document.querySelector('.table-body');
+    if (container) {
+        const mo = new MutationObserver(mutations => {
+            for (const m of mutations) {
+                for (const node of m.addedNodes) {
+                    if (node.nodeType === 1 && node.classList.contains('salary-row')) {
+                        attachRateEnterBehavior(node);
+                    } else if (node.nodeType === 1 && node.querySelectorAll) {
+                        node.querySelectorAll('.salary-row').forEach(r => attachRateEnterBehavior(r));
+                    }
+                }
+            }
+        });
+        mo.observe(container, { childList: true, subtree: true });
+    }
+
+    (function () {
+        const orig = Element.prototype.appendChild;
+        Element.prototype.appendChild = function (child) {
+            const res = orig.call(this, child);
+            try {
+                if (child && child.classList && child.classList.contains('salary-row')) {
+                    attachRateEnterBehavior(child);
+                } else if (child && child.querySelectorAll) {
+                    child.querySelectorAll('.salary-row').forEach(r => attachRateEnterBehavior(r));
+                }
+            } catch (_) {}
+            return res;
+        };
+    })();
 });
 </script>
