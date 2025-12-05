@@ -377,9 +377,9 @@ document.addEventListener('DOMContentLoaded', function() {
 <script>
 document.addEventListener('click', function(e) {
     // Add a new salary row when Add Component is clicked
-    if (e.target.closest('.add-row-btn')) {
-        const rowsContainer = document.querySelector('.table-body');
-        const firstRow = document.querySelector('.salary-row');
+    if (e.target.closest('.btn-add')) {
+        const rowsContainer = document.querySelector('.table-rows');
+        const firstRow = document.querySelector('.table-row');
         
         if (rowsContainer && firstRow) {
             const newRow = firstRow.cloneNode(true);
@@ -388,20 +388,22 @@ document.addEventListener('click', function(e) {
             newRow.querySelectorAll('input, select').forEach(input => {
                 if (input.type !== 'button') {
                     input.value = input.tagName === 'SELECT' ? input.querySelector('option').value : '';
-                    input.disabled = false;
+                    if (input.name && input.name.endsWith('[]')) {
+                        // Reset the name to ensure it's unique in the form
+                        input.name = input.name.replace(/\[\d*\]/, '') + '[]';
+                    }
                 }
             });
             
             rowsContainer.appendChild(newRow);
-            handleDropdownChanges(); // re-bind dropdown logic for the new row
             updateComponentsCount();
         }
     }
     
     // Delete a salary row or clear it if it's the last row
     if (e.target.closest('.delete-btn')) {
-        const row = e.target.closest('.salary-row');
-        const rows = document.querySelectorAll('.salary-row');
+        const row = e.target.closest('.table-row');
+        const rows = document.querySelectorAll('.table-row');
         
         if (rows.length > 1) {
             row.remove();
