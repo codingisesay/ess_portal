@@ -1342,26 +1342,36 @@ public function updateComponents(Request $request, $id) {
     return redirect()->route('create_components')->with('error', 'Component Not Updated Successfully!!');
 }
 
-
 public function salaryDetailsCreation($user_id)
-{   
-    // Fetch the user record based on the given user_id.
-    $user = DB::table('users')
-    ->where('id', $user_id) // Match the user by primary key
-    ->select('id', 'name', 'employeeID')
+{
+    // Fetch user details with mapped department and designation
+    $user = DB::table('users as u')
+    // Join with emp_details to get department and designation
+    ->leftJoin('emp_details as e', 'u.id', '=', 'e.user_id')
+    // Join with organisation_departments to get department name
+    ->leftJoin('organisation_departments as d', 'e.department', '=', 'd.id')
+    // Join with organisation_designations to get designation name
+    ->leftJoin('organisation_designations as des', 'e.designation', '=', 'des.id')
+    //get only selected users details
+    ->where('u.id', $user_id)
+    ->select(
+        'u.id',
+        'u.name',
+        'u.employeeID',
+        'd.name as department_name',
+        'des.name as designation_name'
+    )
     ->first();
-
-     // If no matching user is found, redirect back with an error message
-    if (!$user) {
+    //check if user is found or not
+    if (! $user) {
         return redirect()->back()->with('error', 'User not found');
     }
-     // Return the salaryDetailsCreation view with the user details
+     // Pass the retrieved data to the view
     return view('user_view.salaryDetailsCreation', [
         'user' => $user,
-        'user_id' => $user_id
+        'user_id' => $user_id,
     ]);
 }
-
 
 }
 

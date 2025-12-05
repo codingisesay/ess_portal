@@ -1,118 +1,164 @@
+
 {{-- Page-specific CSS and Font Awesome icons (keeps styles and icons loading) --}}
 <link rel="stylesheet" href="{{ asset('/user_end/css/salaryDetailsCreation.css') }}">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 
-<div class="page-hero">
-    <div class="hero-icon">
-        <i class="fas fa-money-bill-wave"></i>
-    </div>
-    <div class="hero-body">
-        <h1 class="hero-title">Salary Details Page</h1>
-        <p class="hero-sub">Manage employee salary components and details</p>
-        
-        <div class="employee-pill">
-            <div class="meta">
-                <strong>ID:</strong>
-                <span id="employee_id">{{ $user->employeeID ?? 'N/A' }}</span>
+<div class="page-layout">
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <div class="sidebar-icon">
+                <i class="fas fa-dollar-sign"></i>
             </div>
-            <div class="meta">
-                <strong>Name:</strong>
-                <span id="employee_name">{{ $user->name ?? 'N/A' }}</span>
+            <h1>Salary Details</h1>
+            <p>Manage components</p>
+            <a href="{{ route('user.setting') }}" class="back-button">
+                <i class="fas fa-arrow-left"></i>
+            </a>
+        </div>
+        
+        <div class="employee-info">
+            <div class="employee-avatar">
+                <div class="avatar">{{ substr($user->name ?? 'AD', 0, 2) }}</div>
+                <div class="employee-name">
+                    <h3>{{ $user->name ?? 'Aniket Desai' }}</h3>
+                    <span class="status-badge">Active</span>
+                </div>
+            </div>
+            
+            <div class="info-item">
+                <i class="fas fa-user"></i>
+                <div class="info-content">
+                    <span class="info-label">Employee ID</span>
+                    <span class="info-value" id="employee_id">{{ $user->employeeID ?? 'PV0009' }}</span>
+                </div>
+            </div>
+            
+            <div class="info-item">
+                <i class="fas fa-briefcase"></i>
+                <div class="info-content">
+                    <span class="info-label">Department</span>
+                    <span class="info-value">{{ $user->department_name ?? 'Development' }}</span>
+                </div>
+            </div>
+            
+            <div class="info-item">
+                <i class="fas fa-id-badge"></i>
+                <div class="info-content">
+                    <span class="info-label">Designation</span>
+                    <span class="info-value">{{ $user->designation_name ?? 'Associate Engineering Manager' }}</span>
+                </div>
             </div>
         </div>
+        
+        
+        <div class="last-updated">
+            <span>Last Updated</span>
+            <span class="date">Today</span>
+        </div>
     </div>
-</div>
 
-<div class="card">
-    <!-- Table Header -->
-    <div class="table-head">
-        <div class="col">Effective From</div>
-        <div class="col">Payhead</div>
-        <div class="col">Rate</div>
-        <div class="col">Per</div>
-        <div class="col">Type</div>
-        <div class="col">Calculation</div>
-        <div class="col">Action</div>
-    </div>
-    <!-- Table Body -->
-    <div class="table-body">
-        <div class="salary-row">
-            <div class="col date">
-                <input type="date" 
-                       name="effective_from[]" 
-                       class="salary-input" 
-                       required>
-            </div>
-            <div class="col payhead">
-                <select name="payhead[]" class="salary-input" required>
-                    <option value="">Select Payhead</option>
-                    <option value="Basic">Basic</option>
-                    <option value="HRA">HRA</option>
-                    <option value="DA">DA</option>
-                    <option value="Medical">Medical</option>
-                    <option value="Special Allowance">Special Allowance</option>
-                </select>
-            </div>
-            <div class="col rate">
-                <input type="number" 
-                       name="rate[]" 
-                       class="salary-input"
-                       step="0.01"
-                       placeholder="0.00"
-                       required>
-            </div>
-            <div class="col per">
-                <input type="text" 
-                       name="per[]" 
-                       class="salary-input" 
-                       value="Month" 
-                       readonly 
-                       style="background-color: #f5f5f5; cursor: not-allowed; color: #999;">
-            </div>
-            <div class="col type">
-                <input type="text" 
-                       name="per[]" 
-                       class="salary-input" 
-                       value="Month" 
-                       readonly 
-                       style="background-color: #f5f5f5; cursor: not-allowed; color: #999;">
-           
-            </div>
-            <div class="col calc">
-               <input type="text" 
-                       name="per[]" 
-                       class="salary-input" 
-                       value="Month" 
-                       readonly 
-                       style="background-color: #f5f5f5; cursor: not-allowed; color: #999;">
-           
-            </div>
-            <div class="col action">
-                <button type="button" class="delete-btn">
-                    <i class="fas fa-trash"></i>
-                </button>
-            </div>
-        </div>
+    <!-- Card Body Container -->
+    <div class="card-body">
+                <!-- Table Header -->
+                <div class="table-header">
+                    <div class="header-cell">Effective From</div>
+                    <div class="header-cell">Payhead</div>
+                    <div class="header-cell">Rate</div>
+                    <div class="header-cell">Per</div>
+                    <div class="header-cell">Type</div>
+                    <div class="header-cell">Calculation</div>
+                    <div class="header-cell">Action</div>
+                </div>
+                
+                <!-- Table Rows -->
+                <div class="table-rows">
+                    <div class="table-row">
+                        <!-- Effective From -->
+                        <div class="table-cell">
+                            <div class="input-wrapper">
+                                <input type="date" name="effective_from[]" class="form-input" required>
+                            </div>
+                        </div>
+                        
+                        <!-- Payhead -->
+                        <div class="table-cell">
+                            <div class="input-wrapper">
+                                <input type="text" name="payhead[]" class="form-input" list="payheadOptions" placeholder="Select Payhead" required>
+                            </div>
+                        </div>
+                        
+                        <!-- Rate -->
+                        <div class="table-cell">
+                            <div class="input-wrapper currency-input">
+                                <span class="currency">₹</span>
+                                <input type="number" name="rate[]" class="form-input" step="0.01" placeholder="0.00" required>
+                            </div>
+                        </div>
+                        
+                        <!-- Per -->
+                        <div class="table-cell">
+                            <div class="input-wrapper">
+                                <select name="per[]" class="form-select" required>
+                                    <option value="Month">Month</option>
+                                    <option value="Year">Year</option>
+                                    <option value="Day">Day</option>
+                                    <option value="Hour">Hour</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <!-- Type -->
+                        <div class="table-cell">
+                            <div class="input-wrapper">
+                                <select name="type[]" class="form-select" required>
+                                    <option value="Earning">Earning</option>
+                                    <option value="Deduction">Deduction</option>
+                                    <option value="Benefit">Benefit</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <!-- Calculation -->
+                        <div class="table-cell">
+                            <div class="input-wrapper">
+                                <select name="calculation[]" class="form-select" required>
+                                    <option value="Fixed">Fixed</option>
+                                    <option value="Formula">Formula</option>
+                                    <option value="Percentage">Percentage</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <!-- Action -->
+                        <div class="table-cell">
+                            <button type="button" class="delete-btn">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Card Footer -->
+                <div class="card-footer">
+                    <div class="footer-left">
+                        <button type="button" class="btn btn-add">
+                            <i class="fas fa-plus"></i> Add Component
+                        </button>
+                        <span class="component-count">1 component added</span>
+                    </div>
+                    <div class="footer-right">
+                        <button type="button" class="btn btn-ghost">
+                            <i class="fas fa-undo"></i> Reset
+                        </button>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save"></i> Save Configuration
+                        </button>
+                    </div>
+                </div>
     </div>
     
-    
-    <!-- how many component added it show count -->
-    <div class="footer-bar">
-        <div class="footer-left">
-            <button type="button" class="add-row-btn">
-                <i class="fas fa-plus"></i> Add Component
-            </button>
-            <div class="components-count">1 component added</div>
-        </div>
-        <div class="footer-right">
-            <button type="button" class="btn-ghost" id="resetForm">Reset</button>
-            <button type="submit" class="btn-primary">
-                <i class="fas fa-save"></i> Save Configuration
-            </button>
-        </div>
-    </div>
-        
-    <!-- quick list for payhead autocomplete -->
+    <!-- Datalist for payhead autocomplete -->
     <datalist id="payheadOptions">
         <option value="Basic">
         <option value="HRA">
@@ -122,8 +168,6 @@
         <option value="PF">
         <option value="TDS">
     </datalist>
-
-</div> 
 <!-- card end -->
 
 <script>

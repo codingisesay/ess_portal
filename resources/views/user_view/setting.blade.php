@@ -315,6 +315,8 @@
                                             <th>Sr.No.</th>
                                             <th>Employee ID</th>
                                             <th>Employee Name</th>
+                                            <th>Department</th>
+                                            <th>Designation</th>
                                             <!-- changed the table column name from edit to action -->
                                             <th>Action</th>
                                         </tr>
@@ -331,6 +333,11 @@
                                                 <td>{{ $loop->iteration }}</td>
                                                 <td>{{ $us->emp_employeeID }}</td>
                                                 <td>{{ $us->user_name }}</td>
+                                                
+                                                <!-- display department name -->
+                                                <td>{{ $us->department_name ?? 'N/A' }}</td>
+                                                <!-- display designation name -->
+                                                <td>{{ $us->designation_name ?? 'N/A' }}</td>
                                                 <td>
                                                     <a href="{{ route('salary.details.creation', $us->user_id) }}" class="icon-btn">
                                                         <i class="fa-solid fa-up-right-from-square"></i>
