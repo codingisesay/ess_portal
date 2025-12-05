@@ -1259,11 +1259,17 @@ public function loadCompForm(){
     return view('superadmin_view.create_comp',compact('template_datas'));
 
 }
-
+// function to insert components
 public function insertComponents(Request $request){
     $data = $request->validate([
         'name' => 'required',
         'component_type' => 'required',
+        'income_type' => 'required',
+        'affect_net_salary' => 'required',
+        'calculate_of_gratuity' => 'required',
+        'calculation_type' => 'required',
+        'calculation_period' => 'required',
+        'user_define_days' => 'nullable',
         'status' => 'required',
     ]);
 
@@ -1273,6 +1279,12 @@ public function insertComponents(Request $request){
         'organisation_id' => $org_data->id,
         'name' => $data['name'],
         'type' => $data['component_type'],
+        'income_type' => $data['income_type'],
+        'affect_net_salary' => $data['affect_net_salary'],
+        'calculate_of_gratuity' => $data['calculate_of_gratuity'],
+        'calculation_type' => $data['calculation_type'],
+        'calculation_period' => $data['calculation_period'],
+        'user_define_days' => $data['user_define_days'] ?? null,
         'status' => $data['status'],
         'created_at' => NOW(),
         'updated_at' => NOW(),
@@ -1293,6 +1305,12 @@ public function updateComponents(Request $request, $id) {
     $data = $request->validate([
         'name' => 'required',
         'type' => 'required',
+        'income_type' => 'required',
+        'affect_net_salary' => 'required',
+        'calculate_of_gratuity' => 'required',
+        'calculation_type' => 'required',
+        'calculation_period' => 'required',
+        'user_define_days' => 'nullable',
         'status' => 'required',
     ]);
 
@@ -1306,6 +1324,12 @@ public function updateComponents(Request $request, $id) {
         ->update([
             'name' => $data['name'],
             'type' => $data['type'],
+            'income_type' => $data['income_type'],
+            'affect_net_salary' => $data['affect_net_salary'],
+            'calculate_of_gratuity' => $data['calculate_of_gratuity'],
+            'calculation_type' => $data['calculation_type'],
+            'calculation_period' => $data['calculation_period'],
+            'user_define_days' => $data['user_define_days'] ?? null,
             'status' => $data['status'],
             'updated_at' => NOW(),
         ]);

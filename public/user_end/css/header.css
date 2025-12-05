@@ -269,6 +269,144 @@ nav ul li a:hover {
     }
 }
 
+/* Upload image Modal Styles */
+.modall {
+    display: none;
+    position: fixed;
+    z-index: 1000; /* Using the higher z-index for better layering */
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    align-items: center;
+    justify-content: center;
+}
+
+.modal-content8 {
+    position: relative;
+    background-color: #fefefe;
+    padding: 20px;
+    border: 1px solid #888;
+    border-radius: 15px;
+    max-width: 400px;
+    width: 90%;
+    margin: 90px auto;
+    text-align: center;
+    overflow: hidden;
+}
+
+.modal-header {
+    background-color: rgb(138, 51, 102);
+    color: white;
+    padding: 15px 20px;
+    margin: -20px -20px 20px -20px;
+    position: relative;
+}
+
+.modal-header h2 {
+    margin: 0;
+    font-size: 1.2em;
+    font-weight: 500;
+}
+
+.image-container8 {
+    width: 200px;
+    height: 200px;
+    margin: 0 auto 20px;
+    border-radius: 50%;
+    overflow: hidden;
+    position: relative;
+    cursor: pointer;
+    background-color: #f5f5f5;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='48' height='48' viewBox='0 0 24 24' fill='none' stroke='%23cccccc' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z'%3E%3C/path%3E%3Ccircle cx='12' cy='13' r='4'%3E%3C/circle%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 48px 48px;
+}
+
+.image-preview {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    position: relative;
+    z-index: 1;
+}
+
+.image-preview[src*='default-avatar.png'] {
+    opacity: 0.6;
+}
+
+.camera-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    color: white;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    z-index: 2;
+}
+
+.image-container8:hover .camera-overlay {
+    opacity: 1;
+}
+
+.camera-overlay i {
+    font-size: 24px;
+    margin-bottom: 5px;
+}
+
+.camera-overlay span {
+    font-size: 12px;
+    text-align: center;
+    padding: 0 10px;
+}
+
+.buttonn {
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s;
+    margin-top: 10px;
+}
+
+.buttonn:hover {
+    background-color: #45a049;
+}
+
+.buttonn:disabled {
+    background-color: #cccccc;
+    cursor: not-allowed;
+}
+
+.close1 {
+    position: absolute;
+    right: 20px;
+    top: 10px;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+    color: white;
+}
+
+.close1:hover {
+    color: #f1f1f1;
+}
+
 /* Add your custom CSS here */
 .profile-dropdown {
     position: relative;
@@ -370,30 +508,6 @@ nav ul li a:hover {
     vertical-align: middle;
 }
 
-/* Modal Styles */
-.modall {
-    display: none;
-    position: fixed;
-    z-index: 1;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    overflow: auto;
-    background-color: rgba(0, 0, 0, 0.4);
-}
-
-.modal-content8 {
-    background-color: #fefefe;
-    margin: 15% auto;
-    padding: 20px;
-    border: 1px solid #888;
-    width: 25%;
-    text-align: center;
-    position: relative;
-    border-radius: 15px;
-}
-
 .close1 {
     color: #aaa;
     font-weight: bold;
@@ -410,13 +524,23 @@ nav ul li a:hover {
     cursor: pointer;
 }
 
-/* Image Container (Circle view) */
-.image-container8 {
+/* Small Image Container (Circle view) */
+.small-image-container {
     width: 150px;
     height: 150px;
+    margin: 10px auto;
     border-radius: 50%;
     overflow: hidden;
-    margin: 10px auto;
+    position: relative;
+    cursor: pointer;
+    background-color: #f5f5f5;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='48' height='48' viewBox='0 0 24 24' fill='none' stroke='%23cccccc' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z'%3E%3C/path%3E%3Ccircle cx='12' cy='13' r='4'%3E%3C/circle%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 48px 48px;
 }
 
 .image-preview {
