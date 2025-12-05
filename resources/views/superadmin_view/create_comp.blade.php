@@ -1,6 +1,7 @@
 @extends('superadmin_view/superadmin_layout')  <!-- Extending the layout file -->
 @section('content')  <!-- Defining the content section -->
 <link rel="stylesheet" href="{{ asset('errors/error.css') }}">
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>  <!-- SweetAlert2 for alerts -->
 
 <?php 
 $id = Auth::guard('superadmin')->user()->id;
@@ -104,10 +105,17 @@ $id = Auth::guard('superadmin')->user()->id;
                 <div class="col-3 mb-4">
                     <div class="form-group">
                         <input type="text" name="name" required>
-                        <label>Components Name</label>
+                        <label>Pay Head Name</label>
                     </div>
                 </div>
-             <!-- component type -->
+
+                 <div class="col-3 mb-4">
+                    <div class="form-group">
+                        <input type="text" name="name_to_display_in_payslip" required>
+                        <label>Name to Display in Payslip</label>
+                    </div>
+                </div>
+             <!-- component type (added new dropdown for component type) -->
                 <div class="col-3 mb-4">
                     <div class="form-group">
                         <select name="component_type" required>
@@ -115,7 +123,14 @@ $id = Auth::guard('superadmin')->user()->id;
                             <option value="Bonus">Bonus</option>
                             <option value="Earnings for Employees">Earnings for Employees</option>
                             <option value="Deduction from Employees">Deduction from Employees</option>
+                            <option value="Employees statutory deductions">Employees statutory deductions</option>
                             <option value="Loans & Advances">Loans & Advances</option>
+                            <option value="Employers other charges">Employers other charges</option>
+                            <option value="Employers statutory contributions ">Employers statutory contributions </option>
+                            <option value="Gratuity">Gratuity</option>
+                            <option value="Reimbursement to employees">Reimbursement to employees</option>
+                            <option value="Tax paid by employers on perquisites">Tax paid by employers on perquisites</option>
+                            <option value="Other">Other</option>
                         </select>   
                         <label>Type</label>
                     </div>
@@ -150,7 +165,22 @@ $id = Auth::guard('superadmin')->user()->id;
                             <option value="Yes">Yes</option>
                             <option value="No">No</option>
                         </select>
-                        <label>Calculate of Gratuity</label>
+                        <label>Use for Gratuity</label>
+                    </div>
+                </div>
+
+                <div class="col-3 mb-4">
+                    <div class="form-group">
+                        <select name="Set/Alter_Income_Tax_Details" id="incomeTaxDetailsSelect" required>
+                            <option value="" disabled selected></option>
+                            <option value="Yes">Yes</option>
+                            <option value="No">No</option>
+                        </select>
+                        <label>Set/Alter Income Tax Details</label>
+                        <!-- Hidden inputs for income tax configuration -->
+                        <input type="hidden" name="income_tax_components" id="hiddenIncomeTaxComponents" value="">
+                        <input type="hidden" name="tax_calculation_basis" id="hiddenTaxCalculationBasis" value="">
+                        <input type="hidden" name="deduct_tds_across_periods" id="hiddenDeductTDSAcrossPeriods" value="">
                     </div>
                 </div>
                <!-- calculation type -->
@@ -158,10 +188,15 @@ $id = Auth::guard('superadmin')->user()->id;
                     <div class="form-group">
                         <select name="calculation_type" required>
                             <option value="" disabled selected></option>
+                            <option value="Computed">Computed</option>
+                            <option value="User Defined">User Defined</option>
                             <option value="Flat Rate">Flat Rate</option>
                             <option value="On Attendance">On Attendance</option>
+                            <option value="On Attendance">Production</option>
                         </select>
                         <label>Calculation Type</label>
+                            <!-- Hidden input for attendance/leave with pay config -->
+                            <input type="hidden" name="attendance_leave_with_pay" id="hiddenAttendanceLeaveWithPay" value="">
                     </div>
                 </div>
                <!-- calculation period -->
@@ -169,8 +204,11 @@ $id = Auth::guard('superadmin')->user()->id;
                     <div class="form-group">
                         <select name="calculation_period" id="calculationPeriodSelect" required>
                             <option value="" disabled selected></option>
+                            <option value="Days">Days</option>
+                            <option value="Weeks">Weeks</option>
+                            <option value="Fortnights">Fortnights</option>
                             <option value="User Defined">User Defined</option>
-                            <option value="Monthly">Monthly</option>
+                            <option value="Monthly">Monthly(As per Calender period)</option>
                         </select>
                         <label>Calculation Period</label>
                         <!-- Hidden input to store the custom days value -->
@@ -202,24 +240,35 @@ $id = Auth::guard('superadmin')->user()->id;
  
     <!-- Table Section -->
     <div id="tableSection" style="display: none;">
-        @include('partials.data_table', [
+       @include('partials.data_table', [
             'items' => $template_datas,
             'columns' => [
                 ['header' => 'ID', 'accessor' => 'id'],
+
+                // Basic Information
                 ['header' => 'Template Name', 'accessor' => 'name'],
+                ['header' => 'Name to Display in Payslip', 'accessor' => 'name_to_display_in_payslip'],
                 ['header' => 'Type', 'accessor' => 'type'],
                 ['header' => 'Income Type', 'accessor' => 'income_type'],
                 ['header' => 'Affect Net Salary', 'accessor' => 'affect_net_salary'],
                 ['header' => 'Calculate of Gratuity', 'accessor' => 'calculate_of_gratuity'],
+                ['header' => 'Set/Alter Income Tax Details', 'accessor' => 'set_alter_income_tax_details'],
+                ['header' => 'Income Tax Components', 'accessor' => 'income_tax_components'],
+                ['header' => 'Tax Calculation Basis', 'accessor' => 'tax_calculation_basis'],
+                ['header' => 'Deduct TDS Across Periods', 'accessor' => 'deduct_tds_across_periods'],
+                ['header' => 'Attendance / Leave with Pay', 'accessor' => 'attendance_leave_with_pay'],
                 ['header' => 'Calculation Type', 'accessor' => 'calculation_type'],
                 ['header' => 'Calculation Period', 'accessor' => 'calculation_period'],
                 ['header' => 'User Define Days', 'accessor' => 'user_define_days'],
+
+                // Status
                 ['header' => 'Status', 'accessor' => 'status'],
             ], 
             'editModalId' => 'openEditModal',
             'hasActions' => true,
             'perPage' => 5
         ])
+
     </div>
 </div>
 
@@ -244,12 +293,77 @@ $id = Auth::guard('superadmin')->user()->id;
     </div>
 </div>
 
+<!-- Modal for Income Tax Configuration -->
+<div id="incomeTaxModal" class="w3-modal" style="display: none;">
+    <div class="w3-modal-content w3-animate-top w3-card-4" style="width: 500px;">
+        <header class="w3-container w3-teal"> 
+            <span onclick="closeIncomeTaxModal()" 
+            class="w3-button w3-display-topright">&times;</span>
+            <h2>Income Tax Configuration</h2>
+        </header>
+        <div class="w3-container" >
+            <div class="popup-form-group-small">
+                <input type="text" id="incomeTaxComponents" placeholder="Income Tax Components" required>
+                <label for="incomeTaxComponents">Income Tax Components</label>
+            </div>
+
+            <div class="popup-form-group-small">
+                <select id="taxCalculationBasis" required>
+                    <option value="" disabled selected></option>
+                    <option value="Projected Value">Projected Value</option>
+                    <option value="Actual Value">Actual Value</option>
+                </select>
+                <label for="taxCalculationBasis">Tax Calculation Basis</label>
+            </div>
+            <div class="popup-form-group-small">
+                <select id="deductTDSAcrossPeriods" required>
+                    <option value="" disabled selected></option>
+                    <option value="Yes">Yes</option>
+                    <option value="No">No</option>
+                </select>
+                <label for="deductTDSAcrossPeriods">Deduct TDS Across Periods</label>
+            </div>
+
+            <div style="display: flex; gap: 10px; margin-top: 20px;">
+                <button type="button" class="create-btn" onclick="saveIncomeTaxConfig()" style="flex: 1;">Save</button>
+                <button type="button" class="create-btn" style="background-color: #6c757d; flex: 1;" onclick="closeIncomeTaxModal()">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Attendance/Leave With Pay Modal -->
+<div id="attendanceLeaveModal" class="w3-modal" style="display: none;">
+    <div class="w3-modal-content w3-animate-top w3-card-4" style="width: 400px;">
+        <header class="w3-container w3-teal"> 
+            <span onclick="closeAttendanceLeaveModal()" class="w3-button w3-display-topright">&times;</span>
+            <h2>Attendance/Leave With Pay</h2>
+        </header>
+        <div class="w3-container" style="padding: 20px;">
+            <div class="popup-form-group">
+                <select id="attendanceLeaveSelect" required>
+                    <option value="" disabled selected></option>
+                    <option value="Present">Present</option>
+                    <option value="LOP">LOP</option>
+                    <option value="Leave With Pay">Leave With Pay</option>
+                    <option value="Leave Without Pay">Leave Without Pay</option>
+                </select>
+                <label for="attendanceLeaveSelect">Attendance/Leave Type</label>
+            </div>
+            <div style="display: flex; gap: 10px; margin-top: 20px;">
+                <button type="button" class="create-btn" onclick="saveAttendanceLeaveConfig()" style="flex: 1;">Save</button>
+                <button type="button" class="create-btn" style="background-color: #6c757d; flex: 1;" onclick="closeAttendanceLeaveModal()">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <div id="editSalaryComponentForm" class="w3-modal" style="display: none;">
     <div class="w3-modal-content w3-animate-top w3-card-4">
         <header class="w3-container w3-teal"> 
             <span onclick="document.getElementById('editSalaryComponentForm').style.display='none'" 
             class="w3-button w3-display-topright">&times;</span>
-            <h2>Edit Salary Template</h2>
+            <h2>Pay Heads Master</h2>
         </header>
         <div class="w3-container">
             <form id="editSalaryComponentForm2" method="POST">
@@ -260,13 +374,25 @@ $id = Auth::guard('superadmin')->user()->id;
                     <input type="text" name="name" id="editSalaryTemplateName" required>
                     <label for="editSalaryTemplateName">Name</label>
                 </div>
+
+                <div class="popup-form-group">
+                    <input type="text" name="name_to_display_in_payslip" id="editNameToDisplay" required>
+                    <label for="editNameToDisplay">Name to Display in Payslip</label>
+                </div>
                 <!-- Component Type -->
                 <div class="popup-form-group">
                     <select name="type" id="editComponentType" required>
                         <option value="Bonus">Bonus</option>
                         <option value="Earnings for Employees">Earnings for Employees</option>
                         <option value="Deduction from Employees">Deduction from Employees</option>
+                        <option value="Employees statutory deductions">Employees statutory deductions</option>
                         <option value="Loans & Advances">Loans & Advances</option>
+                        <option value="Employers other charges">Employers other charges</option>
+                        <option value="Employers statutory contributions">Employers statutory contributions</option>
+                        <option value="Gratuity">Gratuity</option>
+                        <option value="Reimbursement to employees">Reimbursement to employees</option>
+                        <option value="Tax paid by employers on perquisites">Tax paid by employers on perquisites</option>
+                        <option value="Other">Other</option>
                     </select>
                     <label for="editComponentType">Type</label>
                 </div>
@@ -298,20 +424,67 @@ $id = Auth::guard('superadmin')->user()->id;
                     <label for="editCalculateOfGratuity">Calculate Of Gratuity</label>
                 </div>
 
+                <!-- Set/Alter Income Tax Details -->
+                <div class="popup-form-group">
+                    <select name="Set/Alter_Income_Tax_Details" id="editIncomeTaxDetails" required>
+                        <option value="Yes">Yes</option>
+                        <option value="No">No</option>
+                    </select>
+                    <label for="editIncomeTaxDetails">Set/Alter Income Tax Details</label>
+                </div>
+
+                    <!-- Income Tax Components -->
+                 <div class="popup-form-group">
+                    <input type="text" name="income_tax_components" id="editIncomeTaxComponents" placeholder="Income Tax Components" required>
+                    <label for="editIncomeTaxComponents">Income Tax Components</label>
+                 </div>
+                    <!-- Tax Calculation Basis -->
+                <div class="popup-form-group">
+                    <select name="tax_calculation_basis" id="editTaxCalculationBasis" required>
+                        <option value="" disabled selected></option>
+                        <option value="Projected Value">Projected Value</option>
+                        <option value="Actual Value">Actual Value</option>
+                    </select>
+                    <label for="editTaxCalculationBasis">Tax Calculation Basis</label>
+                </div>
+                    <!-- Deduct TDS Across Periods -->
+                <div class="popup-form-group">
+                    <select name="deduct_tds_across_periods" id="editDeductTDSAcrossPeriods" required>
+                        <option value="" disabled selected></option>
+                        <option value="Yes">Yes</option>
+                        <option value="No">No</option>
+                    </select>
+                    <label for="editDeductTDSAcrossPeriods">Deduct TDS Across Periods</label>
+                </div>
+
                  <!-- Calculation Type -->
                 <div class="popup-form-group">
                     <select name="calculation_type" id="editCalculationType" required>
+                         <option value="Computed">Computed</option>
+                         <option value="User Defined">User Defined</option>
                         <option value="Flat Rate">Flat Rate</option>
                         <option value="On Attendance">On Attendance</option>
+                        <option value="Production">Production</option>
                     </select>
                     <label for="editCalculationType">Calculation Type</label>
+                </div>
+                <!-- Attendance/Leave Type (Hidden by default) -->
+                <div class="popup-form-group" id="attendanceLeaveWrapper" style="display: none;">
+                    <select name="attendance_leave_with_pay" id="editAttendanceLeaveWithPay">
+                        <option value="" disabled selected></option>
+                        <option value="Present">Present</option>
+                        <option value="LOP">LOP</option>
+                        <option value="Leave With Pay">Leave With Pay</option>
+                        <option value="Leave Without Pay">Leave Without Pay</option>
+                    </select>
+                    <label for="editAttendanceLeaveWithPay">Attendance/Leave Type</label>
                 </div>
 
                  <!-- Calculation Period -->
                 <div class="popup-form-group">
                     <select name="calculation_period" id="editCalculationPeriod" required>
                         <option value="User Defined">User Defined</option>
-                        <option value="Monthly">Monthly</option>
+                        <option value="Monthly">Monthly (As per Calender period)</option>
                     </select>
                     <label for="editCalculationPeriod">Calculation Period</label>
                 </div>
@@ -339,6 +512,7 @@ $id = Auth::guard('superadmin')->user()->id;
 
 
 
+
 <script>
     /* ----------------------- CUSTOM DAYS MODAL ----------------------- */
 
@@ -357,7 +531,7 @@ function saveCustomDays() {
     const days = daysInput.value.trim();
 
     if (!days || isNaN(days) || days < 1 || days > 31) {
-        alert("Please enter a valid number between 1 and 31");
+        Swal.fire("Please enter a valid number between 1 and 31");
         daysInput.focus();
         return;
     }
@@ -367,6 +541,72 @@ function saveCustomDays() {
     document.getElementById('customDaysValue').textContent = days;
 
     closeCustomDaysModal();
+}
+
+/* ----------------------- INCOME TAX MODAL ----------------------- */
+
+function openIncomeTaxModal() {
+    document.getElementById('incomeTaxModal').style.display = 'block';
+    document.getElementById('incomeTaxComponents').focus();
+}
+
+function closeIncomeTaxModal() {
+    document.getElementById('incomeTaxModal').style.display = 'none';
+    // Reset fields
+    document.getElementById('incomeTaxComponents').value = '';
+    document.getElementById('taxCalculationBasis').value = '';
+    document.getElementById('deductTDSAcrossPeriods').value = '';
+}
+
+function saveIncomeTaxConfig() {
+    const components = document.getElementById('incomeTaxComponents').value.trim();
+    const basis = document.getElementById('taxCalculationBasis').value;
+    const tds = document.getElementById('deductTDSAcrossPeriods').value;
+
+    if (!components) {
+        Swal.fire("Please enter Income Tax Components");
+        return;
+    }
+    if (!basis) {
+        Swal.fire("Please select Tax Calculation Basis");
+        return;
+    }
+    if (!tds) {
+        Swal.fire("Please select Deduct TDS Across Periods");
+        return;
+    }
+
+    // Store the values in hidden inputs
+    document.getElementById('hiddenIncomeTaxComponents').value = components;
+    document.getElementById('hiddenTaxCalculationBasis').value = basis;
+    document.getElementById('hiddenDeductTDSAcrossPeriods').value = tds;
+
+    // Show confirmation
+    Swal.fire("Income Tax Configuration saved successfully!");
+    closeIncomeTaxModal();
+}
+
+/* ----------------------- ATTENDANCE/LEAVE MODAL ----------------------- */
+
+function openAttendanceLeaveModal() {
+    document.getElementById('attendanceLeaveModal').style.display = 'block';
+    document.getElementById('attendanceLeaveSelect').focus();
+}
+
+function closeAttendanceLeaveModal() {
+    document.getElementById('attendanceLeaveModal').style.display = 'none';
+    document.getElementById('attendanceLeaveSelect').value = '';
+}
+
+function saveAttendanceLeaveConfig() {
+    const attendanceType = document.getElementById('attendanceLeaveSelect').value;
+    if (!attendanceType) {
+        Swal.fire('Please select Attendance/Leave Type');
+        return;
+    }
+    document.getElementById('hiddenAttendanceLeaveWithPay').value = attendanceType;
+    Swal.fire('Attendance/Leave With Pay configuration saved!');
+    closeAttendanceLeaveModal();
 }
 
 /* ----------------------- INITIALIZATION ----------------------- */
@@ -387,11 +627,41 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
+    /* Handle Income Tax Details change */
+    const incomeTaxDetailsSelect = document.getElementById('incomeTaxDetailsSelect');
+
+    if (incomeTaxDetailsSelect) {
+        incomeTaxDetailsSelect.addEventListener('change', function () {
+            if (this.value === 'Yes') {
+                openIncomeTaxModal();
+            }
+        });
+    }
+
+    /* Handle Calculation Type change */
+    const calculationTypeSelect = document.querySelector('select[name="calculation_type"]');
+
+    if (calculationTypeSelect) {
+        calculationTypeSelect.addEventListener('change', function () {
+            if (this.value === 'On Attendance') {
+                openAttendanceLeaveModal();
+            }
+        });
+    }
+
     /* Close custom modal when clicking outside */
     window.addEventListener('click', function (event) {
-        const modal = document.getElementById('customDaysModal');
-        if (event.target === modal) {
+        const customModal = document.getElementById('customDaysModal');
+        const taxModal = document.getElementById('incomeTaxModal');
+        const attendanceModal = document.getElementById('attendanceLeaveModal');
+        if (event.target === customModal) {
             closeCustomDaysModal();
+        }
+        if (event.target === taxModal) {
+            closeIncomeTaxModal();
+        }
+        if (event.target === attendanceModal) {
+            closeAttendanceLeaveModal();
         }
     });
 });
@@ -511,79 +781,175 @@ document.addEventListener("DOMContentLoaded", function () {
         return el;
     }
 
+    /* ----------------------------------------------------
+       USER DEFINED DAYS LOGIC
+    ---------------------------------------------------- */
     const calcPeriod = $id("editCalculationPeriod");
     const userDaysContainer = $id("editUserDaysContainer");
     const userDaysInput = $id("editUserDefineDays");
 
-    // On-change (inside modal)
     if (calcPeriod) {
         calcPeriod.addEventListener("change", function () {
             if (this.value === "User Defined") {
-                if (userDaysContainer) userDaysContainer.style.display = "block";
+                userDaysContainer.style.display = "block";
             } else {
-                if (userDaysContainer) userDaysContainer.style.display = "none";
-                if (userDaysInput) userDaysInput.value = "";
+                userDaysContainer.style.display = "none";
+                userDaysInput.value = "";
             }
         });
     }
 
-    // -------------------------
-    // OPEN EDIT MODAL FUNCTION
-    // -------------------------
+    /* ----------------------------------------------------
+       INCOME TAX TOGGLE LOGIC (Show/Hide + Clear + Backend Support)
+    ---------------------------------------------------- */
+    const incomeTaxSelect = $id("editIncomeTaxDetails");
+
+    const componentsInput = $id("editIncomeTaxComponents");
+    const basisSelect = $id("editTaxCalculationBasis");
+    const tdsSelect = $id("editDeductTDSAcrossPeriods");
+
+    const componentsField = componentsInput?.closest(".popup-form-group");
+    const basisField = basisSelect?.closest(".popup-form-group");
+    const tdsField = tdsSelect?.closest(".popup-form-group");
+
+    function toggleIncomeTaxFields() {
+        const isYes = incomeTaxSelect.value === "Yes";
+
+        if (componentsField) componentsField.style.display = isYes ? "block" : "none";
+        if (basisField) basisField.style.display = isYes ? "block" : "none";
+        if (tdsField) tdsField.style.display = isYes ? "block" : "none";
+
+        componentsInput.required = isYes;
+        basisSelect.required = isYes;
+        tdsSelect.required = isYes;
+
+        if (!isYes) {
+            componentsInput.value = "";
+            basisSelect.value = "";
+            tdsSelect.value = "";
+        }
+    }
+
+    // Follow backend value on page load
+    toggleIncomeTaxFields();
+
+    incomeTaxSelect.addEventListener("change", toggleIncomeTaxFields);
+
+            /* ----------------------------------------------------
+        ON ATTENDANCE LOGIC (Show/Hide + Clear + Backend Support)
+        - Define in outer scope so openEditModal can call it
+        ---------------------------------------------------- */
+        const calcType = $id("editCalculationType");
+        const attendanceWrapper = $id("attendanceLeaveWrapper");
+        const attendanceSelect = $id("editAttendanceLeaveWithPay");
+
+        // Defensive: if element not found, bail gracefully
+        function toggleAttendanceField() {
+            if (!calcType || !attendanceWrapper || !attendanceSelect) return;
+
+            // Normalize value from backend/user
+            const selected = (calcType.value || "").toString().trim();
+
+            // Compare case-insensitively and tolerate small differences
+            if (selected.toLowerCase() === "on attendance".toLowerCase()) {
+                attendanceWrapper.style.display = "block";
+                // Make select required if you want when visible (optional)
+                // attendanceSelect.required = true;
+            } else {
+                attendanceWrapper.style.display = "none";
+                attendanceSelect.value = "";       // clear the value on hide
+                // attendanceSelect.required = false;
+            }
+        }
+
+        // Run on load in case page has default filled by server
+        toggleAttendanceField();
+
+        // Ensure user interaction still works
+        if (calcType) {
+            calcType.addEventListener("change", toggleAttendanceField);
+        }
+
+
+
+    /* ----------------------------------------------------
+       OPEN EDIT MODAL FUNCTION
+    ---------------------------------------------------- */
     window.openEditModal = function (id, templatedata) {
 
         if (!templatedata) {
-            alert("Invalid data passed");
+            Swal.fire("Invalid data passed");
             return;
         }
 
         // Field references
         const idField = $id("editSalaryTemplateId");
         const nameField = $id("editSalaryTemplateName");
+        const nameToDisplay = $id("editNameToDisplay");
         const compType = $id("editComponentType");
         const incomeType = $id("editIncomeType");
         const affectNet = $id("editAffectNetSalary");
         const gratuity = $id("editCalculateOfGratuity");
+        const incomeTaxDetails = $id("editIncomeTaxDetails");
+        const incomeTaxComp = $id("editIncomeTaxComponents");
+        const taxCalcBasis = $id("editTaxCalculationBasis");
+        const deductTds = $id("editDeductTDSAcrossPeriods");
         const calcType = $id("editCalculationType");
+        const attendancePay = $id("editAttendanceLeaveWithPay");
         const calcPeriodF = $id("editCalculationPeriod");
         const statusField = $id("editSalaryTemplateStatus");
         const formEl = $id("editSalaryComponentForm2");
         const modalEl = $id("editSalaryComponentForm");
 
-        // Fill values
-        if (idField) idField.value = templatedata.id || "";
-        if (nameField) nameField.value = templatedata.name || "";
+        // Fill values from backend
+        idField.value = templatedata.id || "";
+        nameField.value = templatedata.name || "";
+        nameToDisplay.value = templatedata.name_to_display_in_payslip || "";
+        compType.value = templatedata.component_type || templatedata.type || "";
+        incomeType.value = templatedata.income_type || "";
+        affectNet.value = templatedata.affect_net_salary || "";
+        gratuity.value = templatedata.calculate_of_gratuity || "";
+        calcType.value = templatedata.calculation_type || "";
+        attendancePay.value = templatedata.attendance_leave_with_pay || "";
+        calcPeriodF.value = templatedata.calculation_period || "";
+        statusField.value = templatedata.status || "";
 
-        if (compType) compType.value = templatedata.component_type || templatedata.type || "";
-        if (incomeType) incomeType.value = templatedata.income_type || "";
-        if (affectNet) affectNet.value = templatedata.affect_net_salary || "";
-        if (gratuity) gratuity.value = templatedata.calculate_of_gratuity || "";
-        if (calcType) calcType.value = templatedata.calculation_type || "";
-        if (calcPeriodF) calcPeriodF.value = templatedata.calculation_period || "";
-        if (statusField) statusField.value = templatedata.status || "";
+        // Income Tax fields from backend
+        incomeTaxDetails.value = templatedata.set_alter_income_tax_details || templatedata.income_tax_details || "";
+        incomeTaxComp.value = templatedata.income_tax_components || "";
+        taxCalcBasis.value = templatedata.tax_calculation_basis || "";
+        deductTds.value = templatedata.deduct_tds_across_periods || "";
 
-        // Handle User Defined days
+        // Apply toggle again for backend value
+        toggleIncomeTaxFields();
+
+        // CALL THE TOGGLE HERE to react to backend value
+        toggleAttendanceField();
+
+        // User defined days
         if (templatedata.calculation_period === "User Defined") {
-            if (userDaysContainer) userDaysContainer.style.display = "block";
-            if (userDaysInput) userDaysInput.value = templatedata.user_define_days || "";
+            userDaysContainer.style.display = "block";
+            userDaysInput.value = templatedata.user_define_days || "";
         } else {
-            if (userDaysContainer) userDaysContainer.style.display = "none";
-            if (userDaysInput) userDaysInput.value = "";
+            userDaysContainer.style.display = "none";
+            userDaysInput.value = "";
         }
 
-        // Set action URL
+        // Update form action
         try {
-            const actionUrl = "{{ route('update_component', ['id' => ':id']) }}".replace(":id", templatedata.id);
-            if (formEl) formEl.action = actionUrl;
+            const actionUrl = "{{ route('update_component', ['id' => ':id']) }}"
+                .replace(":id", templatedata.id);
+            formEl.action = actionUrl;
         } catch (e) {
-            console.warn("Form action route not replaced:", e);
+            console.warn("Form URL error:", e);
         }
 
-        // Show modal
-        if (modalEl) modalEl.style.display = "block";
+        // Open modal
+        modalEl.style.display = "block";
     };
 });
 </script>
+
 
 
 

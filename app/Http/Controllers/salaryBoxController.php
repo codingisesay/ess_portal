@@ -1261,30 +1261,44 @@ public function loadCompForm(){
 }
 // function to insert components
 public function insertComponents(Request $request){
+    // Add attendance_leave_with_pay to validation
     $data = $request->validate([
         'name' => 'required',
         'component_type' => 'required',
+        'name_to_display_in_payslip' => 'nullable', // <-- added
         'income_type' => 'required',
         'affect_net_salary' => 'required',
         'calculate_of_gratuity' => 'required',
         'calculation_type' => 'required',
         'calculation_period' => 'required',
         'user_define_days' => 'nullable',
+        'Set/Alter_Income_Tax_Details' => 'required',  // <-- added
+        'income_tax_components' => 'nullable', // <-- added
+        'tax_calculation_basis' => 'nullable', // <-- added
+        'deduct_tds_across_periods' => 'nullable', // <-- added
+        'attendance_leave_with_pay' => 'nullable', // <-- added
         'status' => 'required',
     ]);
 
     $org_data = Auth::guard('superadmin')->user();
 
+    // Add attendance_leave_with_pay to insert
     $insertStatus = DB::table('org_salary_components')->insert([
         'organisation_id' => $org_data->id,
         'name' => $data['name'],
         'type' => $data['component_type'],
+        'name_to_display_in_payslip' => $data['name_to_display_in_payslip'], // <-- added
         'income_type' => $data['income_type'],
         'affect_net_salary' => $data['affect_net_salary'],
         'calculate_of_gratuity' => $data['calculate_of_gratuity'],
         'calculation_type' => $data['calculation_type'],
         'calculation_period' => $data['calculation_period'],
         'user_define_days' => $data['user_define_days'] ?? null,
+        'set_alter_income_tax_details' => $data['Set/Alter_Income_Tax_Details'], // <-- added   
+        'income_tax_components' => $data['income_tax_components'] ?? null,  // <-- added
+        'tax_calculation_basis' => $data['tax_calculation_basis'] ?? null, // <-- added
+        'deduct_tds_across_periods' => $data['deduct_tds_across_periods'] ?? null, // <-- added
+        'attendance_leave_with_pay' => $data['attendance_leave_with_pay'] ?? null, // <-- added
         'status' => $data['status'],
         'created_at' => NOW(),
         'updated_at' => NOW(),
@@ -1301,16 +1315,22 @@ public function insertComponents(Request $request){
 }
 
 public function updateComponents(Request $request, $id) {
-    // Validate the incoming request data
+    // Validate the incoming request data (match insertComponents)
     $data = $request->validate([
         'name' => 'required',
         'type' => 'required',
+        'name_to_display_in_payslip' => 'nullable', // <-- added
         'income_type' => 'required',
         'affect_net_salary' => 'required',
         'calculate_of_gratuity' => 'required',
         'calculation_type' => 'required',
         'calculation_period' => 'required',
         'user_define_days' => 'nullable',
+        'Set/Alter_Income_Tax_Details' => 'required', // <-- added
+        'income_tax_components' => 'nullable',  // <-- added
+        'tax_calculation_basis' => 'nullable', // <-- added
+        'deduct_tds_across_periods' => 'nullable', // <-- added
+        'attendance_leave_with_pay' => 'nullable', // <-- added
         'status' => 'required',
     ]);
 
@@ -1324,12 +1344,18 @@ public function updateComponents(Request $request, $id) {
         ->update([
             'name' => $data['name'],
             'type' => $data['type'],
+            'name_to_display_in_payslip' => $data['name_to_display_in_payslip'], // <-- added
             'income_type' => $data['income_type'],
             'affect_net_salary' => $data['affect_net_salary'],
             'calculate_of_gratuity' => $data['calculate_of_gratuity'],
             'calculation_type' => $data['calculation_type'],
             'calculation_period' => $data['calculation_period'],
             'user_define_days' => $data['user_define_days'] ?? null,
+            'set_alter_income_tax_details' => $data['Set/Alter_Income_Tax_Details'], // <-- added
+            'income_tax_components' => $data['income_tax_components'] ?? null,  // <-- added
+            'tax_calculation_basis' => $data['tax_calculation_basis'] ?? null, // <-- added
+            'deduct_tds_across_periods' => $data['deduct_tds_across_periods'] ?? null, // <-- added
+            'attendance_leave_with_pay' => $data['attendance_leave_with_pay'] ?? null, // <-- added
             'status' => $data['status'],
             'updated_at' => NOW(),
         ]);
