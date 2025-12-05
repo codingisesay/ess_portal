@@ -1,0 +1,463 @@
+/* =========================
+   Theme & basic setup
+   ========================= */
+/* A small set of colors we reuse everywhere so the UI feels consistent */
+:root {
+  --purple-1: rgb(138, 51, 102);
+  --purple-2: rgba(138, 51, 102, 0.8);
+  --card: #ffffff;
+  --muted: #8a7b9a;
+  --border: #efe7f6;
+}
+
+/* Global page baseline: soft background, clean typography */
+body {
+  font-family: 'Poppins', system-ui, sans-serif;
+  background: #f0f2f5;
+  margin: 0;
+  color: #2b2640;
+  min-height: 100vh;
+  box-sizing: border-box;
+}
+
+/* Main horizontal layout: sidebar on the left, content on the right */
+.page-layout {
+  display: flex;
+  gap: 20px;
+  padding: 24px;
+  align-items: flex-start;
+}
+
+/* =========================
+   Sidebar
+   ========================= */
+/* The left column: holds profile info and navigation */
+.sidebar {
+  width: 20%;
+  background: white;
+  border-radius: 15px;
+  display: flex;
+  flex-direction: column;
+  height: 92vh;
+  position: relative;
+  overflow: visible;
+  z-index: 1;
+}
+
+/* A subtle glowing circle to give the sidebar header some “depth” */
+.sidebar::after {
+  content: "";
+  position: absolute;
+  right: -20px;
+  top: -22px;
+  width: 160px;
+  height: 160px;
+  background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.08), rgba(255,255,255,0) 40%);
+  border-radius: 50%;
+  filter: blur(6px);
+}
+
+/* Sidebar’s top panel — usually where the title/icon lives */
+.sidebar-header {
+  padding: 20px 20px 60px;
+  background: var(--purple-1);
+  color: white;
+  border-radius: 15px 15px 0 0;
+  margin-bottom: -20px; /* Pulls the card upward for a stacked effect */
+  position: relative;
+}
+
+/* A floating “back” button sitting inside the header */
+.back-button {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  width: 32px;
+  height: 32px;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  opacity: 0.9;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-decoration: none;
+  z-index: 1000;
+  pointer-events: auto;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.back-button:hover {
+  opacity: 1;
+  background: rgba(255, 255, 255, 0.3);
+  transform: translateX(-2px);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.back-button i {
+  font-size: 14px;
+}
+
+/* Small icon block inside the header */
+.sidebar-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  background: rgba(255,255,255,0.18);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  margin-bottom: 12px;
+}
+
+/* The little profile card that pops out from the header area */
+.employee-info {
+  background: #fff;
+  padding: 10px 20px 20px;
+  margin: -40px 16px 0;
+  border-radius: 12px;
+  box-shadow: 4px 4px 8px 8px rgba(138,123,154,0.12);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  z-index: 2;
+  border: 1px solid rgba(0,0,0,0.1);
+}
+
+/* Avatar + name row */
+.employee-avatar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+/* Placeholder avatar (initials, etc.) */
+.avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 10px;
+  background: var(--purple-1);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* A tiny badge to show employment status or similar */
+.status-badge {
+  background: #e8f5e9;
+  color: #2e7d32;
+  padding: 8px 8px;
+  font-size: 10px;
+  border-radius: 10px;
+  font-weight: 600;
+  height: 18px;
+}
+
+/* Smaller profile details inside the sidebar */
+.info-item {
+  display: flex;
+  gap: 4px;
+  padding: 8px 12px;
+  background: rgb(235,213,225);
+  border-radius: 8px;
+}
+.info-content {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.info-item i {
+  width: 20px;
+  font-size: 16px;
+  color: #5f6368;
+}
+
+/* Labels + values for sidebar fields */
+.info-label {
+  font-size: 11px;
+  color: var(--muted);
+  font-weight: 600;
+}
+.info-value {
+  font-size: 13px;
+  font-weight: 700;
+  color: #2b2640;
+}
+
+/* This sits at the very bottom of the sidebar */
+.last-updated {
+  margin-top: auto;
+  padding: 12px 20px;
+  background: #f8f9fa;
+  border-top: 1px solid #f0f0f0;
+  display: flex;
+  justify-content: space-between;
+  font-size: 11px;
+}
+
+/* =========================
+   Main card content
+   ========================= */
+/* This is the big workspace on the right side */
+.card-body {
+  background: #fff;
+  border-radius: 8px;
+  border: 1px solid #e0e0e0;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  height: 91vh;
+  overflow: hidden;
+}
+
+/* =========================
+   Table layout
+   ========================= */
+/* Header + data rows share the same grid structure */
+.table-header,
+.table-row {
+  display: grid;
+  grid-template-columns: 150px 1.5fr 1fr 1fr 1fr 1.5fr 80px;
+  gap: 12px;
+  padding: 12px 16px;
+  align-items: center;
+}
+
+/* Table header stays stuck at the top while scrolling */
+.table-header {
+  background: var(--purple-1);
+  color: #fff;
+  font-weight: 600;
+  font-size: 12px;
+  text-transform: uppercase;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.table-cell { padding: 0 4px; }
+
+/* Rows get a soft highlight when hovered */
+.table-row {
+  border-bottom: 1px solid #f0f0f0;
+  transition: background 0.15s;
+}
+.table-row:hover { background: #f9f9f9; }
+
+/* =========================
+   Inputs & selects
+   ========================= */
+/* Wrapper for fancy input styling (icons, currency, etc.) */
+.input-wrapper { position: relative; }
+
+/* General input appearance */
+.form-input,
+.form-select {
+  width: 100%;
+  padding: 8px 12px;
+  height: 36px;
+  border: 1px solid #dadce0;
+  border-radius: 4px;
+  background: white;
+  font-size: 13px;
+}
+
+/* Visual feedback when a field is focused */
+.form-input:focus,
+.form-select:focus {
+  border-color: #1a73e8;
+  box-shadow: 0 0 0 1px #1a73e8;
+}
+
+/* Currency fields get an inline symbol on the left */
+.currency-input {
+  display: flex;
+  align-items: center;
+  position: relative;
+}
+.currency {
+  position: absolute;
+  left: 12px;
+  color: #5f6368;
+}
+.currency-input .form-input {
+  padding-left: 24px;
+  text-align: right; /* Makes amounts line up neatly */
+}
+
+/* Custom dropdown arrow drawn with inline SVG */
+.form-select {
+  appearance: none;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='%235f6368' width='16' height='16' viewBox='0 0 24 24'%3E%3Cpath d='M7 10l5 5 5-5'/%3E%3C/svg%3E");
+  background-position:right 8px center;
+  background-repeat:no-repeat;
+  padding-right:28px;
+}
+
+/* =========================
+   Buttons
+   ========================= */
+/* Basic button look */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  font-size: 13px;
+  border-radius: 4px;
+  cursor: pointer;
+  border: 1px solid transparent;
+}
+
+/* “Add” button in blue */
+.btn-add {
+  background: #1a73e8;
+  color: white;
+}
+.btn-add:hover { background:#1557b0; }
+
+/* Neutral button with a light border */
+.btn-ghost {
+  background:white;
+  border:1px solid #dadce0;
+  color:#5f6368;
+}
+.btn-ghost:hover { background:#f8f9fa; }
+
+/* Green button for save/confirm actions */
+.btn-primary {
+  background:#34a853;
+  color:#fff;
+}
+.btn-primary:hover { background:#2d8e49; }
+
+/* Minimal delete icon-button */
+.delete-btn {
+  background:none;
+  border:none;
+  color:#d93025;
+  font-size:16px;
+  padding:4px;
+  cursor:pointer;
+}
+.delete-btn:hover { background:#fce8e6; }
+
+/* =========================
+   Footer (sticky action bar)
+   ========================= */
+/* Lives at the bottom of the main card — actions always visible */
+.card-footer {
+  display: flex;
+  justify-content: space-between;
+  padding: 12px 16px;
+  background: #f8f9fa;
+  border-top: 1px solid #e0e0e0;
+  position: sticky;
+  bottom: 0;
+  margin-top: auto;
+  overflow-x: auto;
+  white-space: nowrap;
+  gap: 12px;
+}
+
+/* Small text indicating counts or totals */
+.component-count {
+  font-size: 13px;
+  color: #5f6368;
+}
+
+/* Hides the scrollbar to keep things looking clean */
+.card-footer::-webkit-scrollbar { display: none; }
+.card-footer {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Prevent buttons from squishing when space is tight */
+.btn {
+  flex-shrink: 0;
+}
+
+/* =========================
+   Responsive tweaks
+   ========================= */
+/* Slightly smaller buttons on tablets */
+@media (max-width: 768px) {
+  .card-footer {
+    padding: 8px 12px;
+  }
+
+  .btn {
+    padding: 6px 12px;
+    font-size: 13px;
+  }
+
+  .component-count {
+    font-size: 12px;
+  }
+}
+
+/* Adjust grid for mid-sized screens */
+@media (max-width:1200px){
+  .table-header,
+  .table-row {
+    grid-template-columns:120px 1.5fr 1fr 1fr 1fr 1.2fr 80px;
+  }
+
+  /* Keep footer horizontal instead of stacking */
+  .card-footer { 
+    flex-direction: row;
+    align-items: center;
+  }
+}
+
+/* Mobile mode: table becomes a stacked card UI */
+@media (max-width:768px){
+  .table-header { display:none; }
+
+  /* Each row turns into a card-style block */
+  .table-row {
+    grid-template-columns:1fr;
+    border:1px solid #e0e0e0;
+    border-radius:8px;
+    margin-bottom:12px;
+    padding:16px;
+  }
+
+  /* Each cell reveals its own label using data-label */
+  .table-cell {
+    border-bottom:1px solid #f0f0f0;
+    padding-bottom:8px;
+  }
+  .table-cell:last-child {
+    border-bottom:none;
+    text-align:right;
+  }
+  .table-cell::before {
+    content: attr(data-label);
+    font-size:11px;
+    color:#5f6368;
+    text-transform:uppercase;
+    display:block;
+    margin-bottom:4px;
+  }
+
+  .card-footer {
+    flex-direction:column;
+    gap:12px;
+  }
+}
+
+/* =========================
+   Print mode
+   ========================= */
+/* Hide interactive buttons when printing */
+@media print{
+  .btn-primary,
+  .btn-ghost { display:none; }
+}

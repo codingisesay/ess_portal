@@ -315,40 +315,35 @@
                                             <th>Sr.No.</th>
                                             <th>Employee ID</th>
                                             <th>Employee Name</th>
-                                            <th>Salary Template</th>
-                                            <th>Employee CTC</th>
-                                            <th>Edit</th>
+                                            <th>Department</th>
+                                            <th>Designation</th>
+                                            <!-- changed the table column name from edit to action -->
+                                            <th>Action</th>
                                         </tr>
                                     </thead>
                 
                                     <tbody>
                                         @foreach ($users_for_salary as $us)
-                                        <form action="{{ route('user.salaryTemCTC') }}" method="POST">
-                                            @csrf
                                             <tr>
                                                 <input type="hidden" name="user_id" value="{{ $us->user_id }}">
+
+                                                 <!-- used to send required backend data without showing it to the user -->
+                                                <input type="hidden" name="trmplate_id" value="1">
+                                                <input type="hidden" name="ctc" value="0">
                                                 <td>{{ $loop->iteration }}</td>
                                                 <td>{{ $us->emp_employeeID }}</td>
                                                 <td>{{ $us->user_name }}</td>
+                                                
+                                                <!-- display department name -->
+                                                <td>{{ $us->department_name ?? 'N/A' }}</td>
+                                                <!-- display designation name -->
+                                                <td>{{ $us->designation_name ?? 'N/A' }}</td>
                                                 <td>
-                                                    <select name="trmplate_id" required>
-                                                        <option value="{{ $us->org_salary_templates_id }}">{{ $us->org_salary_templates_name }}</option>
-                                                        @foreach ($salary_templates as $st)
-                                                        <option value="{{$st->id}}">{{$st->name}}</option>
-                                                        @endforeach
-                                                    
-                                                    </select>
-                                                </td>
-                                                <td>
-                                                    <input type="number" name="ctc" value="{{$us->user_ctc}}">
-                                                </td>
-                                                <td>
-            
-                                                        <input type="submit" value="submit">
-                                                    
+                                                    <a href="{{ route('salary.details.creation', $us->user_id) }}" class="icon-btn">
+                                                        <i class="fa-solid fa-up-right-from-square"></i>
+                                                    </a>
                                                 </td>
                                             </tr>
-                                        </form>
                                         @endforeach
                                         </tbody>
                                     </table>
