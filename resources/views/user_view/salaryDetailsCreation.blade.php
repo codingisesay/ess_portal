@@ -145,10 +145,17 @@
                         <button type="button" class="btn btn-add">
                             <i class="fas fa-plus"></i> Add Component
                         </button>
+                      <!-- Action button for dynamically adding additional form sections/rows -->
+                        <button type="button" class="btn btn-add-another" style="margin-left: 10px;">
+                            <i class="fas fa-plus-circle"></i> Add Another
+                        </button>
+
                         <span class="component-count">1 component added</span>
                     </div>
                     <div class="footer-right">
-                        <button type="button" class="btn btn-ghost">
+                       <!-- Button to reset/clear all fields in the form -->
+                        <button type="button" class="btn btn-ghost" id="resetForm">
+
                             <i class="fas fa-undo"></i> Reset
                         </button>
                         <button type="submit" class="btn btn-primary">
@@ -376,10 +383,10 @@ document.addEventListener('DOMContentLoaded', function() {
 <!-- Global click handler: add rows, delete rows, update counts -->
 <script>
 document.addEventListener('click', function(e) {
-    // Add a new salary row when Add Component is clicked
-    if (e.target.closest('.add-row-btn')) {
-        const rowsContainer = document.querySelector('.table-body');
-        const firstRow = document.querySelector('.salary-row');
+    // Handle Add Component button
+    if (e.target.closest('.btn-add')) {
+        const rowsContainer = document.querySelector('.table-rows');
+        const firstRow = document.querySelector('.table-row');
         
         if (rowsContainer && firstRow) {
             const newRow = firstRow.cloneNode(true);
@@ -387,21 +394,76 @@ document.addEventListener('click', function(e) {
             // clear values and ensure inputs are enabled
             newRow.querySelectorAll('input, select').forEach(input => {
                 if (input.type !== 'button') {
+                    // Skip setting value for date input in new rows (rows after the first one)
+                    if (input.type !== 'date' || rowsContainer.children.length === 0) {
+                        input.value = input.tagName === 'SELECT' ? input.querySelector('option').value : '';
+                    }
+                    if (input.name && input.name.endsWith('[]')) {
+                        // Reset the name to ensure it's unique in the form
+                        input.name = input.name.replace(/\[\d*\]/, '') + '[]';
+                    }
+                }
+            });
+            
+            // For new rows (after the first one), hide the date input
+            if (rowsContainer.children.length > 0) {
+                const dateCell = newRow.querySelector('.table-cell:first-child');
+                if (dateCell) {
+                    const dateInput = dateCell.querySelector('input[type="date"]');
+                    if (dateInput) {
+                        dateInput.value = '';
+                        dateInput.readOnly = true;
+                        dateInput.required = false;
+                        dateInput.style.visibility = 'hidden';
+                    }
+                }
+            }
+            
+            rowsContainer.appendChild(newRow);
+            updateComponentsCount();
+            
+            // Scroll to the newly added row
+            newRow.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+    }
+    
+    // Handle Add Another button
+    if (e.target.closest('.btn-add-another')) {
+        const rowsContainer = document.querySelector('.table-rows');
+        const firstRow = document.querySelector('.table-row');
+        
+        if (rowsContainer && firstRow) {
+            const newRow = firstRow.cloneNode(true);
+            
+            // Clear all input values
+            newRow.querySelectorAll('input, select').forEach(input => {
+                if (input.type !== 'button') {
                     input.value = input.tagName === 'SELECT' ? input.querySelector('option').value : '';
-                    input.disabled = false;
+                    if (input.name && input.name.endsWith('[]')) {
+                        // Reset the name to ensure it's unique in the form
+                        input.name = input.name.replace(/\[\d*\]/, '') + '[]';
+                    }
+                    // Ensure date input is visible and enabled
+                    if (input.type === 'date') {
+                        input.readOnly = false;
+                        input.required = true;
+                        input.style.visibility = 'visible';
+                    }
                 }
             });
             
             rowsContainer.appendChild(newRow);
-            handleDropdownChanges(); // re-bind dropdown logic for the new row
             updateComponentsCount();
+            
+            // Scroll to the newly added row
+            newRow.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
         }
     }
     
     // Delete a salary row or clear it if it's the last row
     if (e.target.closest('.delete-btn')) {
-        const row = e.target.closest('.salary-row');
-        const rows = document.querySelectorAll('.salary-row');
+        const row = e.target.closest('.table-row');
+        const rows = document.querySelectorAll('.table-row');
         
         if (rows.length > 1) {
             row.remove();
@@ -420,25 +482,36 @@ document.addEventListener('click', function(e) {
 <!-- Reset button: keep a single blank row and clear it -->
 <script>
 document.getElementById('resetForm')?.addEventListener('click', function() {
-    const rows = document.querySelectorAll('.salary-row');
+    const rowsContainer = document.querySelector('.table-rows');
+    const firstRow = document.querySelector('.table-row');
     
-    // remove all except first
-    if (rows.length > 1) {
-        rows.forEach((row, index) => {
-            if (index > 0) row.remove();
-        });
+    if (!rowsContainer || !firstRow) return;
+    
+    // Remove all rows except the first one
+    while (rowsContainer.children.length > 1) {
+        rowsContainer.removeChild(rowsContainer.lastChild);
     }
     
-    // clear the first/template row
-    const firstRow = document.querySelector('.salary-row');
-    if (firstRow) {
-        firstRow.querySelectorAll('input, select').forEach(input => {
-            if (input.type !== 'button') {
-                input.value = input.tagName === 'SELECT' ? input.querySelector('option').value : '';
-                input.disabled = false;
+    // Reset the first row
+    firstRow.querySelectorAll('input, select').forEach(input => {
+        if (input.type !== 'button') {
+            // Reset value
+            if (input.type === 'date') {
+                input.value = '';
+                input.readOnly = false;
+                input.required = true;
+                input.style.visibility = 'visible';
+            } else if (input.tagName === 'SELECT') {
+                input.value = input.querySelector('option').value;
+            } else {
+                input.value = '';
             }
-        });
-    }
+            input.disabled = false;
+        }
+    });
+    
+    // Update the component count
+    updateComponentsCount();
     
     updateComponentsCount();
     handleDropdownChanges();
@@ -493,8 +566,8 @@ function handleDropdownChanges() {
 <script>
 // Keep the component counter up to date in the footer
 function updateComponentsCount() {
-    const count = document.querySelectorAll('.salary-row').length;
-    const countElement = document.querySelector('.components-count');
+    const count = document.querySelectorAll('.table-row').length;
+    const countElement = document.querySelector('.component-count');
     if (countElement) {
         countElement.textContent = `${count} component${count !== 1 ? 's' : ''} added`;
     }
