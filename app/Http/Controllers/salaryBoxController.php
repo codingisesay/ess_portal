@@ -1399,5 +1399,43 @@ public function salaryDetailsCreation($user_id)
     ]);
 }
 
+// Function to get payhead details based on payhead name
+    public function getPayheadDetails(Request $request)
+{
+    $payhead = $request->payhead;
+
+    $component = \DB::table('org_salary_components')
+        ->where('name', $payhead) // matching your column
+        ->where('status', 'Active') // if required
+        ->first();
+
+    if (!$component) {
+        return response()->json([
+            'status' => false,
+            'message' => 'Payhead not found'
+        ], 404);
+    }
+
+    return response()->json([
+        'status' => true,
+        'data' => $component
+    ]);
+}
+// Function to get all active payheads
+public function getAllPayheads()
+{
+    $payheads = \DB::table('org_salary_components')
+        ->where('status', 'Active')
+        ->select('id', 'name')
+        ->orderBy('name')
+        ->get();
+
+    return response()->json([
+        'status' => true,
+        'data' => $payheads
+    ]);
+}
+
+
 }
 

@@ -298,6 +298,12 @@ Route::post('user/update_reimbursement_claims/{reimbursement_traking_id}', [sala
 
 Route::get('user/download-payslip/{payroll_id}', [App\Http\Controllers\salaryBoxController::class, 'downloadPayslip'])->name('download_payslip');
 Route::get('/load-payslip/{payroll_id}', [App\Http\Controllers\salaryBoxController::class, 'loadPayslip'])->name('load_payslip');
+// AJAX route to get payhead details
+Route::get('/payhead-details', [salaryBoxController::class, 'getPayheadDetails']);
+// AJAX route to get all payheads
+Route::get('/payhead-list', [salaryBoxController::class, 'getAllPayheads']);
+
+
 
 // Notifications page (bell icon target)
 Route::get('/notifications', function() {
