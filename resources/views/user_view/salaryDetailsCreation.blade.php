@@ -96,37 +96,24 @@
                             </div>
                         </div>
                         
-                        <!-- Per -->
+                          <!-- Per (Auto-fill) -->
                         <div class="table-cell">
                             <div class="input-wrapper">
-                                <select name="per[]" class="form-select" required>
-                                    <option value="Month">Month</option>
-                                    <option value="Year">Year</option>
-                                    <option value="Day">Day</option>
-                                    <option value="Hour">Hour</option>
-                                </select>
+                                <input type="text" name="per[]" class="form-input auto-filled" placeholder="Per" readonly>
                             </div>
                         </div>
                         
-                        <!-- Type -->
+                        <!-- Type (Auto-fill) -->
                         <div class="table-cell">
                             <div class="input-wrapper">
-                                <select name="type[]" class="form-select" required>
-                                    <option value="Earning">Earning</option>
-                                    <option value="Deduction">Deduction</option>
-                                    <option value="Benefit">Benefit</option>
-                                </select>
+                                <input type="text" name="type[]" class="form-input auto-filled" placeholder="Type" readonly>
                             </div>
                         </div>
                         
-                        <!-- Calculation -->
+                        <!-- Calculation (Auto-fill) -->
                         <div class="table-cell">
                             <div class="input-wrapper">
-                                <select name="calculation[]" class="form-select" required>
-                                    <option value="Fixed">Fixed</option>
-                                    <option value="Formula">Formula</option>
-                                    <option value="Percentage">Percentage</option>
-                                </select>
+                                <input type="text" name="calculation[]" class="form-input auto-filled" placeholder="Calculation" readonly>
                             </div>
                         </div>
                         
@@ -165,17 +152,85 @@
                 </div>
     </div>
     
-    <!-- Datalist for payhead autocomplete -->
-    <datalist id="payheadOptions">
-        <option value="Basic">
-        <option value="HRA">
-        <option value="DA">
-        <option value="TA">
-        <option value="Medical">
-        <option value="PF">
-        <option value="TDS">
-    </datalist>
-<!-- card end -->
+            <!-- Datalist for payhead autocomplete -->
+            <datalist id="payheadOptions">
+            </datalist>
+        <!-- card end -->
+<!-- scipt for payhead list -->
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+
+    fetch("/payhead-list")
+        .then(res => res.json())
+        .then(response => {
+
+            if (!response.status) {
+                console.error("Failed to load payheads");
+                return;
+            }
+
+            const datalist = document.getElementById("payheadOptions");
+            datalist.innerHTML = "";
+
+            response.data.forEach(payhead => {
+                const option = document.createElement("option");
+                option.value = payhead.name;
+                datalist.appendChild(option);
+            });
+        })
+        .catch(err => console.error("Error fetching payheads", err));
+
+});
+</script>
+<!-- script for payhead details autofill -->
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+    document.addEventListener("change", function (e) {
+
+        if (!e.target.matches('input[name="payhead[]"]')) return;
+
+        let payheadInput = e.target;
+        let row = payheadInput.closest(".table-row");
+
+        let perField = row.querySelector('input[name="per[]"]');
+        let typeField = row.querySelector('input[name="type[]"]');
+        let calcField = row.querySelector('input[name="calculation[]"]');
+        let rateField = row.querySelector('input[name="rate[]"]');
+        let effectiveField = row.querySelector('input[name="effective_from[]"]');
+
+        fetch(`/payhead-details?payhead=${encodeURIComponent(payheadInput.value)}`)
+            .then(res => res.json())
+            .then(response => {
+
+                console.log("Backend Response:", response);
+
+                if (!response.status) {
+                    alert(response.message);
+                    return;
+                }
+
+                const data = response.data;
+
+                // Auto-fill input fields
+                perField.value = data.calculation_period ?? '';
+                typeField.value = data.type ?? '';
+                calcField.value = data.calculation_type ?? '';
+                
+                if (data.effective_from) {
+                    effectiveField.value = data.effective_from;
+                }
+
+                // Rate stays empty
+                rateField.value = '';
+
+            })
+            .catch(err => console.error("Payhead fetch failed:", err));
+    });
+
+});
+</script>
+
 
 <script>
 /*
