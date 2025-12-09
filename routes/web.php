@@ -302,6 +302,9 @@ Route::get('/load-payslip/{payroll_id}', [App\Http\Controllers\salaryBoxControll
 Route::get('/payhead-details', [salaryBoxController::class, 'getPayheadDetails']);
 // AJAX route to get all payheads
 Route::get('/payhead-list', [salaryBoxController::class, 'getAllPayheads']);
+// Save Payroll Configuration
+Route::post('/payroll/save', [SalaryBoxController::class, 'savePayrollConfig'])
+    ->name('payroll.save');
 
 
 
