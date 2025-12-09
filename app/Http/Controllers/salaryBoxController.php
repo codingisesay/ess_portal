@@ -1435,6 +1435,44 @@ public function getAllPayheads()
         'data' => $payheads
     ]);
 }
+// Function to save payroll configuration
+public function savePayrollConfig(Request $request)
+{
+    $userId = auth()->id();  // Or pass dynamically if you're saving for another user
+
+    $request->validate([
+        'effective_from.*' => 'required|date',
+        'payhead.*' => 'required|string',
+        'rate.*' => 'required|numeric',
+        'per.*' => 'required|string',
+        'type.*' => 'required|string',
+        'calculation.*' => 'required|string',
+    ]);
+
+    foreach ($request->payhead as $index => $payheadName) {
+
+        // ✅ Get payhead ID
+        $payhead = DB::table('org_salary_components')
+            ->where('name', $payheadName)
+            ->first();
+
+        if (!$payhead) continue;
+
+        DB::table('payroll_configurations')->insert([
+            'user_id' => $userId,
+            'effective_date' => $request->effective_from[$index],
+            'payhead_tagging_id' => $payhead->id,
+            'rate' => $request->rate[$index],
+            'per' => $request->per[$index],
+            'type' => $request->type[$index],
+            'calculation' => $request->calculation[$index],
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+    }
+
+    return redirect()->back()->with('success', 'Payroll configuration saved successfully.');
+}
 
 
 }
