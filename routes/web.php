@@ -26,7 +26,7 @@ use App\Http\Controllers\superadmindashboardController;
 use App\Http\Controllers\AttendanceImportController;
 use App\Http\Controllers\PmsController;
 use App\Http\Controllers\NotificationController;  // Notification Controller 
-
+use App\Http\Controllers\AdminAuthController;
 
 
 /*
@@ -48,13 +48,24 @@ Route::get('superadmin/account_suspended',function(){
 return view('superadmin_view.account_suspended');
 })->name('account_suspended');
 
+
+// Admin Login Routes
+Route::get('admin/login', [AdminAuthController::class, 'showLoginForm'])->name('admin.login');
+Route::post('admin/login', [AdminAuthController::class, 'login'])->name('admin.login.submit');
+
+// routes (protected by admin middleware)
+Route::middleware('admins')->group(function () {
+    Route::get('admin/dashboard', function() {
+        return view('admin_view.dashboard'); // your admin dashboard view
+    })->name('admin.dashboard');
+
+    Route::post('admin/logout', [AdminAuthController::class, 'logout'])->name('admin.logout');
+});
+
+
+
 Route::middleware(['auth.superadmin'])->group(function () {
-
-// Route::get('superadmin/dashboard', function () {
-//     return view('dashboard.superadmin');
-// })->name('superadmin.dashboard');
-
-
+//superadmin dashboard route
 
 Route::get('superadmin/dashboard', [superadmindashboardController::class, 'index'])
 ->name('superadmin.dashboard');
