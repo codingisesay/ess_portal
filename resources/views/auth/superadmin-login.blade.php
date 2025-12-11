@@ -47,7 +47,9 @@
             <div class="logo">
             <img src="{{ asset('user_end/images/STPL Logo with TagLine HD Transparent.png') }}" alt="SIL Logo" class="img-fluid" width="180">
             </div>
-            <form class="signup-form" method="POST" action="{{ route('superadmin.login') }}">
+                 <!-- change the action attribute used in the form added variable format -->
+                   <!-- Form submits to the route passed from controller -->
+                <form method="POST" action="{{ $loginAction }}">
                 @csrf
                 <div class="form-group">
                     {{-- Updated email from info@siltech.co.in to info@payvance.co.in on 2025-11-06 --}}
