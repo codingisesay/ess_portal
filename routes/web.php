@@ -55,10 +55,9 @@ Route::post('admin/login', [AdminAuthController::class, 'login'])->name('admin.l
 
 // routes (protected by admin middleware)
 Route::middleware('admins')->group(function () {
-    Route::get('admin/dashboard', function() {
-        return view('admin_view.dashboard'); // your admin dashboard view
-    })->name('admin.dashboard');
-
+    // Admin Dashboard Route
+   Route::get('admin/dashboard', [App\Http\Controllers\AdminDashboardController::class, 'adminDashboard'])->name('admin.dashboard');
+    // Admin Logout Route
     Route::post('admin/logout', [AdminAuthController::class, 'logout'])->name('admin.logout');
 });
 
