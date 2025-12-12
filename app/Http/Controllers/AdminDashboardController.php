@@ -1,0 +1,148 @@
+<?php
+namespace App\Http\Controllers;
+ 
+use Illuminate\Http\Request;
+use Illuminate\View\View;
+ 
+class AdminDashboardController extends Controller
+{
+    // Show admin dashboard
+    public function adminDashboard(): View
+    {
+        return view('admin_view.dashboard');
+    }
+// Method to insert new organisation details
+    public function clientmasterinsert(Request $request)
+{
+    $data = $request->validate([
+        'name' => 'required',
+        'client_name' => 'nullable',
+        'email' => 'required',
+        'password' => 'required',
+
+        'contact_person' => 'nullable',
+        'mobile' => 'nullable',
+
+        // Address
+        'building_no' => 'nullable',
+        'premises_name' => 'nullable',
+        'landmark' => 'nullable',
+        'road_street' => 'nullable',
+        'pincode' => 'nullable',
+        'district' => 'nullable',
+        'state' => 'nullable',
+        'country' => 'nullable',
+
+        'GST_number' => 'nullable',
+        'industry_type' => 'nullable',
+        'number_of_emplooyees' => 'nullable',
+        'software_package_plan' => 'nullable',
+        'storage_limit' => 'nullable',
+        'number_of_user_allowed' => 'nullable',
+        'TAN' => 'nullable',
+        'PAN' => 'nullable',
+        'expire_date' => 'nullable',
+
+        // Certificates
+        'MSME_udyam_certificate' => 'nullable|file|mimes:pdf,jpg,jpeg,png',
+        'GST_registration_certificate' => 'nullable|file|mimes:pdf,jpg,jpeg,png',
+
+        'organisation_status' => 'nullable|in:Active,Incative',
+    ]);
+
+    // Hash password
+    $data['password'] = bcrypt($data['password']);
+
+    // Handle file uploads
+    if ($request->hasFile('MSME_udyam_certificate')) {
+        $data['MSME_udyam_certificate'] = file_get_contents($request->file('MSME_udyam_certificate'));
+    }
+
+    if ($request->hasFile('GST_registration_certificate')) {
+        $data['GST_registration_certificate'] = file_get_contents($request->file('GST_registration_certificate'));
+    }
+
+    \DB::table('organisations')->insert($data);
+
+    return back()->with('success', 'Organisation created successfully!');
+}
+
+// Method to update organisation details
+public function clientmasterupdate(Request $request, $id)
+{
+    $organisation = \DB::table('organisations')->where('id', $id)->first();
+
+    if (!$organisation) {
+        return back()->with('error', 'Organisation not found');
+    }
+
+    $data = $request->validate([
+        'name' => 'required',
+        'client_name' => 'nullable',
+        'email' => 'required|email|max:50|unique:organisations,email,' . $id,
+
+        // Password optional on update
+        'password' => 'nullable',
+
+        'contact_person' => 'nullable',
+        'mobile' => 'nullable|string|max:15',
+
+        // Address
+        'building_no' => 'nullable',
+        'premises_name' => 'nullable',
+        'landmark' => 'nullable',
+        'road_street' => 'nullable',
+        'pincode' => 'nullable',
+        'district' => 'nullable',
+        'state' => 'nullable',
+        'country' => 'nullable',
+
+        'GST_number' => 'nullable',
+        'industry_type' => 'nullable',
+        'number_of_emplooyees' => 'nullable',
+        'software_package_plan' => 'nullable',
+        'storage_limit' => 'nullable',
+        'number_of_user_allowed' => 'nullable',
+        'TAN' => 'nullable',
+        'PAN' => 'nullable',
+        'expire_date' => 'nullable|date',
+
+        // Certificates
+        'MSME_udyam_certificate' => 'nullable|file|mimes:pdf,jpg,jpeg,png',
+        'GST_registration_certificate' => 'nullable|file|mimes:pdf,jpg,jpeg,png',
+
+        'organisation_status' => 'nullable|in:Active,Incative',
+    ]);
+
+    if (!empty($data['password'])) {
+        $data['password'] = bcrypt($data['password']);
+    } else {
+        unset($data['password']); // don't update password
+    }
+
+    // File uploads
+    if ($request->hasFile('MSME_udyam_certificate')) {
+        $data['MSME_udyam_certificate'] = file_get_contents($request->file('MSME_udyam_certificate'));
+    }
+
+    if ($request->hasFile('GST_registration_certificate')) {
+        $data['GST_registration_certificate'] = file_get_contents($request->file('GST_registration_certificate'));
+    }
+
+    \DB::table('organisations')->where('id', $id)->update($data);
+
+    return back()->with('success', 'Organisation updated successfully!');
+}
+
+// Method to get list of organisations users
+public function getOrganisations()
+{
+    $organisations = \DB::table('organisations')->orderBy('id', 'ASC')->get();
+
+    return view('organisation_list', compact('organisations'));
+}
+
+
+
+}
+ 
