@@ -216,6 +216,10 @@ function clearPermanentAddress() {
 }
 // function clearCorrespondenceAddress() {
 function clearCorrespondenceAddress() {
+
+    //  Uncheck the checkbox first 
+    document.getElementById('copy_address_checkbox').checked = false;
+
     // Correspondence Address fields
     document.getElementById('correspondence_building_no').value = '';
     document.getElementById('correspondence_premises_name').value = '';
