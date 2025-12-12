@@ -11,7 +11,7 @@
             <?php 
             $profileimahe = session('profile_image');
             ?>
-            <img id="profile-image" src="{{ asset('storage/'.$profileimahe) }}" class="profile-image mb-2" alt="Profile Picture"> 
+            <img id="profile-image" src="{{ $profileimahe ? asset('storage/'.$profileimahe) : asset('user_end/images/default-avatar.png')}}" class="profile-image mb-2" alt="Profile Picture"> 
             <h4 id="emp-name">{{ ucfirst($userDetails->name ?? '-') }}</h4>
         </div>
         <hr>
