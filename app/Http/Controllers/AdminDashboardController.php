@@ -15,33 +15,33 @@ class AdminDashboardController extends Controller
     public function clientmasterinsert(Request $request)
 {
     $data = $request->validate([
-        'name' => 'required|string|max:50',
-        'client_name' => 'nullable|string|max:225',
-        'email' => 'required|email|max:50|unique:organisations,email',
-        'password' => 'required|string|min:6',
+        'name' => 'required',
+        'client_name' => 'nullable',
+        'email' => 'required',
+        'password' => 'required',
 
-        'contact_person' => 'nullable|string|max:225',
-        'mobile' => 'nullable|string|max:15',
+        'contact_person' => 'nullable',
+        'mobile' => 'nullable',
 
         // Address
-        'building_no' => 'nullable|string|max:10',
-        'premises_name' => 'nullable|string|max:100',
-        'landmark' => 'nullable|string|max:150',
-        'road_street' => 'nullable|string|max:150',
-        'pincode' => 'nullable|string|max:15',
-        'district' => 'nullable|string|max:50',
-        'state' => 'nullable|string|max:50',
-        'country' => 'nullable|string|max:50',
+        'building_no' => 'nullable',
+        'premises_name' => 'nullable',
+        'landmark' => 'nullable',
+        'road_street' => 'nullable',
+        'pincode' => 'nullable',
+        'district' => 'nullable',
+        'state' => 'nullable',
+        'country' => 'nullable',
 
-        'GST_number' => 'nullable|string|max:15',
-        'industry_type' => 'nullable|string|max:225',
-        'number_of_emplooyees' => 'nullable|integer',
-        'software_package_plan' => 'nullable|string|max:225',
-        'storage_limit' => 'nullable|string|max:225',
-        'number_of_user_allowed' => 'nullable|integer',
-        'TAN' => 'nullable|string|max:10',
-        'PAN' => 'nullable|string|max:10',
-        'expire_date' => 'nullable|date',
+        'GST_number' => 'nullable',
+        'industry_type' => 'nullable',
+        'number_of_emplooyees' => 'nullable',
+        'software_package_plan' => 'nullable',
+        'storage_limit' => 'nullable',
+        'number_of_user_allowed' => 'nullable',
+        'TAN' => 'nullable',
+        'PAN' => 'nullable',
+        'expire_date' => 'nullable',
 
         // Certificates
         'MSME_udyam_certificate' => 'nullable|file|mimes:pdf,jpg,jpeg,png',
@@ -77,34 +77,34 @@ public function clientmasterupdate(Request $request, $id)
     }
 
     $data = $request->validate([
-        'name' => 'required|string|max:50',
-        'client_name' => 'nullable|string|max:225',
+        'name' => 'required',
+        'client_name' => 'nullable',
         'email' => 'required|email|max:50|unique:organisations,email,' . $id,
 
         // Password optional on update
-        'password' => 'nullable|string|min:6',
+        'password' => 'nullable',
 
-        'contact_person' => 'nullable|string|max:225',
+        'contact_person' => 'nullable',
         'mobile' => 'nullable|string|max:15',
 
         // Address
-        'building_no' => 'nullable|string|max:10',
-        'premises_name' => 'nullable|string|max:100',
-        'landmark' => 'nullable|string|max:150',
-        'road_street' => 'nullable|string|max:150',
-        'pincode' => 'nullable|string|max:15',
-        'district' => 'nullable|string|max:50',
-        'state' => 'nullable|string|max:50',
-        'country' => 'nullable|string|max:50',
+        'building_no' => 'nullable',
+        'premises_name' => 'nullable',
+        'landmark' => 'nullable',
+        'road_street' => 'nullable',
+        'pincode' => 'nullable',
+        'district' => 'nullable',
+        'state' => 'nullable',
+        'country' => 'nullable',
 
-        'GST_number' => 'nullable|string|max:15',
-        'industry_type' => 'nullable|string|max:225',
-        'number_of_emplooyees' => 'nullable|integer',
-        'software_package_plan' => 'nullable|string|max:225',
-        'storage_limit' => 'nullable|string|max:225',
-        'number_of_user_allowed' => 'nullable|integer',
-        'TAN' => 'nullable|string|max:10',
-        'PAN' => 'nullable|string|max:10',
+        'GST_number' => 'nullable',
+        'industry_type' => 'nullable',
+        'number_of_emplooyees' => 'nullable',
+        'software_package_plan' => 'nullable',
+        'storage_limit' => 'nullable',
+        'number_of_user_allowed' => 'nullable',
+        'TAN' => 'nullable',
+        'PAN' => 'nullable',
         'expire_date' => 'nullable|date',
 
         // Certificates
