@@ -8,7 +8,7 @@
   <link rel="stylesheet" href="{{ asset('/user_end/css/homepage.css') }}"> 
    
       <div class="mx-3">
-        <h2> <span class="back-btn mx-3" onclick="history.back()"> &lt; </span>Reimbursement Form</h2> 
+        <h2> <span class="back-btn mx-3" onclick="history.back()" style="cursor: pointer;"> &lt; </span>Reimbursement Form</h2> 
         <!-- FORM STARTS HERE -->
         <form action="{{ route('insert_Reimbursement_Form') }}" method="post" enctype="multipart/form-data">
           @csrf
