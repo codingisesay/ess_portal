@@ -452,6 +452,8 @@ $id = Auth::guard('web')->user()->id;
 
     // Function to clear the Salary Bank Details fields
     function clearSalaryBankDetails() {
+        //  Uncheck the checkbox first 
+        document.getElementById('copyBankDetails1').checked = false;
         document.getElementById('bankName2').value = '';
         document.getElementById('branchName2').value = '';
         document.getElementById('accountNumber2').value = '';
