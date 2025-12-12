@@ -143,6 +143,91 @@ public function getOrganisations()
 }
 
 
+public function saveSubscriptionPlan(Request $request)
+{
+    $data = $request->validate([
+        'plan_name' => 'required|string|max:100',
+        'description' => 'nullable|string',
+        'price_monthly' => 'nullable|numeric',
+        'price_yearly' => 'nullable|numeric',
+        'max_users' => 'nullable|integer',
+        'max_storage_gb' => 'nullable|integer',
+        'max_employees' => 'nullable|integer',
+        'max_branches' => 'nullable|integer',
+        'features_json' => 'nullable',
+        'trial_days' => 'nullable|integer',
+        'is_popular' => 'nullable|boolean',
+        'status' => 'required|string',
+    ]);
+
+    \DB::table('subscription_plans')->insert([
+        'plan_name' => $data['plan_name'],
+        'description' => $data['description'] ?? null,
+        'price_monthly' => $data['price_monthly'] ?? null,
+        'price_yearly' => $data['price_yearly'] ?? null,
+        'max_users' => $data['max_users'] ?? null,
+        'max_storage_gb' => $data['max_storage_gb'] ?? null,
+        'max_employees' => $data['max_employees'] ?? null,
+        'max_branches' => $data['max_branches'] ?? null,
+        'features_json' => $data['features_json'] ?? null,
+        'trial_days' => $data['trial_days'] ?? 0,
+        'is_popular' => $data['is_popular'] ?? 0,
+        'status' => $data['status'],
+        'created_at' => now(),
+    ]);
+
+    return back()->with('success', 'Subscription plan created successfully');
+}
+
+
+public function updateSubscriptionPlan(Request $request, $id)
+{
+    $data = $request->validate([
+        'plan_name' => 'required|string|max:100',
+        'description' => 'nullable|string',
+        'price_monthly' => 'nullable|numeric',
+        'price_yearly' => 'nullable|numeric',
+        'max_users' => 'nullable|integer',
+        'max_storage_gb' => 'nullable|integer',
+        'max_employees' => 'nullable|integer',
+        'max_branches' => 'nullable|integer',
+        'features_json' => 'nullable',
+        'trial_days' => 'nullable|integer',
+        'is_popular' => 'nullable|boolean',
+        'status' => 'required|string',
+    ]);
+
+    \DB::table('subscription_plans')
+        ->where('id', $id)
+        ->update([
+            'plan_name' => $data['plan_name'],
+            'description' => $data['description'] ?? null,
+            'price_monthly' => $data['price_monthly'] ?? null,
+            'price_yearly' => $data['price_yearly'] ?? null,
+            'max_users' => $data['max_users'] ?? null,
+            'max_storage_gb' => $data['max_storage_gb'] ?? null,
+            'max_employees' => $data['max_employees'] ?? null,
+            'max_branches' => $data['max_branches'] ?? null,
+            'features_json' => $data['features_json'] ?? null,
+            'trial_days' => $data['trial_days'] ?? 0,
+            'is_popular' => $data['is_popular'] ?? 0,
+            'status' => $data['status'],
+            'updated_at' => now(),
+        ]);
+
+    return back()->with('success', 'Subscription plan updated successfully');
+}
+
+public function getSubscriptionPlans()
+{
+    $plans = \DB::table('subscription_plans')
+        ->orderBy('id', 'ASC')
+        ->get();
+
+    return view('subscription_plan_list', compact('plans'));
+}
+
+
 
 }
  
