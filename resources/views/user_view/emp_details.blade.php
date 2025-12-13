@@ -198,7 +198,8 @@ $employeeID = Auth::guard('web')->user()->employeeID;
                 <h4 class="d-flex align-items-center"><x-icon name="wellfareoutline"/>&nbsp;Welfare Benefits</h4>
                 <div class="form-row">
                     <div class="form-group">
-                        <input type="text" id="uan" name="uan" class="form-control" placeholder="Enter Universal Account Number" minlength="12" value='{{old('uan',$results[0]->universal_account_number)}}' maxlength="16" pattern="\d{12,16}" oninput="validateUAN(this)" placeholder="" onkeypress="return isNumberKey(event)">
+                        <!-- Change the error message by using oninvalid -->
+                        <input type="text" id="uan" name="uan" class="form-control" placeholder="Enter Universal Account Number" minlength="12" value='{{old('uan',$results[0]->universal_account_number)}}' maxlength="16" pattern="\d{12,16}" oninput="validateUAN(this)" placeholder="" onkeypress="return isNumberKey(event)"  oninvalid="this.setCustomValidity('Universal Account Number must be between 12 and 16 digits')">
                         <label for="uan">Universal Account Number</label>
                         <span class="error" id="uanError"></span>
                     </div>
@@ -472,6 +473,24 @@ $employeeID = Auth::guard('web')->user()->employeeID;
             return false;
         return true;
     }
+    // ... your existing JavaScript code ...
+
+// Run script after page loads
+// Use 'blur' so the check happens only after the user
+// finishes typing and leaves the Total Experience field
+// Store the entered value in exp
+// If experience is entered and not zero Set cookie to indicate experience exists else set cookie to indicate no experience
+document.addEventListener('DOMContentLoaded', function() {
+    document.getElementById('totalExperience').addEventListener('blur', function() {
+        var exp = this.value;
+        if (exp !== '0' && exp !== '0.0') {
+            // Set a cookie
+            document.cookie = "hasExperience=1; path=/";
+        } else {
+            document.cookie = "hasExperience=0; path=/";
+        }
+    });
+});
 </script>
 <script src="{{ asset('user_end/js/onboarding_form.js') }}"></script>
 
