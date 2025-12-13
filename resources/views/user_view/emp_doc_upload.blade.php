@@ -33,6 +33,7 @@
 <link rel="stylesheet" href="https://unpkg.com/dropzone@5/dist/min/dropzone.min.css" type="text/css" />
 <head>
     <meta name="csrf-token" content="{{ csrf_token() }}">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head> 
 <div class="tab-content active" id="tab7">
     <div  class="input-column">
@@ -173,12 +174,11 @@
             success: function(file,response){
                 if(response == true){
 
-                    alert('File Uploaded');
+                    Swal.fire('Success', 'File Uploaded Successfully!', 'success');
 
                 }else{
 
-                    alert('File Not uploaded');
-
+                    Swal.fire('File Not uploaded');
                 }
             }
 
@@ -200,12 +200,11 @@
             success: function(file,response){
                 if(response == true){
 
-                    alert('File Uploaded');
+                    Swal.fire('Success', 'File Uploaded Successfully!', 'success');
 
                 }else{
 
-                    alert('File Not uploaded');
-
+                    Swal.fire('File Not uploaded');
                 }
             }
 
@@ -226,12 +225,11 @@
             success: function(file,response){
                 if(response == true){
 
-                    alert('File Uploaded');
+                    Swal.fire('Success', 'File Uploaded Successfully!', 'success');
 
                 }else{
 
-                    alert('File Not uploaded');
-
+                    Swal.fire('File Not uploaded');
                 }
             }
 
@@ -252,12 +250,11 @@
             success: function(file,response){
                 if(response == true){
 
-                    alert('File Uploaded');
+                    Swal.fire('Success', 'File Uploaded Successfully!', 'success');
 
                 }else{
 
-                    alert('File Not uploaded');
-
+                    Swal.fire('File Not uploaded');
                 }
             }
 
@@ -278,12 +275,11 @@
             success: function(file,response){
                 if(response == true){
 
-                    alert('File Uploaded');
+                    Swal.fire('Success', 'File Uploaded Successfully!', 'success');
 
                 }else{
 
-                    alert('File Not uploaded');
-
+                    Swal.fire('File Not uploaded');
                 }
             }
 
@@ -304,12 +300,11 @@
             success: function(file,response){
                 if(response == true){
 
-                    alert('File Uploaded');
+                    Swal.fire('Success', 'File Uploaded Successfully!', 'success');
 
                 }else{
 
-                    alert('File Not uploaded');
-
+                    Swal.fire('File Not uploaded');
                 }
             }
 
@@ -330,12 +325,11 @@
             success: function(file,response){
                 if(response == true){
 
-                    alert('File Uploaded');
+                    Swal.fire('Success', 'File Uploaded Successfully!', 'success');
 
                 }else{
 
-                    alert('File Not uploaded');
-
+                    Swal.fire('File Not uploaded');
                 }
             }
 
@@ -356,12 +350,11 @@
             success: function(file,response){
                 if(response == true){
 
-                    alert('File Uploaded');
+                    Swal.fire('Success', 'File Uploaded Successfully!', 'success');
 
                 }else{
 
-                    alert('File Not uploaded');
-
+                    Swal.fire('File Not uploaded');
                 }
             }
 
