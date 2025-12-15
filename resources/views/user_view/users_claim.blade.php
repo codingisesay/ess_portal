@@ -7,6 +7,7 @@
     <title>Claims Page</title>
     <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
     <link rel="stylesheet" href="{{ asset('/user_end/css/homepage.css') }}"> 
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <body>
 <div class="mx-4">
@@ -137,7 +138,7 @@
             if (!field.value.trim()) {
                 isValid = false;
                 field.classList.add('error'); // Add a class to highlight the field (optional)
-                alert('Please fill out all required fields.');
+                Swal.fire('Please fill out all required fields.');
             } else {
                 field.classList.remove('error'); // Remove the error class if the field is valid
             }
@@ -183,7 +184,7 @@ document.querySelectorAll('input[type="checkbox"]').forEach(function (checkbox) 
 
         if (!checkbox.checked) {
             remarkField.setAttribute('required', 'required'); // Make the remark field required
-            alert('Please add a remark for the unchecked row.'); // Show alert
+            Swal.fire('Please add a remark for the unchecked row.'); // Show alert
         } else {
             remarkField.removeAttribute('required'); // Remove the required attribute
         }

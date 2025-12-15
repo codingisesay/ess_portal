@@ -351,7 +351,7 @@
                             <div class="form-group">
                                 <div class="floating-label-wrapper">
                                     <label >Degree</label>
-                                    <input class="input-field" type="text" value=" {{ ucfirst($education->degree ?? '-') }} " />
+                                    <input class="input-field" type="text" value=" {{ ucfirst($education->degree ?? '-') }} " disabled />
                                 </div>                                
                             </div>
                         </div>
@@ -359,7 +359,7 @@
                             <div class="form-group">
                                 <div class="floating-label-wrapper">
                                     <label >University</label>
-                                    <input class="input-field" type="text" value=" {{ ucfirst($education->university_board ?? '-') }} " />
+                                    <input class="input-field" type="text" value=" {{ ucfirst($education->university_board ?? '-') }} "  disabled/>
                                 </div>                                
                             </div>
                         </div>
@@ -368,7 +368,7 @@
                             <div class="form-group">
                                 <div class="floating-label-wrapper">
                                     <label >Institution</label>
-                                    <input class="input-field" type="text" value=" {{ ucfirst($education->institution ?? '-') }} " />
+                                    <input class="input-field" type="text" value=" {{ ucfirst($education->institution ?? '-') }} " disabled />
                                 </div>                                
                             </div>
                         </div>
@@ -376,7 +376,7 @@
                             <div class="form-group">
                                 <div class="floating-label-wrapper">
                                     <label >Passing Year</label>
-                                    <input class="input-field" type="text" value=" {{ $education->passing_year ? $education->passing_year : '-' }} " />
+                                    <input class="input-field" type="text" value=" {{ $education->passing_year ? $education->passing_year : '-' }} " disabled />
                                 </div>                                
                             </div>
                         </div>
@@ -385,7 +385,7 @@
                             <div class="form-group">
                                 <div class="floating-label-wrapper">
                                     <label >Percentage</label>
-                                    <input class="input-field" type="text" value=" {{ ucfirst($education->percentage_cgpa ?? '-') }} " />
+                                    <input class="input-field" type="text" value=" {{ ucfirst($education->percentage_cgpa ?? '-') }} " disabled />
                                 </div>                                
                             </div>
                         </div>

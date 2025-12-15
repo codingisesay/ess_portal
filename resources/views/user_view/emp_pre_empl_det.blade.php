@@ -302,5 +302,38 @@ Swal.fire({
     });
 
     </script>
+    <script>
+//   Find the table where employment records are shown
+//   Check for the presence of the 'hasExperience' cookie
+//   If there are existing data rows and the cookie is present, add the asterisk
+//   Add event listener to the Next button
+//   Check if the asterisk is present and there are no data rows
+//   if has asterisk and no rows, prevent submission and alert user
+ window.onload = function() {
+    const tableBody = document.getElementById('employmentTableBody');
+    
+    const hasExistingData = tableBody.querySelectorAll('tr').length > 0;
+    // Check for the presence of the 'hasExperience' cookie
+    var hasExpCookie = document.cookie.includes('hasExperience=1');
+    if (hasExpCookie) {
+        var h4 = document.querySelector('#tab6 h4');
+        h4.innerHTML += ' <span style="color:red">*</span>';
+    }
+    var nextBtn = document.querySelector('.next-btn');
+    nextBtn.addEventListener('click', function(event) {
+        const h4 = document.querySelector('#tab6 h4');
+        const hasAsterisk = h4.innerHTML.includes('<span style="color:red">*</span>');
+        if (hasAsterisk && tableBody.querySelectorAll('tr').length === 0) {
+            event.preventDefault();
+            Swal.fire({
+                title: 'Attention!',
+                text: 'Please add at least one previous employment record.',
+                icon: 'warning',
+                confirmButtonText: 'OK'
+            });
+        }
+    });
+};
+</script>
 
 @endsection
