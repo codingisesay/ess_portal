@@ -27,6 +27,7 @@ use App\Http\Controllers\AttendanceImportController;
 use App\Http\Controllers\PmsController;
 use App\Http\Controllers\NotificationController;  // Notification Controller 
 use App\Http\Controllers\AdminAuthController;
+use App\Http\Controllers\AdminDashboardController;
 
 
 /*
@@ -55,11 +56,16 @@ Route::post('admin/login', [AdminAuthController::class, 'login'])->name('admin.l
 
 // routes (protected by admin middleware)
 Route::middleware('admins')->group(function () {
-    Route::get('admin/dashboard', function() {
-        return view('admin_view.dashboard'); // your admin dashboard view
-    })->name('admin.dashboard');
-
-    Route::post('admin/logout', [AdminAuthController::class, 'logout'])->name('admin.logout');
+ // Admin Dashboard Route
+Route::get('admin/dashboard', [AdminDashboardController::class, 'adminDashboard'])->name('admin.dashboard');
+// route to insert new organisation details
+Route::post('admin/organisation/store', [AdminDashboardController::class, 'clientmasterinsert'])->name('organisation.store');
+// Route to get list of organisations users
+Route::get('admin/organisations', [OrganisationController::class, 'getOrganisations'])->name('organisations.list');
+// Route to update organisation details
+Route::post('admin/organisation/update/{id}', [AdminDashboardController::class, 'clientmasterupdate'])->name('organisation.update');
+// Admin Logout Route
+Route::post('admin/logout', [AdminAuthController::class, 'logout'])->name('admin.logout');
 });
 
 
