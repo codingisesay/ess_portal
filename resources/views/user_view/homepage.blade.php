@@ -174,7 +174,7 @@ error_reporting(0);
                             <!-- Date Field -->
                             <div class="form-group">
                                 <div class="floating-label-wrapper">
-                                    <input type="date" name="task_date" id="task_date" placeholder=" " class="input-field" required>                                
+                                    <input type="date" name="task_date" id="task_date" placeholder=" " class="input-field" required min="{{ date('Y-m-d') }}">                                
                                     <label for="task_date">Date</label>
                                 </div>
                             </div>

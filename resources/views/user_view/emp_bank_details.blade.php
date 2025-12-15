@@ -60,8 +60,9 @@ $id = Auth::guard('web')->user()->id;
                       <span class="error" id="bankNameError1"></span>
                   </div>
                   <div class="form-group">
+                    <!-- Added Max length to branch name -->
                       <input type="text" class="form-control" id="branchName1" name="branchName1"
-                          placeholder="" value="{{ old('branchName1', $emp_bank_datas[0]->per_branch_name) }}" required>
+                          placeholder="" maxlength="50" value="{{ old('branchName1', $emp_bank_datas[0]->per_branch_name) }}" required>
                       <label for="branchName1">Branch Name <span style="color: red;">*</span></label>
                       <span class="error" id="branchName1Error"></span>
                   </div>
@@ -73,8 +74,9 @@ $id = Auth::guard('web')->user()->id;
                       <span class="error" id="accountNumber1Error"></span>
                   </div>
                   <div class="form-group">
+                      <!-- Added pattern for IFSC code -->
                       <input type="text" class="form-control" id="ifscCode1" name="ifscCode1" maxlength="11"
-                          placeholder="Enter IFSC Code" oninput="validateIFSC(this)" value="{{ old('ifscCode1', $emp_bank_datas[0]->per_ifsc_code) }}" required>
+                          placeholder="Enter IFSC Code" oninput="validateIFSC(this)" value="{{ old('ifscCode1', $emp_bank_datas[0]->per_ifsc_code) }}" required pattern="[A-Z]{4}0[A-Z0-9]{6}">
                       <label for="ifscCode1">IFSC Code <span style="color: red;">*</span></label>
                       <span class="error" id="ifscCode1Error"></span>
                   </div>
@@ -120,7 +122,7 @@ $id = Auth::guard('web')->user()->id;
                   </div>
                   <div class="form-group">
                       <input type="text" id="ifscCode2" class="form-control" name="ifscCode2" maxlength="11"
-                          placeholder="Enter IFSC Code" oninput="validateIFSC(this)" value="{{ old('ifscCode2', $emp_bank_datas[0]->sal_ifsc_code) }}">
+                          placeholder="Enter IFSC Code" oninput="validateIFSC(this)" value="{{ old('ifscCode2', $emp_bank_datas[0]->sal_ifsc_code) }}" pattern="[A-Z]{4}0[A-Z0-9]{6}">
                       <label for="ifscCode2">IFSC Code<span style="color: red;">*</span></label>
                       <span class="error" id="ifscCode2Error"></span>
                   </div>
@@ -131,6 +133,7 @@ $id = Auth::guard('web')->user()->id;
       <div class="input-column" >
           <div class="address-form">
               <h4 class="d-flex align-items-center"><x-icon name="passportoutline"/>&nbsp;Passport and Visa</h4>
+              <button type="button" class="clear-btn3" onclick="clearpassportVisaDetails()"><i class="fas fa-undo"></i></button>
               <div class="form-row">
                   <div class="form-group">
                       <input type="text" class="form-control" id="passportNumber" name="passportNumber"
@@ -201,6 +204,7 @@ $id = Auth::guard('web')->user()->id;
       <div class="input-column" >
           <div class="address-form">
               <h4 class="d-flex align-items-center"><x-icon name="vehicalfill"/>&nbsp;Vehicle Details</h4>
+              <button type="button" class="clear-btn4" onclick="clearvehicleDetails()"><i class="fas fa-undo"></i></button>
               <div class="form-row">
                   <div class="form-group">
                       <select id="vehicleType" class="form-control dropdown drop" placeholder="" name="vehicleType">
@@ -461,6 +465,26 @@ $id = Auth::guard('web')->user()->id;
         document.getElementById('accountNumber2Error').textContent = '';
         document.getElementById('ifscCode2Error').textContent = '';
         document.getElementById('branchName2Error').textContent = '';
+    }
+    // Function to clear Passport and Visa Details fields
+    function clearpassportVisaDetails() {
+        document.getElementById('passportNumber').value = '';
+        document.getElementById('issuingcountry').value = '';
+        document.getElementById('passportIssueDate').value = '';
+        document.getElementById('passportExpiryDate').value = '';
+        document.getElementById('usaVisa').value = '';
+        document.getElementById('visaExpiryDate').value = '';
+        togglePassportFields();
+    }
+    // Function to clear Vehicle Details fields
+    function clearvehicleDetails() {
+        document.getElementById('vehicleType').value = '';
+        document.getElementById('vehicleModel').value = '';
+        document.getElementById('vehicleOwner').value = '';
+        document.getElementById('registrationNumber').value = '';
+        document.getElementById('insuranceProvider').value = '';
+        document.getElementById('insuranceExpiry').value = '';
+        document.getElementById('vehicleType').dispatchEvent(new Event('change'));
     }
 </script>
 @endsection

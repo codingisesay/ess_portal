@@ -581,3 +581,6 @@ nav ul li a:hover {
 .buttonn:hover {
     background-color: #8A3366;
 }
+#clearAll:hover {
+    color: #b02a37 !important;
+}
