@@ -12,6 +12,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
      
 </head>
+
 <body>
  
     <div class="row mx-3">
@@ -340,6 +341,9 @@
     <script>
         // JavaScript to handle modal popup
         function openDegreeModal(serialNo) {
+
+            document.querySelector("header").style.zIndex = "1";
+
             var modalContent = document.getElementById("degree-modal-content-details");
             modalContent.innerHTML = ''; // Clear previous content
 
