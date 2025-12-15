@@ -3,6 +3,16 @@
 <link rel="stylesheet" href="{{ asset('/user_end/css/manager-dashboard.css') }}">
 <link rel="stylesheet" href="{{ asset('/user_end/css/Employee_dash.css') }}">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+<style>
+.swal2-popup {
+    width: 420px !important;
+    max-width: 90% !important;
+    border-radius: 12px !important;
+} 
+
+</style>
+
+
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <!-- Added: Responsive two-column layout (Sidebar + Main content) for Employee PMS dashboard -->
 <div class="row g-3 align-items-stretch">
@@ -210,7 +220,11 @@
 
 <script>
 document.querySelectorAll(".add-insight-btn").forEach(btn => {
+ document.querySelector("header")
+        .style.setProperty("z-index", "1", "important");
+
     btn.addEventListener("click", function () {
+        // FIX: Lower header so modal animation works correctly
         document.getElementById("insight_id").value = ""; // new insight
         document.getElementById("insight_goal_id").value = this.dataset.goalId;
         document.getElementById("insight_goal_title").textContent = this.dataset.goalTitle;
@@ -223,6 +237,8 @@ document.querySelectorAll(".add-insight-btn").forEach(btn => {
 document.getElementById("insightForm").addEventListener("submit", async function(e) {
     e.preventDefault();
     const formData = new FormData(this);
+    const header = document.querySelector("header");
+    header.style.setProperty("z-index", "1", "important");
 
     try {
         const response = await fetch("{{ url('/insights') }}", {
@@ -233,8 +249,9 @@ document.getElementById("insightForm").addEventListener("submit", async function
 
         if (response.ok) {
             const data = await response.json(); // if backend returns JSON
-            new bootstrap.Modal(document.getElementById('insightModal')).hide();
-
+            const insightModal = bootstrap.Modal.getInstance(document.getElementById('insightModal'));
+            insightModal.hide();
+          
             Swal.fire({
                 icon: 'success',
                 title: 'Saved!',
@@ -562,6 +579,14 @@ document.getElementById("insightForm").addEventListener("submit", async function
           insightModalEl.addEventListener('hidden.bs.modal', function(){
             document.documentElement.style.removeProperty('--emp-header-offset');
           });
+        });
+        </script>
+        <!--  Add THIS right below the above script -->
+        <script>
+        document.getElementById('insightModal')
+        .addEventListener('hidden.bs.modal', function () {
+            const header = document.querySelector("header");
+            if (header) header.style.zIndex = "9999"; // restore original
         });
         </script>
 

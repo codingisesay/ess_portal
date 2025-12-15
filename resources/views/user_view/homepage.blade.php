@@ -597,6 +597,10 @@ error_reporting(0);
     // Task Model script below
     // Open the leave modal
      function openTaskModal() {
+           const header = document.querySelector('header');
+            if (header) {
+                header.style.setProperty('z-index', '1', 'important');
+            }
         document.getElementById('taskModal').style.display = 'block';  // Show the modal
     }
 

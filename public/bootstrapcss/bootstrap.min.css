@@ -6036,7 +6036,8 @@ fieldset:disabled .btn {
     background-clip: padding-box;
     border: 1px solid rgba(0, 0, 0, .2);
     border-radius: .3rem;
-    outline: 0
+    outline: 0;
+    margin-top: 180px;
 }
 
 .modal-backdrop {
@@ -6060,6 +6061,8 @@ fieldset:disabled .btn {
 .modal-header {
     display: flex;
     flex-shrink: 0;
+    width: 499px;
+    margin-left: 0.45px;
     align-items: center;
     justify-content: space-between;
     padding: 1rem 1rem;
