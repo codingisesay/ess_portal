@@ -6061,6 +6061,8 @@ fieldset:disabled .btn {
 .modal-header {
     display: flex;
     flex-shrink: 0;
+    width: 499px;
+    margin-left: 0.45px;
     align-items: center;
     justify-content: space-between;
     padding: 1rem 1rem;
