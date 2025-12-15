@@ -132,8 +132,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 sendEmail: document.getElementById('sendEmail').checked,
                 sendSMS: document.getElementById('sendSMS').checked
             };
-            
-            console.log('Notification form submitted:', formData);
+           
             
             hideModal();
             form.reset();

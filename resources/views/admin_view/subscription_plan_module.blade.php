@@ -154,8 +154,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 billingCycle: document.getElementById('billingCycle').value,
                 isActive: document.getElementById('isActive').checked
             };
-            
-            console.log('Subscription plan form submitted:', formData);
+           
             
             // For now, just hide the modal and reset the form
             hideModal();
