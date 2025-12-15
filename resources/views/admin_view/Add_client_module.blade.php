@@ -1,6 +1,13 @@
    
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
 <!-- Custom admin styles -->
  <link rel="stylesheet" href="{{ asset('Offical_admin/css/official_admin.css') }}">   
+</head>
+
+<body>
 
 <!-- =========================
          ADD CLIENT MODAL
@@ -27,6 +34,8 @@
                     <!-- Basic Information -->
                     <div class="form-group">
                         <!-- Client Name: Only allows letters and spaces.  -->
+
+                        <!-- on input is used to Correct the validations at typing time -->
                         <input 
                             type="text"
                             id="client_name" 
@@ -38,37 +47,67 @@
                             oninput="this.value = this.value.replace(/[^A-Za-z\s]/g, '')"
                             required
                         >
+                        <label for="client_name">Client Name</label>
                     </div>
-                    <!-- Company Name: Only allows letters and spaces.  -->
 
+                    <!-- Company Name  -->
                     <div class="form-group">
-                        <input type="text" id="name" name="name" placeholder="Company Name *" 
-                        maxlength="50" 
-                            pattern="[A-Za-z\s]+"
-                            title="Please enter only letters and spaces (no numbers or special characters)"
-                            oninput="this.value = this.value.replace(/[^A-Za-z\s]/g, '')"
-                            required>
+                        <input 
+                            type="text" 
+                            id="name" 
+                            name="name" 
+                            placeholder=" "
+                            maxlength="50" 
+                            required
+                        >
+                        <label for="name">Company Name</label>
                     </div>
 
                     <!-- Contact Information -->
                     <div class="form-group">
-                        <input type="text" id="contact_person" name="contact_person" placeholder="Contact Person *" required>
+                        <input 
+                            type="text" 
+                            id="contact_person" 
+                            name="contact_person" 
+                            placeholder=" "
+                            required
+                        >
+                        <label for="contact_person">Contact Person</label>
                     </div>
-                    <div class="form-group">
 
-                        <!-- Email: Only allows valid email addresses. 
+
+                    <div class="form-group">
+                        <!-- Email: Only allows email addresses. 
                          setCustomValidity is a built-in JavaScript method for HTML5 form validation that allows you to set a custom validation message -->
-                        <input type="email" id="email" name="email" placeholder="Email *" 
-                        pattern="[a-z0-9._%+\-]+@[a-z0-9.\-]+\.[a-z]{2,}$"
-                        title="Please enter a valid email address (e.g., example@domain.com)"
-                        oninput="this.setCustomValidity('')"
-                        oninvalid="this.setCustomValidity('Please enter a valid email address (e.g., example@domain.com)')"
-                    
-                        required>
+                         <input 
+                            type="email"
+                            id="email"
+                            name="email"
+                            placeholder=" "
+                            autocomplete="username"
+                            required
+                            pattern="[a-zA-Z0-9._%+-]+@gmail\.com"
+                            title="Please enter a valid Gmail address (example@gmail.com)"
+                        >
+                        <label for="email">Email</label>
                     </div>
 
+
                     <div class="form-group">
-                        <input type="text" id="password" name="password" placeholder="passsword ">
+                        <!-- Password: Only allows password -->
+                        <input
+                            type="password"
+                            id="password"
+                            name="password"
+                            class="form-control password-field"
+                            placeholder=" "
+                            minlength="8"
+                            required
+                            aria-describedby="passwordHelp"
+                            autocomplete="new-password"
+                        >
+                        <label for="password">Password</label>
+                        <small id="passwordHelp" class="error-text"></small>
                     </div>
 
 
@@ -78,7 +117,7 @@
                             type="tel" 
                             id="mobile" 
                             name="mobile" 
-                            placeholder="Phone *" 
+                            placeholder=" " 
                             maxlength="10" 
                             title="Please enter a valid 10-digit mobile number" 
                             pattern="[0-9]{10}"
@@ -87,6 +126,7 @@
                             oninput="this.value = this.value.replace(/\D/g, '')"
                             required
                         >
+                        <label for="mobile">Phone</label>
                     </div>
                     
                     <!-- Address Fields -->
@@ -95,10 +135,11 @@
                             type="text"
                             id="building_no"
                             name="building_no"
-                            placeholder="Building/House No. *"
+                            placeholder=" "
                             maxlength="50"
                             required
                         >
+                        <label for="building_no">Building/House No.</label>
                     </div>
 
                     <!-- Validation for premises name -->
@@ -107,9 +148,10 @@
                             type="text"
                             id="premises_name"
                             name="premises_name"
-                            placeholder="Premises Name"
+                            placeholder=" "
                             maxlength="100"
                         >
+                        <label for="premises_name">Premises Name</label>
                     </div>
 
                     <!-- Validation for landmark -->
@@ -118,13 +160,10 @@
                             type="text"
                             id="landmark"
                             name="landmark"
-                            placeholder="Landmark"
+                            placeholder=" "
                             maxlength="150"
-                            pattern="[A-Za-z\s\-,.()]+"
-                            title="Only letters, spaces, and basic punctuation (-,.()) allowed"
-                            oninput="this.value = this.value.replace(/[^A-Za-z\s\-,.()]/g, '')"
-    
                         >
+                        <label for="landmark">Landmark</label>
                     </div>
 
                     <!-- Validation for road/street -->
@@ -133,10 +172,11 @@
                             type="text"
                             id="road_street"
                             name="road_street"
-                            placeholder="Road/Street *"
+                            placeholder=" "
                             maxlength="150"
                             required
                         >
+                        <label for="road_street">Road/Street</label>
                     </div>
 
                     <!-- Validation for pincode -->
@@ -145,7 +185,7 @@
                             type="text"
                             id="pincode"
                             name="pincode"
-                            placeholder="Pincode *"
+                            placeholder=" "
                             maxlength="6"
                             pattern="[0-9]{6}"
                             inputmode="numeric"
@@ -154,6 +194,7 @@
                             oninput="this.value = this.value.replace(/\D/g, '')"
                             required
                         >
+                        <label for="pincode">Pincode</label>
                     </div>
 
                     <!-- Validation for district -->
@@ -162,11 +203,11 @@
                             type="text"
                             id="district"
                             name="district"
-                            placeholder="District *"
+                            placeholder=" "
                             maxlength="50"
-                            
                             required
                         >
+                        <label for="district">District</label>
                     </div>
 
                     <!-- Validation for state -->
@@ -175,13 +216,11 @@
                             type="text"
                             id="state"
                             name="state"
-                            placeholder="State *"
+                            placeholder=" "
                             maxlength="50"
-                            pattern="[A-Za-z\s\]+"
-                            title="Only letters, spaces, and basic punctuation (-,.()) allowed"
-                            oninput="this.value = this.value.replace(/[^A-Za-z\s]/g, '')"
                             required
                         >
+                        <label for="state">State</label>
                     </div>
 
                     <!-- Validation for country -->
@@ -192,14 +231,14 @@
                             name="country"
                             value="India"
                             readonly
+                            placeholder=" "
                         >
                     </div>
 
-                    <!-- Validation for industry type -->
                     <!-- Business Details -->
                     <div class="form-group">
                         <select id="industry_type" name="industry_type" required>
-                            <option value="">Select Industry *</option>
+                            <option value=""> </option>
                             <option value="it">Information Technology</option>
                             <option value="manufacturing">Manufacturing</option>
                             <option value="healthcare">Healthcare</option>
@@ -207,85 +246,90 @@
                             <option value="retail">Retail</option>
                             <option value="other">Other</option>
                         </select>
+                        <label for="industry_type">Industry Type</label>
                     </div>
-                    <div class="form-group">
-                        <input type="number" id="number_of_emplooyees" name="number_of_emplooyees" placeholder="Number of Employees *" required>
-                    </div>
-
+                    
                     <!-- software Package Information -->
                     <div class="form-group">
                         <select id="software_package_plan" name="software_package_plan" required>
-                            <option value="">Select Plan *</option>
+                            <option value=""> </option>
                             <option value="basic">Basic</option>
                             <option value="standard">Standard</option>
                             <option value="enterprise">Enterprise</option>
                         </select>
-                    </div>
-
-                    <!-- storage limit -->
-                    <div class="form-group">
-                        <input type="number" id="storage_limit" name="storage_limit" placeholder="Storage (GB) *" maxlength="4" required>
-                    </div>
-
-                    <!-- number of user allowed -->
-                    <div class="form-group">
-                        <input type="number" id="number_of_user_allowed" name="number_of_user_allowed" placeholder="Max Users *" required>
+                        <label for="software_package_plan">Software Package Plan</label>
                     </div>
 
                     <!-- organisation status -->
                     <div class="form-group">
                         <select id="organisation_status" name="organisation_status" required>
-                            <option value="">Select Status *</option>
-                            <option value="Active">active</option>
-                            <option value="Incative">incative</option>
+                            <option value=""> </option>
+                            <option value="Active">Active</option>
+                            <option value="Inactive">Inactive</option>
                         </select>
+                        <label for="organisation_status">Status</label>
                     </div>
 
                     <!-- Document Information -->
-                    <div class="form-group">
-                         <input  
-                            type="text" 
-                            id="GST_number" 
-                            name="GST_number" 
-                            placeholder="GSTIN (e.g., 22AAAAA0000A1Z5)" 
-                           maxlength="15"
-                      >
-                    </div>
+                   <div class="form-group">
+                    <input
+                        type="text"
+                        id="GST_number"
+                        name="GST_number"
+                        placeholder=" "
+                        maxlength="15"
+                        required
+                        pattern="[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z][1-9A-Z]Z[0-9A-Z]"
+                        title="Enter a valid GSTIN (e.g., 22AAAAA0000A1Z5)"
+                        
+                    >
+                    <label for="GST_number">GST Number</label>
+                </div>
+
 
                     <!-- Validation for PAN -->
                     <div class="form-group">
-                    <input 
-                        type="text" 
-                        id="PAN" 
-                        name="PAN" 
-                        placeholder="PAN (e.g., AAAAA9999A)" 
-                        maxlength="10"
-                        required
-                    >
-                </div>
+                        <input 
+                            type="text"
+                            id="PAN"
+                            name="PAN"
+                            placeholder=" "
+                            maxlength="10"
+                            pattern="[A-Z]{5}[0-9]{4}[A-Z]{1}"
+                            title="Enter a valid PAN (e.g., ABCDE1234F)"
+                        >
+                        <label for="PAN">PAN Number</label>
+                    </div>
 
                     <!-- Validation for TAN -->
+                    <!-- Validation for TAN -->
                     <div class="form-group">
-                        <input 
-                            type="text" 
-                            id="TAN" 
-                            name="TAN" 
-                            placeholder="TAN (e.g., bbbbb9999A)" 
+                        <input
+                            type="text"
+                            id="TAN"
+                            name="TAN"
+                            placeholder=" "
                             maxlength="10"
+                            pattern="[A-Z]{4}[0-9]{5}[A-Z]{1}"
+                            title="Enter a valid TAN (e.g., ABCD12345E)"
                             required
                         >
+                        <label for="TAN">TAN Number</label>
                     </div>
+
 
                     <!-- expire date -->
                     <div class="form-group">
-                         <input 
-                        type="date" 
-                        id="expire_date" 
-                        name="expire_date" 
-                        min="" 
-                        oninput="validateExpiryDate(this)"
-                        required
-                    > </div>
+                        <input 
+                            type="date" 
+                            id="expire_date"
+                            name="expire_date"
+                            placeholder=" "
+                            required
+                        >
+                        <label for="expire_date">Expiry Date</label>
+                    </div>
+
 
                     <!-- certificate uploaded files -->
                     <div class="certificate-files">
@@ -402,4 +446,8 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 </script>
+
 @endpush
+
+</body>
+</html>
