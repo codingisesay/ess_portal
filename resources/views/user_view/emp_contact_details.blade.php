@@ -7,6 +7,7 @@
 
 <link rel="stylesheet" href="{{ asset('user_end/css/onboarding_form.css') }}">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <style>body{margin:10px}</style>
 <?php 
 error_reporting(0);
@@ -305,10 +306,11 @@ $email = Auth::guard('web')->user()->email;
                   <span class="error" id="alternatePhoneNumberError"></span>
               </div>
               <div class="form-group">
-                  
+                  <!-- Change the error message by using oninvalid -->
                   <input type="email" id="emailID" name="emailID" class="form-control"
                       placeholder=""
-                      pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}" required value="{{ old('emailID', $emp_contact_datas[0]->email_address) }}">
+                      pattern="^[^\s@]+@[^\s@]+\.[^\s@]+$" required value="{{ old('emailID', $emp_contact_datas[0]->email_address) }}" oninvalid="this.setCustomValidity('Please enter a valid email address (e.g., user@example.com).')"
+                     oninput="this.setCustomValidity('')">
                       <label for="emailID">Personal Email Address<span style="color: red;">*</span></label>
                   <span class="error" id="emailIDError"></span> <!-- Ensure this element exists -->
               </div>
@@ -439,11 +441,11 @@ window.onload = function() {
                 // Populate the District input
                 districtField.value = place.District || 'Not Available';
             } else {
-                alert('No data found for this pincode.');
+                Swal.fire('No data found for this pincode.');
             }
         } catch (error) {
             console.error("Error fetching location details:", error);
-            alert('Error fetching location details.');
+            Swal.fire('Error fetching location details.');
         }
     }
     
@@ -483,6 +485,24 @@ window.onload = function() {
         </script>
 
 <script src="{{ asset('user_end/js/onboarding_form.js') }}"></script>
+<!-- Validation for personal email and official email both can not be same -->
+<script>
+document.querySelector('form.address-form')?.addEventListener('submit', function (e) {
+    const official = document.getElementById('email')?.value.trim().toLowerCase();
+    const personal = document.getElementById('emailID')?.value.trim().toLowerCase();
+
+    if (official === personal) {
+        e.preventDefault(); // stop form submission
+
+        Swal.fire({
+            icon: 'warning',
+            title: 'Invalid Email',
+            text: 'Official Email Address and Personal Email Address cannot be the same.',
+            confirmButtonText: 'OK'
+        });
+    }
+});
+</script>
 
 
 
