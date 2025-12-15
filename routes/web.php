@@ -64,6 +64,13 @@ Route::post('admin/organisation/store', [AdminDashboardController::class, 'clien
 Route::get('admin/organisations', [OrganisationController::class, 'getOrganisations'])->name('organisations.list');
 // Route to update organisation details
 Route::post('admin/organisation/update/{id}', [AdminDashboardController::class, 'clientmasterupdate'])->name('organisation.update');
+// Subscription Plans Routes for inserting
+Route::post('/subscription-plans/save', [AdminDashboardController::class, 'saveSubscriptionPlan'])->name('subscription.plans.save');
+// List Subscription Plans Routes
+Route::get('/subscription-plans', [AdminDashboardController::class, 'getSubscriptionPlans'])->name('subscription.plans');
+// Update Subscription Plans Routes
+Route::post('/subscription-plans/update/{id}', [AdminDashboardController::class, 'updateSubscriptionPlan'])->name('subscription.plans.update');
+    
 // Admin Logout Route
 Route::post('admin/logout', [AdminAuthController::class, 'logout'])->name('admin.logout');
 });

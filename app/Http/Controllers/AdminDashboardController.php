@@ -142,7 +142,7 @@ public function getOrganisations()
     return view('organisation_list', compact('organisations'));
 }
 
-
+// Method to insert new subscription plan
 public function saveSubscriptionPlan(Request $request)
 {
     $data = $request->validate([
@@ -154,7 +154,6 @@ public function saveSubscriptionPlan(Request $request)
         'max_storage_gb' => 'nullable|integer',
         'max_employees' => 'nullable|integer',
         'max_branches' => 'nullable|integer',
-        'features_json' => 'nullable',
         'trial_days' => 'nullable|integer',
         'is_popular' => 'nullable|boolean',
         'status' => 'required|string',
@@ -169,7 +168,6 @@ public function saveSubscriptionPlan(Request $request)
         'max_storage_gb' => $data['max_storage_gb'] ?? null,
         'max_employees' => $data['max_employees'] ?? null,
         'max_branches' => $data['max_branches'] ?? null,
-        'features_json' => $data['features_json'] ?? null,
         'trial_days' => $data['trial_days'] ?? 0,
         'is_popular' => $data['is_popular'] ?? 0,
         'status' => $data['status'],
@@ -179,7 +177,7 @@ public function saveSubscriptionPlan(Request $request)
     return back()->with('success', 'Subscription plan created successfully');
 }
 
-
+// Method to update existing subscription plan
 public function updateSubscriptionPlan(Request $request, $id)
 {
     $data = $request->validate([
@@ -191,7 +189,6 @@ public function updateSubscriptionPlan(Request $request, $id)
         'max_storage_gb' => 'nullable|integer',
         'max_employees' => 'nullable|integer',
         'max_branches' => 'nullable|integer',
-        'features_json' => 'nullable',
         'trial_days' => 'nullable|integer',
         'is_popular' => 'nullable|boolean',
         'status' => 'required|string',
@@ -208,7 +205,6 @@ public function updateSubscriptionPlan(Request $request, $id)
             'max_storage_gb' => $data['max_storage_gb'] ?? null,
             'max_employees' => $data['max_employees'] ?? null,
             'max_branches' => $data['max_branches'] ?? null,
-            'features_json' => $data['features_json'] ?? null,
             'trial_days' => $data['trial_days'] ?? 0,
             'is_popular' => $data['is_popular'] ?? 0,
             'status' => $data['status'],
@@ -217,7 +213,7 @@ public function updateSubscriptionPlan(Request $request, $id)
 
     return back()->with('success', 'Subscription plan updated successfully');
 }
-
+// Method to get list of subscription plans
 public function getSubscriptionPlans()
 {
     $plans = \DB::table('subscription_plans')

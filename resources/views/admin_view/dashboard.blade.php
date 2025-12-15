@@ -1,180 +1,155 @@
-@extends('layouts.app')
+<form id="addClientForm"
+      class="compact-form"
+      method="POST"
+      action="{{ route('organisation.store') }}"
+      enctype="multipart/form-data">
 
-@section('content')
+    @csrf
 
-<div class="container">
+    <div class="form-grid">
 
-    <h3>{{ isset($organisation) ? 'Edit Organisation' : 'Create Organisation' }}</h3>
+        <!-- Basic Information -->
+        <div class="form-group">
+            <input type="text" name="client_name" placeholder="Client Name *"> 
+        </div>
 
-    <form method="POST" action="{{ isset($organisation) ? route('organisation.update', $organisation->id) : route('organisation.store') }}" enctype="multipart/form-data">
-        @csrf
+        <div class="form-group">
+            <input type="text" name="name" placeholder="Company Name *" required>
+        </div>
 
-        <div class="row">
+        <!-- Contact Information -->
+        <div class="form-group">
+            <input type="text" name="contact_person" placeholder="Contact Person *">
+        </div>
 
-            <div class="col-md-6 mb-3">
-                <label>Company Name</label>
-                <input type="text" name="name" class="form-control"
-                       value="{{ $organisation->name ?? '' }}" required>
+        <div class="form-group">
+            <input type="email" name="email" placeholder="Email *" required>
+        </div>
+
+        <div class="form-group">
+            <input type="password" name="password" placeholder="Password *" required>
+        </div>
+
+        <div class="form-group">
+            <input type="tel" name="mobile" placeholder="Phone *">
+        </div>
+
+        <!-- Address -->
+        <div class="form-group">
+            <input type="text" name="building_no" placeholder="Building/House No. *">
+        </div>
+
+        <div class="form-group">
+            <input type="text" name="premises_name" placeholder="Premises Name">
+        </div>
+
+        <div class="form-group">
+            <input type="text" name="landmark" placeholder="Landmark">
+        </div>
+
+        <div class="form-group">
+            <input type="text" name="road_street" placeholder="Road/Street *">
+        </div>
+
+        <div class="form-group">
+            <input type="text" name="pincode" placeholder="Pincode *">
+        </div>
+
+        <div class="form-group">
+            <input type="text" name="district" placeholder="District *">
+        </div>
+
+        <div class="form-group">
+            <input type="text" name="state" placeholder="State *">
+        </div>
+
+        <div class="form-group">
+            <input type="text" name="country" value="India" readonly>
+        </div>
+
+        <!-- Business Details -->
+        <div class="form-group">
+            <select name="industry_type">
+                <option value="">Select Industry *</option>
+                <option value="it">Information Technology</option>
+                <option value="manufacturing">Manufacturing</option>
+                <option value="healthcare">Healthcare</option>
+                <option value="finance">Finance</option>
+                <option value="retail">Retail</option>
+                <option value="other">Other</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <input type="number" name="number_of_emplooyees" min="1" placeholder="Number of Employees *">
+        </div>
+
+        <!-- Package -->
+        <div class="form-group">
+            <select name="software_package_plan">
+                <option value="">Select Plan *</option>
+                <option value="basic">Basic</option>
+                <option value="standard">Standard</option>
+                <option value="enterprise">Enterprise</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <input type="number" name="storage_limit" min="1" placeholder="Storage (GB) *">
+        </div>
+
+        <div class="form-group">
+            <input type="number" name="number_of_user_allowed" min="1" placeholder="Max Users *">
+        </div>
+
+        <div class="form-group">
+            <select name="organisation_status">
+                <option value="">Select Status *</option>
+                <option value="Active">Active</option>
+                <option value="Incative">Inactive</option>
+            </select>
+        </div>
+
+        <!-- Legal -->
+        <div class="form-group">
+            <input type="text" name="GST_number" placeholder="GST Number">
+        </div>
+
+        <div class="form-group">
+            <input type="text" name="PAN" placeholder="PAN *">
+        </div>
+
+        <div class="form-group">
+            <input type="text" name="TAN" placeholder="TAN Number">
+        </div>
+
+        <div class="form-group">
+            <input type="date" name="expire_date">
+        </div>
+
+        <!-- Certificates -->
+        <div class="certificate-files">
+
+            <div class="form-group">
+                <label>Company Logo</label>
+                <input type="file" name="companyLogo" accept="image/*">
             </div>
 
-            <div class="col-md-6 mb-3">
-                <label>Client Name</label>
-                <input type="text" name="client_name" class="form-control"
-                       value="{{ $organisation->client_name ?? '' }}">
+            <div class="form-group">
+                <label>GST Certificate</label>
+                <input type="file" name="GST_registration_certificate" accept=".pdf,.jpg,.jpeg,.png">
             </div>
 
-            <div class="col-md-6 mb-3">
-                <label>Email</label>
-                <input type="email" name="email" class="form-control"
-                       value="{{ $organisation->email ?? '' }}" required>
-            </div>
-
-            <div class="col-md-6 mb-3">
-                <label>Password</label>
-                <input type="password" name="password" class="form-control">
-                @if(isset($organisation))
-                    <small class="text-muted">Leave empty to keep existing password</small>
-                @endif
-            </div>
-
-            <div class="col-md-6 mb-3">
-                <label>Contact Person</label>
-                <input type="text" name="contact_person" class="form-control"
-                       value="{{ $organisation->contact_person ?? '' }}">
-            </div>
-
-            <div class="col-md-6 mb-3">
-                <label>Mobile</label>
-                <input type="text" name="mobile" class="form-control"
-                       value="{{ $organisation->mobile ?? '' }}">
-            </div>
-
-            <div class="col-md-3 mb-3">
-                <label>Building No</label>
-                <input type="text" name="building_no" class="form-control"
-                       value="{{ $organisation->building_no ?? '' }}">
-            </div>
-
-            <div class="col-md-3 mb-3">
-                <label>Premises Name</label>
-                <input type="text" name="premises_name" class="form-control"
-                       value="{{ $organisation->premises_name ?? '' }}">
-            </div>
-
-            <div class="col-md-3 mb-3">
-                <label>Landmark</label>
-                <input type="text" name="landmark" class="form-control"
-                       value="{{ $organisation->landmark ?? '' }}">
-            </div>
-
-            <div class="col-md-3 mb-3">
-                <label>Road / Street</label>
-                <input type="text" name="road_street" class="form-control"
-                       value="{{ $organisation->road_street ?? '' }}">
-            </div>
-
-            <div class="col-md-3 mb-3">
-                <label>Pincode</label>
-                <input type="text" name="pincode" class="form-control"
-                       value="{{ $organisation->pincode ?? '' }}">
-            </div>
-
-            <div class="col-md-3 mb-3">
-                <label>District</label>
-                <input type="text" name="district" class="form-control"
-                       value="{{ $organisation->district ?? '' }}">
-            </div>
-
-            <div class="col-md-3 mb-3">
-                <label>State</label>
-                <input type="text" name="state" class="form-control"
-                       value="{{ $organisation->state ?? '' }}">
-            </div>
-
-            <div class="col-md-3 mb-3">
-                <label>Country</label>
-                <input type="text" name="country" class="form-control"
-                       value="{{ $organisation->country ?? 'India' }}">
-            </div>
-
-            <div class="col-md-6 mb-3">
-                <label>GST Number</label>
-                <input type="text" name="GST_number" class="form-control"
-                       value="{{ $organisation->GST_number ?? '' }}">
-            </div>
-
-            <div class="col-md-6 mb-3">
-                <label>Industry Type</label>
-                <input type="text" name="industry_type" class="form-control"
-                       value="{{ $organisation->industry_type ?? '' }}">
-            </div>
-
-            <div class="col-md-4 mb-3">
-                <label>No. of Employees</label>
-                <input type="number" name="number_of_emplooyees" class="form-control"
-                       value="{{ $organisation->number_of_emplooyees ?? '' }}">
-            </div>
-
-            <div class="col-md-4 mb-3">
-                <label>Software Package Plan</label>
-                <input type="text" name="software_package_plan" class="form-control"
-                       value="{{ $organisation->software_package_plan ?? '' }}">
-            </div>
-
-            <div class="col-md-4 mb-3">
-                <label>Storage Limit</label>
-                <input type="text" name="storage_limit" class="form-control"
-                       value="{{ $organisation->storage_limit ?? '' }}">
-            </div>
-
-            <div class="col-md-6 mb-3">
-                <label>Users Allowed</label>
-                <input type="number" name="number_of_user_allowed" class="form-control"
-                       value="{{ $organisation->number_of_user_allowed ?? '' }}">
-            </div>
-
-            <div class="col-md-3 mb-3">
-                <label>TAN</label>
-                <input type="text" name="TAN" class="form-control"
-                       value="{{ $organisation->TAN ?? '' }}">
-            </div>
-
-            <div class="col-md-3 mb-3">
-                <label>PAN</label>
-                <input type="text" name="PAN" class="form-control"
-                       value="{{ $organisation->PAN ?? '' }}">
-            </div>
-
-            <div class="col-md-4 mb-3">
-                <label>Expire Date</label>
-                <input type="date" name="expire_date" class="form-control"
-                       value="{{ $organisation->expire_date ?? '' }}">
-            </div>
-
-            <div class="col-md-4 mb-3">
-                <label>Status</label>
-                <select name="organisation_status" class="form-control">
-                    <option value="Active" {{ isset($organisation) && $organisation->organisation_status == 'Active' ? 'selected' : '' }}>Active</option>
-                    <option value="Inactive" {{ isset($organisation) && $organisation->organisation_status == 'Inactive' ? 'selected' : '' }}>Inactive</option>
-                </select>
-            </div>
-
-            <div class="col-md-6 mb-3">
+            <div class="form-group">
                 <label>MSME Certificate</label>
-                <input type="file" name="MSME_udyam_certificate" class="form-control">
-            </div>
-
-            <div class="col-md-6 mb-3">
-                <label>GST Registration Certificate</label>
-                <input type="file" name="GST_registration_certificate" class="form-control">
+                <input type="file" name="MSME_udyam_certificate" accept=".pdf,.jpg,.jpeg,.png">
             </div>
 
         </div>
+    </div>
 
-        <button class="btn btn-primary">{{ isset($organisation) ? 'Update' : 'Save' }}</button>
-
-    </form>
-
-</div>
-
-@endsection
+    <div class="form-actions">
+        <button type="button" class="btn btn-secondary">Cancel</button>
+        <button type="submit" class="btn btn-primary">Create</button>
+    </div>
+</form>
