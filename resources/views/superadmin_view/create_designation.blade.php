@@ -85,7 +85,7 @@ $id = Auth::guard('superadmin')->user()->id;
                     <div class="form-group">
                         <input type="hidden" name="organisation_id" value="{{$id}}">
                         <select name="department_id" required>
-                            <option value="" disabled selected></option>
+                            <option disabled selected>Select</option>
                             @foreach ($departments as $department)
                                 <option value="{{ $department->id }}">{{ $department->name }}</option>
                             @endforeach
@@ -96,7 +96,7 @@ $id = Auth::guard('superadmin')->user()->id;
                 <div class="col-3 mb-4">
                     <div class="form-group">
                         <select name="branch_id" required>
-                            <option value="" disabled selected></option>
+                            <option disabled selected>Select</option>
                             @foreach ($branches as $branch)
                                 <option value="{{ $branch->id }}">{{ $branch->name }}</option>
                             @endforeach
@@ -124,7 +124,7 @@ $id = Auth::guard('superadmin')->user()->id;
             'columns' => [
                 ['header' => 'Designation', 'accessor' => 'department_name'],
                 ['header' => 'Branch', 'accessor' => 'branch_name'],
-                ['header' => 'Designation', 'accessor' => 'designation_name'], 
+                ['header' => 'Designation Name', 'accessor' => 'designation_name'], 
             ],
             'editModalId' => 'openEditModal',
             'hasPermision' => true,
