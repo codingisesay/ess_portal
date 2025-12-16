@@ -11,7 +11,6 @@ class AdminDashboardController extends Controller
     // Show admin dashboard
     public function adminDashboard(): View
     {
-
          // Get the expiry alerts
         $expiryAlerts = $this->getExpiryAlerts();
 
