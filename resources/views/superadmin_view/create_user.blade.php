@@ -116,7 +116,7 @@ $id = Auth::guard('superadmin')->user()->id;
                 <div class="form-group">
                         <input type="hidden" name="organisation_id" value="1">
                         <select name="acct_allow" required="" fdprocessedid="kg1mb">
-                            <option value="" disabled="" selected=""></option>
+                            <option disabled selected>Select</option>
                                     <option value="1">Not Allow</option>
                                     <option value="2">Allowed</option> 
                             </select>
