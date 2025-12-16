@@ -120,7 +120,7 @@ $id = Auth::guard('superadmin')->user()->id;
                     <div class="col-3 mb-4">
                     <div class="form-group">
                         <select id="category_id" name="category_id" class="form-control" required>
-                            <option value="" disabled selected></option>
+                            <option disabled selected>Select</option>
                             @foreach($categories as $category)
                                 <option value="{{ $category->id }}">{{ $category->name }}</option>
                             @endforeach
@@ -155,7 +155,7 @@ $id = Auth::guard('superadmin')->user()->id;
                     <div class="col-3 mb-4">
                     <div class="form-group">
                         <select id="category_id" name="status" class="form-control" required>
-                            <option value="" disabled selected></option>
+                            <option disabled selected>Select</option>
                             <option value="Active">Active</option>
                             <option value="Inactive">Inactive</option>
                         </select>
