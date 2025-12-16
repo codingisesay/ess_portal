@@ -3,14 +3,27 @@ namespace App\Http\Controllers;
  
 use Illuminate\Http\Request;
 use Illuminate\View\View;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\DB;
  
 class AdminDashboardController extends Controller
 {
     // Show admin dashboard
     public function adminDashboard(): View
     {
-        return view('admin_view.dashboard');
+         // Get the expiry alerts
+        $expiryAlerts = $this->getExpiryAlerts();
+
+        // Get the subscription plans
+        $subscriptionPlans = $this->getSubscriptionPlans();
+
+        // Get the organisations
+        $organisations = $this->getOrganisations();
+
+        // Return the dashboard view and pass the data
+        return view('admin_view.dashboard', compact('expiryAlerts', 'subscriptionPlans', 'organisations'));
     }
+
 // Method to insert new organisation details
     public function clientmasterinsert(Request $request)
 {
@@ -139,7 +152,7 @@ public function getOrganisations()
 {
     $organisations = \DB::table('organisations')->orderBy('id', 'ASC')->get();
 
-    return view('organisation_list', compact('organisations'));
+    return $organisations;
 }
 
 // Method to insert new subscription plan
@@ -219,10 +232,57 @@ public function getSubscriptionPlans()
     $plans = \DB::table('subscription_plans')
         ->orderBy('id', 'ASC')
         ->get();
-
-    return view('subscription_plan_list', compact('plans'));
+    return $plans;
 }
+// Method to get organisations with expiry alerts within next 7 days
+public function getExpiryAlerts()
+{
+    $today = now()->toDateString();
+    $alertDate = now()->addDays(7)->toDateString();
 
+    $organisations = \DB::table('organisations')
+        ->join('subscription_plans', 'subscription_plans.id', '=', 'organisations.software_package_plan')
+        ->select(
+            'organisations.*',
+            'subscription_plans.plan_name'
+        )
+        ->whereBetween('organisations.expire_date', [$today, $alertDate])
+        ->orderBy('organisations.expire_date', 'ASC')
+        ->get();
+        
+    return $organisations;
+}   
+
+public function sendExpiryEmails()
+{
+    $today = now()->toDateString();
+    $alertDate = now()->addDays(7)->toDateString();
+
+    // 🔹 Get notification email from global params table
+    $fromEmail = DB::table('org_global_prams')
+        ->where('pram_id', '1')
+        ->value('values');
+
+    // Fallback if not found
+    if (!$fromEmail) {
+        $fromEmail = config('mail.from.address');
+    }
+
+    $organisations = DB::table('organisations')
+        ->whereBetween('expire_date', [$today, $alertDate])
+        ->get();
+
+    foreach ($organisations as $org) {
+        Mail::raw(
+            "Dear {$org->name}, your subscription will expire on {$org->expire_date}. Please renew to avoid service interruption.",
+            function ($message) use ($org, $fromEmail) {
+                $message->from($fromEmail)
+                        ->to($org->email)
+                        ->subject('Subscription Expiry Reminder');
+            }
+        );
+    }
+}
 
 
 }
