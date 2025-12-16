@@ -147,7 +147,7 @@
                 <div class="col-4 mb-4">
                     <div class="form-group">
                         <select name="status" required>
-                            <option value="" disabled selected></option>
+                            <option disabled selected>Select</option>
                             <option value="Active">Active</option>
                             <option value="Inactive">Inactive</option>
                         </select>
