@@ -183,7 +183,7 @@ $id = Auth::guard('superadmin')->user()->id;
             'items' => $branchs,
             'columns' => [
                 ['header' => 'ID', 'accessor' => 'id'],
-                ['header' => 'Name', 'accessor' => 'name'],
+                ['header' => 'Branch Name', 'accessor' => 'name'],
                 ['header' => 'Mobile', 'accessor' => 'mobile'],
                 ['header' => 'Email', 'accessor' => 'branch_email'],
             ],
