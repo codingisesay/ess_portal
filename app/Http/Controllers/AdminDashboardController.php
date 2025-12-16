@@ -232,7 +232,6 @@ public function getSubscriptionPlans()
     $plans = \DB::table('subscription_plans')
         ->orderBy('id', 'ASC')
         ->get();
-
     return $plans;
 }
 // Method to get organisations with expiry alerts within next 7 days
