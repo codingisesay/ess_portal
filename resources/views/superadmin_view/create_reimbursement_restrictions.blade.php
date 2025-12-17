@@ -94,7 +94,7 @@ $id = Auth::guard('superadmin')->user()->id;
                 <div class="col-3 mb-4">
                     <div class="form-group ">
                         <select id="organisation_reimbursement_type_id" name="reimbursement_type_id" class="form-control" required>
-                            <option value="" disabled selected></option>
+                            <option disabled selected>Select</option>
                             @foreach ($reim_type as $item)
                             <option value="{{ $item->id }}">{{ $item->name }}</option> 
                             @endforeach
@@ -113,7 +113,7 @@ $id = Auth::guard('superadmin')->user()->id;
                 <div class="col-3 mb-4">
                     <div class="form-group ">
                         <select id="category_id" name="bill_required" class="form-control" required>
-                            <option value="" disabled selected></option>
+                            <option disabled selected>Select</option>
                             <option value="Yes">Yes</option>
                             <option value="No">No</option>
                         </select>
@@ -123,7 +123,7 @@ $id = Auth::guard('superadmin')->user()->id;
                 <div class="col-3 mb-4">
                     <div class="form-group ">
                         <select id="category_id" name="tax_required" class="form-control" required>
-                            <option value="" disabled selected></option>
+                            <option disabled selected>Select</option>
                             <option value="Yes">Yes</option>
                             <option value="No">No</option>
                         </select>
