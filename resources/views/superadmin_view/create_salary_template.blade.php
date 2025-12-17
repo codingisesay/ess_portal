@@ -104,7 +104,7 @@ $id = Auth::guard('superadmin')->user()->id;
                 <div class="col-3 mb-4">
                     <div class="form-group">
                         <input type="text" name="template_name" required>
-                        <label>Name</label>
+                        <label>Template Name</label>
                     </div>
                 </div>
                 <div class="col-3 mb-4">
