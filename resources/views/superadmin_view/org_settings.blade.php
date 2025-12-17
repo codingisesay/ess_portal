@@ -202,7 +202,7 @@ $formattedOrgSettings = $orgSettings->map(function ($item) {
         'items' => $formattedOrgSettings ?? [],
         'columns' => [
             ['header' => 'ID', 'accessor' => 'id'],
-            ['header' => ' Organization Name', 'accessor' => 'name'],
+            ['header' => 'Organization Name', 'accessor' => 'name'],
             ['header' => 'Year', 'accessor' => 'financial_year'],
             ['header' => 'Cycle Type', 'accessor' => 'cycle_type'],
             ['header' => 'Cycle Period', 'accessor' => 'cycle_period'],
