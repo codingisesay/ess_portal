@@ -154,7 +154,7 @@
                         <label>Status</label>
                     </div>
                 </div>
-                <div class="col-4">
+                <div class="col-12">
                     <button class="create-btn" type="submit">Save</button>
                 </div>
             </div>
