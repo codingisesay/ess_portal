@@ -9,6 +9,8 @@
     <!-- Custom admin styles -->
     <link rel="stylesheet" href="{{ asset('Offical_admin/css/official_admin.css') }}">
     <!-- Font Awesome icons -->
+    <link rel="stylesheet" href="{{ asset('Offical_admin/css/create_user_popup.css') }}">
+
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 
@@ -20,6 +22,12 @@
     
     <!-- Include Subscription Plan Module -->
     @include('admin_view.subscription_plan_module')
+
+    @include('admin_view.create_user_popup')
+
+    @include('admin_view.client_details_popup')
+
+
 <body>
 
 <!-- =========================
@@ -39,12 +47,65 @@
             <!-- Sidebar navigation -->
             <nav>
                 <ul>
-                    <li class="active" title="Dashboard"><i class="fas fa-home"></i></li>
-                    <li title="Analytics"><i class="fas fa-chart-line"></i></li>
-                    <li title="Users"><i class="fas fa-users"></i></li>
-                    <li title="Products"><i class="fas fa-box"></i></li>
-                    <li title="Orders"><i class="fas fa-shopping-cart"></i></li>
-                    <li title="Settings"><i class="fas fa-cog"></i></li>
+            <!-- =========================
+                SIDEBAR NAVIGATION MENU
+                Primary navigation for admin dashboard
+                ========================= -->
+            <nav>
+                <ul>
+
+                    <!-- Dashboard: default landing page -->
+                    <!-- Marked as active to highlight current route -->
+                    <li class="active" title="Dashboard">
+                        <a href="{{ route('admin.dashboard') }}" class="nav-link">
+                            <i class="fas fa-home"></i>
+                            <span>Dashboard</span>
+                        </a>
+                    </li>
+
+                    <!-- Analytics: reports, metrics, and insights -->
+                    <li title="Analytics">
+                        <a href="#" class="nav-link">
+                            <i class="fas fa-chart-line"></i>
+                            <span>Analytics</span>
+                        </a>
+                    </li>
+
+                    <!-- Users: manage users, roles, and permissions -->
+                    <li title="Users">
+                        <a href="#" class="nav-link">
+                            <i class="fas fa-users"></i>
+                            <span>Users</span>
+                        </a>
+                    </li>
+
+                    <!-- Products: product listing, creation, and updates -->
+                    <li title="Products">
+                        <a href="#" class="nav-link">
+                            <i class="fas fa-box"></i>
+                            <span>Products</span>
+                        </a>
+                    </li>
+
+                    <!-- Orders: order tracking and fulfillment -->
+                    <li title="Orders">
+                        <a href="#" class="nav-link">
+                            <i class="fas fa-shopping-cart"></i>
+                            <span>Orders</span>
+                        </a>
+                    </li>
+
+                    <!-- Settings: application and account configuration -->
+                    <li title="Settings">
+                        <a href="#" class="nav-link">
+                            <i class="fas fa-cog"></i>
+                            <span>Settings</span>
+                        </a>
+                    </li>
+
+                </ul>
+            </nav>
+
                 </ul>
             </nav> <!-- closed sidebar-navigation -->
 
@@ -121,85 +182,54 @@
                     
                     <!-- Clients grid where all clients are displayed -->
                     <div class="clients-grid">
-                        <!-- Client Card 1 -->
-                        <div class="client-card">
-                            <div class="client-avatar client-avatar-blue">AC</div>
-                            <div class="client-info">
-                                <h3>Acme Corp</h3>
-                                <p>John Smith • Enterprise</p>
-                                <div class="storage-bar">
-                                    <div class="storage-fill" style="width: 85%;"></div>
-                                </div>
-                                <div class="storage-info">
-                                    <span>85% Storage Used</span>
-                                </div>
-                            </div>
-                            <div class="client-status active">Active</div>
-                        </div>
 
-                        <!-- Client Card 2 -->
-                        <div class="client-card">
-                            <div class="client-avatar" style="background-color: #e8f5e9; color: #388e3c;">TI</div>
-                            <div class="client-info">
-                                <h3>TechStart</h3>
-                                <p>Sarah Johnson • Startup</p>
-                                <div class="storage-bar">
-                                    <div class="storage-fill" style="width: 45%;"></div>
-                                </div>
-                                <div class="storage-info">
-                                    <span>45% Storage Used</span>
-                                </div>
-                            </div>
-                            <div class="client-status active">Active</div>
-                        </div>
+                      <!-- Loop through organisations -->
+                        @forelse ($organisations as $org)
+                            @php
+                                // Initials (AC, TI, etc.)
+                                $initials = collect(explode(' ', $org->name))
+                                    ->map(fn ($word) => strtoupper(substr($word, 0, 1)))
+                                    ->take(2)
+                                    ->implode('');
+ 
+                                // Storage %
+                                $storage = (int) ($org->storage_used_percent ?? 0);
+ 
+                                // Status handling (1 = Active, 0 = Inactive)
+                                $statusClass = ((int) ($org->status ?? 0) === 1)
+                                    ? 'active'
+                                    : 'inactive';
+                            @endphp
 
-                        <!-- Client Card 3 -->
-                        <div class="client-card">
-                            <div class="client-avatar" style="background-color: #fff3e0; color: #f57c00;">GR</div>
-                            <div class="client-info">
-                                <h3>Global Retail</h3>
-                                <p>Michael Brown • Business</p>
-                                <div class="storage-bar">
-                                    <div class="storage-fill" style="width: 72%;"></div>
-                                </div>
-                                <div class="storage-info">
-                                    <span>72% Storage Used</span>
-                                </div>
-                            </div>
-                            <div class="client-status active">Active</div>
-                        </div>
 
-                        <!-- Client Card 4 -->
-                        <div class="client-card">
-                            <div class="client-avatar" style="background-color: #e0f7fa; color: #00acc1;">DS</div>
-                            <div class="client-info">
-                                <h3>DataSystems</h3>
-                                <p>Emily Davis • Enterprise</p>
-                                <div class="storage-bar">
-                                    <div class="storage-fill" style="width: 38%;"></div>
+                             <!-- Avatar with initials -->
+                            <div class="client-card" 
+                                 data-client-id="{{ $org->id }}"
+                                 data-email="{{ $org->email ?? '' }}"
+                                 data-phone="{{ $org->phone ?? '' }}"
+                                 data-package="{{ $org->package ?? 'basic' }}">
+                                <div class="client-avatar client-avatar-blue">
+                                    {{ $initials }}
                                 </div>
-                                <div class="storage-info">
-                                    <span>38% Storage Used</span>
-                                </div>
-                            </div>
-                            <div class="client-status active">Active</div>
-                        </div>
 
-                        <!-- Client Card 5 -->
-                        <div class="client-card">
-                            <div class="client-avatar" style="background-color: #f3e5f5; color: #8e24aa;">MS</div>
-                            <div class="client-info">
-                                <h3>MediaSoft</h3>
-                                <p>David Wilson • Professional</p>
-                                <div class="storage-bar">
-                                    <div class="storage-fill" style="width: 62%;"></div>
+                                <!-- Client details -->
+                                <div class="client-info">
+                                    <h3>{{ $org->name }}</h3>
+                                    <p>
+                                        {{ $org->contact_person ?? '—' }}
+                                    </p>
+ 
                                 </div>
-                                <div class="storage-info">
-                                    <span>62% Storage Used</span>
+                                 <!-- Client status -->
+                                <div class="client-status {{ $statusClass }}">
+                                    {{ ucfirst($statusClass) }}
                                 </div>
                             </div>
-                            <div class="client-status expiring">Expiring</div>
-                        </div>
+ 
+                        @empty
+                        <!-- Message when no data is available -->
+                        <p>No organisations found.</p>
+                        @endforelse
                     </div>
                 </div>
                 <!-- end of main-content-2 -->
@@ -275,30 +305,103 @@
     </div> 
 
     <script>
-        // Close success modal
-        document.getElementById('closeSuccess').addEventListener('click', function() {
-            const successModal = document.getElementById('successModal');
-            successModal.style.display = 'none';
-            successModal.classList.remove('show');
-        });
+        document.addEventListener('DOMContentLoaded', function() {
 
-        document.getElementById('successOkBtn').addEventListener('click', function() {
-            const successModal = document.getElementById('successModal');
-            successModal.style.display = 'none';
-            successModal.classList.remove('show');
-        });
+            // Close success modal
+            const closeSuccessBtn = document.getElementById('closeSuccess');
+            if (closeSuccessBtn) {
+                closeSuccessBtn.addEventListener('click', function() {
 
-        // Close modal when clicking outside
-        window.addEventListener('click', function(event) {
-            const successModal = document.getElementById('successModal');
-            if (event.target === successModal) {
-                successModal.style.display = 'none';
-                successModal.classList.remove('show');
+                    
+                    const successModal = document.getElementById('successModal');
+                    if (successModal) {
+                        successModal.style.display = 'none';
+                        successModal.classList.remove('show');
+                    }
+                });
+            }
+
+            const successOkBtn = document.getElementById('successOkBtn');
+            if (successOkBtn) {
+                successOkBtn.addEventListener('click', function() {
+                    const successModal = document.getElementById('successModal');
+                    if (successModal) {
+                        successModal.style.display = 'none';
+                    }
+                });
+            }
+
+            // View All link functionality
+            const viewAllLink = document.querySelector('.view-all');
+            if (viewAllLink) {
+                viewAllLink.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const sidebar = document.querySelector('.sidebar');
+                    const usersNavItem = document.querySelector('li[title="Users"]');
+                    
+                    // Expand the sidebar if it's not already expanded
+                    if (!sidebar.classList.contains('expanded')) {
+                        sidebar.classList.add('expanded');
+                        // Wait for the sidebar to expand before scrolling
+                        setTimeout(() => {
+                            if (usersNavItem) {
+                                usersNavItem.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                                // Add active class to highlight the Users nav item
+                                document.querySelectorAll('.sidebar nav li').forEach(item => {
+                                    item.classList.remove('active');
+                                });
+                                usersNavItem.classList.add('active');
+                            }
+                        }, 300); // Match this with the CSS transition time
+                    } else if (usersNavItem) {
+                        usersNavItem.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        // Add active class to highlight the Users nav item
+                        document.querySelectorAll('.sidebar nav li').forEach(item => {
+                            item.classList.remove('active');
+                        });
+                        usersNavItem.classList.add('active');
+                    }
+                });
+            }
+
+            // Handle Users nav item click to show Clients Overview in full view
+            const usersNavLink = document.querySelector('li[title="Users"] a.nav-link');
+            if (usersNavLink) {
+                usersNavLink.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    
+                    
+                    const mainContent = document.querySelector('.main-content');
+                    const mainContent2 = document.querySelector('.main-content-2');
+                    
+                    if (mainContent && mainContent2) {
+                        // Toggle full view class on main content
+                        mainContent.classList.toggle('full-view');
+                        
+                        // Toggle active class on main-content-2
+                        mainContent2.classList.toggle('active');
+                        
+                        // Update active state in navigation
+                        document.querySelectorAll('.sidebar nav li').forEach(item => {
+                            item.classList.remove('active');
+                        });
+                        this.parentElement.classList.add('active');
+                        
+                        // Update the page title
+                        const headerTitle = document.querySelector('.header-title');
+                        if (headerTitle) {
+                            headerTitle.textContent = mainContent.classList.contains('full-view') 
+                                ? 'Clients Overview' 
+                                : 'Dashboard';
+                        }
+                        
+                        // Scroll to top
+                        window.scrollTo({ top: 0, behavior: 'smooth' });
+                    }
+                });
             }
         });
     </script>
-    });
-</script>
+
 </body>
 </html>
-
