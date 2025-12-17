@@ -122,7 +122,7 @@ $id = Auth::guard('superadmin')->user()->id;
         @include('partials.data_table', [
             'items' => $results,
             'columns' => [
-                ['header' => 'Designation', 'accessor' => 'department_name'],
+                ['header' => 'Department', 'accessor' => 'department_name'],
                 ['header' => 'Branch', 'accessor' => 'branch_name'],
                 ['header' => 'Designation Name', 'accessor' => 'designation_name'], 
             ],
