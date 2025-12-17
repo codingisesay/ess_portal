@@ -63,7 +63,7 @@ $id = Auth::guard('superadmin')->user()->id;
 </head>
 <body>
     <div class="container">
-        <h3>Employee Type Policy</h3>
+        <h3>Employee Type Leave Policy</h3>
 
         <div class="d-flex">
             <!-- Toggle Buttons -->
