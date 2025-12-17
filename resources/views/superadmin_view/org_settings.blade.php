@@ -92,7 +92,7 @@
                 <div class="col-3 mb-4">
                     <div class="form-group">
                         <select name="year" id="year" class="form-control" required>
-                            <option value="" disabled selected></option>
+                            <option disabled selected>Select</option>
                             @php
                                 $currentYear = date('Y');
                                 for ($i = $currentYear - 2; $i <= $currentYear + 5; $i++) {
@@ -111,7 +111,7 @@
                         <select name="cycle_type" id="cycle_type" class="form-control" required
                                 onfocus="this.querySelector('option[value=\'\']').textContent='Select Cycle Type'"
                                 onblur="if(!this.value) this.querySelector('option[value=\'\']').textContent=''">
-                            <option value="" disabled selected></option>
+                            <option disabled selected>Select</option>
                             <option value="monthly">Monthly</option>
                             <option value="quarterly">Quarterly</option>
                             <option value="half-yearly">Half Yearly</option>
@@ -202,7 +202,7 @@ $formattedOrgSettings = $orgSettings->map(function ($item) {
         'items' => $formattedOrgSettings ?? [],
         'columns' => [
             ['header' => 'ID', 'accessor' => 'id'],
-            ['header' => 'Name', 'accessor' => 'name'],
+            ['header' => ' Organization Name', 'accessor' => 'name'],
             ['header' => 'Year', 'accessor' => 'financial_year'],
             ['header' => 'Cycle Type', 'accessor' => 'cycle_type'],
             ['header' => 'Cycle Period', 'accessor' => 'cycle_period'],
