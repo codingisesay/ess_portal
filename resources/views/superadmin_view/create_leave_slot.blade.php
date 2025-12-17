@@ -125,7 +125,7 @@ $id = Auth::guard('superadmin')->user()->id;
             'items' => $leaveCycleDatas,
             'columns' => [
                 ['header' => 'ID', 'accessor' => 'id'],
-                ['header' => 'Name', 'accessor' => 'name'],
+                ['header' => 'Cycle Name', 'accessor' => 'name'],
                 ['header' => 'Start', 'accessor' => 'start_date'],
                 ['header' => 'End', 'accessor' => 'end_date'],
                 ['header' => 'Year', 'accessor' => 'year'], 
