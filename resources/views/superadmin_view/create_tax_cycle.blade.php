@@ -121,7 +121,7 @@ $id = Auth::guard('superadmin')->user()->id;
             <div class="col-3 mb-4">
                 <div class="form-group">
                     <select name="status" required>
-                        <option value="" disabled selected></option>
+                        <option disabled selected>Select</option>
                         <option value="Active">Active</option>
                         <option value="Inactive">Inactive</option>
                     
