@@ -62,7 +62,7 @@ $name = Auth::guard('superadmin')->user()->name;
                         <li><a href="{{ route('create_department_form') }}" class="{{ request()->routeIs('create_department_form') ? 'active' : '' }}">Create Department</a></li>
                         <li><a href="{{ route('create_designation_form') }}" class="{{ request()->routeIs('create_designation_form') ? 'active' : '' }}">Create Designation</a></li>
                         <li><a href="{{ route('bank_list') }}" class="{{ request()->routeIs('bank_list') ? 'active' : '' }}">Bank Master</a></li>
-                        <li><a href="{{ route('attendance.import') }}" class="{{ request()->routeIs('attendance.import') ? 'active' : '' }}">Import</a></li>
+                        <li><a href="{{ route('attendance.form') }}" class="{{ request()->routeIs('attendance.form') ? 'active' : '' }}">Import</a></li>
                     </ul>
                 </li>
 
