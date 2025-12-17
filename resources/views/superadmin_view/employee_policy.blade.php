@@ -89,7 +89,7 @@ $id = Auth::guard('superadmin')->user()->id;
                     <div class="col-3 mb-4">
                         <div class="form-group">
                             <select id="category_id" name="restriction_id" class="form-control" required>
-                                <option value="" disabled selected></option>
+                                <option disabled selected>Select</option>
                                 @foreach ($dataFromLeaveRestctions as $dataFromLeaveRestction)
                                     <option value="{{ $dataFromLeaveRestction->leave_restriction_id }}">{{ $dataFromLeaveRestction->leave_type }}</option>
                                 @endforeach
@@ -100,7 +100,7 @@ $id = Auth::guard('superadmin')->user()->id;
                     <div class="col-3 mb-4">
                         <div class="form-group">
                             <select id="category_id" name="emp_id" class="form-control" required>
-                                <option value="" disabled selected></option>
+                                <option disabled selected>Select</option>
                                 @foreach ($empTypes as $empType)
                                     <option value="{{ $empType->id }}">{{ $empType->name }}</option>
                                 @endforeach
