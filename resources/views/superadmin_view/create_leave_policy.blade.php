@@ -110,7 +110,7 @@ $id = Auth::guard('superadmin')->user()->id;
                     <div class="col-3 mb-4">
                         <div class="form-group">
                             <select id="category_id" name="leave_type_id" class="form-control" required>
-                                <option value="" disabled selected></option>
+                                <option disabled selected>Select</option>
                                 @foreach ($results as $result)
                                     <option value="{{ $result->leave_type_id }}">{{ $result->leave_type }}</option>
                                 @endforeach
@@ -151,7 +151,7 @@ $id = Auth::guard('superadmin')->user()->id;
                     <div class="col-3 mb-4">
                     <div class="form-group">
                         <select id="is_carry_forward" name="is_carry_forward" class="form-control" required>
-                            <option value="" disabled selected></option>
+                            <option disabled selected>Select</option>
                             <option value="Yes">Yes</option>
                             <option value="No">No</option> 
                         </select>
@@ -167,7 +167,7 @@ $id = Auth::guard('superadmin')->user()->id;
                     <div class="col-3 mb-4">
                         <div class="form-group">
                             <select id="LeaveEncash" name="leave_encash" class="form-control" required>
-                                <option value="" disabled selected></option>
+                                <option disabled selected>Select</option>
                                 <option value="Yes">Yes</option>
                                 <option value="No">No</option> 
                             </select>
@@ -183,7 +183,7 @@ $id = Auth::guard('superadmin')->user()->id;
                     <div class="col-3 mb-4">
                         <div class="form-group">
                             <select id="category_id" name="provision_status" class="form-control" required>
-                                <option value="" disabled selected></option>
+                                <option disabled selected>Select</option>
                                 <option value="Applicable">Applicable</option>
                                 <option value="Not Applicable">Not Applicable</option> 
                             </select>
