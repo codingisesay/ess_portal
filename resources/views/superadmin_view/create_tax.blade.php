@@ -104,7 +104,7 @@ $id = Auth::guard('superadmin')->user()->id;
             <div class="col-3 mb-4">
                 <div class="form-group">
                     <select name="tax_cycle_type" required>
-                        <option value="" disabled selected></option>
+                        <option disabled selected>Select</option>
                         @foreach ($taxregim as $tax)
                         <option value="{{ $tax->id }}">{{ $tax->name }}</option>
                         @endforeach
@@ -116,7 +116,7 @@ $id = Auth::guard('superadmin')->user()->id;
             <div class="col-3 mb-4">
                 <div class="form-group">
                     <select name="tax_type" required>
-                        <option value="" disabled selected></option>
+                        <option disabled selected>Select</option>
                         <option value="Income Tax">Income Tax</option>
                     </select>
                     <label>Tax Type</label>
