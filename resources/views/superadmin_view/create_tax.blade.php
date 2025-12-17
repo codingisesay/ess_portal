@@ -170,7 +170,7 @@ $id = Auth::guard('superadmin')->user()->id;
             'items' => $datafortaxes,
             'columns' => [
                 ['header' => 'ID', 'accessor' => 'id'],
-                ['header' => 'Tax Regime Year', 'accessor' => 'org_tax_regime_years_name'],
+                ['header' => 'Tax Regime', 'accessor' => 'org_tax_regime_years_name'],
                 ['header' => 'Tax Type', 'accessor' => 'tax_type'],
                 ['header' => 'Min Income', 'accessor' => 'min_income'],
                 ['header' => 'Max Income', 'accessor' => 'max_income'],
