@@ -68,7 +68,7 @@ $id = Auth::guard('superadmin')->user()->id;
     }
 </style>
 <div class="container">
-    <h3>Create Salary Tax Slot</h3>
+    <h3>Create Tax Cycle</h3>
     <div class="d-flex">
         <!-- Toggle Buttons -->
         <div class="toggle-buttons">
