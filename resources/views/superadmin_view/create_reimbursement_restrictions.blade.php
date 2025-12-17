@@ -145,7 +145,7 @@ $id = Auth::guard('superadmin')->user()->id;
             'columns' => [
                 ['header' => 'ID', 'accessor' => 'id'],
                 ['header' => 'Reimbursement Type', 'accessor' => 'reim_type'],
-                ['header' => 'maximum Amount', 'accessor' => 'max_amount'],
+                ['header' => 'Maximum Amount', 'accessor' => 'max_amount'],
                 ['header' => 'Bill Required', 'accessor' => 'bill_required'],
                 ['header' => 'Tax Required', 'accessor' => 'tax_applicable'], 
             ],
