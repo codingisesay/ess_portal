@@ -24,13 +24,13 @@ class AdminDashboardController extends Controller
         return view('admin_view.dashboard', compact('expiryAlerts', 'subscriptionPlans', 'organisations'));
     }
 
-// Method to insert new organisation details
-    public function clientmasterinsert(Request $request)
+// Method to insert new organisation details with welcome email
+  public function clientmasterinsert(Request $request)
 {
     $data = $request->validate([
         'name' => 'required',
         'client_name' => 'nullable',
-        'email' => 'required',
+        'email' => 'required|email',
         'password' => 'required',
 
         'contact_person' => 'nullable',
@@ -63,21 +63,35 @@ class AdminDashboardController extends Controller
         'organisation_status' => 'nullable|in:Active,Incative',
     ]);
 
-    // Hash password
+    // 🔹 Store plain password for email
+    $plainPassword = $data['password'];
+
+    // 🔹 Hash password for DB
     $data['password'] = bcrypt($data['password']);
 
     // Handle file uploads
     if ($request->hasFile('MSME_udyam_certificate')) {
-        $data['MSME_udyam_certificate'] = file_get_contents($request->file('MSME_udyam_certificate'));
+        $data['MSME_udyam_certificate'] = file_get_contents(
+            $request->file('MSME_udyam_certificate')
+        );
     }
 
     if ($request->hasFile('GST_registration_certificate')) {
-        $data['GST_registration_certificate'] = file_get_contents($request->file('GST_registration_certificate'));
+        $data['GST_registration_certificate'] = file_get_contents(
+            $request->file('GST_registration_certificate')
+        );
     }
 
-    \DB::table('organisations')->insert($data);
+    // 🔹 Insert organisation
+    DB::table('organisations')->insert($data);
+    // 🔹 Send welcome email 
+    SendOrganisationCredentialsMail::dispatch(
+        $data['email'],
+        $plainPassword,
+        url('/superadmin/login')
+    );
 
-    return back()->with('success', 'Organisation created successfully!');
+    return back()->with('success', 'Organisation created. Credentials email queued!');
 }
 
 // Method to update organisation details
@@ -143,6 +157,8 @@ public function clientmasterupdate(Request $request, $id)
     }
 
     \DB::table('organisations')->where('id', $id)->update($data);
+
+    
 
     return back()->with('success', 'Organisation updated successfully!');
 }
