@@ -110,7 +110,106 @@
         visibility: visible;
     }
 </style>
+<style>
+/* ===============================
+   BANK MASTER TABLE LAYOUT FIX
+   Match Create Designation UI
+   =============================== */
+/* Let table decide height */
+#tableSection table {
+    margin-bottom: 0;
+}
+
+/* Remove unnecessary vertical space */
+.table-container {
+    padding-bottom: 0 !important;
+    margin-bottom: 0 !important;
+}
+
+/* Pagination should sit just below table */
+.pagination-container {
+    margin-top: 10px;
+    padding-top: 8px;
+    border-top: 1px solid #eee;
+}
+
+/* Match Designation pagination alignment */
+.pagination {
+    justify-content: flex-end;
+}
+</style>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+let rows = [];
+let filteredRows = [];
+let currentPage = 1;
+const perPage = 10;
+
+let prevBtn, nextBtn, pageNumbers, currentPageEl, totalPagesEl;
+</script>
+<script>
+function showPage(page) {
+    const start = (page - 1) * perPage;
+    const end = start + perPage;
+
+    rows.forEach(row => row.style.display = 'none');
+
+    filteredRows.slice(start, end).forEach(row => {
+        row.style.display = 'table-row';
+    });
+
+    currentPageEl.textContent = page;
+}
+
+function updatePagination() {
+    const totalPages = Math.ceil(filteredRows.length / perPage) || 1;
+    totalPagesEl.textContent = totalPages;
+    pageNumbers.innerHTML = '';
+
+    for (let i = 1; i <= totalPages; i++) {
+        const a = document.createElement('a');
+        a.href = '#';
+        a.textContent = i;
+        a.className = 'page-number' + (i === currentPage ? ' active' : '');
+
+        a.onclick = function (e) {
+            e.preventDefault();
+            currentPage = i;
+            showPage(currentPage);
+            updatePagination();
+        };
+
+        pageNumbers.appendChild(a);
+    }
+    prevBtn.parentElement.classList.toggle('disabled', currentPage === 1);
+    nextBtn.parentElement.classList.toggle('disabled', currentPage === totalPages);
+}
+</script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+
+    const tableSection = document.getElementById('tableSection');
+    const table = tableSection.querySelector('table');
+    if (!table) return;
+
+    // ✅ INIT ROWS
+    rows = Array.from(table.querySelectorAll('tbody tr'));
+    filteredRows = rows;
+
+    // ✅ ASSIGN GLOBAL ELEMENTS (NO const!)
+    prevBtn = document.querySelector('.page-prev');
+    nextBtn = document.querySelector('.page-next');
+    pageNumbers = document.querySelector('.page-numbers');
+    currentPageEl = document.querySelector('.current-page');
+    totalPagesEl = document.querySelector('.total-pages');
+
+    // ✅ INITIAL RENDER
+    updatePagination();
+    showPage(currentPage);
+});
+
+</script>
 </head>
 <body>
 
@@ -128,7 +227,15 @@
         <div class="search-container" id="tableSearchContainer" style="display: none;">
             <div class="search-box">
                 <img src="{{ asset('user_end/images/search (1).png') }}" alt="Search" class="search-icon" id="searchIcon">
-                <input type="text" id="tableSearch" placeholder="Search..." class="search-input">
+                <input
+                type="text"
+                id="tableSearch"
+                class="search-input"
+                placeholder="Search Bank Name"
+                data-search-input
+                data-table-section="tableSection"
+                data-no-results="noResults"
+            />
             </div>
         </div>
     </div>
@@ -213,7 +320,27 @@
                 @endforeach
             </tbody>
         </table>
+        <!-- Pagination Controls -->
+            <div class="pagination-container mt-3">
+                <small class="page-info">
+                    Showing Page <span class="current-page">1</span> of <span class="total-pages">1</span>
+                </small>
+
+                <ul class="pagination">
+                    <li class="page-item">
+                        <a href="#" class="page-prev">Prev</a>
+                    </li>
+
+                    <li class="page-numbers"></li>
+
+                    <li class="page-item">
+                        <a href="#" class="page-next">Next</a>
+                    </li>
+                </ul>
+            </div>
+  
     </div>
+    @include('partials.no-results')
 </div>
 
 <script>
@@ -335,9 +462,17 @@
         btn.classList.add('active');
         
         // Update URL without page reload
-        const url = new URL(window.location.href);
-        url.searchParams.set('view', 'table');
-        window.history.pushState({}, '', url);
+        // const url = new URL(window.location.href);
+        // url.searchParams.set('view', 'table');
+        // window.history.pushState({}, '', url);   
+
+        
+    // ✅ Initialize pagination ONLY AFTER table is visible
+        setTimeout(() => {
+            currentPage = 1;
+            updatePagination();
+            showPage(1);
+        }, 50);
     }
     
     function sortTable(column, order) {

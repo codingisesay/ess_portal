@@ -265,5 +265,8 @@ $name = Auth::guard('superadmin')->user()->name;
 
 
     </script>
+    {{-- GLOBAL COMMON SEARCH --}}
+<script src="{{ asset('admin_end/js/common-search.js') }}"></script>
+
 </body>
 </html>
