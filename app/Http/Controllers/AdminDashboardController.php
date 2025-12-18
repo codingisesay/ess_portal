@@ -5,6 +5,9 @@ use Illuminate\Http\Request;
 use Illuminate\View\View;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\DB;
+// Import the Mailable class
+use App\Mail\SendOrganisationCredentialsMail;
+use App\Jobs\SendSubscriptionExpiryMail;
  
 class AdminDashboardController extends Controller
 {
@@ -24,6 +27,7 @@ class AdminDashboardController extends Controller
         return view('admin_view.dashboard', compact('expiryAlerts', 'subscriptionPlans', 'organisations'));
     }
 
+<<<<<<< HEAD
 
     //created a function to show all client details
      public function clientAllDetails(){
@@ -33,11 +37,15 @@ class AdminDashboardController extends Controller
 
 // Method to insert new organisation details
     public function clientmasterinsert(Request $request)
+=======
+// Method to insert new organisation details with welcome email
+  public function clientmasterinsert(Request $request)
+>>>>>>> 5bf6a559d7881f39862178c0455f3f6631193496
 {
     $data = $request->validate([
         'name' => 'required',
         'client_name' => 'nullable',
-        'email' => 'required',
+        'email' => 'required|email',
         'password' => 'required',
 
         'contact_person' => 'nullable',
@@ -70,21 +78,35 @@ class AdminDashboardController extends Controller
         'organisation_status' => 'nullable|in:Active,Incative',
     ]);
 
-    // Hash password
+    // 🔹 Store plain password for email
+    $plainPassword = $data['password'];
+
+    // 🔹 Hash password for DB
     $data['password'] = bcrypt($data['password']);
 
     // Handle file uploads
     if ($request->hasFile('MSME_udyam_certificate')) {
-        $data['MSME_udyam_certificate'] = file_get_contents($request->file('MSME_udyam_certificate'));
+        $data['MSME_udyam_certificate'] = file_get_contents(
+            $request->file('MSME_udyam_certificate')
+        );
     }
 
     if ($request->hasFile('GST_registration_certificate')) {
-        $data['GST_registration_certificate'] = file_get_contents($request->file('GST_registration_certificate'));
+        $data['GST_registration_certificate'] = file_get_contents(
+            $request->file('GST_registration_certificate')
+        );
     }
 
-    \DB::table('organisations')->insert($data);
+    // 🔹 Insert organisation
+    DB::table('organisations')->insert($data);
+    // 🔹 Send welcome email 
+    SendOrganisationCredentialsMail::dispatch(
+        $data['email'],
+        $plainPassword,
+        url('/superadmin/login')
+    );
 
-    return back()->with('success', 'Organisation created successfully!');
+    return back()->with('success', 'Organisation created. Credentials email queued!');
 }
 
 // Method to update organisation details
@@ -150,6 +172,8 @@ public function clientmasterupdate(Request $request, $id)
     }
 
     \DB::table('organisations')->where('id', $id)->update($data);
+
+    
 
     return back()->with('success', 'Organisation updated successfully!');
 }
@@ -259,38 +283,29 @@ public function getExpiryAlerts()
         
     return $organisations;
 }   
-
+// Method to send expiry alert emails to organisations
 public function sendExpiryEmails()
 {
     $today = now()->toDateString();
     $alertDate = now()->addDays(7)->toDateString();
-
-    // 🔹 Get notification email from global params table
-    $fromEmail = DB::table('org_global_prams')
-        ->where('pram_id', '1')
-        ->value('values');
-
-    // Fallback if not found
-    if (!$fromEmail) {
-        $fromEmail = config('mail.from.address');
-    }
 
     $organisations = DB::table('organisations')
         ->whereBetween('expire_date', [$today, $alertDate])
         ->get();
 
     foreach ($organisations as $org) {
-        Mail::raw(
-            "Dear {$org->name}, your subscription will expire on {$org->expire_date}. Please renew to avoid service interruption.",
-            function ($message) use ($org, $fromEmail) {
-                $message->from($fromEmail)
-                        ->to($org->email)
-                        ->subject('Subscription Expiry Reminder');
-            }
+        SendSubscriptionExpiryMail::dispatch(
+            $org->email,
+            $org->name,
+            $org->expire_date
         );
     }
-}
 
+    return response()->json([
+        'status' => true,
+        'message' => 'Expiry emails queued successfully'
+    ]);
+}
 
 
 }
