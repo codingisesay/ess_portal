@@ -351,6 +351,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 // Leave Model script below
 function openSalaryModal() {
+    document.querySelector("header").style.zIndex = "1";
     document.getElementById('leaveModal').style.display = 'block';  // Show the modal
 }
 

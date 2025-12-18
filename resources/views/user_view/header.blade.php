@@ -21,6 +21,7 @@ $userDetails = app('App\Http\Controllers\headerController')->getUserDetails();
     <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
 
     <script src="{{ asset('user_end/js/toastify-notifications.js') }}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <body>
 
@@ -328,10 +329,29 @@ document.addEventListener("DOMContentLoaded", function () {
             // ✅ Clear all
             document.getElementById('clearAll')?.addEventListener('click', async function (e) {
                 e.preventDefault();
-                if (confirm("Clear all notifications?")) {
-                    await fetch("{{ route('notifications.clearAll') }}");
-                    loadNotifications();
-                }
+                Swal.fire({
+                title: 'Are you sure?',
+                text: "This will delete all notifications permanently.",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'Yes, clear all!',
+                cancelButtonText: 'Cancel'
+                }).then(async (result) => {
+                 if (result.isConfirmed) {
+                 
+                 await fetch("{{ route('notifications.clearAll') }}");
+                 loadNotifications();
+                
+                Swal.fire({
+                    title: 'Cleared!',
+                    text: 'All notifications have been cleared.',
+                    icon: 'success',
+                    confirmButtonColor: '#3085d6',
+                });
+         }
+        });
             });
 
             // ✅ Handle individual notification click
