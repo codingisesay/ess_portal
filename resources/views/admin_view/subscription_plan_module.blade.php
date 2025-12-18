@@ -1,6 +1,18 @@
+     
+     <!DOCTYPE html>
+<html>
+<head>
+<title>Add Subscription Plan</title>
+</head>
+<body>
      <!-- Custom admin styles -->
     <link rel="stylesheet" href="{{ asset('Offical_admin/css/official_admin.css') }}">
- 
+ <!-- Subscription Module CSS -->
+<link rel="stylesheet" href="{{ asset('Offical_admin/css/subscription_module.css') }}">
+
+<!-- Add Font Awesome for icons (if not already included in your layout) -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
  <!-- =========================
      ADD SUBSCRIPTION PLAN MODAL
      ========================= -->
@@ -18,73 +30,98 @@
         <!-- div modal-header close -->
 
         <!-- Subscription plan creation form -->
-        <form id="subscriptionForm">
 
-            <!-- Plan name input -->
-            <div class="form-group">
-                <label for="planName">Plan Name *</label>
-                <input type="text" id="planName" name="planName" required>
+                <form id="subscriptionForm" method="POST" action="{{ route('subscription.plans.save') }}">
+            @csrf
+
+            <!-- Plan Name -->
+            <div class="subscription-form-group required">
+                <input type="text" name="plan_name" id="plan_name" placeholder=" " required>
+                <label for="plan_name">Plan Name</label>
             </div>
 
-            <!-- Plan description input -->
-            <div class="form-group">
-                <label for="planDescription">Description</label>
-                <textarea id="planDescription" name="planDescription" rows="3"></textarea>
+            <!-- Description -->
+            <div class="subscription-form-group">
+                <textarea name="description" id="description" placeholder=" " rows="3"></textarea>
+                <label for="description">Description</label>
             </div>
 
-            <!-- Plan pricing input -->
-            <div class="form-group">
-                <label for="planPrice">Price (₹) *</label>
-                <input type="number"
-                       id="planPrice"
-                       name="planPrice"
-                       min="0"
-                       step="0.01"
-                       required>
-            </div>
-
-            <!-- Billing cycle selection -->
-            <div class="form-group">
-                <label for="billingCycle">Billing Cycle</label>
-                <select id="billingCycle" name="billingCycle">
-                    <option value="monthly">Monthly</option>
-                    <option value="quarterly">Quarterly</option>
-                    <option value="yearly">Yearly</option>
-                </select>
-            </div>
-
-            <!-- Plan active status toggle -->
-            <div class="form-group">
-                <div class="checkbox-group">
-                    <label class="checkbox-container">
-                        <input type="checkbox" id="isActive" name="isActive" checked>
-                        <span class="checkmark"></span>
-                        Active
-                    </label>
+            <!-- Price Fields Row -->
+            <div class="form-row">
+                <div class="subscription-form-group">
+                    <input type="number" step="0.01" name="price_monthly" id="price_monthly" placeholder=" ">
+                    <label for="price_monthly">Price Monthly ($)</label>
+                </div>
+                <div class="subscription-form-group">
+                    <input type="number" step="0.01" name="price_yearly" id="price_yearly" placeholder=" ">
+                    <label for="price_yearly">Price Yearly ($)</label>
                 </div>
             </div>
 
-            <!-- Form action buttons -->
-            <div class="form-actions">
-                <button type="button"
-                        id="cancelSubscription"
-                        class="btn btn-cancel">
-                    Cancel
-                </button>
-
-                <button type="submit"
-                        class="btn btn-primary">
-                    Create Plan
-                </button>
+            <!-- Max Users and Max Storage Row -->
+            <div class="form-row">
+                <div class="subscription-form-group">
+                    <input type="number" name="max_users" id="max_users" placeholder=" " min="1">
+                    <label for="max_users">Max Users</label>
+                </div>
+                <div class="subscription-form-group">
+                    <input type="number" name="max_storage_gb" id="max_storage_gb" placeholder=" " min="1" step="0.1">
+                    <label for="max_storage_gb">Max Storage (GB)</label>
+                </div>
             </div>
 
-        </form>
-        <!-- form subscriptionForm close -->
+            <!-- Max Employees and Max Branches Row -->
+            <div class="form-row">
+                <div class="subscription-form-group">
+                    <input type="number" name="max_employees" id="max_employees" placeholder=" " min="1">
+                    <label for="max_employees">Max Employees</label>
+                </div>
+                <div class="subscription-form-group">
+                    <input type="number" name="max_branches" id="max_branches" placeholder=" " min="1">
+                    <label for="max_branches">Max Branches</label>
+                </div>
+            </div>
 
-    </div>
-    <!-- div modal-content close -->
-</div>
-<!-- div subscriptionModal close -->
+            <!-- Trial Days and Status Row -->
+            <div class="form-row">  
+                <div class="subscription-form-group">
+                    <input type="number" name="trial_days" id="trial_days" placeholder=" " min="0">
+                    <label for="trial_days">Trial Days (0 for no trial)</label>
+                </div>
+                <div class="subscription-form-group">
+                    <select name="status" id="status" required>
+                        <option value="" disabled selected></option>
+                        <option value="Active">Active</option>
+                        <option value="Inactive">Inactive</option>
+                    </select>
+                    <label for="status">Status</label>
+                </div>
+            </div>
+
+            <!-- Popular Plan Toggle -->
+            <div class="subscription-form-group">
+                <div class="popular-checkbox">
+                    <input type="checkbox" name="is_popular" id="is_popular" value="1">
+                    <label for="is_popular">Mark as Popular Plan</label>
+                </div>
+            </div>
+
+            <!-- Form Actions -->
+            <div class="form-actions">
+                <button type="button" class="btn-cancel" id="cancelBtn">
+                    <i class="fas fa-times"></i> Cancel
+                </button>
+                <button type="submit" class="btn-submit">
+                    <i class="fas fa-save"></i> Save Plan
+                </button>
+            </div>
+                </form>
+               <!-- form subscriptionForm close -->
+
+                    </div>
+                    <!-- div modal-content close -->
+                </div>
+                <!-- div subscriptionModal close -->
 
 @push('scripts')
 <script>
@@ -143,7 +180,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Handle form submission
     if (form) {
-        form.addEventListener('submit', function(e) {
+        form.addEventListener('', function(e) {
             e.preventDefault();
             
             // Get form data
@@ -163,4 +200,6 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 </script>
+</body>
+</html>
 @endpush
