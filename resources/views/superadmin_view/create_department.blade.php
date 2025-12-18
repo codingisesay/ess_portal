@@ -211,7 +211,7 @@
 </script>
 <script>
 document.addEventListener('DOMContentLoaded', function () {
-
+// Get the data form the table and check whether the input matches with the table data 
     const form = document.getElementById('departmentForm');
     const input = form.querySelector('input[name="department_name"]');
 
@@ -227,7 +227,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
         // Check duplicate
         if (existingDepartments.includes(enteredName)) {
-            e.preventDefault(); // ⛔ STOP FORM SUBMIT
+            e.preventDefault(); //  STOP FORM SUBMIT
 
             Swal.fire({
                 icon: 'error',
