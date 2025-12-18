@@ -5,6 +5,9 @@ use Illuminate\Http\Request;
 use Illuminate\View\View;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\DB;
+// Import the Mailable class
+use App\Mail\SendOrganisationCredentialsMail;
+use App\Jobs\SendSubscriptionExpiryMail;
  
 class AdminDashboardController extends Controller
 {
@@ -268,38 +271,29 @@ public function getExpiryAlerts()
         
     return $organisations;
 }   
-
+// Method to send expiry alert emails to organisations
 public function sendExpiryEmails()
 {
     $today = now()->toDateString();
     $alertDate = now()->addDays(7)->toDateString();
-
-    // 🔹 Get notification email from global params table
-    $fromEmail = DB::table('org_global_prams')
-        ->where('pram_id', '1')
-        ->value('values');
-
-    // Fallback if not found
-    if (!$fromEmail) {
-        $fromEmail = config('mail.from.address');
-    }
 
     $organisations = DB::table('organisations')
         ->whereBetween('expire_date', [$today, $alertDate])
         ->get();
 
     foreach ($organisations as $org) {
-        Mail::raw(
-            "Dear {$org->name}, your subscription will expire on {$org->expire_date}. Please renew to avoid service interruption.",
-            function ($message) use ($org, $fromEmail) {
-                $message->from($fromEmail)
-                        ->to($org->email)
-                        ->subject('Subscription Expiry Reminder');
-            }
+        SendSubscriptionExpiryMail::dispatch(
+            $org->email,
+            $org->name,
+            $org->expire_date
         );
     }
-}
 
+    return response()->json([
+        'status' => true,
+        'message' => 'Expiry emails queued successfully'
+    ]);
+}
 
 }
  

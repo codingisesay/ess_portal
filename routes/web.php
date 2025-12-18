@@ -73,13 +73,9 @@ Route::post('/subscription-plans/update/{id}', [AdminDashboardController::class,
 // Get Expiry Alerts
 Route::get('/organisations/expiry-alerts', [AdminDashboardController::class, 'getExpiryAlerts'])->name('organisations.expiry.alerts');
     
-Route::get('/test-expiry-mail', function () {
-    app(AdminDashboardController::class)
-        ->sendExpiryEmails();
-
-    return 'Expiry mail function executed';
-});
-
+// Send Expiry Emails route
+Route::post('/admin/send-expiry-mails', [AdminDashboardController::class, 'sendExpiryEmails'])
+    ->name('admin.sendExpiryMails');
 
 // Admin Logout Route
 Route::post('admin/logout', [AdminAuthController::class, 'logout'])->name('admin.logout');
