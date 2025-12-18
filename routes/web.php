@@ -58,6 +58,9 @@ Route::post('admin/login', [AdminAuthController::class, 'login'])->name('admin.l
 Route::middleware('admins')->group(function () {
  // Admin Dashboard Route
 Route::get('admin/dashboard', [AdminDashboardController::class, 'adminDashboard'])->name('admin.dashboard');
+
+// Route to show all client details
+Route::get('admin/client_all_details', [AdminDashboardController::class, 'clientAllDetails'])->name('admin.client_all_details');
 // route to insert new organisation details
 Route::post('admin/organisation/store', [AdminDashboardController::class, 'clientmasterinsert'])->name('organisation.store');
 // Route to get list of organisations users
