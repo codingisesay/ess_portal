@@ -27,7 +27,6 @@ class AdminDashboardController extends Controller
         return view('admin_view.dashboard', compact('expiryAlerts', 'subscriptionPlans', 'organisations'));
     }
 
-<<<<<<< HEAD
 
     //created a function to show all client details
      public function clientAllDetails(){
@@ -35,12 +34,9 @@ class AdminDashboardController extends Controller
         return view('admin_view.client_all_details');
     }
 
-// Method to insert new organisation details
-    public function clientmasterinsert(Request $request)
-=======
-// Method to insert new organisation details with welcome email
+
+// Method to insert new organisation details with welcome emailq
   public function clientmasterinsert(Request $request)
->>>>>>> 5bf6a559d7881f39862178c0455f3f6631193496
 {
     $data = $request->validate([
         'name' => 'required',
