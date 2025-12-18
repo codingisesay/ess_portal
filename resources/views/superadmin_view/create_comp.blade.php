@@ -254,7 +254,7 @@ $id = Auth::guard('superadmin')->user()->id;
                 ['header' => 'ID', 'accessor' => 'id'],
 
                 // Basic Information
-                ['header' => 'Template Name', 'accessor' => 'name'],
+                ['header' => 'Pay Head Name', 'accessor' => 'name'],
                 ['header' => 'Name to Display in Payslip', 'accessor' => 'name_to_display_in_payslip'],
                 ['header' => 'Type', 'accessor' => 'type'],
                 ['header' => 'Income Type', 'accessor' => 'income_type'],
