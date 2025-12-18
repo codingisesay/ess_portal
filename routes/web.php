@@ -61,7 +61,7 @@ Route::get('admin/dashboard', [AdminDashboardController::class, 'adminDashboard'
 // route to insert new organisation details
 Route::post('admin/organisation/store', [AdminDashboardController::class, 'clientmasterinsert'])->name('organisation.store');
 // Route to get list of organisations users
-Route::get('admin/organisations', [OrganisationController::class, 'getOrganisations'])->name('organisations.list');
+Route::get('admin/organisations', [AdminDashboardController::class, 'getOrganisations'])->name('organisations.list');
 // Route to update organisation details
 Route::post('admin/organisation/update/{id}', [AdminDashboardController::class, 'clientmasterupdate'])->name('organisation.update');
 // Subscription Plans Routes for inserting
@@ -70,7 +70,13 @@ Route::post('/subscription-plans/save', [AdminDashboardController::class, 'saveS
 Route::get('/subscription-plans', [AdminDashboardController::class, 'getSubscriptionPlans'])->name('subscription.plans');
 // Update Subscription Plans Routes
 Route::post('/subscription-plans/update/{id}', [AdminDashboardController::class, 'updateSubscriptionPlan'])->name('subscription.plans.update');
+// Get Expiry Alerts
+Route::get('/organisations/expiry-alerts', [AdminDashboardController::class, 'getExpiryAlerts'])->name('organisations.expiry.alerts');
     
+// Send Expiry Emails route
+Route::post('/admin/send-expiry-mails', [AdminDashboardController::class, 'sendExpiryEmails'])
+    ->name('admin.sendExpiryMails');
+
 // Admin Logout Route
 Route::post('admin/logout', [AdminAuthController::class, 'logout'])->name('admin.logout');
 });

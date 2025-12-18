@@ -1,0 +1,263 @@
+<!-- Client Details Popup -->
+<div id="clientPopup" class="client-popup" style="display: none;">
+
+<!-- div client-popup-content open  -->
+    <div class="client-popup-content">
+        <span class="close-popup">&times;</span>
+
+        <!-- View Mode -->
+        <div id="viewMode">
+            <div class="client-popup-header">
+                <h2 id="clientName">Client Name</h2>
+                <span id="clientStatus" class="client-status active">Active</span>
+            </div>
+
+
+        <!-- fileds which are present insidde the popup -->
+            
+            <div class="client-popup-details">
+                <p><strong>Contact:</strong> <span id="clientContact">—</span></p>
+                <p><strong>Email:</strong> <span id="clientEmail">—</span></p>
+                <p><strong>Package:</strong> <span id="clientPackage">—</span></p>
+                <p><strong>Phone:</strong> <span id="clientPhone">—</span></p>
+            </div>
+
+        <!-- two action buttons-->
+
+            <div class="client-popup-actions">
+                <button type="button" class="btn btn-secondary" id="cancelViewBtn" style="margin-right: 8px;">
+                    Cancel
+                </button>
+                <button class="btn btn-primary" id="editClientBtn">Edit</button>
+            </div>
+        </div>
+
+        <!-- Edit Mode -->
+    <form id="editMode"
+      method="POST"
+      action="{{ route('organisation.update', $organisation->id ?? '') }}"
+      enctype="multipart/form-data"
+      style="display:none;">
+    @csrf
+
+    <div class="client-popup-header">
+        <h2>Edit Client</h2>
+    </div>
+
+      <!-- Hidden organisation ID -->
+    <input type="hidden" name="id" id="editId">
+
+    <div class="form-group">
+        <input type="text" id="editName" name="name" class="form-control" required>
+        <label>Client Name</label>
+    </div>
+
+    <div class="form-group">
+        <input type="text" id="editContact" name="contact_person" class="form-control" required>
+        <label>Contact Person</label>
+    </div>
+
+    <div class="form-group">
+        <input type="email" id="editEmail" name="email" class="form-control">
+        <label>Email</label>
+    </div>
+
+    <div class="form-group">
+        <input type="mobile" id="editPhone" name="phone" class="form-control">
+        <label>Phone</label>
+    </div>
+
+    <div class="form-group">
+        <select id="editPackage" name="package" class="form-control">
+            <option value="basic">Basic</option>
+            <option value="standard">Standard</option>
+            <option value="premium">Premium</option>
+        </select>
+        <label>Package</label>
+    </div>
+
+    <div class="form-group form-check">
+        <label class="form-check-label">Status</label>
+        <div class="form-check form-switch">
+            <input type="hidden" name="status" value="0">
+            <input type="checkbox" id="editStatus" name="status" value="1" class="form-check-input">
+            <label class="form-check-label" for="editStatus">Active</label>
+            
+
+        </div>
+    </div>
+
+    <div class="client-popup-actions">
+        <button type="button" id="cancelEditBtn" class="btn btn-secondary">Cancel</button>
+        <button type="submit" class="btn btn-primary">Save Changes</button>
+    </div>
+</form>
+    
+    
+    </div><!-- div client-popup-content closed -->
+</div><!--clientPopup div end -->
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    // Handle status toggle
+    const statusToggle = document.getElementById('editStatus');
+    const statusLabel = document.querySelector('label[for="editStatus"]');
+    
+    if (statusToggle) {
+        // Update label on toggle
+        statusToggle.addEventListener('change', function() {
+            statusLabel.textContent = this.checked ? 'Active' : 'Inactive';
+        });
+        
+        // Initialize label text
+        statusLabel.textContent = statusToggle.checked ? 'Active' : 'Inactive';
+    }
+
+    // Open popup when clicking client card
+    document.querySelectorAll('.client-card').forEach(card => {
+        card.addEventListener('click', function (e) {
+
+            if (e.target.closest('button, a')) return;
+
+
+            //iif  there is no data at that time it show "-"
+            const clientName = this.querySelector('h3')?.textContent || '—';
+            const clientContact = this.querySelector('p')?.textContent.trim() || '—';
+            const clientEmail = this.getAttribute('data-email') || '—';
+            const clientPhone = this.getAttribute('data-phone') || '—';
+            const clientPackage = this.getAttribute('data-package') || '—';
+            const clientStatus = this.querySelector('.client-status')?.textContent.trim().toLowerCase() || 'inactive';
+            
+            // Store client ID if available (for server-side updates)
+            const clientId = this.getAttribute('data-client-id');
+            if (clientId) {
+                document.getElementById('clientPopup').setAttribute('data-client-id', clientId);
+            }
+
+            document.getElementById('clientName').textContent = clientName;
+            
+            // Show the popup
+            document.getElementById('clientPopup').style.display = 'block';
+            
+            // Close popup when clicking the cancel button in view mode
+            document.getElementById('cancelViewBtn').addEventListener('click', function(e) {
+                e.stopPropagation();
+                document.getElementById('clientPopup').style.display = 'none';
+            });
+            document.getElementById('clientContact').textContent = clientContact;
+            document.getElementById('clientEmail').textContent = clientEmail;
+            document.getElementById('clientPhone').textContent = clientPhone;
+            document.getElementById('clientPackage').textContent = clientPackage;
+
+            const statusEl = document.getElementById('clientStatus');
+            statusEl.textContent = clientStatus.charAt(0).toUpperCase() + clientStatus.slice(1);
+            statusEl.className = `client-status ${clientStatus}`;
+
+            document.getElementById('clientPopup').style.display = 'flex';
+        });
+    });
+
+    // Close popup (X)
+    document.querySelector('.close-popup')?.addEventListener('click', () => {
+        document.getElementById('clientPopup').style.display = 'none';
+    });
+
+    // Close popup (outside click)
+    window.addEventListener('click', (e) => {
+        const popup = document.getElementById('clientPopup');
+        if (e.target === popup) {
+            popup.style.display = 'none';
+        }
+    });
+
+
+
+    // Edit Client button
+    document.getElementById('editClientBtn')?.addEventListener('click', () => {
+        // Get current values
+        const name = document.getElementById('clientName').textContent;
+        const contact = document.getElementById('clientContact').textContent;
+        const email = document.getElementById('clientEmail').textContent;
+        const phone = document.getElementById('clientPhone').textContent;
+        const package = document.getElementById('clientPackage').textContent;
+        const status = document.getElementById('clientStatus').classList.contains('active');
+        
+        // Set form values
+        document.getElementById('editName').value = name;
+        document.getElementById('editContact').value = contact;
+        document.getElementById('editEmail').value = email === '—' ? '' : email;
+        document.getElementById('editPhone').value = phone === '—' ? '' : phone;
+        document.getElementById('editPackage').value = package.toLowerCase() || 'basic';
+        document.getElementById('editStatus').checked = status;
+        
+        // Toggle view/edit modes
+        document.getElementById('viewMode').style.display = 'none';
+        document.getElementById('editMode').style.display = 'block';
+    });
+    
+    // Cancel Edit button
+    document.getElementById('cancelEditBtn')?.addEventListener('click', () => {
+        document.getElementById('viewMode').style.display = 'block';
+        document.getElementById('editMode').style.display = 'none';
+    });
+    
+    
+
+});
+</script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+
+    const editForm = document.getElementById('editMode');
+
+    // Open edit mode
+    document.getElementById('editClientBtn')?.addEventListener('click', () => {
+
+        const popup = document.getElementById('clientPopup');
+        const clientId = popup.getAttribute('data-client-id');
+
+        // Set form action
+        editForm.action = `/admin/organisation/update/${clientId}`;
+
+        document.getElementById('editName').value =
+            document.getElementById('clientName').textContent;
+
+        document.getElementById('editContact').value =
+            document.getElementById('clientContact').textContent;
+
+        document.getElementById('editEmail').value =
+            document.getElementById('clientEmail').textContent === '—'
+                ? ''
+                : document.getElementById('clientEmail').textContent;
+
+        document.getElementById('editPhone').value =
+            document.getElementById('clientPhone').textContent === '—'
+                ? ''
+                : document.getElementById('clientPhone').textContent;
+
+        document.getElementById('editPackage').value =
+            document.getElementById('clientPackage').textContent.toLowerCase();
+
+        document.getElementById('editStatus').checked =
+            document.getElementById('clientStatus').classList.contains('active');
+
+        document.getElementById('viewMode').style.display = 'none';
+        editForm.style.display = 'block';
+    });
+
+    // Cancel edit
+    document.getElementById('cancelEditBtn')?.addEventListener('click', () => {
+        editForm.style.display = 'none';
+        document.getElementById('viewMode').style.display = 'block';
+    });
+
+    // Set status before submit (IMPORTANT)
+    editForm?.addEventListener('submit', function () {
+        document.getElementById('editStatusHidden').value =
+            document.getElementById('editStatus').checked
+                ? 'active'
+                : 'inactive';
+    });
+
+});
+</script>
