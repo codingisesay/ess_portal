@@ -207,6 +207,28 @@ function updatePagination() {
     // ✅ INITIAL RENDER
     updatePagination();
     showPage(currentPage);
+
+        //  PREV BUTTON
+    prevBtn.addEventListener('click', function (e) {
+        e.preventDefault();
+        if (currentPage > 1) {
+            currentPage--;
+            showPage(currentPage);
+            updatePagination();
+        }
+    });
+
+    //  NEXT BUTTON
+    nextBtn.addEventListener('click', function (e) {
+        e.preventDefault();
+        const totalPages = Math.ceil(filteredRows.length / perPage);
+        if (currentPage < totalPages) {
+            currentPage++;
+            showPage(currentPage);
+            updatePagination();
+        }
+});
+
 });
 
 </script>
@@ -345,26 +367,6 @@ function updatePagination() {
 
 <script>
     // Search functionality
-    function performSearch(searchTerm) {
-        const rows = document.querySelectorAll('#tableSection tbody tr');
-        const searchTermLower = searchTerm.toLowerCase();
-        
-        rows.forEach(row => {
-            const cells = row.querySelectorAll('td');
-            let rowMatches = false;
-            
-            // Skip the action column (last cell)
-            for (let i = 0; i < cells.length - 1; i++) {
-                const cellText = cells[i].textContent.toLowerCase();
-                if (cellText.includes(searchTermLower)) {
-                    rowMatches = true;
-                    break;
-                }
-            }
-            
-            row.style.display = rowMatches ? '' : 'none';
-        });
-    }
     
     // Search box toggle functionality
     document.addEventListener('DOMContentLoaded', function() {
@@ -385,16 +387,24 @@ function updatePagination() {
                 } else {
                     // Clear search when collapsing
                     searchInput.value = '';
-                    performSearch('');
+                
                 }
             });
             
             // Handle search input
             searchInput.addEventListener('input', function() {
-                clearTimeout(searchTimeout);
-                searchTimeout = setTimeout(() => {
-                    performSearch(this.value);
-                }, 300);
+                const term = this.value.toLowerCase().trim();
+
+                filteredRows = term
+                    ? rows.filter(row =>
+                        row.textContent.toLowerCase().includes(term)
+                    )
+                    : rows;
+
+                currentPage = 1;
+                updatePagination();
+                showPage(currentPage);
+
             });
             
             // Close search when clicking outside
@@ -402,7 +412,7 @@ function updatePagination() {
                 if (!searchBox.contains(event.target) && searchBox.classList.contains('expanded')) {
                     searchBox.classList.remove('expanded');
                     searchInput.value = '';
-                    performSearch('');
+                    
                 }
             });
             
@@ -415,7 +425,7 @@ function updatePagination() {
             searchInput.addEventListener('keydown', function(event) {
                 if (event.key === 'Escape') {
                     this.value = '';
-                    performSearch('');
+                    
                     searchBox.classList.remove('expanded');
                 }
             });
@@ -454,7 +464,7 @@ function updatePagination() {
         const searchInput = document.getElementById('tableSearch');
         if (searchInput) {
             searchInput.value = '';
-            performSearch('');
+            
         }
 
         let siblings = btn.parentElement.children;
@@ -462,9 +472,9 @@ function updatePagination() {
         btn.classList.add('active');
         
         // Update URL without page reload
-        // const url = new URL(window.location.href);
-        // url.searchParams.set('view', 'table');
-        // window.history.pushState({}, '', url);   
+        const url = new URL(window.location.href);
+        url.searchParams.set('view', 'table');
+        window.history.pushState({}, '', url);   
 
         
     // ✅ Initialize pagination ONLY AFTER table is visible
