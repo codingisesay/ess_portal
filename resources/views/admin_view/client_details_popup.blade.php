@@ -25,67 +25,93 @@
         <!-- two action buttons-->
 
             <div class="client-popup-actions">
-                <button class="btn btn-success" id="createUserBtn">Create User</button>
+                <button type="button" class="btn btn-secondary" id="cancelViewBtn" style="margin-right: 8px;">
+                    Cancel
+                </button>
                 <button class="btn btn-primary" id="editClientBtn">Edit</button>
             </div>
         </div>
 
         <!-- Edit Mode -->
-        <form id="editMode" style="display: none;">
-            <div class="client-popup-header">
-                <h2>Edit Client</h2>
-            </div>
+    <form id="editMode"
+      method="POST"
+      action="{{ route('organisation.update', $organisation->id ?? '') }}"
+      enctype="multipart/form-data"
+      style="display:none;">
+    @csrf
 
+    <div class="client-popup-header">
+        <h2>Edit Client</h2>
+    </div>
 
-        <!-- the fields which can be edited -->
+      <!-- Hidden organisation ID -->
+    <input type="hidden" name="id" id="editId">
 
-            <div class="form-group">
-                <input type="text" id="editName" class="form-control" placeholder=" " required>
-                <label for="editName">Client Name</label>
-            </div>
+    <div class="form-group">
+        <input type="text" id="editName" name="name" class="form-control" required>
+        <label>Client Name</label>
+    </div>
 
-            <div class="form-group">
-                <input type="text" id="editContact" class="form-control" placeholder=" " required>
-                <label for="editContact">Contact Person</label>
-            </div>
+    <div class="form-group">
+        <input type="text" id="editContact" name="contact_person" class="form-control" required>
+        <label>Contact Person</label>
+    </div>
 
-            <div class="form-group">
-                <input type="email" id="editEmail" class="form-control" placeholder=" ">
-                <label for="editEmail">Email</label>
-            </div>
+    <div class="form-group">
+        <input type="email" id="editEmail" name="email" class="form-control">
+        <label>Email</label>
+    </div>
 
-            <div class="form-group">
-                <input type="tel" id="editPhone" class="form-control" placeholder=" ">
-                <label for="editPhone">Phone</label>
-            </div>
+    <div class="form-group">
+        <input type="mobile" id="editPhone" name="phone" class="form-control">
+        <label>Phone</label>
+    </div>
 
-            <div class="form-group">
-                <select id="editPackage" class="form-control">
-                    <option value="basic">Basic</option>
-                    <option value="standard">Standard</option>
-                    <option value="premium">Premium</option>
-                </select>
-                <label for="editPackage">Package</label>
-            </div>
+    <div class="form-group">
+        <select id="editPackage" name="package" class="form-control">
+            <option value="basic">Basic</option>
+            <option value="standard">Standard</option>
+            <option value="premium">Premium</option>
+        </select>
+        <label>Package</label>
+    </div>
 
-            <div class="form-group">
-                <div class="form-check">
-                    <input type="checkbox" id="editStatus" class="form-check-input">
-                    <label class="form-check-label" for="editStatus">Active</label>
-                </div>
-            </div>
+    <div class="form-group form-check">
+        <label class="form-check-label">Status</label>
+        <div class="form-check form-switch">
+            <input type="hidden" name="status" value="0">
+            <input type="checkbox" id="editStatus" name="status" value="1" class="form-check-input">
+            <label class="form-check-label" for="editStatus">Active</label>
+            
 
-            <!-- two action buttons-->
-            <div class="client-popup-actions">
-                <button type="button" id="cancelEditBtn" class="btn btn-secondary">Cancel</button>
-                <button type="submit" class="btn btn-primary">Save Changes</button>
-            </div>
-        </form>
+        </div>
+    </div>
+
+    <div class="client-popup-actions">
+        <button type="button" id="cancelEditBtn" class="btn btn-secondary">Cancel</button>
+        <button type="submit" class="btn btn-primary">Save Changes</button>
+    </div>
+</form>
+    
+    
     </div><!-- div client-popup-content closed -->
 </div><!--clientPopup div end -->
 
 <script>
 document.addEventListener('DOMContentLoaded', function () {
+    // Handle status toggle
+    const statusToggle = document.getElementById('editStatus');
+    const statusLabel = document.querySelector('label[for="editStatus"]');
+    
+    if (statusToggle) {
+        // Update label on toggle
+        statusToggle.addEventListener('change', function() {
+            statusLabel.textContent = this.checked ? 'Active' : 'Inactive';
+        });
+        
+        // Initialize label text
+        statusLabel.textContent = statusToggle.checked ? 'Active' : 'Inactive';
+    }
 
     // Open popup when clicking client card
     document.querySelectorAll('.client-card').forEach(card => {
@@ -109,6 +135,15 @@ document.addEventListener('DOMContentLoaded', function () {
             }
 
             document.getElementById('clientName').textContent = clientName;
+            
+            // Show the popup
+            document.getElementById('clientPopup').style.display = 'block';
+            
+            // Close popup when clicking the cancel button in view mode
+            document.getElementById('cancelViewBtn').addEventListener('click', function(e) {
+                e.stopPropagation();
+                document.getElementById('clientPopup').style.display = 'none';
+            });
             document.getElementById('clientContact').textContent = clientContact;
             document.getElementById('clientEmail').textContent = clientEmail;
             document.getElementById('clientPhone').textContent = clientPhone;
@@ -135,17 +170,7 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 
-    // Create User button
-    document.getElementById('createUserBtn')?.addEventListener('click', function (e) {
-        e.stopPropagation();
 
-        document.getElementById('clientPopup').style.display = 'none';
-
-        const createUserPopup = document.getElementById('createUserPopup');
-        if (createUserPopup) {
-            createUserPopup.style.display = 'flex';
-        }
-    });
 
     // Edit Client button
     document.getElementById('editClientBtn')?.addEventListener('click', () => {
@@ -176,38 +201,62 @@ document.addEventListener('DOMContentLoaded', function () {
         document.getElementById('editMode').style.display = 'none';
     });
     
-    // Save Edit form
-    document.getElementById('editMode')?.addEventListener('submit', (e) => {
-        e.preventDefault();
-        
-        // Get form values
-        const name = document.getElementById('editName').value;
-        const contact = document.getElementById('editContact').value;
-        const email = document.getElementById('editEmail').value;
-        const phone = document.getElementById('editPhone').value;
-        const package = document.getElementById('editPackage').value;
-        const isActive = document.getElementById('editStatus').checked;
-        
-        // Update view mode with new values
-        document.getElementById('clientName').textContent = name;
-        document.getElementById('clientContact').textContent = contact;
-        document.getElementById('clientEmail').textContent = email || '—';
-        document.getElementById('clientPhone').textContent = phone || '—';
-        document.getElementById('clientPackage').textContent = package.charAt(0).toUpperCase() + package.slice(1);
-        
-        const statusEl = document.getElementById('clientStatus');
-        statusEl.textContent = isActive ? 'Active' : 'Inactive';
-        statusEl.className = `client-status ${isActive ? 'active' : 'inactive'}`;
-        
-        // Here you would typically make an AJAX call to save the changes to the server
-        console.log('Saving changes:', { name, contact, email, phone, package, isActive });
-        
-        // Show success message (you can replace this with actual feedback from your server)
-        alert('Client details updated successfully!');
-        
-        // Switch back to view mode
+    
+
+});
+</script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+
+    const editForm = document.getElementById('editMode');
+
+    // Open edit mode
+    document.getElementById('editClientBtn')?.addEventListener('click', () => {
+
+        const popup = document.getElementById('clientPopup');
+        const clientId = popup.getAttribute('data-client-id');
+
+        // Set form action
+        editForm.action = `/admin/organisation/update/${clientId}`;
+
+        document.getElementById('editName').value =
+            document.getElementById('clientName').textContent;
+
+        document.getElementById('editContact').value =
+            document.getElementById('clientContact').textContent;
+
+        document.getElementById('editEmail').value =
+            document.getElementById('clientEmail').textContent === '—'
+                ? ''
+                : document.getElementById('clientEmail').textContent;
+
+        document.getElementById('editPhone').value =
+            document.getElementById('clientPhone').textContent === '—'
+                ? ''
+                : document.getElementById('clientPhone').textContent;
+
+        document.getElementById('editPackage').value =
+            document.getElementById('clientPackage').textContent.toLowerCase();
+
+        document.getElementById('editStatus').checked =
+            document.getElementById('clientStatus').classList.contains('active');
+
+        document.getElementById('viewMode').style.display = 'none';
+        editForm.style.display = 'block';
+    });
+
+    // Cancel edit
+    document.getElementById('cancelEditBtn')?.addEventListener('click', () => {
+        editForm.style.display = 'none';
         document.getElementById('viewMode').style.display = 'block';
-        document.getElementById('editMode').style.display = 'none';
+    });
+
+    // Set status before submit (IMPORTANT)
+    editForm?.addEventListener('submit', function () {
+        document.getElementById('editStatusHidden').value =
+            document.getElementById('editStatus').checked
+                ? 'active'
+                : 'inactive';
     });
 
 });

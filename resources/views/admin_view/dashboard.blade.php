@@ -23,8 +23,6 @@
     <!-- Include Subscription Plan Module -->
     @include('admin_view.subscription_plan_module')
 
-    @include('admin_view.create_user_popup')
-
     @include('admin_view.client_details_popup')
 
 
@@ -133,23 +131,36 @@
              ========================= -->
             <div class="stats-grid">
                 <!-- Total clients -->
+                 <!-- it is used for getting a count of total clients -->
+                 @php
+                    $totalClients = \DB::table('organisations')->count();
+                    @endphp
                 <div class="stat-card stat-card-blue">
                     <div class="stat-icon">
                         <i class="fas fa-file-alt"></i>
                     </div>
+
+                    <!-- changes made to get count of total clients -->
                     <div class="stat-details">
-                        <h3>5</h3>
+                        <h3>{{ $totalClients }}</h3>
                         <p>Total Clients</p>
                     </div>
                 </div>
 
                 <!-- Active clients -->
+                @php
+                $activeClients = \DB::table('organisations')->where('status', '=', 1)->count();
+                @endphp
                 <div class="stat-card stat-card-green">
                     <div class="stat-icon">
                         <i class="fas fa-check"></i>
                     </div>
+                    
+                    <!-- changes made to get count of active clients -->
                     <div class="stat-details">
-                        <h3>4</h3>
+                        <h3>
+                            {{ $activeClients }}
+                        </h3>
                         <p>Active</p>
                     </div>
                 </div>
@@ -198,15 +209,16 @@
                                 // Status handling (1 = Active, 0 = Inactive)
                                 $statusClass = ((int) ($org->status ?? 0) === 1)
                                     ? 'active'
-                                    : 'inactive';
+                                    : 'inactive';                 
                             @endphp
 
 
                              <!-- Avatar with initials -->
-                            <div class="client-card" 
+                              <!-- used the right column name for mobile number (mobile) -->
+                            <div class="client-card"
                                  data-client-id="{{ $org->id }}"
                                  data-email="{{ $org->email ?? '' }}"
-                                 data-phone="{{ $org->phone ?? '' }}"
+                                 data-phone="{{ $org->mobile ?? '' }}"
                                  data-package="{{ $org->package ?? 'basic' }}">
                                 <div class="client-avatar client-avatar-blue">
                                     {{ $initials }}

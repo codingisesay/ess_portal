@@ -225,24 +225,21 @@ body {
   display: none !important;
 }
 
-/* Full view styles for Clients Overview */
+/* Client Overview Section */
 .main-content-2 {
   transition: all 0.3s ease;
   width: 100%;
-  max-width: 100%;
-  margin: 0;
-  padding: 20px;
   box-sizing: border-box;
-  display: none; /* Hidden by default */
+  display: none;
 }
 
-/* When main-content-2 is active */
+/* When client overview is active */
 .main-content-2.active {
   display: block;
-  width: 100%;
-  max-width: 100%;
-  margin: 0;
+  background: #f5f6fa;
   padding: 20px;
+  margin-left: 70px; /* Keep sidebar space */
+  width: calc(100% - 70px); /* Full width minus sidebar */
 }
 
 /* Adjust the dashboard content layout when in full view */
@@ -253,22 +250,25 @@ body {
   margin-top: 20px;
 }
 
-/* Ensure clients grid takes full width in full view */
+/* Clients Grid Layout */
 .clients-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
   gap: 20px;
   width: 100%;
-  margin-top: 20px;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
-/* Full view adjustments */
+/* Full view adjustments for client overview */
 .main-content.full-view .main-content-2 {
-  width: 100%;
-  max-width: 100%;
-  margin: 0;
+  width: calc(100% - 70px);
+  margin-left: 160px;
   padding: 20px;
-  height: 100%;
+  min-height: 95vh;
+  box-sizing: border-box;
+  background-color: #f9fafb;
 }
 
 /* Hide header and stats in full view */
@@ -289,15 +289,7 @@ body {
   }
 }
 
-/* Full view styles for Clients Overview */
-.main-content-2 {
-  transition: all 0.3s ease;
-  width: 100%;
-  max-width: 100%;
-  margin: 0;
-  padding: 20px;
-  box-sizing: border-box;
-}
+/* Client card styles */
 
 /* Adjust the dashboard content layout when in full view */
 .dashboard-content {
@@ -307,19 +299,14 @@ body {
   margin-top: 20px;
 }
 
-/* Ensure clients grid takes full width in full view */
-.clients-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 20px;
-  width: 100%;
-}
+/* Ensure clients grid takes full width in full view - Duplicate removed */
 
-/* Full view adjustments */
+/* Full view adjustments for client overview */
 .full-view .main-content-2 {
-  margin-left: 0;
-  padding: 20px 30px;
-  height: 100%;
+  margin-left: 70px;
+  padding: 20px;
+  min-height: 100vh;
+  width: calc(100% - 70px);
 }
 
 /* Clients Grid Specific Styles */
@@ -1634,7 +1621,6 @@ input[type="file"]::file-selector-button:hover {
 
 #editMode .form-group label {
     display: block;
-    margin-bottom: 8px;
     font-size: 13px;
     font-weight: 500;
     color: #4a5568;
@@ -1646,6 +1632,9 @@ input[type="file"]::file-selector-button:hover {
     appearance: none;
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
     background-repeat: no-repeat;
+    height: 40px;
+    line-height: 1.5;
+    padding: 10px 15px;
     background-position: right 12px center;
     padding-right: 35px;
 }
@@ -1653,13 +1642,12 @@ input[type="file"]::file-selector-button:hover {
 #editMode .form-check {
     display: flex;
     align-items: center;
-    margin-top: 10px;
+    margin-top: -5px;
 }
 
 #editMode .form-check-input {
     width: 18px;
     height: 18px;
-    margin-right: 8px;
     border: 2px solid #cbd5e0;
     border-radius: 4px;
     cursor: pointer;
@@ -1675,6 +1663,10 @@ input[type="file"]::file-selector-button:hover {
     margin: 0;
     font-size: 14px;
     color: #4a5568;
+    position: static !important;
+    transform: none !important;
+    margin-bottom: 0;
+    cursor: pointer;
     cursor: pointer;
 }
 
@@ -1682,7 +1674,7 @@ input[type="file"]::file-selector-button:hover {
     display: flex;
     justify-content: flex-end;
     gap: 12px;
-    margin-top: 25px;
+    margin-top: -14px;
     padding-top: 20px;
     border-top: 1px solid #e9ecef;
 }
