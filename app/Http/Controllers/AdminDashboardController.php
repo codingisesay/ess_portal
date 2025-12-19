@@ -27,7 +27,15 @@ class AdminDashboardController extends Controller
         return view('admin_view.dashboard', compact('expiryAlerts', 'subscriptionPlans', 'organisations'));
     }
 
-// Method to insert new organisation details with welcome email
+
+    //created a function to show all client details
+     public function clientAllDetails(){
+      
+        return view('admin_view.client_all_details');
+    }
+
+
+// Method to insert new organisation details with welcome emailq
   public function clientmasterinsert(Request $request)
 {
     $data = $request->validate([
@@ -294,6 +302,7 @@ public function sendExpiryEmails()
         'message' => 'Expiry emails queued successfully'
     ]);
 }
+
 
 }
  

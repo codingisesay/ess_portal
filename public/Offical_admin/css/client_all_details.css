@@ -1,0 +1,259 @@
+/* Css file for the showing all client details */
+
+/* * Main Container */ 
+.client-details-container {
+    padding: 24px;
+    background: #f8fafc;
+    min-height: 100vh;
+}
+
+/* Header Section */
+.client-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 32px;
+}
+
+.client-header h2 {
+    font-size: 20px;
+    font-weight: 600;
+    color: #1e293b;
+    margin: 0;
+}
+
+.header-actions {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+}
+
+.search-container {
+    position: relative;
+    width: 280px;
+}
+
+.search-input {
+    padding: 10px 16px 10px 40px;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    width: 100%;
+    outline: none;
+    font-size: 14px;
+    transition: all 0.2s;
+    background-color: #fff;
+}
+
+.search-input:focus {
+    border-color: #4f46e5;
+    box-shadow: 0 0 0 2px rgba(79, 70, 229, 0.1);
+}
+
+.search-icon {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #94a3b8;
+    font-size: 14px;
+}
+
+.filter-btn {
+    background: white;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    padding: 8px 16px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    color: #475569;
+    transition: all 0.2s;
+}
+
+.filter-btn:hover {
+    background: #f8fafc;
+    border-color: #cbd5e1;
+}
+
+.add-client-btn {
+    background: #4f46e5;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 10px 16px;
+    font-weight: 500;
+    font-size: 14px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.2s;
+}
+
+.add-client-btn:hover {
+    background: #4338ca;
+}
+
+/* Client Cards Grid */
+.client-cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 24px;
+}
+
+/* Client Card */
+.client-card {
+    background: white;
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    border: 1px solid #e2e8f0;
+    transition: all 0.2s;
+    position: relative;
+    height: max-content;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.client-card:hover {
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    transform: translateY(-2px);
+}
+
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 16px;
+}
+
+.client-info {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+}
+
+.client-avatar {
+    width: 48px;
+    height: 48px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    font-size: 16px;
+    color: white;
+    flex-shrink: 0;
+}
+
+.view-icon {
+    color: #94a3b8;
+    cursor: pointer;
+    font-size: 18px;
+    transition: color 0.2s;
+}
+
+.view-icon:hover {
+    color: #4f46e5;
+}
+
+.status-badge {
+    padding: 4px 10px;
+    border-radius: 16px;
+    font-size: 12px;
+    font-weight: 500;
+    text-transform: capitalize;
+}
+
+.status-active {
+    background: #ecfdf5;
+    color: #059669;
+}
+
+.status-expiring {
+    background: #fffbeb;
+    color: #d97706;
+}
+
+.client-info {
+    margin-top: 4px;
+}
+
+.client-name {
+    font-size: 16px;
+    font-weight: 600;
+    color: #1e293b;
+    margin: 0 0 4px 0;
+    line-height: 1.4;
+}
+
+.client-type {
+    color: #64748b;
+    font-size: 13px;
+    margin: 0;
+    font-weight: 400;
+}
+
+.contact-person {
+    color: #475569;
+    font-size: 14px;
+    margin: 16px 0 0 0;
+    display: flex;
+    align-items: center;
+}
+
+.contact-person i {
+    margin-right: 8px;
+    color: #94a3b8;
+    font-size: 16px;
+}
+
+.metrics-container {
+    margin-top: 20px;
+    border-top: 1px solid #f1f5f9;
+    padding-top: 16px;
+}
+
+.metric-container {
+    margin-bottom: 16px;
+}
+
+.metric-container:last-child {
+    margin-bottom: 0;
+}
+
+.metric-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 6px;
+    font-size: 12px;
+    color: #64748b;
+    font-weight: 500;
+}
+
+.progress-bar {
+    height: 6px;
+    background: #f1f5f9;
+    border-radius: 3px;
+    overflow: hidden;
+}
+
+.progress-fill {
+    height: 100%;
+    border-radius: 3px;
+}
+
+/* Specific progress bar colors */
+.progress-users-1 { width: 48%; background: #4f46e5; }
+.progress-storage-1 { width: 45.8%; background: #10b981; }
+.progress-users-2 { width: 80%; background: #f59e0b; }
+.progress-storage-2 { width: 36.4%; background: #f59e0b; }
+.progress-users-3 { width: 42%; background: #3b82f6; }
+.progress-storage-3 { width: 39.25%; background: #3b82f6; }
+.progress-users-4 { width: 60%; background: #8b5cf6; }
+.progress-storage-4 { width: 64.2%; background: #8b5cf6; }
+.progress-users-5 { width: 50%; background: #10b981; }
+.progress-storage-5 { width: 43.5%; background: #10b981; }
