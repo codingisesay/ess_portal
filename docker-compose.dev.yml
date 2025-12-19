@@ -16,7 +16,7 @@ services:
     volumes:
       - ${STORAGE_PATH}:/var/www/html/storage
       # - ./vendor:/var/www/html/vendor
-    restart: always
+    restart: none
 
 networks:
   common-services-dev-net:
