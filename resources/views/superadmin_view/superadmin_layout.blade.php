@@ -30,14 +30,13 @@ $name = Auth::guard('superadmin')->user()->name;
     </script>
     
     <!-- Sidebar/menu -->
-    <!-- Add the orgization name instead of hardcoded value  -->
     <nav class="sidebar" id="mySidebar">
         <div class="sidebar-header"> 
             <div class="logo">
-                <h5> 
-                   <strong>
-                      {{ Str::before(optional($branches->first())->organisation_name, '.') }}
-                   </strong>
+                <h5>
+                    <strong>
+                          {{ $displayOrgName }}
+                    </strong>
                 </h5>
             </div>
             <span onclick="toggleSidebar()">
