@@ -81,7 +81,15 @@ $id = Auth::guard('superadmin')->user()->id;
         <div class="search-container" id="tableSearchContainer" style="display: none;">
             <div class="search-box">
                 <img src="{{ asset('user_end/images/search (1).png') }}" alt="Search" class="search-icon" id="searchIcon">
-                <input type="text" id="tableSearch" placeholder="Search..." class="search-input">
+                    <input
+                    type="text"
+                    id="tableSearch"
+                    class="search-input"
+                    placeholder="Search..."
+                    data-search-input
+                    data-table-section="tableSection"
+                    data-no-results="noResults"
+                    />
             </div>
         </div>
     </div>
@@ -134,7 +142,7 @@ $id = Auth::guard('superadmin')->user()->id;
                 <div class="col-3 mb-4">
                     <div class="form-group">
                         <select name="status" required>
-                            <option value="" disabled selected></option>
+                            <option disabled selected>Select</option>
                             <option value="Active">Active</option>
                             <option value="Inactive">Inactive</option>
                         </select>
@@ -167,6 +175,7 @@ $id = Auth::guard('superadmin')->user()->id;
             'perPage' => 5
         ])
     </div> 
+    @include('partials.no-results')
 
 
 </div>

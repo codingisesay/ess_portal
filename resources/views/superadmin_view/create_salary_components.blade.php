@@ -82,7 +82,15 @@ $id = Auth::guard('superadmin')->user()->id;
         <div class="search-container" id="tableSearchContainer" style="display: none;">
             <div class="search-box">
                 <img src="{{ asset('user_end/images/search (1).png') }}" alt="Search" class="search-icon" id="searchIcon">
-                <input type="text" id="tableSearch" placeholder="Search..." class="search-input">
+                <input
+                    type="text"
+                    id="tableSearch"
+                    class="search-input"
+                    placeholder="Search..."
+                    data-search-input
+                    data-table-section="tableSection"
+                    data-no-results="noResults"
+                />
             </div>
         </div>
     </div>
@@ -105,7 +113,7 @@ $id = Auth::guard('superadmin')->user()->id;
                 <div class="col-3 mb-4">
                     <div class="form-group">
                         <select name="template_id" required>
-                            <option value="" disabled selected></option>
+                            <option disabled selected>Select</option>
                             @foreach ($templates as $item)
                                 <option value="{{ $item->id }}">{{ $item->name }}</option>
                             @endforeach
@@ -116,7 +124,7 @@ $id = Auth::guard('superadmin')->user()->id;
                 <div class="col-3 mb-4">
                     <div class="form-group">
                         <select name="component_id" required>
-                            <option value="" disabled selected></option>
+                            <option disabled selected>Select</option>
                             @foreach ($orgComp as $OC)
                                 <option value="{{ $OC->id }}">{{ $OC->name }}</option>
                             @endforeach
@@ -127,7 +135,7 @@ $id = Auth::guard('superadmin')->user()->id;
                 <div class="col-3 mb-4">
                     <div class="form-group">
                         <select name="component_type" required>
-                            <option value="" disabled selected></option>
+                            <option disabled selected>Select</option>
                             <option value="Earning">Earning</option>
                             <option value="Deduction">Deduction</option>
                         </select>
@@ -137,7 +145,7 @@ $id = Auth::guard('superadmin')->user()->id;
                 <div class="col-3 mb-4">
                     <div class="form-group">
                         <select name="calculation_type" required>
-                            <option value="" disabled selected></option>
+                            <option disabled selected>Select</option>
                             <option value="Percentage">Percentage</option>
                             <option value="Fixed">Fixed</option>
                             <option value="Calculative">Calculative</option>
@@ -177,6 +185,8 @@ $id = Auth::guard('superadmin')->user()->id;
             'perPage' => 5
         ])
     </div>
+    @include('partials.no-results')
+    
 
 
     </div>
