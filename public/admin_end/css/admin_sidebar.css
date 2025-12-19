@@ -2,6 +2,14 @@
     width: 5px;
     height: 5px;
 }
+
+/* =========================
+   GLOBAL FONT FIX
+   ========================= */
+
+html, body {
+    font-family:'Fira Sans' !important;
+}
  
 ::-webkit-scrollbar-track {
     -webkit-box-shadow: none;
