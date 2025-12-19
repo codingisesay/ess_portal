@@ -30,8 +30,12 @@ class AdminDashboardController extends Controller
 
     //created a function to show all client details
      public function clientAllDetails(){
-      
-        return view('admin_view.client_all_details');
+        // Fetch all organisations data
+        $organisations = $this->getOrganisations();
+        // dd($organisations->take(5));
+
+        // Pass the organisations data to the client details view
+        return view('admin_view.client_all_details', compact('organisations'));
     }
 
 
