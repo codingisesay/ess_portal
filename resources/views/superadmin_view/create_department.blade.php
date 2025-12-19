@@ -61,14 +61,22 @@
         <div class="search-container" id="tableSearchContainer" style="display: none;">
             <div class="search-box">
                 <img src="{{ asset('user_end/images/search (1).png') }}" alt="Search" class="search-icon" id="searchIcon">
-                <input type="text" id="tableSearch" placeholder="Search..." class="search-input">
+                    <input
+                    type="text"
+                    id="tableSearch"
+                    class="search-input"
+                    placeholder="Search..."
+                    data-search-input
+                    data-table-section="tableSection"
+                    data-no-results="noResults"
+                />
             </div>
         </div>
     </div>
 
     <!-- Form Section -->
     <div id="formSection">
-        <form method="POST" action="{{ route('insert_department') }}">
+        <form method="POST" action="{{ route('insert_department') }}"  id="departmentForm">
             @csrf
             <div class="form-container row">
                 <div class="col-3 mb-4">
@@ -98,6 +106,7 @@
             'perPage' => 5
         ])
     </div>
+    @include('partials.no-results')
 </div>
 
 <!-- Edit Department Modal -->
@@ -200,4 +209,38 @@
         showDepartmentForm(document.querySelector('.toggle-buttons button:first-child'));
     });
 </script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+// Get the data form the table and check whether the input matches with the table data 
+    const form = document.getElementById('departmentForm');
+    const input = form.querySelector('input[name="department_name"]');
+
+    form.addEventListener('submit', function (e) {
+
+        const enteredName = input.value.trim().toLowerCase();
+        if (!enteredName) return;
+
+        // Collect existing department names from table
+        const existingDepartments = Array.from(
+            document.querySelectorAll('#tableSection tbody tr td:nth-child(2)')
+        ).map(td => td.textContent.trim().toLowerCase());
+
+        // Check duplicate
+        if (existingDepartments.includes(enteredName)) {
+            e.preventDefault(); //  STOP FORM SUBMIT
+
+            Swal.fire({
+                icon: 'error',
+                title: 'Department already exists',
+                text: 'Please use a different department name.',
+                confirmButtonColor: '#d33'
+            });
+
+            return false;
+        }
+    });
+
+});
+</script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 @endsection

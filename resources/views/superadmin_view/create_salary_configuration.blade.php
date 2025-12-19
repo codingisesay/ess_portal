@@ -18,7 +18,7 @@ $id = Auth::guard('superadmin')->user()->id;
 <link rel="stylesheet" href="{{ asset('admin_end/css/admin_form.css') }}">
 <link rel="stylesheet" href="{{ asset('admin_end/css/popup_form.css') }}">
 <div class="container">
-    <h3>Creates Salary Templates</h3>
+    <h3>Create Salary Templates</h3>
 
     <!-- Toggle Buttons -->
     <div class="toggle-buttons">

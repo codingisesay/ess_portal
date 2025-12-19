@@ -82,7 +82,15 @@ $id = Auth::guard('superadmin')->user()->id;
         <div class="search-container" id="tableSearchContainer" style="display: none;">
             <div class="search-box">
                 <img src="{{ asset('user_end/images/search (1).png') }}" alt="Search" class="search-icon" id="searchIcon">
-                <input type="text" id="tableSearch" placeholder="Search..." class="search-input">
+                <input
+                    type="text"
+                    id="tableSearch"
+                    class="search-input"
+                    placeholder="Search..."
+                    data-search-input
+                    data-table-section="tableSection"
+                    data-no-results="noResults"
+                />
             </div>
         </div>
     </div>
@@ -119,7 +127,7 @@ $id = Auth::guard('superadmin')->user()->id;
                 <div class="col-3 mb-4">
                     <div class="form-group">
                         <select name="component_type" required>
-                            <option value="" disabled selected></option>
+                            <option disabled selected>Select</option>
                             <option value="Bonus">Bonus</option>
                             <option value="Earnings for Employees">Earnings for Employees</option>
                             <option value="Deduction from Employees">Deduction from Employees</option>
@@ -139,7 +147,7 @@ $id = Auth::guard('superadmin')->user()->id;
                   <div class="col-3 mb-4">
                     <div class="form-group">
                         <select name="income_type" required>
-                            <option value="" disabled selected></option>
+                            <option disabled selected>Select</option>
                             <option value="Fixed">Fixed</option>
                             <option value="Variable">Variable</option>
                         </select>
@@ -150,7 +158,7 @@ $id = Auth::guard('superadmin')->user()->id;
                 <div class="col-3 mb-4">
                     <div class="form-group">
                         <select name="affect_net_salary" required>
-                            <option value="" disabled selected></option>
+                            <option disabled selected>Select</option>
                             <option value="Yes">Yes</option>
                             <option value="No">No</option>
                         </select>
@@ -161,7 +169,7 @@ $id = Auth::guard('superadmin')->user()->id;
                  <div class="col-3 mb-4">
                     <div class="form-group">
                         <select name="calculate_of_gratuity" required>
-                            <option value="" disabled selected></option>
+                            <option disabled selected>Select</option>
                             <option value="Yes">Yes</option>
                             <option value="No">No</option>
                         </select>
@@ -172,7 +180,7 @@ $id = Auth::guard('superadmin')->user()->id;
                 <div class="col-3 mb-4">
                     <div class="form-group">
                         <select name="Set/Alter_Income_Tax_Details" id="incomeTaxDetailsSelect" required>
-                            <option value="" disabled selected></option>
+                            <option disabled selected>Select</option>
                             <option value="Yes">Yes</option>
                             <option value="No">No</option>
                         </select>
@@ -187,7 +195,7 @@ $id = Auth::guard('superadmin')->user()->id;
                  <div class="col-3 mb-4">
                     <div class="form-group">
                         <select name="calculation_type" required>
-                            <option value="" disabled selected></option>
+                            <option disabled selected>Select</option>
                             <option value="Computed">Computed</option>
                             <option value="User Defined">User Defined</option>
                             <option value="Flat Rate">Flat Rate</option>
@@ -203,7 +211,7 @@ $id = Auth::guard('superadmin')->user()->id;
                 <div class="col-3 mb-4">
                     <div class="form-group">
                         <select name="calculation_period" id="calculationPeriodSelect" required>
-                            <option value="" disabled selected></option>
+                            <option disabled selected>Select</option>
                             <option value="Days">Days</option>
                             <option value="Weeks">Weeks</option>
                             <option value="Fortnights">Fortnights</option>
@@ -223,7 +231,7 @@ $id = Auth::guard('superadmin')->user()->id;
                 <div class="col-3 mb-4">
                     <div class="form-group">
                         <select name="status" required>
-                            <option value="" disabled selected></option>
+                            <option  disabled selected>Select</option>
                             <option value="Active">Active</option>
                             <option value="Inactive">Inactive</option>
                         </select>
@@ -246,7 +254,7 @@ $id = Auth::guard('superadmin')->user()->id;
                 ['header' => 'ID', 'accessor' => 'id'],
 
                 // Basic Information
-                ['header' => 'Template Name', 'accessor' => 'name'],
+                ['header' => 'Pay Head Name', 'accessor' => 'name'],
                 ['header' => 'Name to Display in Payslip', 'accessor' => 'name_to_display_in_payslip'],
                 ['header' => 'Type', 'accessor' => 'type'],
                 ['header' => 'Income Type', 'accessor' => 'income_type'],
@@ -270,6 +278,7 @@ $id = Auth::guard('superadmin')->user()->id;
         ])
 
     </div>
+    @include('partials.no-results')
 </div>
 
 <!-- Modal for Custom Days Input -->
@@ -309,7 +318,7 @@ $id = Auth::guard('superadmin')->user()->id;
 
             <div class="popup-form-group-small">
                 <select id="taxCalculationBasis" required>
-                    <option value="" disabled selected></option>
+                    <option disabled selected>Select</option>
                     <option value="Projected Value">Projected Value</option>
                     <option value="Actual Value">Actual Value</option>
                 </select>
@@ -317,7 +326,7 @@ $id = Auth::guard('superadmin')->user()->id;
             </div>
             <div class="popup-form-group-small">
                 <select id="deductTDSAcrossPeriods" required>
-                    <option value="" disabled selected></option>
+                    <option disabled selected>Select</option>
                     <option value="Yes">Yes</option>
                     <option value="No">No</option>
                 </select>
@@ -342,7 +351,7 @@ $id = Auth::guard('superadmin')->user()->id;
         <div class="w3-container" style="padding: 20px;">
             <div class="popup-form-group">
                 <select id="attendanceLeaveSelect" required>
-                    <option value="" disabled selected></option>
+                    <option disabled selected>Select</option>
                     <option value="Present">Present</option>
                     <option value="LOP">LOP</option>
                     <option value="Leave With Pay">Leave With Pay</option>
@@ -382,6 +391,7 @@ $id = Auth::guard('superadmin')->user()->id;
                 <!-- Component Type -->
                 <div class="popup-form-group">
                     <select name="type" id="editComponentType" required>
+                        <option disabled selected>Select</option>
                         <option value="Bonus">Bonus</option>
                         <option value="Earnings for Employees">Earnings for Employees</option>
                         <option value="Deduction from Employees">Deduction from Employees</option>

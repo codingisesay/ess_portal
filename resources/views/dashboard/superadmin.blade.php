@@ -79,11 +79,15 @@
             <div class="badge">D</div>
             <div>
                 <div style="font-weight:700">Departments</div>
-                <div class="small">Searchable categories (tap to expand)</div>
+                <div class="small">List of departments</div>
             </div>
         </div>
         <div class="shared-search">
-            <input id="dept-search" placeholder="Search departments..." onkeyup="filterList('dept-search','departments-list')"/>
+            <input id="dept-search" placeholder="Search departments..." onkeyup="filterList('dept-search','departments-list')"     
+            data-search-input
+            data-table-section="tableSection"
+            data-no-results="noResults" 
+            />
         </div>
         <div id="departments-list" class="shared-list">
             @foreach($departments as $dept)
@@ -104,6 +108,7 @@
                     </div>
                 </div>
             @endforeach
+            @include('partials.no-results')  
         </div>
         </section>
 
@@ -118,7 +123,11 @@
                 </div>
             </div>
             <div class="shared-search">
-                <input id="policy-search" placeholder="Search policies..." onkeyup="filterList('policy-search','policies-list')"/>
+                <input id="policy-search" placeholder="Search policies..." onkeyup="filterList('policy-search','policies-list')"
+                data-search-input
+                data-table-section="tableSection"
+                data-no-results="noResults"
+                />
             </div>
             <div id="policies-list" class="shared-list">
                 @foreach($policies as $policy)
@@ -137,6 +146,7 @@
                         </div>
                     </div>
                 @endforeach
+                @include('partials.no-results')           
             </div>
         </section>
     </div>
@@ -156,11 +166,22 @@ function toggleBody(el){
 }
 function filterList(inputId, listId){
     const filter = document.getElementById(inputId).value.toLowerCase();
-    const cards = document.getElementById(listId).getElementsByClassName('shared-card');
+    const list = document.getElementById(listId);
+    const cards = list.getElementsByClassName('shared-card');
+    const noResults = list.querySelector('#noResults');
+
+    let visibleCount = 0;
+
     Array.from(cards).forEach(card => {
         const text = card.textContent.toLowerCase();
-        card.style.display = text.includes(filter) ? '' : 'none';
+        const match = text.includes(filter);
+        card.style.display = match ? '' : 'none';
+        if (match) visibleCount++;
     });
+
+    if (noResults) {
+        noResults.style.display = visibleCount === 0 ? 'block' : 'none';
+    }
 }
 </script>
 @endsection

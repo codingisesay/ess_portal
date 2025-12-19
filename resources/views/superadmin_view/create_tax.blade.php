@@ -81,7 +81,15 @@ $id = Auth::guard('superadmin')->user()->id;
         <div class="search-container" id="tableSearchContainer" style="display: none;">
             <div class="search-box">
                 <img src="{{ asset('user_end/images/search (1).png') }}" alt="Search" class="search-icon" id="searchIcon">
-                <input type="text" id="tableSearch" placeholder="Search..." class="search-input">
+                <input
+                    type="text"
+                    id="tableSearch"
+                    class="search-input"
+                    placeholder="Search..."
+                    data-search-input
+                    data-table-section="tableSection"
+                    data-no-results="noResults"
+                />
             </div>
         </div>
     </div>
@@ -104,7 +112,7 @@ $id = Auth::guard('superadmin')->user()->id;
             <div class="col-3 mb-4">
                 <div class="form-group">
                     <select name="tax_cycle_type" required>
-                        <option value="" disabled selected></option>
+                        <option disabled selected>Select</option>
                         @foreach ($taxregim as $tax)
                         <option value="{{ $tax->id }}">{{ $tax->name }}</option>
                         @endforeach
@@ -116,7 +124,7 @@ $id = Auth::guard('superadmin')->user()->id;
             <div class="col-3 mb-4">
                 <div class="form-group">
                     <select name="tax_type" required>
-                        <option value="" disabled selected></option>
+                        <option disabled selected>Select</option>
                         <option value="Income Tax">Income Tax</option>
                     </select>
                     <label>Tax Type</label>
@@ -170,7 +178,7 @@ $id = Auth::guard('superadmin')->user()->id;
             'items' => $datafortaxes,
             'columns' => [
                 ['header' => 'ID', 'accessor' => 'id'],
-                ['header' => 'Tax Regime Year', 'accessor' => 'org_tax_regime_years_name'],
+                ['header' => 'Tax Regime', 'accessor' => 'org_tax_regime_years_name'],
                 ['header' => 'Tax Type', 'accessor' => 'tax_type'],
                 ['header' => 'Min Income', 'accessor' => 'min_income'],
                 ['header' => 'Max Income', 'accessor' => 'max_income'],
@@ -182,6 +190,7 @@ $id = Auth::guard('superadmin')->user()->id;
             'perPage' => 5
         ])
     </div>
+    @include('partials.no-results')
 </div>
 
 <div id="editTaxSlabModal" class="w3-modal" style="display: none;">

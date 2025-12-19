@@ -80,7 +80,15 @@ $id = Auth::guard('superadmin')->user()->id;
             <div class="search-container" id="tableSearchContainer" style="display: none;">
                 <div class="search-box">
                     <img src="{{ asset('user_end/images/search (1).png') }}" alt="Search" class="search-icon" id="searchIcon">
-                    <input type="text" id="tableSearch" placeholder="Search..." class="search-input">
+                    <input
+                        type="text"
+                        id="tableSearch"
+                        class="search-input"
+                        placeholder="Search..."
+                        data-search-input
+                        data-table-section="tableSection"
+                        data-no-results="noResults"
+                    />
                 </div>
             </div>
         </div>
@@ -94,7 +102,7 @@ $id = Auth::guard('superadmin')->user()->id;
                 <div class="col-3 mb-4">
                     <div class="form-group ">
                         <select id="organisation_reimbursement_type_id" name="reimbursement_type_id" class="form-control" required>
-                            <option value="" disabled selected></option>
+                            <option disabled selected>Select</option>
                             @foreach ($reim_type as $item)
                             <option value="{{ $item->id }}">{{ $item->name }}</option> 
                             @endforeach
@@ -113,7 +121,7 @@ $id = Auth::guard('superadmin')->user()->id;
                 <div class="col-3 mb-4">
                     <div class="form-group ">
                         <select id="category_id" name="bill_required" class="form-control" required>
-                            <option value="" disabled selected></option>
+                            <option disabled selected>Select</option>
                             <option value="Yes">Yes</option>
                             <option value="No">No</option>
                         </select>
@@ -123,7 +131,7 @@ $id = Auth::guard('superadmin')->user()->id;
                 <div class="col-3 mb-4">
                     <div class="form-group ">
                         <select id="category_id" name="tax_required" class="form-control" required>
-                            <option value="" disabled selected></option>
+                            <option disabled selected>Select</option>
                             <option value="Yes">Yes</option>
                             <option value="No">No</option>
                         </select>
@@ -145,7 +153,7 @@ $id = Auth::guard('superadmin')->user()->id;
             'columns' => [
                 ['header' => 'ID', 'accessor' => 'id'],
                 ['header' => 'Reimbursement Type', 'accessor' => 'reim_type'],
-                ['header' => 'maximum Amount', 'accessor' => 'max_amount'],
+                ['header' => 'Maximum Amount', 'accessor' => 'max_amount'],
                 ['header' => 'Bill Required', 'accessor' => 'bill_required'],
                 ['header' => 'Tax Required', 'accessor' => 'tax_applicable'], 
             ],
@@ -153,7 +161,8 @@ $id = Auth::guard('superadmin')->user()->id;
             'hasActions' => true,
             'perPage' => 5
         ])
-    </div> 
+    </div>
+    @include('partials.no-results') 
     </div>
 
     <!-- Edit Modal -->
