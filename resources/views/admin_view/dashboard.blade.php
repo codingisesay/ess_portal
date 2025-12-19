@@ -1,3 +1,5 @@
+<!-- added the layout sidebar inside a dashboard  -->
+@extends('admin_view.admin_layout')
 
 <!DOCTYPE html>
 <html lang="en">
@@ -25,6 +27,8 @@
 
     @include('admin_view.client_details_popup')
 
+    
+
 
 <body>
 
@@ -33,85 +37,6 @@
      ========================= -->
 
     <div class="container">
-        <!-- Sidebar -->
-         <!-- <aside> because it stays on the side and helps navigate the page -->
-        <aside class="sidebar">
-
-        <!-- Application logo -->
-            <div class="logo">
-                <i class="fas fa-chart-pie"></i>
-            </div>
-
-            <!-- Sidebar navigation -->
-            <nav>
-                <ul>
-            <!-- =========================
-                SIDEBAR NAVIGATION MENU
-                Primary navigation for admin dashboard
-                ========================= -->
-            <nav>
-                <ul>
-
-                    <!-- Dashboard: default landing page -->
-                    <!-- Marked as active to highlight current route -->
-                    <li class="active" title="Dashboard">
-                        <a href="{{ route('admin.dashboard') }}" class="nav-link">
-                            <i class="fas fa-home"></i>
-                            <span>Dashboard</span>
-                        </a>
-                    </li>
-
-                    <!-- Analytics: reports, metrics, and insights -->
-                    <li title="Analytics">
-                        <a href="#" class="nav-link">
-                            <i class="fas fa-chart-line"></i>
-                            <span>Analytics</span>
-                        </a>
-                    </li>
-
-                    <!-- Users: manage users, roles, and permissions -->
-                    <li title="Users">
-                        <a href="#" class="nav-link">
-                            <i class="fas fa-users"></i>
-                            <span>Users</span>
-                        </a>
-                    </li>
-
-                    <!-- Products: product listing, creation, and updates -->
-                    <li title="Products">
-                        <a href="#" class="nav-link">
-                            <i class="fas fa-box"></i>
-                            <span>Products</span>
-                        </a>
-                    </li>
-
-                    <!-- Orders: order tracking and fulfillment -->
-                    <li title="Orders">
-                        <a href="#" class="nav-link">
-                            <i class="fas fa-shopping-cart"></i>
-                            <span>Orders</span>
-                        </a>
-                    </li>
-
-                    <!-- Settings: application and account configuration -->
-                    <li title="Settings">
-                        <a href="#" class="nav-link">
-                            <i class="fas fa-cog"></i>
-                            <span>Settings</span>
-                        </a>
-                    </li>
-
-                </ul>
-            </nav>
-
-                </ul>
-            </nav> <!-- closed sidebar-navigation -->
-
-            <!-- Logout button -->
-            <div class="logout" title="Logout">
-                <i class="fas fa-sign-out-alt"></i>
-            </div>
-        </aside>
 
          <!-- =========================
          MAIN CONTENT AREA
@@ -343,39 +268,7 @@
                 });
             }
 
-            // View All link functionality
-            const viewAllLink = document.querySelector('.view-all');
-            if (viewAllLink) {
-                viewAllLink.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    const sidebar = document.querySelector('.sidebar');
-                    const usersNavItem = document.querySelector('li[title="Users"]');
-                    
-                    // Expand the sidebar if it's not already expanded
-                    if (!sidebar.classList.contains('expanded')) {
-                        sidebar.classList.add('expanded');
-                        // Wait for the sidebar to expand before scrolling
-                        setTimeout(() => {
-                            if (usersNavItem) {
-                                usersNavItem.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                                // Add active class to highlight the Users nav item
-                                document.querySelectorAll('.sidebar nav li').forEach(item => {
-                                    item.classList.remove('active');
-                                });
-                                usersNavItem.classList.add('active');
-                            }
-                        }, 300); // Match this with the CSS transition time
-                    } else if (usersNavItem) {
-                        usersNavItem.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                        // Add active class to highlight the Users nav item
-                        document.querySelectorAll('.sidebar nav li').forEach(item => {
-                            item.classList.remove('active');
-                        });
-                        usersNavItem.classList.add('active');
-                    }
-                });
-            }
-
+        
             // Handle Users nav item click to show Clients Overview in full view
             const usersNavLink = document.querySelector('li[title="Users"] a.nav-link');
             if (usersNavLink) {
