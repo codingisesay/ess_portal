@@ -483,7 +483,7 @@ tbody tr:nth-child(even) {
 
 /* Pagination Controls */
 .pagination-container {
-    position: absolute;
+    position: relative;
     /* This makes the pagination stay at the bottom */
     bottom: 0;
     /* Place it at the bottom */

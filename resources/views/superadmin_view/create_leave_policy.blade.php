@@ -78,7 +78,15 @@ $id = Auth::guard('superadmin')->user()->id;
             <div class="search-container" id="tableSearchContainer" style="display: none;">
                 <div class="search-box">
                     <img src="{{ asset('user_end/images/search (1).png') }}" alt="Search" class="search-icon" id="searchIcon">
-                    <input type="text" id="tableSearch" placeholder="Search..." class="search-input">
+                    <input
+                    type="text"
+                    id="tableSearch"
+                    class="search-input"
+                    placeholder="Search..."
+                    data-search-input
+                    data-table-section="tableSection"
+                    data-no-results="noResults"
+                    />
                 </div>
             </div>
         </div>
@@ -110,7 +118,7 @@ $id = Auth::guard('superadmin')->user()->id;
                     <div class="col-3 mb-4">
                         <div class="form-group">
                             <select id="category_id" name="leave_type_id" class="form-control" required>
-                                <option value="" disabled selected></option>
+                                <option disabled selected>Select</option>
                                 @foreach ($results as $result)
                                     <option value="{{ $result->leave_type_id }}">{{ $result->leave_type }}</option>
                                 @endforeach
@@ -151,7 +159,7 @@ $id = Auth::guard('superadmin')->user()->id;
                     <div class="col-3 mb-4">
                     <div class="form-group">
                         <select id="is_carry_forward" name="is_carry_forward" class="form-control" required>
-                            <option value="" disabled selected></option>
+                            <option disabled selected>Select</option>
                             <option value="Yes">Yes</option>
                             <option value="No">No</option> 
                         </select>
@@ -167,7 +175,7 @@ $id = Auth::guard('superadmin')->user()->id;
                     <div class="col-3 mb-4">
                         <div class="form-group">
                             <select id="LeaveEncash" name="leave_encash" class="form-control" required>
-                                <option value="" disabled selected></option>
+                                <option disabled selected>Select</option>
                                 <option value="Yes">Yes</option>
                                 <option value="No">No</option> 
                             </select>
@@ -183,7 +191,7 @@ $id = Auth::guard('superadmin')->user()->id;
                     <div class="col-3 mb-4">
                         <div class="form-group">
                             <select id="category_id" name="provision_status" class="form-control" required>
-                                <option value="" disabled selected></option>
+                                <option disabled selected>Select</option>
                                 <option value="Applicable">Applicable</option>
                                 <option value="Not Applicable">Not Applicable</option> 
                             </select>
@@ -242,6 +250,7 @@ $id = Auth::guard('superadmin')->user()->id;
             'perPage' => 5
         ])
     </div>
+    @include('partials.no-results')
     </div>
 
     <div id="editLeavePolicyModal" class="w3-modal" style="display: none;">

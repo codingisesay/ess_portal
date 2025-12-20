@@ -3,21 +3,118 @@ namespace App\Http\Controllers;
  
 use Illuminate\Http\Request;
 use Illuminate\View\View;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\DB;
+// Import the Mailable class
+use App\Mail\SendOrganisationCredentialsMail;
+use App\Jobs\SendSubscriptionExpiryMail;
+use Illuminate\Support\Facades\Log;
  
 class AdminDashboardController extends Controller
 {
     // Show admin dashboard
     public function adminDashboard(): View
     {
-        return view('admin_view.dashboard');
+         // Get the expiry alerts
+        $expiryAlerts = $this->getExpiryAlerts();
+
+        // Get the subscription plans
+        $subscriptionPlans = $this->getSubscriptionPlans();
+
+        // Get the organisations
+        $organisations = $this->getOrganisations();
+
+        // Return the dashboard view and pass the data
+        return view('admin_view.dashboard', compact('expiryAlerts', 'subscriptionPlans', 'organisations'));
     }
-// Method to insert new organisation details
-    public function clientmasterinsert(Request $request)
+
+
+    //created a function to show all client details
+     public function clientAllDetails(){
+      
+        return view('admin_view.client_all_details');
+    }
+
+
+// Method to insert new organisation details with welcome emailq
+//   public function clientmasterinsert(Request $request)
+// {
+//     $data = $request->validate([
+//         'name' => 'required',
+//         'client_name' => 'nullable',
+//         'email' => 'required|email',
+//         'password' => 'required',
+
+//         'contact_person' => 'nullable',
+//         'mobile' => 'nullable',
+
+//         // Address
+//         'building_no' => 'nullable',
+//         'premises_name' => 'nullable',
+//         'landmark' => 'nullable',
+//         'road_street' => 'nullable',
+//         'pincode' => 'nullable',
+//         'district' => 'nullable',
+//         'state' => 'nullable',
+//         'country' => 'nullable',
+
+//         'GST_number' => 'nullable',
+//         'industry_type' => 'nullable',
+//         'number_of_emplooyees' => 'nullable',
+//         'software_package_plan' => 'nullable',
+//         'storage_limit' => 'nullable',
+//         'number_of_user_allowed' => 'nullable',
+//         'TAN' => 'nullable',
+//         'PAN' => 'nullable',
+//         'expire_date' => 'nullable',
+
+//         // Certificates
+//         'MSME_udyam_certificate' => 'nullable|file|mimes:pdf,jpg,jpeg,png',
+//         'GST_registration_certificate' => 'nullable|file|mimes:pdf,jpg,jpeg,png',
+
+//         'organisation_status' => 'nullable|in:Active,Incative',
+//     ]);
+
+//     // 🔹 Store plain password for email
+//     $plainPassword = $data['password'];
+
+//     // 🔹 Hash password for DB
+//     $data['password'] = bcrypt($data['password']);
+
+//     // Handle file uploads
+//     if ($request->hasFile('MSME_udyam_certificate')) {
+//         $data['MSME_udyam_certificate'] = file_get_contents(
+//             $request->file('MSME_udyam_certificate')
+//         );
+//     }
+
+//     if ($request->hasFile('GST_registration_certificate')) {
+//         $data['GST_registration_certificate'] = file_get_contents(
+//             $request->file('GST_registration_certificate')
+//         );
+//     }
+
+//     // 🔹 Insert organisation
+//     DB::table('organisations')->insert($data);
+//     // 🔹 Send welcome email 
+//     SendOrganisationCredentialsMail::dispatch(
+//         $data['email'],
+//         $plainPassword,
+//         url('/superadmin/login')
+//     );
+
+//     return back()->with('success', 'Organisation created. Credentials email queued!');
+// }
+
+public function clientmasterinsert(Request $request)
 {
-    $data = $request->validate([
-        'name' => 'required',
+    try {
+        Log::info('Client master insert started');
+
+        $data = $request->validate([
+         'name' => 'required',
         'client_name' => 'nullable',
-        'email' => 'required',
+        'email' => 'required|email',
         'password' => 'required',
 
         'contact_person' => 'nullable',
@@ -48,23 +145,48 @@ class AdminDashboardController extends Controller
         'GST_registration_certificate' => 'nullable|file|mimes:pdf,jpg,jpeg,png',
 
         'organisation_status' => 'nullable|in:Active,Incative',
-    ]);
+        ]);
 
-    // Hash password
-    $data['password'] = bcrypt($data['password']);
+        $plainPassword = $data['password'];
+        $data['password'] = bcrypt($data['password']);
 
-    // Handle file uploads
-    if ($request->hasFile('MSME_udyam_certificate')) {
-        $data['MSME_udyam_certificate'] = file_get_contents($request->file('MSME_udyam_certificate'));
+        if ($request->hasFile('MSME_udyam_certificate')) {
+            $data['MSME_udyam_certificate'] = file_get_contents(
+                $request->file('MSME_udyam_certificate')
+            );
+        }
+
+        if ($request->hasFile('GST_registration_certificate')) {
+            $data['GST_registration_certificate'] = file_get_contents(
+                $request->file('GST_registration_certificate')
+            );
+        }
+
+        DB::table('organisations')->insert($data);
+
+        Log::info('Organisation inserted', [
+            'email' => $data['email']
+        ]);
+
+        SendOrganisationCredentialsMail::dispatch(
+            $data['email'],
+            $plainPassword,
+            url('/superadmin/login')
+        );
+
+        Log::info('SendOrganisationCredentialsMail job dispatched', [
+            'email' => $data['email']
+        ]);
+
+        return back()->with('success', 'Organisation created. Credentials email queued!');
+
+    } catch (\Exception $e) {
+        Log::error('Client master insert failed', [
+            'error' => $e->getMessage()
+        ]);
+
+        return back()->with('error', 'Something went wrong');
     }
-
-    if ($request->hasFile('GST_registration_certificate')) {
-        $data['GST_registration_certificate'] = file_get_contents($request->file('GST_registration_certificate'));
-    }
-
-    \DB::table('organisations')->insert($data);
-
-    return back()->with('success', 'Organisation created successfully!');
 }
 
 // Method to update organisation details
@@ -131,6 +253,8 @@ public function clientmasterupdate(Request $request, $id)
 
     \DB::table('organisations')->where('id', $id)->update($data);
 
+    
+
     return back()->with('success', 'Organisation updated successfully!');
 }
 
@@ -139,7 +263,7 @@ public function getOrganisations()
 {
     $organisations = \DB::table('organisations')->orderBy('id', 'ASC')->get();
 
-    return view('organisation_list', compact('organisations'));
+    return $organisations;
 }
 
 // Method to insert new subscription plan
@@ -219,10 +343,49 @@ public function getSubscriptionPlans()
     $plans = \DB::table('subscription_plans')
         ->orderBy('id', 'ASC')
         ->get();
-
-    return view('subscription_plan_list', compact('plans'));
+    return $plans;
 }
+// Method to get organisations with expiry alerts within next 7 days
+public function getExpiryAlerts()
+{
+    $today = now()->toDateString();
+    $alertDate = now()->addDays(7)->toDateString();
 
+    $organisations = \DB::table('organisations')
+        ->join('subscription_plans', 'subscription_plans.id', '=', 'organisations.software_package_plan')
+        ->select(
+            'organisations.*',
+            'subscription_plans.plan_name'
+        )
+        ->whereBetween('organisations.expire_date', [$today, $alertDate])
+        ->orderBy('organisations.expire_date', 'ASC')
+        ->get();
+        
+    return $organisations;
+}   
+// Method to send expiry alert emails to organisations
+public function sendExpiryEmails()
+{
+    $today = now()->toDateString();
+    $alertDate = now()->addDays(7)->toDateString();
+
+    $organisations = DB::table('organisations')
+        ->whereBetween('expire_date', [$today, $alertDate])
+        ->get();
+
+    foreach ($organisations as $org) {
+        SendSubscriptionExpiryMail::dispatch(
+            $org->email,
+            $org->name,
+            $org->expire_date
+        );
+    }
+
+    return response()->json([
+        'status' => true,
+        'message' => 'Expiry emails queued successfully'
+    ]);
+}
 
 
 }

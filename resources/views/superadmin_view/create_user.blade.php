@@ -75,7 +75,16 @@ $id = Auth::guard('superadmin')->user()->id;
         <div class="search-container" id="tableSearchContainer" style="display: none;">
             <div class="search-box">
                 <img src="{{ asset('user_end/images/search (1).png') }}" alt="Search" class="search-icon" id="searchIcon">
-                <input type="text" id="tableSearch" placeholder="Search..." class="search-input">
+                <input
+                type="text"
+                id="tableSearch"
+                class="search-input"
+                placeholder="Search..."
+                data-search-input
+                data-table-section="tableSection"
+                data-no-results="noResults"
+            />
+
             </div>
         </div>
     </div>
@@ -116,7 +125,7 @@ $id = Auth::guard('superadmin')->user()->id;
                 <div class="form-group">
                         <input type="hidden" name="organisation_id" value="1">
                         <select name="acct_allow" required="" fdprocessedid="kg1mb">
-                            <option value="" disabled="" selected=""></option>
+                            <option disabled selected>Select</option>
                                     <option value="1">Not Allow</option>
                                     <option value="2">Allowed</option> 
                             </select>
@@ -145,6 +154,7 @@ $id = Auth::guard('superadmin')->user()->id;
             'perPage' => 5
         ])
     </div>
+    @include('partials.no-results')
  <!-- Edit User Modal -->
 <div id="editUserModal" class="w3-modal">
     <div class="w3-modal-content w3-animate-top w3-card-4">

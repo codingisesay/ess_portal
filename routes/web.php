@@ -58,10 +58,13 @@ Route::post('admin/login', [AdminAuthController::class, 'login'])->name('admin.l
 Route::middleware('admins')->group(function () {
  // Admin Dashboard Route
 Route::get('admin/dashboard', [AdminDashboardController::class, 'adminDashboard'])->name('admin.dashboard');
+
+// Route to show all client details
+Route::get('admin/client_all_details', [AdminDashboardController::class, 'clientAllDetails'])->name('admin.client_all_details');
 // route to insert new organisation details
 Route::post('admin/organisation/store', [AdminDashboardController::class, 'clientmasterinsert'])->name('organisation.store');
 // Route to get list of organisations users
-Route::get('admin/organisations', [OrganisationController::class, 'getOrganisations'])->name('organisations.list');
+Route::get('admin/organisations', [AdminDashboardController::class, 'getOrganisations'])->name('organisations.list');
 // Route to update organisation details
 Route::post('admin/organisation/update/{id}', [AdminDashboardController::class, 'clientmasterupdate'])->name('organisation.update');
 // Subscription Plans Routes for inserting
@@ -70,7 +73,13 @@ Route::post('/subscription-plans/save', [AdminDashboardController::class, 'saveS
 Route::get('/subscription-plans', [AdminDashboardController::class, 'getSubscriptionPlans'])->name('subscription.plans');
 // Update Subscription Plans Routes
 Route::post('/subscription-plans/update/{id}', [AdminDashboardController::class, 'updateSubscriptionPlan'])->name('subscription.plans.update');
+// Get Expiry Alerts
+Route::get('/organisations/expiry-alerts', [AdminDashboardController::class, 'getExpiryAlerts'])->name('organisations.expiry.alerts');
     
+// Send Expiry Emails route
+Route::post('/admin/send-expiry-mails', [AdminDashboardController::class, 'sendExpiryEmails'])
+    ->name('admin.sendExpiryMails');
+
 // Admin Logout Route
 Route::post('admin/logout', [AdminAuthController::class, 'logout'])->name('admin.logout');
 });
@@ -218,7 +227,7 @@ Route::get('user/preemp',[empDetailFormController::class,'loadpreempuser'])->nam
 Route::get('user/docupload',[empDetailFormController::class,'loaddocuploaduser'])->name('user.docupload');
 //load department according to branch_id
 Route::get('user/fetch_department/{branch_id}',[empDetailFormController::class,'fetchDepartmentBrach'])->name('fetch_department_branch');
-Route::get('user/fetch_designation/{department_id}',[empDetailFormController::class,'fetchDesignationBrach'])->name('fetch_department_branch');
+Route::get('user/fetch_designation/{department_id}',[empDetailFormController::class,'fetchDesignationBrach'])->name('fetch_designation_branch');
 
 //Edit user Controller routes
 
@@ -232,7 +241,7 @@ Route::get('user/edit/docupload/{id?}',[editUserController::class,'loaddocupload
 
 //load department according to branch_id
 Route::get('user/edit/fetch_department/{branch_id}',[empDetailFormController::class,'fetchDepartmentBrach'])->name('fetch_editdepartment_branch');
-Route::get('user/edit/fetch_designation/{department_id}',[empDetailFormController::class,'fetchDesignationBrach'])->name('fetch_editdepartment_branch');
+Route::get('user/edit/fetch_designation/{department_id}',[empDetailFormController::class,'fetchDesignationBrach'])->name('fetch_editdesignation_branch');
 
 //Update edit users Routes
 Route::post('user/edit/detail_insert',[editUserController::class,'insertDetail'])->name('edit_detail_insert');
