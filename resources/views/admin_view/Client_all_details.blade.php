@@ -84,25 +84,14 @@
                 <!-- Address Section -->
                 <div class="section-title">Address</div>
 
-                <!-- Building / premises -->
-                <div class="detail-row">
-                    <span class="detail-label">Building/Premises:</span>
-                    <span class="detail-value">{{ $org->building_no ?? '' }} {{ $org->premises_name ?? '' }}</span>
-                </div>
-
-                <!-- Landmark (optional) -->
-                @if($org->landmark)
-                <div class="detail-row">
-                    <span class="detail-label">Landmark:</span>
-                    <span class="detail-value">{{ $org->landmark }}</span>
-                </div>
-                @endif
-
+                <!-- kept the all fields of addres in only one address input  -->
                 <!-- Full address -->
                 <div class="detail-row">
                     <span class="detail-label">Address:</span>
                     <span class="detail-value">
                         {{ $org->road_street ?? '' }}, 
+                        {{ $org->landmark }},
+                        {{ $org->building_no ?? '' }} ,{{ $org->premises_name ?? '' }},
                         {{ $org->district ?? '' }}, 
                         {{ $org->state ?? '' }} - {{ $org->pincode ?? '' }}
                     </span>
