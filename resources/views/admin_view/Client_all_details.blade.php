@@ -58,8 +58,8 @@
             <div class="details-section">
 
                 <!-- Contact Information -->
-                <div class="section-title" style="display: flex; align-items: center; gap: 8px; font-size: 16px; font-weight: 500; color: #333; padding-bottom: 8px; border-bottom: 1px solid #f0f0f0;">
-                    <i class="fas fa-user" style="color: #4a6cf7; font-size: 14px;"></i>
+                <div class="section-title">
+                    <i class="fas fa-user"></i>
                     <span>Contact Details</span>
                 </div>
 
