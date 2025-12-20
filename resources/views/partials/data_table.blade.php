@@ -1,7 +1,7 @@
 @props(['items', 'columns', 'editModalId' => null, 'perPage' => 10, 'hasActions' => false, 'hasPermision' => false])
  
 <div class="table-container">
-    <div class="table-bordered sm-edit-td">
+    <div class="table-responsive-wrapper">
     <table id="dataTable" class="table ">
         <thead>
             <tr>
@@ -52,8 +52,10 @@
         </tbody>
     </table>
     </div>
-    <!-- Pagination Controls -->
-     <div class=" ">
+   
+</div>
+ <!-- Pagination Controls -->
+    <div class=" ">
         <div class="pagination-container">
             <small class="page-info">Showing Page <span class="current-page">1</span> of <span class="total-pages">1</span></small>
             <ul class="pagination">
@@ -63,7 +65,6 @@
             </ul>
         </div>
     </div>
-</div>
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {

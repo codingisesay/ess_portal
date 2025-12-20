@@ -232,6 +232,24 @@ h3 {
     /* 75vw; */
     box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
     /* Enable horizontal scrolling */
+    display: flex;
+    flex-direction: column;
+    height: 600px; 
+    overflow: hidden; 
+    border-radius: 10px 10px 0 0; /* Only round the top corners */
+    margin-bottom: 0; /* Remove bottom margin so footer can snap to it */
+    padding-bottom: 10px;
+    height: auto; /* Let it grow, or keep 75vh if you want internal scroll */
+  
+
+    overflow-y: auto;
+}
+
+/* Wrap your <table> in a div with this class to allow internal scrolling */
+.table-responsive-wrapper {
+    flex: 1; /* This takes up all available space, pushing pagination down */
+    overflow-y: auto; /* Only the table area scrolls if data is long */
+    padding: 15px 20px 0 20px;
 }
 
 table {
@@ -436,13 +454,13 @@ tbody tr:nth-child(even) {
 }
 
 .pagination-container {
+  margin-top: auto; /* Ensures it stays at the bottom of the flex column */
+    background: #fdfdfd;
+    padding: 15px 20px;
+    border-top: 1px solid #edf2f7 !important;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    /* margin: 15px 5px 0 5px; */
-    /* added the margin bottom to remove the spacing issue*/ 
-    margin-bottom : -5px;
-
 }
 
 .pagination {
@@ -450,7 +468,8 @@ tbody tr:nth-child(even) {
     display: flex;
     align-items: center;
     gap: 7px;
-    font-size: 14px
+    font-size: 14px;
+    list-style: none;
 }
 
 .pagination a {
@@ -473,22 +492,72 @@ tbody tr:nth-child(even) {
 
 .page-number.active {
     border: none;
-    color: #FFF;
-    background: #702851;
+    background-color: #8A3366 !important; /* Your deep purple */
+    color: #ffffff !important;
+    border-color: #702851 !important;
+    background-color: #702851 !important;
 }
 
+/* Hover State */
+.pagination a:hover:not(.disabled a), 
+.page-number:hover:not(.active) {
+    border-color: #8A3366;
+    color: #8A3366;
+    background: #fff5fb;
+    transform: translateY(-1px);
+}
+
+/* Base style for ALL navigation items (Prev, Next, and Numbers) */
+.pagination a, 
+.page-number {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 36px;
+    height: 36px;
+    padding: 0 6px;
+    border-radius: 8px;
+    border: 1px solid #e2e8f0;
+    background: #ffffff;
+    color: #64748b;
+    font-size: 14px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    cursor: pointer;
+}
+/* Ellipsis (...) Style */
 .ellipsis {
-    padding: 5px 10px;
+    color: #cbd5e1;
+    font-weight: 700;
+    padding: 0 4px;
+    display: inline-block;
+}
+
+/* Disabled State (Handled by your JS logic) */
+.pagination li.disabled a {
+    opacity: 0.4;
+    cursor: not-allowed;
+    background: #f8fafc;
+    pointer-events: none;
+}
+/* SVG Icon alignment inside buttons */
+.pagination svg {
+    width: 18px;
+    height: 18px;
+    display: block;
 }
 
 .table-container {
     position: relative;
     /* This makes the pagination container position relative to this container */
-    padding-bottom: 40px;
+    padding-bottom: 0px;
     /* Space for pagination (adjust this value based on pagination height) */
     min-height: 200px;
     /* Minimum height, you can adjust based on your content */
+    overflow: hidden;
 }
+
 
 /* Pagination Controls */
 .pagination-container {
@@ -510,7 +579,21 @@ tbody tr:nth-child(even) {
     padding: 0;
     display: flex;
     justify-content: center;
+    align-items: center;
     /* Center the pagination links */
+}
+
+/* Page Info Text (e.g., "Showing Page 1 of 5") */
+.page-info {
+    font-size: 13px;
+    color: #64748b;
+    font-weight: 500;
+}
+
+.page-info .current-page, 
+.page-info .total-pages {
+    color: #8A3366; /* Your primary brand color */
+    font-weight: 700;
 }
 
 .pagination li {
@@ -538,4 +621,43 @@ tbody tr:nth-child(even) {
     border-color: none;
     outline: 0;
     box-shadow: none;
+}
+
+
+/* 2. The Table - Remove bottom margin so it touches the footer */
+#tableSection table {
+    width: 100% !important;
+    margin-bottom: 0 !important;
+    border-collapse: collapse;
+}
+
+/* 5. Fix for Action Buttons (Update/Delete) in Table */
+td form {
+    display: inline-flex;
+    gap: 4px;
+    align-items: center;
+}
+
+td input[type="text"], td select {
+    padding: 4px 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 13px;
+}
+
+td button {
+    padding: 5px 10px;
+    border-radius: 4px;
+    border: 1px solid #e2e8f0;
+    background: white;
+    cursor: pointer;
+    font-size: 12px;
+    font-weight: 600;
+    transition: 0.2s;
+}
+
+td button[type="submit"]:hover {
+    background: #8A3366;
+    color: white;
+    border-color: #8A3366;
 }
