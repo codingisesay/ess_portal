@@ -31,8 +31,11 @@ class AdminDashboardController extends Controller
 
     //created a function to show all client details
      public function clientAllDetails(){
-      
-        return view('admin_view.client_all_details');
+        // Fetch all organisations data
+        $organisations = $this->getOrganisations();
+
+        // Pass the organisations data to the client details view
+        return view('admin_view.client_all_details', compact('organisations'));
     }
 
 
@@ -259,12 +262,54 @@ public function clientmasterupdate(Request $request, $id)
 }
 
 // Method to get list of organisations users
-public function getOrganisations()
-{
-    $organisations = \DB::table('organisations')->orderBy('id', 'ASC')->get();
+    public function getOrganisations()
+    {
+        $organisations = \DB::table('organisations')->orderBy('id', 'ASC')->get();
+        return $organisations;
+    }
 
-    return $organisations;
-}
+    /**
+     * Display the specified certificate file.
+     *
+     * @param  int  $id
+     * @param  string  $type  Type of certificate (msme or gst)
+     * @return \Illuminate\Http\Response
+     */
+    public function viewCertificate($id, $type)
+    {
+        $organisation = DB::table('organisations')->find($id);
+        
+         // Determine certificate field and base filename based on type
+        $certificateField = $type === 'msme' ? 'MSME_udyam_certificate' : 'GST_registration_certificate';
+        $certificateName = $type === 'msme' ? 'msme_certificate' : 'gst_certificate';
+        
+        // Retrieve binary file content from database
+        $fileContent = $organisation->$certificateField;
+        
+        // Determine content type which is stored in binary format of databse
+        $finfo = new \finfo(FILEINFO_MIME);
+        $mimeType = $finfo->buffer($fileContent);
+        
+        // Adjust extension based on type
+        $extension = 'pdf'; // default
+        if (str_contains($mimeType, 'image/png')) {
+            $extension = 'png';
+        } elseif (str_contains($mimeType, 'image/jpeg')) {
+            $extension = 'jpg';
+        }
+        
+         // Build filename for browser display
+        $filename = "{$certificateName}_{$organisation->id}.{$extension}";
+        
+         // Return file response with inline display
+        return response($fileContent)
+            ->header('Content-Type', $mimeType)
+            ->header('Content-Disposition', "inline; filename=\"{$filename}\"")
+            ->header('Cache-Control', 'no-cache, no-store, must-revalidate')
+            ->header('Pragma', 'no-cache')
+            ->header('Expires', '0');
+    }
+
 
 // Method to insert new subscription plan
 public function saveSubscriptionPlan(Request $request)

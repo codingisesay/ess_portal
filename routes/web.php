@@ -84,6 +84,10 @@ Route::post('/admin/send-expiry-mails', [AdminDashboardController::class, 'sendE
 Route::post('admin/logout', [AdminAuthController::class, 'logout'])->name('admin.logout');
 });
 
+// View organisation certificates
+Route::get('admin/organisation/certificate/{id}/{type}', [AdminDashboardController::class, 'viewCertificate'])
+    ->name('admin.organisation.certificate');
+
 
 
 Route::middleware(['auth.superadmin'])->group(function () {
