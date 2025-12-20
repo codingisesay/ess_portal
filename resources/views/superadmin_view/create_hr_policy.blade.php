@@ -116,7 +116,7 @@ $id = Auth::guard('superadmin')->user()->id;
             </div>
             @endif
 
-            <form action="{{ route('save_hr_policy') }}" method="POST" enctype="multipart/form-data">
+            <form action="{{ route('save_hr_policy') }}" method="POST" enctype="multipart/form-data" id="hrPolicyForm">
                 @csrf
                 <div  class="form-container row">
 
@@ -184,7 +184,7 @@ $id = Auth::guard('superadmin')->user()->id;
             'items' => $datas,
             'columns' => [
                 ['header' => 'ID', 'accessor' => 'id'],
-                ['header' => 'Title', 'accessor' => 'policy_title'],
+                ['header' => 'Policy Title', 'accessor' => 'policy_title'],
                 ['header' => 'Category', 'accessor' => 'policy_categorie_id'],
                 ['header' => 'Status', 'accessor' => 'status'],
             ],
@@ -343,6 +343,41 @@ $id = Auth::guard('superadmin')->user()->id;
             document.getElementById('editHRPolicyModal').style.display = 'block';
         }
     </script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const policyForm = document.getElementById('hrPolicyForm');
+    const policyInput = document.getElementById('policy_title');
+
+    if (policyForm) {
+        policyForm.addEventListener('submit', function (e) {
+            const enteredTitle = policyInput.value.trim().toLowerCase();
+            
+            if (!enteredTitle) return;
+
+            // Collect existing titles from the Table Section (2nd Column)
+            const existingTitles = Array.from(
+                document.querySelectorAll('#tableSection tbody tr td:nth-child(2)')
+            ).map(td => td.textContent.trim().toLowerCase());
+
+            // Check for matches
+            if (existingTitles.includes(enteredTitle)) {
+                e.preventDefault(); // Stop the form from submitting
+
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Duplicate Policy Title',
+                    text: 'A policy with this title already exists in the table below.',
+                    confirmButtonColor: '#802451' // Matching your button color
+                });
+
+                return false;
+            }
+        });
+    }
+});
+</script>
 @endsection
 </body>
 </html>
