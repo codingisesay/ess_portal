@@ -24,21 +24,121 @@
             </ul>
             </div>
             @endif
-        <h2>Settings</h2>
-        <div class="accordion">
-            <!-- Upcoming Holidays -->
-            <?php 
-                if(in_array(11, $permission_array)){ 
-                ?>
-                    <div class="accordion-item my-2">
-                        <!-- Accordion Header with a toggle dropdown -->
-                        <div class="accordion-header" onclick="toggleCalendarMasterDropdown()">
-                            Calendar Master
+    <!-- Main container with sidebar and content area -->
+    <div class="main-container mx-">
+        <!-- Sidebar for different settings components -->
+        <div class="sidebar_main" id="sidebarMain">
+            <div class="sidebar_internal">
+                <!-- Top Section with Search Bar and Toggle -->
+                <div class="sidebar_top">
+                    <div class="sidebar_top_left">
+                        <div class="Logo_main sidebar-search" id="logoMain">
+                            <div class="search-bar">
+                                <!-- Search input to filter settings -->
+                                <input type="text" placeholder="Search Settings..." id="searchInput">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="sidebar_top_right">
+                        <div class="top_button_container">
+                            <!-- Button to collapse/expand sidebar -->
+                            <button type="button" class="top_button" id="collapseButton" onclick="toggleSidebar()">
+                                <i class="fas fa-chevron-right" id="collapseIcon"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sidebar Bottom with Settings Categories -->
+                <div class="sidebar_bottom">
+                    <div class="button-list" id="buttonList">
+                        <!-- Setting option based on Permission -->
+                        <?php if(in_array(11, $permission_array)): ?>
+                        <div class="dropdown-section">
+                            <button class="sidebar-button" 
+                                    onclick="selectSetting('calendarMaster')"
+                                    data-setting="calendarMaster">
+                                <div class="sidebar-icon">
+                                    <img src="{{ asset('user_end/images/calendar-icon.png') }}" alt="Calendar Master">
+                                </div>
+                                <span class="sidebar-button-text">Calendar Master</span>
+                            </button>
+                        </div>
+                        <?php endif; ?>
+                        <!-- Setting option based on Permission -->
+                        <?php if(in_array(13, $permission_array)): ?>
+                        <div class="dropdown-section">
+                            <button class="sidebar-button" 
+                                    onclick="selectSetting('thoughtNews')"
+                                    data-setting="thoughtNews">
+                                <div class="sidebar-icon">
+                                    <img src="{{ asset('user_end/images/thought-icon.png') }}" alt="Thought & News">
+                                </div>
+                                <span class="sidebar-button-text">Thought of the Day/News & Events</span>
+                            </button>
+                        </div>
+                        <?php endif; ?>
+                        <!-- Setting option based on Permission -->
+                        <?php if(in_array(12, $permission_array)): ?>
+                        <div class="dropdown-section">
+                            <button class="sidebar-button" 
+                                    onclick="selectSetting('employeeDetails')"
+                                    data-setting="employeeDetails">
+                                <div class="sidebar-icon">
+                                    <img src="{{ asset('user_end/images/employee-icon.png') }}" alt="Employee Details">
+                                </div>
+                                <span class="sidebar-button-text">Employee Details Edit</span>
+                            </button>
+                        </div>
+                        <?php endif; ?>
+                        <!-- Setting option based on Permission -->
+                        <?php if(in_array(14, $permission_array)): ?>
+                        <div class="dropdown-section">
+                            <button class="sidebar-button" 
+                                    onclick="selectSetting('employeeSalary')"
+                                    data-setting="employeeSalary">
+                                <div class="sidebar-icon">
+                                    <img src="{{ asset('user_end/images/salary-icon.png') }}" alt="Employee Salary">
+                                </div>
+                                <span class="sidebar-button-text">Employee Salary</span>
+                            </button>
+                        </div>
+                        <?php endif; ?>
+
+                        <div class="dropdown-section">
+                            <button class="sidebar-button" 
+                                    onclick="selectSetting('processSalary')"
+                                    data-setting="processSalary">
+                                <div class="sidebar-icon">
+                                    <img src="{{ asset('user_end/images/process-icon.png') }}" alt="Process Salary">
+                                </div>
+                                <span class="sidebar-button-text">Process Salary (2025-26)</span>
+                            </button>
                         </div>
 
-                        <!-- Dropdown content (initially hidden) -->
-                        <div id="calendarMasterDropdown" class="dropdown-content px-3" style="display: none;">
-                            <form id="calendarMasterForm" method="POST" action="{{ route('create_calendra_master') }}">
+                        <div class="dropdown-section">
+                            <button class="sidebar-button" 
+                                    onclick="selectSetting('leaveSummary')"
+                                    data-setting="leaveSummary">
+                                <div class="sidebar-icon">
+                                    <img src="{{ asset('user_end/images/leave-icon.png') }}" alt="Leave Summary">
+                                </div>
+                                <span class="sidebar-button-text">Leave Summary</span>
+                            </button>
+                        </div> <!-- Leave Summary Button End -->
+                    </div> <!-- Button List End -->
+                </div> <!-- Sidebar Bottom End -->
+            </div> <!-- Sidebar Internal End -->
+        </div> <!-- Sidebar Main End -->
+
+        <!-- Content Area -->
+        <div class="content-area my-2 active" id="contentArea">
+            <div class="setting-content" id="settingContent">
+                <!-- Calendar Master Content (Default Open) -->
+                <?php if(in_array(11, $permission_array)): ?>
+                <div id="calendarMasterContent" class="setting-section active">
+                    <h2>Calendar Master</h2>
+                    <form id="calendarMasterForm" method="POST" action="{{ route('create_calendra_master') }}">
                                 @csrf
                                 <div class="row">
                                     <!-- Year Selection -->
@@ -79,7 +179,7 @@
                                     <span class="error" id="weekOffError"></span>
                                 </div>
 
-                                <!-- Saturday Config (only visible if Saturday is checked) -->
+                                <!-- Saturday Config  -->
                                 <div id="saturdayConfig" style="display:none;" class="mx-3 my-2">
                                     <label>Select Saturday Offs:</label><br>
                                     <input type="checkbox" name="saturday_offs[]" value="1"> 1st Saturday
@@ -89,7 +189,7 @@
                                     <input type="checkbox" name="saturday_offs[]" value="5"> 5th Saturday
                                 </div>
 
-                                <!-- Holiday Selection (Date, Name, and Description) -->
+                                <!-- Holiday Selection  -->
                                 <div id="holidayUpdate" style="display:none;">
                                     <div class="row">
                                         <div class="col-md-4 my-2">                                                                
@@ -117,38 +217,22 @@
                                 </div>
                                 </div>
 
-                                <!-- Working Hours Container (Dynamically populated) -->
+                                <!-- Working Hours Container  -->
                                 <div id="workingHoursContainer" style="display:none;">
-                                    <!-- Working hours will be dynamically inserted here -->
                                 </div>
 
                                 <!-- Submit Button -->
                                 <button type="submit" class="submit-btn px-3 py-1">Submit</button>
                             </form>
                         </div>
-                    </div>
-                <?php 
-                }
-                ?>
-
-
-
-
-            <!-- Leave Section (With Link to hr_universal.php) -->
-            <!-- {{-- <div class="accordion-item my-2">
-                <div class="accordion-header" onclick="window.location.href='{{ url('hr_universal') }}'">
-                    Global Leaves
-                </div>
-            </div> --}} -->
+                <?php endif; ?>
+                
 
             <!-- Thought of the Day -->
-            <?php 
-            if(in_array(13,$permission_array)){?>
-             
-                <div class="accordion-item my-2">
-                    <div class="accordion-header" onclick="toggleDropdown()">Thought of the Day/News & Events</div>
-                    <div class="dropdown-content" id="dropdownContent">
-                        <form action="{{ route('save_thought') }}" method="POST">
+            <?php if(in_array(13,$permission_array)): ?>
+            <div id="thoughtNewsContent" class="setting-section">
+                    <h2>Thought of the Day/News & Events</h2>
+                    <form action="{{ route('save_thought') }}" method="POST">
                             @csrf
                             <!-- Entry Type -->
                             <!-- <div class="form-group"> --> 
@@ -238,28 +322,13 @@
                             </form>
                         </div>
                     </div>
-                </div>
                 
-            <?php
-            }
-            
-            
-            
-            ?>
+            <?php endif; ?>
          
             <!-- Employee Edit -->
-            <?php 
-                if(in_array(12, $permission_array)){ 
-                ?>
-            <div class="accordion-item my-2">
-                <!-- Accordion Header with a toggle dropdown -->
-                <div class="accordion-header" onclick="toggleEmployeeDetailsDropdown()">
-                    Employee Details Edit
-                </div>
-
-                <!-- Dropdown content (initially hidden) -->
-                <div id="employeeDetailsDropdown" class="dropdown-content" style="display: none;">
-                    <!-- Collapsible Content (Table) -->
+            <?php if(in_array(12, $permission_array)): ?>
+            <div id="employeeDetailsContent" class="setting-section">
+                    <h2>Employee Details Edit</h2>
                     <div class="content" id="employeeTableContainer">
                         <table class="custom-table">
                             <thead>
@@ -293,21 +362,11 @@
                         </div>
                     </div>
                 </div>
-                <?php } ?>
+                <?php endif; ?>
 
-                <?php 
-                //user salary functions
-                if(in_array(14, $permission_array)){ 
-                ?>
-                    <div class="accordion-item my-2">
-                        <!-- Accordion Header with a toggle dropdown -->
-                        <div class="accordion-header" onclick="toggleEmployeeSalaryDropdown()">
-                            Employee Salary
-                        </div>
-                
-                        <!-- Dropdown content (initially hidden) -->
-                        <div id="EmployeeSalaryDropdown" class="dropdown-content" style="display: none;">
-                            <!-- Collapsible Content (Table) -->
+                <?php if(in_array(14, $permission_array)): ?>
+                <div id="employeeSalaryContent" class="setting-section">
+                    <h2>Employee Salary</h2> 
                             <div class="content">
                                 <table class="custom-table">
                                     <thead>
@@ -352,19 +411,12 @@
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                        <?php } ?>
-            </div>
-                <div class="accordion-item my-2">
-                    <!-- Accordion Header with a toggle dropdown -->
-                    <div class="accordion-header" onclick="toggleProcessSalaryDropdown()">
-                        Process Salary (2025-26)
-                    </div>
-            
-                    <!-- Dropdown content (initially hidden) -->
-                    <div id="ProcessSalaryDropdown" class="dropdown-content mt-0 pt-0" style="display: none;">
-                        <!-- Collapsible Content (Table) -->
-                        <form action="{{ route('process_salary') }}" method="POST" >
+                        <?php endif; ?>
+
+             <!-- Process Salary -->
+                <div id="processSalaryContent" class="setting-section">
+                    <h2>Process Salary</h2>
+                    <form action="{{ route('process_salary') }}" method="POST">
                             @csrf
                             <div class="row">
                             
@@ -394,17 +446,12 @@
                         <button class="ms-auto px-4 py-1" type="submit">Process</button>
                         </form>
                     </div>
-                </div>      
-        </div>
 
 
 
 <!-- Leave Summary Section -->
-<div class="accordion-item my-2">
-    <div class="accordion-header" onclick="#">
-        Leave Summary
-    </div>
-    <div id="LeaveSummaryDropdown" class="dropdown-content mt-0 pt-0" style="display: block;">
+<div id="leaveSummaryContent" class="setting-section">
+    <h2>Leave Summary</h2>
     <div class="accordion-content">
         {{-- Month & Year Filter --}}
             <form method="GET" action="{{ route('user.setting') }}" class="mb-3 d-flex align-items-center gap-2">
@@ -423,6 +470,7 @@
                     <input type="date" name="end_date" id="end_date" value="{{ request('end_date') }}" onchange="this.form.submit()">
             </form>     
         <!-- Leave Summary Table -->
+            <div class="table-scroll-container">
             <table class="custom-table">
                 <thead>
                     <tr>
@@ -479,83 +527,251 @@
                     </tr>
                 </tfoot>
             </table>             
-    </div>
-</div>
-</main>
-
-
-
-   <script>
-                                // show/hide the Saturday config when Saturday checkbox toggles
-            const saturdayCheckbox = document.getElementById('saturday');
-            const saturdayConfig = document.getElementById('saturdayConfig');
-
-            saturdayCheckbox.addEventListener('change', function() {
-                saturdayConfig.style.display = this.checked ? 'block' : 'none';
-            });
-
-            // if user checks any specific saturday boxes, automatically ensure the main Saturday checkbox is checked
-            document.querySelectorAll('input[name="saturday_offs[]"]').forEach(function(el) {
-                el.addEventListener('change', function() {
-                    const anyChecked = document.querySelectorAll('input[name="saturday_offs[]"]:checked').length > 0;
-                    if (anyChecked) {
-                        saturdayCheckbox.checked = true;
-                        saturdayConfig.style.display = 'block';
-                    }
-                });
-            });
-         </script>
+        </div> <!-- Table Scroll Container End -->
+        </div> <!-- Accordion Content End -->
+   </div> <!-- Leave Summary Content End -->
+</div> <!-- Setting Content End -->
+</div> <!-- Content Area End -->
+</div> <!-- Main Container End -->
+</main> <!-- Main End -->
 
 <script>
-    function toggleEmployeeDetailsDropdown() {
-        var dropdown = document.getElementById("employeeDetailsDropdown");
-        dropdown.style.display = dropdown.style.display === "none" || dropdown.style.display === "" ? "block" : "none";
+    // Calendar Master functionality for week off and holiday selection
+    const saturdayCheckbox = document.getElementById('saturday');
+    const saturdayConfig = document.getElementById('saturdayConfig');
+       
+       saturdayCheckbox.addEventListener('change', function() {
+            saturdayConfig.style.display = this.checked ? 'block' : 'none';
+        });
+        // if user checks any specific saturday boxes, automatically ensure the main Saturday checkbox is checked
+        document.querySelectorAll('input[name="saturday_offs[]"]').forEach(function(el) {
+            el.addEventListener('change', function() {
+                const anyChecked = document.querySelectorAll('input[name="saturday_offs[]"]:checked').length > 0;
+                if (anyChecked && saturdayCheckbox) {
+                    saturdayCheckbox.checked = true;
+                    saturdayConfig.style.display = 'block';
+                }
+            });
+        });
+    
+
+    // Sidebar collapse/expand functionality
+    let sidebarCollapsed = false;
+   
+    function toggleSidebar() {
+        sidebarCollapsed = !sidebarCollapsed;
+        const sidebarMain = document.getElementById('sidebarMain');
+        const sidebarTop = document.querySelector('.sidebar_top');
+        const logoMain = document.getElementById('logoMain');
+        const searchBar = document.querySelector('.search-bar');
+        const searchInput = document.getElementById('searchInput');
+        const collapseIcon = document.getElementById('collapseIcon');
+        const buttonList = document.getElementById('buttonList');
+        const sidebarButtons = document.querySelectorAll('.sidebar-button');
+        const buttonTexts = document.querySelectorAll('.sidebar-button-text');
+        const sidebarTopLeft = document.querySelector('.sidebar_top_left');
+        const sidebarTopRight = document.querySelector('.sidebar_top_right');
+        const topButtonContainer = document.querySelector('.top_button_container');
+        const sidebarBottom = document.querySelector('.sidebar_bottom');
+
+        if (sidebarCollapsed) {
+            // Collapse sidebar to 75px width
+            sidebarMain.style.width = '75px';
+            sidebarMain.style.minWidth = '75px';
+            
+            // Hide search bar and logo completely
+            if (logoMain) {
+                logoMain.style.display = 'none';
+            }
+            if (searchBar) {
+                searchBar.style.display = 'none';
+            }
+            if (searchInput) {
+                searchInput.style.display = 'none';
+            }
+            if (sidebarTopLeft) {
+                sidebarTopLeft.style.display = 'none';
+            }
+            
+            // Adjust sidebar top to center button only
+            if (sidebarTop) {
+                sidebarTop.style.justifyContent = 'center';
+                sidebarTop.style.alignItems = 'center';
+                sidebarTop.style.padding = '10px 0';
+            }
+            
+            // Center the collapse button
+            if (sidebarTopRight) {
+                sidebarTopRight.style.width = '100%';
+                sidebarTopRight.style.display = 'flex';
+                sidebarTopRight.style.justifyContent = 'center';
+                sidebarTopRight.style.alignItems = 'center';
+                sidebarTopRight.style.borderRadius = '30px 30px 0 0';
+            }
+            if (topButtonContainer) {
+                topButtonContainer.style.padding = '10px';
+                topButtonContainer.style.margin = '0 auto';
+            }
+            
+            // Rotate collapse icon
+            collapseIcon.style.transform = 'rotate(180deg)';
+            
+            // Adjust sidebar bottom for icons only
+            if (sidebarBottom) {
+                sidebarBottom.style.paddingTop = '5px';
+            }
+            
+            // Adjust button list for icons only
+            if (buttonList) {
+                buttonList.style.borderRadius = '0px 0px 25px 25px';
+                buttonList.style.paddingTop = '5px';
+                buttonList.style.gap = '8px';
+            }
+            
+            // Show only icons, hide text - properly centered
+            sidebarButtons.forEach(btn => {
+                btn.style.width = '60px';
+                btn.style.height = '60px';
+                btn.style.justifyContent = 'center';
+                btn.style.alignItems = 'center';
+                btn.style.padding = '0';
+                btn.style.margin = '0 auto';
+            });
+            
+            // Hide icon backgrounds when collapsed, show just icons
+            document.querySelectorAll('.sidebar-icon').forEach(icon => {
+                icon.style.margin = '0';
+                icon.style.width = '50px';
+                icon.style.height = '50px';
+            });
+            
+            buttonTexts.forEach(text => {
+                text.style.display = 'none';
+            });
+        } else {
+            // Expand sidebar back
+            sidebarMain.style.width = '22%';
+            sidebarMain.style.minWidth = 'auto';
+            
+            // Restore sidebar top layout
+            if (sidebarTop) {
+                sidebarTop.style.justifyContent = 'space-between';
+                sidebarTop.style.alignItems = 'flex-start';
+                sidebarTop.style.padding = '0';
+            }
+            
+            // Show search bar and logo
+            if (logoMain) {
+                logoMain.style.display = 'flex';
+                logoMain.style.width = '75%';
+                logoMain.style.height = '70px';
+                logoMain.style.marginLeft = '10px';
+                logoMain.style.marginRight = '10px';
+            }
+            if (searchBar) {
+                searchBar.style.display = 'flex';
+            }
+            if (searchInput) {
+                searchInput.style.display = 'block';
+            }
+            if (sidebarTopLeft) {
+                sidebarTopLeft.style.display = 'block';
+            }
+            
+            // Restore top right layout
+            if (sidebarTopRight) {
+                sidebarTopRight.style.width = '30%';
+                sidebarTopRight.style.justifyContent = 'flex-end';
+                sidebarTopRight.style.borderRadius = '45px 45px 45px 0';
+            }
+            if (topButtonContainer) {
+                topButtonContainer.style.padding = '20px';
+                topButtonContainer.style.margin = '0';
+            }
+            
+            // Rotate collapse icon back
+            collapseIcon.style.transform = 'rotate(0deg)';
+            
+            // Restore sidebar bottom
+            if (sidebarBottom) {
+                sidebarBottom.style.paddingTop = '0';
+            }
+            
+            // Restore button list
+            if (buttonList) {
+                buttonList.style.borderRadius = '0px 25px 25px 25px';
+                buttonList.style.paddingTop = '10px';
+                buttonList.style.gap = '6px';
+            }
+            
+            // Show text with icons - restore full layout
+            sidebarButtons.forEach(btn => {
+                btn.style.width = '98%';
+                btn.style.height = 'auto';
+                btn.style.justifyContent = 'flex-start';
+                btn.style.alignItems = 'center';
+                btn.style.padding = '10px 15px';
+                btn.style.margin = '0';
+            });
+            
+            // Restore icon sizes
+            document.querySelectorAll('.sidebar-icon').forEach(icon => {
+                icon.style.width = '50px';
+                icon.style.height = '50px';
+                icon.style.margin = '0';
+            });
+            
+            buttonTexts.forEach(text => {
+                text.style.display = 'inline';
+            });
+        }
     }
 
-    function toggleCalendarMasterDropdown() {
-        var dropdown = document.getElementById("calendarMasterDropdown");
-        dropdown.style.display = dropdown.style.display === "none" ? "block" : "none";
+    // Select setting from sidebar
+    function selectSetting(settingType) {
+        // Remove active class from all buttons
+        document.querySelectorAll('.sidebar-button').forEach(btn => {
+            btn.classList.remove('active');
+        });
+        
+        // Add active class to clicked button
+        event.target.closest('.sidebar-button').classList.add('active');
+        
+        // Hide all setting sections
+        document.querySelectorAll('.setting-section').forEach(section => {
+            section.classList.remove('active');
+        });
+        
+        // Show selected setting section
+        const selectedSection = document.getElementById(settingType + 'Content');
+        if (selectedSection) {
+            selectedSection.classList.add('active');
+        }
     }
 
-    function toggleEmployeeSalaryDropdown() {
-        var dropdown = document.getElementById("EmployeeSalaryDropdown");
-        dropdown.style.display = dropdown.style.display === "none" ? "block" : "none";
-    }
-
-     function toggleProcessSalaryDropdown() {
-        var dropdown = document.getElementById("ProcessSalaryDropdown");
-        dropdown.style.display = dropdown.style.display === "none" ? "block" : "none";
-    }
-
-     function toggleLeaveSummaryDropdown() {
-        var dropdown = document.getElementById("LeaveSummaryDropdown");
-        dropdown.style.display = dropdown.style.display === "none" ? "block" : "none";
-    }
-
-    document.addEventListener("DOMContentLoaded", function () {
+         // functionality for week off and holiday selection
+        document.addEventListener("DOMContentLoaded", function () {
         const yearSelect = document.getElementById("year");
         const weekOffHolidaySelect = document.getElementById("weekOffHolidaySelect");
         const weekOffSelection = document.getElementById("weekOffSelection");
         const holidayUpdate = document.getElementById("holidayUpdate");
         const workingHoursContainer = document.getElementById("workingHoursContainer");
-
         weekOffSelection.style.display = "none";
         holidayUpdate.style.display = "none";
         workingHoursContainer.style.display = "none";
-
         weekOffHolidaySelect.addEventListener("change", function () {
             const selectedOption = weekOffHolidaySelect.value;
             if (selectedOption === "weekoff") {
                 weekOffSelection.style.display = "block";
-                holidayUpdate.style.display = "none";
-                workingHoursContainer.style.display = "block";
-            } else if (selectedOption === "holiday") {
-                weekOffSelection.style.display = "none";
-                holidayUpdate.style.display = "block";
-                workingHoursContainer.style.display = "none";
-            }
+                    if (holidayUpdate) holidayUpdate.style.display = "none";
+                    if (workingHoursContainer) workingHoursContainer.style.display = "block";
+                } else if (selectedOption === "holiday") {
+                    if (weekOffSelection) weekOffSelection.style.display = "none";
+                    holidayUpdate.style.display = "block";
+                    if (workingHoursContainer) workingHoursContainer.style.display = "none";
+                }
         });
-
+        
         function populateYearDropdown() {
             const currentYear = new Date().getFullYear();
             for (let year = currentYear; year <= currentYear + 50; year++) {
@@ -565,19 +781,22 @@
                 yearSelect.appendChild(option);
             }
         }
-
         populateYearDropdown();
-
+        
+        // Week Off Selection - Update Working Hours Fields
         const weekOffCheckboxes = document.querySelectorAll('input[name="weekoff[]"]');
-        weekOffCheckboxes.forEach(checkbox => {
-            checkbox.addEventListener('change', function () {
-                updateWorkingHoursFields();
+        if (weekOffCheckboxes.length > 0) {
+            weekOffCheckboxes.forEach(checkbox => {
+                checkbox.addEventListener('change', function () {
+                    updateWorkingHoursFields();
+                });
             });
-        });
-
+        // Function to create working hours input fields based on selected week off days
         function updateWorkingHoursFields() {
             const weekOffDays = [];
-            workingHoursContainer.innerHTML = "";
+            if (workingHoursContainer) {
+                workingHoursContainer.innerHTML = "";
+            }
             weekOffCheckboxes.forEach(checkbox => {
                 if (checkbox.checked) {
                     weekOffDays.push(checkbox.value);
@@ -589,102 +808,195 @@
 
             if (workingDays.length > 0) {
                 workingHoursContainer.innerHTML = `
-                    <div class='row '>
-                        <div class="col-md-4">
-                         <div class="form-group">
-                        <label>Set Working Hours for All Working Days:</label><br>
-                        <label for="start_time">Start Time:</label>
-                        <input type="time" id="start_time" name="working_start_time"><br>
-                        </div></div>
-                        <div class="col-md-4">
-                         <div class="form-group">
-                        <label for="end_time">End Time:</label>
-                        <input type="time" id="end_time" name="working_end_time"><br>
-                        </div></div>
-                    </div>
-                `;
-            } else {
+                        <div class='row '>
+                            <div class="col-md-4">
+                             <div class="form-group">
+                            <label>Set Working Hours for All Working Days:</label><br>
+                            <label for="start_time">Start Time:</label>
+                            <input type="time" id="start_time" name="working_start_time"><br>
+                            </div></div>
+                            <div class="col-md-4">
+                             <div class="form-group">
+                            <label for="end_time">End Time:</label>
+                            <input type="time" id="end_time" name="working_end_time"><br>
+                            </div></div>
+                        </div>
+                    `;
+            } else if (workingHoursContainer) {
                 workingHoursContainer.innerHTML = "<p>No working days left. Please select week off days first.</p>";
             }
         }
+        }
+
+        // Thought form validation
+        const thoughtDate = document.getElementById("thoughtDate");
+        const thoughtDescription = document.getElementById("thoughtDescription");
+        const submitThought = document.getElementById("submitThought");
+        
+        if (thoughtDate && submitThought) {
+            thoughtDate.addEventListener("input", validateThoughtForm);
+            thoughtDescription.addEventListener("input", validateThoughtForm);
+        }
+        // Function to validate thought form fields
+        function validateThoughtForm() {
+            const thoughtDate = document.getElementById("thoughtDate");
+            const thoughtDescription = document.getElementById("thoughtDescription");
+            const submitButton = document.getElementById("submitThought");
+            submitButton.disabled = !(thoughtDate.value && thoughtDescription.value);
+            
+        }
+
+    
+        const date = document.getElementById("date");
+        const title = document.getElementById("title");
+        const description = document.getElementById("description");
+        const eventStartDate = document.getElementById("event-start-date");
+        const eventEndDate = document.getElementById("event-end-date");
+        const location = document.getElementById("location");
+        const submitNews = document.getElementById("submitNews");
+
+        if (date && submitNews) {
+            date.addEventListener("input", validateNewsForm);
+            title.addEventListener("input", validateNewsForm);
+            description.addEventListener("input", validateNewsForm);
+            eventStartDate.addEventListener("input", validateNewsForm);
+            eventEndDate.addEventListener("input", validateNewsForm);
+            location.addEventListener("input", validateNewsForm);
+        }
+        // Function to validate news form fields
+        function validateNewsForm() {
+            const date = document.getElementById("date");
+            const title = document.getElementById("title");
+            const description = document.getElementById("description");
+            const eventStartDate = document.getElementById("event-start-date");
+            const eventEndDate = document.getElementById("event-end-date");
+            const location = document.getElementById("location");
+            const submitButton = document.getElementById("submitNews");
+            
+            submitButton.disabled = !(date.value && title.value && description.value && eventStartDate.value && eventEndDate.value && location.value);
+            
+        }
+
+        // Search functionality
+        const searchInput = document.getElementById('searchInput');
+        if (searchInput) {
+            searchInput.addEventListener('input', function() {
+                performSearch();
+            });
+        }
+
+        function performSearch() {
+            const searchInput = document.getElementById('searchInput');
+            if (!searchInput) return;
+            
+            const term = (searchInput.value || '').trim().toLowerCase();
+            const sidebarButtons = document.querySelectorAll('.sidebar-button');
+
+            // Remove highlight classes only
+            sidebarButtons.forEach(btn => btn.classList.remove('highlight'));
+
+            if (!term) return;
+
+            // Search in setting names and highlight matching settings
+            sidebarButtons.forEach(button => {
+                const settingNameEl = button.querySelector('.sidebar-button-text');
+                if (settingNameEl) {
+                    const settingName = settingNameEl.textContent.toLowerCase().trim();
+                    if (settingName.includes(term)) {
+                        button.classList.add('highlight');
+                    }
+                }
+            });
+        }
     });
-
-    function toggleDropdown() {
-        const dropdownContent = document.getElementById("dropdownContent");
-        dropdownContent.style.display = dropdownContent.style.display === "block" ? "none" : "block";
-    }
-
-    document.getElementById("thoughtDate").addEventListener("input", validateThoughtForm);
-    document.getElementById("thoughtDescription").addEventListener("input", validateThoughtForm);
-
-    function validateThoughtForm() {
-        const thoughtDate = document.getElementById("thoughtDate").value;
-        const thoughtDescription = document.getElementById("thoughtDescription").value;
-        const submitButton = document.getElementById("submitThought");
-
-        submitButton.disabled = !(thoughtDate && thoughtDescription);
-    }
-
-    document.getElementById("date").addEventListener("input", validateNewsForm);
-    document.getElementById("title").addEventListener("input", validateNewsForm);
-    document.getElementById("description").addEventListener("input", validateNewsForm);
-    document.getElementById("event-start-date").addEventListener("input", validateNewsForm);
-    document.getElementById("event-end-date").addEventListener("input", validateNewsForm);
-    document.getElementById("location").addEventListener("input", validateNewsForm);
-
-    function validateNewsForm() {
-        const date = document.getElementById("date").value;
-        const title = document.getElementById("title").value;
-        const description = document.getElementById("description").value;
-        const eventStartDate = document.getElementById("event-start-date").value;
-        const eventEndDate = document.getElementById("event-end-date").value;
-        const location = document.getElementById("location").value;
-        const submitButton = document.getElementById("submitNews");
-
-        submitButton.disabled = !(date && title && description && eventStartDate && eventEndDate && location);
-    }
-
+    // Function to switch between Thought and News forms
     function switchForm(formType) {
         const thoughtForm = document.getElementById("thoughtForm");
         const newsForm = document.getElementById("newsForm");
 
-        if (formType === "thought") {
-            thoughtForm.style.display = "block";
-            newsForm.style.display = "none";
-        } else if (formType === "news") {
-            thoughtForm.style.display = "none";
-            newsForm.style.display = "block";
-        }
+            if (formType === "thought") {
+                thoughtForm.style.display = "block";
+                newsForm.style.display = "none";
+                thoughtForm.classList.add("active");
+                newsForm.classList.remove("active");
+            } else if (formType === "news") {
+                thoughtForm.style.display = "none";
+                newsForm.style.display = "block";
+                thoughtForm.classList.remove("active");
+                newsForm.classList.add("active");
+            }
+        
     }
+
+    // Fixed page reload issue on Settings page — prevented re-rendering after clicking Next using JavaScript(3823).
+    document.addEventListener('click', function (e) {
+        const link = e.target.closest('#employeeTableContainer .pagination a');
+        if (!link) return;
+
+        e.preventDefault();
+        const container = document.getElementById('employeeTableContainer');
+        if (!container) return;
+
+        fetch(link.href, { headers: { 'X-Requested-With': 'XMLHttpRequest' }})
+            .then(res => res.text())
+            .then(html => {
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(html, 'text/html');
+                const newContainer = doc.querySelector('#employeeTableContainer');
+                if (newContainer) {
+                    container.innerHTML = newContainer.innerHTML;
+                }
+            })
+            .catch(err => console.error('Pagination load failed:', err));
+    });
 </script>
-
 <script>
-// Fixed page reload issue on Settings page — prevented re-rendering after clicking Next using JavaScript(3823).
-document.addEventListener('click', function (e) {
-    const link = e.target.closest('#employeeDetailsDropdown .pagination a');
-    if (!link) return;
+    // Wait until the DOM is fully loaded before executing the script
+    document.addEventListener('DOMContentLoaded', function () {
 
-    e.preventDefault();
-    const container = document.getElementById('employeeTableContainer');
-    if (!container) return;
+    // Get all sidebar buttons
+    const buttons = document.querySelectorAll('.sidebar-button');
 
-    fetch(link.href, { headers: { 'X-Requested-With': 'XMLHttpRequest' }})
-        .then(res => res.text())
-        .then(html => {
-            const parser = new DOMParser();
-            const doc = parser.parseFromString(html, 'text/html');
-            const newContainer = doc.querySelector('#employeeTableContainer');
-            if (newContainer) {
-                container.innerHTML = newContainer.innerHTML;
-            }
-            // keep accordion open
-            const dd = document.getElementById('employeeDetailsDropdown');
-            if (dd && (dd.style.display === 'none' || dd.style.display === '')) {
-                dd.style.display = 'block';
-            }
-        })
-        .catch(err => console.error('Pagination load failed:', err));
+    // Find first visible (permission-based) button
+    const firstVisibleButton = Array.from(buttons)
+        .find(btn => btn.offsetParent !== null);
+
+    // Simulate click on first permitted button
+    firstVisibleButton.click();
+
 });
 </script>
+
+
+<style>
+    /* Search highlight styles */
+    .sidebar-button.highlight {
+        background-color: #E0AFA0 !important;
+        font-weight: bold !important;
+    }
+    
+    /* Make top_button (sidebar collapse button) circular */
+    .top_button {
+        border-radius: 50% !important;
+    }
+
+    /* Setting section styles */
+    .setting-section {
+        display: none;
+        padding: 20px;
+    }
+    /* Active setting section */
+    .setting-section.active {
+        display: block;
+    }
+    /* Dynamic form styles */
+    .dynamic-form {
+        display: none;
+    }
+    /* Active dynamic form */
+    .dynamic-form.active {
+        display: block;
+    }
+</style>
 
 @endsection
