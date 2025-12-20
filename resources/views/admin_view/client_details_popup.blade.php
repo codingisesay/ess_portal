@@ -62,8 +62,9 @@
         <label>Email</label>
     </div>
 
+    <!-- changed the phone to mobile to edit is visible -->
     <div class="form-group">
-        <input type="mobile" id="editPhone" name="phone" class="form-control">
+        <input type="mobile" id="editPhone" name="mobile" class="form-control">
         <label>Phone</label>
     </div>
 
