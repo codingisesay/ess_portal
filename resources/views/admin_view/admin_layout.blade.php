@@ -34,8 +34,8 @@
                 <ul>
 
                     <!-- Dashboard: default landing page -->
-                    <!-- Marked as active to highlight current route -->
-                    <li class="active" title="Dashboard">
+                    <!-- Active state based on current route -->
+                    <li class="{{ request()->routeIs('admin.dashboard') ? 'active' : '' }}" title="Dashboard">
                         <a href="{{ route('admin.dashboard') }}" class="nav-link">
                             <i class="fas fa-home"></i>
                             <span>Dashboard</span>
@@ -51,9 +51,12 @@
                     </li>
 
                     <!-- Users: manage users, roles, and permissions -->
+                     <!-- addded navigation for the client_all_details page -->
                     <li title="Users">
-                        <a href="{{ route('admin.client_all_details') }}" class="{{ request()->routeIs('admin.client_all_details') ? 'active' : '' }}">Users</a>
-                        <span>Users</span>
+                        <a href="{{ route('admin.client_all_details') }}" class="nav-link {{ request()->routeIs('admin.client_all_details') ? 'active' : '' }}">
+                            <i class="fas fa-users"></i>
+                            <span>Users</span>
+                        </a>
                     </li>
                      <li></li>
 
