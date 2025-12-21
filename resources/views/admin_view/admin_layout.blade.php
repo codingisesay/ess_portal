@@ -46,7 +46,7 @@
                     <li title="Analytics">
                         <a href="#" class="nav-link">
                             <i class="fas fa-chart-line"></i>
-                            <span>Analytics</span>
+                            <span>Subscriptions</span>
                         </a>
                     </li>
 
@@ -60,29 +60,6 @@
                     </li>
                      <li></li>
 
-                    <!-- Products: product listing, creation, and updates -->
-                    <li title="Products">
-                        <a href="#" class="nav-link">
-                            <i class="fas fa-box"></i>
-                            <span>Products</span>
-                        </a>
-                    </li>
-
-                    <!-- Orders: order tracking and fulfillment -->
-                    <li title="Orders">
-                        <a href="#" class="nav-link">
-                            <i class="fas fa-shopping-cart"></i>
-                            <span>Orders</span>
-                        </a>
-                    </li>
-
-                    <!-- Settings: application and account configuration -->
-                    <li title="Settings">
-                        <a href="#" class="nav-link">
-                            <i class="fas fa-cog"></i>
-                            <span>Settings</span>
-                        </a>
-                    </li>
 
                 </ul>
             </nav>
@@ -96,8 +73,22 @@
             </div>
         </aside>
 
+        <!-- logout form (POST) -->
+        <form id="admin-logout-form" action="{{ route('admin.logout') }}" method="POST" style="display:none;">
+            @csrf
+        </form>
+
         <script>
             const viewAllLink = document.querySelector('.view-all');
+            // Handle admin logout click -> submit hidden POST form
+            const logoutBtn = document.querySelector('.logout');
+            if (logoutBtn) {
+                logoutBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const form = document.getElementById('admin-logout-form');
+                    if (form) form.submit();
+                });
+            }
             if (viewAllLink) {
                 viewAllLink.addEventListener('click', function(e) {
                     e.preventDefault();
