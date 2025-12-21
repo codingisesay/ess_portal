@@ -266,15 +266,7 @@
                         <label for="software_package_plan">Subscription Plan</label>
                     </div>
 
-                    <!-- organisation status -->
-                    <div class="form-group">
-                        <select id="organisation_status" name="organisation_status" required>
-                            <option value=""> </option>
-                            <option value="Active">Active</option>
-                            <option value="Inactive">Inactive</option>
-                        </select>
-                        <label for="organisation_status">Status</label>
-                    </div>
+                    
 
                     <!-- Document Information -->
                    <div class="form-group">
