@@ -203,6 +203,11 @@ document.addEventListener('DOMContentLoaded', function () {
         //setting the current value of software package id
         document.getElementById('editPackage').value = popupPkgId;
         document.getElementById('editStatus').checked = status;
+        // Sync label text with current status when entering edit mode
+        const editStatusLabel1 = document.querySelector('label[for="editStatus"]');
+        if (editStatusLabel1) {
+            editStatusLabel1.textContent = status ? 'Active' : 'Inactive';
+        }
         
         // Toggle view/edit modes
         document.getElementById('viewMode').style.display = 'none';
@@ -254,6 +259,11 @@ document.addEventListener('DOMContentLoaded', function () {
 
         document.getElementById('editStatus').checked =
             document.getElementById('clientStatus').classList.contains('active');
+        // Sync label text with current status when entering edit mode (like on a container)
+        const editStatusLabel2 = document.querySelector('label[for="editStatus"]');
+        if (editStatusLabel2) {
+            editStatusLabel2.textContent = document.getElementById('editStatus').checked ? 'Active' : 'Inactive';
+        }
 
         document.getElementById('viewMode').style.display = 'none';
         editForm.style.display = 'block';
