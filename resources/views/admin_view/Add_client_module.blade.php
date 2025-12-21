@@ -40,7 +40,7 @@
                             type="text"
                             id="client_name" 
                             name="client_name" 
-                            placeholder="Client Name *" 
+                            placeholder="" 
                             maxlength="225" 
                             pattern="[A-Za-z\s]+"
                             title="Please enter only letters and spaces (no numbers or special characters)"
