@@ -38,7 +38,7 @@
         <div class="client-card"
             data-client-id="{{ $org->id }}"
             data-package-id="{{ $org->software_package_plan }}"
-            data-package-name="{{ $org->plan_name }}">
+            >
 
             
             <!-- Card Header -->
