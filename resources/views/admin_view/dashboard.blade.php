@@ -127,24 +127,29 @@
                                     ->map(fn ($word) => strtoupper(substr($word, 0, 1)))
                                     ->take(2)
                                     ->implode('');
- 
+
                                 // Storage %
                                 $storage = (int) ($org->storage_used_percent ?? 0);
- 
+
                                 // Status handling (1 = Active, 0 = Inactive)
                                 $statusClass = ((int) ($org->status ?? 0) === 1)
                                     ? 'active'
-                                    : 'inactive';                 
+                                    : 'inactive';
+
+                                // subscription plan name from plans collection
+                                $planName = optional(collect($subscriptionPlans)->firstWhere('id', $org->software_package_plan))->plan_name ?? '—';
                             @endphp
 
 
                              <!-- Avatar with initials -->
                               <!-- used the right column name for mobile number (mobile) -->
+                               <!-- getting the current value of software package id -->
                             <div class="client-card"
                                  data-client-id="{{ $org->id }}"
                                  data-email="{{ $org->email ?? '' }}"
                                  data-phone="{{ $org->mobile ?? '' }}"
-                                 data-package="{{ $org->package ?? 'basic' }}">
+                                 data-package-id="{{ $org->software_package_plan ?? '' }}"
+                                 data-package="{{ $planName }}">
                                 <div class="client-avatar client-avatar-blue">
                                     {{ $initials }}
                                 </div>

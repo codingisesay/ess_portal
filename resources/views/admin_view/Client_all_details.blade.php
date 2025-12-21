@@ -33,9 +33,13 @@
             <p>No clients match your search criteria. Try different keywords.</p>
         </div>
         
-        <!-- Loop through all organisations -->
+         <!-- Loop through all organisations passed from the controller -->
         @foreach($organisations as $org)
-        <div class="client-card" data-searchable="true">
+        <div class="client-card"
+            data-client-id="{{ $org->id }}"
+            data-package-id="{{ $org->software_package_plan }}"
+            data-package-name="{{ $org->plan_name }}">
+
             
             <!-- Card Header -->
             <div class="card-header">

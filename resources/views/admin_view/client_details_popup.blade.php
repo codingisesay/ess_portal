@@ -68,12 +68,17 @@
         <label>Phone</label>
     </div>
 
+    <!-- Subscription Plans get from the subscription plan module where we cretae a subscritption plan -->
     <div class="form-group">
-        <select id="editPackage" name="package" class="form-control">
-            <option value="basic">Basic</option>
-            <option value="standard">Standard</option>
-            <option value="premium">Premium</option>
-        </select>
+        <select id="editPackage" name="software_package_plan" class="form-control">
+            <option value="" disabled selected></option>
+
+                            @foreach($subscriptionPlans as $plan)
+                                <option value="{{ $plan->id }}">
+                                    {{ $plan->plan_name }}
+                                </option>
+                            @endforeach
+                        </select>
         <label>Package</label>
     </div>
 
@@ -127,6 +132,7 @@ document.addEventListener('DOMContentLoaded', function () {
             const clientEmail = this.getAttribute('data-email') || '—';
             const clientPhone = this.getAttribute('data-phone') || '—';
             const clientPackage = this.getAttribute('data-package') || '—';
+            const clientPackageId = this.getAttribute('data-package-id') || '';
             const clientStatus = this.querySelector('.client-status')?.textContent.trim().toLowerCase() || 'inactive';
             
             // Store client ID if available (for server-side updates)
@@ -134,6 +140,8 @@ document.addEventListener('DOMContentLoaded', function () {
             if (clientId) {
                 document.getElementById('clientPopup').setAttribute('data-client-id', clientId);
             }
+            //getting package id from the data when we insert the client newly
+            document.getElementById('clientPopup').setAttribute('data-package-id', clientPackageId);
 
             document.getElementById('clientName').textContent = clientName;
             
@@ -181,6 +189,9 @@ document.addEventListener('DOMContentLoaded', function () {
         const email = document.getElementById('clientEmail').textContent;
         const phone = document.getElementById('clientPhone').textContent;
         const package = document.getElementById('clientPackage').textContent;
+
+        //getting the cuurent value of software package id
+        const popupPkgId = document.getElementById('clientPopup').getAttribute('data-package-id') || '';
         const status = document.getElementById('clientStatus').classList.contains('active');
         
         // Set form values
@@ -188,7 +199,9 @@ document.addEventListener('DOMContentLoaded', function () {
         document.getElementById('editContact').value = contact;
         document.getElementById('editEmail').value = email === '—' ? '' : email;
         document.getElementById('editPhone').value = phone === '—' ? '' : phone;
-        document.getElementById('editPackage').value = package.toLowerCase() || 'basic';
+        
+        //setting the current value of software package id
+        document.getElementById('editPackage').value = popupPkgId;
         document.getElementById('editStatus').checked = status;
         
         // Toggle view/edit modes
@@ -237,7 +250,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 : document.getElementById('clientPhone').textContent;
 
         document.getElementById('editPackage').value =
-            document.getElementById('clientPackage').textContent.toLowerCase();
+            (document.getElementById('clientPopup').getAttribute('data-package-id') || '');
 
         document.getElementById('editStatus').checked =
             document.getElementById('clientStatus').classList.contains('active');
