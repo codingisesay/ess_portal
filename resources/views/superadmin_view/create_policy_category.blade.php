@@ -91,7 +91,7 @@ $id = Auth::guard('superadmin')->user()->id;
 
         <!-- Form Section -->
         <div id="formSection">
-            <form action="{{ route('save_policy_category') }}" method="POST" enctype="multipart/form-data" >
+            <form action="{{ route('save_policy_category') }}" method="POST" enctype="multipart/form-data" id="policyCategoryForm">
                 @csrf
                 <div class="form-container row">
                 <div class="col-3 mb-4">
@@ -272,6 +272,41 @@ $id = Auth::guard('superadmin')->user()->id;
             document.getElementById('editPolicyCategoryModal').style.display = 'block';
         }
     </script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const form = document.getElementById('policyCategoryForm');
+    const input = document.getElementById('category_name');
+
+    if (form) {
+        form.addEventListener('submit', function (e) {
+            const enteredName = input.value.trim().toLowerCase();
+            
+            if (!enteredName) return;
+
+            // Collect existing category names from the table (2nd Column)
+            const existingCategories = Array.from(
+                document.querySelectorAll('#tableSection tbody tr td:nth-child(2)')
+            ).map(td => td.textContent.trim().toLowerCase());
+
+            // Check for duplicates
+            if (existingCategories.includes(enteredName)) {
+                e.preventDefault(); // Stop form submission
+
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Category already exists',
+                    text: 'This policy category name is already present in the list.',
+                    confirmButtonColor: '#d33'
+                });
+
+                return false;
+            }
+        });
+    }
+});
+</script>
 @endsection
 </body>
 </html>

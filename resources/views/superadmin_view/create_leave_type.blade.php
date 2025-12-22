@@ -102,7 +102,7 @@ $id = Auth::guard('superadmin')->user()->id;
             </div>
             @endif
 
-            <form action="{{ route('insert_policy_type') }}" method="POST" enctype="multipart/form-data">
+            <form id="leaveTypeForm" action="{{ route('insert_policy_type') }}" method="POST" enctype="multipart/form-data">
                 @csrf
                 <div  class="form-container row">
                     <div class="col-3 mb-4">
@@ -320,6 +320,52 @@ $id = Auth::guard('superadmin')->user()->id;
 
                 document.getElementById('editLeaveTypeModal').style.display = 'block'; // Show the modal
             }
+        </script>
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+        <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const form = document.getElementById('leaveTypeForm');
+            
+            if (form) {
+                form.addEventListener('submit', function (e) {
+                    // 1. Get current values from the form
+                    const cycleSelect = document.querySelector('select[name="cycle_slot_id"]');
+                    const selectedCycleText = cycleSelect.options[cycleSelect.selectedIndex].text.trim().toLowerCase();
+                    const enteredLeaveType = document.getElementById('category_name').value.trim().toLowerCase();
+
+                    // 2. Identify all rows in the data table
+                    // Based on your columns: Cycle Name is 2nd column, Leave Type is 3rd column
+                    const tableRows = document.querySelectorAll('#tableSection tbody tr');
+                    let isDuplicate = false;
+
+                    tableRows.forEach(row => {
+                        const cells = row.querySelectorAll('td');
+                        if (cells.length >= 3) {
+                            const existingCycle = cells[1].textContent.trim().toLowerCase();
+                            const existingType = cells[2].textContent.trim().toLowerCase();
+
+                            // 3. Check if the combination matches
+                            if (existingCycle === selectedCycleText && existingType === enteredLeaveType) {
+                                isDuplicate = true;
+                            }
+                        }
+                    });
+
+                    // 4. If duplicate found, stop submission and show SWAL
+                    if (isDuplicate) {
+                        e.preventDefault();
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Duplicate Entry',
+                            text: `The Leave Type "${enteredLeaveType.toUpperCase()}" already exists for the cycle "${selectedCycleText.toUpperCase()}".`,
+                            confirmButtonColor: '#3085d6'
+                        });
+                        return false;
+                    }
+                });
+            }
+        });
         </script>
 @endsection
 </body>
