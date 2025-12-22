@@ -84,6 +84,10 @@ Route::post('/admin/send-expiry-mails', [AdminDashboardController::class, 'sendE
 Route::post('admin/logout', [AdminAuthController::class, 'logout'])->name('admin.logout');
 });
 
+// View organisation certificates
+Route::get('admin/organisation/certificate/{id}/{type}', [AdminDashboardController::class, 'viewCertificate'])
+    ->name('admin.organisation.certificate');
+
 
 
 Route::middleware(['auth.superadmin'])->group(function () {
@@ -227,7 +231,7 @@ Route::get('user/preemp',[empDetailFormController::class,'loadpreempuser'])->nam
 Route::get('user/docupload',[empDetailFormController::class,'loaddocuploaduser'])->name('user.docupload');
 //load department according to branch_id
 Route::get('user/fetch_department/{branch_id}',[empDetailFormController::class,'fetchDepartmentBrach'])->name('fetch_department_branch');
-Route::get('user/fetch_designation/{department_id}',[empDetailFormController::class,'fetchDesignationBrach'])->name('fetch_department_branch');
+Route::get('user/fetch_designation/{department_id}',[empDetailFormController::class,'fetchDesignationBrach'])->name('fetch_designation_branch');
 
 //Edit user Controller routes
 
@@ -241,7 +245,7 @@ Route::get('user/edit/docupload/{id?}',[editUserController::class,'loaddocupload
 
 //load department according to branch_id
 Route::get('user/edit/fetch_department/{branch_id}',[empDetailFormController::class,'fetchDepartmentBrach'])->name('fetch_editdepartment_branch');
-Route::get('user/edit/fetch_designation/{department_id}',[empDetailFormController::class,'fetchDesignationBrach'])->name('fetch_editdepartment_branch');
+Route::get('user/edit/fetch_designation/{department_id}',[empDetailFormController::class,'fetchDesignationBrach'])->name('fetch_editdesignation_branch');
 
 //Update edit users Routes
 Route::post('user/edit/detail_insert',[editUserController::class,'insertDetail'])->name('edit_detail_insert');
