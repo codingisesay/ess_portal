@@ -34,8 +34,9 @@ class AdminDashboardController extends Controller
         // Fetch all organisations data
         $organisations = $this->getOrganisations();
 
-        // Pass the organisations data to the client details view
-        return view('admin_view.client_all_details', compact('organisations'));
+        // Pass the organisations data to the client details view 
+        // handle casesensative file systems
+        return view('admin_view.Client_all_details', compact('organisations'));
     }
 
 

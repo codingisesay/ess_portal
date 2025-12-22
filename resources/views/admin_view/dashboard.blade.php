@@ -15,6 +15,7 @@
 
 {{-- Main content section starts --}}    
 @section('content')
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <!-- =========================
      DASHBOARD CONTAINER
@@ -263,6 +264,48 @@
             }
         });
     </script>
+     <!-- added sweetalert2 script for sending expiry notification to all clients -->
+   <script>
+document.getElementById('sendNotificationBtn').addEventListener('click', function () {
+
+    Swal.fire({
+        title: 'Are you sure?',
+        text: 'Send expiry notifications to all clients?',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Yes, send it!',
+        cancelButtonText: 'Cancel'
+    }).then((result) => {
+        if (!result.isConfirmed) return;
+
+        fetch("{{ route('admin.sendExpiryMails') }}", {
+            method: "POST",
+            headers: {
+                "X-CSRF-TOKEN": "{{ csrf_token() }}",
+                "Accept": "application/json",
+                "Content-Type": "application/json"
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            Swal.fire({
+                icon: 'success',
+                title: 'Done!',
+                text: data.message
+            });
+        })
+        .catch(error => {
+            console.error(error);
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops!',
+                text: 'Something went wrong'
+            });
+        });
+    });
+});
+</script>
+
 
 @endsection
 {{-- Main content section ends --}}
