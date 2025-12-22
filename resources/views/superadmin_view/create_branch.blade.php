@@ -226,7 +226,7 @@ $id = Auth::guard('superadmin')->user()->id;
                     <label for="editBranchName">Branch Name</label>
                 </div>
                 <div class="popup-form-group">
-                    <input type="text" name="mobile" id="editMobile" required>
+                    <input type="text" name="mobile" id="editMobile" required  pattern="[0-9]{10}"  pattern="[0-9]{10}" inputmode="numeric" oninput="this.value = this.value.replace(/[^0-9]/g, '')">
                     <label for="editMobile">Mobile</label>
                 </div>
                 <div class="popup-form-group">

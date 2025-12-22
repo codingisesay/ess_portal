@@ -270,7 +270,7 @@ $id = Auth::guard('superadmin')->user()->id;
                         <label for="editLeaveType">Leave Type</label>
                     </div>
                     <div class="popup-form-group">
-                        <input type="number" name="max_leave_count" id="editMaxLeave" required>
+                        <input type="number" name="max_leave_count" id="editMaxLeave" required  min="1" max="365" step="1">
                         <label for="editMaxLeave">Max Leave</label>
                     </div>
                     <div class="popup-form-group">
