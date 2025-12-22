@@ -128,31 +128,31 @@ $id = Auth::guard('superadmin')->user()->id;
                     </div>
                     <div class="col-3 mb-4">
                         <div class="form-group">
-                            <input type="number" id="category_name" name="max_leave_count" class="form-control" required>
+                            <input type="number" id="category_name" name="max_leave_count" class="form-control" required min="1" max="365" step="1">
                             <label for="category_name">Max Leave</label>
                         </div>
                     </div>
                     <div class="col-3 mb-4">
                         <div class="form-group">
-                            <input type="number" id="category_name" name="max_leave_at_time" class="form-control" required>
+                            <input type="number" id="category_name" name="max_leave_at_time" class="form-control" required min="1" step="1">
                             <label for="category_name">Max Leave At Time</label>
                         </div>
                     </div>
                     <div class="col-3 mb-4">
                         <div class="form-group">
-                            <input type="number" id="category_name" name="min_leave_at_time" class="form-control" required step="0.5">
+                            <input type="number" id="category_name" name="min_leave_at_time" class="form-control"  min="0.5" required step="0.5">
                             <label for="category_name">Min Leave At Time</label>
                         </div> 
                     </div>
                     <div class="col-3 mb-4">
                         <div class="form-group">
-                            <input type="number" id="category_name" name="leave_count_per_month" class="form-control" required step="0.5">
+                            <input type="number" id="category_name" name="leave_count_per_month" class="form-control"   min="0" required step="0.5">
                             <label for="category_name">Leave Count Per Month</label>
                         </div> 
                     </div>
                     <div class="col-3 mb-4">
                         <div class="form-group">
-                            <input type="number" id="category_name" name="no_of_leaves_per_month" class="form-control" required step="0.5">
+                            <input type="number" id="category_name" name="no_of_leaves_per_month" class="form-control" required step="0.5" min="1" max="31">
                             <label for="category_name">No of Times Per Months</label>
                         </div> 
                     </div>
