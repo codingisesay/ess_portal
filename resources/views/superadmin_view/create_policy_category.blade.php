@@ -96,8 +96,11 @@ $id = Auth::guard('superadmin')->user()->id;
                 <div class="form-container row">
                 <div class="col-3 mb-4">
                 <div class="form-group">
-                    <input type="text" id="category_name" name="category_name" class="form-control" required>
-                    <label for="category_name">Category Name</label>
+                    <input type="text" id="category_name" name="category_name" class="form-control" required
+                      oninput="this.value = this.value.replace(/[^A-Za-z\s\-]/g, '')">
+                    <label for="category_name">
+                        Category Name <span style="color:red">*</span>
+                    </label>
                 </div>
                 </div>
                 <div class="col-3 mb-4">
@@ -107,7 +110,9 @@ $id = Auth::guard('superadmin')->user()->id;
                         <option value="Active">Active</option>
                         <option value="Inactive">Inactive</option>
                     </select>
-                    <label for="category_id">Status</label>
+                    <label for="category_id">
+                       Status <span style="color:red">*</span>
+                    </label>
                 </div> 
                 </div>
 
@@ -147,15 +152,19 @@ $id = Auth::guard('superadmin')->user()->id;
                     @method('POST')
                     <input type="hidden" name="category_id" id="editPolicyCategoryId">
                     <div class="popup-form-group">
-                        <input type="text" name="category_name" id="editPolicyCategoryName" required> 
-                        <label for="editPolicyCategoryName">Category Name</label>
+                        <input type="text" name="category_name" id="editPolicyCategoryName" required  oninput="this.value = this.value.replace(/[^A-Za-z\s\-]/g, '')"> 
+                        <label for="editPolicyCategoryName">
+                        Category Name <span style="color:red">*</span>
+                    </label>
                     </div>
                     <div class="popup-form-group">
                         <select name="status" id="editPolicyCategoryStatus" required>
                             <option value="Active">Active</option>
                             <option value="Inactive">Inactive</option>
                         </select>
-                        <label for="editPolicyCategoryStatus">Status</label>
+                    <label for="editPolicyCategoryStatus">
+                       Status <span style="color:red">*</span>
+                    </label>
                     </div>
                     <div class="popup-form-group">
                         <button class="create-btn1" type="submit">Save Changes</button>
