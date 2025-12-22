@@ -200,19 +200,19 @@ $id = Auth::guard('superadmin')->user()->id;
                     </div>
                     <div class="col-3 mb-4">
                         <div class="form-group">
-                            <input type="number" id="category_name" name="max_leave_pp" class="form-control" required>
+                            <input type="number" id="category_name" name="max_leave_pp" class="form-control" >
                             <label for="category_name">Max Leave Probation Period</label>
                         </div>
                     </div>
                     <div class="col-3 mb-4">
                         <div class="form-group">
-                            <input type="number" id="category_name" name="probation_period_per_month" class="form-control" required>
+                            <input type="number" id="category_name" name="probation_period_per_month" class="form-control" >
                             <label for="category_name">Probation Period Per Month</label>
                         </div> 
                     </div>
                     <div class="col-3 mb-4">
                         <div class="form-group">
-                            <input type="number" id="category_name" name="calendra_start_for_PP" class="form-control" required>
+                            <input type="number" id="category_name" name="calendra_start_for_PP" class="form-control">
                             <label for="category_name">Calendra Start For PP</label>
                         </div>
                     </div>
@@ -413,6 +413,53 @@ $id = Auth::guard('superadmin')->user()->id;
     carryForwardSelect.addEventListener('change', toggleCarryForwardInput);
 });
     </script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+
+    // ✅ Select by NAME instead of ID
+    const provisionSelect = document.querySelector('select[name="provision_status"]');
+    const maxLeavePP = document.querySelector('input[name="max_leave_pp"]');
+    const probationPerMonth = document.querySelector('input[name="probation_period_per_month"]');
+    const calendarPP = document.querySelector('input[name="calendra_start_for_PP"]');
+
+    if (!provisionSelect) return;
+
+    function toggleProvisionFields() {
+        if (provisionSelect.value === 'Not Applicable') {
+
+            maxLeavePP.disabled = true;
+            probationPerMonth.disabled = true;
+            calendarPP.disabled = true;
+
+            maxLeavePP.removeAttribute('required');
+            probationPerMonth.removeAttribute('required');
+            calendarPP.removeAttribute('required');
+
+            maxLeavePP.value = '';
+            probationPerMonth.value = '';
+            calendarPP.value = '';
+
+        } else if (provisionSelect.value === 'Applicable') {
+
+            maxLeavePP.disabled = false;
+            probationPerMonth.disabled = false;
+            calendarPP.disabled = false;
+
+            maxLeavePP.setAttribute('required', 'required');
+            probationPerMonth.setAttribute('required', 'required');
+            calendarPP.setAttribute('required', 'required');
+        }
+    }
+
+    // Run on load + change
+    toggleProvisionFields();
+    provisionSelect.addEventListener('change', toggleProvisionFields);
+
+});
+</script>
+
+
 
     <script>
         // Show form by default
