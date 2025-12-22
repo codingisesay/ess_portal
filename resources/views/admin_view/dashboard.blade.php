@@ -1,21 +1,6 @@
 <!-- added the layout sidebar inside a dashboard  -->
 @extends('admin_view.admin_layout')
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <!-- Page title -->
-    <title>Admin Dashboard</title>
-    <!-- Custom admin styles -->
-    <link rel="stylesheet" href="{{ asset('Offical_admin/css/official_admin.css') }}">
-    <!-- Font Awesome icons -->
-    <link rel="stylesheet" href="{{ asset('Offical_admin/css/create_user_popup.css') }}">
-
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-</head>
-
     <!-- Include Add Client Module -->
     @include('admin_view.Add_client_module')
     
@@ -27,21 +12,17 @@
 
     @include('admin_view.client_details_popup')
 
-    
 
-
-<body>
+{{-- Main content section starts --}}    
+@section('content')
 
 <!-- =========================
      DASHBOARD CONTAINER
      ========================= -->
 
-    <div class="container">
-
-         <!-- =========================
+        <!-- =========================
          MAIN CONTENT AREA
          ========================= -->
-        <main class="main-content">
 
         <!-- Dashboard header -->
             <header class="header">
@@ -127,24 +108,29 @@
                                     ->map(fn ($word) => strtoupper(substr($word, 0, 1)))
                                     ->take(2)
                                     ->implode('');
- 
+
                                 // Storage %
                                 $storage = (int) ($org->storage_used_percent ?? 0);
- 
+
                                 // Status handling (1 = Active, 0 = Inactive)
                                 $statusClass = ((int) ($org->status ?? 0) === 1)
                                     ? 'active'
-                                    : 'inactive';                 
+                                    : 'inactive';
+
+                                // subscription plan name from plans collection
+                                $planName = optional(collect($subscriptionPlans)->firstWhere('id', $org->software_package_plan))->plan_name ?? '—';
                             @endphp
 
 
                              <!-- Avatar with initials -->
                               <!-- used the right column name for mobile number (mobile) -->
+                               <!-- getting the current value of software package id -->
                             <div class="client-card"
                                  data-client-id="{{ $org->id }}"
                                  data-email="{{ $org->email ?? '' }}"
                                  data-phone="{{ $org->mobile ?? '' }}"
-                                 data-package="{{ $org->package ?? 'basic' }}">
+                                 data-package-id="{{ $org->software_package_plan ?? '' }}"
+                                 data-package="{{ $planName }}">
                                 <div class="client-avatar client-avatar-blue">
                                     {{ $initials }}
                                 </div>
@@ -221,7 +207,6 @@
                     </div>  <!-- div quick-actions close -->
                 </div> <!-- sidebar-content close -->
             </div> <!-- main-content-2 close -->
-        </main> <!-- main-content close -->
     </div> <!-- dashboard-content close -->
 
 
@@ -273,40 +258,11 @@
             const usersNavLink = document.querySelector('li[title="Users"] a.nav-link');
             if (usersNavLink) {
                 usersNavLink.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    
-                    
-                    const mainContent = document.querySelector('.main-content');
-                    const mainContent2 = document.querySelector('.main-content-2');
-                    
-                    if (mainContent && mainContent2) {
-                        // Toggle full view class on main content
-                        mainContent.classList.toggle('full-view');
-                        
-                        // Toggle active class on main-content-2
-                        mainContent2.classList.toggle('active');
-                        
-                        // Update active state in navigation
-                        document.querySelectorAll('.sidebar nav li').forEach(item => {
-                            item.classList.remove('active');
-                        });
-                        this.parentElement.classList.add('active');
-                        
-                        // Update the page title
-                        const headerTitle = document.querySelector('.header-title');
-                        if (headerTitle) {
-                            headerTitle.textContent = mainContent.classList.contains('full-view') 
-                                ? 'Clients Overview' 
-                                : 'Dashboard';
-                        }
-                        
-                        // Scroll to top
-                        window.scrollTo({ top: 0, behavior: 'smooth' });
-                    }
+                    // Allow default navigation to Client_all_details page
                 });
             }
         });
     </script>
 
-</body>
-</html>
+@endsection
+{{-- Main content section ends --}}

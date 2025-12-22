@@ -40,7 +40,7 @@
                             type="text"
                             id="client_name" 
                             name="client_name" 
-                            placeholder="Client Name *" 
+                            placeholder="" 
                             maxlength="225" 
                             pattern="[A-Za-z\s]+"
                             title="Please enter only letters and spaces (no numbers or special characters)"
@@ -250,26 +250,23 @@
                         <label for="industry_type">Industry Type</label>
                     </div>
                     
-                    <!-- software Package Information -->
+                    
+
+                    <!-- Subscription Plans get from the subscription plan module where we cretae a subscritption plan -->
                     <div class="form-group">
-                        <select id="software_package_plan" name="software_package_plan" required>
-                            <option value=""> </option>
-                            <option value="basic">Basic</option>
-                            <option value="standard">Standard</option>
-                            <option value="enterprise">Enterprise</option>
+                         <select id="software_package_plan" name="software_package_plan" required>
+                            <option value="" disabled selected></option>
+
+                            @foreach($subscriptionPlans as $plan)
+                                <option value="{{ $plan->id }}">
+                                    {{ $plan->plan_name }}
+                                </option>
+                            @endforeach
                         </select>
-                        <label for="software_package_plan">Software Package Plan</label>
+                        <label for="software_package_plan">Subscription Plan</label>
                     </div>
 
-                    <!-- organisation status -->
-                    <div class="form-group">
-                        <select id="organisation_status" name="organisation_status" required>
-                            <option value=""> </option>
-                            <option value="Active">Active</option>
-                            <option value="Inactive">Inactive</option>
-                        </select>
-                        <label for="organisation_status">Status</label>
-                    </div>
+                    
 
                     <!-- Document Information -->
                    <div class="form-group">

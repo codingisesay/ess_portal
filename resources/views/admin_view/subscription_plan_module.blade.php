@@ -58,29 +58,7 @@
                 </div>
             </div>
 
-            <!-- Max Users and Max Storage Row -->
-            <div class="form-row">
-                <div class="subscription-form-group">
-                    <input type="number" name="max_users" id="max_users" placeholder=" " min="1">
-                    <label for="max_users">Max Users</label>
-                </div>
-                <div class="subscription-form-group">
-                    <input type="number" name="max_storage_gb" id="max_storage_gb" placeholder=" " min="1" step="0.1">
-                    <label for="max_storage_gb">Max Storage (GB)</label>
-                </div>
-            </div>
 
-            <!-- Max Employees and Max Branches Row -->
-            <div class="form-row">
-                <div class="subscription-form-group">
-                    <input type="number" name="max_employees" id="max_employees" placeholder=" " min="1">
-                    <label for="max_employees">Max Employees</label>
-                </div>
-                <div class="subscription-form-group">
-                    <input type="number" name="max_branches" id="max_branches" placeholder=" " min="1">
-                    <label for="max_branches">Max Branches</label>
-                </div>
-            </div>
 
             <!-- Trial Days and Status Row -->
             <div class="form-row">  
