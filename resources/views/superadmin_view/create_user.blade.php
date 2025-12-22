@@ -91,32 +91,45 @@ $id = Auth::guard('superadmin')->user()->id;
 
     <!-- Form Section -->
     <div id="formSection" >
-        <form action="{{ route('register_save') }}" method="POST">
+        <form action="{{ route('register_save') }}" method="POST" onsubmit="return validateEmail(document.getElementById('usermailid'));">
             @csrf
             <div class="form-container row">
                 <div class="col-3 mb-2">
                 <div class="form-group">
                     <input type="hidden" name="organisation_id" value="{{$id}}">
-                    <input type="text" name="username" required>
-                    <label>Name</label>
+                       
+                    <input type="text" name="username" required  pattern="[A-Za-z\s]+" title="Only alphabets are allowed"  oninput="this.value = this.value.replace(/[^A-Za-z\s]/g, '')">
+                     <label>
+                            Name <span style="color:red">*</span>
+                     </label>
                 </div>
                 </div>
                 <div class="col-3 mb-2">
                 <div class="form-group">
                     <input type="text" name="empid" required>
-                    <label>Company Emp ID</label>
+                     <label>
+                            Company Emp ID <span style="color:red">*</span>
+                     </label>
                 </div>
                 </div>
                 <div class="col-3 mb-2">
-                    <div class="form-group">
-                        <input type="email" name="usermailid" required>
-                        <label>Email</label>
+                    <div class="form-group">    
+                        <input type="email" name="usermailid" required oninput="validateEmail(this)">
+                            
+                        <label>
+                            Email <span style="color:red">*</span>
+                        </label>
                     </div>
+                     <small id="emailError" style="color:red; display:none;">
+                            Please enter a valid email address
+                     </small>
                 </div>
                 <div class="col-3 mb-2">
                 <div class="form-group">
                     <input type="text" id="passwordField" name="userpassword" readonly>
-                    <label>Password</label> 
+                    <label>
+                            Password <span style="color:red">*</span>
+                     </label>
                 </div>
                 <small> <a href="#" onclick="generateAndDisplayPassword()">Generate Password</a></small>
                 </div>
@@ -164,21 +177,33 @@ $id = Auth::guard('superadmin')->user()->id;
             <h2>Edit User</h2>
         </header>
         <div class="w3-container">
-            <form id="editUserForm" action="{{ route('update_user') }}" method="POST">
+            <form id="editUserForm" action="{{ route('update_user') }}" method="POST" onsubmit="return validateEmail(this.querySelector('input[type=email]'));">
                 @csrf
                 <input type="hidden" name="user_id" id="editUserId">
                 <div class="popup-form-group">
-                    <input type="text" name="username" id="editUsername" required>
-                    <label for="editUsername">Username</label>
+                    <input type="text" name="username" id="editUsername" required pattern="[A-Za-z\s]+" title="Only alphabets are allowed"  oninput="this.value = this.value.replace(/[^A-Za-z\s]/g, '')">
+                     <label>
+                            Name <span style="color:red">*</span>
+                     </label>
                 </div>
                 <div class="popup-form-group">
                     <input type="text" name="empid" id="editEmpid" required>
-                    <label for="editEmpid">Employee ID</label>
+                    <label>
+                            Company Emp ID <span style="color:red">*</span>
+                    </label>
                 </div>
                 <div class="popup-form-group">
-                    <input type="email" name="usermailid" id="editUsermailid" required>
-                    <label for="editUsermailid">User Email</label>
+                    <input type="email" name="usermailid" id="editUsermailid" required  oninput="validateEmail(this)">
+                    <label>
+                            Email <span style="color:red">*</span>
+                    </label> 
+                     
                 </div>
+                  <small id="emailError" style="color:red; display:none;">
+                            Please enter a valid email address
+                  </small> 
+               
+                
                 <div class="popup-form-group">
                     <select name="user_status" id="editUserStatus" required>
                         <option value="active">Active</option>
@@ -283,6 +308,44 @@ $id = Auth::guard('superadmin')->user()->id;
         document.getElementById('editUserModal').style.display = 'block';
     }
 </script>
+<script>
+// Script to valiadate the input on key press
+function validateEmail(input) {
+    const email = input.value.trim();
+
+    let error;
+
+    // Edit modal structure
+    if (input.closest('.popup-form-group')) {
+        error = input.closest('.popup-form-group').nextElementSibling;
+    }
+    // Create form structure
+    else if (input.closest('.form-group')) {
+        error = input.closest('.form-group').parentElement.querySelector('small');
+    }
+
+    if (!error) return true; // safety
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    if (email === '') {
+        error.style.display = 'none';
+        input.classList.remove('invalid');
+        return false;
+    }
+
+    if (!emailRegex.test(email)) {
+        error.style.display = 'block';
+        input.classList.add('invalid');
+        return false;
+    } else {
+        error.style.display = 'none';
+        input.classList.remove('invalid');
+        return true;
+    }
+}
+</script>
+
 
 @endsection
 
