@@ -40,82 +40,10 @@ class AdminDashboardController extends Controller
 
 
 // Method to insert new organisation details with welcome emailq
-//   public function clientmasterinsert(Request $request)
-// {
-//     $data = $request->validate([
-//         'name' => 'required',
-//         'client_name' => 'nullable',
-//         'email' => 'required|email',
-//         'password' => 'required',
-
-//         'contact_person' => 'nullable',
-//         'mobile' => 'nullable',
-
-//         // Address
-//         'building_no' => 'nullable',
-//         'premises_name' => 'nullable',
-//         'landmark' => 'nullable',
-//         'road_street' => 'nullable',
-//         'pincode' => 'nullable',
-//         'district' => 'nullable',
-//         'state' => 'nullable',
-//         'country' => 'nullable',
-
-//         'GST_number' => 'nullable',
-//         'industry_type' => 'nullable',
-//         'number_of_emplooyees' => 'nullable',
-//         'software_package_plan' => 'nullable',
-//         'storage_limit' => 'nullable',
-//         'number_of_user_allowed' => 'nullable',
-//         'TAN' => 'nullable',
-//         'PAN' => 'nullable',
-//         'expire_date' => 'nullable',
-
-//         // Certificates
-//         'MSME_udyam_certificate' => 'nullable|file|mimes:pdf,jpg,jpeg,png',
-//         'GST_registration_certificate' => 'nullable|file|mimes:pdf,jpg,jpeg,png',
-
-//         'organisation_status' => 'nullable|in:Active,Incative',
-//     ]);
-
-//     // 🔹 Store plain password for email
-//     $plainPassword = $data['password'];
-
-//     // 🔹 Hash password for DB
-//     $data['password'] = bcrypt($data['password']);
-
-//     // Handle file uploads
-//     if ($request->hasFile('MSME_udyam_certificate')) {
-//         $data['MSME_udyam_certificate'] = file_get_contents(
-//             $request->file('MSME_udyam_certificate')
-//         );
-//     }
-
-//     if ($request->hasFile('GST_registration_certificate')) {
-//         $data['GST_registration_certificate'] = file_get_contents(
-//             $request->file('GST_registration_certificate')
-//         );
-//     }
-
-//     // 🔹 Insert organisation
-//     DB::table('organisations')->insert($data);
-//     // 🔹 Send welcome email 
-//     SendOrganisationCredentialsMail::dispatch(
-//         $data['email'],
-//         $plainPassword,
-//         url('/superadmin/login')
-//     );
-
-//     return back()->with('success', 'Organisation created. Credentials email queued!');
-// }
-
-public function clientmasterinsert(Request $request)
+  public function clientmasterinsert(Request $request)
 {
-    try {
-        Log::info('Client master insert started');
-
-        $data = $request->validate([
-         'name' => 'required',
+    $data = $request->validate([
+        'name' => 'required',
         'client_name' => 'nullable',
         'email' => 'required|email',
         'password' => 'required',
@@ -143,54 +71,45 @@ public function clientmasterinsert(Request $request)
         'PAN' => 'nullable',
         'expire_date' => 'nullable',
 
-        // Certificates (optional uploads )
-        'MSME_udyam_certificate' => 'nullable',
-        'GST_registration_certificate' => 'nullable',
+        // Certificates
+        'MSME_udyam_certificate' => 'nullable|file|mimes:pdf,jpg,jpeg,png',
+        'GST_registration_certificate' => 'nullable|file|mimes:pdf,jpg,jpeg,png',
 
         'organisation_status' => 'nullable|in:Active,Incative',
-        ]);
+    ]);
 
-        $plainPassword = $data['password'];
-        $data['password'] = bcrypt($data['password']);
+    // 🔹 Store plain password for email
+    $plainPassword = $data['password'];
 
-        if ($request->hasFile('MSME_udyam_certificate')) {
-            $data['MSME_udyam_certificate'] = file_get_contents(
-                $request->file('MSME_udyam_certificate')
-            );
-        }
+    // 🔹 Hash password for DB
+    $data['password'] = bcrypt($data['password']);
 
-        if ($request->hasFile('GST_registration_certificate')) {
-            $data['GST_registration_certificate'] = file_get_contents(
-                $request->file('GST_registration_certificate')
-            );
-        }
-
-        DB::table('organisations')->insert($data);
-
-        Log::info('Organisation inserted', [
-            'email' => $data['email']
-        ]);
-
-        SendOrganisationCredentialsMail::dispatch(
-            $data['email'],
-            $plainPassword,
-            url('/superadmin/login')
+    // Handle file uploads
+    if ($request->hasFile('MSME_udyam_certificate')) {
+        $data['MSME_udyam_certificate'] = file_get_contents(
+            $request->file('MSME_udyam_certificate')
         );
-
-        Log::info('SendOrganisationCredentialsMail job dispatched', [
-            'email' => $data['email']
-        ]);
-
-        return back()->with('success', 'Organisation created. Credentials email queued!');
-
-    } catch (\Exception $e) {
-        Log::error('Client master insert failed', [
-            'error' => $e->getMessage()
-        ]);
-
-        return back()->with('error', 'Something went wrong');
     }
+
+    if ($request->hasFile('GST_registration_certificate')) {
+        $data['GST_registration_certificate'] = file_get_contents(
+            $request->file('GST_registration_certificate')
+        );
+    }
+
+    // 🔹 Insert organisation
+    DB::table('organisations')->insert($data);
+    // 🔹 Send welcome email 
+    SendOrganisationCredentialsMail::dispatch(
+        $data['email'],
+        $plainPassword,
+        url('/superadmin/login')
+    );
+
+    return back()->with('success', 'Organisation created. Credentials email queued!');
 }
+
+
 
 // Method to update organisation details
 public function clientmasterupdate(Request $request, $id)
