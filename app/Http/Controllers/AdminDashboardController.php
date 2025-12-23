@@ -24,8 +24,16 @@ class AdminDashboardController extends Controller
         // Get the organisations
         $organisations = $this->getOrganisations();
 
+        // Get the expiry count
+         $today = now()->toDateString();
+        $alertDate = now()->addDays(7)->toDateString();
+        // Count organisations with expiry dates within the next 7 days
+        $expiryCount = \DB::table('organisations')
+            ->whereBetween('expire_date', [$today, $alertDate])
+            ->count();
+
         // Return the dashboard view and pass the data
-        return view('admin_view.dashboard', compact('expiryAlerts', 'subscriptionPlans', 'organisations'));
+        return view('admin_view.dashboard', compact('expiryAlerts', 'subscriptionPlans', 'organisations', 'expiryCount'));
     }
 
 
@@ -180,9 +188,25 @@ public function clientmasterupdate(Request $request, $id)
         $data['GST_registration_certificate'] = file_get_contents($request->file('GST_registration_certificate'));
     }
 
+    // Update organisation
     \DB::table('organisations')->where('id', $id)->update($data);
 
-    
+    // If organisation_status present, update all users of that organisation
+    if (array_key_exists('organisation_status', $data)) {
+        $orgStatus = (string) $data['organisation_status'];
+        $normalized = strtolower(trim($orgStatus));
+
+        if ($normalized === 'active') {
+            \DB::table('users')
+                ->where('organisation_id', $id)
+                ->update(['user_status' => 'Active']);
+        } else {
+            // Any value other than 'active' (including 'Incative') will be treated as inactive
+            \DB::table('users')
+                ->where('organisation_id', $id)
+                ->update(['user_status' => 'Inactive']);
+        }
+    }
 
     return back()->with('success', 'Organisation updated successfully!');
 }
@@ -316,24 +340,28 @@ public function getSubscriptionPlans()
         ->get();
     return $plans;
 }
-// Method to get organisations with expiry alerts within next 7 days
+// Method to get organisations with expiry alerts within next 7 days with plan details
 public function getExpiryAlerts()
 {
     $today = now()->toDateString();
     $alertDate = now()->addDays(7)->toDateString();
 
-    $organisations = \DB::table('organisations')
+    $organisationsexpiry = \DB::table('organisations')
         ->join('subscription_plans', 'subscription_plans.id', '=', 'organisations.software_package_plan')
         ->select(
-            'organisations.*',
+            'organisations.id',
+            'organisations.name',
+            'organisations.expire_date',
             'subscription_plans.plan_name'
         )
         ->whereBetween('organisations.expire_date', [$today, $alertDate])
         ->orderBy('organisations.expire_date', 'ASC')
         ->get();
-        
-    return $organisations;
-}   
+
+    return response()->json($organisationsexpiry);
+}
+
+
 // Method to send expiry alert emails to organisations
 public function sendExpiryEmails()
 {

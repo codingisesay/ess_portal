@@ -72,13 +72,14 @@
                     </div>
                 </div>
 
-                <!-- Expiring soon clients -->
+                <!-- Expiring clients counts  -->
                 <div class="stat-card stat-card-orange">
                     <div class="stat-icon">
                         <i class="fas fa-exclamation"></i>
                     </div>
                     <div class="stat-details">
-                        <h3>1</h3>
+                        <!-- changes made to get count of expiring clients -->
+                        <h3>{{ $expiryCount }}</h3>
                         <p>Expiring Soon</p>
                     </div>
                 </div>
@@ -182,17 +183,15 @@
                      <!-- Expiring clients section -->
                     <div class="expiring-soon">
                         <div class="section-header">
-                            <h3>Expiring Soon</h3>
-                        </div>
-                        <div class="expiring-card">
-                            <div class="expiring-avatar" style="background-color: #e8f5e9; color: #388e3c;">TI</div>
-                            <div class="expiring-info">
-                                <h4>TechStart</h4>
-                                <p>2024-12-25</p>
-                            </div>
-                            <a href="#" class="view-details">View Details</a>
+                        <h3>Expiring Soon</h3>
+                    </div>
+
+                    <div class="expiring-scroll" id="expiringScroll">
+                        <div id="expiringList">
+                            <!-- Cards injected here -->
                         </div>
                     </div>
+                </div>
                   <!-- div expiring-soon close -->
 
                   <!-- Subscription Plans section -->
@@ -305,6 +304,130 @@ document.getElementById('sendNotificationBtn').addEventListener('click', functio
     });
 });
 </script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+
+    fetch("{{ route('organisations.expiry.alerts') }}")
+        .then(res => res.json())
+        .then(data => {
+
+            const container = document.getElementById('expiringList');
+
+            // If API returns empty array or invalid data → do nothing
+            if (!Array.isArray(data) || data.length === 0) {
+                container.innerHTML = '';
+                return;
+            }
+
+            let html = '';
+
+            data.forEach(org => {
+
+                const initials = org.name
+                    .split(' ')
+                    .map(w => w[0])
+                    .join('')
+                    .substring(0, 2)
+                    .toUpperCase();
+
+                html += `
+                    <div class="expiring-card">
+                        <div class="expiring-avatar"
+                             style="background-color:#e8f5e9;color:#388e3c;">
+                            ${initials}
+                        </div>
+
+                        <div class="expiring-info">
+                            <h4>${org.name}</h4>
+                            <p>${org.expire_date}</p>
+                            <small>${org.plan_name}</small>
+                        </div>
+
+                        <a href="/admin/organisations/${org.id}"
+                           class="view-details">
+                           View Details
+                        </a>
+                    </div>
+                `;
+            });
+
+            container.innerHTML = html;
+        })
+        .catch(err => {
+            console.error('Expiry alert error:', err);
+        });
+});
+</script>
+
+
+<!-- Expiry alerts script with animation and scroll to show the expiry cards -->
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+
+    const scrollContainer = document.getElementById('expiringScroll');
+    const listContainer = document.getElementById('expiringList');
+
+    /* 🖱 Mouse wheel → horizontal scroll */
+    scrollContainer.addEventListener('wheel', (e) => {
+        e.preventDefault();
+        scrollContainer.scrollLeft += e.deltaY;
+    }, { passive: false });
+
+    /* Helper: days until expiry */
+    function daysUntil(dateStr) {
+        const today = new Date();
+        const expiry = new Date(dateStr);
+        const diff = expiry - today;
+        return Math.ceil(diff / (1000 * 60 * 60 * 24));
+    }
+
+    /* Render cards */
+    window.renderExpiryCards = function (data) {
+
+        if (!Array.isArray(data) || data.length === 0) {
+            listContainer.innerHTML = '';
+            return;
+        }
+
+        let html = '';
+
+        data.forEach(org => {
+            const days = daysUntil(org.expire_date);
+
+            let statusClass = 'safe';
+            if (days <= 3) statusClass = 'critical';
+            else if (days <= 7) statusClass = 'warning';
+
+            const initials = org.name
+                .split(' ')
+                .map(w => w[0])
+                .join('')
+                .substring(0, 2)
+                .toUpperCase();
+
+            html += `
+                <div class="expiring-card ${statusClass}">
+                    <div class="expiring-avatar">${initials}</div>
+
+                    <div class="expiring-info">
+                        <h4>${org.name}</h4>
+                        <p>Expires in ${days} day${days !== 1 ? 's' : ''}</p>
+                        <small>${org.plan_name}</small>
+                    </div>
+
+                    <a href="/admin/organisations/${org.id}" class="view-details">
+                        View Details
+                    </a>
+                </div>
+            `;
+        });
+
+        listContainer.innerHTML = html;
+    };
+
+});
+</script>
+
 
 
 @endsection
