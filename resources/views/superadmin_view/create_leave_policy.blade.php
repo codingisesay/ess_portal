@@ -123,38 +123,51 @@ $id = Auth::guard('superadmin')->user()->id;
                                     <option value="{{ $result->leave_type_id }}">{{ $result->leave_type }}</option>
                                 @endforeach
                             </select>
-                            <label for="category_id">Select Leave Type</label>
+                            <label for="category_id">
+                               Select Leave Type <span style="color:red">*</span>
+                            </label>
+
                         </div>
                     </div>
                     <div class="col-3 mb-4">
                         <div class="form-group">
-                            <input type="number" id="category_name" name="max_leave_count" class="form-control" required min="1" max="365" step="1">
-                            <label for="category_name">Max Leave</label>
+                            <input type="number" id="category_name" name="max_leave_count" class="form-control" required min="1" oninput="this.value = this.value > 365 ? 365 : this.value"step="1">
+                            <label for="category_name">
+                               Max Leave <span style="color:red">*</span>
+                            </label>
                         </div>
                     </div>
                     <div class="col-3 mb-4">
                         <div class="form-group">
-                            <input type="number" id="category_name" name="max_leave_at_time" class="form-control" required min="1" step="1">
-                            <label for="category_name">Max Leave At Time</label>
+                            <input type="number" id="category_name" name="max_leave_at_time" class="form-control" required min="1" oninput="validateMaxLeave(this)" step="1">
+                            <label for="category_name">
+                              Max Leave At Time <span style="color:red">*</span>
+                            </label>
                         </div>
                     </div>
                     <div class="col-3 mb-4">
                         <div class="form-group">
-                            <input type="number" id="category_name" name="min_leave_at_time" class="form-control"  min="0.5" required step="0.5">
-                            <label for="category_name">Min Leave At Time</label>
+                            <input type="number" id="category_name" name="min_leave_at_time" class="form-control"  min="0.5"  oninput="validateMinLeave(this)" required step="0.5">
+                            <label for="category_name">
+                              Min Leave At Time <span style="color:red">*</span>
+                            </label>
                         </div> 
                     </div>
                     <div class="col-3 mb-4">
                         <div class="form-group">
-                            <input type="number" id="category_name" name="leave_count_per_month" class="form-control"   min="0" required step="0.5">
-                            <label for="category_name">Leave Count Per Month</label>
+                            <input type="number" id="category_name" name="leave_count_per_month" class="form-control"   min="0" required step="0.5" oninput="validateLeaveCountPerMonth(this)">
+                            <label for="category_name">
+                              Leave Count Per Month <span style="color:red">*</span>
+                            </label>
                         </div> 
                     </div>
                     <div class="col-3 mb-4">
                         <div class="form-group">
-                            <input type="number" id="category_name" name="no_of_leaves_per_month" class="form-control" required step="0.5" min="1" max="31">
-                            <label for="category_name">No of Times Per Months</label>
-                        </div> 
+                            <input type="number" id="category_name" name="no_of_leaves_per_month" class="form-control" required step="0.5" min="1" max="31" oninput="validateNoOfTimesPerMonth(this)">
+                            <label for="category_name">
+                              No of Times Per Months <span style="color:red">*</span>
+                            </label>
+                        </div>
                     </div>
                     <div class="col-3 mb-4">
                     <div class="form-group">
@@ -163,13 +176,17 @@ $id = Auth::guard('superadmin')->user()->id;
                             <option value="Yes">Yes</option>
                             <option value="No">No</option> 
                         </select>
-                        <label for="is_carry_forward">Is Carry Forward?</label>
+                        <label for="is_carry_forward">
+                              Is Carry Forward? <span style="color:red">*</span>
+                        </label>
                     </div>
                 </div>
                 <div class="col-3 mb-4">
                     <div class="form-group">
-                        <input type="number" id="no_of_carry_forward" name="no_of_carry_forward" class="form-control" required>
-                        <label for="no_of_carry_forward">No. Of Carry Forward</label>
+                        <input type="number" id="no_of_carry_forward" name="no_of_carry_forward" class="form-control" required oninput="validateCarryForward(this)" max="365" min="0" step="1">
+                        <label for="no_of_carry_forward">
+                              No. Of Carry Forward <span style="color:red">*</span>
+                        </label>
                     </div>
                 </div>
                     <div class="col-3 mb-4">
@@ -179,13 +196,17 @@ $id = Auth::guard('superadmin')->user()->id;
                                 <option value="Yes">Yes</option>
                                 <option value="No">No</option> 
                             </select>
-                            <label for="category_name">Is Leave Encash?</label>
+                            <label for="LeaveEncash">
+                              Is Leave Encash? <span style="color:red">*</span>
+                            </label>
                         </div>
                     </div>
                     <div class="col-3 mb-4">
                         <div class="form-group">
-                            <input type="number" id="NoOfLeaveEncash" name="leave_encash_count" class="form-control" required>
-                            <label for="category_name">No. Of Leave Encash</label>
+                            <input type="number" id="NoOfLeaveEncash" name="leave_encash_count" class="form-control" required oninput="validateLeaveEncash(this)">
+                            <label for="category_name">
+                              No. Of Leave Encash <span style="color:red">*</span>
+                            </label>
                         </div> 
                     </div>
                     <div class="col-3 mb-4">
@@ -195,25 +216,33 @@ $id = Auth::guard('superadmin')->user()->id;
                                 <option value="Applicable">Applicable</option>
                                 <option value="Not Applicable">Not Applicable</option> 
                             </select>
-                            <label for="category_name">Provision Status</label>
+                            <label for="category_name">
+                              Provision Status <span style="color:red">*</span>
+                            </label>
                         </div> 
                     </div>
                     <div class="col-3 mb-4">
                         <div class="form-group">
-                            <input type="number" id="category_name" name="max_leave_pp" class="form-control" >
-                            <label for="category_name">Max Leave Probation Period</label>
+                            <input type="number" id="category_name" name="max_leave_pp" class="form-control" max="90" step="1" oninput="validateMaxLeavePP(this)" >
+                            <label for="category_name">
+                              Max Leave Probation Period <span style="color:red">*</span>
+                            </label>
                         </div>
                     </div>
                     <div class="col-3 mb-4">
                         <div class="form-group">
-                            <input type="number" id="category_name" name="probation_period_per_month" class="form-control" >
-                            <label for="category_name">Probation Period Per Month</label>
+                            <input type="number" id="category_name" name="probation_period_per_month" class="form-control"   min="0" max="2" step="0.5" oninput="validateProbationPerMonth(this)">
+                            <label for="category_name">
+                              Probation Period Per Month <span style="color:red">*</span>
+                            </label>
                         </div> 
                     </div>
                     <div class="col-3 mb-4">
                         <div class="form-group">
-                            <input type="number" id="category_name" name="calendra_start_for_PP" class="form-control">
-                            <label for="category_name">Calendra Start For PP</label>
+                            <input type="number" id="category_name" name="calendra_start_for_PP" class="form-control" min="1" max="12" step="1" oninput="validateCalendarPP(this)">
+                            <label for="category_name">
+                              Calendra Start For PP <span style="color:red">*</span>
+                            </label>
                         </div>
                     </div>
                     
@@ -267,68 +296,96 @@ $id = Auth::guard('superadmin')->user()->id;
                     <input type="hidden" name="policy_id" id="editLeavePolicyId">
                     <div class="popup-form-group">
                         <input type="text" id="editLeaveType" disabled>
-                        <label for="editLeaveType">Leave Type</label>
+                        <label for="editLeaveType">
+                              Leave Type  <span style="color:red">*</span>
+                        </label>
                     </div>
                     <div class="popup-form-group">
-                        <input type="number" name="max_leave_count" id="editMaxLeave" required  min="1" max="365" step="1">
-                        <label for="editMaxLeave">Max Leave</label>
+                        <input type="number" name="max_leave_count" id="editMaxLeave"  required min="1" oninput="this.value = this.value > 365 ? 365 : this.value"step="1">
+                        <label for="editMaxLeave">
+                              Max Leave <span style="color:red">*</span>
+                        </label>
                     </div>
                     <div class="popup-form-group">
-                        <input type="number" name="max_leave_at_time" id="editMaxLeaveAtTime" required>
-                        <label for="editMaxLeaveAtTime">Max Leave At Time</label>
+                        <input type="number" name="max_leave_at_time" id="editMaxLeaveAtTime" required required min="1" oninput="validateMaxLeave(this)" step="1">
+                        <label for="editMaxLeaveAtTime">
+                              Max Leave At Time <span style="color:red">*</span>
+                        </label>
                     </div>
                     <div class="popup-form-group">
-                        <input type="number" name="min_leave_at_time" id="editMinLeaveAtTime" required step="0.5">
-                        <label for="editMinLeaveAtTime">Min Leave At Time</label>
+                        <input type="number" name="min_leave_at_time" id="editMinLeaveAtTime" required step="0.5" oninput="validateMinLeave(this)">
+                        <label for="editMinLeaveAtTime">
+                              Min Leave At Time <span style="color:red">*</span>
+                        </label>
                     </div>
                     <div class="popup-form-group">
-                        <input type="number" name="leave_count_per_month" id="editLeaveCountPerMonth" required step="0.5">
-                        <label for="editLeaveCountPerMonth">Leave Count Per Month</label>
+                        <input type="number" name="leave_count_per_month" id="editLeaveCountPerMonth" required step="0.5"  oninput="validateLeaveCountPerMonth(this)">
+                        <label for="editLeaveCountPerMonth">
+                              Leave Count Per Month <span style="color:red">*</span>
+                        </label>
                     </div>
                     <div class="popup-form-group">
-                        <input type="number" name="no_of_leaves_per_month" id="editNoOfTimesPerMonth" required step="0.5">
-                        <label for="editNoOfTimesPerMonth">No of Times Per Month</label>
+                        <input type="number" name="no_of_leaves_per_month" id="editNoOfTimesPerMonth" required step="0.5" oninput="validateNoOfTimesPerMonth(this)">
+                        <label for="editNoOfTimesPerMonth">
+                              No of Times Per Month <span style="color:red">*</span>
+                        </label>
                     </div>
                     <div class="popup-form-group">
                         <select name="is_carry_forward" id="editCarryForward" required> editCarryForward editNoOfCarryForward
                             <option value="Yes">Yes</option>
                             <option value="No">No</option>
                         </select>
-                        <label for="editCarryForward">Carry Forward</label>
+                        <label for="editCarryForward">
+                              No of Times Per Month <span style="color:red">*</span>
+                        </label>
                     </div>
                     <div class="popup-form-group">
-                        <input type="number" name="no_of_carry_forward" id="editNoOfCarryForward">
-                        <label for="editNoOfCarryForward">No. Of Carry Forward</label>
+                        <input type="number" name="no_of_carry_forward" id="editNoOfCarryForward"  oninput="validateCarryForward(this)">
+                        <label for="editNoOfCarryForward">
+                              No. Of Carry Forward <span style="color:red">*</span>
+                        </label>
                     </div>
                     <div class="popup-form-group">
                         <select name="leave_encash" id="editLeaveEncash" required> 
                             <option value="Yes">Yes</option>
                             <option value="No">No</option>
                         </select>
-                        <label for="editLeaveEncash">Leave Encash</label>
+                        <label for="editLeaveEncash">
+                              Leave Encash <span style="color:red">*</span>
+                        </label>
                     </div>
                     <div class="popup-form-group">
-                        <input type="number" name="leave_encash_count" id="editNoOfLeaveEncash">
-                        <label for="editNoOfLeaveEncash">No. Of Leave Encash</label>
+                        <input type="number" name="leave_encash_count" id="editNoOfLeaveEncash" oninput="validateLeaveEncash(this)"  min="1" step="1" max="365">
+                        <label for="editNoOfLeaveEncash">
+                              No. Of Leave Encash <span style="color:red">*</span>
+                        </label>
                     </div>
                     <div class="popup-form-group">
                         <select name="provision_status" id="editProvisionStatus" required>
                             <option value="Applicable">Applicable</option>
                             <option value="Not Applicable">Not Applicable</option>
                         </select>
-                        <label for="editProvisionStatus">Provision Status</label>
+                        <label for="editProvisionStatus">
+                              Provision Status <span style="color:red">*</span>
+                        </label>
                     </div>
                     <div class="popup-form-group">
-                        <input type="number" name="max_leave_pp" id="editMaxLeavePP" required>
-                        <label for="editMaxLeavePP">Max Leave Probation Period</label>
+                        <input type="number" name="max_leave_pp" id="editMaxLeavePP" required max="90" step="1" oninput="validateMaxLeavePP(this)">
+                        <label for="editMaxLeavePP">
+                              Max Leave Probation Period <span style="color:red">*</span>
+                        </label>
                     </div>
                     <div class="popup-form-group">
-                        <input type="number" name="probation_period_per_month" id="editProbationPeriodPerMonth" required>
-                        <label for="editProbationPeriodPerMonth">Probation Period Per Month</label>
+                        <input type="number" name="probation_period_per_month" id="editProbationPeriodPerMonth" required  min="0" max="2" step="0.5" oninput="validateProbationPerMonth(this)">
+                        <label for="editProbationPeriodPerMonth">
+                              Probation Period Per Month <span style="color:red">*</span>
+                        </label>
                     </div>
                     <div class="popup-form-group">
-                        <input type="number" name="calendra_start_for_PP" id="editCalendraStartForPP" required>
-                        <label for="editCalendraStartForPP">Calendra Start For PP</label>
+                        <input type="number" name="calendra_start_for_PP" id="editCalendraStartForPP" required min="1" max="12" step="1" oninput="validateCalendarPP(this)">
+                        <label for="editCalendraStartForPP">
+                              Calendra Start For PP<span style="color:red">*</span>
+                        </label>
                     </div>
                     <div class="popup-form-group">
                         <button class="create-btn1" type="submit">Save Changes</button>
@@ -458,6 +515,99 @@ document.addEventListener('DOMContentLoaded', function () {
 
 });
 </script>
+<script>
+/* 1. Leave Count Per Month */
+function validateLeaveCountPerMonth(input) {
+    let value = input.value;
+
+    // Allow only numbers & decimals
+    value = value.replace(/[^0-9.]/g, '');
+
+    let num = parseFloat(value);
+
+    // Enforce limits
+    if (num > 31) num = 31;
+    if (num < 0) num = 0;
+
+    // Allow only .5 steps
+    if (num % 0.5 !== 0) {
+        num = Math.floor(num * 2) / 2;
+    }
+
+    input.value = value ? num : '';
+}
+
+/* 2. No of Times Per Month */
+function validateNoOfTimesPerMonth(input) {
+    let value = input.value.replace(/[^0-9]/g, '');
+    let num = Number(value);
+
+    if (num > 31) num = 31;
+    if (num < 1 && value !== '') num = 1;
+
+    input.value = value ? num : '';
+}
+
+/* 3. No. Of Carry Forward */
+function validateCarryForward(input) {
+    let value = input.value.replace(/[^0-9]/g, '');
+    let num = Number(value);
+
+    if (num > 365) num = 365;
+    if (num < 0 && value !== '') num = 0;
+
+    input.value = value ? num : '';
+}
+
+function validateLeaveEncash(input) {
+    let value = input.value.replace(/[^0-9]/g, '');
+    let num = Number(value);
+
+    if (num > 365) num = 365;
+    if (num < 1 && value !== '') num = 1;
+
+    input.value = value ? num : '';
+}
+
+
+function validateMaxLeavePP(input) {
+    let value = input.value.replace(/[^0-9]/g, '');
+    let num = Number(value);
+
+    if (num > 90) num = 90;
+    if (num < 0 && value !== '') num = 0;
+
+    input.value = value ? num : '';
+}
+
+
+function validateProbationPerMonth(input) {
+    let value = input.value.replace(/[^0-9.]/g, '');
+    let num = parseFloat(value);
+
+    if (num > 2) num = 2;
+    if (num < 0) num = 0;
+
+    if (num % 0.5 !== 0) {
+        num = Math.floor(num * 2) / 2;
+    }
+
+    input.value = value ? num : '';
+}
+
+
+function validateCalendarPP(input) {
+    let value = input.value.replace(/[^0-9]/g, '');
+    let num = Number(value);
+
+    if (num > 12) num = 12;
+    if (num < 1 && value !== '') num = 1;
+
+    input.value = value ? num : '';
+}
+
+</script>
+
 
 
 
@@ -580,5 +730,58 @@ document.addEventListener('DOMContentLoaded', function () {
             document.getElementById('editLeavePolicyModal').style.display = 'block';
         }
     </script>
+
+    <script>
+function validateMinLeave(input) {
+    let value = input.value;
+
+    // Remove non-numeric characters
+    value = value.replace(/[^0-9]/g, '');
+
+    // Limit to 3 digits
+    if (value.length > 3) {
+        value = value.slice(0, 3);
+    }
+
+    // Convert to number
+    let num = Number(value);
+
+    // Enforce range 1–365
+    if (num > 365) num = 365;
+    if (num < 1 && value !== '') num = 1;
+
+    input.value = value ? num : '';
+
+    // Cross check with Max Leave
+    const maxInput = document.getElementById('max_leave_at_time');
+    if (maxInput.value && num > Number(maxInput.value)) {
+        input.value = maxInput.value;
+    }
+}
+
+function validateMaxLeave(input) {
+    let value = input.value;
+
+    value = value.replace(/[^0-9]/g, '');
+
+    if (value.length > 3) {
+        value = value.slice(0, 3);
+    }
+
+    let num = Number(value);
+
+    if (num > 365) num = 365;
+    if (num < 1 && value !== '') num = 1;
+
+    input.value = value ? num : '';
+
+    // Cross check with Min Leave
+    const minInput = document.getElementById('min_leave_at_time');
+    if (minInput.value && num < Number(minInput.value)) {
+        input.value = minInput.value;
+    }
+}
+</script>
+
 @endsection
 

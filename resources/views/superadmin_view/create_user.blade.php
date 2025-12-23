@@ -142,7 +142,9 @@ $id = Auth::guard('superadmin')->user()->id;
                                     <option value="1">Not Allow</option>
                                     <option value="2">Allowed</option> 
                             </select>
-                        <label>Account Access</label>
+                        <label>
+                              Account Access <span style="color:red">*</span>
+                        </label>
                     </div>
                 </div>
                 <div class="col-12">

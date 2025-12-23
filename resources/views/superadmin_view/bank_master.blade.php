@@ -346,8 +346,11 @@ function updatePagination() {
             <div class="form-container row">
                 <div class="col-4 mb-2">
                     <div class="form-group">
-                        <input type="text" name="name" required>
-                        <label>Bank Name</label>
+                        <input type="text" name="name" required oninput="validateBankName(this)">
+                        <label >
+                            Bank Name <span style="color:red">*</span>
+                        </label>
+                        
                     </div>
                 </div>
                 <div class="col-4 mb-4">
@@ -357,7 +360,9 @@ function updatePagination() {
                             <option value="Active">Active</option>
                             <option value="Inactive">Inactive</option>
                         </select>
-                        <label>Status</label>
+                        <label >
+                            Status <span style="color:red">*</span>
+                        </label>
                     </div>
                 </div>
                 <div class="col-12">
@@ -401,7 +406,7 @@ function updatePagination() {
                             <!-- Edit -->
                             <form action="{{ route('update_bank', $bank->id) }}" method="POST" class="edit-form-inline">
                                 @csrf
-                                <input type="text" name="name" value="{{ $bank->name }}" required>
+                                <input type="text" name="name" value="{{ $bank->name }}" required oninput="validateBankName(this)">
                                 <select name="status">
                                     <option value="Active" {{ $bank->status == 'Active' ? 'selected' : '' }}>Active</option>
                                     <option value="Inactive" {{ $bank->status == 'Inactive' ? 'selected' : '' }}>Inactive</option>
@@ -563,6 +568,24 @@ function updatePagination() {
             showPage(1);
         }, 50);
     }
+
+    function validateBankName(input) {
+        let value = input.value;
+
+        // Allow only letters, spaces, dot and ampersand
+        value = value.replace(/[^a-zA-Z\s.&]/g, '');
+
+        // Prevent multiple spaces
+        value = value.replace(/\s{2,}/g, ' ');
+
+        // Max length (recommended)
+        if (value.length > 50) {
+            value = value.slice(0, 50);
+        }
+
+        input.value = value;
+    }
+
     
     function sortTable(column, order) {
         const url = new URL(window.location.href);

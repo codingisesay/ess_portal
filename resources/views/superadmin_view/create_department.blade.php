@@ -83,7 +83,10 @@
                     <div class="form-group">
                         <input type="hidden" name="organisation_id" value="{{ Auth::guard('superadmin')->user()->id }}">
                         <input type="text" name="department_name" required>
-                        <label>Department Name</label>
+                        <label >
+                            Department Name <span style="color:red">*</span>
+                        </label>
+
                     </div>
                 </div>
                 <div class="col-12">
@@ -123,7 +126,9 @@
                 <input type="hidden" name="department_id" id="editDepartmentId">
                 <div class="popup-form-group">
                     <input type="text" name="department_name" placeholder=" " id="editDepartmentName" required>
-                    <label for="editDepartmentName">Department Name</label>
+                    <label for="editDepartmentName" >
+                            Department Name <span style="color:red">*</span>
+                    </label>
                 </div>
                 <div class="popup-form-group">
                     <button class="create-btn1" type="submit">Save Changes</button>

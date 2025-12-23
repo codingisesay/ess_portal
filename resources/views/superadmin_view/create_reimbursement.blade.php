@@ -100,14 +100,19 @@ $id = Auth::guard('superadmin')->user()->id;
                 <div class="form-container row">
                 <div class="col-3 mb-4">
                     <div class="form-group">
-                        <input type="text" id="category_name" name="category_name" class="form-control" required>
-                        <label for="category_name">Reimbursement Name</label>
+                        <input type="text" id="category_name" name="category_name" class="form-control" required oninput="validateReimbursementName(this,50)">
+                        <label for="category_name">
+                              Reimbursement Name <span style="color:red">*</span>
+                        </label>
+
                     </div>
                 </div>
                 <div class="col-3 mb-4">
                     <div class="form-group">
-                        <input type="text" id="category_name" name="category_short_name" class="form-control" required>
-                        <label for="category_name">Reimbursement Abbreviation</label>
+                        <input type="text" id="category_name" name="category_short_name" class="form-control" required oninput="validateReimbursementAbbreviation(this,10)">
+                        <label for="category_name">
+                             Reimbursement Abbreviation  <span style="color:red">*</span>
+                        </label>
                     </div>
                 </div>
                 <div class="col-3 mb-4">
@@ -117,7 +122,9 @@ $id = Auth::guard('superadmin')->user()->id;
                         <option value="Active">Active</option>
                         <option value="Inactive">Inactive</option>
                     </select>
-                    <label for="category_id">Status</label>
+                    <label for="category_id">
+                            Status <span style="color:red">*</span>
+                    </label>
                 </div> 
                 </div>
 
@@ -160,19 +167,25 @@ $id = Auth::guard('superadmin')->user()->id;
                     @csrf
                     <input type="hidden" name="id" id="editReimbursementId">
                     <div class="popup-form-group">
-                        <input type="text" name="category_name" id="editReimbursementName" required>
-                        <label for="editReimbursementName">Reimbursement Name</label>
+                        <input type="text" name="category_name" id="editReimbursementName" required  oninput="validateReimbursementName(this,50)">
+                        <label for="editReimbursementName">
+                            Reimbursement Name <span style="color:red">*</span>
+                        </label>
                     </div>
                     <div class="popup-form-group">
-                        <input type="text" name="category_short_name" id="editReimbursementShortName" required>
-                        <label for="editReimbursementShortName">Reimbursement Abbreviation</label>
+                        <input type="text" name="category_short_name" id="editReimbursementShortName" required oninput="validateReimbursementAbbreviation(this,10)">
+                        <label for="editReimbursementShortName">
+                            Reimbursement Abbreviation <span style="color:red">*</span>
+                        </label>
                     </div>
                     <div class="popup-form-group">
                         <select name="status" id="editReimbursementStatus" required>
                             <option value="Active">Active</option>
                             <option value="Inactive">Inactive</option>
                         </select>
-                        <label for="editReimbursementStatus">Status</label>
+                        <label for="editReimbursementStatus">
+                            Status <span style="color:red">*</span>
+                        </label>
                     </div>
                     <div class="popup-form-group">
                         <button class="create-btn1" type="submit">Save Changes</button>
@@ -256,6 +269,39 @@ $id = Auth::guard('superadmin')->user()->id;
             
             updateActiveButton(clickedElement);
         }
+
+        function validateReimbursementName(input, maxLen = 50) {
+            // Allow only alphabets and spaces
+            let value = input.value.replace(/[^a-zA-Z\s]/g, '');
+
+            // Remove leading spaces
+            value = value.replace(/^\s+/g, '');
+
+            // Enforce max length
+            if (value.length > maxLen) {
+                value = value.slice(0, maxLen);
+            }
+
+            input.value = value;
+        }
+
+
+        function validateReimbursementAbbreviation(input, maxLen = 10) {
+            // Allow only letters
+            let value = input.value.replace(/[^a-zA-Z]/g, '');
+
+            // Convert to uppercase
+            value = value.toUpperCase();
+
+            // Enforce max length
+            if (value.length > maxLen) {
+                value = value.slice(0, maxLen);
+            }
+
+            input.value = value;
+        }
+
+
 
         function showHRPolicyTable(clickedElement) {
             // Show table section and hide form section

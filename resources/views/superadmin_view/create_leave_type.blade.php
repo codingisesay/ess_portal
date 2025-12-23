@@ -113,13 +113,21 @@ $id = Auth::guard('superadmin')->user()->id;
                                 <option value="{{$leaveCycleData->id}}">{{ $leaveCycleData->name }}</option>
                                 @endforeach
                             </select>
-                            <label for="category_id">Select Cycle</label>
+                            <label for="category_id">
+                                Select Cycle <span style="color:red">*</span>
+                            </label>
                         </div>
                     </div>
                     <div class="col-3 mb-4">
                         <div class="form-group">
-                            <input type="text" id="category_name" name="leave_category" class="form-control" required>
-                            <label for="category_name">Leave Type Name</label>
+                            <input type="text" id="category_name" name="leave_category" class="form-control" required  pattern="[A-Za-z\s\-]+"
+                                title="Only letters, spaces and hyphens are allowed"
+                                oninput="this.value = this.value.replace(/[^A-Za-z\s\-]/g, '')"
+                            >
+                            <label for="category_name">
+                                Leave Type Name <span style="color:red">*</span>
+                            </label>
+
                         </div>
                     </div>
                     <div class="col-3 mb-4">
@@ -129,7 +137,9 @@ $id = Auth::guard('superadmin')->user()->id;
                                 <option value="Yes">Yes</option>
                                 <option value="No">No</option>
                             </select>
-                            <label for="category_name">Half Day Applicable?</label>
+                            <label for="category_id">
+                                Half Day Applicable? <span style="color:red">*</span>
+                            </label>
                         </div>
                     </div>
                     <div class="col-3 mb-4">
@@ -139,7 +149,9 @@ $id = Auth::guard('superadmin')->user()->id;
                                 <option value="Active">Active</option>
                                 <option value="Inactive">Inactive</option>
                             </select>
-                            <label for="category_id">Status</label>
+                            <label for="category_id">
+                                Status <span style="color:red">*</span>
+                            </label>
                         </div>
                     </div>
                     <div class="col-12">
@@ -187,25 +199,36 @@ $id = Auth::guard('superadmin')->user()->id;
                                     <option value="{{ $leaveCycleData->id }}">{{ $leaveCycleData->name }}</option>
                                 @endforeach
                             </select>
-                            <label for="editLeaveCycle">Select Cycle</label>
+                            <label for="editLeaveCycle">
+                                Select Cycle <span style="color:red">*</span>
+                            </label>
                         </div>
                         <div class="popup-form-group">
-                            <input type="text" name="leave_category" id="editLeaveTypeName" required>
-                            <label for="editLeaveTypeName">Leave Type Name</label>
+                            <input type="text" name="leave_category" id="editLeaveTypeName" required pattern="[A-Za-z\s\-]+"
+                                title="Only letters, spaces and hyphens are allowed"
+                                oninput="this.value = this.value.replace(/[^A-Za-z\s\-]/g, '')"
+                            >
+                            <label for="editLeaveTypeName">
+                               Leave Type Name <span style="color:red">*</span>
+                            </label>
                         </div>
                         <div class="popup-form-group">
                             <select name="half_day_status" id="editHalfDayStatus" required>
                                 <option value="Yes">Yes</option>
                                 <option value="No">No</option>
                             </select>
-                            <label for="editHalfDayStatus">Half Day Applicable?</label>
+                             <label for="editHalfDayStatus">
+                               Half Day Applicable? <span style="color:red">*</span>
+                            </label>
                         </div>
                         <div class="popup-form-group">
                             <select name="status" id="editLeaveStatus" required>
                                 <option value="Active">Active</option>
                                 <option value="Inactive">Inactive</option>
                             </select>
-                            <label for="editLeaveStatus">Status</label>
+                            <label for="editLeaveStatus">
+                               Status <span style="color:red">*</span>
+                            </label>
                         </div>
                         <div class="popup-form-group">
                             <button class="create-btn1" type="submit">Save Changes</button>

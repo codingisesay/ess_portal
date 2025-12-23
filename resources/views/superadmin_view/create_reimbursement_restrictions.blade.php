@@ -109,13 +109,17 @@ $id = Auth::guard('superadmin')->user()->id;
                             
                            
                         </select>
-                        <label for="category_id">Reimbusrtment Type</label>
+                        <label for="category_id">
+                              Reimbusrtment Type <span style="color:red">*</span>
+                        </label>
                     </div> 
                 </div>
                 <div class="col-3 mb-4">
                     <div class="form-group">
-                        <input type="text" id="category_name" name="max_amount" class="form-control" required>
-                        <label for="category_name">Maximum Amount</label>
+                        <input type="text" id="category_name" name="max_amount" class="form-control" required oninput="validateAmount(this)">
+                        <label for="category_name">
+                              Maximum Amount <span style="color:red">*</span>
+                        </label>
                     </div>
                 </div> 
                 <div class="col-3 mb-4">
@@ -125,7 +129,9 @@ $id = Auth::guard('superadmin')->user()->id;
                             <option value="Yes">Yes</option>
                             <option value="No">No</option>
                         </select>
-                        <label for="category_id">Bill Required</label>
+                        <label for="category_id">
+                              Bill Required <span style="color:red">*</span>
+                        </label>
                     </div> 
                 </div>
                 <div class="col-3 mb-4">
@@ -135,7 +141,9 @@ $id = Auth::guard('superadmin')->user()->id;
                             <option value="Yes">Yes</option>
                             <option value="No">No</option>
                         </select>
-                        <label for="category_id">Tax Required</label>
+                        <label for="category_id">
+                              Tax Required <span style="color:red">*</span>
+                        </label>
                     </div> 
                 </div>
 
@@ -183,25 +191,33 @@ $id = Auth::guard('superadmin')->user()->id;
                                 <option value="{{ $item->id }}">{{ $item->name }}</option>
                             @endforeach
                         </select>
-                        <label for="editReimbursementType">Reimbursement Type</label>
+                        <label for="editReimbursementType">
+                              Reimbursement Type <span style="color:red">*</span>
+                        </label>
                     </div>
                     <div class="popup-form-group">
-                        <input type="text" name="max_amount" id="editMaxAmount" required>
-                        <label for="editMaxAmount">Maximum Amount</label>
+                        <input type="text" name="max_amount" id="editMaxAmount" required oninput="validateAmount(this)">
+                        <label for="editMaxAmount">
+                              Maximum Amount <span style="color:red">*</span>
+                        </label>
                     </div>
                     <div class="popup-form-group">
                         <select name="bill_required" id="editBillRequired" required>
                             <option value="Yes">Yes</option>
                             <option value="No">No</option>
                         </select>
-                        <label for="editBillRequired">Bill Required</label>
+                        <label for="editBillRequired">
+                              Bill Required <span style="color:red">*</span>
+                        </label>
                     </div>
                     <div class="popup-form-group">
                         <select name="tax_required" id="editTaxRequired" required>
                             <option value="Yes">Yes</option>
                             <option value="No">No</option>
                         </select>
-                        <label for="editTaxRequired">Tax Required</label>
+                        <label for="editTaxRequired">
+                              Tax Required <span style="color:red">*</span>
+                        </label>
                     </div>
                     <div class="popup-form-group">
                         <button class="create-btn1" type="submit">Save Changes</button>
@@ -286,6 +302,35 @@ $id = Auth::guard('superadmin')->user()->id;
             updateActiveButton(clickedElement);
         }
 
+        function validateAmount(input) {
+    // Allow only digits and one decimal
+    let value = input.value.replace(/[^0-9.]/g, '');
+
+    // Prevent multiple decimals
+    const parts = value.split('.');
+    if (parts.length > 2) {
+        value = parts[0] + '.' + parts[1];
+    }
+
+    // Limit decimals to 2 places
+    if (parts[1]?.length > 2) {
+        value = parts[0] + '.' + parts[1].slice(0, 2);
+    }
+
+    // Limit total length (7 digits + decimal)
+    if (value.length > 10) {
+        value = value.slice(0, 20);
+    }
+
+    // Prevent zero or empty
+    if (value === '0') {
+        value = '';
+    }
+
+    input.value = value;
+}
+
+
         function showHRPolicyTable(clickedElement) {
             // Show table section and hide form section
             document.getElementById('formSection').style.display = 'none';
@@ -329,6 +374,43 @@ $id = Auth::guard('superadmin')->user()->id;
             clickedElement.classList.add('active');
         }
     </script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+
+    const form = document.querySelector('form[action="{{ route('insert_reimbursement_validation') }}"]');
+    const reimbursementSelect = document.getElementById('organisation_reimbursement_type_id');
+
+    form.addEventListener('submit', function (e) {
+
+        const selectedOption = reimbursementSelect.options[reimbursementSelect.selectedIndex];
+        if (!selectedOption || !selectedOption.value) return;
+
+        const selectedText = selectedOption.text.trim().toLowerCase();
+
+        // Collect existing reimbursement types from table (2nd column)
+        const existingTypes = Array.from(
+            document.querySelectorAll('#tableSection tbody tr td:nth-child(2)')
+        ).map(td => td.textContent.trim().toLowerCase());
+
+        // Duplicate check
+        if (existingTypes.includes(selectedText)) {
+            e.preventDefault(); //  STOP SUBMIT
+
+            Swal.fire({
+                icon: 'error',
+                title: 'Reimbursement Restriction Already Exists',
+                text: 'This reimbursement type already has restrictions defined.',
+                confirmButtonColor: '#d33'
+            });
+
+            return false;
+        }
+    });
+
+});
+</script>
+
 @endsection
 </body>
 </html>

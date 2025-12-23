@@ -99,25 +99,35 @@ $id = Auth::guard('superadmin')->user()->id;
                     <div class="col-3 mb-4">
                     <div class="form-group">
                         <input type="text" id="category_name" name="cycle_name" class="form-control" required>
-                        <label for="category_name">Cycle Name</label>
+                        <label for="category_name">
+                            Cycle Name <span style="color:red">*</span>
+                        </label>
+
                     </div>
 </div>
                     <div class="col-3 mb-4">
                     <div class="form-group">
                         <input type="datetime-local" id="category_name" name="start_date_time" class="form-control" required>
-                        <label for="category_name">Start Date Time</label>
+                        <label for="category_name">
+                          Start Date Time <span style="color:red">*</span>
+                        </label>
+                        
                     </div>
 </div>
                     <div class="col-3 mb-4">
                     <div class="form-group">
                         <input type="datetime-local" id="category_name" name="end_date_time" class="form-control" required>
-                        <label for="category_name">End Date Time</label>
+                         <label for="category_name">
+                          End Date Time <span style="color:red">*</span>
+                        </label>
                     </div>
 </div>
                     <div class="col-3 mb-4">
                     <div class="form-group">
-                        <input id="text" id="category_name" name="year_slot" class="form-control" required>
-                        <label for="year">Input Year: (EX: 2025-26)</label>
+                        <input id="text" id="category_name" name="year_slot" class="form-control" maxlength="7" required oninput="validateYearSlot(this)">
+                        <label for="category_name">
+                          Input Year: (EX: 2025-26) <span style="color:red">*</span>
+                        </label>
                     </div>
 </div>
                     <div class="col-12">
@@ -162,19 +172,29 @@ $id = Auth::guard('superadmin')->user()->id;
                     <input type="hidden" name="cycle_id" id="editLeaveSlotId">
                     <div class="popup-form-group">
                         <input type="text" name="cycle_name" id="editLeaveSlotName" required>
-                        <label for="editLeaveSlotName">Cycle Name</label>
+                        <label for="editLeaveSlotName">
+                         Cycle Name<span style="color:red">*</span>
+                        </label>
+                        
                     </div>
                     <div class="popup-form-group">
                         <input type="datetime-local" name="start_date_time" id="editLeaveSlotStartDate" required>
-                        <label for="editLeaveSlotStartDate">Start Date Time</label>
+                        <label for="editLeaveSlotName">
+                          Start Date Time<span style="color:red">*</span>
+                        </label>
                     </div>
                     <div class="popup-form-group">
                         <input type="datetime-local" name="end_date_time" id="editLeaveSlotEndDate" required>
-                        <label for="editLeaveSlotEndDate">End Date Time</label>
+                        <label for="editLeaveSlotEndDate">
+                          End Date Time <span style="color:red">*</span>
+                        </label>
                     </div>
                     <div class="popup-form-group">
-                        <input type="text" name="year_slot" id="editLeaveSlotYear" required>
-                        <label for="editLeaveSlotYear">Year</label>
+                        <input type="text" name="year_slot" id="editLeaveSlotYear" required  maxlength="7"  oninput="validateYearSlot(this)">
+                        <label for="editLeaveSlotYear">
+                          Year <span style="color:red">*</span>
+                        </label>
+                        
                     </div>
                     <div class="popup-form-group">
                         <button class="create-btn1" type="submit">Save Changes</button>
@@ -310,6 +330,43 @@ $id = Auth::guard('superadmin')->user()->id;
             document.getElementById('editLeaveSlotModal').style.display = 'block';
         }
     </script>
+    <script>
+function validateYearSlot(input) {
+    let value = input.value;
+
+    // Allow only digits and hyphen
+    value = value.replace(/[^0-9-]/g, '');
+
+    // Allow only one hyphen
+    if ((value.match(/-/g) || []).length > 1) {
+        value = value.substring(0, value.lastIndexOf('-'));
+    }
+
+    // Limit length to 7 characters (YYYY-YY)
+    if (value.length > 7) {
+        value = value.slice(0, 7);
+    }
+
+    // Validate logical year relation when full format entered
+    if (/^\d{4}-\d{2}$/.test(value)) {
+        const startYear = parseInt(value.substring(0, 4));
+        const endYear = parseInt(value.substring(5, 7));
+        const expectedEnd = (startYear + 1) % 100;
+
+        if (endYear !== expectedEnd) {
+            input.setCustomValidity(
+                'Invalid year range. Example: 2025-26'
+            );
+        } else {
+            input.setCustomValidity('');
+        }
+    } else {
+        input.setCustomValidity('');
+    }
+
+    input.value = value;
+}
+</script>
 @endsection
 </body>
 </html>
