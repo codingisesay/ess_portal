@@ -75,7 +75,7 @@
                     data-search-input
                     data-table-section="tableSection"
                     data-no-results="noResults"
-                    />
+                />
             </div>
         </div>
     </div>
@@ -291,7 +291,7 @@ $formattedOrgSettings = $orgSettings->map(function ($item) {
                                     <option value="half-yearly">Half Yearly</option>
                                     <option value="yearly">Yearly</option>
                                 </select>
-                                
+                         
                             </div>
                             <div class="col-3 mb-3" id="edit_cycleWrapper" style="display:none;">
                                 <label for="edit_cycle_period" class="form-label fw-bold mb-1">
@@ -305,25 +305,25 @@ $formattedOrgSettings = $orgSettings->map(function ($item) {
                                 <label for="edit_start_date" class="form-label fw-bold mb-1">
                                     Start Date <span style="color:red">*</span>
                                 </label>
-                                <input type="date" name="start_date" id="edit_start_date" class="form-control" required  onchange="validateStartEndDates(this, edit_end_date)">
-                            </div>
+                                <input type="date" name="start_date" id="edit_start_date" class="form-control" required >
+                            </div>  
                             <div class="col-3 mb-3">
                                 <label for="edit_end_date" class="form-label fw-bold mb-1">
                                    End Date <span style="color:red">*</span>
                                 </label>
-                                <input type="date" name="end_date" id="edit_end_date" class="form-control" required onchange="validateStartEndDates(edit_start_date, this)">
+                                <input type="date" name="end_date" id="edit_end_date" class="form-control" required >
                             </div>
                             <div class="col-3 mb-3">
                                 <label for="edit_process_start_date" class="form-label fw-bold mb-1">
                                    Process Start Date <span style="color:red">*</span>
                                 </label>
-                                <input type="date" name="process_start_date" id="edit_process_start_date" class="form-control" required onchange="validateProcessStart(this, edit_start_date, edit_end_date)">
+                                <input type="date" name="process_start_date" id="edit_process_start_date" class="form-control" required >
                             </div>
                             <div class="col-3 mb-3">
                                 <label for="edit_process_end_date" class="form-label fw-bold mb-1">
                                    Process End Date <span style="color:red">*</span>
                                 </label>
-                                <input type="date" name="process_end_date" id="edit_process_end_date" class="form-control" required onchange="validateProcessEnd(this, edit_process_start_date, edit_end_date)">
+                                <input type="date" name="process_end_date" id="edit_process_end_date" class="form-control" required >
                             </div>
                             <div class="col-3 mb-3">
                                 <label for="edit_status" class="form-label fw-bold mb-1">
@@ -954,4 +954,91 @@ document.getElementById("cycle_period").addEventListener("change", calculateDate
         clickedElement.classList.add('active');
     }
 </script>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const today = new Date().toISOString().split('T')[0];
+
+    const dateIds = [
+        'start_date',
+        'end_date',
+        'process_start_date',
+        'process_end_date',
+        'edit_start_date',
+        'edit_end_date',
+        'edit_process_start_date',
+        'edit_process_end_date'
+    ];
+
+    dateIds.forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.min = today;
+    });
+});
+</script>
+<script>
+function validateStartEndDates(startInput, endInput) {
+    if (!startInput.value || !endInput.value) return;
+
+    const start = new Date(startInput.value);
+    const end = new Date(endInput.value);
+    const today = new Date(); today.setHours(0,0,0,0);
+
+    //  Start date in past
+    if (start < today) {
+        startInput.setCustomValidity('Start date cannot be in the past');
+        return;
+    } else {
+        startInput.setCustomValidity('');
+    }
+
+    //  End before start
+    if (end <= start) {
+        endInput.setCustomValidity('End date must be after start date');
+        return;
+    }
+
+    //  More than 1 year
+    const diffDays = (end - start) / (1000 * 60 * 60 * 24);
+    if (diffDays > 366) {
+        endInput.setCustomValidity('Cycle duration cannot exceed 1 year');
+        return;
+    }
+
+    endInput.setCustomValidity('');
+}
+</script>
+<script>
+function validateProcessStart(input, cycleStart, cycleEnd) {
+    if (!cycleStart.value || !cycleEnd.value) return;
+
+    if (input.value < cycleStart.value) {
+        input.setCustomValidity('Process start cannot be before cycle start');
+        return;
+    }
+
+    if (input.value > cycleEnd.value) {
+        input.setCustomValidity('Process start cannot be after cycle end');
+        return;
+    }
+
+    input.setCustomValidity('');
+}
+
+function validateProcessEnd(input, processStart, cycleEnd) {
+    if (!processStart.value || !cycleEnd.value) return;
+
+    if (input.value < processStart.value) {
+        input.setCustomValidity('Process end cannot be before process start');
+        return;
+    }
+
+    if (input.value > cycleEnd.value) {
+        input.setCustomValidity('Process end cannot exceed cycle end');
+        return;
+    }
+
+    input.setCustomValidity('');
+}
+</script>
+
 @endsection

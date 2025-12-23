@@ -117,19 +117,19 @@ $id = Auth::guard('superadmin')->user()->id;
                 </div>
                 <div class="col-3 mb-4">
                     <div class="form-group">
-                        <input type="datetime-local" name="applicable_from" required>
+                        <input type="datetime-local" name="applicable_from" id="applicableFrom" required oninput="validateSalaryDates()">
                         <label>Applicable From</label>
                     </div>
                 </div>
                 <div class="col-3 mb-4">
                     <div class="form-group">
-                        <input type="datetime-local" name="applicable_to" required>
+                        <input type="datetime-local" name="applicable_to" id="applicableTo" required oninput="validateSalaryDates()">
                         <label>Applicable To</label>
                     </div>
                 </div>
                 <div class="col-3 mb-4">
                     <div class="form-group">
-                        <input type="number" name="month_start_date" required>
+                        <input type="number" name="month_start_date" required >
                         <label>Month Start Date</label>
                     </div>
                 </div>
@@ -197,11 +197,11 @@ $id = Auth::guard('superadmin')->user()->id;
                     <label for="editSalaryCycleName">Name</label>
                 </div>
                 <div class="popup-form-group">
-                    <input type="datetime-local" name="applicable_from" id="editApplicableFrom" required>
+                    <input type="datetime-local" name="applicable_from" id="editApplicableFrom" required oninput="validateEditSalaryDates()">
                     <label for="editApplicableFrom">Applicable From</label>
                 </div>
                 <div class="popup-form-group">
-                    <input type="datetime-local" name="applicable_to" id="editApplicableTo" required>
+                    <input type="datetime-local" name="applicable_to" id="editApplicableTo" required oninput="validateEditSalaryDates()">
                     <label for="editApplicableTo">Applicable To</label>
                 </div>
                 <div class="popup-form-group">
@@ -331,6 +331,76 @@ $id = Auth::guard('superadmin')->user()->id;
     document.getElementById('editSalaryCycleModal').style.display = 'block';
 }
 </script>
+<script>
+function validateEditSalaryDates() {
+    const fromInput = document.getElementById('editApplicableFrom');
+    const toInput   = document.getElementById('editApplicableTo');
+
+    if (!fromInput.value || !toInput.value) return;
+
+    const now  = new Date();
+    const from = new Date(fromInput.value);
+    const to   = new Date(toInput.value);
+
+    if (from < now) {
+        fromInput.setCustomValidity('Applicable From cannot be before today');
+        return;
+    } else {
+        fromInput.setCustomValidity('');
+    }
+
+    if (to <= from) {
+        toInput.setCustomValidity('Applicable To must be after Applicable From');
+        return;
+    } else {
+        toInput.setCustomValidity('');
+    }
+}
+</script>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const now = new Date();
+    now.setSeconds(0, 0); // clean seconds
+
+    const minDateTime = now.toISOString().slice(0, 16);
+
+    const from = document.getElementById('applicableFrom');
+    const to   = document.getElementById('applicableTo');
+
+    // Disable back dates in calendar
+    if (from) from.min = minDateTime;
+    if (to)   to.min   = minDateTime;
+});
+
+function validateSalaryDates() {
+    const fromInput = document.getElementById('applicableFrom');
+    const toInput   = document.getElementById('applicableTo');
+
+    if (!fromInput.value || !toInput.value) return;
+
+    const now  = new Date();
+    const from = new Date(fromInput.value);
+    const to   = new Date(toInput.value);
+
+    //  Applicable From cannot be in the past
+    if (from < now) {
+        fromInput.setCustomValidity('Applicable From cannot be before today');
+        return;
+    } else {
+        fromInput.setCustomValidity('');
+    }
+
+    //  Applicable To must be after Applicable From
+    if (to <= from) {
+        toInput.setCustomValidity('Applicable To must be after Applicable From');
+        return;
+    } else {
+        toInput.setCustomValidity('');
+    }
+}
+</script>
+
 
 @endsection
 
