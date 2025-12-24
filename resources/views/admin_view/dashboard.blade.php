@@ -103,7 +103,7 @@
                     <div class="clients-grid">
 
                       <!-- Loop through organisations -->
-                        @forelse ($organisations as $org)
+                       @forelse ($organisations as $org)
                             @php
                                 // Initials (AC, TI, etc.)
                                 $initials = collect(explode(' ', $org->name))
@@ -114,25 +114,30 @@
                                 // Storage %
                                 $storage = (int) ($org->storage_used_percent ?? 0);
 
-                                // Status handling (1 = Active, 0 = Inactive)
-                                $statusClass = ((int) ($org->status ?? 0) === 1)
+                                // Status handling (organisation_status = Active / Inactive)
+                                $statusClass = (strtolower($org->organisation_status ?? '') === 'active')
                                     ? 'active'
                                     : 'inactive';
 
-                                // subscription plan name from plans collection
-                                $planName = optional(collect($subscriptionPlans)->firstWhere('id', $org->software_package_plan))->plan_name ?? '—';
+                                $statusLabel = ucfirst(strtolower($org->organisation_status ?? 'Inactive'));
+
+                                // Subscription plan name
+                                $planName = optional(
+                                    collect($subscriptionPlans)->firstWhere('id', $org->software_package_plan)
+                                )->plan_name ?? '—';
                             @endphp
 
 
                              <!-- Avatar with initials -->
                               <!-- used the right column name for mobile number (mobile) -->
                                <!-- getting the current value of software package id -->
-                            <div class="client-card"
-                                 data-client-id="{{ $org->id }}"
-                                 data-email="{{ $org->email ?? '' }}"
-                                 data-phone="{{ $org->mobile ?? '' }}"
-                                 data-package-id="{{ $org->software_package_plan ?? '' }}"
-                                 data-package="{{ $planName }}">
+                       <div class="client-card"
+                           data-client-id="{{ $org->id }}"
+                           data-email="{{ $org->email ?? '' }}"
+                           data-phone="{{ $org->mobile ?? '' }}"
+                           data-package-id="{{ $org->software_package_plan ?? '' }}"
+                           data-package="{{ $planName }}"
+                           data-organisation-status="{{ $org->organisation_status ?? ( (isset($org->status) && (int)$org->status === 1) ? 'Active' : 'Inactive' ) }}">
                                 <div class="client-avatar client-avatar-blue">
                                     {{ $initials }}
                                 </div>
