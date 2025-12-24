@@ -1022,6 +1022,11 @@
                 btn.style.alignItems = 'center';
                 btn.style.padding = '0';
                 btn.style.margin = '0 auto';
+                const dropdownArrow = btn.querySelector('.dropdown-arrow');
+                // Hide dropdown arrows when sidebar is collapsed
+                 if (dropdownArrow) {
+                 dropdownArrow.style.display = 'none';
+            }
             });
             
             // Hide icon backgrounds when collapsed, show just icons
