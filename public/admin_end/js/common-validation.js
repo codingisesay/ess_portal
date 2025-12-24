@@ -97,5 +97,89 @@ function bindNumericRanges() {
 
 document.addEventListener('DOMContentLoaded', bindNumericRanges);
 
+/* =========================
+   COMMON CONSTANTS
+========================= */
+
+const LIMITS = {
+    TEXT_DEFAULT: 50,
+    USER_DEFINED_DAYS_MAX: 365,
+    DAYS_IN_MONTH: 31
+};
+
+
+/* =========================
+   TEXT ONLY (COMMON)
+========================= */
+
+function bindTextOnly() {
+    document.querySelectorAll('.text-only').forEach(input => {
+
+        if (input.dataset.bound) return;
+        input.dataset.bound = 'true';
+
+        const maxLen = Number(input.dataset.maxlen ?? LIMITS.TEXT_DEFAULT);
+
+        input.addEventListener('input', () => {
+            let val = input.value.replace(/[^a-zA-Z\s.&]/g, '');
+            if (val.length > maxLen) val = val.slice(0, maxLen);
+            input.value = val;
+        });
+    });
+}
+
+/* =========================
+   USER DEFINED DAYS (COMMON)
+========================= */
+
+function bindUserDefinedDays() {
+    document.querySelectorAll('.user-days').forEach(input => {
+
+        if (input.dataset.bound) return;
+        input.dataset.bound = 'true';
+
+        const max = Number(input.dataset.max ?? LIMITS.USER_DEFINED_DAYS_MAX);
+
+        input.addEventListener('input', () => {
+            let value = input.value.replace(/[^0-9]/g, '');
+
+            if (value.length > 3) value = value.slice(0, 3);
+
+            let num = Number(value);
+
+            if (num > max) num = max;
+            if (num < 1 && value !== '') num = 1;
+
+            input.value = value ? num : '';
+        });
+    });
+}
+
+function bindDays() {
+    document.querySelectorAll('.days-only').forEach(input => {
+
+        if (input.dataset.bound) return;
+        input.dataset.bound = 'true';
+
+        input.addEventListener('input', () => {
+            let value = input.value.replace(/\D/g, '');
+            let num = Number(value);
+
+            if (num > 31) num = 31;
+            if (num < 1 && value !== '') num = 1;
+
+            input.value = value ? num : '';
+        });
+    });
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    bindNumericRanges();
+    bindTextOnly();
+    bindUserDefinedDays();
+    bindDays();
+});
+
+
 
 

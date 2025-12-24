@@ -112,7 +112,7 @@ $id = Auth::guard('superadmin')->user()->id;
             <div class="form-container row">
                 <div class="col-3 mb-4">
                     <div class="form-group">
-                        <input type="text" name="name" required oninput="validateTextOnly(this,50)">
+                        <input type="text" name="name" class="text-only" required >
                         <label>
                             Pay Head Name <span style="color:red">*</span>
                         </label>
@@ -121,7 +121,7 @@ $id = Auth::guard('superadmin')->user()->id;
 
                  <div class="col-3 mb-4">
                     <div class="form-group">
-                        <input type="text" name="name_to_display_in_payslip" required oninput="validateTextOnly(this,50)">
+                        <input type="text" name="name_to_display_in_payslip" class="text-only" required >
                         <label>
                             Name to Display in Payslip <span style="color:red">*</span>
                         </label>
@@ -315,7 +315,7 @@ $id = Auth::guard('superadmin')->user()->id;
         </header>
         <div class="w3-container" style="padding: 20px;">
             <div class="popup-form-group">
-                <input type="number" id="customDaysInput" min="1" max="31" placeholder="Enter days (1-31)" required oninput="validateDays(this)">
+                <input type="number" id="customDaysInput" placeholder="Enter days (1-31)"  class="days-only" required >
                 <label for="customDaysInput">
                     How many days <span style="color:red">*</span>
                 </label>
@@ -338,7 +338,7 @@ $id = Auth::guard('superadmin')->user()->id;
         </header>
         <div class="w3-container" >
             <div class="popup-form-group-small">
-                <input type="text" id="incomeTaxComponents" placeholder="Income Tax Components" required oninput="validateTextOnly(this,100)">
+                <input type="text" id="incomeTaxComponents" placeholder="Income Tax Components" required class="text-only" data-maxlen="100">
                 <label for="incomeTaxComponents">
                     Income Tax Components <span style="color:red">*</span>
                 </label>
@@ -414,14 +414,14 @@ $id = Auth::guard('superadmin')->user()->id;
                 @method('POST')
                 <input type="hidden" name="template_id" id="editSalaryTemplateId">
                 <div class="popup-form-group">
-                    <input type="text" name="name" id="editSalaryTemplateName" required oninput="validateTextOnly(this,50)">
+                    <input type="text" name="name" id="editSalaryTemplateName" class="text-only" data-maxlen="100" required >
                     <label for="editSalaryTemplateName">
                         Name <span style="color:red">*</span>
                     </label>
                 </div>
 
                 <div class="popup-form-group">
-                    <input type="text" name="name_to_display_in_payslip" id="editNameToDisplay" required oninput="validateTextOnly(this,50)">
+                    <input type="text" name="name_to_display_in_payslip" id="editNameToDisplay"  class="text-only" data-maxlen="100" required >
                     <label for="editNameToDisplay">
                         Name to Display in Payslip <span style="color:red">*</span>
                     </label>
@@ -494,7 +494,7 @@ $id = Auth::guard('superadmin')->user()->id;
 
                     <!-- Income Tax Components -->
                  <div class="popup-form-group">
-                    <input type="text" name="income_tax_components" id="editIncomeTaxComponents" placeholder="Income Tax Components" required  oninput="validateTextOnly(this,100)">
+                    <input type="text" name="income_tax_components" id="editIncomeTaxComponents" placeholder="Income Tax Components" required  class="text-only" data-maxlen="100">
                     <label for="editIncomeTaxComponents">
                        Income Tax Components <span style="color:red">*</span>
                     </label>
@@ -562,7 +562,7 @@ $id = Auth::guard('superadmin')->user()->id;
 
                 <!-- User Defined Days (Visible only when User Defined is selected) -->
                 <div class="popup-form-group" id="editUserDaysContainer" style="display:none;">
-                    <input type="number" name="user_define_days" id="editUserDefineDays" placeholder="Enter Days" type="number" min="1" max="365" step="1" oninput="validateUserDefinedDays(this)" required>
+                    <input type="number" name="user_define_days" id="editUserDefineDays" placeholder="Enter Days" type="number" data-max="365" class="user-days" required>
                     <label for="editUserDefineDays">
                        User Defined Days <span style="color:red">*</span>
                     </label>
@@ -687,38 +687,38 @@ function saveAttendanceLeaveConfig() {
 
 
 /* ----------------------- TEXT ONLY VALIDATION ----------------------- */
-function validateTextOnly(input, maxLen = 50) {
-    let val = input.value.replace(/[^a-zA-Z\s.&]/g, '');
-    if (val.length > maxLen) val = val.slice(0, maxLen);
-    input.value = val;
-}
+// function validateTextOnly(input, maxLen = 50) {
+//     let val = input.value.replace(/[^a-zA-Z\s.&]/g, '');
+//     if (val.length > maxLen) val = val.slice(0, maxLen);
+//     input.value = val;
+// }
 
-/* ----------------------- USER DEFINED DAYS VALIDATION ----------------------- */
-function validateUserDefinedDays(input) {
-    // Remove decimals and non-numeric characters
-    input.value = input.value.replace(/[^0-9]/g, '');
+// /* ----------------------- USER DEFINED DAYS VALIDATION ----------------------- */
+// function validateUserDefinedDays(input) {
+//     // Remove decimals and non-numeric characters
+//     input.value = input.value.replace(/[^0-9]/g, '');
 
-    // Prevent more than 3 digits
-    if (input.value.length > 3) {
-        input.value = input.value.slice(0, 3);
-    }
+//     // Prevent more than 3 digits
+//     if (input.value.length > 3) {
+//         input.value = input.value.slice(0, 3);
+//     }
 
-    const value = parseInt(input.value, 10);
+//     const value = parseInt(input.value, 10);
 
-    // Enforce range 1 – 365
-    if (value > 365) {
-        input.value = 365;
-    } else if (value < 1 && input.value !== '') {
-        input.value = 1;
-    }
-}
+//     // Enforce range 1 – 365
+//     if (value > 365) {
+//         input.value = 365;
+//     } else if (value < 1 && input.value !== '') {
+//         input.value = 1;
+//     }
+// }
 
 
-function validateDays(input) {
-    input.value = input.value.replace(/\D/g, '');
-    if (input.value > 31) input.value = 31;
-    if (input.value < 1) input.value = 1;
-}
+// function validateDays(input) {
+//     input.value = input.value.replace(/\D/g, '');
+//     if (input.value > 31) input.value = 31;
+//     if (input.value < 1) input.value = 1;
+// }
 
 /* ----------------------- INITIALIZATION ----------------------- */
 
