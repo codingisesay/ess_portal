@@ -686,39 +686,6 @@ function saveAttendanceLeaveConfig() {
 
 
 
-/* ----------------------- TEXT ONLY VALIDATION ----------------------- */
-// function validateTextOnly(input, maxLen = 50) {
-//     let val = input.value.replace(/[^a-zA-Z\s.&]/g, '');
-//     if (val.length > maxLen) val = val.slice(0, maxLen);
-//     input.value = val;
-// }
-
-// /* ----------------------- USER DEFINED DAYS VALIDATION ----------------------- */
-// function validateUserDefinedDays(input) {
-//     // Remove decimals and non-numeric characters
-//     input.value = input.value.replace(/[^0-9]/g, '');
-
-//     // Prevent more than 3 digits
-//     if (input.value.length > 3) {
-//         input.value = input.value.slice(0, 3);
-//     }
-
-//     const value = parseInt(input.value, 10);
-
-//     // Enforce range 1 – 365
-//     if (value > 365) {
-//         input.value = 365;
-//     } else if (value < 1 && input.value !== '') {
-//         input.value = 1;
-//     }
-// }
-
-
-// function validateDays(input) {
-//     input.value = input.value.replace(/\D/g, '');
-//     if (input.value > 31) input.value = 31;
-//     if (input.value < 1) input.value = 1;
-// }
 
 /* ----------------------- INITIALIZATION ----------------------- */
 
