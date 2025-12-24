@@ -46,15 +46,22 @@
 
       <!-- Hidden organisation ID -->
     <input type="hidden" name="id" id="editId">
-
+    <!-- client name validations -->
     <div class="form-group">
-        <input type="text" id="editName" name="name" class="form-control" required>
-        <label>Client Name</label>
+        <input type="text" id="editName" name="name" class="form-control" required
+        pattern="[A-Za-z\s]+"
+        title="Only letters are allowed"
+        oninput="this.value = this.value.replace(/[^A-Za-z\s]/g, '')">
+        <label>Client Name<span style="color: red;">*</span></label>
     </div>
 
+    <!-- contact person validations -->
     <div class="form-group">
-        <input type="text" id="editContact" name="contact_person" class="form-control" required>
-        <label>Contact Person</label>
+        <input type="text" id="editContact" name="contact_person" class="form-control" required
+        pattern="[A-Za-z\s]+"
+        title="Only letters are allowed"
+        oninput="this.value = this.value.replace(/[^A-Za-z\s]/g, '')">
+        <label>Contact Person<span style="color: red;">*</span></label>
     </div>
 
     <div class="form-group">
