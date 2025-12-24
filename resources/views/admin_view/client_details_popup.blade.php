@@ -96,7 +96,7 @@
         <label class="form-check-label">Status</label>
         <div class="form-check form-switch">
             <!-- Hidden input for organisation_status (submitted) -->
-            <input type="hidden" name="organisation_status" id="editStatusHidden" value="Incative">
+            <input type="hidden" name="organisation_status" id="editStatusHidden" value="Active">
             <!-- Checkbox only toggles the hidden input; it does not submit directly -->
             <input type="checkbox" id="editStatus" class="form-check-input">
             <label class="form-check-label" for="editStatus">Active</label>
