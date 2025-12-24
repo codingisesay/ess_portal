@@ -39,6 +39,7 @@
                         <!-- Client Name: Only allows letters and spaces.  -->
 
                         <!-- on input is used to Correct the validations at typing time -->
+                         <!-- pattern <span style="color: red;">*</span> is used to validate the input fileds are required -->
                         <input 
                             type="text"
                             id="client_name" 
@@ -50,7 +51,9 @@
                             oninput="this.value = this.value.replace(/[^A-Za-z\s]/g, '')"
                             required
                         >
-                        <label for="client_name">Client Name</label>
+                        <label for="client_name">
+                            Client Name <span style="color: red;">*</span>
+                        </label>
                     </div>
 
                     <!-- Company Name  -->
@@ -63,7 +66,9 @@
                             maxlength="50" 
                             required
                         >
-                        <label for="name">Company Name</label>
+                        <label for="name">Company Name
+                            <span style="color: red;">*</span>
+                        </label>
                     </div>
 
                     <!-- Contact Information -->
@@ -75,7 +80,9 @@
                             placeholder=" "
                             required
                         >
-                        <label for="contact_person">Contact Person</label>
+                        <label for="contact_person">Contact Person
+                            <span style="color: red;">*</span>
+                    </label>
                     </div>
 
 
@@ -92,7 +99,9 @@
                             pattern="[a-zA-Z0-9._%+-]+@gmail\.com"
                             title="Please enter a valid Gmail address (example@gmail.com)"
                         >
-                        <label for="email">Email</label>
+                        <label for="email">Email
+                            <span style="color: red;">*</span>
+                        </label>
                     </div>
 
 
@@ -110,7 +119,9 @@
                             aria-describedby="passwordHelp"
                             autocomplete="new-password"
                         >
-                        <label for="password">Password</label>
+                        <label for="password">Password
+                            <span style="color: red;">*</span>
+                        </label>
                         <small id="passwordHelp" class="error-text"></small>
                     </div>
 
@@ -130,7 +141,9 @@
                             oninput="this.value = this.value.replace(/\D/g, '')"
                             required
                         >
-                        <label for="mobile">Phone</label>
+                        <label for="mobile">Phone
+                            <span style="color: red;">*</span>
+                        </label>
                     </div>
                     
                     <!-- Address Fields -->
@@ -143,7 +156,9 @@
                             maxlength="50"
                             required
                         >
-                        <label for="building_no">Building/House No.</label>
+                        <label for="building_no">Building/House No.
+                            <span style="color: red;">*</span>
+                        </label>
                     </div>
 
                     <!-- Validation for premises name -->
@@ -155,7 +170,9 @@
                             placeholder=" "
                             maxlength="100"
                         >
-                        <label for="premises_name">Premises Name</label>
+                        <label for="premises_name">Premises Name
+                            <span style="color: red;">*</span>
+                        </label>
                     </div>
 
                     <!-- Validation for landmark -->
@@ -167,7 +184,9 @@
                             placeholder=" "
                             maxlength="150"
                         >
-                        <label for="landmark">Landmark</label>
+                        <label for="landmark">Landmark
+                            <span style="color: red;">*</span>
+                        </label>
                     </div>
 
                     <!-- Validation for road/street -->
@@ -180,7 +199,9 @@
                             maxlength="150"
                             required
                         >
-                        <label for="road_street">Road/Street</label>
+                        <label for="road_street">Road/Street
+                            <span style="color: red;">*</span>
+                        </label>
                     </div>
 
                     <!-- Validation for pincode -->
@@ -198,7 +219,9 @@
                             oninput="this.value = this.value.replace(/\D/g, '')"
                             required
                         >
-                        <label for="pincode">Pincode</label>
+                        <label for="pincode">Pincode
+                            <span style="color: red;">*</span>
+                        </label>
                     </div>
 
                     <!-- Validation for district -->
@@ -211,7 +234,9 @@
                             maxlength="50"
                             required
                         >
-                        <label for="district">District</label>
+                        <label for="district">District
+                                <span style="color: red;">*</span>
+                        </label>
                     </div>
 
                     <!-- Validation for state -->
@@ -224,7 +249,9 @@
                             maxlength="50"
                             required
                         >
-                        <label for="state">State</label>
+                        <label for="state">State
+                            <span style="color: red;">*</span>
+                        </label>
                     </div>
 
                     <!-- Validation for country -->
@@ -240,9 +267,10 @@
                     </div>
 
                     <!-- Business Details -->
+                     <!-- added the default value to the select option -->
                     <div class="form-group">
                         <select id="industry_type" name="industry_type" required>
-                            <option value=""> </option>
+                            <option value="">Select Industry Type</option>
                             <option value="it">Information Technology</option>
                             <option value="manufacturing">Manufacturing</option>
                             <option value="healthcare">Healthcare</option>
@@ -250,15 +278,18 @@
                             <option value="retail">Retail</option>
                             <option value="other">Other</option>
                         </select>
-                        <label for="industry_type">Industry Type</label>
+                        <label for="industry_type">Industry Type
+                            <span style="color: red;">*</span>
+                        </label>
                     </div>
                     
                     
 
                     <!-- Subscription Plans get from the subscription plan module where we cretae a subscritption plan -->
+                    <!-- added the default value to the select option -->
                     <div class="form-group">
                          <select id="software_package_plan" name="software_package_plan" required>
-                            <option value="" disabled selected></option>
+                            <option value="" disabled selected>select Subscription Plan</option>
 
                             @foreach($subscriptionPlans as $plan)
                                 <option value="{{ $plan->id }}">
@@ -266,7 +297,9 @@
                                 </option>
                             @endforeach
                         </select>
-                        <label for="software_package_plan">Subscription Plan</label>
+                        <label for="software_package_plan">Subscription Plan
+                            <span style="color: red;">*</span>
+                        </label>
                     </div>
 
                     
@@ -287,7 +320,9 @@
                         style="text-transform: uppercase"
                         
                     >
-                    <label for="GST_number">GST Number</label>
+                    <label for="GST_number">GST Number
+                        <span style="color: red;">*</span>
+                    </label>
                 </div>
 
 
@@ -300,12 +335,15 @@
                             name="PAN"
                             placeholder=" "
                             maxlength="10"
+                            required
                             pattern="[A-Z]{5}[0-9]{4}[A-Z]{1}"
                             title="Enter a valid PAN (e.g., ABCDE1234F)"
                             oninput="this.value = this.value.toUpperCase()"
                             style="text-transform: uppercase"
                         >
-                        <label for="PAN">PAN Number</label>
+                        <label for="PAN">PAN Number
+                            <span style="color: red;">*</span>
+                        </label>
                     </div>
 
                     <!-- Validation for TAN -->
@@ -324,7 +362,9 @@
                             style="text-transform: uppercase"
                             required
                         >
-                        <label for="TAN">TAN Number</label>
+                        <label for="TAN">TAN Number
+                            <span style="color: red;">*</span>
+                        </label>
                     </div>
 
 
@@ -337,18 +377,20 @@
                             placeholder=" "
                             required
                         >
-                        <label for="expire_date">Expiry Date</label>
+                        <label for="expire_date">Expiry Date
+                            <span style="color: red;">*</span>
+                        </label>
                     </div>
 
 
                     <!-- certificate uploaded files -->
                     <div class="certificate-files">
                         <div class="form-group">
-                            <label for="GST_registration_certificate" class="file-upload-label">GST Certificate</label>
+                            <label for="GST_registration_certificate" class="file-upload-label">GST Certificate <span style="color: red;">*</span></label>
                             <input type="file" id="GST_registration_certificate" name="GST_registration_certificate" class="file-upload-input">
                         </div>
                         <div class="form-group">
-                            <label for="MSME_udyam_certificate" class="file-upload-label">MSME Certificate</label>
+                            <label for="MSME_udyam_certificate" class="file-upload-label">MSME Certificate <span style="color: red;">*</span></label>
                             <input type="file" id="MSME_udyam_certificate" name="MSME_udyam_certificate" class="file-upload-input">
                         </div>
                     </div>
