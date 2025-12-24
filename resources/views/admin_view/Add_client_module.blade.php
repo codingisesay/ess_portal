@@ -269,6 +269,7 @@
                     
 
                     <!-- Document Information -->
+                     <!-- updated the GST input field to automatically convert lowercase letters to uppercase as the user types -->
                    <div class="form-group">
                     <input
                         type="text"
@@ -279,6 +280,8 @@
                         required
                         pattern="[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z][1-9A-Z]Z[0-9A-Z]"
                         title="Enter a valid GSTIN (e.g., 22AAAAA0000A1Z5)"
+                        oninput="this.value = this.value.toUpperCase()"
+                        style="text-transform: uppercase"
                         
                     >
                     <label for="GST_number">GST Number</label>
@@ -286,6 +289,7 @@
 
 
                     <!-- Validation for PAN -->
+                     <!-- updated the PAN input field to automatically convert lowercase letters to uppercase as the user types -->
                     <div class="form-group">
                         <input 
                             type="text"
@@ -295,12 +299,15 @@
                             maxlength="10"
                             pattern="[A-Z]{5}[0-9]{4}[A-Z]{1}"
                             title="Enter a valid PAN (e.g., ABCDE1234F)"
+                            oninput="this.value = this.value.toUpperCase()"
+                            style="text-transform: uppercase"
                         >
                         <label for="PAN">PAN Number</label>
                     </div>
 
                     <!-- Validation for TAN -->
                     <!-- Validation for TAN -->
+                     <!-- updated the TAN input field to automatically convert lowercase letters to uppercase as the user types -->
                     <div class="form-group">
                         <input
                             type="text"
@@ -310,6 +317,8 @@
                             maxlength="10"
                             pattern="[A-Z]{4}[0-9]{5}[A-Z]{1}"
                             title="Enter a valid TAN (e.g., ABCD12345E)"
+                            oninput="this.value = this.value.toUpperCase()"
+                            style="text-transform: uppercase"
                             required
                         >
                         <label for="TAN">TAN Number</label>
@@ -384,16 +393,14 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    // Set default dates for validity 
+    // Set minimum date for expiry date field
     function setDefaultDates() {
         const today = new Date();
-        const nextYear = new Date();
-        nextYear.setFullYear(today.getFullYear() + 1);
-        
         const expireDateInput = document.getElementById('expire_date');
         if (expireDateInput) {
+            // Set minimum date to today
             expireDateInput.min = today.toISOString().split('T')[0];
-            expireDateInput.value = nextYear.toISOString().split('T')[0];
+            // No default value set, field will be empty
         }
     }
 
