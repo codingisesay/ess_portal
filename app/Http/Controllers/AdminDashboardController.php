@@ -131,6 +131,12 @@ public function clientmasterupdate(Request $request, $id)
         'contact_person' => 'nullable',
         'mobile' => 'nullable|string|max:15',
 
+        // Status from Edit Client popup:
+        // - Checkbox sends '1' when Active is toggled on
+        // - Hidden input ensures a '0' is sent when toggled off
+        // Accept only 0 or 1 to persist boolean status safely
+        'status' => 'nullable|in:0,1',
+
         // Address
         'building_no' => 'nullable',
         'premises_name' => 'nullable',

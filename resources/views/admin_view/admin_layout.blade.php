@@ -34,8 +34,8 @@
                 <ul>
 
                     <!-- Dashboard: default landing page -->
-                    <!-- Marked as active to highlight current route -->
-                    <li class="active" title="Dashboard">
+                    <!-- Active state based on current route -->
+                    <li class="{{ request()->routeIs('admin.dashboard') ? 'active' : '' }}" title="Dashboard">
                         <a href="{{ route('admin.dashboard') }}" class="nav-link">
                             <i class="fas fa-home"></i>
                             <span>Dashboard</span>
@@ -46,40 +46,20 @@
                     <li title="Analytics">
                         <a href="#" class="nav-link">
                             <i class="fas fa-chart-line"></i>
-                            <span>Analytics</span>
+                            <span>Subscriptions</span>
                         </a>
                     </li>
 
                     <!-- Users: manage users, roles, and permissions -->
+                     <!-- addded navigation for the client_all_details page -->
                     <li title="Users">
-                        <a href="{{ route('admin.client_all_details') }}" class="{{ request()->routeIs('admin.client_all_details') ? 'active' : '' }}">Users</a>
-                        <span>Users</span>
+                        <a href="{{ route('admin.client_all_details') }}" class="nav-link {{ request()->routeIs('admin.client_all_details') ? 'active' : '' }}">
+                            <i class="fas fa-users"></i>
+                            <span>Users</span>
+                        </a>
                     </li>
                      <li></li>
 
-                    <!-- Products: product listing, creation, and updates -->
-                    <li title="Products">
-                        <a href="#" class="nav-link">
-                            <i class="fas fa-box"></i>
-                            <span>Products</span>
-                        </a>
-                    </li>
-
-                    <!-- Orders: order tracking and fulfillment -->
-                    <li title="Orders">
-                        <a href="#" class="nav-link">
-                            <i class="fas fa-shopping-cart"></i>
-                            <span>Orders</span>
-                        </a>
-                    </li>
-
-                    <!-- Settings: application and account configuration -->
-                    <li title="Settings">
-                        <a href="#" class="nav-link">
-                            <i class="fas fa-cog"></i>
-                            <span>Settings</span>
-                        </a>
-                    </li>
 
                 </ul>
             </nav>
@@ -93,8 +73,22 @@
             </div>
         </aside>
 
+        <!-- logout form (POST) -->
+        <form id="admin-logout-form" action="{{ route('admin.logout') }}" method="POST" style="display:none;">
+            @csrf
+        </form>
+
         <script>
             const viewAllLink = document.querySelector('.view-all');
+            // Handle admin logout click -> submit hidden POST form
+            const logoutBtn = document.querySelector('.logout');
+            if (logoutBtn) {
+                logoutBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const form = document.getElementById('admin-logout-form');
+                    if (form) form.submit();
+                });
+            }
             if (viewAllLink) {
                 viewAllLink.addEventListener('click', function(e) {
                     e.preventDefault();
