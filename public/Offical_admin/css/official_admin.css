@@ -534,7 +534,8 @@ body {
   background:#fff; 
   border-radius:15px; 
   transition: margin-left .3s ease;
-  height: 420px;
+  /* addded the height to match existing Ui */
+  height: 465px;
   display: flex;
   flex-direction: column;
   box-sizing: border-box; 
@@ -1963,6 +1964,8 @@ input[type="date"]:hover::-webkit-calendar-picker-indicator {
     padding: 1.25rem;
     margin-bottom: 1.5rem;
     color: white;
+    /* added the height to match existing Ui */
+    height: 180px;
     box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
 }
 
@@ -2024,7 +2027,7 @@ input[type="date"]:hover::-webkit-calendar-picker-indicator {
 }
 
 /* Expiring soon card */
-.expiring-soon { background:#fff; border-radius:12px; padding:20px; box-shadow:0 2px 10px rgba(0,0,0,.05); margin-bottom:24px;border: 1px solid #8a3366; }
+.expiring-soon { background:#fff; border-radius:12px; padding:20px; box-shadow:0 2px 10px rgba(0,0,0,.05); margin-bottom:24px;border: 1px solid #8a3366;height: 160px; }
 .expiring-card { display:flex; align-items:center; padding:12px; border-radius:8px; background:#fff3e0; border: 1px solid #ef4444;}
 .expiring-avatar { width:40px; height:40px; border-radius:8px; display:flex; align-items:center; justify-content:center; font-weight:600; font-size:.9rem; margin-right:12px; flex-shrink:0; }
 .expiring-info h4 { font-size:.9rem; font-weight:600; margin:0 0 4px 0; color:#1a1a2e; }

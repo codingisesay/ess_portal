@@ -94,7 +94,7 @@
                     <!-- Clients overview header -->
                     <div class="section-header">
                         <h2>Clients Overview</h2>
-                        <a href="#" class="view-all">View All</a>
+                        
                     </div>
                     
                     <!-- Clients grid where all clients are displayed -->
