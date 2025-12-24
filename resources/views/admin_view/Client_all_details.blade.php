@@ -38,6 +38,7 @@
         <div class="client-card"
             data-client-id="{{ $org->id }}"
             data-package-id="{{ $org->software_package_plan }}"
+            data-organisation-status="{{ $org->organisation_status ?? ( (isset($org->status) && (int)$org->status === 1) ? 'Active' : 'Inactive' ) }}"
             >
 
             
