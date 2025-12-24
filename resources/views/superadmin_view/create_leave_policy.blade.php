@@ -155,7 +155,7 @@ $id = Auth::guard('superadmin')->user()->id;
                     </div>
                     <div class="col-3 mb-4">
                         <div class="form-group">
-                            <input type="number" id="category_name" name="leave_count_per_month" class="form-control"   min="0" required step="0.5" oninput="validateLeaveCountPerMonth(this)">
+                            <input type="number" id="category_name" name="leave_count_per_month" class="num-validate" data-min="0" data-max="31" data-step="0.5" required >
                             <label for="category_name">
                               Leave Count Per Month <span style="color:red">*</span>
                             </label>
@@ -163,7 +163,7 @@ $id = Auth::guard('superadmin')->user()->id;
                     </div>
                     <div class="col-3 mb-4">
                         <div class="form-group">
-                            <input type="number" id="category_name" name="no_of_leaves_per_month" class="form-control" required step="0.5" min="1" max="31" oninput="validateNoOfTimesPerMonth(this)">
+                            <input type="number" id="category_name" name="no_of_leaves_per_month" required data-min="1" data-max="31" data-step="1" class="num-validate">
                             <label for="category_name">
                               No of Times Per Months <span style="color:red">*</span>
                             </label>
@@ -183,7 +183,7 @@ $id = Auth::guard('superadmin')->user()->id;
                 </div>
                 <div class="col-3 mb-4">
                     <div class="form-group">
-                        <input type="number" id="no_of_carry_forward" name="no_of_carry_forward" class="form-control" required oninput="validateCarryForward(this)" max="365" min="0" step="1">
+                        <input type="number" id="no_of_carry_forward" name="no_of_carry_forward" class="num-validate"    required data-min="0" data-max="365" data-step="1">
                         <label for="no_of_carry_forward">
                               No. Of Carry Forward <span style="color:red">*</span>
                         </label>
@@ -203,7 +203,7 @@ $id = Auth::guard('superadmin')->user()->id;
                     </div>
                     <div class="col-3 mb-4">
                         <div class="form-group">
-                            <input type="number" id="NoOfLeaveEncash" name="leave_encash_count" class="form-control" required oninput="validateLeaveEncash(this)">
+                            <input type="number" id="NoOfLeaveEncash" name="leave_encash_count" required class="num-validate" data-min="1" data-max="365" data-step="1">
                             <label for="category_name">
                               No. Of Leave Encash <span style="color:red">*</span>
                             </label>
@@ -223,7 +223,7 @@ $id = Auth::guard('superadmin')->user()->id;
                     </div>
                     <div class="col-3 mb-4">
                         <div class="form-group">
-                            <input type="number" id="category_name" name="max_leave_pp" class="form-control" max="90" step="1" oninput="validateMaxLeavePP(this)" >
+                            <input type="number" id="category_name" name="max_leave_pp" class="num-validate" data-min="0" data-max="90" data-step="1">
                             <label for="category_name">
                               Max Leave Probation Period <span style="color:red">*</span>
                             </label>
@@ -231,7 +231,7 @@ $id = Auth::guard('superadmin')->user()->id;
                     </div>
                     <div class="col-3 mb-4">
                         <div class="form-group">
-                            <input type="number" id="category_name" name="probation_period_per_month" class="form-control"   min="0" max="2" step="0.5" oninput="validateProbationPerMonth(this)">
+                            <input type="number" id="category_name" name="probation_period_per_month" class="num-validate" data-min="1" data-max="6" data-step="1">
                             <label for="category_name">
                               Probation Period Per Month <span style="color:red">*</span>
                             </label>
@@ -239,7 +239,7 @@ $id = Auth::guard('superadmin')->user()->id;
                     </div>
                     <div class="col-3 mb-4">
                         <div class="form-group">
-                            <input type="number" id="category_name" name="calendra_start_for_PP" class="form-control" min="1" max="12" step="1" oninput="validateCalendarPP(this)">
+                            <input type="number" id="category_name" name="calendra_start_for_PP" class="num-validate" data-min="1" data-max="12" data-step="1">
                             <label for="category_name">
                               Calendra Start For PP <span style="color:red">*</span>
                             </label>
@@ -319,13 +319,13 @@ $id = Auth::guard('superadmin')->user()->id;
                         </label>
                     </div>
                     <div class="popup-form-group">
-                        <input type="number" name="leave_count_per_month" id="editLeaveCountPerMonth" required step="0.5"  oninput="validateLeaveCountPerMonth(this)">
+                        <input type="number" name="leave_count_per_month" id="editLeaveCountPerMonth" required class="num-validate" data-min="0" data-max="31" data-step="0.5">
                         <label for="editLeaveCountPerMonth">
                               Leave Count Per Month <span style="color:red">*</span>
                         </label>
                     </div>
                     <div class="popup-form-group">
-                        <input type="number" name="no_of_leaves_per_month" id="editNoOfTimesPerMonth" required step="0.5" oninput="validateNoOfTimesPerMonth(this)">
+                        <input type="number" name="no_of_leaves_per_month" id="editNoOfTimesPerMonth" required class="num-validate" data-min="1" data-max="31" data-step="1">
                         <label for="editNoOfTimesPerMonth">
                               No of Times Per Month <span style="color:red">*</span>
                         </label>
@@ -340,7 +340,7 @@ $id = Auth::guard('superadmin')->user()->id;
                         </label>
                     </div>
                     <div class="popup-form-group">
-                        <input type="number" name="no_of_carry_forward" id="editNoOfCarryForward"  oninput="validateCarryForward(this)">
+                        <input type="number" name="no_of_carry_forward" id="editNoOfCarryForward" class="num-validate" data-min="0" data-max="365" data-step="1">
                         <label for="editNoOfCarryForward">
                               No. Of Carry Forward <span style="color:red">*</span>
                         </label>
@@ -355,7 +355,7 @@ $id = Auth::guard('superadmin')->user()->id;
                         </label>
                     </div>
                     <div class="popup-form-group">
-                        <input type="number" name="leave_encash_count" id="editNoOfLeaveEncash" oninput="validateLeaveEncash(this)"  min="1" step="1" max="365">
+                        <input type="number" name="leave_encash_count" id="editNoOfLeaveEncash" class="num-validate" data-min="1" data-max="365" data-step="1">
                         <label for="editNoOfLeaveEncash">
                               No. Of Leave Encash <span style="color:red">*</span>
                         </label>
@@ -370,19 +370,19 @@ $id = Auth::guard('superadmin')->user()->id;
                         </label>
                     </div>
                     <div class="popup-form-group">
-                        <input type="number" name="max_leave_pp" id="editMaxLeavePP" required max="90" step="1" oninput="validateMaxLeavePP(this)">
+                        <input type="number" name="max_leave_pp" id="editMaxLeavePP" required class="num-validate" data-min="0" data-max="90" data-step="1">
                         <label for="editMaxLeavePP">
                               Max Leave Probation Period <span style="color:red">*</span>
                         </label>
                     </div>
                     <div class="popup-form-group">
-                        <input type="number" name="probation_period_per_month" id="editProbationPeriodPerMonth" required  min="0" max="2" step="0.5" oninput="validateProbationPerMonth(this)">
+                        <input type="number" name="probation_period_per_month" id="editProbationPeriodPerMonth" required class="num-validate" data-min="0" data-max="6" data-step="1">
                         <label for="editProbationPeriodPerMonth">
                               Probation Period Per Month <span style="color:red">*</span>
                         </label>
                     </div>
                     <div class="popup-form-group">
-                        <input type="number" name="calendra_start_for_PP" id="editCalendraStartForPP" required min="1" max="12" step="1" oninput="validateCalendarPP(this)">
+                        <input type="number" name="calendra_start_for_PP" id="editCalendraStartForPP" required class="num-validate" data-min="1" data-max="12" data-step="1">
                         <label for="editCalendraStartForPP">
                               Calendra Start For PP<span style="color:red">*</span>
                         </label>
@@ -474,7 +474,7 @@ $id = Auth::guard('superadmin')->user()->id;
 <script>
 document.addEventListener('DOMContentLoaded', function () {
 
-    // ✅ Select by NAME instead of ID
+    //  Select by NAME instead of ID
     const provisionSelect = document.querySelector('select[name="provision_status"]');
     const maxLeavePP = document.querySelector('input[name="max_leave_pp"]');
     const probationPerMonth = document.querySelector('input[name="probation_period_per_month"]');
@@ -515,7 +515,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
 });
 </script>
-<script>
+{{-- <script>
 /* 1. Leave Count Per Month */
 function validateLeaveCountPerMonth(input) {
     let value = input.value;
@@ -606,7 +606,7 @@ function validateCalendarPP(input) {
     input.value = value ? num : '';
 }
 
-</script>
+</script> --}}
 
 
 

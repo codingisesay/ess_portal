@@ -173,6 +173,55 @@ function bindDays() {
     });
 }
 
+/* =========================
+   GENERIC NUMBER VALIDATION
+========================= */
+
+function bindNumberValidation() {
+    document.querySelectorAll('.num-validate').forEach(input => {
+
+        if (input.dataset.bound) return;
+        input.dataset.bound = 'true';
+
+        const min  = Number(input.dataset.min ?? 0);
+        const max  = Number(input.dataset.max ?? Infinity);
+        const step = Number(input.dataset.step ?? 1);
+        const allowDecimal = step % 1 !== 0;
+
+        input.addEventListener('input', () => {
+            let value = input.value;
+
+            // Allow digits + optional decimal
+            value = allowDecimal
+                ? value.replace(/[^0-9.]/g, '')
+                : value.replace(/[^0-9]/g, '');
+
+            let num = allowDecimal ? parseFloat(value) : Number(value);
+
+            if (isNaN(num)) {
+                input.value = '';
+                return;
+            }
+
+            // Enforce min / max
+            if (num > max) num = max;
+            if (num < min) num = min;
+
+            // Enforce step (0.5, 1, etc.)
+            if (allowDecimal && step > 0) {
+                num = Math.floor(num / step) * step;
+            }
+
+            input.value = value ? num : '';
+        });
+    });
+}
+
+document.addEventListener('DOMContentLoaded', bindNumberValidation);
+
+
+
+
 document.addEventListener('DOMContentLoaded', () => {
     bindNumericRanges();
     bindTextOnly();
