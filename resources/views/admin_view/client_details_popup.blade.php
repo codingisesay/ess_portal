@@ -64,7 +64,17 @@
 
     <!-- changed the phone to mobile to edit is visible -->
     <div class="form-group">
-        <input type="mobile" id="editPhone" name="mobile" class="form-control">
+        <input type="number " 
+               id="editPhone" 
+               name="mobile" 
+               class="form-control"
+               title="Please enter a valid phone number (10 digits)"
+               min="10"
+               maxlength="10"
+               pattern="[0-9]{10}"
+               inputmode="numeric"
+               required
+               oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 10);">
         <label>Phone</label>
     </div>
 
