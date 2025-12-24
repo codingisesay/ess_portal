@@ -316,9 +316,12 @@ document.addEventListener('DOMContentLoaded', function () {
 
             const container = document.getElementById('expiringList');
 
-            // If API returns empty array or invalid data → do nothing
+            // If API returns empty array or invalid data → show message as nothing near to expiry
             if (!Array.isArray(data) || data.length === 0) {
-                container.innerHTML = '';
+                container.innerHTML = `
+                    <div class="no-expiry-message">
+                        No near expiry available
+                    </div>`;
                 return;
             }
 
