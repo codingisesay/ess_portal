@@ -4,8 +4,6 @@
     <!-- Include Add Client Module -->
     @include('admin_view.Add_client_module')
     
-    <!-- Include Notification Module -->
-    @include('admin_view.notification_module')
     
     <!-- Include Subscription Plan Module -->
     @include('admin_view.subscription_plan_module')
