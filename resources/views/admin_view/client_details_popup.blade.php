@@ -85,11 +85,11 @@
     <div class="form-group form-check">
         <label class="form-check-label">Status</label>
         <div class="form-check form-switch">
-            <input type="hidden" name="status" value="0">
-            <input type="checkbox" id="editStatus" name="status" value="1" class="form-check-input">
+            <!-- Hidden input for organisation_status (submitted) -->
+            <input type="hidden" name="organisation_status" id="editStatusHidden" value="Incative">
+            <!-- Checkbox only toggles the hidden input; it does not submit directly -->
+            <input type="checkbox" id="editStatus" class="form-check-input">
             <label class="form-check-label" for="editStatus">Active</label>
-            
-
         </div>
     </div>
 
@@ -133,7 +133,11 @@ document.addEventListener('DOMContentLoaded', function () {
             const clientPhone = this.getAttribute('data-phone') || '—';
             const clientPackage = this.getAttribute('data-package') || '—';
             const clientPackageId = this.getAttribute('data-package-id') || '';
-            const clientStatus = this.querySelector('.client-status')?.textContent.trim().toLowerCase() || 'inactive';
+            // Prefer explicit organisation_status attribute if available, fallback to displayed .client-status text
+            let clientStatus = this.getAttribute('data-organisation-status') ||
+                this.querySelector('.client-status')?.getAttribute('data-organisation-status') ||
+                this.querySelector('.client-status')?.textContent.trim().toLowerCase() || 'inactive';
+            clientStatus = (clientStatus || 'inactive').toString().toLowerCase();
             
             // Store client ID if available (for server-side updates)
             const clientId = this.getAttribute('data-client-id');
@@ -159,8 +163,13 @@ document.addEventListener('DOMContentLoaded', function () {
             document.getElementById('clientPackage').textContent = clientPackage;
 
             const statusEl = document.getElementById('clientStatus');
-            statusEl.textContent = clientStatus.charAt(0).toUpperCase() + clientStatus.slice(1);
-            statusEl.className = `client-status ${clientStatus}`;
+            // Normalize display text and CSS class based on organisation_status
+            const displayText = clientStatus === 'active' ? 'Active' : 'Inactive';
+            statusEl.textContent = displayText;
+            statusEl.className = `client-status ${clientStatus === 'active' ? 'active' : 'inactive'}`;
+
+            // Store the canonical organisation_status on the popup for later use when editing
+            document.getElementById('clientPopup').setAttribute('data-organisation-status', clientStatus);
 
             document.getElementById('clientPopup').style.display = 'flex';
         });
@@ -192,7 +201,10 @@ document.addEventListener('DOMContentLoaded', function () {
 
         //getting the cuurent value of software package id
         const popupPkgId = document.getElementById('clientPopup').getAttribute('data-package-id') || '';
-        const status = document.getElementById('clientStatus').classList.contains('active');
+        // Read canonical organisation_status stored on the popup (prefer that over DOM classes)
+        const popupStatus = document.getElementById('clientPopup').getAttribute('data-organisation-status') ||
+            document.getElementById('clientStatus').textContent.trim().toLowerCase();
+        const status = (popupStatus || 'inactive').toLowerCase() === 'active';
         
         // Set form values
         document.getElementById('editName').value = name;
@@ -275,12 +287,13 @@ document.addEventListener('DOMContentLoaded', function () {
         document.getElementById('viewMode').style.display = 'block';
     });
 
-    // Set status before submit (IMPORTANT)
+    // Set organisation_status before submit (IMPORTANT)
     editForm?.addEventListener('submit', function () {
+        // Controller expects 'Active' or 'Incative' (legacy typo), so send those values
         document.getElementById('editStatusHidden').value =
             document.getElementById('editStatus').checked
-                ? 'active'
-                : 'inactive';
+                ? 'Active'
+                : 'Incative';
     });
 
 });
