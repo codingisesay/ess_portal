@@ -63,6 +63,7 @@
     </div>
 
     <!-- changed the phone to mobile to edit is visible -->
+     <!-- added the phone number validation -->
     <div class="form-group">
         <input type="number " 
                id="editPhone" 
