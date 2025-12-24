@@ -131,7 +131,7 @@ $id = Auth::guard('superadmin')->user()->id;
                     </div>
                     <div class="col-3 mb-4">
                         <div class="form-group">
-                            <input type="number" id="category_name" name="max_leave_count" class="form-control" required min="1" oninput="this.value = this.value > 365 ? 365 : this.value"step="1">
+                            <input type="number" id="category_name" name="max_leave_count" class="num-range" required  data-min="1" data-max="365" >
                             <label for="category_name">
                                Max Leave <span style="color:red">*</span>
                             </label>
@@ -301,7 +301,7 @@ $id = Auth::guard('superadmin')->user()->id;
                         </label>
                     </div>
                     <div class="popup-form-group">
-                        <input type="number" name="max_leave_count" id="editMaxLeave"  required min="1" oninput="this.value = this.value > 365 ? 365 : this.value"step="1">
+                        <input type="number" name="max_leave_count" id="editMaxLeave" required class="num-range" required  data-min="1" data-max="365">
                         <label for="editMaxLeave">
                               Max Leave <span style="color:red">*</span>
                         </label>

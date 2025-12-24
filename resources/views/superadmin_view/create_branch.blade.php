@@ -183,9 +183,8 @@ $id = Auth::guard('superadmin')->user()->id;
                 <div class="col-3 mb-4">
                     <div class="form-group">
                         <input type="text" name="district" required 
-                         pattern="[A-Za-z\s]+"
-                         title="Only alphabets are allowed"
-                         oninput="this.value = this.value.replace(/[^A-Za-z\s]/g, '')">
+                         class="only-alpha"
+                         >
                          <label>
                             District <span style="color:red">*</span>
                         </label>
@@ -195,9 +194,7 @@ $id = Auth::guard('superadmin')->user()->id;
                 <div class="col-3 mb-4">
                     <div class="form-group">
                         <input type="text" name="state" required
-                         pattern="[A-Za-z\s]+"
-                         title="Only alphabets are allowed"
-                         oninput="this.value = this.value.replace(/[^A-Za-z\s]/g, '')"
+                         class="only-alpha"
                          >
                         <label>
                             State <span style="color:red">*</span>
@@ -208,9 +205,8 @@ $id = Auth::guard('superadmin')->user()->id;
                 <div class="col-3 mb-4">
                     <div class="form-group">
                         <input type="text" name="country" required
-                         pattern="[A-Za-z\s]+"
-                         title="Only alphabets are allowed"
-                         oninput="this.value = this.value.replace(/[^A-Za-z\s]/g, '')">
+                         class="only-alpha"
+                         >
                         <label>
                             Country <span style="color:red">*</span>
                         </label>
@@ -316,18 +312,15 @@ $id = Auth::guard('superadmin')->user()->id;
                 </div>
                 <div class="popup-form-group">
                     <input type="text" name="district" id="editDistrict" required
-                         pattern="[A-Za-z\s]+"
-                         title="Only alphabets are allowed"
-                         oninput="this.value = this.value.replace(/[^A-Za-z\s]/g, '')">
+                         class="only-alpha"
+                        >
                      <label for="editDistrict">
                             District <span style="color:red">*</span>
                     </label>
                 </div>
                 <div class="popup-form-group">
                     <input type="text" name="state" id="editState" required
-                         pattern="[A-Za-z\s]+"
-                         title="Only alphabets are allowed"
-                         oninput="this.value = this.value.replace(/[^A-Za-z\s]/g, '')"
+                         class="only-alpha"
                     >
                     <label for="editState">
                             State <span style="color:red">*</span>
@@ -335,10 +328,8 @@ $id = Auth::guard('superadmin')->user()->id;
                 </div>
                 <div class="popup-form-group">
                     <input type="text" name="country" id="editCountry" required
-                         pattern="[A-Za-z\s]+"
-                         title="Only alphabets are allowed"
-                         oninput="this.value = this.value.replace(/[^A-Za-z\s]/g, '')"
-                         >
+                        class="only-alpha"
+                    >
                      <label for="editCountry">
                             State <span style="color:red">*</span>
                     </label>
