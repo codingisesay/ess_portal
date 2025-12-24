@@ -348,10 +348,7 @@ document.addEventListener('DOMContentLoaded', function () {
                             <small>${org.plan_name}</small>
                         </div>
 
-                        <a href="/admin/organisations/${org.id}"
-                           class="view-details">
-                           View Details
-                        </a>
+                       
                     </div>
                 `;
             });
