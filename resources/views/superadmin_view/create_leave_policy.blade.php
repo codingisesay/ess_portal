@@ -139,7 +139,7 @@ $id = Auth::guard('superadmin')->user()->id;
                     </div>
                     <div class="col-3 mb-4">
                         <div class="form-group">
-                            <input type="number" id="category_name" name="max_leave_at_time" class="form-control" required min="1" oninput="validateMaxLeave(this)" step="1">
+                            <input type="number" id="category_name" name="max_leave_at_time" required class="num-pair max-leave" data-min="1" data-max="365" data-pair="min_leave_at_time">
                             <label for="category_name">
                               Max Leave At Time <span style="color:red">*</span>
                             </label>
@@ -147,7 +147,7 @@ $id = Auth::guard('superadmin')->user()->id;
                     </div>
                     <div class="col-3 mb-4">
                         <div class="form-group">
-                            <input type="number" id="category_name" name="min_leave_at_time" class="form-control"  min="0.5"  oninput="validateMinLeave(this)" required step="0.5">
+                            <input type="number" id="category_name" name="min_leave_at_time" class="num-pair min-leave" data-min="1" data-max="365" data-pair="max_leave_at_time">
                             <label for="category_name">
                               Min Leave At Time <span style="color:red">*</span>
                             </label>
@@ -307,13 +307,13 @@ $id = Auth::guard('superadmin')->user()->id;
                         </label>
                     </div>
                     <div class="popup-form-group">
-                        <input type="number" name="max_leave_at_time" id="editMaxLeaveAtTime" required required min="1" oninput="validateMaxLeave(this)" step="1">
+                        <input type="number" name="max_leave_at_time" id="editMaxLeaveAtTime" required  class="num-pair max-leave" data-min="1" data-max="365" data-pair="min_leave_at_time">
                         <label for="editMaxLeaveAtTime">
                               Max Leave At Time <span style="color:red">*</span>
                         </label>
                     </div>
                     <div class="popup-form-group">
-                        <input type="number" name="min_leave_at_time" id="editMinLeaveAtTime" required step="0.5" oninput="validateMinLeave(this)">
+                        <input type="number" name="min_leave_at_time" id="editMinLeaveAtTime" required class="num-pair min-leave" data-min="1" data-max="365" data-pair="max_leave_at_time">
                         <label for="editMinLeaveAtTime">
                               Min Leave At Time <span style="color:red">*</span>
                         </label>
@@ -640,57 +640,6 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     </script>
 
-    <script>
-function validateMinLeave(input) {
-    let value = input.value;
-
-    // Remove non-numeric characters
-    value = value.replace(/[^0-9]/g, '');
-
-    // Limit to 3 digits
-    if (value.length > 3) {
-        value = value.slice(0, 3);
-    }
-
-    // Convert to number
-    let num = Number(value);
-
-    // Enforce range 1–365
-    if (num > 365) num = 365;
-    if (num < 1 && value !== '') num = 1;
-
-    input.value = value ? num : '';
-
-    // Cross check with Max Leave
-    const maxInput = document.getElementById('max_leave_at_time');
-    if (maxInput.value && num > Number(maxInput.value)) {
-        input.value = maxInput.value;
-    }
-}
-
-function validateMaxLeave(input) {
-    let value = input.value;
-
-    value = value.replace(/[^0-9]/g, '');
-
-    if (value.length > 3) {
-        value = value.slice(0, 3);
-    }
-
-    let num = Number(value);
-
-    if (num > 365) num = 365;
-    if (num < 1 && value !== '') num = 1;
-
-    input.value = value ? num : '';
-
-    // Cross check with Min Leave
-    const minInput = document.getElementById('min_leave_at_time');
-    if (minInput.value && num < Number(minInput.value)) {
-        input.value = minInput.value;
-    }
-}
-</script>
 
 @endsection
 

@@ -220,6 +220,59 @@ function bindNumberValidation() {
 document.addEventListener('DOMContentLoaded', bindNumberValidation);
 
 
+/* ----------------------------------------------------
+   MIN / MAX LEAVE PAIR VALIDATION (COMMON)
+---------------------------------------------------- */
+function normalizeNumber(input, min = 1, max = 365) {
+    let value = input.value.replace(/[^0-9]/g, '');
+
+    if (value.length > 3) value = value.slice(0, 3);
+
+    let num = Number(value);
+
+    if (num > max) num = max;
+    if (num < min && value !== '') num = min;
+
+    input.value = value ? num : '';
+    return num;
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+
+    document.querySelectorAll('.num-pair').forEach(input => {
+
+        input.addEventListener('input', () => {
+
+            const min = Number(input.dataset.min || 1);
+            const max = Number(input.dataset.max || 365);
+            const pairName = input.dataset.pair;
+
+            const currentValue = normalizeNumber(input, min, max);
+
+            if (!pairName) return;
+
+            // Find paired input by NAME (works for create & edit)
+            const pairInput = document.querySelector(
+                `input[name="${pairName}"]`
+            );
+
+            if (!pairInput || !pairInput.value) return;
+
+            const pairValue = Number(pairInput.value);
+
+            // 🔁 Cross validation
+            if (input.classList.contains('min-leave') && currentValue > pairValue) {
+                input.value = pairValue;
+            }
+
+            if (input.classList.contains('max-leave') && currentValue < pairValue) {
+                input.value = pairValue;
+            }
+        });
+
+    });
+});
+
 
 
 document.addEventListener('DOMContentLoaded', () => {
