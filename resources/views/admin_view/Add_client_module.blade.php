@@ -5,6 +5,9 @@
 
 <!-- Custom admin styles -->
  <link rel="stylesheet" href="{{ asset('Offical_admin/css/official_admin.css') }}">   
+
+ <!-- added sweetalert2 script for alert messages -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 
 <body>
@@ -360,6 +363,66 @@
     </div> <!-- add client model div end -->
 
 @push('scripts')
+<!-- wrote a script to fetch the district and state based on the pincode -->
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+
+    // Get references to pincode, district, and state input fields
+    const pincodeInput = document.getElementById('pincode');
+    const districtInput = document.getElementById('district');
+    const stateInput = document.getElementById('state');
+
+    async function fetchAddressByPincode(pincode) {
+        try {
+             // Call the India Post API with the entered pincode
+            const response = await fetch(`https://api.postalpincode.in/pincode/${pincode}`);
+
+             // Convert API response to JSON format
+            const data = await response.json();
+
+            if (
+                // Check if API response is successful and contains PostOffice data
+                data[0].Status === "Success" &&
+                data[0].PostOffice &&
+                data[0].PostOffice.length > 0
+            ) {
+                 // Automatically fill district and state fields
+                districtInput.value = data[0].PostOffice[0].District;
+                stateInput.value = data[0].PostOffice[0].State;
+            } else {
+                 // Clear fields if pincode is invalid
+                districtInput.value = "";
+                stateInput.value = "";
+                // added the sweetalert2 script to show the alert message
+                Swal.fire({
+                    title: 'Invalid Pincode',
+                    text: 'Please enter a valid 6-digit pincode.',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    cancelButtonText: 'Cancel'
+                })
+            }
+        } catch (error) {
+            console.error("Pincode API Error:", error);
+            alert("Unable to fetch address. Please try again.");
+        }
+    }
+
+    pincodeInput.addEventListener('input', function () {
+        const pincode = this.value;
+
+        // Fetch only when exactly 6 digits are entered
+        if (pincode.length === 6) {
+            fetchAddressByPincode(pincode);
+        } else {
+            districtInput.value = "";
+            stateInput.value = "";
+        }
+    });
+
+});
+</script>
+
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     // Get the modal and buttons
