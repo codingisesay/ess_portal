@@ -50,42 +50,52 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 });
 
+// =======================
+// YEAR DAYS (COMMON)
+// =======================
+function getYearDays(year = new Date().getFullYear()) {
+    return ((year % 4 === 0 && year % 100 !== 0) || year % 400 === 0)
+        ? 366
+        : 365;
+}
+
 
 // =======================
 // NUMERIC RANGE (COMMON)
 // =======================
 function bindNumericRanges() {
+    const YEAR_DAYS = getYearDays(); // ✅ dynamic
+
     document.querySelectorAll('.num-range').forEach(input => {
 
         if (input.dataset.bound) return;
         input.dataset.bound = 'true';
 
         const min = Number(input.dataset.min ?? 0);
-        const max = Number(input.dataset.max ?? 9999);
+        const max =
+            input.dataset.max === 'YEAR_DAYS'
+                ? YEAR_DAYS
+                : Number(input.dataset.max ?? YEAR_DAYS);
+
         const step = Number(input.dataset.step ?? 1);
 
-        input.setAttribute('type', 'number');
         input.setAttribute('min', min);
         input.setAttribute('max', max);
         input.setAttribute('step', step);
 
         input.addEventListener('input', () => {
-            let value = input.value.replace(/[^0-9.]/g, '');
+            let value = input.value.replace(/[^0-9]/g, '');
             let num = Number(value);
 
             if (num > max) num = max;
             if (num < min && value !== '') num = min;
-
-            // Step handling (supports .5, 1, etc.)
-            if (step % 1 !== 0 && num % step !== 0) {
-                num = Math.round(num / step) * step;
-            }
 
             input.value = value ? num : '';
         });
     });
 }
 
-document.addEventListener('DOMContentLoaded', () => {
-    bindNumericRanges();
-});
+document.addEventListener('DOMContentLoaded', bindNumericRanges);
+
+
+
