@@ -351,7 +351,9 @@ public function updateSubscriptionPlan(Request $request, $id)
 public function getSubscriptionPlans()
 {
     $plans = \DB::table('subscription_plans')
-        ->orderBy('id', 'ASC')
+    // Newest plans will show at the top of the list in descending order
+        ->orderBy('created_at', 'DESC')
+        ->orderBy('id', 'DESC')
         ->get();
     return $plans;
 }

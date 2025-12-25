@@ -291,7 +291,8 @@
                          <select id="software_package_plan" name="software_package_plan" required>
                             <option value="" disabled selected>select Subscription Plan</option>
 
-                            @foreach($subscriptionPlans as $plan)
+                            <!-- Inactive plans from subscription plan module are now hidden from the Add Client subscription plan dropdown. -->
+                            @foreach($subscriptionPlans->where('status', 'Active') as $plan)
                                 <option value="{{ $plan->id }}">
                                     {{ $plan->plan_name }}
                                 </option>
