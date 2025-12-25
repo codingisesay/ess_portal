@@ -1390,6 +1390,11 @@ function showSection(sectionId) {
 document.addEventListener('DOMContentLoaded', function() {
     // Handle clicks on policy toggle button
     document.getElementById('policyToggle').addEventListener('click', function(e) {
+         // Remove active from ALL main sidebar buttons
+    document.querySelectorAll('.sidebar-button').forEach(btn => {
+        btn.classList.remove('active');
+    });
+
         // Add active to this button
         this.classList.add('active');
     });
