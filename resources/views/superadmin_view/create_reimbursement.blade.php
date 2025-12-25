@@ -64,6 +64,7 @@ $id = Auth::guard('superadmin')->user()->id;
     <title>Create Reimbursement Type</title>
     
 </head>
+<script src="{{ asset('admin_end/js/common-input-validation.js') }}"></script>
 <body>
     <div class="container">
         <h3>Create Reimbursement Type</h3>
@@ -100,7 +101,7 @@ $id = Auth::guard('superadmin')->user()->id;
                 <div class="form-container row">
                 <div class="col-3 mb-4">
                     <div class="form-group">
-                        <input type="text" id="category_name" name="category_name" class="form-control" required oninput="validateReimbursementName(this,50)">
+                        <input type="text" id="category_name" name="category_name" class="form-control" required data-validate="reim-name" data-max="50">
                         <label for="category_name">
                               Reimbursement Name <span style="color:red">*</span>
                         </label>
@@ -109,7 +110,7 @@ $id = Auth::guard('superadmin')->user()->id;
                 </div>
                 <div class="col-3 mb-4">
                     <div class="form-group">
-                        <input type="text" id="category_name" name="category_short_name" class="form-control" required oninput="validateReimbursementAbbreviation(this,10)">
+                        <input type="text" id="category_name" name="category_short_name" class="form-control" required data-validate="reim-abbr" data-max="10">
                         <label for="category_name">
                              Reimbursement Abbreviation  <span style="color:red">*</span>
                         </label>
@@ -270,39 +271,7 @@ $id = Auth::guard('superadmin')->user()->id;
             updateActiveButton(clickedElement);
         }
 
-        function validateReimbursementName(input, maxLen = 50) {
-            // Allow only alphabets and spaces
-            let value = input.value.replace(/[^a-zA-Z\s]/g, '');
-
-            // Remove leading spaces
-            value = value.replace(/^\s+/g, '');
-
-            // Enforce max length
-            if (value.length > maxLen) {
-                value = value.slice(0, maxLen);
-            }
-
-            input.value = value;
-        }
-
-
-        function validateReimbursementAbbreviation(input, maxLen = 10) {
-            // Allow only letters
-            let value = input.value.replace(/[^a-zA-Z]/g, '');
-
-            // Convert to uppercase
-            value = value.toUpperCase();
-
-            // Enforce max length
-            if (value.length > maxLen) {
-                value = value.slice(0, maxLen);
-            }
-
-            input.value = value;
-        }
-
-
-
+       
         function showHRPolicyTable(clickedElement) {
             // Show table section and hide form section
             document.getElementById('formSection').style.display = 'none';
