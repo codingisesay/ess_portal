@@ -63,6 +63,7 @@ $id = Auth::guard('superadmin')->user()->id;
     </style>
     
 </head>
+<script src="{{ asset('admin_end/js/common-date-validation.js') }}"></script>
 <body>
     <div class="container">
         <h3>Create Leave Policy Cycle</h3>
@@ -107,7 +108,12 @@ $id = Auth::guard('superadmin')->user()->id;
 </div>
                     <div class="col-3 mb-4">
                     <div class="form-group">
-                        <input type="datetime-local" id="startDateTime" name="start_date_time" class="form-control" required onchange="validateCycleDates()">
+                        <input type="datetime-local" id="startDateTime" name="start_date_time" required data-min-now="true" 
+                              onchange="validateDateRange({
+                                startSelector:'#startDateTime',
+                                endSelector:'#endDateTime'
+                            })"
+                        >
                         <label for="category_name">
                           Start Date Time <span style="color:red">*</span>
                         </label>
@@ -116,7 +122,13 @@ $id = Auth::guard('superadmin')->user()->id;
 </div>
                     <div class="col-3 mb-4">
                     <div class="form-group">
-                        <input type="datetime-local" id="endDateTime" name="end_date_time" class="form-control" required  onchange="validateCycleDates()">
+                        <input type="datetime-local" id="endDateTime" name="end_date_time" required 
+                          data-min-now="true"
+                            onchange="validateDateRange({
+                                startSelector:'#startDateTime',
+                                endSelector:'#endDateTime'
+                            })"
+                        >
                          <label for="category_name">
                           End Date Time <span style="color:red">*</span>
                         </label>
@@ -178,13 +190,25 @@ $id = Auth::guard('superadmin')->user()->id;
                         
                     </div>
                     <div class="popup-form-group">
-                        <input type="datetime-local" name="start_date_time" id="editLeaveSlotStartDate" required onchange="validateEditCycleDates()">
+                        <input type="datetime-local" name="start_date_time" id="editLeaveSlotStartDate" required
+                               data-min-now="true"
+                                onchange="validateDateRange({
+                                    startSelector:'#editLeaveSlotStartDate',
+                                    endSelector:'#editLeaveSlotEndDate'
+                                })"
+                            >
                         <label for="editLeaveSlotName">
                           Start Date Time<span style="color:red">*</span>
                         </label>
                     </div>
                     <div class="popup-form-group">
-                        <input type="datetime-local" name="end_date_time" id="editLeaveSlotEndDate" required onchange="validateEditCycleDates()">
+                        <input type="datetime-local" name="end_date_time" id="editLeaveSlotEndDate" required 
+                               data-min-now="true"
+                                 onchange="validateDateRange({
+                                    startSelector:'#editLeaveSlotStartDate',
+                                    endSelector:'#editLeaveSlotEndDate'
+                                })"
+                            >
                         <label for="editLeaveSlotEndDate">
                           End Date Time <span style="color:red">*</span>
                         </label>
@@ -331,179 +355,7 @@ $id = Auth::guard('superadmin')->user()->id;
         }
     </script>
 
-    <script>
-    document.addEventListener('DOMContentLoaded', () => {
-        const now = new Date();
-        now.setSeconds(0, 0); 
-
-        const minDateTime = now.toISOString().slice(0,16);
-
-        // CREATE FORM
-        const start = document.getElementById('startDateTime');
-        const end = document.getElementById('endDateTime');
-
-        if (start) start.min = minDateTime;
-        if (end) end.min = minDateTime;
-
-        // EDIT MODAL
-        const editStart = document.getElementById('editLeaveSlotStartDate');
-        const editEnd = document.getElementById('editLeaveSlotEndDate');
-
-        if (editStart) editStart.min = minDateTime;
-        if (editEnd) editEnd.min = minDateTime;
-    });
-    </script>
-
-
-    <script>
-     function validateCycleDates() {
-    const startInput = document.getElementById('startDateTime');
-    const endInput = document.getElementById('endDateTime');
-    const yearInput = document.querySelector('input[name="year_slot"]');
-
-    if (!startInput.value || !endInput.value) return;
-
-    const now = new Date();
-    const start = new Date(startInput.value);
-    const end = new Date(endInput.value);
-
-    //  Start date cannot be in the past
-    if (start < now) {
-        startInput.setCustomValidity('Start Date & Time cannot be in the past');
-        return;
-    } else {
-        startInput.setCustomValidity('');
-    }
-
-    //  End must be after start 
-    if (end <= start) {
-        endInput.setCustomValidity('End Date & Time must be after Start Date & Time');
-        return;
-    }
-
-    //  Minimum 1 day
-    const diffHours = (end - start) / (1000 * 60 * 60);
-    if (diffHours < 24) {
-        endInput.setCustomValidity('Leave cycle must be at least 1 full day');
-        return;
-    }
-
-    //  Maximum 1 year
-    if (diffHours / 24 > 366) {
-        endInput.setCustomValidity('Leave cycle cannot exceed 1 year');
-        return;
-    }
-
-    //  Year Slot validation
-    if (yearInput && /^\d{4}-\d{2}$/.test(yearInput.value)) {
-        const startYear = parseInt(yearInput.value.substring(0, 4));
-        const endYear = startYear + 1;
-
-        if (
-            start.getFullYear() < startYear ||
-            end.getFullYear() > endYear
-        ) {
-            endInput.setCustomValidity(
-                `Dates must be within year slot ${yearInput.value}`
-            );
-            return;
-        }
-    }
-
-    endInput.setCustomValidity('');
-}
-
-
-  function validateEditCycleDates() {
-    const startInput = document.getElementById('editLeaveSlotStartDate');
-    const endInput = document.getElementById('editLeaveSlotEndDate');
-    const yearInput = document.getElementById('editLeaveSlotYear');
-
-    if (!startInput.value || !endInput.value) return;
-
-    const now = new Date();
-    const start = new Date(startInput.value);
-    const end = new Date(endInput.value);
-
-    if (start < now) {
-        startInput.setCustomValidity('Start Date & Time cannot be in the past');
-        return;
-    }
-
-    if (end <= start) {
-        endInput.setCustomValidity('End Date & Time must be after Start Date & Time');
-        return;
-    }
-
-    const diffHours = (end - start) / (1000 * 60 * 60);
-    if (diffHours < 24) {
-        endInput.setCustomValidity('Leave cycle must be at least 1 full day');
-        return;
-    }
-
-    if (diffHours / 24 > 366) {
-        endInput.setCustomValidity('Leave cycle cannot exceed 1 year');
-        return;
-    }
-
-    if (yearInput && /^\d{4}-\d{2}$/.test(yearInput.value)) {
-        const startYear = parseInt(yearInput.value.substring(0, 4));
-        const endYear = startYear + 1;
-
-        if (
-            start.getFullYear() < startYear ||
-            end.getFullYear() > endYear
-        ) {
-            endInput.setCustomValidity(
-                `Dates must be within year slot ${yearInput.value}`
-            );
-            return;
-        }
-    }
-
-    endInput.setCustomValidity('');
-}
-
-</script>
-
-
-    <script>
-function validateYearSlot(input) {
-    let value = input.value;
-
-    // Allow only digits and hyphen
-    value = value.replace(/[^0-9-]/g, '');
-
-    // Allow only one hyphen
-    if ((value.match(/-/g) || []).length > 1) {
-        value = value.substring(0, value.lastIndexOf('-'));
-    }
-
-    // Limit length to 7 characters (YYYY-YY)
-    if (value.length > 7) {
-        value = value.slice(0, 7);
-    }
-
-    // Validate logical year relation when full format entered
-    if (/^\d{4}-\d{2}$/.test(value)) {
-        const startYear = parseInt(value.substring(0, 4));
-        const endYear = parseInt(value.substring(5, 7));
-        const expectedEnd = (startYear + 1) % 100;
-
-        if (endYear !== expectedEnd) {
-            input.setCustomValidity(
-                'Invalid year range. Example: 2025-26'
-            );
-        } else {
-            input.setCustomValidity('');
-        }
-    } else {
-        input.setCustomValidity('');
-    }
-
-    input.value = value;
-}
-</script>
+   
 @endsection
 </body>
 </html>
