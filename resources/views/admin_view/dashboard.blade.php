@@ -4,8 +4,6 @@
     <!-- Include Add Client Module -->
     @include('admin_view.Add_client_module')
     
-    <!-- Include Notification Module -->
-    @include('admin_view.notification_module')
     
     <!-- Include Subscription Plan Module -->
     @include('admin_view.subscription_plan_module')
@@ -96,7 +94,7 @@
                     <!-- Clients overview header -->
                     <div class="section-header">
                         <h2>Clients Overview</h2>
-                        <a href="#" class="view-all">View All</a>
+                        
                     </div>
                     
                     <!-- Clients grid where all clients are displayed -->
@@ -318,9 +316,12 @@ document.addEventListener('DOMContentLoaded', function () {
 
             const container = document.getElementById('expiringList');
 
-            // If API returns empty array or invalid data → do nothing
+            // If API returns empty array or invalid data → show message as nothing near to expiry
             if (!Array.isArray(data) || data.length === 0) {
-                container.innerHTML = '';
+                container.innerHTML = `
+                    <div class="no-expiry-message">
+                        No near expiry available
+                    </div>`;
                 return;
             }
 
@@ -348,10 +349,7 @@ document.addEventListener('DOMContentLoaded', function () {
                             <small>${org.plan_name}</small>
                         </div>
 
-                        <a href="/admin/organisations/${org.id}"
-                           class="view-details">
-                           View Details
-                        </a>
+                       
                     </div>
                 `;
             });

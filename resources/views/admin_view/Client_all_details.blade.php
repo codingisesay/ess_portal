@@ -55,8 +55,6 @@
                     <p class="client-type">{{ $org->client_name ?? 'Client' }}</p>
                 </div>
 
-                <!-- Toggle details icon -->
-                <i class="fas fa-eye view-icon toggle-details-btn" onclick="toggleDetails(this)"></i>
             </div>
 
             <!-- Client detailed information section -->
@@ -200,7 +198,7 @@
 
             <!-- Button to show details in modal -->
             <div class="toggle-details" onclick="showClientDetails(this)">
-                Show Details <i class="fas fa-chevron-down"></i>
+                Show Details 
             </div>
 
         </div>
@@ -286,24 +284,6 @@ function showClientDetails(button) {
     modal.scrollTop = 0;
 }
 
-// Toggle inline details view
-function toggleDetails(button) {
-    const card = button.closest('.client-card');
-    const detailsSection = card.querySelector('.details-section');
-    const toggleText = card.querySelector('.toggle-details');
-    const icon = button.classList.contains('toggle-details-btn') ? button : button.querySelector('i');
-
-    // Toggle expanded class
-    detailsSection.classList.toggle('expanded');
-
-    if (detailsSection.classList.contains('expanded')) {
-        toggleText.innerHTML = 'Hide Details <i class="fas fa-chevron-up"></i>';
-        if (icon) icon.classList.replace('fa-eye', 'fa-eye-slash');
-    } else {
-        toggleText.innerHTML = 'Show Details <i class="fas fa-chevron-down"></i>';
-        if (icon) icon.classList.replace('fa-eye-slash', 'fa-eye');
-    }
-}
 
 // Client search functionality
 function searchClients() {
