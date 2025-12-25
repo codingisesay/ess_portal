@@ -214,6 +214,27 @@ document.addEventListener('DOMContentLoaded', function() {
     bindPriceFormatting(priceMonthly);
     bindPriceFormatting(priceYearly);
 
+    // Auto-calculate yearly price from monthly price
+    function toNumber(val){
+        if (val == null) return 0;
+        const cleaned = String(val).replace(/,/g,'').trim();
+        const n = parseFloat(cleaned);
+        return isNaN(n) ? 0 : n;
+    }
+
+    function updateYearlyFromMonthly(){
+        if (!priceMonthly || !priceYearly) return;
+        const monthly = toNumber(priceMonthly.value);
+        if (!monthly) { priceYearly.value = ''; return; }
+        const yearly = (monthly * 12).toFixed(2);
+        priceYearly.value = formatWithCommas(yearly);
+    }
+
+    if (priceMonthly) {
+        priceMonthly.addEventListener('input', updateYearlyFromMonthly);
+        priceMonthly.addEventListener('blur', updateYearlyFromMonthly);
+    }
+
 
 // Before submitting the form:
 // - Remove commas from price values
