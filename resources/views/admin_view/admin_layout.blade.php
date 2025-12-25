@@ -55,7 +55,7 @@
                     <li title="Users">
                         <a href="{{ route('admin.client_all_details') }}" class="nav-link {{ request()->routeIs('admin.client_all_details') ? 'active' : '' }}">
                             <i class="fas fa-users"></i>
-                            <span>Users</span>
+                            <span>Clients</span>
                         </a>
                     </li>
                      <li></li>
