@@ -223,7 +223,6 @@ public function clientmasterupdate(Request $request, $id)
                 ->update(['user_status' => 'Inactive']);
         }
     }
-
     return back()->with('success', 'Organisation updated successfully!');
 }
 
