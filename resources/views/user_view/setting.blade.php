@@ -1535,7 +1535,7 @@ document.addEventListener('click', function (e) {
     const link = e.target.closest('#hrPolicyTableSection .pagination a');
     if (!link) return;
 
-   
+    e.preventDefault();
 
     fetch(link.href, {
         headers: { 'X-Requested-With': 'XMLHttpRequest' }
