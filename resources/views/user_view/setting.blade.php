@@ -135,6 +135,8 @@
                         <!-- Policy Management -->
                         <div class="dropdown-section">
                         <!-- Parent Button -->
+                         <!-- Policy Management based on Permission -->
+                        <?php if(in_array(17, $permission_array)): ?>
                         <button class="sidebar-button" id="policyToggle">
                             <div class="sidebar-icon">
                                 <i class="fa fa-file-alt"></i>
@@ -152,7 +154,7 @@
                                  </button> 
                             </div> <!-- Sub Menu End -->
                         </div> <!-- Policy Management End -->
-
+                        <?php endif; ?>
                     </div> <!-- Button List End -->
                 </div> <!-- Sidebar Bottom End -->
             </div> <!-- Sidebar Internal End -->
