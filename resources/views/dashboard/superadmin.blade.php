@@ -46,6 +46,7 @@
 
         <!-- Branch list -->
         <div class="carousel-wrap">
+            <button class="carousel-btn left" onclick="scrollBranches(-1)">‹</button>
             <div class="branch-scroller" id="branch-scroller">
                 @foreach($branches as $branch)
                     <div class="branch-tile">
@@ -68,6 +69,7 @@
                     </div>
                 @endforeach
             </div>
+            <button class="carousel-btn right" onclick="scrollBranches(1)">›</button>
         </div>
     </section>
 
@@ -182,6 +184,18 @@ function filterList(inputId, listId){
     if (noResults) {
         noResults.style.display = visibleCount === 0 ? 'block' : 'none';
     }
+}
+</script>
+<script>
+function scrollBranches(direction) {
+    const scroller = document.getElementById('branch-scroller');
+    if (!scroller) return;
+
+    const scrollAmount = scroller.querySelector('.branch-tile')?.offsetWidth || 320;
+    scroller.scrollBy({
+        left: direction * (scrollAmount + 18),
+        behavior: 'smooth'
+    });
 }
 </script>
 @endsection

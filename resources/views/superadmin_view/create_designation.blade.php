@@ -87,7 +87,7 @@ $id = Auth::guard('superadmin')->user()->id;
 
     <!-- Form Section -->
     <div id="formSection" >
-        <form method="POST" action="{{ route('insert_designation') }}">
+        <form method="POST" action="{{ route('insert_designation') }}" id="designationForm">
             @csrf
             <div class="form-container row">
                 <div class="col-3 mb-4">
@@ -226,6 +226,42 @@ $id = Auth::guard('superadmin')->user()->id;
     function openEditModal() { 
         document.getElementById('popup').style.display = 'block';
     }
+</script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const form = document.getElementById('designationForm');
+    
+    if (form) {
+        form.addEventListener('submit', function (e) {
+            const input = form.querySelector('input[name="name"]');
+            const enteredName = input.value.trim().toLowerCase();
+            
+            if (!enteredName) return;
+
+            // 1. Get all table cells
+            const allCells = Array.from(document.querySelectorAll('#tableSection td'));
+            
+            // 2. Extract text and filter out empty or unrelated values
+            const existingNames = allCells.map(td => td.textContent.trim().toLowerCase());
+
+
+            // 3. Check for match
+            if (existingNames.includes(enteredName)) {
+                e.preventDefault(); // Stop submission
+
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Duplicate Designation',
+                    text: `The designation "${input.value}" already exists in the table.`,
+                    confirmButtonColor: '#d33'
+                });
+                return false;
+            }
+        });
+    }
+});
 </script>
 
 @endsection

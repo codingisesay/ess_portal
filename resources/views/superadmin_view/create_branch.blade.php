@@ -109,14 +109,19 @@ $id = Auth::guard('superadmin')->user()->id;
                 </div>
                 <div class="col-3 mb-4">
                     <div class="form-group">
-                        <input type="text" name="mobile" required>
+                        <input type="tel" name="mobile" required pattern="[0-9]{10}" maxlength="10" inputmode="numeric" oninput="this.value = this.value.replace(/[^0-9]/g, '')">
                         <label>Mobile</label>
                     
                     </div>
                 </div>
                 <div class="col-3 mb-4">
                     <div class="form-group">
-                        <input type="email" name="branchmailid" required>
+                        <input type="email" 
+                        name="branchmailid" 
+                        required maxlength="100"
+                        pattern="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
+                        title="Enter a valid email address (example: branch@company.com)"
+                        >
                         <label>Branch Email</label>
                     
                     </div>
@@ -151,7 +156,7 @@ $id = Auth::guard('superadmin')->user()->id;
                 </div>
                 <div class="col-3 mb-4">
                     <div class="form-group">
-                        <input type="text" name="pincode" required>
+                        <input type="text" name="pincode" required  inputmode="numeric" pattern="^[1-9][0-9]{5}$" maxlength="6"  title="Enter a valid 6-digit pincode" oninput="this.value=this.value.replace(/[^0-9]/g,'')">
                         <label>Pincode</label>
                     
                     </div>

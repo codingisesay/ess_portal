@@ -1,21 +1,6 @@
 <!-- added the layout sidebar inside a dashboard  -->
 @extends('admin_view.admin_layout')
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <!-- Page title -->
-    <title>Admin Dashboard</title>
-    <!-- Custom admin styles -->
-    <link rel="stylesheet" href="{{ asset('Offical_admin/css/official_admin.css') }}">
-    <!-- Font Awesome icons -->
-    <link rel="stylesheet" href="{{ asset('Offical_admin/css/create_user_popup.css') }}">
-
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-</head>
-
     <!-- Include Add Client Module -->
     @include('admin_view.Add_client_module')
     
@@ -27,21 +12,18 @@
 
     @include('admin_view.client_details_popup')
 
-    
 
-
-<body>
+{{-- Main content section starts --}}    
+@section('content')
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <!-- =========================
      DASHBOARD CONTAINER
      ========================= -->
 
-    <div class="container">
-
-         <!-- =========================
+        <!-- =========================
          MAIN CONTENT AREA
          ========================= -->
-        <main class="main-content">
 
         <!-- Dashboard header -->
             <header class="header">
@@ -90,13 +72,14 @@
                     </div>
                 </div>
 
-                <!-- Expiring soon clients -->
+                <!-- Expiring clients counts  -->
                 <div class="stat-card stat-card-orange">
                     <div class="stat-icon">
                         <i class="fas fa-exclamation"></i>
                     </div>
                     <div class="stat-details">
-                        <h3>1</h3>
+                        <!-- changes made to get count of expiring clients -->
+                        <h3>{{ $expiryCount }}</h3>
                         <p>Expiring Soon</p>
                     </div>
                 </div>
@@ -120,31 +103,41 @@
                     <div class="clients-grid">
 
                       <!-- Loop through organisations -->
-                        @forelse ($organisations as $org)
+                       @forelse ($organisations as $org)
                             @php
                                 // Initials (AC, TI, etc.)
                                 $initials = collect(explode(' ', $org->name))
                                     ->map(fn ($word) => strtoupper(substr($word, 0, 1)))
                                     ->take(2)
                                     ->implode('');
- 
+
                                 // Storage %
                                 $storage = (int) ($org->storage_used_percent ?? 0);
- 
-                                // Status handling (1 = Active, 0 = Inactive)
-                                $statusClass = ((int) ($org->status ?? 0) === 1)
+
+                                // Status handling (organisation_status = Active / Inactive)
+                                $statusClass = (strtolower($org->organisation_status ?? '') === 'active')
                                     ? 'active'
-                                    : 'inactive';                 
+                                    : 'inactive';
+
+                                $statusLabel = ucfirst(strtolower($org->organisation_status ?? 'Inactive'));
+
+                                // Subscription plan name
+                                $planName = optional(
+                                    collect($subscriptionPlans)->firstWhere('id', $org->software_package_plan)
+                                )->plan_name ?? '—';
                             @endphp
 
 
                              <!-- Avatar with initials -->
                               <!-- used the right column name for mobile number (mobile) -->
-                            <div class="client-card"
-                                 data-client-id="{{ $org->id }}"
-                                 data-email="{{ $org->email ?? '' }}"
-                                 data-phone="{{ $org->mobile ?? '' }}"
-                                 data-package="{{ $org->package ?? 'basic' }}">
+                               <!-- getting the current value of software package id -->
+                       <div class="client-card"
+                           data-client-id="{{ $org->id }}"
+                           data-email="{{ $org->email ?? '' }}"
+                           data-phone="{{ $org->mobile ?? '' }}"
+                           data-package-id="{{ $org->software_package_plan ?? '' }}"
+                           data-package="{{ $planName }}"
+                           data-organisation-status="{{ $org->organisation_status ?? ( (isset($org->status) && (int)$org->status === 1) ? 'Active' : 'Inactive' ) }}">
                                 <div class="client-avatar client-avatar-blue">
                                     {{ $initials }}
                                 </div>
@@ -195,17 +188,15 @@
                      <!-- Expiring clients section -->
                     <div class="expiring-soon">
                         <div class="section-header">
-                            <h3>Expiring Soon</h3>
-                        </div>
-                        <div class="expiring-card">
-                            <div class="expiring-avatar" style="background-color: #e8f5e9; color: #388e3c;">TI</div>
-                            <div class="expiring-info">
-                                <h4>TechStart</h4>
-                                <p>2024-12-25</p>
-                            </div>
-                            <a href="#" class="view-details">View Details</a>
+                        <h3>Expiring Soon</h3>
+                    </div>
+
+                    <div class="expiring-scroll" id="expiringScroll">
+                        <div id="expiringList">
+                            <!-- Cards injected here -->
                         </div>
                     </div>
+                </div>
                   <!-- div expiring-soon close -->
 
                   <!-- Subscription Plans section -->
@@ -221,7 +212,6 @@
                     </div>  <!-- div quick-actions close -->
                 </div> <!-- sidebar-content close -->
             </div> <!-- main-content-2 close -->
-        </main> <!-- main-content close -->
     </div> <!-- dashboard-content close -->
 
 
@@ -273,40 +263,177 @@
             const usersNavLink = document.querySelector('li[title="Users"] a.nav-link');
             if (usersNavLink) {
                 usersNavLink.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    
-                    
-                    const mainContent = document.querySelector('.main-content');
-                    const mainContent2 = document.querySelector('.main-content-2');
-                    
-                    if (mainContent && mainContent2) {
-                        // Toggle full view class on main content
-                        mainContent.classList.toggle('full-view');
-                        
-                        // Toggle active class on main-content-2
-                        mainContent2.classList.toggle('active');
-                        
-                        // Update active state in navigation
-                        document.querySelectorAll('.sidebar nav li').forEach(item => {
-                            item.classList.remove('active');
-                        });
-                        this.parentElement.classList.add('active');
-                        
-                        // Update the page title
-                        const headerTitle = document.querySelector('.header-title');
-                        if (headerTitle) {
-                            headerTitle.textContent = mainContent.classList.contains('full-view') 
-                                ? 'Clients Overview' 
-                                : 'Dashboard';
-                        }
-                        
-                        // Scroll to top
-                        window.scrollTo({ top: 0, behavior: 'smooth' });
-                    }
+                    // Allow default navigation to Client_all_details page
                 });
             }
         });
     </script>
+     <!-- added sweetalert2 script for sending expiry notification to all clients -->
+   <script>
+document.getElementById('sendNotificationBtn').addEventListener('click', function () {
 
-</body>
-</html>
+    Swal.fire({
+        title: 'Are you sure?',
+        text: 'Send expiry notifications to all clients?',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Yes, send it!',
+        cancelButtonText: 'Cancel'
+    }).then((result) => {
+        if (!result.isConfirmed) return;
+
+        fetch("{{ route('admin.sendExpiryMails') }}", {
+            method: "POST",
+            headers: {
+                "X-CSRF-TOKEN": "{{ csrf_token() }}",
+                "Accept": "application/json",
+                "Content-Type": "application/json"
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            Swal.fire({
+                icon: 'success',
+                title: 'Done!',
+                text: data.message
+            });
+        })
+        .catch(error => {
+            console.error(error);
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops!',
+                text: 'Something went wrong'
+            });
+        });
+    });
+});
+</script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+
+    fetch("{{ route('organisations.expiry.alerts') }}")
+        .then(res => res.json())
+        .then(data => {
+
+            const container = document.getElementById('expiringList');
+
+            // If API returns empty array or invalid data → do nothing
+            if (!Array.isArray(data) || data.length === 0) {
+                container.innerHTML = '';
+                return;
+            }
+
+            let html = '';
+
+            data.forEach(org => {
+
+                const initials = org.name
+                    .split(' ')
+                    .map(w => w[0])
+                    .join('')
+                    .substring(0, 2)
+                    .toUpperCase();
+
+                html += `
+                    <div class="expiring-card">
+                        <div class="expiring-avatar"
+                             style="background-color:#e8f5e9;color:#388e3c;">
+                            ${initials}
+                        </div>
+
+                        <div class="expiring-info">
+                            <h4>${org.name}</h4>
+                            <p>${org.expire_date}</p>
+                            <small>${org.plan_name}</small>
+                        </div>
+
+                        <a href="/admin/organisations/${org.id}"
+                           class="view-details">
+                           View Details
+                        </a>
+                    </div>
+                `;
+            });
+
+            container.innerHTML = html;
+        })
+        .catch(err => {
+            console.error('Expiry alert error:', err);
+        });
+});
+</script>
+
+
+<!-- Expiry alerts script with animation and scroll to show the expiry cards -->
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+
+    const scrollContainer = document.getElementById('expiringScroll');
+    const listContainer = document.getElementById('expiringList');
+
+    /* 🖱 Mouse wheel → horizontal scroll */
+    scrollContainer.addEventListener('wheel', (e) => {
+        e.preventDefault();
+        scrollContainer.scrollLeft += e.deltaY;
+    }, { passive: false });
+
+    /* Helper: days until expiry */
+    function daysUntil(dateStr) {
+        const today = new Date();
+        const expiry = new Date(dateStr);
+        const diff = expiry - today;
+        return Math.ceil(diff / (1000 * 60 * 60 * 24));
+    }
+
+    /* Render cards */
+    window.renderExpiryCards = function (data) {
+
+        if (!Array.isArray(data) || data.length === 0) {
+            listContainer.innerHTML = '';
+            return;
+        }
+
+        let html = '';
+
+        data.forEach(org => {
+            const days = daysUntil(org.expire_date);
+
+            let statusClass = 'safe';
+            if (days <= 3) statusClass = 'critical';
+            else if (days <= 7) statusClass = 'warning';
+
+            const initials = org.name
+                .split(' ')
+                .map(w => w[0])
+                .join('')
+                .substring(0, 2)
+                .toUpperCase();
+
+            html += `
+                <div class="expiring-card ${statusClass}">
+                    <div class="expiring-avatar">${initials}</div>
+
+                    <div class="expiring-info">
+                        <h4>${org.name}</h4>
+                        <p>Expires in ${days} day${days !== 1 ? 's' : ''}</p>
+                        <small>${org.plan_name}</small>
+                    </div>
+
+                    <a href="/admin/organisations/${org.id}" class="view-details">
+                        View Details
+                    </a>
+                </div>
+            `;
+        });
+
+        listContainer.innerHTML = html;
+    };
+
+});
+</script>
+
+
+
+@endsection
+{{-- Main content section ends --}}

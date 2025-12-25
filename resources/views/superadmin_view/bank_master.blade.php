@@ -70,10 +70,10 @@
         align-items: center;
     }
     
-    /* Search box styles */
+/* --- SEARCH BOX POSITIONED TO THE RIGHT --- */
     .search-container {
         position: relative;
-        margin-left: 10px;
+        margin-left: auto; /* This pushes the box to the right side of the flex container */
     }
     .search-box {
         display: flex;
@@ -109,6 +109,83 @@
         opacity: 1;
         visibility: visible;
     }
+
+
+    /* Align the entire cell content to the right */
+.action-cell {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    width: 100%; /* Ensure it uses all available space */
+    gap: 10px; /* Space between the forms */
+    white-space: nowrap;
+}
+
+/* Style for the Edit Form container */
+.edit-form-inline {
+    display: flex;
+    align-items: center;
+    flex: 1;
+    gap: 25px; /* Space between input, select, and update button */
+}
+
+/* Compact styling for inputs and selects in the table */
+.action-cell input[type="text"], 
+.action-cell select {
+    width: 180px; /* You can adjust this width as needed */
+    margin-right: auto; /* This is the "magic" that pushes the select/buttons to the right */
+    padding: 4px 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 13px;
+    height: 32px;
+}
+
+.action-cell input[type="text"] {
+    width: 150px; /* Fixed width for name input to keep it tidy */
+}
+
+/* Button Styling to match PayVance theme */
+.btn-update, .btn-delete {
+    height: 32px;
+    padding: 0 12px;
+    border: none;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.btn-update {
+    background-color: #7d4d5e; /* Matching your header color */
+    color: white;
+}
+
+.btn-update:hover {
+    background-color: #633a48;
+}
+
+/* The base state of the button */
+.btn-delete {
+    height: 32px;
+    padding: 0 12px;
+    border: 1px solid #dc3545; /* Red border */
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    background-color: transparent; /* Or #f8f9fa */
+    color: #dc3545; /* Red text */
+    transition: all 0.3s ease; /* Makes the color change smooth */
+}
+
+/* The hover state */
+.btn-delete:hover {
+    background-color: red !important; /* Changes background to red */
+    color: white !important;           /* Changes text to white */
+    border-color: red;                /* Matches border to background */
+}
 </style>
 <style>
 /* ===============================
@@ -143,7 +220,7 @@
 let rows = [];
 let filteredRows = [];
 let currentPage = 1;
-const perPage = 10;
+const perPage = 9;
 
 let prevBtn, nextBtn, pageNumbers, currentPageEl, totalPagesEl;
 </script>
@@ -292,6 +369,7 @@ function updatePagination() {
 
     <!-- Bank Table (hidden by default) -->
     <div class="table-container" id="tableSection" style="display:none;">
+    <div class="table-responsive-wrapper">
         <table class="table border">
             <thead>
                 <tr>
@@ -319,9 +397,9 @@ function updatePagination() {
                         <td>{{ $bank->id }}</td>
                         <td>{{ $bank->name }}</td>
                         <td>{{ $bank->status }}</td>
-                        <td>
+                        <td class="action-cell">
                             <!-- Edit -->
-                            <form action="{{ route('update_bank', $bank->id) }}" method="POST" style="display:inline-block;">
+                            <form action="{{ route('update_bank', $bank->id) }}" method="POST" class="edit-form-inline">
                                 @csrf
                                 <input type="text" name="name" value="{{ $bank->name }}" required>
                                 <select name="status">
@@ -335,13 +413,14 @@ function updatePagination() {
                             <form action="{{ route('delete_bank', $bank->id) }}" method="POST" style="display:inline-block;">
                                 @csrf
                                 @method('DELETE')
-                                <button type="submit" onclick="return confirm('Delete this bank?')">Delete</button>
+                                <button type="submit" class="btn-delete"s onclick="return confirm('Delete this bank?')">Delete</button>
                             </form>
                         </td>
                     </tr>
                 @endforeach
             </tbody>
         </table>
+        </div>
         <!-- Pagination Controls -->
             <div class="pagination-container mt-3">
                 <small class="page-info">

@@ -1,0 +1,14 @@
+/* =========================
+   GLOBAL APPLICATION CSS
+   ========================= */
+
+@import url('https://fonts.googleapis.com/css2?family=Fira+Sans:wght@100..900&display=swap');
+
+:root {
+    --app-font: 'Fira Sans', sans-serif;
+}
+
+/* Apply everywhere */
+html, body, * {
+    font-family: var(--app-font) !important;
+}

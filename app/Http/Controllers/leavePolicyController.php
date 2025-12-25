@@ -245,9 +245,9 @@ class leavePolicyController extends Controller
             'leave_encash_count' => 'nullable|numeric',
 
             'provision_status' => 'required',
-            'max_leave_pp' => 'required',
-            'probation_period_per_month' => 'required',
-            'calendra_start_for_PP' => 'required',
+            'max_leave_pp' => 'nullable',
+            'probation_period_per_month' => 'nullable',
+            'calendra_start_for_PP' => 'nullable',
         ]);
 
         $id = Auth::guard('superadmin')->user()->id;
