@@ -61,6 +61,7 @@ $id = Auth::guard('superadmin')->user()->id;
         }
     </style>
 </head>
+<script src="{{ asset('admin_end/js/common-validate-month-start.js') }}"></script>
 <body>
     <div class="container">
         <h3>Employee Type Leave Policy</h3>
@@ -130,7 +131,7 @@ $id = Auth::guard('superadmin')->user()->id;
                     </div>
                     <div class="col-3 mb-4">
                         <div class="form-group">
-                            <input type="number" id="date" name="month_start" class="form-control"  min="1" max="31" step="1" required oninput="validateMonthStart(this)">
+                            <input type="number" id="date" name="month_start" class="form-control"  min="1" max="31" step="1" required  oninput="validateMonthStart(this)">
                             <label>
                               Month Start <span style="color:red">*</span>
                             </label>
@@ -263,26 +264,6 @@ $id = Auth::guard('superadmin')->user()->id;
                 alert('The value cannot exceed 30.');
             }
         }
-
-       function validateMonthStart(input) {
-            let value = input.value.replace(/[^0-9]/g, '');
-            let num = Number(value);
-
-            if (num > 31) num = 31;
-            if (num < 1 && value !== '') num = 1;
-
-            input.value = value ? num : '';
-        }
-
-            function validateLeaveCount(input) {
-                let value = input.value.replace(/[^0-9]/g, '');
-                let num = Number(value);
-
-                if (num > 365) num = 365;
-                if (num < 0) num = 0;
-
-                input.value = value ? num : '';
-            }
 
         
     

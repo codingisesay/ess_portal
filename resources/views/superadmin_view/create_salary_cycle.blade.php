@@ -67,6 +67,7 @@ $id = Auth::guard('superadmin')->user()->id;
         gap: 10px;
     }
 </style>
+<script src="{{ asset('admin_end/js/common-validate-month-start.js') }}"></script>
 <div class="container">
     <h3>Creates Salary Cycle</h3>
 
@@ -117,13 +118,24 @@ $id = Auth::guard('superadmin')->user()->id;
                 </div>
                 <div class="col-3 mb-4">
                     <div class="form-group">
-                        <input type="datetime-local" name="applicable_from" id="applicableFrom" required oninput="validateSalaryDates()">
+                        <input type="datetime-local" name="applicable_from" id="applicableFrom" required data-min-now="true"
+                        onchange="validateDateRange({
+                            startSelector:'#start_date',
+                            endSelector:'#end_date'
+                        })"
+                        >
                         <label>Applicable From</label>
                     </div>
                 </div>
                 <div class="col-3 mb-4">
                     <div class="form-group">
-                        <input type="datetime-local" name="applicable_to" id="applicableTo" required oninput="validateSalaryDates()">
+                        <input type="datetime-local" name="applicable_to" id="applicableTo" required 
+                          data-min-now="true"
+                            onchange="validateDateRange({
+                                startSelector:'#start_date',
+                                endSelector:'#end_date'
+                            })"
+                        >
                         <label>Applicable To</label>
                     </div>
                 </div>
@@ -197,11 +209,21 @@ $id = Auth::guard('superadmin')->user()->id;
                     <label for="editSalaryCycleName">Name</label>
                 </div>
                 <div class="popup-form-group">
-                    <input type="datetime-local" name="applicable_from" id="editApplicableFrom" required oninput="validateEditSalaryDates()">
+                    <input type="datetime-local" name="applicable_from" id="editApplicableFrom" required 
+                            data-min-now="true"
+                                onchange="validateDateRange({
+                                    startSelector:'#start_date',
+                                    endSelector:'#end_date'
+                                })">
                     <label for="editApplicableFrom">Applicable From</label>
                 </div>
                 <div class="popup-form-group">
-                    <input type="datetime-local" name="applicable_to" id="editApplicableTo" required oninput="validateEditSalaryDates()">
+                    <input type="datetime-local" name="applicable_to" id="editApplicableTo" required
+                            data-min-now="true"
+                            onchange="validateDateRange({
+                                startSelector:'#start_date',
+                                endSelector:'#end_date'
+                            })">
                     <label for="editApplicableTo">Applicable To</label>
                 </div>
                 <div class="popup-form-group">
@@ -329,75 +351,6 @@ $id = Auth::guard('superadmin')->user()->id;
 
     // Show the modal
     document.getElementById('editSalaryCycleModal').style.display = 'block';
-}
-</script>
-<script>
-function validateEditSalaryDates() {
-    const fromInput = document.getElementById('editApplicableFrom');
-    const toInput   = document.getElementById('editApplicableTo');
-
-    if (!fromInput.value || !toInput.value) return;
-
-    const now  = new Date();
-    const from = new Date(fromInput.value);
-    const to   = new Date(toInput.value);
-
-    if (from < now) {
-        fromInput.setCustomValidity('Applicable From cannot be before today');
-        return;
-    } else {
-        fromInput.setCustomValidity('');
-    }
-
-    if (to <= from) {
-        toInput.setCustomValidity('Applicable To must be after Applicable From');
-        return;
-    } else {
-        toInput.setCustomValidity('');
-    }
-}
-</script>
-
-<script>
-document.addEventListener('DOMContentLoaded', () => {
-    const now = new Date();
-    now.setSeconds(0, 0); // clean seconds
-
-    const minDateTime = now.toISOString().slice(0, 16);
-
-    const from = document.getElementById('applicableFrom');
-    const to   = document.getElementById('applicableTo');
-
-    // Disable back dates in calendar
-    if (from) from.min = minDateTime;
-    if (to)   to.min   = minDateTime;
-});
-
-function validateSalaryDates() {
-    const fromInput = document.getElementById('applicableFrom');
-    const toInput   = document.getElementById('applicableTo');
-
-    if (!fromInput.value || !toInput.value) return;
-
-    const now  = new Date();
-    const from = new Date(fromInput.value);
-    const to   = new Date(toInput.value);
-
-    //  Applicable From cannot be in the past
-    if (from < now) {
-        fromInput.setCustomValidity('Applicable From cannot be before today');
-        return;
-    } else {
-        fromInput.setCustomValidity('');
-    }
-
-    //  Applicable To must be after Applicable From
-    if (to <= from) {
-        toInput.setCustomValidity('Applicable To must be after Applicable From');
-        return;
-    } else {
-        toInput.setCustomValidity('');
-    }
 }
 </script>
 
