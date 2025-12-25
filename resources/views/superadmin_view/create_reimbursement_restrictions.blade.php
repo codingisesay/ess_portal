@@ -65,6 +65,9 @@ $id = Auth::guard('superadmin')->user()->id;
     <title>Create Reimbursement Restrictions</title>
     
 </head>
+<script src="{{ asset('admin_end/js/common-input-validation.js') }}"></script>
+<script src="{{ asset('admin_end/js/common-duplicate-validation.js') }}"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <body>
     <div class="container">
         <h3>Create Reimbursement Restriction</h3>
@@ -96,7 +99,7 @@ $id = Auth::guard('superadmin')->user()->id;
         <!-- Form Section -->
         <div id="formSection">
             
-        <form action="{{ route('insert_reimbursement_validation') }}" method="POST">
+        <form action="{{ route('insert_reimbursement_validation') }}" method="POST" data-duplicate-check="true" data-select-id="organisation_reimbursement_type_id" data-table-selector="#tableSection"  data-column-index="2" data-error-title="Reimbursement Restriction Already Exists"  data-error-message="This reimbursement type already has restrictions defined.">
                 @csrf
                 <div class="form-container row">
                 <div class="col-3 mb-4">
@@ -116,7 +119,7 @@ $id = Auth::guard('superadmin')->user()->id;
                 </div>
                 <div class="col-3 mb-4">
                     <div class="form-group">
-                        <input type="text" id="category_name" name="max_amount" class="form-control" required oninput="validateAmount(this)"  style="direction: rtl; text-align: left;">
+                        <input type="text" id="category_name" name="max_amount" class="form-control" required data-validate="amount" data-decimals="2" data-maxlen="10" data-allow-zero="false"  style="direction: rtl; text-align: left;">
                         <label for="category_name">
                               Maximum Amount <span style="color:red">*</span>
                         </label>
@@ -196,7 +199,7 @@ $id = Auth::guard('superadmin')->user()->id;
                         </label>
                     </div>
                     <div class="popup-form-group">
-                        <input type="text" name="max_amount" id="editMaxAmount" required oninput="validateAmount(this)"  style="direction: rtl; text-align: left;">
+                        <input type="text" name="max_amount" id="editMaxAmount" required data-validate="amount" data-decimals="2" data-maxlen="10" style="direction: rtl; text-align: left;">
                         <label for="editMaxAmount">
                               Maximum Amount <span style="color:red">*</span>
                         </label>
@@ -301,34 +304,6 @@ $id = Auth::guard('superadmin')->user()->id;
             
             updateActiveButton(clickedElement);
         }
-
-        function validateAmount(input) {
-    // Allow only digits and one decimal
-    let value = input.value.replace(/[^0-9.]/g, '');
-
-    // Prevent multiple decimals
-    const parts = value.split('.');
-    if (parts.length > 2) {
-        value = parts[0] + '.' + parts[1];
-    }
-
-    // Limit decimals to 2 places
-    if (parts[1]?.length > 2) {
-        value = parts[0] + '.' + parts[1].slice(0, 2);
-    }
-
-    // Limit total length (7 digits + decimal)
-    if (value.length > 10) {
-        value = value.slice(0, 20);
-    }
-
-    // Prevent zero or empty
-    if (value === '0') {
-        value = '';
-    }
-
-    input.value = value;
-}
 
 
         function showHRPolicyTable(clickedElement) {
