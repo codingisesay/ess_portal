@@ -18,7 +18,7 @@ body {
 
 /* Main Container */
 .main-container {
-    margin: 10px auto;
+    margin: -8px auto;
     display: flex;
     width: 100%;
     max-width: 1550px;
@@ -641,4 +641,732 @@ ul.pagination {
     width: 100%;
     border-radius: 5px;
     height: 42px;
+}
+/* Submenu container */
+.submenu {
+    width: 100%;
+    display: none;
+    flex-direction: column;
+    padding-left: 55px;
+    margin-top: 5px;
+}
+
+/* Submenu buttons */
+.sidebar-sub-button {
+    background: transparent;
+    border: none;
+    text-align: left;
+    padding: 8px 10px;
+    font-size: 13px;
+    font-weight: 600;
+    color: #333;
+    cursor: pointer;
+    border-radius: 20px;
+    transition: all 0.3s ease;
+}
+
+.sidebar-sub-button:hover {
+    background-color: #B3E5FC;
+    color: #1976D2;
+}
+
+/* Dropdown arrow */
+.dropdown-arrow {
+    margin-left: auto;
+    margin-right: 15px;
+    transition: transform 0.3s ease;
+}
+
+/* Rotate arrow when open */
+.dropdown-open .dropdown-arrow {
+    transform: rotate(180deg);
+}
+.sidebar_main {
+    height: calc(95vh - 120px); /* full screen minus navbar */
+}
+
+.sidebar_internal {
+    height: 100%;
+}
+/* Policy Category Section Styles */
+#createPolicyContent {
+    padding: 20px;
+}
+
+.create-policy-container {
+    padding: 20px;
+    background-color: #ffffff;
+    border-radius: 15px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+}
+
+.create-policy-container h3 {
+    color: #8A3366;
+    font-weight: 700;
+    margin-bottom: 25px;
+    padding-bottom: 15px;
+    border-bottom: 2px solid #f0f0f0;
+}
+
+/* Toggle Buttons */
+.policy-toggle-buttons {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.policy-toggle-buttons button {
+    padding: 10px 25px;
+    border: 2px solid #8A3366;
+    background: white;
+    color: #8A3366;
+    border-radius: 25px;
+    cursor: pointer;
+    transition: all 0.3s;
+    font-weight: 600;
+    font-size: 14px;
+}
+
+.policy-toggle-buttons button.active {
+    background: #8A3366;
+    color: white;
+    box-shadow: 0 4px 8px rgba(138, 51, 102, 0.2);
+}
+
+.policy-toggle-buttons button:hover:not(.active) {
+    background: #f8e8f3;
+    border-color: #B24D80;
+}
+
+/* Search Container */
+.policy-search-container {
+    position: relative;
+    margin-left: auto;
+}
+
+.policy-search-box {
+    display: flex;
+    align-items: center;
+    position: relative;
+    transition: all 0.3s ease;
+    width: 40px;
+    height: 40px;
+    overflow: hidden;
+    border-radius: 25px;
+    background: #f8f9fa;
+    border: 2px solid #e0e0e0;
+}
+
+.policy-search-box.expanded {
+    width: 250px;
+    border-color: #8A3366;
+}
+
+.policy-search-icon {
+    position: absolute;
+    left: 12px;
+    cursor: pointer;
+    z-index: 2;
+    width: 18px;
+    height: 18px;
+    transition: all 0.3s ease;
+}
+
+.policy-search-box.expanded .policy-search-icon {
+    left: 12px;
+}
+
+.policy-search-input {
+    padding: 8px 15px 8px 40px;
+    width: 100%;
+    height: 100%;
+    border: none;
+    background: transparent;
+    outline: none;
+    font-size: 14px;
+    color: #333;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+}
+
+.policy-search-box.expanded .policy-search-input {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* Form Styles */
+#formSection .row {
+    margin-top: 20px;
+}
+
+.policy-form-group {
+    position: relative;
+    margin-bottom: 2rem;
+}
+
+.policy-form-group input,
+.policy-form-group select {
+    width: 100%;
+    padding: 12px 15px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    outline: none;
+    font-size: 14px;
+    color: #333;
+    background-color: #fff;
+    transition: all 0.3s ease;
+}
+
+.policy-form-group input:focus,
+.policy-form-group select:focus {
+    border-color: #8A3366;
+    box-shadow: 0 0 0 3px rgba(138, 51, 102, 0.1);
+}
+
+.policy-form-group label {
+    position: absolute;
+    top: -10px;
+    left: 12px;
+    background: white;
+    padding: 0 8px;
+    font-size: 12px;
+    color: #8A3366;
+    font-weight: 600;
+    pointer-events: none;
+    transition: all 0.3s ease;
+}
+
+.policy-form-group input:focus + label,
+.policy-form-group select:focus + label {
+    color: #8A3366;
+}
+
+/* Submit Button */
+.policy-create-btn {
+    background: linear-gradient(135deg, #8A3366, #B24D80);
+    color: white;
+    border: none;
+    padding: 12px 35px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s;
+    font-weight: 600;
+    font-size: 15px;
+    box-shadow: 0 4px 12px rgba(138, 51, 102, 0.2);
+}
+
+.policy-create-btn:hover {
+    background: linear-gradient(135deg, #7a2c5c, #9e4273);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(138, 51, 102, 0.3);
+}
+
+.policy-create-btn:active {
+    transform: translateY(0);
+}
+
+/* Table Section */
+#tableSection {
+    margin-top: 20px;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+}
+
+/* Policy Category Table Customization */
+#tableSection .custom-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 0;
+}
+
+#tableSection .custom-table th {
+    background-color: #8A3366;
+    color: white;
+    font-weight: 600;
+    padding: 12px 15px;
+    border: none;
+}
+
+#tableSection .custom-table td {
+    padding: 12px 15px;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+#tableSection .custom-table tr:hover {
+    background-color: #f9f9f9;
+}
+
+/* Action Buttons in Table */
+#tableSection .icon-btn {
+    background: none;
+    border: none;
+    padding: 6px;
+    margin: 0 3px;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: all 0.3s ease;
+}
+
+#tableSection .icon-btn:hover {
+    background-color: rgba(138, 51, 102, 0.1);
+}
+
+#tableSection .icon-btn i {
+    font-size: 18px;
+    color: #8A3366;
+}
+
+#tableSection .icon-btn.edit-btn i {
+    color: #8A3366;
+}
+
+#tableSection .icon-btn.delete-btn i {
+    color: #dc3545;
+}
+
+/* Modal Styles for Policy Edit */
+.w3-modal {
+    display: none;
+    position: fixed;
+    z-index: 10000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.5);
+    animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.w3-modal-content {
+    background-color: #fff;
+    margin: 10% auto;
+    padding: 0;
+    border: none;
+    width: 90%;
+    max-width: 500px;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    animation: slideIn 0.3s ease;
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.w3-teal {
+    background: linear-gradient(135deg, #8A3366, #B24D80) !important;
+    color: white !important;
+    padding: 20px;
+    border-radius: 15px 15px 0 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.w3-teal h4 {
+    margin: 0;
+    font-weight: 600;
+}
+
+.w3-button {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 24px;
+    cursor: pointer;
+    padding: 0;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: background-color 0.3s;
+}
+
+.w3-button:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+}
+
+.w3-container {
+    padding: 25px;
+}
+
+.w3-container .policy-form-group {
+    margin-bottom: 1.5rem;
+}
+
+/* Status Badges */
+.status-badge {
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    display: inline-block;
+}
+
+.status-badge.active {
+    background-color: rgba(40, 167, 69, 0.1);
+    color: #28a745;
+}
+
+.status-badge.inactive {
+    background-color: rgba(220, 53, 69, 0.1);
+    color: #dc3545;
+}
+
+/* No Results Message */
+.no-results {
+    text-align: center;
+    padding: 40px 20px;
+    color: #666;
+}
+
+.no-results i {
+    font-size: 48px;
+    color: #ddd;
+    margin-bottom: 15px;
+}
+
+.no-results p {
+    font-size: 16px;
+    margin: 0;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .create-policy-container {
+        padding: 15px;
+    }
+    
+    .policy-toggle-buttons {
+        flex-direction: column;
+        gap: 8px;
+    }
+    
+    .policy-toggle-buttons button {
+        width: 100%;
+        text-align: center;
+    }
+    
+    .policy-search-container {
+        margin-left: 0;
+        margin-top: 10px;
+        width: 100%;
+    }
+    
+    .policy-search-box {
+        width: 100%;
+    }
+    
+    .policy-search-box.expanded {
+        width: 100%;
+    }
+    
+    .w3-modal-content {
+        width: 95%;
+        margin: 5% auto;
+    }
+}
+
+.loading-spinner {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    border: 2px solid #f3f3f3;
+    border-top: 2px solid #8A3366;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin-right: 8px;
+    vertical-align: middle;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Form Validation Styles */
+.policy-form-group .error {
+    color: #dc3545;
+    font-size: 12px;
+    margin-top: 5px;
+    display: block;
+}
+
+.policy-form-group input.error-border,
+.policy-form-group select.error-border {
+    border-color: #dc3545;
+}
+
+.alert-message {
+    padding: 12px 20px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.alert-success {
+    background-color: rgba(40, 167, 69, 0.1);
+    color: #28a745;
+    border-left: 4px solid #28a745;
+}
+
+.alert-error {
+    background-color: rgba(220, 53, 69, 0.1);
+    color: #dc3545;
+    border-left: 4px solid #dc3545;
+}
+
+/* Table Pagination */
+.pagination-container {
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+}
+
+.pagination .page-link {
+    color: #8A3366;
+    border: 1px solid #dee2e6;
+}
+
+.pagination .page-item.active .page-link {
+    background-color: #8A3366;
+    border-color: #8A3366;
+    color: white;
+}
+
+/* Tooltip for Action Buttons */
+[data-tooltip] {
+    position: relative;
+}
+
+[data-tooltip]:before {
+    content: attr(data-tooltip);
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #333;
+    color: white;
+    padding: 5px 10px;
+    border-radius: 4px;
+    font-size: 12px;
+    white-space: nowrap;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s;
+    z-index: 1000;
+}
+
+[data-tooltip]:hover:before {
+    opacity: 1;
+    visibility: visible;
+    bottom: calc(100% + 5px);
+}
+
+/* table-scroll-container work with policy category */
+#tableSection .table-scroll-container {
+    max-height: 400px; /* Adjust as needed */
+    overflow-y: auto;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    margin-top: 15px;
+}
+
+#tableSection .table-scroll-container table {
+    margin-bottom: 0;
+}
+
+#tableSection .table-scroll-container thead {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background-color: #8A3366 !important;
+}
+
+#tableSection .table-scroll-container th {
+    background-color: #8A3366 !important;
+    color: white;
+    font-weight: 600;
+    padding: 12px 15px;
+    border: none;
+    position: sticky;
+    top: 0;
+}
+
+/* Custom scrollbar */
+#tableSection .table-scroll-container::-webkit-scrollbar {
+    width: 8px;
+}
+
+#tableSection .table-scroll-container::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 4px;
+}
+
+#tableSection .table-scroll-container::-webkit-scrollbar-thumb {
+    background: #c1c1c1;
+    border-radius: 4px;
+}
+
+#tableSection .table-scroll-container::-webkit-scrollbar-thumb:hover {
+    background: #a1a1a1;
+}
+
+/* Flex layout for toggle buttons and search */
+.d-flex.policy-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1.5rem;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+.toggle-buttons {
+    display: flex;
+    gap: 10px;
+}
+
+.toggle-buttons button {
+    padding: 10px 25px;
+    border: 2px solid #8A3366;
+    background: white;
+    color: #8A3366;
+    border-radius: 25px;
+    cursor: pointer;
+    transition: all 0.3s;
+    font-weight: 600;
+    font-size: 14px;
+}
+
+.toggle-buttons button.active {
+    background: #8A3366;
+    color: white;
+    box-shadow: 0 4px 8px rgba(138, 51, 102, 0.2);
+}
+
+.toggle-buttons button:hover:not(.active) {
+    background: #f8e8f3;
+    border-color: #B24D80;
+}
+
+/* Search container styles */
+.search-container {
+    position: relative;
+}
+
+.search-box {
+    display: flex;
+    align-items: center;
+    position: relative;
+    transition: all 0.3s ease;
+    width: 40px;
+    height: 40px;
+    overflow: hidden;
+    border-radius: 25px;
+    background: #f8f9fa;
+    border: 2px solid #e0e0e0;
+}
+
+.search-box.expanded {
+    width: 250px;
+    border-color: #8A3366;
+}
+
+.search-icon {
+    position: absolute;
+    left: 12px;
+    cursor: pointer;
+    z-index: 2;
+    width: 18px;
+    height: 18px;
+    transition: all 0.3s ease;
+}
+
+.search-box.expanded .search-icon {
+    left: 12px;
+}
+
+.search-input {
+    padding: 8px 15px 8px 40px;
+    width: 100%;
+    height: 100%;
+    border: none;
+    background: transparent;
+    outline: none;
+    font-size: 14px;
+    color: #333;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+}
+
+.search-box.expanded .search-input {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* Form container styles */
+.form-container {
+    padding: 20px;
+    background-color: #ffffff;
+    border-radius: 15px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    margin-top: 20px;
+}
+
+/* Button styles */
+.create-btn, .create-btn1 {
+    background: linear-gradient(135deg, #8A3366, #B24D80);
+    color: white;
+    border: none;
+    padding: 12px 35px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s;
+    font-weight: 600;
+    font-size: 15px;
+    box-shadow: 0 4px 12px rgba(138, 51, 102, 0.2);
+}
+
+.create-btn:hover, .create-btn1:hover {
+    background: linear-gradient(135deg, #7a2c5c, #9e4273);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(138, 51, 102, 0.3);
+}
+
+.create-btn:active, .create-btn1:active {
+    transform: translateY(0);
+}
+/* Active state for submenu (Create Policy Category / Create HR Policy) */
+.sidebar-sub-button.active {
+    background-color: #B3E5FC;  
+    color: #1976D2;
+    padding: 10px 15px;
+    border-radius: 20px;
+}
+
+/*icon/text bold when active */
+.sidebar-button .sidebar-icon i {
+    color: #fff;
 }
