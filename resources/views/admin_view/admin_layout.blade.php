@@ -42,9 +42,10 @@
                         </a>
                     </li>
 
-                    <!-- Analytics: reports, metrics, and insights -->
-                    <li title="Analytics">
-                        <a href="#" class="nav-link">
+                    <!-- Subscriptions: view all subscription plans -->
+                     <!-- Added navigation for subscription plan details page -->
+                    <li title="Subscriptions" class="{{ request()->routeIs('admin.subscription_plans_all_details') ? 'active' : '' }}">
+                        <a href="{{ route('admin.subscription_plans_all_details') }}" class="nav-link {{ request()->routeIs('admin.subscription_plans_all_details') ? 'active' : '' }}">
                             <i class="fas fa-chart-line"></i>
                             <span>Subscriptions</span>
                         </a>

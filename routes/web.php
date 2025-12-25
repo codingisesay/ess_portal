@@ -61,6 +61,8 @@ Route::get('admin/dashboard', [AdminDashboardController::class, 'adminDashboard'
 
 // Route to show all client details
 Route::get('admin/client_all_details', [AdminDashboardController::class, 'clientAllDetails'])->name('admin.client_all_details');
+// Route to show all subscription plan details
+Route::get('admin/subscription_plans_all_details', [AdminDashboardController::class, 'subscriptionPlanAllDetails'])->name('admin.subscription_plans_all_details');
 // route to insert new organisation details
 Route::post('admin/organisation/store', [AdminDashboardController::class, 'clientmasterinsert'])->name('organisation.store');
 // Route to get list of organisations users

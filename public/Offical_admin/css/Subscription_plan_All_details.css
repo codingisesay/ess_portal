@@ -1,0 +1,405 @@
+/* =====================
+   Edit Plan Modal Styles
+   ===================== */
+#editPlanModal{
+  /* overlay defaults; visibility toggled inline via JS */
+  position:fixed;
+  top:0; left:0; right:0; bottom:0;
+  background:rgba(0,0,0,0.45);
+  backdrop-filter:saturate(120%) blur(2px);
+  z-index:1000;
+  display:none; /* will switch to flex when opened */
+  align-items:center;
+  justify-content:center;
+  padding: 7px 18px 18px 18px;
+}
+
+/* Modal card container (targets the immediate child) */
+#editPlanModal > div{
+  background:#ffffff;
+  width:100%;
+  max-width:640px;
+  border-radius:14px;
+  padding:7px 18px 18px 18px;
+  border:1px solid #eef2f7;
+  box-shadow:0 18px 40px rgba(17,24,39,.18);
+  position:relative;
+  animation:modalIn .18s ease-out;
+}
+
+#editPlanModal h3{
+  margin:0;
+  font-size:1.15rem;
+  color:#111827;
+}
+
+#editPlanModal label{
+  display:block;
+  font-size:0.8rem;
+  color:#374151;
+  margin-bottom:6px;
+}
+
+/* Modal header row */
+.modal-header-row{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  margin-bottom:12px;
+      background-color: azure;
+    padding: 10px;
+    border-radius: 15px 15px 0px 0px;
+}
+
+/* Close button */
+#closeEditPlan{
+  border:none;
+  background:transparent;
+  font-size:22px;
+  line-height:1;
+  cursor:pointer;
+  color:#6b7280;
+  padding:4px 6px;
+  border-radius:8px;
+}
+#closeEditPlan:hover{
+  color:#111827;
+  background:#f3f4f6;
+}
+
+/* Unified inputs */
+.form-control{
+  width:100%;
+  padding:10px 12px;
+  border:1px solid #e5e7eb;
+  border-radius:10px;
+  font-size:0.9rem;
+  color:#111827;
+  outline:none;
+  background:#fff;
+}
+.form-control:focus{
+  border-color:#8b5cf6;
+  box-shadow:0 0 0 3px rgba(139,92,246,0.15);
+}
+
+/* Floating label groups */
+.fl-group{ position:relative; }
+.fl-group .form-control{ padding-top:1.35rem; }
+.fl-group textarea.form-control{ padding-top:1.65rem; }
+.fl-group label{
+  position:absolute;
+  left:12px;
+  top:10px;
+  background:#fff;
+  padding:0 6px;
+  color:#6b7280;
+  pointer-events:none;
+  transition:all .15s ease;
+  border-radius:6px;
+}
+/* Float when focused or when there is content */
+.fl-group .form-control:focus + label,
+.fl-group .form-control:not(:placeholder-shown) + label{
+  top:-8px;
+  font-size:.7rem;
+  color:#8b5cf6;
+}
+/* Select floating style: always floated for clarity */
+.fl-group select.form-control + label{
+  top:-8px;
+  font-size:.7rem;
+  color:#6b7280;
+}
+
+/* Grid inside modal */
+.modal-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:12px;
+}
+.modal-grid-span{ grid-column:1 / -1; }
+.modal-inline{ display:flex; align-items:center; gap:8px; }
+
+/* Modal action buttons area */
+#editPlanModal .modal-actions{
+  display:flex;
+  gap:10px;
+  justify-content:flex-end;
+  margin-top:14px;
+}
+
+/* Buttons inside modal */
+.btn-secondary{
+  background:#f3f4f6;
+  color:#374151;
+  border:none;
+  border-radius:10px;
+  padding:10px 12px;
+  font-weight:700;
+}
+.btn-secondary:hover{ background:#e5e7eb; }
+.btn-primary{ border:none; }
+
+@media (max-width:480px){
+  #editPlanModal > div{ padding:14px; }
+  .modal-grid{ grid-template-columns:1fr; }
+}
+
+@keyframes modalIn{
+  from{ transform:translateY(8px) scale(.98); opacity:0; }
+  to{ transform:translateY(0) scale(1); opacity:1; }
+}
+/* Container */
+.spad-page{
+  padding:2% 2.5%;
+  color:#1f2937;
+}
+
+.spad-header{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  margin-bottom:2%;
+}
+
+.spad-header h2{
+  margin:0;
+  font-size:1.4rem;
+  color:#111827;
+}
+
+.spad-header p{
+  margin:0.4% 0 0;
+  color:#6b7280;
+  font-size:0.85rem;
+}
+
+/* Primary button */
+.btn-primary{
+  display:inline-flex;
+  gap:0.6vw;
+  align-items:center;
+  background:#ec4899;
+  color:#fff;
+  padding:0.7rem 1rem;
+  border-radius:0.7rem;
+  text-decoration:none;
+  font-weight:600;
+  box-shadow:0 0.5vw 1.2vw rgba(236,72,153,.25);
+}
+
+.btn-primary:hover{
+  background:#db2777;
+}
+
+/* Stats row */
+.spad-stats{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:1.2%;
+  margin-bottom:2%;
+}
+
+.stat-card{
+  display:flex;
+  gap:1%;
+  align-items:center;
+  background:#fff;
+  border:1px solid #eef2f7;
+  border-radius:0.8rem;
+  padding:1rem;
+  box-shadow:0 0.2vw 0.6vw rgba(17,24,39,.04);
+}
+
+.stat-icon{
+  width:3rem;
+  height:3rem;
+  border-radius:0.7rem;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  color:#fff;
+}
+
+.stat-icon.blue{background:#60a5fa}
+.stat-icon.green{background:#34d399}
+.stat-icon.purple{background:#a78bfa}
+.stat-icon.yellow{background:#f59e0b}
+
+.stat-title{
+  font-size:0.75rem;
+  color:#6b7280;
+}
+
+.stat-value{
+  font-size:1.1rem;
+  font-weight:700;
+  color:#111827;
+}
+
+/* Grid of plan cards */
+.spad-grid{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:2%;
+}
+
+.plan-card{
+  background:#fff;
+  border:1px solid #eef2f7;
+  border-radius:1rem;
+  padding:1.2rem;
+  box-shadow:0 0.6vw 1.4vw rgba(17,24,39,.05);
+}
+
+/* Popular modifier */
+.plan-card.popular{
+  position:relative;
+}
+
+.popular-bar{
+  margin:-1.2rem -1.2rem 1rem;
+  height:2.2rem;
+  border-radius:1rem 1rem 0 0;
+  background:linear-gradient(90deg,#ec4899 0%,#8b5cf6 100%);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  color:#fff;
+  font-size:0.95rem;
+  font-weight:700;
+  letter-spacing:0.08rem;
+  padding:0.2rem 0;
+}
+
+.popular-bar i{
+  margin-right:0.4rem;
+}
+
+/* Head */
+.plan-head{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+}
+
+.plan-head h3{
+  margin:0;
+  font-size:1rem;
+  color:#1f2937;
+}
+
+.badge{
+  padding:0.4rem 0.7rem;
+  font-size:0.65rem;
+  border-radius:999px;
+  font-weight:700;
+}
+
+.badge.success{
+  background:#e7f9ef;
+  color:#059669;
+}
+
+.badge.warning{
+  background:#fdecec;
+  color:#dc2626;
+}
+
+.plan-sub{
+  margin:0.5rem 0;
+  color:#6b7280;
+  font-size:0.8rem;
+}
+
+.plan-price{
+  display:flex;
+  align-items:baseline;
+  gap:0.4rem;
+  margin:0.6rem 0;
+}
+
+.amount{
+  font-size:2rem;
+  font-weight:800;
+  color:#111827;
+}
+
+.per{
+  color:#6b7280;
+  font-weight:600;
+}
+
+.plan-year{
+  color:#6b7280;
+  font-size:0.7rem;
+  margin-bottom:0.6rem;
+}
+
+.plan-features{
+  list-style:none;
+  padding:0;
+  margin:0.8rem 0 1rem;
+}
+
+.plan-features li{
+  display:flex;
+  align-items:center;
+  gap:0.5rem;
+  color:#4b5563;
+  font-size:0.8rem;
+  margin:0.4rem 0;
+}
+
+.plan-features i{
+  color:#8b5cf6;
+}
+
+/* Actions */
+.plan-actions{
+  display:flex;
+  gap:1%;
+}
+
+.btn-lite,
+.btn-danger{
+  flex:1;
+  border:none;
+  border-radius:0.7rem;
+  padding:0.7rem;
+  font-weight:700;
+}
+
+.btn-lite{
+  background:#efe7fb;
+  color:#6b21a8;
+}
+
+.btn-danger{
+  background:#fbe5e5;
+  color:#b91c1c;
+}
+
+.btn-lite i,
+.btn-danger i{
+  margin-right:0.4rem;
+}
+
+/* Responsive */
+@media (max-width:1024px){
+  .spad-stats{
+    grid-template-columns:repeat(2,1fr);
+  }
+  .spad-grid{
+    grid-template-columns:1fr;
+  }
+}
+
+@media (max-width:640px){
+  .spad-header{
+    flex-direction:column;
+    align-items:flex-start;
+    gap:1rem;
+  }
+}

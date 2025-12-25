@@ -47,6 +47,22 @@ class AdminDashboardController extends Controller
         return view('admin_view.Client_all_details', compact('organisations'));
     }
 
+    // Show all subscription plan details page
+    public function subscriptionPlanAllDetails(): View
+    {
+        // Fetch all subscription plans
+        $subscriptionPlans = $this->getSubscriptionPlans();
+
+        // Compute dynamic stats
+        $totalPlans = $subscriptionPlans->count();
+        $activePlans = $subscriptionPlans->where('status', 'Active')->count();
+        $popularPlans = $subscriptionPlans->where('is_popular', 1)->count();
+
+        // Return the dedicated view for listing subscription plan details
+        // handle casesensitive file systems
+        return view('admin_view.Subscription_Plan_All_details', compact('subscriptionPlans', 'totalPlans', 'activePlans', 'popularPlans'));
+    }
+
 
 // Method to insert new organisation details with welcome emailq
   public function clientmasterinsert(Request $request)
