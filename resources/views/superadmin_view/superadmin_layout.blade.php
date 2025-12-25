@@ -82,8 +82,6 @@ $name = Auth::guard('superadmin')->user()->name;
                         <img src="{{ asset('user_end/images/arrow-right.svg') }}" alt="arrow" class="dropdown-arrow">
                     </strong>
                     <ul id="policyManagementDropdown" class="submenu">
-                        <li><a href="{{ route('create_policy_category') }}" class="{{ request()->routeIs('create_policy_category') ? 'active' : '' }}">Create Policy Category</a></li>
-                        <li><a href="{{ route('create_hr_policy') }}" class="{{ request()->routeIs('create_hr_policy') ? 'active' : '' }}">Create HR Policy</a></li>
                         <li><a href="{{ route('create_policy_time_slot') }}" class="{{ request()->routeIs('create_policy_time_slot') ? 'active' : '' }}">Leave Policy Slot</a></li>
                         <li><a href="{{ route('create_policy_type') }}" class="{{ request()->routeIs('create_policy_type') ? 'active' : '' }}">Leave Policy Type</a></li>
                         <li><a href="{{ route('create_policy') }}" class="{{ request()->routeIs('create_policy') ? 'active' : '' }}">Leave Policy Creation</a></li>
