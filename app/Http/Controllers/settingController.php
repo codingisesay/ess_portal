@@ -232,10 +232,26 @@ $leaveSummary = $leaveSummary->groupBy(
 
 
 $leaveTypes = DB::table('leave_types')->where('status', 'ACTIVE')->get();
+// for policy categories - with pagination
+$policy_categories = DB::table('hr_policy_categories') 
+    ->where('organisation_id', $loginUserInfo->organisation_id)
+    ->orderBy('created_at', 'asc')
+    ->paginate(10);
+    
+// For HR Policy - Get categories
+$categories = DB::table('hr_policy_categories')
+    ->where('organisation_id', $loginUserInfo->organisation_id)
+    ->where('status', 'Active')
+    ->orderBy('name', 'asc')
+    ->get();
 
+// For HR Policy - Get HR policies with pagination
+$hr_policies = DB::table('hr_policies')
+    ->where('organisation_id', $loginUserInfo->organisation_id)
+    ->orderBy('created_at', 'asc')
+    ->paginate(10);    
 
-// dd($monthsInCycle);
-        return view('user_view.setting',compact('users','title','salary_templates','users_for_salary','monthsInCycle','dataofcurrentyear','leaveSummary','startDate','endDate','leaveTypeId','leaveTypes'));
+        return view('user_view.setting',compact('users','title','salary_templates','users_for_salary','monthsInCycle','dataofcurrentyear','leaveSummary','startDate','endDate','leaveTypeId','leaveTypes','categories','hr_policies','policy_categories'));
     }
 
     public function saveThought(Request $request)

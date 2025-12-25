@@ -11,32 +11,33 @@ class hrPolicyViewController extends Controller
 {
     // Show the form to create a new policy category
     public function createPolicyCategory()
-    {
-        $id = Auth::guard('superadmin')->user()->id;
-        $datas = DB::table('hr_policy_categories')->where('organisation_id', $id)->get();
+    {   
+        $user = Auth::user();
+        $organisationId = $user->organisation_id;
+        $datas = DB::table('hr_policy_categories')->where('organisation_id', $organisationId)->get();
         return view('superadmin_view.create_policy_category', compact('datas'));
     }
-
+    // Save a new policy category
     public function savePolicyCategory(Request $request)
     {
         $request->validate([
             'category_name' => 'required',
             'status' => 'required',
         ]);
-        $id = Auth::guard('superadmin')->user()->id;
-
+        $user = Auth::user();
+        $organisationId = $user->organisation_id;
         $status = DB::table('hr_policy_categories')->insert([
             'name' => $request->category_name,
             'status' => $request->status,
-            'organisation_id' => $id,
+            'organisation_id' => $organisationId,
             'created_at' => now(),
             'updated_at' => now(),
         ]);
-
+        
         if ($status) {
-            return redirect()->route('create_policy_category')->with('success', 'Policy Category saved successfully.');
+            return redirect()->route('user.setting')->with('success', 'Policy Category saved successfully.');
         } else {
-            return redirect()->route('create_policy_category')->with('error', 'Policy Category not saved successfully.');
+            return redirect()->route('user.setting')->with('error', 'Policy Category not saved successfully.');
         }
     }
 
@@ -75,22 +76,23 @@ class hrPolicyViewController extends Controller
              'updated_at' => now()
             ]);
 
-            return redirect()->route('create_policy_category')->with('success', 'Policy Category updated successfully.');
+            return redirect()->route('user.setting')->with('success', 'Policy Category updated successfully.');
 
         } else {
-            return redirect()->route('create_policy_category')->with('error', 'Failed to update Policy Category.');
+            return redirect()->route('user.setting')->with('error', 'Failed to update Policy Category.');
         }
     }
-
+    // Show the form to create a new HR policy
     public function createHrPolicy()
     {
-        $id = Auth::guard('superadmin')->user()->id;
+        $user = Auth::user();
+        $organisationId = $user->organisation_id;
         // $categories = DB::table('hr_policy_categories')->where('organisation_id', $id)->get();
         $categories = DB::table('hr_policy_categories')
-    ->where('organisation_id', $id)
+    ->where('organisation_id', $organisationId)
     ->where('status', 'Active')
     ->get();
-        $datas = DB::table('hr_policies')->where('organisation_id', $id)->get();
+        $datas = DB::table('hr_policies')->where('organisation_id', $organisationId)->get();
 
         return view('superadmin_view.create_hr_policy', compact('categories', 'datas'));
     }
@@ -136,7 +138,7 @@ class hrPolicyViewController extends Controller
     //         return redirect()->route('create_hr_policy')->with('error', 'HR Policy not saved successfully.');
     //     }
     // }
-
+    // Save a new HR policy
     public function saveHrPolicy(Request $request)
 {
     $request->validate([
@@ -153,11 +155,12 @@ class hrPolicyViewController extends Controller
     $iconPath = $request->file('icon') ? $request->file('icon')->store('icons', 'public') : null;
     $contentImagePath = $request->file('content_image') ? $request->file('content_image')->store('images', 'public') : null;
 
-    $id = Auth::guard('superadmin')->user()->id;
+    $user = Auth::user();
+    $organisationId = $user->organisation_id;
 
     $status = DB::table('hr_policies')->insert([
         'policy_categorie_id' => $request->category_id,
-        'organisation_id' => $id,
+        'organisation_id' => $organisationId,
         'policy_title' => $request->policy_title,
         'policy_content' => $request->policy_content,
         'docName' => $request->file('document') ? $request->file('document')->getClientOriginalName() : null,
@@ -172,9 +175,9 @@ class hrPolicyViewController extends Controller
     ]);
 
     if ($status) {
-        return redirect()->route('create_hr_policy')->with('success', 'HR Policy saved successfully.');
+        return redirect()->route('user.setting')->with('success', 'HR Policy saved successfully.');
     } else {
-        return redirect()->route('create_hr_policy')->with('error', 'HR Policy not saved successfully.');
+        return redirect()->route('user.setting')->with('error', 'HR Policy not saved successfully.');
     }
 }
 
@@ -202,9 +205,9 @@ class hrPolicyViewController extends Controller
             ]);
 
         if ($status) {
-            return redirect()->route('create_hr_policy')->with('success', 'HR Policy updated successfully.');
+            return redirect()->route('user.setting')->with('success', 'HR Policy updated successfully.');
         } else {
-            return redirect()->route('create_hr_policy')->with('error', 'Failed to update HR Policy.');
+            return redirect()->route('user.setting')->with('error', 'Failed to update HR Policy.');
         }
     }
 
