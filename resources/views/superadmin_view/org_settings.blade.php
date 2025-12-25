@@ -54,6 +54,8 @@
     }
 </style>
 <script src="{{ asset('admin_end/js/common-date-validation.js') }}"></script>
+<script src="{{ asset('admin_end/js/common-input-validation.js') }}"></script>
+
 
 <div class="container">
     <h3>Organization Settings</h3>
@@ -848,31 +850,7 @@ function calculateDates() {
     }
 }
 
-// validate org name 
-function validateOrgName(input) {
-    let value = input.value.replace(/[^a-zA-Z\s.&]/g, '');
-    if (value.length > 100) value = value.slice(0, 100);
-    input.value = value;
-}
 
-// validate process start & end
-function validateProcessStart(input, start, end) {
-    if (start.value && input.value < start.value) {
-        input.value = start.value;
-    }
-    if (end.value && input.value > end.value) {
-        input.value = end.value;
-    }
-}
-
-function validateProcessEnd(input, processStart, end) {
-    if (processStart.value && input.value < processStart.value) {
-        input.value = processStart.value;
-    }
-    if (end.value && input.value > end.value) {
-        input.value = end.value;
-    }
-}
 
 
 // Attach listeners

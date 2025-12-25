@@ -116,7 +116,7 @@ $id = Auth::guard('superadmin')->user()->id;
                 </div>
                 <div class="col-3 mb-4">
                     <div class="form-group">
-                        <input type="text" id="category_name" name="max_amount" class="form-control" required oninput="validateAmount(this)">
+                        <input type="text" id="category_name" name="max_amount" class="form-control" required oninput="validateAmount(this)"  style="direction: rtl; text-align: left;">
                         <label for="category_name">
                               Maximum Amount <span style="color:red">*</span>
                         </label>
@@ -196,7 +196,7 @@ $id = Auth::guard('superadmin')->user()->id;
                         </label>
                     </div>
                     <div class="popup-form-group">
-                        <input type="text" name="max_amount" id="editMaxAmount" required oninput="validateAmount(this)">
+                        <input type="text" name="max_amount" id="editMaxAmount" required oninput="validateAmount(this)"  style="direction: rtl; text-align: left;">
                         <label for="editMaxAmount">
                               Maximum Amount <span style="color:red">*</span>
                         </label>
