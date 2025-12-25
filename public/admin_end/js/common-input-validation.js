@@ -142,3 +142,41 @@ document.addEventListener('input', function (e) {
         });
     }
 });
+
+/**
+ * Validate Bank Name
+ * - Letters, spaces, dot (.), ampersand (&)
+ * - No multiple spaces
+ * - Max length configurable (default 50)
+ */
+function validateBankName(input, maxLen = 50) {
+    if (!input) return;
+
+    let value = input.value;
+
+    // Allow only letters, space, dot and ampersand
+    value = value.replace(/[^a-zA-Z\s.&]/g, '');
+
+    // Prevent multiple spaces
+    value = value.replace(/\s{2,}/g, ' ');
+
+    // Trim leading spaces
+    value = value.replace(/^\s+/g, '');
+
+    // Enforce max length
+    if (value.length > maxLen) {
+        value = value.slice(0, maxLen);
+    }
+
+    input.value = value;
+}
+
+
+document.addEventListener('input', function (e) {
+    const el = e.target;
+
+    if (el.dataset.validate === 'bank-name') {
+        validateBankName(el, Number(el.dataset.maxlen) || 50);
+    }
+});
+

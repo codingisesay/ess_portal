@@ -309,6 +309,7 @@ function updatePagination() {
 });
 
 </script>
+<script src="{{ asset('admin_end/js/common-input-validation.js') }}"></script>
 </head>
 <body>
 
@@ -346,7 +347,7 @@ function updatePagination() {
             <div class="form-container row">
                 <div class="col-4 mb-2">
                     <div class="form-group">
-                        <input type="text" name="name" required oninput="validateBankName(this)">
+                        <input type="text" name="name" required value="{{ $bank->name }}" required data-validate="bank-name" data-maxlen="50">
                         <label >
                             Bank Name <span style="color:red">*</span>
                         </label>
@@ -569,22 +570,7 @@ function updatePagination() {
         }, 50);
     }
 
-    function validateBankName(input) {
-        let value = input.value;
-
-        // Allow only letters, spaces, dot and ampersand
-        value = value.replace(/[^a-zA-Z\s.&]/g, '');
-
-        // Prevent multiple spaces
-        value = value.replace(/\s{2,}/g, ' ');
-
-        // Max length (recommended)
-        if (value.length > 50) {
-            value = value.slice(0, 50);
-        }
-
-        input.value = value;
-    }
+  
 
     
     function sortTable(column, order) {

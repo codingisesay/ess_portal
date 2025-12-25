@@ -350,41 +350,6 @@ $id = Auth::guard('superadmin')->user()->id;
         }
     </script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-<script>
-document.addEventListener('DOMContentLoaded', function () {
-
-    const form = document.querySelector('form[action="{{ route('insert_reimbursement_validation') }}"]');
-    const reimbursementSelect = document.getElementById('organisation_reimbursement_type_id');
-
-    form.addEventListener('submit', function (e) {
-
-        const selectedOption = reimbursementSelect.options[reimbursementSelect.selectedIndex];
-        if (!selectedOption || !selectedOption.value) return;
-
-        const selectedText = selectedOption.text.trim().toLowerCase();
-
-        // Collect existing reimbursement types from table (2nd column)
-        const existingTypes = Array.from(
-            document.querySelectorAll('#tableSection tbody tr td:nth-child(2)')
-        ).map(td => td.textContent.trim().toLowerCase());
-
-        // Duplicate check
-        if (existingTypes.includes(selectedText)) {
-            e.preventDefault(); //  STOP SUBMIT
-
-            Swal.fire({
-                icon: 'error',
-                title: 'Reimbursement Restriction Already Exists',
-                text: 'This reimbursement type already has restrictions defined.',
-                confirmButtonColor: '#d33'
-            });
-
-            return false;
-        }
-    });
-
-});
-</script>
 
 @endsection
 </body>
