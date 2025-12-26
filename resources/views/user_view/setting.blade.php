@@ -108,7 +108,9 @@
                             </button>
                         </div>
                         <?php endif; ?>
-
+                        <!-- Setting option based on Permission -->
+                         <!-- process salary -->
+                        <?php if(in_array(19, $permission_array)): ?>
                         <div class="dropdown-section">
                             <button class="sidebar-button" 
                                     onclick="selectSetting('processSalary')"
@@ -120,7 +122,10 @@
                                 <span class="sidebar-button-text">Process Salary (2025-26)</span>
                             </button>
                         </div>
-
+                        <?php endif; ?>
+                        <!-- Leave Summary -->
+                         <!-- permission check   -->
+                         <?php if(in_array(18, $permission_array)): ?>
                         <div class="dropdown-section">
                             <button class="sidebar-button" 
                                     onclick="selectSetting('leaveSummary')"
@@ -132,6 +137,7 @@
                                 <span class="sidebar-button-text">Leave Summary</span>
                             </button>
                         </div> <!-- Leave Summary Button End -->
+                        <?php endif; ?>
                         <!-- Policy Management -->
                         <div class="dropdown-section">
                         <!-- Parent Button -->
