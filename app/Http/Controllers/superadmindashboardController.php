@@ -4,14 +4,23 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 
 class SuperAdminDashboardController extends Controller
 {
-    public function index()
+    public function index(\Illuminate\Http\Request $request)
     {
+        // Determine organisation filter: prefer explicit param, otherwise use superadmin's id
+        $organisationId = $request->input('organisation_id');
+        if (empty($organisationId) && Auth::guard('superadmin')->check()) {
+            $organisationId = Auth::guard('superadmin')->user()->id;
+        }
         // 🔹 Branch Data
         $branches = DB::table('branches as b')
             ->join('organisations as o', 'o.id', '=', 'b.organisation_id')
+            ->when($organisationId, function ($q) use ($organisationId) {
+                $q->where('b.organisation_id', $organisationId);
+            })
             ->select(
                 'b.id',
                 'b.name',
@@ -51,6 +60,9 @@ class SuperAdminDashboardController extends Controller
                 'g.name as designation_name',
                 DB::raw('COUNT(DISTINCT u.id) as active_count')
             )
+            ->when($organisationId, function ($q) use ($organisationId) {
+                $q->where('d.organisation_id', $organisationId);
+            })
             ->groupBy('d.id', 'd.name', 'g.id', 'g.name')
             ->get()
             ->groupBy('department_name')
@@ -70,6 +82,10 @@ class SuperAdminDashboardController extends Controller
         // 🔹 Policies grouped by categories
         $policies = DB::table('hr_policy_categories as c')
             ->leftJoin('hr_policies as p', 'p.policy_categorie_id', '=', 'c.id')
+            ->when($organisationId, function ($q) use ($organisationId) {
+                // Scope policies to the organisation when the column exists
+                $q->where('p.organisation_id', $organisationId);
+            })
             ->select(
                 'c.id as category_id',
                 'c.name as category_name',
