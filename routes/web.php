@@ -117,15 +117,7 @@ Route::post('superadmin/save_permission/{org_id}/{desig_id}/{b_id}',[permissionC
 Route::get('superadmin/create_mail_config',[ororganisationMailConController::class,'index'])->name('load_mail_config_form');
 Route::post('superadmin/insert_config',[ororganisationMailConController::class,'insertMailConfig'])->name('insert_configuration');
 Route::post('superadmin/update_mail_config', [ororganisationMailConController::class, 'updateMailConfig'])->name('update_configuration');
-//hr policy controller routes
-Route::get('superadmin/create_policy_category', [hrPolicyViewController::class, 'createPolicyCategory'])->name('create_policy_category');
-Route::post('superadmin/save_policy_category', [hrPolicyViewController::class, 'savePolicyCategory'])->name('save_policy_category');
 
-Route::get('superadmin/create_hr_policy', [hrPolicyViewController::class, 'createHrPolicy'])->name('create_hr_policy');
-Route::post('superadmin/save_hr_policy', [hrPolicyViewController::class, 'saveHrPolicy'])->name('save_hr_policy');
-
-Route::post('superadmin/update_policy_category/{id}', [hrPolicyViewController::class, 'updatePolicyCategory'])->name('update_policy_category');
-Route::post('superadmin/update_hr_policy/{id}', [hrPolicyViewController::class, 'updateHrPolicy'])->name('update_hr_policy');
 
 Route::get('superadmin/create_organisation', [organisationController::class, 'index'])->name('create_organisation_form');
 Route::post('superadmin/insert_organisation', [organisationController::class, 'insert'])->name('insert_organisation');
@@ -343,7 +335,15 @@ Route::get('/payhead-list', [salaryBoxController::class, 'getAllPayheads']);
 Route::post('/payroll/save', [SalaryBoxController::class, 'savePayrollConfig'])
     ->name('payroll.save');
 
+//hr policy controller routes
+Route::get('superadmin/create_policy_category', [hrPolicyViewController::class, 'createPolicyCategory'])->name('create_policy_category');
+Route::post('superadmin/save_policy_category', [hrPolicyViewController::class, 'savePolicyCategory'])->name('save_policy_category');
 
+Route::get('superadmin/create_hr_policy', [hrPolicyViewController::class, 'createHrPolicy'])->name('create_hr_policy');
+Route::post('superadmin/save_hr_policy', [hrPolicyViewController::class, 'saveHrPolicy'])->name('save_hr_policy');
+
+Route::post('superadmin/update_policy_category/{id}', [hrPolicyViewController::class, 'updatePolicyCategory'])->name('update_policy_category');
+Route::post('superadmin/update_hr_policy/{id}', [hrPolicyViewController::class, 'updateHrPolicy'])->name('update_hr_policy');
 
 // Notifications page (bell icon target)
 Route::get('/notifications', function() {
