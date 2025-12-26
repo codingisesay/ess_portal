@@ -1,15 +1,31 @@
-// common-validation.js
 
+
+window.APP = window.APP || {};
+window.APP.REGEX = {
+    ALPHABETS_SPACE: /[^A-Za-z\s]/g,
+    TEXT_EXTENDED: /[^a-zA-Z\s.&]/g,
+    NUMBERS_ONLY: /[^0-9]/g,
+    DECIMAL: /[^0-9.]/g,
+    NON_DIGITS: /\D/g, 
+    EMAIL: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+    BANK_ALLOWED_CHARS: /[^a-zA-Z\s.&]/g,   // letters, space, dot, &
+    MULTIPLE_SPACES: /\s{2,}/g,              // more than one space
+    LEADING_SPACES: /^\s+/g   
+};
+
+window.APP.PATTERN = {
+    ALPHABETS_SPACE: '[A-Za-z\\s]+',
+    EMAIL: '[^\\s@]+@[^\\s@]+\\.[^\\s@]+'
+};
+
+// common-validation.js  ✅
 function validateEmail(input) {
     const email = input.value.trim();
     let error;
 
-    // Edit modal structure
     if (input.closest('.popup-form-group')) {
         error = input.closest('.popup-form-group').nextElementSibling;
-    }
-    // Create form structure
-    else if (input.closest('.form-group')) {
+    } else if (input.closest('.form-group')) {
         error = input.closest('.form-group')
             .parentElement
             .querySelector('small');
@@ -17,38 +33,44 @@ function validateEmail(input) {
 
     if (!error) return true;
 
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
     if (email === '') {
         error.style.display = 'none';
         input.classList.remove('invalid');
         return false;
     }
 
-    if (!emailRegex.test(email)) {
+    if (!APP.REGEX.EMAIL.test(email)) {
         error.style.display = 'block';
         input.classList.add('invalid');
         return false;
-    } else {
-        error.style.display = 'none';
-        input.classList.remove('invalid');
-        return true;
     }
+
+    error.style.display = 'none';
+    input.classList.remove('invalid');
+    return true;
 }
-// Allow only alphabets and spaces
+// Allow only alphabets and spaces  
 function allowOnlyAlphabets(input) {
-    input.value = input.value.replace(/[^A-Za-z\s]/g, '');
+    if (!input) return;
+    input.value = input.value.replace(APP.REGEX.ALPHABETS_SPACE, '');
 }
+
 // Auto-bind for all fields having .only-alpha class
 document.addEventListener('DOMContentLoaded', () => {
     document.querySelectorAll('.only-alpha').forEach(input => {
-        input.setAttribute('pattern', '[A-Za-z\\s]+');
+
+        if (input.dataset.bound) return;
+        input.dataset.bound = 'true';
+
+        input.setAttribute('pattern', APP.PATTERN.ALPHABETS_SPACE);
         input.setAttribute('title', 'Only alphabets are allowed');
+
         input.addEventListener('input', () => {
-            input.value = input.value.replace(/[^A-Za-z\s]/g, '');
+            input.value = input.value.replace(APP.REGEX.ALPHABETS_SPACE, '');
         });
     });
 });
+
 
 // =======================
 // YEAR DAYS (COMMON)
@@ -61,10 +83,10 @@ function getYearDays(year = new Date().getFullYear()) {
 
 
 // =======================
-// NUMERIC RANGE (COMMON)
+// NUMERIC RANGE (COMMON) 
 // =======================
 function bindNumericRanges() {
-    const YEAR_DAYS = getYearDays(); // ✅ dynamic
+    const YEAR_DAYS = getYearDays(); // dynamic
 
     document.querySelectorAll('.num-range').forEach(input => {
 
@@ -84,7 +106,7 @@ function bindNumericRanges() {
         input.setAttribute('step', step);
 
         input.addEventListener('input', () => {
-            let value = input.value.replace(/[^0-9]/g, '');
+            let value = input.value.replace(APP.REGEX.NUMBERS_ONLY, '');
             let num = Number(value);
 
             if (num > max) num = max;
@@ -108,25 +130,6 @@ const LIMITS = {
 };
 
 
-/* =========================
-   TEXT ONLY (COMMON)
-========================= */
-
-function bindTextOnly() {
-    document.querySelectorAll('.text-only').forEach(input => {
-
-        if (input.dataset.bound) return;
-        input.dataset.bound = 'true';
-
-        const maxLen = Number(input.dataset.maxlen ?? LIMITS.TEXT_DEFAULT);
-
-        input.addEventListener('input', () => {
-            let val = input.value.replace(/[^a-zA-Z\s.&]/g, '');
-            if (val.length > maxLen) val = val.slice(0, maxLen);
-            input.value = val;
-        });
-    });
-}
 
 /* =========================
    USER DEFINED DAYS (COMMON)
@@ -141,7 +144,7 @@ function bindUserDefinedDays() {
         const max = Number(input.dataset.max ?? LIMITS.USER_DEFINED_DAYS_MAX);
 
         input.addEventListener('input', () => {
-            let value = input.value.replace(/[^0-9]/g, '');
+            let value = input.value.replace(APP.REGEX.NUMBERS_ONLY, '');
 
             if (value.length > 3) value = value.slice(0, 3);
 
@@ -162,7 +165,7 @@ function bindDays() {
         input.dataset.bound = 'true';
 
         input.addEventListener('input', () => {
-            let value = input.value.replace(/\D/g, '');
+            let value = input.value.replace(APP.REGEX.NON_DIGITS, '');
             let num = Number(value);
 
             if (num > 31) num = 31;
@@ -174,10 +177,10 @@ function bindDays() {
 }
 
 /* =========================
-   GENERIC NUMBER VALIDATION
+   MOBILE NUMBER VALIDATION
 ========================= */
 
-function bindNumberValidation() {
+function mobileNumberValidation() {
     document.querySelectorAll('.num-validate').forEach(input => {
 
         if (input.dataset.bound) return;
@@ -193,8 +196,8 @@ function bindNumberValidation() {
 
             // Allow digits + optional decimal
             value = allowDecimal
-                ? value.replace(/[^0-9.]/g, '')
-                : value.replace(/[^0-9]/g, '');
+                ? value.replace(APP.REGEX.DECIMAL, '')
+                : value.replace(APP.REGEX.NUMBERS_ONLY, '');
 
             let num = allowDecimal ? parseFloat(value) : Number(value);
 
@@ -217,14 +220,14 @@ function bindNumberValidation() {
     });
 }
 
-document.addEventListener('DOMContentLoaded', bindNumberValidation);
+document.addEventListener('DOMContentLoaded', mobileNumberValidation);
 
 
 /* ----------------------------------------------------
    MIN / MAX LEAVE PAIR VALIDATION (COMMON)
 ---------------------------------------------------- */
 function normalizeNumber(input, min = 1, max = 365) {
-    let value = input.value.replace(/[^0-9]/g, '');
+    let value = input.value.replace(APP.REGEX.NUMBERS_ONLY, '');
 
     if (value.length > 3) value = value.slice(0, 3);
 
@@ -276,8 +279,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
 document.addEventListener('DOMContentLoaded', () => {
-    bindNumericRanges();
-    bindTextOnly();
+    bindNumericRanges();  
     bindUserDefinedDays();
     bindDays();
 });

@@ -60,6 +60,7 @@ $id = Auth::guard('superadmin')->user()->id;
         visibility: visible;
     }
 </style>
+<script src="{{ asset('admin_end/js/common-validation.js') }}"></script>
 
 <div class="container">
     <h3 class="mb-4">Create User Of Your Organisation</h3>
@@ -98,7 +99,7 @@ $id = Auth::guard('superadmin')->user()->id;
                 <div class="form-group">
                     <input type="hidden" name="organisation_id" value="{{$id}}">
                        
-                    <input type="text" name="username" required  pattern="[A-Za-z\s]+" title="Only alphabets are allowed"  oninput="this.value = this.value.replace(/[^A-Za-z\s]/g, '')">
+                    <input type="text" name="username" required class="only-alpha">
                      <label>
                             Name <span style="color:red">*</span>
                      </label>
@@ -114,7 +115,7 @@ $id = Auth::guard('superadmin')->user()->id;
                 </div>
                 <div class="col-3 mb-2">
                     <div class="form-group">    
-                        <input type="email" name="usermailid" required oninput="validateEmail(this)">
+                        <input type="email" name="usermailid" required onblur="validateEmail(this)">
                             
                         <label>
                             Email <span style="color:red">*</span>
@@ -183,7 +184,8 @@ $id = Auth::guard('superadmin')->user()->id;
                 @csrf
                 <input type="hidden" name="user_id" id="editUserId">
                 <div class="popup-form-group">
-                    <input type="text" name="username" id="editUsername" required pattern="[A-Za-z\s]+" title="Only alphabets are allowed"  oninput="this.value = this.value.replace(/[^A-Za-z\s]/g, '')">
+                name="usermailid"
+           <input type="text" name="username" id="editUsername" required class="only-alpha">
                      <label>
                             Name <span style="color:red">*</span>
                      </label>
@@ -195,7 +197,7 @@ $id = Auth::guard('superadmin')->user()->id;
                     </label>
                 </div>
                 <div class="popup-form-group">
-                    <input type="email" name="usermailid" id="editUsermailid" required  oninput="validateEmail(this)">
+                    <input type="email" name="usermailid" id="editUsermailid" required  onblur="validateEmail(this)">
                     <label>
                             Email <span style="color:red">*</span>
                     </label> 

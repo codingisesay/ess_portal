@@ -68,6 +68,7 @@ $id = Auth::guard('superadmin')->user()->id;
         gap: 10px;
     }
 </style>
+<script src="{{ asset('admin_end/js/common-validation.js') }}"></script>
 <div class="container">
     <h3>Pay Heads Master</h3>
 
@@ -112,7 +113,7 @@ $id = Auth::guard('superadmin')->user()->id;
             <div class="form-container row">
                 <div class="col-3 mb-4">
                     <div class="form-group">
-                        <input type="text" name="name" class="text-only" required >
+                        <input type="text" name="name" class="only-alpha" required >
                         <label>
                             Pay Head Name <span style="color:red">*</span>
                         </label>
@@ -121,7 +122,7 @@ $id = Auth::guard('superadmin')->user()->id;
 
                  <div class="col-3 mb-4">
                     <div class="form-group">
-                        <input type="text" name="name_to_display_in_payslip" class="text-only" required >
+                        <input type="text" name="name_to_display_in_payslip" class="only-alpha" required >
                         <label>
                             Name to Display in Payslip <span style="color:red">*</span>
                         </label>
@@ -414,14 +415,14 @@ $id = Auth::guard('superadmin')->user()->id;
                 @method('POST')
                 <input type="hidden" name="template_id" id="editSalaryTemplateId">
                 <div class="popup-form-group">
-                    <input type="text" name="name" id="editSalaryTemplateName" class="text-only" data-maxlen="100" required >
+                    <input type="text" name="name" id="editSalaryTemplateName" class="only-alpha" data-maxlen="100" required >
                     <label for="editSalaryTemplateName">
                         Name <span style="color:red">*</span>
                     </label>
                 </div>
 
                 <div class="popup-form-group">
-                    <input type="text" name="name_to_display_in_payslip" id="editNameToDisplay"  class="text-only" data-maxlen="100" required >
+                    <input type="text" name="name_to_display_in_payslip" id="editNameToDisplay" class="only-alpha" data-maxlen="100" required >
                     <label for="editNameToDisplay">
                         Name to Display in Payslip <span style="color:red">*</span>
                     </label>
@@ -1024,6 +1025,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
         // Open modal
         modalEl.style.display = "block";
+        bindUserDefinedDays();
     };
 });
 </script>

@@ -53,6 +53,7 @@
         gap: 10px;
     }
 </style>
+<script src="{{ asset('admin_end/js/common-validation.js') }}"></script>
 <script src="{{ asset('admin_end/js/common-date-validation.js') }}"></script>
 <script src="{{ asset('admin_end/js/common-input-validation.js') }}"></script>
 
@@ -90,12 +91,12 @@
             <div class="form-container row">
                 <div class="col-3 mb-4">
                     <div class="form-group">
-                        <input type="text" name="name" id="name" class="form-control" 
-                            value="{{ old('name', $setting->name ?? '') }}" required
+                        <input type="text" name="name" id="name" 
+                            value="{{ old('name', $setting->name ?? '') }}" 
+                            required
                             placeholder=" "
                             onfocus="this.placeholder = 'Enter organization name'"
-                            onblur="this.placeholder = ' '"
-                            oninput="validateOrgName(this)"
+                            class="only-alpha"
                             >
                             <label for="name">
                             Organization Name  <span style="color:red">*</span>
@@ -275,7 +276,7 @@ $formattedOrgSettings = $orgSettings->map(function ($item) {
                         <input type="hidden" name="id" id="edit_id">
                         <div class="form-container row">
                             <div class="col-3 mb-3">
-                                <label for="edit_name" class="form-label fw-bold mb-1">
+                                <label for="edit_name" class="only-alpha fw-bold mb-1">
                                     Organization Name <span style="color:red">*</span>
                                 </label>
                                 <input type="text" name="name" id="edit_name" class="form-control" required oninput="validateOrgName(this)">
@@ -320,10 +321,11 @@ $formattedOrgSettings = $orgSettings->map(function ($item) {
                                 </label>
                                 <input type="date" name="start_date" id="edit_start_date"  required 
                                 data-min-now="true"
-                            onchange="validateDateRange({
-                                startSelector:'#start_date',
-                                endSelector:'#end_date'
-                            })">
+                                onchange="validateDateRange({
+                                    startSelector:'#start_date',
+                                    endSelector:'#end_date'
+                                })"
+                                >
                             </div>  
                             <div class="col-3 mb-3">
                                 <label for="edit_end_date" class="form-label fw-bold mb-1">
@@ -334,7 +336,7 @@ $formattedOrgSettings = $orgSettings->map(function ($item) {
                                 onchange="validateDateRange({
                                     startSelector:'#start_date',
                                     endSelector:'#end_date'
-                                })" >
+                                })">
                             </div>
                             <div class="col-3 mb-3">
                                 <label for="edit_process_start_date" class="form-label fw-bold mb-1">

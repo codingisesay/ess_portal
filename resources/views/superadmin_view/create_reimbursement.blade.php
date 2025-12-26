@@ -101,7 +101,7 @@ $id = Auth::guard('superadmin')->user()->id;
                 <div class="form-container row">
                 <div class="col-3 mb-4">
                     <div class="form-group">
-                        <input type="text" id="category_name" name="category_name" class="form-control" required data-validate="reim-name" data-max="50">
+                        <input type="text" id="category_name" name="category_name" class="only-alpha" required data-max="50">
                         <label for="category_name">
                               Reimbursement Name <span style="color:red">*</span>
                         </label>
@@ -110,9 +110,9 @@ $id = Auth::guard('superadmin')->user()->id;
                 </div>
                 <div class="col-3 mb-4">
                     <div class="form-group">
-                        <input type="text" id="category_name" name="category_short_name" class="form-control" required data-validate="reim-abbr" data-max="10">
+                        <input type="text" id="category_name" name="category_short_name"  class="only-alpha" required data-max="10">
                         <label for="category_name">
-                             Reimbursement Abbreviation  <span style="color:red">*</span>
+                             Reimbursement Abbreviation <span style="color:red">*</span>
                         </label>
                     </div>
                 </div>
@@ -168,13 +168,13 @@ $id = Auth::guard('superadmin')->user()->id;
                     @csrf
                     <input type="hidden" name="id" id="editReimbursementId">
                     <div class="popup-form-group">
-                        <input type="text" name="category_name" id="editReimbursementName" required  oninput="validateReimbursementName(this,50)">
+                        <input type="text" name="category_name" id="editReimbursementName" required  class="only-alpha" data-max="50">
                         <label for="editReimbursementName">
                             Reimbursement Name <span style="color:red">*</span>
                         </label>
                     </div>
                     <div class="popup-form-group">
-                        <input type="text" name="category_short_name" id="editReimbursementShortName" required oninput="validateReimbursementAbbreviation(this,10)">
+                        <input type="text" name="category_short_name" id="editReimbursementShortName" required  class="only-alpha" data-max="10">
                         <label for="editReimbursementShortName">
                             Reimbursement Abbreviation <span style="color:red">*</span>
                         </label>

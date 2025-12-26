@@ -1,7 +1,7 @@
 // common-validate-month-start.js
 
 function validateMonthStart(input) {
-    let value = input.value.replace(/[^0-9]/g, '');
+    let value = input.value.replace(APP.REGEX.NUMBERS_ONLY, '');
     let num = Number(value);
 
     if (num > 31) num = 31;
@@ -11,7 +11,7 @@ function validateMonthStart(input) {
 }
 
 function validateLeaveCount(input) {
-    let value = input.value.replace(/[^0-9]/g, '');
+    let value = input.value.replace(APP.REGEX.NUMBERS_ONLY, '');
     let num = Number(value);
 
     if (num > 365) num = 365;

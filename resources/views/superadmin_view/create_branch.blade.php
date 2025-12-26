@@ -110,7 +110,12 @@ $id = Auth::guard('superadmin')->user()->id;
                 </div>
                 <div class="col-3 mb-4">
                     <div class="form-group">
-                        <input type="tel" name="mobile" required pattern="[0-9]{10}" maxlength="10" inputmode="numeric" oninput="this.value = this.value.replace(/[^0-9]/g, '')">
+                        <input type="tel" name="mobile" required
+                               class="num-validate"
+                                data-min="0"
+                                data-max="9999999999"
+                                maxlength="10"
+                                inputmode="numeric">
                         <label for="mobile">
                                 Mobile <span style="color:red">*</span>
                         </label>
@@ -120,11 +125,9 @@ $id = Auth::guard('superadmin')->user()->id;
                 <div class="col-3 mb-4">
                     <div class="form-group">
                         <input type="email" 
-                        name="branchmailid" 
-                        required maxlength="100"
-                        pattern="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
-                        title="Enter a valid email address (example: branch@company.com)"
-                        oninput="validateEmail(this)"
+                        name="branchmailid"
+                        maxlength="100" 
+                        onblur="validateEmail(this)"
                         >
                         <label>
                             Branch Email <span style="color:red">*</span>
@@ -173,7 +176,12 @@ $id = Auth::guard('superadmin')->user()->id;
                 </div>
                 <div class="col-3 mb-4">
                     <div class="form-group">
-                        <input type="text" name="pincode" required  inputmode="numeric" pattern="^[1-9][0-9]{5}$" maxlength="6"  title="Enter a valid 6-digit pincode" oninput="this.value=this.value.replace(/[^0-9]/g,'')">
+                        <input type="text" name="pincode" required  
+                        class="num-validate"
+                        data-min="100000"
+                        data-max="999999"
+                        maxlength="6"
+                        inputmode="numeric">
                          <label>
                             Pincode <span style="color:red">*</span>
                          </label>
@@ -259,7 +267,12 @@ $id = Auth::guard('superadmin')->user()->id;
                     </label>
                 </div>
                 <div class="popup-form-group">
-                    <input type="text" name="mobile" id="editMobile" required pattern="[0-9]{10}" maxlength="10" inputmode="numeric" oninput="this.value = this.value.replace(/[^0-9]/g, '')">
+                    <input type="text" name="mobile" id="editMobile" required 
+                        class="num-validate"
+                        data-min="0"
+                        data-max="9999999999"
+                        maxlength="10"
+                        inputmode="numeric">
                     <label for="editMobile">
                                 Mobile <span style="color:red">*</span>
                     </label>
@@ -267,10 +280,8 @@ $id = Auth::guard('superadmin')->user()->id;
                 <div class="popup-form-group">
                     <input type="email" name="branchmailid" id="editBranchEmail" 
                         required
-                        maxlength="100"
-                        pattern="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
-                        title="Enter a valid email address (example: branch@company.com)"
-                        oninput="validateEmail(this)"
+                        maxlength="100" 
+                        onblur="validateEmail(this)"
                         >
                     <label for="editBranchEmail">
                             Branch Email <span style="color:red">*</span>
@@ -305,7 +316,11 @@ $id = Auth::guard('superadmin')->user()->id;
                     </label>
                 </div>
                 <div class="popup-form-group">
-                    <input type="text" name="pincode" id="editPincode" required inputmode="numeric" pattern="^[1-9][0-9]{5}$" maxlength="6"  title="Enter a valid 6-digit pincode" oninput="this.value=this.value.replace(/[^0-9]/g,'')">
+                    <input type="text" name="pincode" id="editPincode" required class="num-validate"
+                    data-min="100000"
+                    data-max="999999"
+                    maxlength="6"
+                    inputmode="numeric">
                      <label>
                             Pincode <span style="color:red">*</span>
                      </label>

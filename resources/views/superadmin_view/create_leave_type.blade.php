@@ -120,9 +120,7 @@ $id = Auth::guard('superadmin')->user()->id;
                     </div>
                     <div class="col-3 mb-4">
                         <div class="form-group">
-                            <input type="text" id="category_name" name="leave_category" class="form-control" required  pattern="[A-Za-z\s\-]+"
-                                title="Only letters, spaces and hyphens are allowed"
-                                oninput="this.value = this.value.replace(/[^A-Za-z\s\-]/g, '')"
+                            <input type="text" id="category_name" name="leave_category" class="only-alpha" required  
                             >
                             <label for="category_name">
                                 Leave Type Name <span style="color:red">*</span>
@@ -204,9 +202,7 @@ $id = Auth::guard('superadmin')->user()->id;
                             </label>
                         </div>
                         <div class="popup-form-group">
-                            <input type="text" name="leave_category" id="editLeaveTypeName" required pattern="[A-Za-z\s\-]+"
-                                title="Only letters, spaces and hyphens are allowed"
-                                oninput="this.value = this.value.replace(/[^A-Za-z\s\-]/g, '')"
+                            <input type="text" name="leave_category" id="editLeaveTypeName" required class="only-alpha"
                             >
                             <label for="editLeaveTypeName">
                                Leave Type Name <span style="color:red">*</span>

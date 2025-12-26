@@ -1,5 +1,4 @@
 
-
 /* ====================================================
    COMMON DATE VALIDATION UTILITIES
 ==================================================== */
@@ -44,19 +43,19 @@ function validateDateRange({ startSelector, endSelector }) {
     const start = new Date(startInput.value);
     const end = new Date(endInput.value);
 
-    // ❌ Start date in the past
+    //  Start date in the past
     if (start < now) {
         startInput.setCustomValidity('Start Date & Time cannot be in the past');
         return;
     }
 
-    // ❌ End date in the past
+    //  End date in the past
     if (end < now) {
         endInput.setCustomValidity('End Date & Time cannot be in the past');
         return;
     }
 
-    // ❌ End before or same as start
+    //  End before or same as start
     if (end <= start) {
         endInput.setCustomValidity(
             'End Date & Time must be after Start Date & Time'
