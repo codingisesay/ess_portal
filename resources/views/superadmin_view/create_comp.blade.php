@@ -339,7 +339,7 @@ $id = Auth::guard('superadmin')->user()->id;
         </header>
         <div class="w3-container" >
             <div class="popup-form-group-small">
-                <input type="text" id="incomeTaxComponents" placeholder="Income Tax Components" required class="text-only" data-maxlen="100">
+                <input type="text" id="incomeTaxComponents" placeholder="Income Tax Components" required class="only-alpha" data-maxlen="100">
                 <label for="incomeTaxComponents">
                     Income Tax Components <span style="color:red">*</span>
                 </label>
@@ -495,7 +495,7 @@ $id = Auth::guard('superadmin')->user()->id;
 
                     <!-- Income Tax Components -->
                  <div class="popup-form-group">
-                    <input type="text" name="income_tax_components" id="editIncomeTaxComponents" placeholder="Income Tax Components" required  class="text-only" data-maxlen="100">
+                    <input type="text" name="income_tax_components" id="editIncomeTaxComponents" placeholder="Income Tax Components" required  class="only-alpha" data-maxlen="100">
                     <label for="editIncomeTaxComponents">
                        Income Tax Components <span style="color:red">*</span>
                     </label>

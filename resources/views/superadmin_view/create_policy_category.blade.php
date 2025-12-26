@@ -96,8 +96,8 @@ $id = Auth::guard('superadmin')->user()->id;
                 <div class="form-container row">
                 <div class="col-3 mb-4">
                 <div class="form-group">
-                    <input type="text" id="category_name" name="category_name" class="form-control" required
-                      oninput="this.value = this.value.replace(/[^A-Za-z\s\-]/g, '')">
+                    <input type="text" id="category_name" name="category_name" class="only-alpha" required
+                      >
                     <label for="category_name">
                         Category Name <span style="color:red">*</span>
                     </label>
@@ -152,7 +152,7 @@ $id = Auth::guard('superadmin')->user()->id;
                     @method('POST')
                     <input type="hidden" name="category_id" id="editPolicyCategoryId">
                     <div class="popup-form-group">
-                        <input type="text" name="category_name" id="editPolicyCategoryName" required  oninput="this.value = this.value.replace(/[^A-Za-z\s\-]/g, '')"> 
+                        <input type="text" name="category_name" id="editPolicyCategoryName" required  class="only-alpha" >  
                         <label for="editPolicyCategoryName">
                         Category Name <span style="color:red">*</span>
                     </label>

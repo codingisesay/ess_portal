@@ -279,7 +279,7 @@ $formattedOrgSettings = $orgSettings->map(function ($item) {
                                 <label for="edit_name" class="only-alpha fw-bold mb-1">
                                     Organization Name <span style="color:red">*</span>
                                 </label>
-                                <input type="text" name="name" id="edit_name" class="form-control" required oninput="validateOrgName(this)">
+                                <input type="text" name="name" id="edit_name" class="form-control" required class="only-alpha">
                             </div>
                             <div class="col-3 mb-3">
                                 <label for="edit_year" class="form-label fw-bold mb-1">
