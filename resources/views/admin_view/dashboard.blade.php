@@ -10,6 +10,31 @@
 
     @include('admin_view.client_details_popup')
 
+<script>
+// Ensure favicon for Dashboard page (set multiple variants for better browser support)
+document.addEventListener('DOMContentLoaded', function () {
+  var href = "{{ asset('user_end/images/STPLLogo.png') }}";
+
+  function ensureFavicon(rel, sizes) {
+    var selector = sizes ? `link[rel='${rel}'][sizes='${sizes}']` : `link[rel='${rel}']`;
+    var link = document.querySelector(selector);
+    if (!link) {
+      link = document.createElement('link');
+      link.setAttribute('rel', rel);
+      if (sizes) link.setAttribute('sizes', sizes);
+      document.head.appendChild(link);
+    }
+    link.setAttribute('type', 'image/png');
+    link.setAttribute('href', href);
+  }
+
+  ensureFavicon('icon');
+  ensureFavicon('shortcut icon');
+  ensureFavicon('icon', '32x32');
+  ensureFavicon('icon', '16x16');
+});
+</script>
+
 
 {{-- Main content section starts --}}    
 @section('content')

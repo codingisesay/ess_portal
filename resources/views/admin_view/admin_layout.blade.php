@@ -6,6 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <!-- Page title -->
     <title>Admin Dashboard</title>
+    <!-- Application icon added  -->
+    <link rel="icon" href="{{ asset('user_end/images/STPLLogo.png') }}" type="image/png">
     <!-- Custom admin styles -->
     <link rel="stylesheet" href="{{ asset('Offical_admin/css/official_admin.css') }}">
     <!-- Font Awesome icons -->

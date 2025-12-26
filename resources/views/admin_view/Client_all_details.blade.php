@@ -35,7 +35,9 @@
         
          <!-- Loop through all organisations passed from the controller -->
         @foreach($organisations as $org)
-        <div class="client-card"
+
+        <!-- unabled the serach functionality for the client cards -->
+        <div class="client-card" data-searchable="true"
             data-client-id="{{ $org->id }}"
             data-package-id="{{ $org->software_package_plan }}"
             data-organisation-status="{{ $org->organisation_status ?? ( (isset($org->status) && (int)$org->status === 1) ? 'Active' : 'Inactive' ) }}"

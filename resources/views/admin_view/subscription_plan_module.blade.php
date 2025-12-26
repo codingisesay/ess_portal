@@ -2,7 +2,8 @@
      <!DOCTYPE html>
 <html>
 <head>
-<title>Add Subscription Plan</title>
+    <!-- Page title -->
+<title>Admin Dashboard</title>
 </head>
 <body>
      <!-- Custom admin styles -->
