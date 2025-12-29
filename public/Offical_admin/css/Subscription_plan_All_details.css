@@ -152,7 +152,6 @@
 }
 /* Container */
 .spad-page{
-  padding:2% 2.5%;
   color:#1f2937;
 }
 
@@ -160,7 +159,9 @@
   display:flex;
   align-items:center;
   justify-content:space-between;
-  margin-bottom:2%;
+  /* margin alligned to the header of subscription plan */
+  margin-bottom:1.5%;
+  margin-top: 0.5%;
 }
 
 .spad-header h2{
@@ -241,7 +242,8 @@
 /* Grid of plan cards */
 .spad-grid{
   display:grid;
-  grid-template-columns:repeat(2,1fr);
+  /* for showing the plan cards in 4 columns */
+  grid-template-columns:repeat(4,1fr);
   gap:2%;
 }
 
@@ -308,7 +310,6 @@
 }
 
 .plan-sub{
-  margin:0.5rem 0;
   color:#6b7280;
   font-size:0.8rem;
 }
@@ -317,7 +318,6 @@
   display:flex;
   align-items:baseline;
   gap:0.4rem;
-  margin:0.6rem 0;
 }
 
 .amount{
@@ -392,7 +392,8 @@
     grid-template-columns:repeat(2,1fr);
   }
   .spad-grid{
-    grid-template-columns:1fr;
+    /* for showing the plan cards in 4 columns as responsive screen */
+    grid-template-columns:repeat(4,1fr);
   }
 }
 
