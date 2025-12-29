@@ -609,7 +609,7 @@
             <div class="form-container row">
                 <div class="col-3 mb-4">
                     <div class="form-group policy-form-group">
-                        <input type="text" id="policy_title" name="policy_title" class="form-control" required>
+                        <input type="text" id="policy_title" name="policy_title" class="form-control" placeholder=" " required>
                         <label for="policy_title">Policy Title</label>
                     </div>
                 </div>
@@ -626,7 +626,7 @@
                 </div>
                 <div class="col-3 mb-4">
                     <div class="form-group policy-form-group">
-                        <input type="text" id="policy_content" name="policy_content" class="form-control" required>
+                        <input type="text" id="policy_content" name="policy_content" class="form-control" placeholder=" " required>
                         <label for="policy_content">Policy Content</label>
                     </div>
                 </div>
@@ -817,7 +817,7 @@
             <div class="form-container row">
                 <div class="col-3 mb-4">
                     <div class="form-group policy-form-group">
-                        <input type="text" id="category_name" name="category_name" class="form-control" required>
+                        <input type="text" id="category_name" name="category_name" class="form-control" placeholder=" " required>
                         <label for="category_name">Category Name</label>
                     </div>
                 </div>
