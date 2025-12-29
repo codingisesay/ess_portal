@@ -68,6 +68,7 @@ $id = Auth::guard('superadmin')->user()->id;
         gap: 10px;
     }
 </style>
+<script src="{{ asset('admin_end/js/common-validation.js') }}"></script>
 <div class="container">
     <h3>Pay Heads Master</h3>
 
@@ -112,15 +113,19 @@ $id = Auth::guard('superadmin')->user()->id;
             <div class="form-container row">
                 <div class="col-3 mb-4">
                     <div class="form-group">
-                        <input type="text" name="name" required>
-                        <label>Pay Head Name</label>
+                        <input type="text" name="name" class="only-alpha" required >
+                        <label>
+                            Pay Head Name <span style="color:red">*</span>
+                        </label>
                     </div>
                 </div>
 
                  <div class="col-3 mb-4">
                     <div class="form-group">
-                        <input type="text" name="name_to_display_in_payslip" required>
-                        <label>Name to Display in Payslip</label>
+                        <input type="text" name="name_to_display_in_payslip" class="only-alpha" required >
+                        <label>
+                            Name to Display in Payslip <span style="color:red">*</span>
+                        </label>
                     </div>
                 </div>
              <!-- component type (added new dropdown for component type) -->
@@ -140,7 +145,9 @@ $id = Auth::guard('superadmin')->user()->id;
                             <option value="Tax paid by employers on perquisites">Tax paid by employers on perquisites</option>
                             <option value="Other">Other</option>
                         </select>   
-                        <label>Type</label>
+                        <label>
+                          Type <span style="color:red">*</span>
+                        </label>
                     </div>
                 </div>
                 <!-- income type -->
@@ -151,7 +158,9 @@ $id = Auth::guard('superadmin')->user()->id;
                             <option value="Fixed">Fixed</option>
                             <option value="Variable">Variable</option>
                         </select>
-                        <label>Income Type</label>
+                        <label>
+                            Income Type <span style="color:red">*</span>
+                        </label>
                     </div>
                 </div>
                <!-- affect net salary -->
@@ -162,7 +171,9 @@ $id = Auth::guard('superadmin')->user()->id;
                             <option value="Yes">Yes</option>
                             <option value="No">No</option>
                         </select>
-                        <label>Affect net salary</label>
+                        <label>
+                            Affect Net Salary <span style="color:red">*</span>
+                        </label>
                     </div>
                 </div>
                 <!-- calculate of gratuity -->
@@ -173,7 +184,9 @@ $id = Auth::guard('superadmin')->user()->id;
                             <option value="Yes">Yes</option>
                             <option value="No">No</option>
                         </select>
-                        <label>Use for Gratuity</label>
+                        <label>
+                            Calculate of Gratuity <span style="color:red">*</span>
+                        </label>
                     </div>
                 </div>
 
@@ -184,7 +197,9 @@ $id = Auth::guard('superadmin')->user()->id;
                             <option value="Yes">Yes</option>
                             <option value="No">No</option>
                         </select>
-                        <label>Set/Alter Income Tax Details</label>
+                        <label>
+                            Set/Alter Income Tax Details <span style="color:red">*</span>
+                        </label>
                         <!-- Hidden inputs for income tax configuration -->
                         <input type="hidden" name="income_tax_components" id="hiddenIncomeTaxComponents" value="">
                         <input type="hidden" name="tax_calculation_basis" id="hiddenTaxCalculationBasis" value="">
@@ -202,7 +217,10 @@ $id = Auth::guard('superadmin')->user()->id;
                             <option value="On Attendance">On Attendance</option>
                             <option value="On Attendance">Production</option>
                         </select>
-                        <label>Calculation Type</label>
+                        <label>
+                            Calculation Type <span style="color:red">*</span>
+                        </label>
+
                             <!-- Hidden input for attendance/leave with pay config -->
                             <input type="hidden" name="attendance_leave_with_pay" id="hiddenAttendanceLeaveWithPay" value="">
                     </div>
@@ -218,7 +236,10 @@ $id = Auth::guard('superadmin')->user()->id;
                             <option value="User Defined">User Defined</option>
                             <option value="Monthly">Monthly(As per Calender period)</option>
                         </select>
-                        <label>Calculation Period</label>
+                        <label>
+                            Calculation Period <span style="color:red">*</span>
+                        </label>
+
                         <!-- Hidden input to store the custom days value -->
                         <input type="hidden" name="user_define_days" id="calculationPeriodDays" value="">
                         <!-- Display saved custom days below the select -->
@@ -235,7 +256,11 @@ $id = Auth::guard('superadmin')->user()->id;
                             <option value="Active">Active</option>
                             <option value="Inactive">Inactive</option>
                         </select>
-                        <label>Status</label>
+                        <label>
+                            Status <span style="color:red">*</span>
+                        </label>
+                        
+
                     </div>
                 </div>
               
@@ -291,8 +316,10 @@ $id = Auth::guard('superadmin')->user()->id;
         </header>
         <div class="w3-container" style="padding: 20px;">
             <div class="popup-form-group">
-                <input type="number" id="customDaysInput" min="1" max="31" placeholder="Enter days (1-31)" required>
-                <label for="customDaysInput">How many days?</label>
+                <input type="number" id="customDaysInput" placeholder="Enter days (1-31)"  class="days-only" required >
+                <label for="customDaysInput">
+                    How many days <span style="color:red">*</span>
+                </label>
             </div>
             <div style="display: flex; gap: 10px; margin-top: 20px;">
                 <button type="button" class="create-btn" onclick="saveCustomDays()" style="flex: 1;">Save</button>
@@ -312,8 +339,10 @@ $id = Auth::guard('superadmin')->user()->id;
         </header>
         <div class="w3-container" >
             <div class="popup-form-group-small">
-                <input type="text" id="incomeTaxComponents" placeholder="Income Tax Components" required>
-                <label for="incomeTaxComponents">Income Tax Components</label>
+                <input type="text" id="incomeTaxComponents" placeholder="Income Tax Components" required class="only-alpha" data-maxlen="100">
+                <label for="incomeTaxComponents">
+                    Income Tax Components <span style="color:red">*</span>
+                </label>
             </div>
 
             <div class="popup-form-group-small">
@@ -322,7 +351,9 @@ $id = Auth::guard('superadmin')->user()->id;
                     <option value="Projected Value">Projected Value</option>
                     <option value="Actual Value">Actual Value</option>
                 </select>
-                <label for="taxCalculationBasis">Tax Calculation Basis</label>
+                <label for="taxCalculationBasis">
+                    Tax Calculation Basis <span style="color:red">*</span>
+                </label>
             </div>
             <div class="popup-form-group-small">
                 <select id="deductTDSAcrossPeriods" required>
@@ -330,7 +361,9 @@ $id = Auth::guard('superadmin')->user()->id;
                     <option value="Yes">Yes</option>
                     <option value="No">No</option>
                 </select>
-                <label for="deductTDSAcrossPeriods">Deduct TDS Across Periods</label>
+                <label for="deductTDSAcrossPeriods">
+                    Deduct TDS Across Periods <span style="color:red">*</span>
+                </label>
             </div>
 
             <div style="display: flex; gap: 10px; margin-top: 20px;">
@@ -357,7 +390,9 @@ $id = Auth::guard('superadmin')->user()->id;
                     <option value="Leave With Pay">Leave With Pay</option>
                     <option value="Leave Without Pay">Leave Without Pay</option>
                 </select>
-                <label for="attendanceLeaveSelect">Attendance/Leave Type</label>
+                <label for="attendanceLeaveSelect">
+                    Attendance/Leave Type <span style="color:red">*</span>
+                </label>
             </div>
             <div style="display: flex; gap: 10px; margin-top: 20px;">
                 <button type="button" class="create-btn" onclick="saveAttendanceLeaveConfig()" style="flex: 1;">Save</button>
@@ -380,13 +415,17 @@ $id = Auth::guard('superadmin')->user()->id;
                 @method('POST')
                 <input type="hidden" name="template_id" id="editSalaryTemplateId">
                 <div class="popup-form-group">
-                    <input type="text" name="name" id="editSalaryTemplateName" required>
-                    <label for="editSalaryTemplateName">Name</label>
+                    <input type="text" name="name" id="editSalaryTemplateName" class="only-alpha" data-maxlen="100" required >
+                    <label for="editSalaryTemplateName">
+                        Name <span style="color:red">*</span>
+                    </label>
                 </div>
 
                 <div class="popup-form-group">
-                    <input type="text" name="name_to_display_in_payslip" id="editNameToDisplay" required>
-                    <label for="editNameToDisplay">Name to Display in Payslip</label>
+                    <input type="text" name="name_to_display_in_payslip" id="editNameToDisplay" class="only-alpha" data-maxlen="100" required >
+                    <label for="editNameToDisplay">
+                        Name to Display in Payslip <span style="color:red">*</span>
+                    </label>
                 </div>
                 <!-- Component Type -->
                 <div class="popup-form-group">
@@ -404,7 +443,9 @@ $id = Auth::guard('superadmin')->user()->id;
                         <option value="Tax paid by employers on perquisites">Tax paid by employers on perquisites</option>
                         <option value="Other">Other</option>
                     </select>
-                    <label for="editComponentType">Type</label>
+                    <label for="editComponentType">
+                        Type <span style="color:red">*</span>
+                    </label>
                 </div>
 
                <!-- Income Type -->
@@ -413,7 +454,10 @@ $id = Auth::guard('superadmin')->user()->id;
                         <option value="Fixed">Fixed</option>
                         <option value="Variable">Variable</option>
                     </select>
-                    <label for="editIncomeType">Income Type</label>
+                    <label for="editIncomeType">
+                        Income Type <span style="color:red">*</span>
+                    </label>
+
                 </div>
 
                  <!-- Affect Net Salary -->
@@ -422,7 +466,9 @@ $id = Auth::guard('superadmin')->user()->id;
                         <option value="Yes">Yes</option>
                         <option value="No">No</option>
                     </select>
-                    <label for="editAffectNetSalary">Affect Net Salary</label>
+                    <label for="editAffectNetSalary">
+                        Affect Net Salary <span style="color:red">*</span>
+                    </label>
                 </div>
 
                 <!-- Calculate Of Gratuity -->
@@ -431,7 +477,9 @@ $id = Auth::guard('superadmin')->user()->id;
                         <option value="Yes">Yes</option>
                         <option value="No">No</option>
                     </select>
-                    <label for="editCalculateOfGratuity">Calculate Of Gratuity</label>
+                    <label for="editCalculateOfGratuity">
+                       Calculate Of Gratuity<span style="color:red">*</span>
+                    </label>
                 </div>
 
                 <!-- Set/Alter Income Tax Details -->
@@ -440,13 +488,17 @@ $id = Auth::guard('superadmin')->user()->id;
                         <option value="Yes">Yes</option>
                         <option value="No">No</option>
                     </select>
-                    <label for="editIncomeTaxDetails">Set/Alter Income Tax Details</label>
+                    <label for="editIncomeTaxDetails">
+                       Set/Alter Income Tax Details <span style="color:red">*</span>
+                    </label>
                 </div>
 
                     <!-- Income Tax Components -->
                  <div class="popup-form-group">
-                    <input type="text" name="income_tax_components" id="editIncomeTaxComponents" placeholder="Income Tax Components" required>
-                    <label for="editIncomeTaxComponents">Income Tax Components</label>
+                    <input type="text" name="income_tax_components" id="editIncomeTaxComponents" placeholder="Income Tax Components" required  class="only-alpha" data-maxlen="100">
+                    <label for="editIncomeTaxComponents">
+                       Income Tax Components <span style="color:red">*</span>
+                    </label>
                  </div>
                     <!-- Tax Calculation Basis -->
                 <div class="popup-form-group">
@@ -455,7 +507,9 @@ $id = Auth::guard('superadmin')->user()->id;
                         <option value="Projected Value">Projected Value</option>
                         <option value="Actual Value">Actual Value</option>
                     </select>
-                    <label for="editTaxCalculationBasis">Tax Calculation Basis</label>
+                    <label for="editTaxCalculationBasis">
+                       Tax Calculation Basis <span style="color:red">*</span>
+                    </label>
                 </div>
                     <!-- Deduct TDS Across Periods -->
                 <div class="popup-form-group">
@@ -464,7 +518,9 @@ $id = Auth::guard('superadmin')->user()->id;
                         <option value="Yes">Yes</option>
                         <option value="No">No</option>
                     </select>
-                    <label for="editDeductTDSAcrossPeriods">Deduct TDS Across Periods</label>
+                    <label for="editDeductTDSAcrossPeriods">
+                       Deduct TDS Across Periods <span style="color:red">*</span>
+                    </label>
                 </div>
 
                  <!-- Calculation Type -->
@@ -476,7 +532,9 @@ $id = Auth::guard('superadmin')->user()->id;
                         <option value="On Attendance">On Attendance</option>
                         <option value="Production">Production</option>
                     </select>
-                    <label for="editCalculationType">Calculation Type</label>
+                    <label for="editCalculationType">
+                       Calculation Type <span style="color:red">*</span>
+                    </label>
                 </div>
                 <!-- Attendance/Leave Type (Hidden by default) -->
                 <div class="popup-form-group" id="attendanceLeaveWrapper" style="display: none;">
@@ -487,7 +545,9 @@ $id = Auth::guard('superadmin')->user()->id;
                         <option value="Leave With Pay">Leave With Pay</option>
                         <option value="Leave Without Pay">Leave Without Pay</option>
                     </select>
-                    <label for="editAttendanceLeaveWithPay">Attendance/Leave Type</label>
+                    <label for="editAttendanceLeaveWithPay">
+                       Attendance/Leave Type <span style="color:red">*</span>
+                    </label>
                 </div>
 
                  <!-- Calculation Period -->
@@ -496,13 +556,17 @@ $id = Auth::guard('superadmin')->user()->id;
                         <option value="User Defined">User Defined</option>
                         <option value="Monthly">Monthly (As per Calender period)</option>
                     </select>
-                    <label for="editCalculationPeriod">Calculation Period</label>
+                    <label for="editCalculationPeriod">
+                       Calculation Period <span style="color:red">*</span>
+                    </label>
                 </div>
 
                 <!-- User Defined Days (Visible only when User Defined is selected) -->
                 <div class="popup-form-group" id="editUserDaysContainer" style="display:none;">
-                    <input type="number" min="1" name="user_define_days" id="editUserDefineDays" placeholder="Enter Days">
-                    <label for="editUserDefineDays">User Defined Days</label>
+                    <input type="number" name="user_define_days" id="editUserDefineDays" placeholder="Enter Days" type="number" data-max="365" class="user-days" required>
+                    <label for="editUserDefineDays">
+                       User Defined Days <span style="color:red">*</span>
+                    </label>
                 </div>
 
                 <div class="popup-form-group">
@@ -510,7 +574,9 @@ $id = Auth::guard('superadmin')->user()->id;
                         <option value="Active">Active</option>
                         <option value="Inactive">Inactive</option>
                     </select>
-                    <label for="editSalaryTemplateStatus">Status</label>
+                    <label for="editSalaryTemplateStatus">
+                       Status <span style="color:red">*</span>
+                    </label>
                 </div>
                 <div class="popup-form-group">
                     <button class="create-btn1" type="submit">Save Changes</button>
@@ -618,6 +684,9 @@ function saveAttendanceLeaveConfig() {
     Swal.fire('Attendance/Leave With Pay configuration saved!');
     closeAttendanceLeaveModal();
 }
+
+
+
 
 /* ----------------------- INITIALIZATION ----------------------- */
 
@@ -956,6 +1025,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
         // Open modal
         modalEl.style.display = "block";
+        bindUserDefinedDays();
     };
 });
 </script>

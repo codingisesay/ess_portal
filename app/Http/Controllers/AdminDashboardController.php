@@ -64,7 +64,7 @@ class AdminDashboardController extends Controller
     }
 
 
-// Method to insert new organisation details with welcome emailq
+// Method to insert new organisation details with welcome email
   public function clientmasterinsert(Request $request)
 {
     $data = $request->validate([

@@ -123,7 +123,9 @@ $id = Auth::guard('superadmin')->user()->id;
                 <div class="col-3 mb-4">
                     <div class="form-group">
                         <input type="text" id="policy_title" name="policy_title" class="form-control" required>
-                        <label for="policy_title">Policy Title</label>
+                        <label for="policy_title">
+                            Policy Title <span style="color:red">*</span>
+                        </label>
                     </div>
                 </div>
                     <div class="col-3 mb-4">
@@ -134,13 +136,17 @@ $id = Auth::guard('superadmin')->user()->id;
                                 <option value="{{ $category->id }}">{{ $category->name }}</option>
                             @endforeach
                         </select>
-                        <label for="category_id">Select Category</label>
+                        <label for="category_id">
+                            Select Category <span style="color:red">*</span>
+                        </label>
                     </div>
                 </div>
                     <div class="col-3 mb-4">
                     <div class="form-group">
                         <input type="text" id="policy_content" name="policy_content" class="form-control" required>
-                        <label for="policy_content">Policy Content</label>
+                         <label for="policy_content">
+                            Policy Content <span style="color:red">*</span>
+                        </label>
                     </div>
                 </div>
                     <div class="col-3 mb-4">
@@ -168,7 +174,9 @@ $id = Auth::guard('superadmin')->user()->id;
                             <option value="Active">Active</option>
                             <option value="Inactive">Inactive</option>
                         </select>
-                        <label for="category_id">Status</label>
+                        <label for="category_id">
+                            Status <span style="color:red">*</span>
+                        </label>
                     </div>
                 </div>
                     <div class="col-12">
@@ -211,7 +219,9 @@ $id = Auth::guard('superadmin')->user()->id;
                     <input type="hidden" name="policy_id" id="editHRPolicyId">
                     <div class="popup-form-group">
                         <input type="text" name="policy_title" id="editHRPolicyTitle" required>
-                        <label for="editHRPolicyTitle">Policy Title</label>
+                         <label for="editHRPolicyTitle">
+                            Policy Title <span style="color:red">*</span>
+                        </label>
                     </div>
                     <div class="popup-form-group">
                         <select name="category_id" id="editHRPolicyCategory" required>
@@ -219,14 +229,18 @@ $id = Auth::guard('superadmin')->user()->id;
                                 <option value="{{ $category->id }}">{{ $category->name }}</option>
                             @endforeach
                         </select>
-                        <label for="editHRPolicyCategory">Select Category</label>
+                        <label for="editHRPolicyCategory">
+                           Select Category <span style="color:red">*</span>
+                        </label>
                     </div>
                     <div class="popup-form-group">
                         <select name="status" id="editHRPolicyStatus" required>
                             <option value="Active">Active</option>
                             <option value="Inactive">Inactive</option>
                         </select>
-                        <label for="editHRPolicyStatus">Status</label>
+                         <label for="editHRPolicyStatus">
+                          Status<span style="color:red">*</span>
+                        </label>
                     </div>
                     <div class="popup-form-group">
                         <button class="create-btn1" type="submit">Save Changes</button>

@@ -24,6 +24,8 @@ $name = Auth::guard('superadmin')->user()->name;
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
 
 </head>
+<!-- Common validation for the the email functionality -->
+<script src="{{ asset('admin_end/js/common-validation.js') }}"></script>
 
 <body class="body">
     <!-- Top container -->

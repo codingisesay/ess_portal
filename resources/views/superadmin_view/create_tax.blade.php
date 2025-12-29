@@ -145,7 +145,7 @@ $id = Auth::guard('superadmin')->user()->id;
             <div class="col-3 mb-4">
                 <div class="form-group">
                     <input type="number" name="tax_per" required>
-                    <label>percentage Tax</label>
+                    <label>Percentage Tax</label>
                 </div>
             </div>
             <div class="col-3 mb-4">
