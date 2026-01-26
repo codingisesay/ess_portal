@@ -347,7 +347,7 @@ function updatePagination() {
             <div class="form-container row">
                 <div class="col-4 mb-2">
                     <div class="form-group">
-                        <input type="text" name="name" required value="{{ $bank->name }}" required data-validate="bank-name" data-maxlen="50">
+                        <input type="text" name="name" required value="{{ old('name') }}" required data-validate="bank-name" data-maxlen="50">
                         <label >
                             Bank Name <span style="color:red">*</span>
                         </label>
