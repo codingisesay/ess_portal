@@ -97,88 +97,127 @@ $id = Auth::guard('superadmin')->user()->id;
         </div>
         @endif
 
-        <form method="POST" action="{{ route('insert_branch') }}">
+        <form method="POST" action="{{ route('insert_branch') }}" onsubmit="return validateEmail(this.querySelector('input[type=email]'));">
             @csrf
             <div class="form-container row">
                 <div class="col-3 mb-4">
                     <div class="form-group">
                         <input type="text" name="branchname" required>
-                        <label>Branch Name</label>
-                    
+                        <label for="branchname">
+                                Branch Name <span style="color:red">*</span>
+                        </label>
                     </div>
                 </div>
                 <div class="col-3 mb-4">
                     <div class="form-group">
-                        <input type="tel" name="mobile" required pattern="[0-9]{10}" maxlength="10" inputmode="numeric" oninput="this.value = this.value.replace(/[^0-9]/g, '')">
-                        <label>Mobile</label>
+                        <input type="tel" name="mobile" required
+                               class="num-validate"
+                                data-min="0"
+                                data-max="9999999999"
+                                maxlength="10"
+                                inputmode="numeric">
+                        <label for="mobile">
+                                Mobile <span style="color:red">*</span>
+                        </label>
                     
                     </div>
                 </div>
                 <div class="col-3 mb-4">
                     <div class="form-group">
                         <input type="email" 
-                        name="branchmailid" 
-                        required maxlength="100"
-                        pattern="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
-                        title="Enter a valid email address (example: branch@company.com)"
+                        name="branchmailid"
+                        maxlength="100" 
+                        onblur="validateEmail(this)"
                         >
-                        <label>Branch Email</label>
+                        <label>
+                            Branch Email <span style="color:red">*</span>
+                        </label>
                     
                     </div>
+                    <small id="emailError" style="color:red; display:none;">
+                            Please enter a valid email address
+                     </small>                  
                 </div>
                 <div class="col-3 mb-4">
                     <div class="form-group">
                         <input type="text" name="Building_No" value="" required>
-                        <label>Building No</label>
+                        <label>
+                            Building No <span style="color:red">*</span>
+                        </label>
                     
                     </div>
                 </div>
                 <div class="col-3 mb-4">
                     <div class="form-group">
                         <input type="text" name="premises_name" required>
-                        <label>Premises Name</label>
+                          <label >
+                            Premises Name <span style="color:red">*</span>
+                          </label>
                     
                     </div>
                 </div>
                 <div class="col-3 mb-4">
                     <div class="form-group">
                         <input type="text" name="landmark" required>
-                        <label>Landmark</label>
+                        <label for="editLandmark">
+                            Landmark <span style="color:red">*</span>
+                         </label>
                     
                     </div>
                 </div>
                 <div class="col-3 mb-4">
                     <div class="form-group">
                         <input type="text" name="road_street" required>
-                        <label>Road Street</label>
+                        <label for="editRoadStreet">
+                            Road Street <span style="color:red">*</span>
+                        </label>
                     
                     </div>
                 </div>
                 <div class="col-3 mb-4">
                     <div class="form-group">
-                        <input type="text" name="pincode" required  inputmode="numeric" pattern="^[1-9][0-9]{5}$" maxlength="6"  title="Enter a valid 6-digit pincode" oninput="this.value=this.value.replace(/[^0-9]/g,'')">
-                        <label>Pincode</label>
+                        <input type="text" name="pincode" required  
+                        class="num-validate"
+                        data-min="100000"
+                        data-max="999999"
+                        maxlength="6"
+                        inputmode="numeric">
+                         <label>
+                            Pincode <span style="color:red">*</span>
+                         </label>
                     
                     </div>
                 </div>
                 <div class="col-3 mb-4">
                     <div class="form-group">
-                        <input type="text" name="district" required>
-                        <label>District</label>
+                        <input type="text" name="district" required 
+                         class="only-alpha"
+                         >
+                         <label>
+                            District <span style="color:red">*</span>
+                        </label>
                     
                     </div>
                 </div>
                 <div class="col-3 mb-4">
                     <div class="form-group">
-                        <input type="text" name="state" required>
-                        <label>State</label>
+                        <input type="text" name="state" required
+                         class="only-alpha"
+                         >
+                        <label>
+                            State <span style="color:red">*</span>
+                        </label>
                     
                     </div>
                 </div>
                 <div class="col-3 mb-4">
                     <div class="form-group">
-                        <input type="text" name="country" required>
-                        <label>Country</label>
+                        <input type="text" name="country" required
+                         class="only-alpha"
+                         >
+                        <label>
+                            Country <span style="color:red">*</span>
+                        </label>
                     
                     </div>
                 </div>
@@ -218,52 +257,97 @@ $id = Auth::guard('superadmin')->user()->id;
             <h2>Edit Branch</h2>
         </header>
         <div class="w3-container">
-            <form id="editBranchForm" action="{{ route('update_branch') }}" method="POST">
+            <form id="editBranchForm" action="{{ route('update_branch') }}" method="POST"  onsubmit="return validateEmail(this.querySelector('input[type=email]'));">
                 @csrf
                 <input type="hidden" name="branch_id" id="editBranchId">
                 <div class="popup-form-group">
-                    <input type="text" name="branchname" id="editBranchName" required>
-                    <label for="editBranchName">Branch Name</label>
+                    <input type="text" name="branchname" id="editBranchName" required>          
+                    <label for="editBranchName">
+                        Branch Name <span style="color:red">*</span>
+                    </label>
                 </div>
                 <div class="popup-form-group">
-                    <input type="text" name="mobile" id="editMobile" required>
-                    <label for="editMobile">Mobile</label>
+                    <input type="text" name="mobile" id="editMobile" required 
+                        class="num-validate"
+                        data-min="0"
+                        data-max="9999999999"
+                        maxlength="10"
+                        inputmode="numeric">
+                    <label for="editMobile">
+                                Mobile <span style="color:red">*</span>
+                    </label>
                 </div>
                 <div class="popup-form-group">
-                    <input type="email" name="branchmailid" id="editBranchEmail" required>
-                    <label for="editBranchEmail">Branch Email</label>
+                    <input type="email" name="branchmailid" id="editBranchEmail" 
+                        required
+                        maxlength="100" 
+                        onblur="validateEmail(this)"
+                        >
+                    <label for="editBranchEmail">
+                            Branch Email <span style="color:red">*</span>
+                    </label>
                 </div>
+                <small id="emailError" style="color:red; display:none;">
+                            Please enter a valid email address
+                </small> 
+
                 <div class="popup-form-group">
                     <input type="text" name="Building_No" id="editBuildingNo" required>
-                    <label for="editBuildingNo">Building No</label>
+                    <label for="editBuildingNo">
+                            Building No <span style="color:red">*</span>
+                    </label>
                 </div>
                 <div class="popup-form-group">
                     <input type="text" name="premises_name" id="editPremisesName" required>
-                    <label for="editPremisesName">Premises Name</label>
+                    <label for="editPremisesName">
+                            Premises Name <span style="color:red">*</span>
+                    </label>
                 </div>
                 <div class="popup-form-group">
                     <input type="text" name="landmark" id="editLandmark" required>
-                    <label for="editLandmark">Landmark</label>
+                    <label for="editLandmark">
+                            Landmark <span style="color:red">*</span>
+                    </label>
                 </div>
                 <div class="popup-form-group">
                     <input type="text" name="road_street" id="editRoadStreet" required>
-                    <label for="editRoadStreet">Road Street</label>
+                    <label for="editRoadStreet">
+                            Road Street <span style="color:red">*</span>
+                    </label>
                 </div>
                 <div class="popup-form-group">
-                    <input type="text" name="pincode" id="editPincode" required>
-                    <label for="editPincode">Pincode</label>
+                    <input type="text" name="pincode" id="editPincode" required class="num-validate"
+                    data-min="100000"
+                    data-max="999999"
+                    maxlength="6"
+                    inputmode="numeric">
+                     <label>
+                            Pincode <span style="color:red">*</span>
+                     </label>
                 </div>
                 <div class="popup-form-group">
-                    <input type="text" name="district" id="editDistrict" required>
-                    <label for="editDistrict">District</label>
+                    <input type="text" name="district" id="editDistrict" required
+                         class="only-alpha"
+                        >
+                     <label for="editDistrict">
+                            District <span style="color:red">*</span>
+                    </label>
                 </div>
                 <div class="popup-form-group">
-                    <input type="text" name="state" id="editState" required>
-                    <label for="editState">State</label>
+                    <input type="text" name="state" id="editState" required
+                         class="only-alpha"
+                    >
+                    <label for="editState">
+                            State <span style="color:red">*</span>
+                    </label>
                 </div>
                 <div class="popup-form-group">
-                    <input type="text" name="country" id="editCountry" required>
-                    <label for="editCountry">Country</label>
+                    <input type="text" name="country" id="editCountry" required
+                        class="only-alpha"
+                    >
+                     <label for="editCountry">
+                            State <span style="color:red">*</span>
+                    </label>
                 </div>
                 <div class="popup-form-group">
                     <button class="create-btn1" type="submit">Save Changes</button>
@@ -363,6 +447,7 @@ $id = Auth::guard('superadmin')->user()->id;
         document.getElementById('editBranchModal').style.display = 'block';
     }
 </script>
+
 
 @endsection
 

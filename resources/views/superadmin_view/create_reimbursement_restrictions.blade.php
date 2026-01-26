@@ -65,6 +65,9 @@ $id = Auth::guard('superadmin')->user()->id;
     <title>Create Reimbursement Restrictions</title>
     
 </head>
+<script src="{{ asset('admin_end/js/common-input-validation.js') }}"></script>
+<script src="{{ asset('admin_end/js/common-duplicate-validation.js') }}"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <body>
     <div class="container">
         <h3>Create Reimbursement Restriction</h3>
@@ -96,7 +99,7 @@ $id = Auth::guard('superadmin')->user()->id;
         <!-- Form Section -->
         <div id="formSection">
             
-        <form action="{{ route('insert_reimbursement_validation') }}" method="POST">
+        <form action="{{ route('insert_reimbursement_validation') }}" method="POST" data-duplicate-check="true" data-select-id="organisation_reimbursement_type_id" data-table-selector="#tableSection"  data-column-index="2" data-error-title="Reimbursement Restriction Already Exists"  data-error-message="This reimbursement type already has restrictions defined.">
                 @csrf
                 <div class="form-container row">
                 <div class="col-3 mb-4">
@@ -109,13 +112,17 @@ $id = Auth::guard('superadmin')->user()->id;
                             
                            
                         </select>
-                        <label for="category_id">Reimbusrtment Type</label>
+                        <label for="category_id">
+                              Reimbusrtment Type <span style="color:red">*</span>
+                        </label>
                     </div> 
                 </div>
                 <div class="col-3 mb-4">
                     <div class="form-group">
-                        <input type="text" id="category_name" name="max_amount" class="form-control" required>
-                        <label for="category_name">Maximum Amount</label>
+                        <input type="text" id="category_name" name="max_amount" class="form-control" required data-validate="amount" data-decimals="2" data-maxlen="10" data-allow-zero="false"  style="direction: rtl; text-align: left;">
+                        <label for="category_name">
+                              Maximum Amount <span style="color:red">*</span>
+                        </label>
                     </div>
                 </div> 
                 <div class="col-3 mb-4">
@@ -125,7 +132,9 @@ $id = Auth::guard('superadmin')->user()->id;
                             <option value="Yes">Yes</option>
                             <option value="No">No</option>
                         </select>
-                        <label for="category_id">Bill Required</label>
+                        <label for="category_id">
+                              Bill Required <span style="color:red">*</span>
+                        </label>
                     </div> 
                 </div>
                 <div class="col-3 mb-4">
@@ -135,7 +144,9 @@ $id = Auth::guard('superadmin')->user()->id;
                             <option value="Yes">Yes</option>
                             <option value="No">No</option>
                         </select>
-                        <label for="category_id">Tax Required</label>
+                        <label for="category_id">
+                              Tax Required <span style="color:red">*</span>
+                        </label>
                     </div> 
                 </div>
 
@@ -183,25 +194,33 @@ $id = Auth::guard('superadmin')->user()->id;
                                 <option value="{{ $item->id }}">{{ $item->name }}</option>
                             @endforeach
                         </select>
-                        <label for="editReimbursementType">Reimbursement Type</label>
+                        <label for="editReimbursementType">
+                              Reimbursement Type <span style="color:red">*</span>
+                        </label>
                     </div>
                     <div class="popup-form-group">
-                        <input type="text" name="max_amount" id="editMaxAmount" required>
-                        <label for="editMaxAmount">Maximum Amount</label>
+                        <input type="text" name="max_amount" id="editMaxAmount" required data-validate="amount" data-decimals="2" data-maxlen="10" style="direction: rtl; text-align: left;">
+                        <label for="editMaxAmount">
+                              Maximum Amount <span style="color:red">*</span>
+                        </label>
                     </div>
                     <div class="popup-form-group">
                         <select name="bill_required" id="editBillRequired" required>
                             <option value="Yes">Yes</option>
                             <option value="No">No</option>
                         </select>
-                        <label for="editBillRequired">Bill Required</label>
+                        <label for="editBillRequired">
+                              Bill Required <span style="color:red">*</span>
+                        </label>
                     </div>
                     <div class="popup-form-group">
                         <select name="tax_required" id="editTaxRequired" required>
                             <option value="Yes">Yes</option>
                             <option value="No">No</option>
                         </select>
-                        <label for="editTaxRequired">Tax Required</label>
+                        <label for="editTaxRequired">
+                              Tax Required <span style="color:red">*</span>
+                        </label>
                     </div>
                     <div class="popup-form-group">
                         <button class="create-btn1" type="submit">Save Changes</button>
@@ -286,6 +305,7 @@ $id = Auth::guard('superadmin')->user()->id;
             updateActiveButton(clickedElement);
         }
 
+
         function showHRPolicyTable(clickedElement) {
             // Show table section and hide form section
             document.getElementById('formSection').style.display = 'none';
@@ -329,6 +349,8 @@ $id = Auth::guard('superadmin')->user()->id;
             clickedElement.classList.add('active');
         }
     </script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 @endsection
 </body>
 </html>

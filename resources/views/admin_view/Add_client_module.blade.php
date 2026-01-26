@@ -5,6 +5,9 @@
 
 <!-- Custom admin styles -->
  <link rel="stylesheet" href="{{ asset('Offical_admin/css/official_admin.css') }}">   
+
+ <!-- added sweetalert2 script for alert messages -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 
 <body>
@@ -36,6 +39,7 @@
                         <!-- Client Name: Only allows letters and spaces.  -->
 
                         <!-- on input is used to Correct the validations at typing time -->
+                         <!-- pattern <span style="color: red;">*</span> is used to validate the input fileds are required -->
                         <input 
                             type="text"
                             id="client_name" 
@@ -47,7 +51,9 @@
                             oninput="this.value = this.value.replace(/[^A-Za-z\s]/g, '')"
                             required
                         >
-                        <label for="client_name">Client Name</label>
+                        <label for="client_name">
+                            Client Name <span style="color: red;">*</span>
+                        </label>
                     </div>
 
                     <!-- Company Name  -->
@@ -60,7 +66,9 @@
                             maxlength="50" 
                             required
                         >
-                        <label for="name">Company Name</label>
+                        <label for="name">Company Name
+                            <span style="color: red;">*</span>
+                        </label>
                     </div>
 
                     <!-- Contact Information -->
@@ -72,7 +80,9 @@
                             placeholder=" "
                             required
                         >
-                        <label for="contact_person">Contact Person</label>
+                        <label for="contact_person">Contact Person
+                            <span style="color: red;">*</span>
+                    </label>
                     </div>
 
 
@@ -89,7 +99,9 @@
                             pattern="[a-zA-Z0-9._%+-]+@gmail\.com"
                             title="Please enter a valid Gmail address (example@gmail.com)"
                         >
-                        <label for="email">Email</label>
+                        <label for="email">Email
+                            <span style="color: red;">*</span>
+                        </label>
                     </div>
 
 
@@ -107,7 +119,9 @@
                             aria-describedby="passwordHelp"
                             autocomplete="new-password"
                         >
-                        <label for="password">Password</label>
+                        <label for="password">Password
+                            <span style="color: red;">*</span>
+                        </label>
                         <small id="passwordHelp" class="error-text"></small>
                     </div>
 
@@ -127,7 +141,9 @@
                             oninput="this.value = this.value.replace(/\D/g, '')"
                             required
                         >
-                        <label for="mobile">Phone</label>
+                        <label for="mobile">Phone
+                            <span style="color: red;">*</span>
+                        </label>
                     </div>
                     
                     <!-- Address Fields -->
@@ -140,7 +156,9 @@
                             maxlength="50"
                             required
                         >
-                        <label for="building_no">Building/House No.</label>
+                        <label for="building_no">Building/House No.
+                            <span style="color: red;">*</span>
+                        </label>
                     </div>
 
                     <!-- Validation for premises name -->
@@ -152,7 +170,9 @@
                             placeholder=" "
                             maxlength="100"
                         >
-                        <label for="premises_name">Premises Name</label>
+                        <label for="premises_name">Premises Name
+                            <span style="color: red;">*</span>
+                        </label>
                     </div>
 
                     <!-- Validation for landmark -->
@@ -164,7 +184,9 @@
                             placeholder=" "
                             maxlength="150"
                         >
-                        <label for="landmark">Landmark</label>
+                        <label for="landmark">Landmark
+                            <span style="color: red;">*</span>
+                        </label>
                     </div>
 
                     <!-- Validation for road/street -->
@@ -177,7 +199,9 @@
                             maxlength="150"
                             required
                         >
-                        <label for="road_street">Road/Street</label>
+                        <label for="road_street">Road/Street
+                            <span style="color: red;">*</span>
+                        </label>
                     </div>
 
                     <!-- Validation for pincode -->
@@ -195,7 +219,9 @@
                             oninput="this.value = this.value.replace(/\D/g, '')"
                             required
                         >
-                        <label for="pincode">Pincode</label>
+                        <label for="pincode">Pincode
+                            <span style="color: red;">*</span>
+                        </label>
                     </div>
 
                     <!-- Validation for district -->
@@ -208,7 +234,9 @@
                             maxlength="50"
                             required
                         >
-                        <label for="district">District</label>
+                        <label for="district">District
+                                <span style="color: red;">*</span>
+                        </label>
                     </div>
 
                     <!-- Validation for state -->
@@ -221,7 +249,9 @@
                             maxlength="50"
                             required
                         >
-                        <label for="state">State</label>
+                        <label for="state">State
+                            <span style="color: red;">*</span>
+                        </label>
                     </div>
 
                     <!-- Validation for country -->
@@ -237,9 +267,10 @@
                     </div>
 
                     <!-- Business Details -->
+                     <!-- added the default value to the select option -->
                     <div class="form-group">
                         <select id="industry_type" name="industry_type" required>
-                            <option value=""> </option>
+                            <option value="">Select Industry Type</option>
                             <option value="it">Information Technology</option>
                             <option value="manufacturing">Manufacturing</option>
                             <option value="healthcare">Healthcare</option>
@@ -247,28 +278,35 @@
                             <option value="retail">Retail</option>
                             <option value="other">Other</option>
                         </select>
-                        <label for="industry_type">Industry Type</label>
+                        <label for="industry_type">Industry Type
+                            <span style="color: red;">*</span>
+                        </label>
                     </div>
                     
                     
 
                     <!-- Subscription Plans get from the subscription plan module where we cretae a subscritption plan -->
+                    <!-- added the default value to the select option -->
                     <div class="form-group">
                          <select id="software_package_plan" name="software_package_plan" required>
-                            <option value="" disabled selected></option>
+                            <option value="" disabled selected>select Subscription Plan</option>
 
-                            @foreach($subscriptionPlans as $plan)
+                            <!-- Inactive plans from subscription plan module are now hidden from the Add Client subscription plan dropdown. -->
+                            @foreach($subscriptionPlans->where('status', 'Active') as $plan)
                                 <option value="{{ $plan->id }}">
                                     {{ $plan->plan_name }}
                                 </option>
                             @endforeach
                         </select>
-                        <label for="software_package_plan">Subscription Plan</label>
+                        <label for="software_package_plan">Subscription Plan
+                            <span style="color: red;">*</span>
+                        </label>
                     </div>
 
                     
 
                     <!-- Document Information -->
+                     <!-- updated the GST input field to automatically convert lowercase letters to uppercase as the user types -->
                    <div class="form-group">
                     <input
                         type="text"
@@ -279,13 +317,18 @@
                         required
                         pattern="[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z][1-9A-Z]Z[0-9A-Z]"
                         title="Enter a valid GSTIN (e.g., 22AAAAA0000A1Z5)"
+                        oninput="this.value = this.value.toUpperCase()"
+                        style="text-transform: uppercase"
                         
                     >
-                    <label for="GST_number">GST Number</label>
+                    <label for="GST_number">GST Number
+                        <span style="color: red;">*</span>
+                    </label>
                 </div>
 
 
                     <!-- Validation for PAN -->
+                     <!-- updated the PAN input field to automatically convert lowercase letters to uppercase as the user types -->
                     <div class="form-group">
                         <input 
                             type="text"
@@ -293,14 +336,20 @@
                             name="PAN"
                             placeholder=" "
                             maxlength="10"
+                            required
                             pattern="[A-Z]{5}[0-9]{4}[A-Z]{1}"
                             title="Enter a valid PAN (e.g., ABCDE1234F)"
+                            oninput="this.value = this.value.toUpperCase()"
+                            style="text-transform: uppercase"
                         >
-                        <label for="PAN">PAN Number</label>
+                        <label for="PAN">PAN Number
+                            <span style="color: red;">*</span>
+                        </label>
                     </div>
 
                     <!-- Validation for TAN -->
                     <!-- Validation for TAN -->
+                     <!-- updated the TAN input field to automatically convert lowercase letters to uppercase as the user types -->
                     <div class="form-group">
                         <input
                             type="text"
@@ -310,9 +359,13 @@
                             maxlength="10"
                             pattern="[A-Z]{4}[0-9]{5}[A-Z]{1}"
                             title="Enter a valid TAN (e.g., ABCD12345E)"
+                            oninput="this.value = this.value.toUpperCase()"
+                            style="text-transform: uppercase"
                             required
                         >
-                        <label for="TAN">TAN Number</label>
+                        <label for="TAN">TAN Number
+                            <span style="color: red;">*</span>
+                        </label>
                     </div>
 
 
@@ -325,18 +378,20 @@
                             placeholder=" "
                             required
                         >
-                        <label for="expire_date">Expiry Date</label>
+                        <label for="expire_date">Expiry Date
+                            <span style="color: red;">*</span>
+                        </label>
                     </div>
 
 
                     <!-- certificate uploaded files -->
                     <div class="certificate-files">
                         <div class="form-group">
-                            <label for="GST_registration_certificate" class="file-upload-label">GST Certificate</label>
+                            <label for="GST_registration_certificate" class="file-upload-label">GST Certificate <span style="color: red;">*</span></label>
                             <input type="file" id="GST_registration_certificate" name="GST_registration_certificate" class="file-upload-input">
                         </div>
                         <div class="form-group">
-                            <label for="MSME_udyam_certificate" class="file-upload-label">MSME Certificate</label>
+                            <label for="MSME_udyam_certificate" class="file-upload-label">MSME Certificate <span style="color: red;">*</span></label>
                             <input type="file" id="MSME_udyam_certificate" name="MSME_udyam_certificate" class="file-upload-input">
                         </div>
                     </div>
@@ -351,6 +406,66 @@
     </div> <!-- add client model div end -->
 
 @push('scripts')
+<!-- wrote a script to fetch the district and state based on the pincode -->
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+
+    // Get references to pincode, district, and state input fields
+    const pincodeInput = document.getElementById('pincode');
+    const districtInput = document.getElementById('district');
+    const stateInput = document.getElementById('state');
+
+    async function fetchAddressByPincode(pincode) {
+        try {
+             // Call the India Post API with the entered pincode
+            const response = await fetch(`https://api.postalpincode.in/pincode/${pincode}`);
+
+             // Convert API response to JSON format
+            const data = await response.json();
+
+            if (
+                // Check if API response is successful and contains PostOffice data
+                data[0].Status === "Success" &&
+                data[0].PostOffice &&
+                data[0].PostOffice.length > 0
+            ) {
+                 // Automatically fill district and state fields
+                districtInput.value = data[0].PostOffice[0].District;
+                stateInput.value = data[0].PostOffice[0].State;
+            } else {
+                 // Clear fields if pincode is invalid
+                districtInput.value = "";
+                stateInput.value = "";
+                // added the sweetalert2 script to show the alert message
+                Swal.fire({
+                    title: 'Invalid Pincode',
+                    text: 'Please enter a valid 6-digit pincode.',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    cancelButtonText: 'Cancel'
+                })
+            }
+        } catch (error) {
+            console.error("Pincode API Error:", error);
+            alert("Unable to fetch address. Please try again.");
+        }
+    }
+
+    pincodeInput.addEventListener('input', function () {
+        const pincode = this.value;
+
+        // Fetch only when exactly 6 digits are entered
+        if (pincode.length === 6) {
+            fetchAddressByPincode(pincode);
+        } else {
+            districtInput.value = "";
+            stateInput.value = "";
+        }
+    });
+
+});
+</script>
+
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     // Get the modal and buttons
@@ -384,16 +499,14 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    // Set default dates for validity 
+    // Set minimum date for expiry date field
     function setDefaultDates() {
         const today = new Date();
-        const nextYear = new Date();
-        nextYear.setFullYear(today.getFullYear() + 1);
-        
         const expireDateInput = document.getElementById('expire_date');
         if (expireDateInput) {
+            // Set minimum date to today
             expireDateInput.min = today.toISOString().split('T')[0];
-            expireDateInput.value = nextYear.toISOString().split('T')[0];
+            // No default value set, field will be empty
         }
     }
 

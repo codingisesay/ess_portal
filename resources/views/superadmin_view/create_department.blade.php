@@ -5,6 +5,7 @@
 <link rel="stylesheet" href="{{ asset('admin_end/css/admin_form.css') }}">
 <link rel="stylesheet" href="{{ asset('admin_end/css/popup_form.css') }}">
 <link rel="stylesheet" href="{{ asset('admin_end/css/pagination.css') }}">
+<script src="{{ asset('admin_end/js/common-validation.js') }}"></script>
 
 <div class="container">
     <h3>Create Department For Your Organisation</h3>
@@ -82,8 +83,11 @@
                 <div class="col-3 mb-4">
                     <div class="form-group">
                         <input type="hidden" name="organisation_id" value="{{ Auth::guard('superadmin')->user()->id }}">
-                        <input type="text" name="department_name" required>
-                        <label>Department Name</label>
+                        <input type="text" name="department_name" required class="only-alpha">
+                        <label >
+                            Department Name <span style="color:red">*</span>
+                        </label>
+
                     </div>
                 </div>
                 <div class="col-12">
@@ -122,8 +126,10 @@
                 @csrf
                 <input type="hidden" name="department_id" id="editDepartmentId">
                 <div class="popup-form-group">
-                    <input type="text" name="department_name" placeholder=" " id="editDepartmentName" required>
-                    <label for="editDepartmentName">Department Name</label>
+                    <input type="text" name="department_name" placeholder=" " id="editDepartmentName" required class="only-alpha">
+                    <label for="editDepartmentName" >
+                            Department Name <span style="color:red">*</span>
+                    </label>
                 </div>
                 <div class="popup-form-group">
                     <button class="create-btn1" type="submit">Save Changes</button>

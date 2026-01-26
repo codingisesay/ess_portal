@@ -6,6 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <!-- Page title -->
     <title>Admin Dashboard</title>
+    <!-- Application icon added  -->
+    <link rel="icon" href="{{ asset('user_end/images/STPLLogo.png') }}" type="image/png">
     <!-- Custom admin styles -->
     <link rel="stylesheet" href="{{ asset('Offical_admin/css/official_admin.css') }}">
     <!-- Font Awesome icons -->
@@ -42,9 +44,10 @@
                         </a>
                     </li>
 
-                    <!-- Analytics: reports, metrics, and insights -->
-                    <li title="Analytics">
-                        <a href="#" class="nav-link">
+                    <!-- Subscriptions: view all subscription plans -->
+                     <!-- Added navigation for subscription plan details page -->
+                    <li title="Subscriptions" class="{{ request()->routeIs('admin.subscription_plans_all_details') ? 'active' : '' }}">
+                        <a href="{{ route('admin.subscription_plans_all_details') }}" class="nav-link {{ request()->routeIs('admin.subscription_plans_all_details') ? 'active' : '' }}">
                             <i class="fas fa-chart-line"></i>
                             <span>Subscriptions</span>
                         </a>
@@ -55,7 +58,8 @@
                     <li title="Users">
                         <a href="{{ route('admin.client_all_details') }}" class="nav-link {{ request()->routeIs('admin.client_all_details') ? 'active' : '' }}">
                             <i class="fas fa-users"></i>
-                            <span>Users</span>
+                            <!-- chnage the name Users to Clients in sidebar -->
+                            <span>Clients</span>
                         </a>
                     </li>
                      <li></li>

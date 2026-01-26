@@ -35,7 +35,9 @@
         
          <!-- Loop through all organisations passed from the controller -->
         @foreach($organisations as $org)
-        <div class="client-card"
+
+        <!-- unabled the serach functionality for the client cards -->
+        <div class="client-card" data-searchable="true"
             data-client-id="{{ $org->id }}"
             data-package-id="{{ $org->software_package_plan }}"
             data-organisation-status="{{ $org->organisation_status ?? ( (isset($org->status) && (int)$org->status === 1) ? 'Active' : 'Inactive' ) }}"
@@ -55,8 +57,6 @@
                     <p class="client-type">{{ $org->client_name ?? 'Client' }}</p>
                 </div>
 
-                <!-- Toggle details icon -->
-                <i class="fas fa-eye view-icon toggle-details-btn" onclick="toggleDetails(this)"></i>
             </div>
 
             <!-- Client detailed information section -->
@@ -200,7 +200,7 @@
 
             <!-- Button to show details in modal -->
             <div class="toggle-details" onclick="showClientDetails(this)">
-                Show Details <i class="fas fa-chevron-down"></i>
+                Show Details 
             </div>
 
         </div>
@@ -286,24 +286,6 @@ function showClientDetails(button) {
     modal.scrollTop = 0;
 }
 
-// Toggle inline details view
-function toggleDetails(button) {
-    const card = button.closest('.client-card');
-    const detailsSection = card.querySelector('.details-section');
-    const toggleText = card.querySelector('.toggle-details');
-    const icon = button.classList.contains('toggle-details-btn') ? button : button.querySelector('i');
-
-    // Toggle expanded class
-    detailsSection.classList.toggle('expanded');
-
-    if (detailsSection.classList.contains('expanded')) {
-        toggleText.innerHTML = 'Hide Details <i class="fas fa-chevron-up"></i>';
-        if (icon) icon.classList.replace('fa-eye', 'fa-eye-slash');
-    } else {
-        toggleText.innerHTML = 'Show Details <i class="fas fa-chevron-down"></i>';
-        if (icon) icon.classList.replace('fa-eye-slash', 'fa-eye');
-    }
-}
 
 // Client search functionality
 function searchClients() {

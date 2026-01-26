@@ -47,8 +47,24 @@ class AdminDashboardController extends Controller
         return view('admin_view.Client_all_details', compact('organisations'));
     }
 
+    // Show all subscription plan details page
+    public function subscriptionPlanAllDetails(): View
+    {
+        // Fetch all subscription plans
+        $subscriptionPlans = $this->getSubscriptionPlans();
 
-// Method to insert new organisation details with welcome emailq
+        // Compute dynamic stats
+        $totalPlans = $subscriptionPlans->count();
+        $activePlans = $subscriptionPlans->where('status', 'Active')->count();
+        $popularPlans = $subscriptionPlans->where('is_popular', 1)->count();
+
+        // Return the dedicated view for listing subscription plan details
+        // handle casesensitive file systems
+        return view('admin_view.Subscription_Plan_All_details', compact('subscriptionPlans', 'totalPlans', 'activePlans', 'popularPlans'));
+    }
+
+
+// Method to insert new organisation details with welcome email
   public function clientmasterinsert(Request $request)
 {
     $data = $request->validate([
@@ -207,7 +223,6 @@ public function clientmasterupdate(Request $request, $id)
                 ->update(['user_status' => 'Inactive']);
         }
     }
-
     return back()->with('success', 'Organisation updated successfully!');
 }
 
@@ -336,7 +351,9 @@ public function updateSubscriptionPlan(Request $request, $id)
 public function getSubscriptionPlans()
 {
     $plans = \DB::table('subscription_plans')
-        ->orderBy('id', 'ASC')
+    // Newest plans will show at the top of the list in descending order
+        ->orderBy('created_at', 'DESC')
+        ->orderBy('id', 'DESC')
         ->get();
     return $plans;
 }

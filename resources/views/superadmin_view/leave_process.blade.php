@@ -84,7 +84,9 @@ $id = Auth::guard('superadmin')->user()->id;
                     <option disabled selected>Select</option>
                     <option value="{{ $leaveCycleDatas->id }}">{{ $leaveCycleDatas->name }}</option>
                 </select>
-                <label for="category_id">Select Cycle</label>
+                <label for="category_id">
+                    Select Cycle <span style="color:red">*</span>
+                </label>
             </div>
             </div>
             <div class="col-12">

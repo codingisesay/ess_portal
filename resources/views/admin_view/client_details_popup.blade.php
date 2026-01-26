@@ -46,15 +46,22 @@
 
       <!-- Hidden organisation ID -->
     <input type="hidden" name="id" id="editId">
-
+    <!-- client name validations -->
     <div class="form-group">
-        <input type="text" id="editName" name="name" class="form-control" required>
-        <label>Client Name</label>
+        <input type="text" id="editName" name="name" class="form-control" required
+        pattern="[A-Za-z\s]+"
+        title="Only letters are allowed"
+        oninput="this.value = this.value.replace(/[^A-Za-z\s]/g, '')">
+        <label>Client Name<span style="color: red;">*</span></label>
     </div>
 
+    <!-- contact person validations -->
     <div class="form-group">
-        <input type="text" id="editContact" name="contact_person" class="form-control" required>
-        <label>Contact Person</label>
+        <input type="text" id="editContact" name="contact_person" class="form-control" required
+        pattern="[A-Za-z\s]+"
+        title="Only letters are allowed"
+        oninput="this.value = this.value.replace(/[^A-Za-z\s]/g, '')">
+        <label>Contact Person<span style="color: red;">*</span></label>
     </div>
 
     <div class="form-group">
@@ -63,8 +70,19 @@
     </div>
 
     <!-- changed the phone to mobile to edit is visible -->
+     <!-- added the phone number validation -->
     <div class="form-group">
-        <input type="mobile" id="editPhone" name="mobile" class="form-control">
+        <input type="number " 
+               id="editPhone" 
+               name="mobile" 
+               class="form-control"
+               title="Please enter a valid phone number (10 digits)"
+               min="10"
+               maxlength="10"
+               pattern="[0-9]{10}"
+               inputmode="numeric"
+               required
+               oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 10);">
         <label>Phone</label>
     </div>
 
@@ -86,7 +104,7 @@
         <label class="form-check-label">Status</label>
         <div class="form-check form-switch">
             <!-- Hidden input for organisation_status (submitted) -->
-            <input type="hidden" name="organisation_status" id="editStatusHidden" value="Incative">
+            <input type="hidden" name="organisation_status" id="editStatusHidden" value="Active">
             <!-- Checkbox only toggles the hidden input; it does not submit directly -->
             <input type="checkbox" id="editStatus" class="form-check-input">
             <label class="form-check-label" for="editStatus">Active</label>

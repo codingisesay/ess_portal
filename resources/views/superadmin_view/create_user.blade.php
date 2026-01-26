@@ -60,6 +60,7 @@ $id = Auth::guard('superadmin')->user()->id;
         visibility: visible;
     }
 </style>
+<script src="{{ asset('admin_end/js/common-validation.js') }}"></script>
 
 <div class="container">
     <h3 class="mb-4">Create User Of Your Organisation</h3>
@@ -91,32 +92,45 @@ $id = Auth::guard('superadmin')->user()->id;
 
     <!-- Form Section -->
     <div id="formSection" >
-        <form action="{{ route('register_save') }}" method="POST">
+        <form action="{{ route('register_save') }}" method="POST" onsubmit="return validateEmail(document.getElementById('usermailid'));">
             @csrf
             <div class="form-container row">
                 <div class="col-3 mb-2">
                 <div class="form-group">
                     <input type="hidden" name="organisation_id" value="{{$id}}">
-                    <input type="text" name="username" required>
-                    <label>Name</label>
+                       
+                    <input type="text" name="username" required class="only-alpha">
+                     <label>
+                            Name <span style="color:red">*</span>
+                     </label>
                 </div>
                 </div>
                 <div class="col-3 mb-2">
                 <div class="form-group">
                     <input type="text" name="empid" required>
-                    <label>Company Emp ID</label>
+                     <label>
+                            Company Emp ID <span style="color:red">*</span>
+                     </label>
                 </div>
                 </div>
                 <div class="col-3 mb-2">
-                    <div class="form-group">
-                        <input type="email" name="usermailid" required>
-                        <label>Email</label>
+                    <div class="form-group">    
+                        <input type="email" name="usermailid" required onblur="validateEmail(this)">
+                            
+                        <label>
+                            Email <span style="color:red">*</span>
+                        </label>
                     </div>
+                     <small id="emailError" style="color:red; display:none;">
+                            Please enter a valid email address
+                     </small>
                 </div>
                 <div class="col-3 mb-2">
                 <div class="form-group">
                     <input type="text" id="passwordField" name="userpassword" readonly>
-                    <label>Password</label> 
+                    <label>
+                            Password <span style="color:red">*</span>
+                     </label>
                 </div>
                 <small> <a href="#" onclick="generateAndDisplayPassword()">Generate Password</a></small>
                 </div>
@@ -129,7 +143,9 @@ $id = Auth::guard('superadmin')->user()->id;
                                     <option value="1">Not Allow</option>
                                     <option value="2">Allowed</option> 
                             </select>
-                        <label>Account Access</label>
+                        <label>
+                              Account Access <span style="color:red">*</span>
+                        </label>
                     </div>
                 </div>
                 <div class="col-12">
@@ -164,21 +180,34 @@ $id = Auth::guard('superadmin')->user()->id;
             <h2>Edit User</h2>
         </header>
         <div class="w3-container">
-            <form id="editUserForm" action="{{ route('update_user') }}" method="POST">
+            <form id="editUserForm" action="{{ route('update_user') }}" method="POST" onsubmit="return validateEmail(this.querySelector('input[type=email]'));">
                 @csrf
                 <input type="hidden" name="user_id" id="editUserId">
                 <div class="popup-form-group">
-                    <input type="text" name="username" id="editUsername" required>
-                    <label for="editUsername">Username</label>
+                name="usermailid"
+           <input type="text" name="username" id="editUsername" required class="only-alpha">
+                     <label>
+                            Name <span style="color:red">*</span>
+                     </label>
                 </div>
                 <div class="popup-form-group">
                     <input type="text" name="empid" id="editEmpid" required>
-                    <label for="editEmpid">Employee ID</label>
+                    <label>
+                            Company Emp ID <span style="color:red">*</span>
+                    </label>
                 </div>
                 <div class="popup-form-group">
-                    <input type="email" name="usermailid" id="editUsermailid" required>
-                    <label for="editUsermailid">User Email</label>
+                    <input type="email" name="usermailid" id="editUsermailid" required  onblur="validateEmail(this)">
+                    <label>
+                            Email <span style="color:red">*</span>
+                    </label> 
+                     
                 </div>
+                  <small id="emailError" style="color:red; display:none;">
+                            Please enter a valid email address
+                  </small> 
+               
+                
                 <div class="popup-form-group">
                     <select name="user_status" id="editUserStatus" required>
                         <option value="active">Active</option>
@@ -283,6 +312,8 @@ $id = Auth::guard('superadmin')->user()->id;
         document.getElementById('editUserModal').style.display = 'block';
     }
 </script>
+
+
 
 @endsection
 

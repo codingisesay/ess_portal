@@ -59,7 +59,8 @@
                                     onclick="selectSetting('calendarMaster')"
                                     data-setting="calendarMaster">
                                 <div class="sidebar-icon">
-                                    <img src="{{ asset('user_end/images/calendar-icon.png') }}" alt="Calendar Master">
+                                    <!-- Calendar Icon -->
+                                    <i class="fa fa-calendar"></i>
                                 </div>
                                 <span class="sidebar-button-text">Calendar Master</span>
                             </button>
@@ -72,7 +73,8 @@
                                     onclick="selectSetting('thoughtNews')"
                                     data-setting="thoughtNews">
                                 <div class="sidebar-icon">
-                                    <img src="{{ asset('user_end/images/thought-icon.png') }}" alt="Thought & News">
+                                    <!-- Thought Icon -->
+                                    <i class="fa fa-lightbulb"></i>
                                 </div>
                                 <span class="sidebar-button-text">Thought of the Day/News & Events</span>
                             </button>
@@ -85,7 +87,8 @@
                                     onclick="selectSetting('employeeDetails')"
                                     data-setting="employeeDetails">
                                 <div class="sidebar-icon">
-                                    <img src="{{ asset('user_end/images/employee-icon.png') }}" alt="Employee Details">
+                                    <!-- User Edit Icon -->
+                                    <i class="fa fa-user-edit"></i>
                                 </div>
                                 <span class="sidebar-button-text">Employee Details Edit</span>
                             </button>
@@ -98,34 +101,66 @@
                                     onclick="selectSetting('employeeSalary')"
                                     data-setting="employeeSalary">
                                 <div class="sidebar-icon">
-                                    <img src="{{ asset('user_end/images/salary-icon.png') }}" alt="Employee Salary">
+                                    <!-- Money Bill Icon -->
+                                    <i class="fa fa-money-bill-wave"></i>
                                 </div>
                                 <span class="sidebar-button-text">Employee Salary</span>
                             </button>
                         </div>
                         <?php endif; ?>
-
+                        <!-- Setting option based on Permission -->
+                         <!-- process salary -->
+                        <?php if(in_array(19, $permission_array)): ?>
                         <div class="dropdown-section">
                             <button class="sidebar-button" 
                                     onclick="selectSetting('processSalary')"
                                     data-setting="processSalary">
                                 <div class="sidebar-icon">
-                                    <img src="{{ asset('user_end/images/process-icon.png') }}" alt="Process Salary">
+                                    <!-- Salary Icon -->
+                                    <i class="fa fa-cogs"></i>
                                 </div>
                                 <span class="sidebar-button-text">Process Salary (2025-26)</span>
                             </button>
                         </div>
-
+                        <?php endif; ?>
+                        <!-- Leave Summary -->
+                         <!-- permission check   -->
+                         <?php if(in_array(18, $permission_array)): ?>
                         <div class="dropdown-section">
                             <button class="sidebar-button" 
                                     onclick="selectSetting('leaveSummary')"
                                     data-setting="leaveSummary">
                                 <div class="sidebar-icon">
-                                    <img src="{{ asset('user_end/images/leave-icon.png') }}" alt="Leave Summary">
+                                    <!-- Calendar Check Icon -->
+                                    <i class="fa fa-calendar-check"></i>
                                 </div>
                                 <span class="sidebar-button-text">Leave Summary</span>
                             </button>
                         </div> <!-- Leave Summary Button End -->
+                        <?php endif; ?>
+                        <!-- Policy Management -->
+                        <div class="dropdown-section">
+                        <!-- Parent Button -->
+                         <!-- Policy Management based on Permission -->
+                        <?php if(in_array(17, $permission_array)): ?>
+                        <button class="sidebar-button" id="policyToggle">
+                            <div class="sidebar-icon">
+                                <i class="fa fa-file-alt"></i>
+                                </div>
+                                <span class="sidebar-button-text">Policy Management</span>
+                                <i class="fas fa-chevron-down dropdown-arrow"></i>
+                                </button>
+                                <!-- Sub Menu -->
+                                <div class="submenu" id="policySubmenu">
+                                <button class="sidebar-sub-button" onclick="showSection('createPolicyContent')">
+                                 Create Policy Category
+                                 </button>
+                                 <button class="sidebar-sub-button" onclick="showSection('createHRPolicyContent')">
+                                 Create HR Policy
+                                 </button> 
+                            </div> <!-- Sub Menu End -->
+                        </div> <!-- Policy Management End -->
+                        <?php endif; ?>
                     </div> <!-- Button List End -->
                 </div> <!-- Sidebar Bottom End -->
             </div> <!-- Sidebar Internal End -->
@@ -530,7 +565,366 @@
         </div> <!-- Table Scroll Container End -->
         </div> <!-- Accordion Content End -->
    </div> <!-- Leave Summary Content End -->
-</div> <!-- Setting Content End -->
+<!-- Create HR Policy Content -->
+<div id="createHRPolicyContent" class="setting-section">
+    <h2>Create HR Policy</h2>
+    <div class="d-flex policy-header">
+        <!-- Toggle Buttons -->
+        <div class="toggle-buttons">
+            <button class="active" onclick="showHRPolicyForm(this)">Show Form</button>
+            <button onclick="showHRPolicyTable(this)">Show Table</button>
+        </div>
+        
+        <!-- Search Box with Icon (initially hidden) -->
+        <div class="search-container" id="hrPolicySearchContainer" style="display: none;">
+            <div class="search-box">
+                <img src="{{ asset('user_end/images/search (1).png') }}" alt="Search" class="search-icon" id="hrPolicySearchIcon">
+                <input
+                type="text"
+                id="hrPolicyTableSearch"
+                class="search-input"
+                placeholder="Search By Title Or Category"
+                data-search-input
+                data-table-section="hrPolicyTableSection"
+                data-no-results="noResults"
+                />
+            </div>
+        </div>
+    </div>
+
+    <!-- Form Section -->
+    <div id="hrPolicyFormSection">
+        @if($errors->any())
+        <div class="alert custom-alert-warning">
+            <ul>
+                @foreach($errors->all() as $error)
+                    <li class="text-danger">{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+        @endif
+
+        <form action="{{ route('save_hr_policy') }}" method="POST" enctype="multipart/form-data">
+            @csrf
+            <div class="form-container row">
+                <div class="col-3 mb-4">
+                    <div class="form-group policy-form-group">
+                        <input type="text" id="policy_title" name="policy_title" class="form-control" placeholder=" " required>
+                        <label for="policy_title">Policy Title</label>
+                    </div>
+                </div>
+                <div class="col-3 mb-4">
+                    <div class="form-group policy-form-group">
+                        <select id="category_id" name="category_id" class="form-control" required>
+                            <option disabled selected>Select</option>
+                            @foreach($categories as $category)
+                                <option value="{{ $category->id }}">{{ $category->name }}</option>
+                            @endforeach
+                        </select>
+                        <label for="category_id">Select Category</label>
+                    </div>
+                </div>
+                <div class="col-3 mb-4">
+                    <div class="form-group policy-form-group">
+                        <input type="text" id="policy_content" name="policy_content" class="form-control" placeholder=" " required>
+                        <label for="policy_content">Policy Content</label>
+                    </div>
+                </div>
+                <div class="col-3 mb-4">
+                    <div class="form-group policy-form-group">
+                        <input type="file" id="document" name="document" class="form-control">
+                        <label for="document">Upload Document</label>
+                    </div>
+                </div>
+                <div class="col-3 mb-4">
+                    <div class="form-group policy-form-group">
+                        <input type="file" id="icon" name="icon" class="form-control">
+                        <label for="icon">Upload Icon</label>
+                    </div>
+                </div>
+                <div class="col-3 mb-4">
+                    <div class="form-group policy-form-group">
+                        <input type="file" id="content_image" name="content_image" class="form-control">
+                        <label for="content_image">Upload Content Image</label>
+                    </div>
+                </div>
+                <div class="col-3 mb-4">
+                    <div class="form-group policy-form-group">
+                        <select id="hr_status" name="status" class="form-control" required>
+                            <option disabled selected>Select</option>
+                            <option value="Active">Active</option>
+                            <option value="Inactive">Inactive</option>
+                        </select>
+                        <label for="hr_status">Status</label>
+                    </div>
+                </div>
+                <div class="col-12">
+                    <button type="submit" class="create-btn policy-create-btn">Save Policy</button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <!-- Table Section -->
+    <div id="hrPolicyTableSection" style="display: none;">
+        <div class="table-scroll-container">
+            @if($hr_policies && count($hr_policies) > 0)
+            <table class="custom-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Title</th>
+                        <th>Category</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach ($hr_policies as $policy)
+                        @php
+                            // Get category name
+                            $categoryName = '';
+                            foreach ($categories as $cat) {
+                                if ($cat->id == $policy->policy_categorie_id) {
+                                    $categoryName = $cat->name;
+                                    break;
+                                }
+                            }
+                        @endphp
+                        <tr>
+                            <td>{{ $policy->id }}</td>
+                            <td>{{ $policy->policy_title }}</td>
+                            <td>{{ $categoryName }}</td>
+                            <td>
+                                <span class="status-badge {{ strtolower($policy->status) }}">
+                                    {{ $policy->status }}
+                                </span>
+                            </td>
+                            <td>
+                                <button class="icon-btn edit-btn" 
+                                        onclick="openHREditModal('{{ $policy->id }}', {
+                                            id: '{{ $policy->id }}', 
+                                            policy_title: '{{ addslashes($policy->policy_title) }}', 
+                                            policy_categorie_id: '{{ $policy->policy_categorie_id }}', 
+                                            status: '{{ $policy->status }}'
+                                        })"
+                                        data-tooltip="Edit">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
+            
+            <!-- Pagination -->
+            @if($hr_policies instanceof \Illuminate\Pagination\LengthAwarePaginator && $hr_policies->hasPages())
+            <div class="pagination-container mt-3">
+                {{ $hr_policies->links() }}
+            </div>
+            @endif
+            
+            @else
+            <div class="no-results">
+                <i class="fas fa-inbox"></i>
+                <p>No HR policies found</p>
+            </div>
+            @endif
+        </div>
+    </div>
+</div>
+
+<!-- Modal for editing HR Policy -->
+<div id="editHRPolicyModal" class="w3-modal" style="display: none;">
+    <div class="w3-modal-content w3-animate-top w3-card-4">
+        <header class="w3-container w3-teal"> 
+            <span onclick="document.getElementById('editHRPolicyModal').style.display='none'" 
+            class="w3-button w3-display-topright">&times;</span>
+            <h2>Edit HR Policy</h2>
+        </header>
+        <div class="w3-container">
+            <form id="editHRPolicyForm" method="POST">
+                @csrf
+                @method('POST')
+                <input type="hidden" name="policy_id" id="editHRPolicyId">
+                <div class="policy-form-group">
+                    <input type="text" name="policy_title" id="editHRPolicyTitle" required>
+                    <label for="editHRPolicyTitle">Policy Title</label>
+                </div>
+                <div class="policy-form-group">
+                    <select name="category_id" id="editHRPolicyCategory" required>
+                        @foreach($categories as $category)
+                            <option value="{{ $category->id }}">{{ $category->name }}</option>
+                        @endforeach
+                    </select>
+                    <label for="editHRPolicyCategory">Select Category</label>
+                </div>
+                <div class="policy-form-group">
+                    <select name="status" id="editHRPolicyStatus" required>
+                        <option value="Active">Active</option>
+                        <option value="Inactive">Inactive</option>
+                    </select>
+                    <label for="editHRPolicyStatus">Status</label>
+                </div>
+                <div class="policy-form-group">
+                    <button class="create-btn1 policy-create-btn" type="submit">Save Changes</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<!-- Create Policy Category Content -->
+<div id="createPolicyContent" class="setting-section">
+    <h2>Create Policy Category</h2>
+    <div class="d-flex policy-header">
+        <!-- Toggle Buttons -->
+        <div class="toggle-buttons">
+            <button class="active" onclick="showPolicyCategoryForm(this)">Show Form</button>
+            <button onclick="showPolicyCategoryTable(this)">Show Table</button>
+        </div>
+        
+        <!-- Search Box with Icon (initially hidden) -->
+        <div class="search-container" id="policyCategorySearchContainer" style="display: none;">
+            <div class="search-box">
+                <img src="{{ asset('user_end/images/search (1).png') }}" alt="Search" class="search-icon" id="policyCategorySearchIcon">
+                <input
+                    type="text"
+                    id="policyCategoryTableSearch"
+                    class="search-input"
+                    placeholder="Search By Category Name"
+                    data-search-input
+                    data-table-section="policyCategoryTableSection"
+                    data-no-results="noResults"
+                />
+            </div>
+        </div>
+    </div>
+
+    <!-- Form Section -->
+    <div id="policyCategoryFormSection">
+        @if($errors->any())
+        <div class="alert custom-alert-warning">
+            <ul>
+                @foreach($errors->all() as $error)
+                    <li class="text-danger">{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+        @endif
+
+        <form action="{{ route('save_policy_category') }}" method="POST">
+            @csrf
+            <div class="form-container row">
+                <div class="col-3 mb-4">
+                    <div class="form-group policy-form-group">
+                        <input type="text" id="category_name" name="category_name" class="form-control" placeholder=" " required>
+                        <label for="category_name">Category Name</label>
+                    </div>
+                </div>
+                <div class="col-3 mb-4">
+                    <div class="form-group policy-form-group">
+                        <select id="status" name="status" class="form-control" required>
+                            <option disabled selected>Select Status</option>
+                            <option value="Active">Active</option>
+                            <option value="Inactive">Inactive</option>
+                        </select>
+                        <label for="status">Status</label>
+                    </div>
+                </div>
+                <div class="col-12">
+                    <button type="submit" class="create-btn policy-create-btn">Save Category</button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <!-- Table Section -->
+    <div id="policyCategoryTableSection" style="display: none;">
+        <div class="table-scroll-container">
+            @if($policy_categories && count($policy_categories) > 0)
+            <table class="custom-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Category Name</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach ($policy_categories as $category)
+                        <tr>
+                            <td>{{ $category->id }}</td>
+                            <td>{{ $category->name }}</td>
+                            <td>
+                                <span class="status-badge {{ strtolower($category->status) }}">
+                                    {{ $category->status }}
+                                </span>
+                            </td>
+                            <td>
+                                <button class="icon-btn edit-btn" 
+                                        onclick="openPolicyCategoryEditModal('{{ $category->id }}', {
+                                            id: '{{ $category->id }}', 
+                                            name: '{{ addslashes($category->name) }}', 
+                                            status: '{{ $category->status }}'
+                                        })"
+                                        data-tooltip="Edit">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
+            
+            <!-- Pagination -->
+            @if($policy_categories instanceof \Illuminate\Pagination\LengthAwarePaginator && $policy_categories->hasPages())
+            <div class="pagination-container mt-3">
+                {{ $policy_categories->links() }}
+            </div>
+            @endif
+            
+            @else
+            <div class="no-results">
+                <i class="fas fa-inbox"></i>
+                <p>No policy categories found</p>
+            </div>
+            @endif
+        </div>
+    </div>
+</div>
+
+<!-- Modal for editing Policy Category -->
+<div id="editPolicyCategoryModal" class="w3-modal" style="display: none;">
+    <div class="w3-modal-content w3-animate-top w3-card-4">
+        <header class="w3-container w3-teal"> 
+            <span onclick="document.getElementById('editPolicyCategoryModal').style.display='none'" 
+            class="w3-button w3-display-topright">&times;</span>
+            <h2>Edit Policy Category</h2>
+        </header>
+        <div class="w3-container">
+            <form id="editPolicyCategoryForm" method="POST">
+                @csrf
+                @method('POST')
+                <input type="hidden" name="category_id" id="editPolicyCategoryId">
+                <div class="policy-form-group">
+                    <input type="text" name="category_name" id="editPolicyCategoryName" required>
+                    <label for="editPolicyCategoryName">Category Name</label>
+                </div>
+                <div class="policy-form-group">
+                    <select name="status" id="editPolicyCategoryStatus" required>
+                        <option value="Active">Active</option>
+                        <option value="Inactive">Inactive</option>
+                    </select>
+                    <label for="editPolicyCategoryStatus">Status</label>
+                </div>
+                <div class="policy-form-group">
+                    <button class="create-btn1 policy-create-btn" type="submit">Save Changes</button>
+                </div>
+            </form>
+        </div> 
+    </div>        
+</div> <!-- Edit Policy Category Modal End -->
 </div> <!-- Content Area End -->
 </div> <!-- Main Container End -->
 </main> <!-- Main End -->
@@ -636,6 +1030,11 @@
                 btn.style.alignItems = 'center';
                 btn.style.padding = '0';
                 btn.style.margin = '0 auto';
+                const dropdownArrow = btn.querySelector('.dropdown-arrow');
+                // Hide dropdown arrows when sidebar is collapsed
+                 if (dropdownArrow) {
+                 dropdownArrow.style.display = 'none';
+            }
             });
             
             // Hide icon backgrounds when collapsed, show just icons
@@ -965,6 +1364,352 @@
     firstVisibleButton.click();
 
 });
+</script>
+<script>
+// Dropdown toggle for Policy Management submenu
+document.getElementById('policyToggle').addEventListener('click', function () {
+    const submenu = document.getElementById('policySubmenu');
+    this.classList.toggle('dropdown-open');
+
+    if (submenu.style.display === 'flex') {
+        submenu.style.display = 'none';
+    } else {
+        submenu.style.display = 'flex';
+    }
+});
+
+/* Content switcher - Main function to show/hide setting sections */
+function showSection(sectionId) {
+    // Hide all sections
+    document.querySelectorAll('.setting-section').forEach(section => {
+        section.classList.remove('active');
+    });
+    
+    // Show selected section
+    document.getElementById(sectionId).classList.add('active');
+    
+    // Ensure policy submenu stays open
+    document.getElementById('policySubmenu').style.display = 'flex';
+}
+
+// Policy Management sidebar active state handling
+document.addEventListener('DOMContentLoaded', function() {
+    // Handle clicks on policy toggle button
+    document.getElementById('policyToggle').addEventListener('click', function(e) {
+         // Remove active from ALL main sidebar buttons
+    document.querySelectorAll('.sidebar-button').forEach(btn => {
+        btn.classList.remove('active');
+    });
+
+        // Add active to this button
+        this.classList.add('active');
+    });
+    
+    // Handle clicks on policy sub-buttons
+    document.querySelectorAll('.sidebar-sub-button').forEach(subBtn => {
+        subBtn.addEventListener('click', function(e) {
+            // Remove active from all sub-buttons
+            document.querySelectorAll('.sidebar-sub-button').forEach(btn => {
+                btn.classList.remove('active');
+            });
+
+            // Add active to clicked submenu
+            this.classList.add('active');
+
+            // Keep Policy Management active
+            const policyToggle = document.getElementById('policyToggle');
+            if (policyToggle) {
+                policyToggle.classList.add('active');
+            }
+
+            // Keep submenu open
+            const submenu = document.getElementById('policySubmenu');
+            if (submenu) {
+                submenu.style.display = 'flex';
+            }
+        });
+    });
+});
+// HR Policy functions
+document.addEventListener('DOMContentLoaded', function() {
+    // Search box toggle functionality for HR Policy
+    const hrSearchBox = document.querySelector('#hrPolicySearchContainer .search-box');
+    const hrSearchIcon = document.getElementById('hrPolicySearchIcon');
+    const hrSearchInput = document.getElementById('hrPolicyTableSearch');
+    
+    if (hrSearchIcon && hrSearchInput) {
+        // Toggle search box on icon click
+        hrSearchIcon.addEventListener('click', function() {
+            hrSearchBox.classList.toggle('expanded');
+            if (hrSearchBox.classList.contains('expanded')) {
+                setTimeout(() => {
+                    hrSearchInput.focus();
+                }, 300);
+            }
+        });
+        
+        // Close search when clicking outside
+        document.addEventListener('click', function(event) {
+            if (!hrSearchBox.contains(event.target) && hrSearchBox.classList.contains('expanded')) {
+                hrSearchBox.classList.remove('expanded');
+            }
+        });
+        
+        // Prevent search box from closing when clicking inside it
+        hrSearchInput.addEventListener('click', function(event) {
+            event.stopPropagation();
+        });
+        
+        // Handle search input
+        hrSearchInput.addEventListener('input', function() {
+            const searchTerm = this.value.toLowerCase();
+            const rows = document.querySelectorAll('#hrPolicyTableSection tbody tr');
+            
+            rows.forEach(row => {
+                const cells = row.querySelectorAll('td');
+                let rowMatches = false;
+                
+                // Skip the action column (last cell)
+                for (let i = 0; i < cells.length - 1; i++) {
+                    const cellText = cells[i].textContent.toLowerCase();
+                    if (cellText.includes(searchTerm)) {
+                        rowMatches = true;
+                        break;
+                    }
+                }
+                
+                row.style.display = rowMatches ? '' : 'none';
+            });
+        });
+    }
+    
+    // Show form by default for HR Policy
+    showHRPolicyForm(document.querySelector('#createHRPolicyContent .toggle-buttons button:first-child'));
+});
+
+function showHRPolicyForm(clickedElement) {
+    // Show form section and hide table section
+    document.getElementById('hrPolicyFormSection').style.display = 'block';
+    document.getElementById('hrPolicyTableSection').style.display = 'none';
+    
+    // Hide search container
+    document.getElementById('hrPolicySearchContainer').style.display = 'none';
+    
+    // Collapse search box if it's expanded
+    const hrSearchBox = document.querySelector('#hrPolicySearchContainer .search-box');
+    if (hrSearchBox) {
+        hrSearchBox.classList.remove('expanded');
+    }
+    
+    updateHRActiveButton(clickedElement);
+}
+
+function showHRPolicyTable(clickedElement) {
+    // Show table section and hide form section
+    document.getElementById('hrPolicyFormSection').style.display = 'none';
+    document.getElementById('hrPolicyTableSection').style.display = 'block';
+    
+    // Show search container when table is shown
+    document.getElementById('hrPolicySearchContainer').style.display = 'block';
+    
+    updateHRActiveButton(clickedElement);
+}
+// 
+function updateHRActiveButton(clickedElement) {
+    const siblings = clickedElement.parentElement.children;
+    for (let sibling of siblings) {
+        sibling.classList.remove('active');
+    }
+    clickedElement.classList.add('active');
+}
+
+function openHREditModal(id, item) {
+    document.getElementById('editHRPolicyId').value = id;
+    document.getElementById('editHRPolicyTitle').value = item.policy_title;
+    document.getElementById('editHRPolicyCategory').value = item.policy_categorie_id;
+    document.getElementById('editHRPolicyStatus').value = item.status;
+    
+    // Dynamically set the form action with the correct ID
+    const formAction = "{{ route('update_hr_policy', ['id' => ':id']) }}".replace(':id', item.id);
+    document.getElementById('editHRPolicyForm').action = formAction;
+
+    document.getElementById('editHRPolicyModal').style.display = 'block';
+}
+
+// Handle HR Policy pagination without page reload
+document.addEventListener('click', function (e) {
+    const link = e.target.closest('#hrPolicyTableSection .pagination a');
+    if (!link) return;
+
+    e.preventDefault();
+
+    fetch(link.href, {
+        headers: { 'X-Requested-With': 'XMLHttpRequest' }
+    })
+    .then(res => res.text())
+    .then(html => {
+        const doc = new DOMParser().parseFromString(html, 'text/html');
+        const newTable = doc.querySelector('#hrPolicyTableSection');
+        if (newTable) {
+            document.getElementById('hrPolicyTableSection').innerHTML = newTable.innerHTML;
+            attachHRSearch();
+        }
+    })
+    .catch(err => console.error('Pagination failed:', err));
+});
+
+// Policy Category functions
+document.addEventListener('DOMContentLoaded', function() {
+    // Search box toggle functionality for Policy Category
+    const policyCategorySearchBox = document.querySelector('#policyCategorySearchContainer .search-box');
+    const policyCategorySearchIcon = document.getElementById('policyCategorySearchIcon');
+    const policyCategorySearchInput = document.getElementById('policyCategoryTableSearch');
+    
+    if (policyCategorySearchIcon && policyCategorySearchInput) {
+        // Toggle search box on icon click
+        policyCategorySearchIcon.addEventListener('click', function() {
+            policyCategorySearchBox.classList.toggle('expanded');
+            if (policyCategorySearchBox.classList.contains('expanded')) {
+                setTimeout(() => {
+                    policyCategorySearchInput.focus();
+                }, 300);
+            }
+        });
+        
+        // Close search when clicking outside
+        document.addEventListener('click', function(event) {
+            if (!policyCategorySearchBox.contains(event.target) && policyCategorySearchBox.classList.contains('expanded')) {
+                policyCategorySearchBox.classList.remove('expanded');
+            }
+        });
+        
+        // Prevent search box from closing when clicking inside it
+        policyCategorySearchInput.addEventListener('click', function(event) {
+            event.stopPropagation();
+        });
+        
+        // Handle search input
+        policyCategorySearchInput.addEventListener('input', function() {
+            const searchTerm = this.value.toLowerCase();
+            const rows = document.querySelectorAll('#policyCategoryTableSection tbody tr');
+            
+            rows.forEach(row => {
+                const cells = row.querySelectorAll('td');
+                let rowMatches = false;
+                
+                // Skip the action column (last cell)
+                for (let i = 0; i < cells.length - 1; i++) {
+                    const cellText = cells[i].textContent.toLowerCase();
+                    if (cellText.includes(searchTerm)) {
+                        rowMatches = true;
+                        break;
+                    }
+                }
+                
+                row.style.display = rowMatches ? '' : 'none';
+            });
+        });
+    }
+    
+    // Show form by default for Policy Category
+    const policyCategoryFirstButton = document.querySelector('#createPolicyContent .toggle-buttons button:first-child');
+    if (policyCategoryFirstButton) {
+        showPolicyCategoryForm(policyCategoryFirstButton);
+    }
+});
+
+function showPolicyCategoryForm(clickedElement) {
+    // Show form section and hide table section
+    document.getElementById('policyCategoryFormSection').style.display = 'block';
+    document.getElementById('policyCategoryTableSection').style.display = 'none';
+    
+    // Hide search container
+    document.getElementById('policyCategorySearchContainer').style.display = 'none';
+    
+    // Collapse search box if it's expanded
+    const policyCategorySearchBox = document.querySelector('#policyCategorySearchContainer .search-box');
+    if (policyCategorySearchBox) {
+        policyCategorySearchBox.classList.remove('expanded');
+    }
+    
+    updatePolicyCategoryActiveButton(clickedElement);
+}
+
+function showPolicyCategoryTable(clickedElement) {
+    // Show table section and hide form section
+    document.getElementById('policyCategoryFormSection').style.display = 'none';
+    document.getElementById('policyCategoryTableSection').style.display = 'block';
+    
+    // Show search container when table is shown
+    document.getElementById('policyCategorySearchContainer').style.display = 'block';
+    
+    updatePolicyCategoryActiveButton(clickedElement);
+}
+function updatePolicyCategoryActiveButton(clickedElement) {
+    const siblings = clickedElement.parentElement.children;
+    for (let sibling of siblings) {
+        sibling.classList.remove('active');
+    }
+    clickedElement.classList.add('active');
+}
+// Form is shown by default via the first DOMContentLoaded listener
+function openPolicyCategoryEditModal(id, item) {
+    document.getElementById('editPolicyCategoryId').value = id;
+    document.getElementById('editPolicyCategoryName').value = item.name;
+    document.getElementById('editPolicyCategoryStatus').value = item.status;
+    
+    // Dynamically set the form action with the correct ID
+    const formAction = "{{ route('update_policy_category', ['id' => ':id']) }}".replace(':id', item.id);
+    document.getElementById('editPolicyCategoryForm').action = formAction;
+
+    document.getElementById('editPolicyCategoryModal').style.display = 'block';
+}
+// Handle Policy Category pagination without page reload
+document.addEventListener('click', function (e) {
+    const link = e.target.closest('#policyCategoryTableSection .pagination a');
+    if (!link) return;
+
+    e.preventDefault();
+
+    fetch(link.href, {
+        headers: { 'X-Requested-With': 'XMLHttpRequest' }
+    })
+    .then(res => res.text())
+    .then(html => {
+        const doc = new DOMParser().parseFromString(html, 'text/html');
+        const section = doc.querySelector('#policyCategoryTableSection');
+
+        if (section) {
+            document.getElementById('policyCategoryTableSection').innerHTML =
+                section.innerHTML;
+            attachPolicyCategoryTableEvents(); // keep functionality
+        }
+    })
+    .catch(err => console.error('Policy Category pagination failed:', err));
+});
+
+// Ensure the section shows properly when selected from sidebar
+function showSection(sectionId) {
+    document.querySelectorAll('.setting-section').forEach(section => {
+        section.classList.remove('active');
+    });
+
+    document.getElementById(sectionId).classList.add('active');
+    
+    // Ensure submenu stays open for policy sections
+    const policySubmenu = document.getElementById('policySubmenu');
+    if (policySubmenu && (sectionId === 'createPolicyContent' || sectionId === 'createHRPolicyContent')) {
+        policySubmenu.style.display = 'flex';
+    }
+    
+    // Initialize the correct view for policy category
+    if (sectionId === 'createPolicyContent') {
+        const firstButton = document.querySelector('#createPolicyContent .toggle-buttons button:first-child');
+        if (firstButton) {
+            showPolicyCategoryForm(firstButton);
+        }
+    }
+}
 </script>
 
 
