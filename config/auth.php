@@ -45,6 +45,11 @@ return [
             'driver' => 'session',
             'provider' => 'organisations',
         ],
+        // added admin guard
+        'admin' => [
+            'driver' => 'session',
+            'provider' => 'admins',
+        ],
     ],
 
     /*
@@ -74,11 +79,11 @@ return [
             'driver' => 'eloquent',
             'model' => App\Models\organisation::class,
         ],
-
-       // // 'users' => [
-        //     'driver' => 'database',
-        //     'table' => 'users',
-        // ],
+        // added admin provider
+        'admins' => [
+            'driver' => 'eloquent',
+            'model' => App\Models\Admin::class,
+        ],
     ],
 
     /*

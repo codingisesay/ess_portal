@@ -12,6 +12,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
      
 </head>
+
 <body>
  
     <div class="row mx-3">
@@ -340,6 +341,9 @@
     <script>
         // JavaScript to handle modal popup
         function openDegreeModal(serialNo) {
+
+            document.querySelector("header").style.zIndex = "1";
+
             var modalContent = document.getElementById("degree-modal-content-details");
             modalContent.innerHTML = ''; // Clear previous content
 
@@ -351,7 +355,7 @@
                             <div class="form-group">
                                 <div class="floating-label-wrapper">
                                     <label >Degree</label>
-                                    <input class="input-field" type="text" value=" {{ ucfirst($education->degree ?? '-') }} " />
+                                    <input class="input-field" type="text" value=" {{ ucfirst($education->degree ?? '-') }} " disabled  />
                                 </div>                                
                             </div>
                         </div>
@@ -359,7 +363,7 @@
                             <div class="form-group">
                                 <div class="floating-label-wrapper">
                                     <label >University</label>
-                                    <input class="input-field" type="text" value=" {{ ucfirst($education->university_board ?? '-') }} " />
+                                    <input class="input-field" type="text" value=" {{ ucfirst($education->university_board ?? '-') }} " disabled />
                                 </div>                                
                             </div>
                         </div>
@@ -368,7 +372,7 @@
                             <div class="form-group">
                                 <div class="floating-label-wrapper">
                                     <label >Institution</label>
-                                    <input class="input-field" type="text" value=" {{ ucfirst($education->institution ?? '-') }} " />
+                                    <input class="input-field" type="text" value=" {{ ucfirst($education->institution ?? '-') }} " disabled />
                                 </div>                                
                             </div>
                         </div>
@@ -376,7 +380,7 @@
                             <div class="form-group">
                                 <div class="floating-label-wrapper">
                                     <label >Passing Year</label>
-                                    <input class="input-field" type="text" value=" {{ $education->passing_year ? $education->passing_year : '-' }} " />
+                                    <input class="input-field" type="text" value=" {{ $education->passing_year ? $education->passing_year : '-' }} " disabled />
                                 </div>                                
                             </div>
                         </div>
@@ -385,7 +389,7 @@
                             <div class="form-group">
                                 <div class="floating-label-wrapper">
                                     <label >Percentage</label>
-                                    <input class="input-field" type="text" value=" {{ ucfirst($education->percentage_cgpa ?? '-') }} " />
+                                    <input class="input-field" type="text" value=" {{ ucfirst($education->percentage_cgpa ?? '-') }} "  disabled />
                                 </div>                                
                             </div>
                         </div>
@@ -410,7 +414,7 @@
                             <div class="form-group">
                                 <div class="floating-label-wrapper">
                                     <label>Certification Name</label>
-                                    <input type="text" class="input-field" value=" {{ ucfirst($education->certification_name ?? '-') }}" />
+                                    <input type="text" class="input-field" value=" {{ ucfirst($education->certification_name ?? '-') }}" disabled />
                                 </div>
                             </div>
                         </div>
@@ -418,7 +422,7 @@
                             <div class="form-group">
                                 <div class="floating-label-wrapper">
                                     <label>Marks Obtained</label>
-                                    <input type="text" class="input-field" value=" {{ ucfirst($education->marks_obtained ?? '-') }} " />
+                                    <input type="text" class="input-field" value=" {{ ucfirst($education->marks_obtained ?? '-') }} " disabled />
                                 </div>
                             </div>
                         </div>                         
@@ -426,7 +430,7 @@
                             <div class="form-group">
                                 <div class="floating-label-wrapper">
                                     <label>Total Marks</label>
-                                    <input type="text" class="input-field" value=" {{ ucfirst($education->out_of_marks_total_marks ?? '-') }} " />
+                                    <input type="text" class="input-field" value=" {{ ucfirst($education->out_of_marks_total_marks ?? '-') }} " disabled/>
                                 </div>
                             </div>
                         </div>
@@ -434,7 +438,7 @@
                             <div class="form-group">
                                 <div class="floating-label-wrapper">
                                     <label>Certificate Date</label>
-                                    <input type="text" class="input-field" value=" {{ $education->date_of_certificate ? \Carbon\Carbon::parse($education->date_of_certificate)->format('d-m-Y') : '-' }} " />
+                                    <input type="text" class="input-field" value=" {{ $education->date_of_certificate ? \Carbon\Carbon::parse($education->date_of_certificate)->format('d-m-Y') : '-' }} " disabled />
                                 </div>
                             </div>
                         </div> 

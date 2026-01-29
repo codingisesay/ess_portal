@@ -27,6 +27,12 @@
     /* main area adjust */
     #pms-main.collapsed-adjust { margin-left:1.5rem !important; width: calc(100% - 75px - 3rem) !important; }
     #sidebarMain, #pms-main { transition: width 0.22s ease, margin-left 0.22s ease; }
+/* Fix SweetAlert Full-Screen Pop Up To Half-Screen */
+.swal2-popup {
+    width: 420px !important;
+    max-width: 90% !important;
+    border-radius: 12px !important;
+}   
 </style>
 <!-- ========== ORGCHART PLUGIN ========== -->
 <link href="https://cdnjs.cloudflare.com/ajax/libs/orgchart/2.1.9/css/jquery.orgchart.min.css" rel="stylesheet">
@@ -1515,6 +1521,12 @@ document.getElementById('submitSelectedInsights')?.addEventListener('click', asy
 document.addEventListener("DOMContentLoaded", function () {
     // Initialize Bootstrap modal for adding/editing insights
     const insightModal = new bootstrap.Modal(document.getElementById('insightModal'));
+    
+    document.getElementById('insightModal')
+    .addEventListener('hidden.bs.modal', function () {
+        const header = document.querySelector("header");
+        if (header) header.style.zIndex = "9000";
+    });
 
     // Reference to the form inside the modal
     const form = document.getElementById("insightForm");
@@ -1522,6 +1534,9 @@ document.addEventListener("DOMContentLoaded", function () {
     //  When "Add Insight" button is clicked (attached to each goal)
     document.querySelectorAll(".add-insight-btn").forEach(btn => {
         btn.addEventListener("click", function () {
+        //  LOWER HEADER WHEN ADD INSIGHT POPUP OPENS
+        const header = document.querySelector("header");
+        if (header) header.style.zIndex = "1";
             // Reset existing insight details (for new entry)
             document.getElementById("insight_id").value = ""; 
             
@@ -1686,7 +1701,14 @@ function addToBundle(goalId, title, orgSettingId, type, button) {
     if (!bundleTableBody || !orgGoalsTableBody) return;
 
     if (document.querySelector(`input[value="${goalId}"]`)) {
-        alert("This goal is already added.");
+        Swal.fire({
+            icon: 'warning',
+            title: 'Already Added!',
+            text: 'This goal is already added.',
+            timer: 1500,
+            showConfirmButton: false
+        });
+
         return;
     }
 
@@ -1753,7 +1775,12 @@ document.getElementById('bundleForm').addEventListener('submit', function(e) {
     e.preventDefault();
 
     if(bundleTableBody.children.length === 0) {
-        alert("No goals selected to submit!");
+        Swal.fire({
+        icon: 'warning',
+        title: 'No Goals Selected',
+        text: 'Please select at least one goal before submitting.',
+        confirmButtonColor: '#8A3366'
+    });
         return;
     }
 

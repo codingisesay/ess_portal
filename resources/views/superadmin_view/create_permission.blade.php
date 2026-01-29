@@ -47,7 +47,112 @@ array_push($permis, $per->feature_id);
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <link rel="stylesheet" href="{{ asset('admin_end/css/admin_form.css') }}">
+<style>
+    /* ===== Create Permission Header (Override popup-header) ===== */
+.popup-header.permission-header {
+    background-color: #d9a3ad;
+    color: #ffffff;
+    padding: 14px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    margin-bottom: 0; /* override popup-header margin */
+}
 
+/* Title inside permission header */
+.popup-header.permission-header h4,
+.popup-header.permission-header h3 {
+    margin: 0;
+    font-size: 16px;
+    font-weight: 600;
+    color: #ffffff;
+}
+
+/* Close button */
+.popup-header.permission-header .popup-close {
+    background: transparent;
+    border: none;
+    color: #ffffff;
+    font-size: 22px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.popup-header.permission-header .popup-close:hover {
+    color: #702851;
+}
+
+/* =========================
+   PERMISSION CHECKBOX STYLING
+   ========================= */
+
+/* Module heading */
+.popup-body h5 {
+    font-size: 15px;
+    font-weight: 600;
+    color: #702851;
+    margin: 18px 0 10px;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 6px;
+}
+
+/* Checkbox row */
+.checkbox-group {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 10px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.2s ease;
+}
+
+/* Hover effect */
+.checkbox-group:hover {
+    background-color: #f8eef3;
+}
+
+/* Checkbox itself */
+.checkbox-group input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+    accent-color: #8A3366; /* modern browsers */
+    cursor: pointer;
+}
+
+/* Label text */
+.checkbox-group label {
+    font-size: 14px;
+    color: #333;
+    cursor: pointer;
+    margin: 0;
+    user-select: none;
+}
+
+/* Checked state highlight */
+.checkbox-group input[type="checkbox"]:checked + label {
+    font-weight: 600;
+    color: #702851;
+}
+
+/* Space between permission blocks */
+.popup-body br {
+    display: none;
+
+}
+
+.popup-body {
+    background: #ffffff;
+    padding: 20px;
+    box-shadow: inset 0 0 0 rgba(0,0,0,0), 
+                0 6px 18px rgba(0, 0, 0, 0.12);
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+}
+
+</style>
 <!-- <div class="w3-container">
     <div class="create-btn">
         <br><br>
@@ -58,7 +163,7 @@ array_push($permis, $per->feature_id);
 <!-- Popup Overlay -->
 <div class="popup-overlay" id="popup-overlay">
     <div class="popup-content" style="z-index:auto">
-        <div class="popup-header">
+        <div class="popup-header permission-header">
             <h4 class="fw-bold">Create Permission</h4>
             <button class="popup-close" onclick="closePopup()">&times;</button>
         </div>

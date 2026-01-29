@@ -120,11 +120,20 @@ public function orgSettingsStore(Request $request) {
  *
  * @return \Illuminate\View\View (issue no-(3743))
  */
-    public function orgSettingsForm()
-{
-    $orgSettings = \App\Models\OrganizationSetting::orderBy('id', 'desc')->get();
-    return view('superadmin_view.org_settings', compact('orgSettings'));
-}
+    public function orgSettingsForm(\Illuminate\Http\Request $request)
+    {
+        // Prefer explicit organisation_id param; otherwise use the authenticated superadmin's id
+        $organisationId = $request->input('organisation_id');
+        if (empty($organisationId) && Auth::guard('superadmin')->check()) {
+            $organisationId = Auth::guard('superadmin')->user()->id;
+        }
+
+        $orgSettings = OrganizationSetting::when($organisationId, function ($q) use ($organisationId) {
+            return $q->where('created_by', $organisationId);
+        })->orderBy('id', 'desc')->get();
+
+        return view('superadmin_view.org_settings', compact('orgSettings'));
+    }
 
     /**
      * Returns all goals with their associated organization settings

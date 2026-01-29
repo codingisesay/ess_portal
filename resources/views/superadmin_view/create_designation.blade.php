@@ -71,21 +71,30 @@ $id = Auth::guard('superadmin')->user()->id;
         <div class="search-container" id="tableSearchContainer" style="display: none;">
             <div class="search-box">
                 <img src="{{ asset('user_end/images/search (1).png') }}" alt="Search" class="search-icon" id="searchIcon">
-                <input type="text" id="tableSearch" placeholder="Search..." class="search-input">
+                <input
+                type="text"
+                id="tableSearch"
+                class="search-input"
+                placeholder="Search Designation Name"
+                data-search-input
+                data-table-section="tableSection"
+                data-no-results="noResults"
+            />
+
             </div>
         </div>
     </div>
 
     <!-- Form Section -->
     <div id="formSection" >
-        <form method="POST" action="{{ route('insert_designation') }}">
+        <form method="POST" action="{{ route('insert_designation') }}" id="designationForm">
             @csrf
             <div class="form-container row">
                 <div class="col-3 mb-4">
                     <div class="form-group">
                         <input type="hidden" name="organisation_id" value="{{$id}}">
                         <select name="department_id" required>
-                            <option value="" disabled selected></option>
+                            <option disabled selected>Select</option>
                             @foreach ($departments as $department)
                                 <option value="{{ $department->id }}">{{ $department->name }}</option>
                             @endforeach
@@ -96,7 +105,7 @@ $id = Auth::guard('superadmin')->user()->id;
                 <div class="col-3 mb-4">
                     <div class="form-group">
                         <select name="branch_id" required>
-                            <option value="" disabled selected></option>
+                            <option disabled selected>Select</option>
                             @foreach ($branches as $branch)
                                 <option value="{{ $branch->id }}">{{ $branch->name }}</option>
                             @endforeach
@@ -122,15 +131,16 @@ $id = Auth::guard('superadmin')->user()->id;
         @include('partials.data_table', [
             'items' => $results,
             'columns' => [
-                ['header' => 'Designation', 'accessor' => 'department_name'],
+                ['header' => 'Department', 'accessor' => 'department_name'],
                 ['header' => 'Branch', 'accessor' => 'branch_name'],
-                ['header' => 'Designation', 'accessor' => 'designation_name'], 
+                ['header' => 'Designation Name', 'accessor' => 'designation_name'], 
             ],
             'editModalId' => 'openEditModal',
             'hasPermision' => true,
             'perPage' => 5
         ])
     </div>
+    @include('partials.no-results')
   
 </div>
 
@@ -216,6 +226,42 @@ $id = Auth::guard('superadmin')->user()->id;
     function openEditModal() { 
         document.getElementById('popup').style.display = 'block';
     }
+</script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const form = document.getElementById('designationForm');
+    
+    if (form) {
+        form.addEventListener('submit', function (e) {
+            const input = form.querySelector('input[name="name"]');
+            const enteredName = input.value.trim().toLowerCase();
+            
+            if (!enteredName) return;
+
+            // 1. Get all table cells
+            const allCells = Array.from(document.querySelectorAll('#tableSection td'));
+            
+            // 2. Extract text and filter out empty or unrelated values
+            const existingNames = allCells.map(td => td.textContent.trim().toLowerCase());
+
+
+            // 3. Check for match
+            if (existingNames.includes(enteredName)) {
+                e.preventDefault(); // Stop submission
+
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Duplicate Designation',
+                    text: `The designation "${input.value}" already exists in the table.`,
+                    confirmButtonColor: '#d33'
+                });
+                return false;
+            }
+        });
+    }
+});
 </script>
 
 @endsection

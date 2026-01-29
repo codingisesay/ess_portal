@@ -53,6 +53,10 @@
         gap: 10px;
     }
 </style>
+<script src="{{ asset('admin_end/js/common-validation.js') }}"></script>
+<script src="{{ asset('admin_end/js/common-date-validation.js') }}"></script>
+<script src="{{ asset('admin_end/js/common-input-validation.js') }}"></script>
+
 
 <div class="container">
     <h3>Organization Settings</h3>
@@ -67,7 +71,15 @@
         <div class="search-container" id="tableSearchContainer" style="display: none;">
             <div class="search-box">
                 <img src="{{ asset('user_end/images/search (1).png') }}" alt="Search" class="search-icon" id="searchIcon">
-                <input type="text" id="tableSearch" placeholder="Search..." class="search-input">
+                    <input
+                    type="text"
+                    id="tableSearch"
+                    class="search-input"
+                    placeholder="Search..."
+                    data-search-input
+                    data-table-section="tableSection"
+                    data-no-results="noResults"
+                />
             </div>
         </div>
     </div>
@@ -79,12 +91,16 @@
             <div class="form-container row">
                 <div class="col-3 mb-4">
                     <div class="form-group">
-                        <input type="text" name="name" id="name" class="form-control" 
-                            value="{{ old('name', $setting->name ?? '') }}" required
+                        <input type="text" name="name" id="name" 
+                            value="{{ old('name', $setting->name ?? '') }}" 
+                            required
                             placeholder=" "
                             onfocus="this.placeholder = 'Enter organization name'"
-                            onblur="this.placeholder = ' '">
-                        <label for="name">Organization Name</label>
+                            class="only-alpha"
+                            >
+                            <label for="name">
+                            Organization Name  <span style="color:red">*</span>
+                            </label>
                     </div>
                 </div>
 
@@ -92,7 +108,7 @@
                 <div class="col-3 mb-4">
                     <div class="form-group">
                         <select name="year" id="year" class="form-control" required>
-                            <option value="" disabled selected></option>
+                            <option disabled selected>Select</option>
                             @php
                                 $currentYear = date('Y');
                                 for ($i = $currentYear - 2; $i <= $currentYear + 5; $i++) {
@@ -101,7 +117,9 @@
                                 }
                             @endphp
                         </select>
-                        <label for="year">Financial Year</label>
+                        <label for="year">
+                            Financial Year  <span style="color:red">*</span>
+                        </label>
                     </div>
                 </div>
 
@@ -111,13 +129,15 @@
                         <select name="cycle_type" id="cycle_type" class="form-control" required
                                 onfocus="this.querySelector('option[value=\'\']').textContent='Select Cycle Type'"
                                 onblur="if(!this.value) this.querySelector('option[value=\'\']').textContent=''">
-                            <option value="" disabled selected></option>
+                            <option disabled selected>Select</option>
                             <option value="monthly">Monthly</option>
                             <option value="quarterly">Quarterly</option>
                             <option value="half-yearly">Half Yearly</option>
                             <option value="yearly">Yearly</option>
                         </select>
-                        <label for="cycle_type">Cycle Type</label>
+                        <label for="cycle_type">
+                            Cycle Type  <span style="color:red">*</span>
+                        </label>
                     </div>
                 </div>
 
@@ -129,39 +149,60 @@
                                 onblur="if(!this.value) this.querySelector('option[value=\'\']').textContent=''">
                             <option value="" disabled selected></option>
                         </select>
-                        <label for="cycle_period">Cycle Period</label>
+                        <label for="cycle_period">
+                            Cycle Period  <span style="color:red">*</span>
+                        </label>
                     </div>
                 </div>
 
                 {{-- Start Date --}}
                 <div class="col-3 mb-3">
                     <div class="form-group">
-                        <input type="date" name="start_date" id="start_date" class="form-control" required>
-                        <label for="start_date">Start Date</label>
+                        <input type="date" name="start_date" id="start_date" required    data-min-now="true"
+                            onchange="validateDateRange({
+                                startSelector:'#start_date',
+                                endSelector:'#end_date'
+                            })"
+                            
+                        >
+                        <label for="start_date">
+                            Start Date  <span style="color:red">*</span>
+                        </label>
                     </div>
                 </div>
 
                 {{-- End Date --}}
                 <div class="col-3 mb-3">
                     <div class="form-group">
-                        <input type="date" name="end_date" id="end_date" class="form-control" required>
-                        <label for="end_date">End Date</label>
+                        <input type="date" name="end_date" id="end_date" required   data-min-now="true"
+                                onchange="validateDateRange({
+                                    startSelector:'#start_date',
+                                    endSelector:'#end_date'
+                                })">
+                        <label for="end_date">
+                            End Date  <span style="color:red">*</span>
+                        </label>
                     </div>
                 </div>
 
                 {{-- Process Start Date --}}
                 <div class="col-3 mb-3">
                     <div class="form-group">
-                        <input type="date" name="process_start_date" id="process_start_date" class="form-control" required>
-                        <label for="process_start_date">Process Start Date</label>
+                        <input type="date" name="process_start_date" id="process_start_date" required class="form-control" >
+                        <label for="process_start_date">
+                            Process Start Date <span style="color:red">*</span>
+                        </label>
                     </div>
                 </div>
 
                 {{-- Process End Date --}}
                 <div class="col-3 mb-3">
                     <div class="form-group">
-                        <input type="date" name="process_end_date" id="process_end_date" class="form-control" required>
-                        <label for="process_end_date">Process End Date</label>
+                        <input type="date" name="process_end_date" id="process_end_date" required class="form-control"  >
+                         <label for="process_end_date">
+                            Process End Date <span style="color:red">*</span>
+                        </label>
+
                     </div>
                 </div>
 
@@ -202,7 +243,7 @@ $formattedOrgSettings = $orgSettings->map(function ($item) {
         'items' => $formattedOrgSettings ?? [],
         'columns' => [
             ['header' => 'ID', 'accessor' => 'id'],
-            ['header' => 'Name', 'accessor' => 'name'],
+            ['header' => 'Organization Name', 'accessor' => 'name'],
             ['header' => 'Year', 'accessor' => 'financial_year'],
             ['header' => 'Cycle Type', 'accessor' => 'cycle_type'],
             ['header' => 'Cycle Period', 'accessor' => 'cycle_period'],
@@ -217,6 +258,7 @@ $formattedOrgSettings = $orgSettings->map(function ($item) {
         'perPage' => 5
     ])
 </div>
+@include('partials.no-results')
 
     <!-- Edit Modal -->
     <div id="editOrgSettingsModal" class="modal" tabindex="-1" role="dialog" style="display: none;">
@@ -234,11 +276,15 @@ $formattedOrgSettings = $orgSettings->map(function ($item) {
                         <input type="hidden" name="id" id="edit_id">
                         <div class="form-container row">
                             <div class="col-3 mb-3">
-                                <label for="edit_name" class="form-label fw-bold mb-1">Organization Name</label>
-                                <input type="text" name="name" id="edit_name" class="form-control" required>
+                                <label for="edit_name" class="only-alpha fw-bold mb-1">
+                                    Organization Name <span style="color:red">*</span>
+                                </label>
+                                <input type="text" name="name" id="edit_name" class="form-control" required class="only-alpha">
                             </div>
                             <div class="col-3 mb-3">
-                                <label for="edit_year" class="form-label fw-bold mb-1">Financial Year</label>
+                                <label for="edit_year" class="form-label fw-bold mb-1">
+                                    Financial Year <span style="color:red">*</span>
+                                </label>
                                 <select name="year" id="edit_year" class="form-select" required>
                                     @php
                                         $currentYear = date('Y');
@@ -249,7 +295,9 @@ $formattedOrgSettings = $orgSettings->map(function ($item) {
                                 </select>
                             </div>
                             <div class="col-3 mb-3">
-                                <label for="edit_cycle_type" class="form-label fw-bold mb-1">Cycle Type</label>
+                                <label for="edit_cycle_type" class="form-label fw-bold mb-1">
+                                    Cycle Type <span style="color:red">*</span>
+                                </label>
                                 <select name="cycle_type" id="edit_cycle_type" class="form-select" required>
                                     <option value="">Select Cycle Type</option>
                                     <option value="monthly">Monthly</option>
@@ -257,31 +305,55 @@ $formattedOrgSettings = $orgSettings->map(function ($item) {
                                     <option value="half-yearly">Half Yearly</option>
                                     <option value="yearly">Yearly</option>
                                 </select>
+                         
                             </div>
                             <div class="col-3 mb-3" id="edit_cycleWrapper" style="display:none;">
-                                <label for="edit_cycle_period" class="form-label fw-bold mb-1">Cycle Period</label>
+                                <label for="edit_cycle_period" class="form-label fw-bold mb-1">
+                                    Cycle Period <span style="color:red">*</span>
+                                </label>
                                 <select name="cycle_period" id="edit_cycle_period" class="form-select" required>
                                     <option value="">Select Period</option>
                                 </select>
                             </div>
                             <div class="col-3 mb-3">
-                                <label for="edit_start_date" class="form-label fw-bold mb-1">Start Date</label>
-                                <input type="date" name="start_date" id="edit_start_date" class="form-control" required>
+                                <label for="edit_start_date" class="form-label fw-bold mb-1">
+                                    Start Date <span style="color:red">*</span>
+                                </label>
+                                <input type="date" name="start_date" id="edit_start_date"  required 
+                                data-min-now="true"
+                                onchange="validateDateRange({
+                                    startSelector:'#start_date',
+                                    endSelector:'#end_date'
+                                })"
+                                >
+                            </div>  
+                            <div class="col-3 mb-3">
+                                <label for="edit_end_date" class="form-label fw-bold mb-1">
+                                   End Date <span style="color:red">*</span>
+                                </label>
+                                <input type="date" name="end_date" id="edit_end_date" required 
+                                data-min-now="true"
+                                onchange="validateDateRange({
+                                    startSelector:'#start_date',
+                                    endSelector:'#end_date'
+                                })">
                             </div>
                             <div class="col-3 mb-3">
-                                <label for="edit_end_date" class="form-label fw-bold mb-1">End Date</label>
-                                <input type="date" name="end_date" id="edit_end_date" class="form-control" required>
+                                <label for="edit_process_start_date" class="form-label fw-bold mb-1">
+                                   Process Start Date <span style="color:red">*</span>
+                                </label>
+                                <input type="date" name="process_start_date" id="edit_process_start_date" class="form-control" required >
                             </div>
                             <div class="col-3 mb-3">
-                                <label for="edit_process_start_date" class="form-label fw-bold mb-1">Process Start Date</label>
-                                <input type="date" name="process_start_date" id="edit_process_start_date" class="form-control" required>
+                                <label for="edit_process_end_date" class="form-label fw-bold mb-1">
+                                   Process End Date <span style="color:red">*</span>
+                                </label>
+                                <input type="date" name="process_end_date" id="edit_process_end_date" class="form-control" required >
                             </div>
                             <div class="col-3 mb-3">
-                                <label for="edit_process_end_date" class="form-label fw-bold mb-1">Process End Date</label>
-                                <input type="date" name="process_end_date" id="edit_process_end_date" class="form-control" required>
-                            </div>
-                            <div class="col-3 mb-3">
-                                <label for="edit_status" class="form-label fw-bold mb-1">Status</label>
+                                <label for="edit_status" class="form-label fw-bold mb-1">
+                                   Status <span style="color:red">*</span>
+                                </label>
                                 <select name="is_active" id="edit_status" class="form-select" required>
                                     <option value="1">Active</option>
                                     <option value="0">Inactive</option>
@@ -308,6 +380,7 @@ $formattedOrgSettings = $orgSettings->map(function ($item) {
 .modal-header {
     background-color: #d49da7 !important;
     color: white !important;
+    width: 100%
 }
 .btn-primary {
     background-color: #702851 !important;
@@ -779,6 +852,9 @@ function calculateDates() {
     }
 }
 
+
+
+
 // Attach listeners
 document.getElementById("year").addEventListener("change", calculateDates);
 document.getElementById("cycle_period").addEventListener("change", calculateDates);
@@ -879,4 +955,23 @@ document.getElementById("cycle_period").addEventListener("change", calculateDate
         clickedElement.classList.add('active');
     }
 </script>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const today = new Date().toISOString().split('T')[0];
+
+    const dateIds = [
+        'start_date',
+        'end_date',
+        'edit_start_date',
+        'edit_end_date',
+    ];
+
+    dateIds.forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.min = today;
+    });
+});
+</script>
+
+
 @endsection

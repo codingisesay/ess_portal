@@ -9,7 +9,11 @@ class SuperAdminAuthController extends Controller
 {
     public function showLoginForm()
     {
-        return view('auth.superadmin-login');
+          // Load the login page view
+        return view('auth.superadmin-login', [
+            // Form POST URL for this login
+            'loginAction' => route('superadmin.login')
+        ]);
     }
 
     public function login(Request $request)

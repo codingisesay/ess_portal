@@ -1259,20 +1259,46 @@ public function loadCompForm(){
     return view('superadmin_view.create_comp',compact('template_datas'));
 
 }
-
+// function to insert components
 public function insertComponents(Request $request){
+    // Add attendance_leave_with_pay to validation
     $data = $request->validate([
         'name' => 'required',
         'component_type' => 'required',
+        'name_to_display_in_payslip' => 'nullable', // <-- added
+        'income_type' => 'required',
+        'affect_net_salary' => 'required',
+        'calculate_of_gratuity' => 'required',
+        'calculation_type' => 'required',
+        'calculation_period' => 'required',
+        'user_define_days' => 'nullable',
+        'Set/Alter_Income_Tax_Details' => 'required',  // <-- added
+        'income_tax_components' => 'nullable', // <-- added
+        'tax_calculation_basis' => 'nullable', // <-- added
+        'deduct_tds_across_periods' => 'nullable', // <-- added
+        'attendance_leave_with_pay' => 'nullable', // <-- added
         'status' => 'required',
     ]);
 
     $org_data = Auth::guard('superadmin')->user();
 
+    // Add attendance_leave_with_pay to insert
     $insertStatus = DB::table('org_salary_components')->insert([
         'organisation_id' => $org_data->id,
         'name' => $data['name'],
         'type' => $data['component_type'],
+        'name_to_display_in_payslip' => $data['name_to_display_in_payslip'], // <-- added
+        'income_type' => $data['income_type'],
+        'affect_net_salary' => $data['affect_net_salary'],
+        'calculate_of_gratuity' => $data['calculate_of_gratuity'],
+        'calculation_type' => $data['calculation_type'],
+        'calculation_period' => $data['calculation_period'],
+        'user_define_days' => $data['user_define_days'] ?? null,
+        'set_alter_income_tax_details' => $data['Set/Alter_Income_Tax_Details'], // <-- added   
+        'income_tax_components' => $data['income_tax_components'] ?? null,  // <-- added
+        'tax_calculation_basis' => $data['tax_calculation_basis'] ?? null, // <-- added
+        'deduct_tds_across_periods' => $data['deduct_tds_across_periods'] ?? null, // <-- added
+        'attendance_leave_with_pay' => $data['attendance_leave_with_pay'] ?? null, // <-- added
         'status' => $data['status'],
         'created_at' => NOW(),
         'updated_at' => NOW(),
@@ -1289,10 +1315,22 @@ public function insertComponents(Request $request){
 }
 
 public function updateComponents(Request $request, $id) {
-    // Validate the incoming request data
+    // Validate the incoming request data (match insertComponents)
     $data = $request->validate([
         'name' => 'required',
         'type' => 'required',
+        'name_to_display_in_payslip' => 'nullable', // <-- added
+        'income_type' => 'required',
+        'affect_net_salary' => 'required',
+        'calculate_of_gratuity' => 'required',
+        'calculation_type' => 'required',
+        'calculation_period' => 'required',
+        'user_define_days' => 'nullable',
+        'Set/Alter_Income_Tax_Details' => 'required', // <-- added
+        'income_tax_components' => 'nullable',  // <-- added
+        'tax_calculation_basis' => 'nullable', // <-- added
+        'deduct_tds_across_periods' => 'nullable', // <-- added
+        'attendance_leave_with_pay' => 'nullable', // <-- added
         'status' => 'required',
     ]);
 
@@ -1306,6 +1344,18 @@ public function updateComponents(Request $request, $id) {
         ->update([
             'name' => $data['name'],
             'type' => $data['type'],
+            'name_to_display_in_payslip' => $data['name_to_display_in_payslip'], // <-- added
+            'income_type' => $data['income_type'],
+            'affect_net_salary' => $data['affect_net_salary'],
+            'calculate_of_gratuity' => $data['calculate_of_gratuity'],
+            'calculation_type' => $data['calculation_type'],
+            'calculation_period' => $data['calculation_period'],
+            'user_define_days' => $data['user_define_days'] ?? null,
+            'set_alter_income_tax_details' => $data['Set/Alter_Income_Tax_Details'], // <-- added
+            'income_tax_components' => $data['income_tax_components'] ?? null,  // <-- added
+            'tax_calculation_basis' => $data['tax_calculation_basis'] ?? null, // <-- added
+            'deduct_tds_across_periods' => $data['deduct_tds_across_periods'] ?? null, // <-- added
+            'attendance_leave_with_pay' => $data['attendance_leave_with_pay'] ?? null, // <-- added
             'status' => $data['status'],
             'updated_at' => NOW(),
         ]);
@@ -1318,6 +1368,111 @@ public function updateComponents(Request $request, $id) {
     return redirect()->route('create_components')->with('error', 'Component Not Updated Successfully!!');
 }
 
+public function salaryDetailsCreation($user_id)
+{
+    // Fetch user details with mapped department and designation
+    $user = DB::table('users as u')
+    // Join with emp_details to get department and designation
+    ->leftJoin('emp_details as e', 'u.id', '=', 'e.user_id')
+    // Join with organisation_departments to get department name
+    ->leftJoin('organisation_departments as d', 'e.department', '=', 'd.id')
+    // Join with organisation_designations to get designation name
+    ->leftJoin('organisation_designations as des', 'e.designation', '=', 'des.id')
+    //get only selected users details
+    ->where('u.id', $user_id)
+    ->select(
+        'u.id',
+        'u.name',
+        'u.employeeID',
+        'd.name as department_name',
+        'des.name as designation_name'
+    )
+    ->first();
+    //check if user is found or not
+    if (! $user) {
+        return redirect()->back()->with('error', 'User not found');
+    }
+     // Pass the retrieved data to the view
+    return view('user_view.salaryDetailsCreation', [
+        'user' => $user,
+        'user_id' => $user_id,
+    ]);
+}
+
+// Function to get payhead details based on payhead name
+    public function getPayheadDetails(Request $request)
+{
+    $payhead = $request->payhead;
+
+    $component = \DB::table('org_salary_components')
+        ->where('name', $payhead) // matching your column
+        ->where('status', 'Active') // if required
+        ->first();
+
+    if (!$component) {
+        return response()->json([
+            'status' => false,
+            'message' => 'Payhead not found'
+        ], 404);
+    }
+
+    return response()->json([
+        'status' => true,
+        'data' => $component
+    ]);
+}
+// Function to get all active payheads
+public function getAllPayheads()
+{
+    $payheads = \DB::table('org_salary_components')
+        ->where('status', 'Active')
+        ->select('id', 'name')
+        ->orderBy('name')
+        ->get();
+
+    return response()->json([
+        'status' => true,
+        'data' => $payheads
+    ]);
+}
+// Function to save payroll configuration
+public function savePayrollConfig(Request $request)
+{
+    $userId = auth()->id();  // Or pass dynamically if you're saving for another user
+
+    $request->validate([
+        'effective_from.*' => 'required|date',
+        'payhead.*' => 'required|string',
+        'rate.*' => 'required|numeric',
+        'per.*' => 'required|string',
+        'type.*' => 'required|string',
+        'calculation.*' => 'required|string',
+    ]);
+
+    foreach ($request->payhead as $index => $payheadName) {
+
+        // ✅ Get payhead ID
+        $payhead = DB::table('org_salary_components')
+            ->where('name', $payheadName)
+            ->first();
+
+        if (!$payhead) continue;
+
+        DB::table('payroll_configurations')->insert([
+            'user_id' => $userId,
+            'effective_date' => $request->effective_from[$index],
+            'payhead_tagging_id' => $payhead->id,
+            'rate' => $request->rate[$index],
+            'per' => $request->per[$index],
+            'type' => $request->type[$index],
+            'calculation' => $request->calculation[$index],
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+    }
+
+    return redirect()->back()->with('success', 'Payroll configuration saved successfully.');
+}
 
 
 }

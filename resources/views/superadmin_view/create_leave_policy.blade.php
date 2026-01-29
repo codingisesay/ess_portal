@@ -78,7 +78,15 @@ $id = Auth::guard('superadmin')->user()->id;
             <div class="search-container" id="tableSearchContainer" style="display: none;">
                 <div class="search-box">
                     <img src="{{ asset('user_end/images/search (1).png') }}" alt="Search" class="search-icon" id="searchIcon">
-                    <input type="text" id="tableSearch" placeholder="Search..." class="search-input">
+                    <input
+                    type="text"
+                    id="tableSearch"
+                    class="search-input"
+                    placeholder="Search..."
+                    data-search-input
+                    data-table-section="tableSection"
+                    data-no-results="noResults"
+                    />
                 </div>
             </div>
         </div>
@@ -110,102 +118,131 @@ $id = Auth::guard('superadmin')->user()->id;
                     <div class="col-3 mb-4">
                         <div class="form-group">
                             <select id="category_id" name="leave_type_id" class="form-control" required>
-                                <option value="" disabled selected></option>
+                                <option disabled selected>Select</option>
                                 @foreach ($results as $result)
                                     <option value="{{ $result->leave_type_id }}">{{ $result->leave_type }}</option>
                                 @endforeach
                             </select>
-                            <label for="category_id">Select Leave Type</label>
+                            <label for="category_id">
+                               Select Leave Type <span style="color:red">*</span>
+                            </label>
+
                         </div>
                     </div>
                     <div class="col-3 mb-4">
                         <div class="form-group">
-                            <input type="number" id="category_name" name="max_leave_count" class="form-control" required>
-                            <label for="category_name">Max Leave</label>
+                            <input type="number" id="category_name" name="max_leave_count" class="num-range" required  data-min="1" data-max="YEAR_DAYS" >
+                            <label for="category_name">
+                               Max Leave <span style="color:red">*</span>
+                            </label>
                         </div>
                     </div>
                     <div class="col-3 mb-4">
                         <div class="form-group">
-                            <input type="number" id="category_name" name="max_leave_at_time" class="form-control" required>
-                            <label for="category_name">Max Leave At Time</label>
+                            <input type="number" id="category_name" name="max_leave_at_time" required class="num-pair max-leave" data-min="1" data-max="365" data-pair="min_leave_at_time">
+                            <label for="category_name">
+                              Max Leave At Time <span style="color:red">*</span>
+                            </label>
                         </div>
                     </div>
                     <div class="col-3 mb-4">
                         <div class="form-group">
-                            <input type="number" id="category_name" name="min_leave_at_time" class="form-control" required step="0.5">
-                            <label for="category_name">Min Leave At Time</label>
+                            <input type="number" id="category_name" name="min_leave_at_time" class="num-pair min-leave" data-min="1" data-max="365" data-pair="max_leave_at_time">
+                            <label for="category_name">
+                              Min Leave At Time <span style="color:red">*</span>
+                            </label>
                         </div> 
                     </div>
                     <div class="col-3 mb-4">
                         <div class="form-group">
-                            <input type="number" id="category_name" name="leave_count_per_month" class="form-control" required step="0.5">
-                            <label for="category_name">Leave Count Per Month</label>
+                            <input type="number" id="category_name" name="leave_count_per_month" class="num-validate" data-min="0" data-max="31" data-step="0.5" required >
+                            <label for="category_name">
+                              Leave Count Per Month <span style="color:red">*</span>
+                            </label>
                         </div> 
                     </div>
                     <div class="col-3 mb-4">
                         <div class="form-group">
-                            <input type="number" id="category_name" name="no_of_leaves_per_month" class="form-control" required step="0.5">
-                            <label for="category_name">No of Times Per Months</label>
-                        </div> 
+                            <input type="number" id="category_name" name="no_of_leaves_per_month" required data-min="1" data-max="31" data-step="1" class="num-validate">
+                            <label for="category_name">
+                              No of Times Per Months <span style="color:red">*</span>
+                            </label>
+                        </div>
                     </div>
                     <div class="col-3 mb-4">
                     <div class="form-group">
                         <select id="is_carry_forward" name="is_carry_forward" class="form-control" required>
-                            <option value="" disabled selected></option>
+                            <option disabled selected>Select</option>
                             <option value="Yes">Yes</option>
                             <option value="No">No</option> 
                         </select>
-                        <label for="is_carry_forward">Is Carry Forward?</label>
+                        <label for="is_carry_forward">
+                              Is Carry Forward? <span style="color:red">*</span>
+                        </label>
                     </div>
                 </div>
                 <div class="col-3 mb-4">
                     <div class="form-group">
-                        <input type="number" id="no_of_carry_forward" name="no_of_carry_forward" class="form-control" required>
-                        <label for="no_of_carry_forward">No. Of Carry Forward</label>
+                        <input type="number" id="no_of_carry_forward" name="no_of_carry_forward" class="num-validate"    required data-min="0" data-max="365" data-step="1">
+                        <label for="no_of_carry_forward">
+                              No. Of Carry Forward <span style="color:red">*</span>
+                        </label>
                     </div>
                 </div>
                     <div class="col-3 mb-4">
                         <div class="form-group">
                             <select id="LeaveEncash" name="leave_encash" class="form-control" required>
-                                <option value="" disabled selected></option>
+                                <option disabled selected>Select</option>
                                 <option value="Yes">Yes</option>
                                 <option value="No">No</option> 
                             </select>
-                            <label for="category_name">Is Leave Encash?</label>
+                            <label for="LeaveEncash">
+                              Is Leave Encash? <span style="color:red">*</span>
+                            </label>
                         </div>
                     </div>
                     <div class="col-3 mb-4">
                         <div class="form-group">
-                            <input type="number" id="NoOfLeaveEncash" name="leave_encash_count" class="form-control" required>
-                            <label for="category_name">No. Of Leave Encash</label>
+                            <input type="number" id="NoOfLeaveEncash" name="leave_encash_count" required class="num-validate" data-min="1" data-max="365" data-step="1">
+                            <label for="category_name">
+                              No. Of Leave Encash <span style="color:red">*</span>
+                            </label>
                         </div> 
                     </div>
                     <div class="col-3 mb-4">
                         <div class="form-group">
                             <select id="category_id" name="provision_status" class="form-control" required>
-                                <option value="" disabled selected></option>
+                                <option disabled selected>Select</option>
                                 <option value="Applicable">Applicable</option>
                                 <option value="Not Applicable">Not Applicable</option> 
                             </select>
-                            <label for="category_name">Provision Status</label>
+                            <label for="category_name">
+                              Provision Status <span style="color:red">*</span>
+                            </label>
                         </div> 
                     </div>
                     <div class="col-3 mb-4">
                         <div class="form-group">
-                            <input type="number" id="category_name" name="max_leave_pp" class="form-control" required>
-                            <label for="category_name">Max Leave Probation Period</label>
+                            <input type="number" id="category_name" name="max_leave_pp" class="num-validate" data-min="0" data-max="90" data-step="1">
+                            <label for="category_name">
+                              Max Leave Probation Period <span style="color:red">*</span>
+                            </label>
                         </div>
                     </div>
                     <div class="col-3 mb-4">
                         <div class="form-group">
-                            <input type="number" id="category_name" name="probation_period_per_month" class="form-control" required>
-                            <label for="category_name">Probation Period Per Month</label>
+                            <input type="number" id="category_name" name="probation_period_per_month" class="num-validate" data-min="1" data-max="6" data-step="1">
+                            <label for="category_name">
+                              Probation Period Per Month <span style="color:red">*</span>
+                            </label>
                         </div> 
                     </div>
                     <div class="col-3 mb-4">
                         <div class="form-group">
-                            <input type="number" id="category_name" name="calendra_start_for_PP" class="form-control" required>
-                            <label for="category_name">Calendra Start For PP</label>
+                            <input type="number" id="category_name" name="calendra_start_for_PP" class="num-validate" data-min="1" data-max="12" data-step="1">
+                            <label for="category_name">
+                              Calendra Start For PP <span style="color:red">*</span>
+                            </label>
                         </div>
                     </div>
                     
@@ -242,6 +279,7 @@ $id = Auth::guard('superadmin')->user()->id;
             'perPage' => 5
         ])
     </div>
+    @include('partials.no-results')
     </div>
 
     <div id="editLeavePolicyModal" class="w3-modal" style="display: none;">
@@ -258,68 +296,96 @@ $id = Auth::guard('superadmin')->user()->id;
                     <input type="hidden" name="policy_id" id="editLeavePolicyId">
                     <div class="popup-form-group">
                         <input type="text" id="editLeaveType" disabled>
-                        <label for="editLeaveType">Leave Type</label>
+                        <label for="editLeaveType">
+                              Leave Type  <span style="color:red">*</span>
+                        </label>
                     </div>
                     <div class="popup-form-group">
-                        <input type="number" name="max_leave_count" id="editMaxLeave" required>
-                        <label for="editMaxLeave">Max Leave</label>
+                        <input type="number" name="max_leave_count" id="editMaxLeave" required class="num-range" required  data-min="1" data-max="YEAR_DAYS">
+                        <label for="editMaxLeave">
+                              Max Leave <span style="color:red">*</span>
+                        </label>
                     </div>
                     <div class="popup-form-group">
-                        <input type="number" name="max_leave_at_time" id="editMaxLeaveAtTime" required>
-                        <label for="editMaxLeaveAtTime">Max Leave At Time</label>
+                        <input type="number" name="max_leave_at_time" id="editMaxLeaveAtTime" required  class="num-pair max-leave" data-min="1" data-max="365" data-pair="min_leave_at_time">
+                        <label for="editMaxLeaveAtTime">
+                              Max Leave At Time <span style="color:red">*</span>
+                        </label>
                     </div>
                     <div class="popup-form-group">
-                        <input type="number" name="min_leave_at_time" id="editMinLeaveAtTime" required step="0.5">
-                        <label for="editMinLeaveAtTime">Min Leave At Time</label>
+                        <input type="number" name="min_leave_at_time" id="editMinLeaveAtTime" required class="num-pair min-leave" data-min="1" data-max="365" data-pair="max_leave_at_time">
+                        <label for="editMinLeaveAtTime">
+                              Min Leave At Time <span style="color:red">*</span>
+                        </label>
                     </div>
                     <div class="popup-form-group">
-                        <input type="number" name="leave_count_per_month" id="editLeaveCountPerMonth" required step="0.5">
-                        <label for="editLeaveCountPerMonth">Leave Count Per Month</label>
+                        <input type="number" name="leave_count_per_month" id="editLeaveCountPerMonth" required class="num-validate" data-min="0" data-max="31" data-step="0.5">
+                        <label for="editLeaveCountPerMonth">
+                              Leave Count Per Month <span style="color:red">*</span>
+                        </label>
                     </div>
                     <div class="popup-form-group">
-                        <input type="number" name="no_of_leaves_per_month" id="editNoOfTimesPerMonth" required step="0.5">
-                        <label for="editNoOfTimesPerMonth">No of Times Per Month</label>
+                        <input type="number" name="no_of_leaves_per_month" id="editNoOfTimesPerMonth" required class="num-validate" data-min="1" data-max="31" data-step="1">
+                        <label for="editNoOfTimesPerMonth">
+                              No of Times Per Month <span style="color:red">*</span>
+                        </label>
                     </div>
                     <div class="popup-form-group">
                         <select name="is_carry_forward" id="editCarryForward" required> editCarryForward editNoOfCarryForward
                             <option value="Yes">Yes</option>
                             <option value="No">No</option>
                         </select>
-                        <label for="editCarryForward">Carry Forward</label>
+                        <label for="editCarryForward">
+                              No of Times Per Month <span style="color:red">*</span>
+                        </label>
                     </div>
                     <div class="popup-form-group">
-                        <input type="number" name="no_of_carry_forward" id="editNoOfCarryForward">
-                        <label for="editNoOfCarryForward">No. Of Carry Forward</label>
+                        <input type="number" name="no_of_carry_forward" id="editNoOfCarryForward" class="num-validate" data-min="0" data-max="365" data-step="1">
+                        <label for="editNoOfCarryForward">
+                              No. Of Carry Forward <span style="color:red">*</span>
+                        </label>
                     </div>
                     <div class="popup-form-group">
                         <select name="leave_encash" id="editLeaveEncash" required> 
                             <option value="Yes">Yes</option>
                             <option value="No">No</option>
                         </select>
-                        <label for="editLeaveEncash">Leave Encash</label>
+                        <label for="editLeaveEncash">
+                              Leave Encash <span style="color:red">*</span>
+                        </label>
                     </div>
                     <div class="popup-form-group">
-                        <input type="number" name="leave_encash_count" id="editNoOfLeaveEncash">
-                        <label for="editNoOfLeaveEncash">No. Of Leave Encash</label>
+                        <input type="number" name="leave_encash_count" id="editNoOfLeaveEncash" class="num-validate" data-min="1" data-max="365" data-step="1">
+                        <label for="editNoOfLeaveEncash">
+                              No. Of Leave Encash <span style="color:red">*</span>
+                        </label>
                     </div>
                     <div class="popup-form-group">
                         <select name="provision_status" id="editProvisionStatus" required>
                             <option value="Applicable">Applicable</option>
                             <option value="Not Applicable">Not Applicable</option>
                         </select>
-                        <label for="editProvisionStatus">Provision Status</label>
+                        <label for="editProvisionStatus">
+                              Provision Status <span style="color:red">*</span>
+                        </label>
                     </div>
                     <div class="popup-form-group">
-                        <input type="number" name="max_leave_pp" id="editMaxLeavePP" required>
-                        <label for="editMaxLeavePP">Max Leave Probation Period</label>
+                        <input type="number" name="max_leave_pp" id="editMaxLeavePP" required class="num-validate" data-min="0" data-max="90" data-step="1">
+                        <label for="editMaxLeavePP">
+                              Max Leave Probation Period <span style="color:red">*</span>
+                        </label>
                     </div>
                     <div class="popup-form-group">
-                        <input type="number" name="probation_period_per_month" id="editProbationPeriodPerMonth" required>
-                        <label for="editProbationPeriodPerMonth">Probation Period Per Month</label>
+                        <input type="number" name="probation_period_per_month" id="editProbationPeriodPerMonth" required class="num-validate" data-min="0" data-max="6" data-step="1">
+                        <label for="editProbationPeriodPerMonth">
+                              Probation Period Per Month <span style="color:red">*</span>
+                        </label>
                     </div>
                     <div class="popup-form-group">
-                        <input type="number" name="calendra_start_for_PP" id="editCalendraStartForPP" required>
-                        <label for="editCalendraStartForPP">Calendra Start For PP</label>
+                        <input type="number" name="calendra_start_for_PP" id="editCalendraStartForPP" required class="num-validate" data-min="1" data-max="12" data-step="1">
+                        <label for="editCalendraStartForPP">
+                              Calendra Start For PP<span style="color:red">*</span>
+                        </label>
                     </div>
                     <div class="popup-form-group">
                         <button class="create-btn1" type="submit">Save Changes</button>
@@ -404,6 +470,55 @@ $id = Auth::guard('superadmin')->user()->id;
     carryForwardSelect.addEventListener('change', toggleCarryForwardInput);
 });
     </script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+
+    //  Select by NAME instead of ID
+    const provisionSelect = document.querySelector('select[name="provision_status"]');
+    const maxLeavePP = document.querySelector('input[name="max_leave_pp"]');
+    const probationPerMonth = document.querySelector('input[name="probation_period_per_month"]');
+    const calendarPP = document.querySelector('input[name="calendra_start_for_PP"]');
+
+    if (!provisionSelect) return;
+
+    function toggleProvisionFields() {
+        if (provisionSelect.value === 'Not Applicable') {
+
+            maxLeavePP.disabled = true;
+            probationPerMonth.disabled = true;
+            calendarPP.disabled = true;
+
+            maxLeavePP.removeAttribute('required');
+            probationPerMonth.removeAttribute('required');
+            calendarPP.removeAttribute('required');
+
+            maxLeavePP.value = '';
+            probationPerMonth.value = '';
+            calendarPP.value = '';
+
+        } else if (provisionSelect.value === 'Applicable') {
+
+            maxLeavePP.disabled = false;
+            probationPerMonth.disabled = false;
+            calendarPP.disabled = false;
+
+            maxLeavePP.setAttribute('required', 'required');
+            probationPerMonth.setAttribute('required', 'required');
+            calendarPP.setAttribute('required', 'required');
+        }
+    }
+
+    // Run on load + change
+    toggleProvisionFields();
+    provisionSelect.addEventListener('change', toggleProvisionFields);
+
+});
+</script>
+
+
+
+
 
     <script>
         // Show form by default
@@ -524,5 +639,7 @@ $id = Auth::guard('superadmin')->user()->id;
             document.getElementById('editLeavePolicyModal').style.display = 'block';
         }
     </script>
+
+
 @endsection
 

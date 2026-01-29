@@ -106,7 +106,7 @@ error_reporting(0);
                 <div class="modal fade" id="horizontalChartModal" tabindex="-1" aria-labelledby="horizontalChartModalLabel" aria-hidden="true" data-bs-backdrop="true">
                     <div class="modal-dialog modal-xl" style="max-width:1200px; width:90vw;">
                 <div class="modal-content">
-                    <div class="modal-header">
+                    <div class="modal-header-horizontal">
                         <h5 class="modal-title" id="horizontalChartModalLabel">Horizontal Organization Chart</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
@@ -534,6 +534,22 @@ error_reporting(0);
     z-index: 99999 !important;
 }
 
+.modal-header-horizontal {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.5rem 1rem;
+    border-bottom: none !important;
+    background-color: rgb(138, 51, 102);
+    color: white;
+    position: relative;
+    margin: -20px -20px 20px -20px;
+    margin-right: -2%;
+    margin-left: -2%;
+    border-top-left-radius: var(--bs-modal-inner-border-radius);
+    border-top-right-radius: var(--bs-modal-inner-border-radius);
+}
+
 /* Position the horizontalChartModal dialog with no top margin */
 #horizontalChartModal .modal-dialog {
     margin: 0 auto 0 auto !important;
@@ -541,7 +557,7 @@ error_reporting(0);
 
 /* Remove top margin from modal content */
 #horizontalChartModal .modal-content {
-    margin-top: 0 !important;
+    margin-top: 10% !important;
     border: none !important;
 }
 

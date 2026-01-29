@@ -28,15 +28,30 @@ class settingController extends Controller
 
         // $users_for_salary = User::where('organisation_id', $loginUserInfo->organisation_id)->get();
         $users_for_salary = DB::table('users')
-        ->leftjoin('employee_salaries','users.id','=','employee_salaries.user_id')
-        ->leftjoin('org_salary_templates','employee_salaries.salary_template_id','=','org_salary_templates.id')
-        ->select('users.employeeID as emp_employeeID',
-        'users.id as user_id','users.name as user_name',
-        'org_salary_templates.name as org_salary_templates_name',
-        'org_salary_templates.id as org_salary_templates_id',
-        'employee_salaries.user_ctc as user_ctc'
+
+        ->leftJoin('employee_salaries', 'users.id', '=', 'employee_salaries.user_id')
+        ->leftJoin('org_salary_templates', 'employee_salaries.salary_template_id', '=', 'org_salary_templates.id')
+
+         // Join with emp_details to get department and designation
+        ->leftJoin('emp_details', 'users.id', '=', 'emp_details.user_id')
+        // Join with organisation_departments to get department name
+        ->leftJoin('organisation_departments as dept', 'emp_details.department', '=', 'dept.id')
+        // Join with organisation_designations to get designation name
+        ->leftJoin('organisation_designations as desg', 'emp_details.designation', '=', 'desg.id')
+        //select required fields
+        ->select(
+            'users.employeeID as emp_employeeID',
+            'users.id as user_id',
+            'users.name as user_name',
+            'org_salary_templates.name as org_salary_templates_name',
+            'org_salary_templates.id as org_salary_templates_id',
+            'employee_salaries.user_ctc as user_ctc',
+            'dept.name as department_name',
+            'desg.name as designation_name'
         )
-        ->where('users.user_status', 'Active') // ✅ Added filter
+
+        //fetch oonly active users
+        ->where('users.user_status', 'Active')
         ->get();
         // dd($sal);
         $salary_templates = DB::table('org_salary_templates')
@@ -217,10 +232,26 @@ $leaveSummary = $leaveSummary->groupBy(
 
 
 $leaveTypes = DB::table('leave_types')->where('status', 'ACTIVE')->get();
+// for policy categories - with pagination
+$policy_categories = DB::table('hr_policy_categories') 
+    ->where('organisation_id', $loginUserInfo->organisation_id)
+    ->orderBy('created_at', 'asc')
+    ->paginate(10);
+    
+// For HR Policy - Get categories
+$categories = DB::table('hr_policy_categories')
+    ->where('organisation_id', $loginUserInfo->organisation_id)
+    ->where('status', 'Active')
+    ->orderBy('name', 'asc')
+    ->get();
 
+// For HR Policy - Get HR policies with pagination
+$hr_policies = DB::table('hr_policies')
+    ->where('organisation_id', $loginUserInfo->organisation_id)
+    ->orderBy('created_at', 'asc')
+    ->paginate(10);    
 
-// dd($monthsInCycle);
-        return view('user_view.setting',compact('users','title','salary_templates','users_for_salary','monthsInCycle','dataofcurrentyear','leaveSummary','startDate','endDate','leaveTypeId','leaveTypes'));
+        return view('user_view.setting',compact('users','title','salary_templates','users_for_salary','monthsInCycle','dataofcurrentyear','leaveSummary','startDate','endDate','leaveTypeId','leaveTypes','categories','hr_policies','policy_categories'));
     }
 
     public function saveThought(Request $request)

@@ -9,7 +9,7 @@ $name = Auth::guard('superadmin')->user()->name;
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway">
+    {{-- <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway"> --}}
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
     <link rel="stylesheet" href="{{ asset('admin_end/css/admin_sidebar.css') }}">
@@ -17,9 +17,15 @@ $name = Auth::guard('superadmin')->user()->name;
     <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script> 
     <script src="{{ asset('user_end/js/toastify-notifications.js') }}"></script>
     <link href="{{ asset('bootstrapcss/bootstrap.min.css') }}" rel="stylesheet"> 
+    {{-- <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Arimo:ital,wght@0,400..700;1,400..700&family=Fira+Sans:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Outfit:wght@100..900&display=swap" rel="stylesheet">  --}}
+    <link rel="stylesheet" href="{{ asset('css/global.css') }}">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
 
 </head>
+<!-- Common validation for the the email functionality -->
+<script src="{{ asset('admin_end/js/common-validation.js') }}"></script>
 
 <body class="body">
     <!-- Top container -->
@@ -33,7 +39,11 @@ $name = Auth::guard('superadmin')->user()->name;
     <nav class="sidebar" id="mySidebar">
         <div class="sidebar-header"> 
             <div class="logo">
-                <h5><strong>Company Name</strong></h5>
+                <h5>
+                    <strong>
+                          {{ $displayOrgName }}
+                    </strong>
+                </h5>
             </div>
             <span onclick="toggleSidebar()">
             <img id="sidebar-icon" src="{{ asset('admin_end/images/left_ht.png') }}" />
@@ -62,7 +72,7 @@ $name = Auth::guard('superadmin')->user()->name;
                         <li><a href="{{ route('create_department_form') }}" class="{{ request()->routeIs('create_department_form') ? 'active' : '' }}">Create Department</a></li>
                         <li><a href="{{ route('create_designation_form') }}" class="{{ request()->routeIs('create_designation_form') ? 'active' : '' }}">Create Designation</a></li>
                         <li><a href="{{ route('bank_list') }}" class="{{ request()->routeIs('bank_list') ? 'active' : '' }}">Bank Master</a></li>
-                        <li><a href="{{ route('attendance.import') }}" class="{{ request()->routeIs('attendance.import') ? 'active' : '' }}">Import</a></li>
+                        <li><a href="{{ route('attendance.form') }}" class="{{ request()->routeIs('attendance.form') ? 'active' : '' }}">Import</a></li>
                     </ul>
                 </li>
 
@@ -74,8 +84,6 @@ $name = Auth::guard('superadmin')->user()->name;
                         <img src="{{ asset('user_end/images/arrow-right.svg') }}" alt="arrow" class="dropdown-arrow">
                     </strong>
                     <ul id="policyManagementDropdown" class="submenu">
-                        <li><a href="{{ route('create_policy_category') }}" class="{{ request()->routeIs('create_policy_category') ? 'active' : '' }}">Create Policy Category</a></li>
-                        <li><a href="{{ route('create_hr_policy') }}" class="{{ request()->routeIs('create_hr_policy') ? 'active' : '' }}">Create HR Policy</a></li>
                         <li><a href="{{ route('create_policy_time_slot') }}" class="{{ request()->routeIs('create_policy_time_slot') ? 'active' : '' }}">Leave Policy Slot</a></li>
                         <li><a href="{{ route('create_policy_type') }}" class="{{ request()->routeIs('create_policy_type') ? 'active' : '' }}">Leave Policy Type</a></li>
                         <li><a href="{{ route('create_policy') }}" class="{{ request()->routeIs('create_policy') ? 'active' : '' }}">Leave Policy Creation</a></li>
@@ -106,7 +114,7 @@ $name = Auth::guard('superadmin')->user()->name;
                         <li><a href="{{ route('create_salary_cycle') }}" class="{{ request()->routeIs('create_salary_cycle') ? 'active' : '' }}">Salary Cycle</a></li>
                         {{-- <li><a href="{{ route('create_salary_configuration') }}" class="{{ request()->routeIs('create_salary_configuration') ? 'active' : '' }}">Salary Configuration</a></li> --}}
                         <li><a href="{{ route('salary_template_form') }}" class="{{ request()->routeIs('salary_template_form') ? 'active' : '' }}">Create Salary Templates</a></li>
-                        <li><a href="{{ route('create_components') }}" class="{{ request()->routeIs('create_components') ? 'active' : '' }}">Create Salary Components</a></li>
+                        <li><a href="{{ route('create_components') }}" class="{{ request()->routeIs('create_components') ? 'active' : '' }}">Pay Heads Master</a></li> <!-- Updated Route Name -->
                         <li><a href="{{ route('create_salary_components') }}" class="{{ request()->routeIs('create_salary_components') ? 'active' : '' }}">Salary Template Components</a></li>
                     </ul>
                 </li>
@@ -265,5 +273,8 @@ $name = Auth::guard('superadmin')->user()->name;
 
 
     </script>
+    {{-- GLOBAL COMMON SEARCH --}}
+<script src="{{ asset('admin_end/js/common-search.js') }}"></script>
+
 </body>
 </html>

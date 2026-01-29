@@ -4,9 +4,8 @@
   <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js"></script> 
   <link rel="stylesheet" href="{{ asset('/user_end/css/homepage.css') }}">
   <link rel="stylesheet" href="{{ asset('user_end/css/leave.css') }}"> 
-  <link rel="stylesheet" href="{{ asset('/user_end/css/homepage.css') }}"> 
  
-<div class="mx-3">
+<div style="margin-top: 100px;" class="mx-3">
   <h2> <span class="back-btn mx-3" onclick="history.back()"> &lt; </span>Edit Reimbursement Form</h2>
  
   <!-- FORM STARTS HERE -->

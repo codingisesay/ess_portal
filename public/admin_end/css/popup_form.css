@@ -104,6 +104,75 @@
     width: 200px;
 }
 
+
+/* Floating Label Form Group */
+.popup-form-group-small {
+    position: relative;
+    width: 100%;
+    margin: 0 6px 20px 6px;
+}
+
+/* Input and Select Styling */
+.popup-form-group-small input,
+.popup-form-group-small select {
+    width: 100%;
+    padding: 7px 10px;
+    border: 1px solid #e0e0e0;
+    border-radius: 6px;
+    font-size: 16px;
+    color: #333;
+    background-color: #f9f9f9;
+    transition: all 0.3s ease;
+}
+
+/* Floating Label Positioning */
+.popup-form-group-small label {
+    position: absolute;
+    top: 8px;
+    left: 15px;
+    font-size: 16px;
+    color: #777;
+    pointer-events: none;
+    transition: all 0.2s ease;
+    padding: 0 4px;
+    background-color: #fff;
+}
+
+/* Label floating logic */
+.popup-form-group-small input:focus + label,
+.popup-form-group-small input:not(:placeholder-shown) + label,
+.popup-form-group-small select:focus + label,
+.popup-form-group-small select:valid + label,
+.popup-form-group-small input.has-value + label,
+.popup-form-group-small select.has-value + label {
+    top: -8px;
+    left: 10px;
+    font-size: 13px;
+    color: #8A3366;
+    background-color: #fff;
+}
+
+/* Input focus effect */
+.popup-form-group-small input:focus,
+.popup-form-group-small select:focus {
+    outline: none;
+    border-color: #8A3366;
+    box-shadow: 0 0 0 3px rgba(138, 51, 102, 0.1);
+    background-color: #fff;
+}
+
+/* Last form group (for submit area) */
+.popup-form-group-small:last-child {
+    width: 100%;
+    text-align: center;
+    padding-top: 10px;
+}
+
+.popup-form-group-small:last-child button {
+    width: 200px;
+}
+
+
 /* Submit button styling */
 .create-btn1 {
     background-color: #8A3366;

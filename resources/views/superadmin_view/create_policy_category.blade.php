@@ -76,30 +76,43 @@ $id = Auth::guard('superadmin')->user()->id;
             <div class="search-container" id="tableSearchContainer" style="display: none;">
                 <div class="search-box">
                     <img src="{{ asset('user_end/images/search (1).png') }}" alt="Search" class="search-icon" id="searchIcon">
-                    <input type="text" id="tableSearch" placeholder="Search..." class="search-input">
+                    <input
+                    type="text"
+                    id="tableSearch"
+                    class="search-input"
+                    placeholder="Search By Category Name"
+                    data-search-input
+                    data-table-section="tableSection"
+                    data-no-results="noResults"
+                    />
                 </div>
             </div>
         </div>
 
         <!-- Form Section -->
         <div id="formSection">
-            <form action="{{ route('save_policy_category') }}" method="POST" enctype="multipart/form-data" >
+            <form action="{{ route('save_policy_category') }}" method="POST" enctype="multipart/form-data" id="policyCategoryForm">
                 @csrf
                 <div class="form-container row">
                 <div class="col-3 mb-4">
                 <div class="form-group">
-                    <input type="text" id="category_name" name="category_name" class="form-control" required>
-                    <label for="category_name">Category Name</label>
+                    <input type="text" id="category_name" name="category_name" class="only-alpha" required
+                      >
+                    <label for="category_name">
+                        Category Name <span style="color:red">*</span>
+                    </label>
                 </div>
                 </div>
                 <div class="col-3 mb-4">
                 <div class="form-group ">
                     <select id="category_id" name="status" class="form-control" required>
-                        <option value="" disabled selected></option>
+                        <option disabled selected>Select</option>
                         <option value="Active">Active</option>
                         <option value="Inactive">Inactive</option>
                     </select>
-                    <label for="category_id">Status</label>
+                    <label for="category_id">
+                       Status <span style="color:red">*</span>
+                    </label>
                 </div> 
                 </div>
 
@@ -114,14 +127,15 @@ $id = Auth::guard('superadmin')->user()->id;
             'items' => $datas,
             'columns' => [
                 ['header' => 'ID', 'accessor' => 'id'],
-                ['header' => 'Name', 'accessor' => 'name'],
-                ['header' => 'Ststus', 'accessor' => 'status'],
+                ['header' => 'Category Name', 'accessor' => 'name'],
+                ['header' => 'Status', 'accessor' => 'status'],
             ],
             'editModalId' => 'editPolicyCategoryModal',
             'hasActions' => true,
             'perPage' => 5
         ])
     </div>
+    @include('partials.no-results')
 
     </div>
 
@@ -138,15 +152,19 @@ $id = Auth::guard('superadmin')->user()->id;
                     @method('POST')
                     <input type="hidden" name="category_id" id="editPolicyCategoryId">
                     <div class="popup-form-group">
-                        <input type="text" name="category_name" id="editPolicyCategoryName" required> 
-                        <label for="editPolicyCategoryName">Category Name</label>
+                        <input type="text" name="category_name" id="editPolicyCategoryName" required  class="only-alpha" >  
+                        <label for="editPolicyCategoryName">
+                        Category Name <span style="color:red">*</span>
+                    </label>
                     </div>
                     <div class="popup-form-group">
                         <select name="status" id="editPolicyCategoryStatus" required>
                             <option value="Active">Active</option>
                             <option value="Inactive">Inactive</option>
                         </select>
-                        <label for="editPolicyCategoryStatus">Status</label>
+                    <label for="editPolicyCategoryStatus">
+                       Status <span style="color:red">*</span>
+                    </label>
                     </div>
                     <div class="popup-form-group">
                         <button class="create-btn1" type="submit">Save Changes</button>
@@ -263,6 +281,41 @@ $id = Auth::guard('superadmin')->user()->id;
             document.getElementById('editPolicyCategoryModal').style.display = 'block';
         }
     </script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const form = document.getElementById('policyCategoryForm');
+    const input = document.getElementById('category_name');
+
+    if (form) {
+        form.addEventListener('submit', function (e) {
+            const enteredName = input.value.trim().toLowerCase();
+            
+            if (!enteredName) return;
+
+            // Collect existing category names from the table (2nd Column)
+            const existingCategories = Array.from(
+                document.querySelectorAll('#tableSection tbody tr td:nth-child(2)')
+            ).map(td => td.textContent.trim().toLowerCase());
+
+            // Check for duplicates
+            if (existingCategories.includes(enteredName)) {
+                e.preventDefault(); // Stop form submission
+
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Category already exists',
+                    text: 'This policy category name is already present in the list.',
+                    confirmButtonColor: '#d33'
+                });
+
+                return false;
+            }
+        });
+    }
+});
+</script>
 @endsection
 </body>
 </html>

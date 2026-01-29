@@ -1,0 +1,48 @@
+/* Footer Styles  */
+
+/* When a fixed footer exists, add bottom padding so page content isn't hidden */
+body.has-fixed-footer {
+    padding-bottom: 80px; /* Add padding to prevent content from being hidden behind fixed footer */
+    position: relative;
+    min-height: 100vh;
+}
+
+.page-footer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    padding: 15px 0;
+    background-color: #f8f9fa;
+    border-top: 1px solid #e9ecef;
+    text-align: center;
+    z-index: 1000;
+}
+
+.footer-content {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+.footer-logo {
+    height: 26px;
+    width: auto;
+}
+
+.footer-text {
+    color: #6c757d;
+    font-size: 0.875rem;
+}
+
+.footer-link {
+    text-decoration: none;
+    color: #6c757d;
+    transition: color 0.3s ease;
+}
+
+.footer-link:hover {
+    color: #8A3366;
+    text-decoration: none;
+}

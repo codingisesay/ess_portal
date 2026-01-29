@@ -67,6 +67,7 @@ $id = Auth::guard('superadmin')->user()->id;
         gap: 10px;
     }
 </style>
+<script src="{{ asset('admin_end/js/common-validate-month-start.js') }}"></script>
 <div class="container">
     <h3>Creates Salary Cycle</h3>
 
@@ -81,7 +82,15 @@ $id = Auth::guard('superadmin')->user()->id;
         <div class="search-container" id="tableSearchContainer" style="display: none;">
             <div class="search-box">
                 <img src="{{ asset('user_end/images/search (1).png') }}" alt="Search" class="search-icon" id="searchIcon">
-                <input type="text" id="tableSearch" placeholder="Search..." class="search-input">
+                    <input
+                    type="text"
+                    id="tableSearch"
+                    class="search-input"
+                    placeholder="Search..."
+                    data-search-input
+                    data-table-section="tableSection"
+                    data-no-results="noResults"
+                    />
             </div>
         </div>
     </div>
@@ -109,19 +118,30 @@ $id = Auth::guard('superadmin')->user()->id;
                 </div>
                 <div class="col-3 mb-4">
                     <div class="form-group">
-                        <input type="datetime-local" name="applicable_from" required>
+                        <input type="datetime-local" name="applicable_from" id="applicableFrom" required data-min-now="true"
+                        onchange="validateDateRange({
+                            startSelector:'#start_date',
+                            endSelector:'#end_date'
+                        })"
+                        >
                         <label>Applicable From</label>
                     </div>
                 </div>
                 <div class="col-3 mb-4">
                     <div class="form-group">
-                        <input type="datetime-local" name="applicable_to" required>
+                        <input type="datetime-local" name="applicable_to" id="applicableTo" required 
+                          data-min-now="true"
+                            onchange="validateDateRange({
+                                startSelector:'#start_date',
+                                endSelector:'#end_date'
+                            })"
+                        >
                         <label>Applicable To</label>
                     </div>
                 </div>
                 <div class="col-3 mb-4">
                     <div class="form-group">
-                        <input type="number" name="month_start_date" required>
+                        <input type="number" name="month_start_date" required >
                         <label>Month Start Date</label>
                     </div>
                 </div>
@@ -134,7 +154,7 @@ $id = Auth::guard('superadmin')->user()->id;
                 <div class="col-3 mb-4">
                     <div class="form-group">
                         <select name="status" required>
-                            <option value="" disabled selected></option>
+                            <option disabled selected>Select</option>
                             <option value="Active">Active</option>
                             <option value="Inactive">Inactive</option>
                         </select>
@@ -167,6 +187,7 @@ $id = Auth::guard('superadmin')->user()->id;
             'perPage' => 5
         ])
     </div> 
+    @include('partials.no-results')
 
 
 </div>
@@ -188,11 +209,21 @@ $id = Auth::guard('superadmin')->user()->id;
                     <label for="editSalaryCycleName">Name</label>
                 </div>
                 <div class="popup-form-group">
-                    <input type="datetime-local" name="applicable_from" id="editApplicableFrom" required>
+                    <input type="datetime-local" name="applicable_from" id="editApplicableFrom" required 
+                            data-min-now="true"
+                                onchange="validateDateRange({
+                                    startSelector:'#start_date',
+                                    endSelector:'#end_date'
+                                })">
                     <label for="editApplicableFrom">Applicable From</label>
                 </div>
                 <div class="popup-form-group">
-                    <input type="datetime-local" name="applicable_to" id="editApplicableTo" required>
+                    <input type="datetime-local" name="applicable_to" id="editApplicableTo" required
+                            data-min-now="true"
+                            onchange="validateDateRange({
+                                startSelector:'#start_date',
+                                endSelector:'#end_date'
+                            })">
                     <label for="editApplicableTo">Applicable To</label>
                 </div>
                 <div class="popup-form-group">
@@ -322,6 +353,7 @@ $id = Auth::guard('superadmin')->user()->id;
     document.getElementById('editSalaryCycleModal').style.display = 'block';
 }
 </script>
+
 
 @endsection
 

@@ -2,13 +2,12 @@
 @section('content')
  
   <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js"></script> 
-  <link rel="stylesheet" href="{{ asset('/user_end/css/homepage.css') }}">
  <!-- Option 1: Include in HTML --> 
   <link rel="stylesheet" href="{{ asset('user_end/css/leave.css') }}"> 
   <link rel="stylesheet" href="{{ asset('/user_end/css/homepage.css') }}"> 
    
-      <div class="mx-3">
-        <h2> <span class="back-btn mx-3" onclick="history.back()"> &lt; </span>Reimbursement Form</h2> 
+      <div style="margin-top: 100px;" class="mx-3">
+        <h2> <span class="back-btn mx-3" onclick="history.back()" style="cursor: pointer;"> &lt; </span>Reimbursement Form</h2> 
         <!-- FORM STARTS HERE -->
         <form action="{{ route('insert_Reimbursement_Form') }}" method="post" enctype="multipart/form-data">
           @csrf
@@ -16,22 +15,6 @@
           <div class="reimbursement-details">
             <!-- Initial form details -->
             <div class="row mb-2">
-              <!-- {{-- <div class="col-3">
-                <div class="form-group">
-                    <div class="floating-label-wrapper">
-                        <input type="text" class="input-field" value="John Doe" disabled >
-                        <label for="project">Employee Name</label>
-                    </div>
-                </div>          
-              </div>   --}}
-              {{-- <div class="col-3">
-                <div class="form-group">
-                    <div class="floating-label-wrapper">
-                        <input type="date" class="input-field" palceholder="Enter title for claim" disabled >
-                        <label for="project">Claim Date</label>
-                    </div>
-                </div>          
-              </div>   --}} -->
               <div class="col-3">
                 <div class="form-group">
                     <div class="floating-label-wrapper">
@@ -182,7 +165,7 @@ function updateTotals() {
 
       row.innerHTML = `
         <td>${rowCount}</td>
-        <td><input type="date" name="bill_date[]" class="form-control" required></td>
+        <td><input type="date" name="bill_date[]" class="form-control text-end" required></td>
         <td>
           <select class="form-control rm_type" name="type[]" required>
             <option value="">Select One</option>

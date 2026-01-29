@@ -64,6 +64,7 @@ $id = Auth::guard('superadmin')->user()->id;
     <title>Create Reimbursement Type</title>
     
 </head>
+<script src="{{ asset('admin_end/js/common-input-validation.js') }}"></script>
 <body>
     <div class="container">
         <h3>Create Reimbursement Type</h3>
@@ -79,7 +80,15 @@ $id = Auth::guard('superadmin')->user()->id;
             <div class="search-container" id="tableSearchContainer" style="display: none;">
                 <div class="search-box">
                     <img src="{{ asset('user_end/images/search (1).png') }}" alt="Search" class="search-icon" id="searchIcon">
-                    <input type="text" id="tableSearch" placeholder="Search..." class="search-input">
+                    <input
+                        type="text"
+                        id="tableSearch"
+                        class="search-input"
+                        placeholder="Search..."
+                        data-search-input
+                        data-table-section="tableSection"
+                        data-no-results="noResults"
+                    />
                 </div>
             </div>
         </div>
@@ -92,24 +101,31 @@ $id = Auth::guard('superadmin')->user()->id;
                 <div class="form-container row">
                 <div class="col-3 mb-4">
                     <div class="form-group">
-                        <input type="text" id="category_name" name="category_name" class="form-control" required>
-                        <label for="category_name">Reimbursement Name</label>
+                        <input type="text" id="category_name" name="category_name" class="only-alpha" required data-max="50">
+                        <label for="category_name">
+                              Reimbursement Name <span style="color:red">*</span>
+                        </label>
+
                     </div>
                 </div>
                 <div class="col-3 mb-4">
                     <div class="form-group">
-                        <input type="text" id="category_name" name="category_short_name" class="form-control" required>
-                        <label for="category_name">Reimbursement Abbreviation</label>
+                        <input type="text" id="category_name" name="category_short_name"  class="only-alpha" required data-max="10">
+                        <label for="category_name">
+                             Reimbursement Abbreviation <span style="color:red">*</span>
+                        </label>
                     </div>
                 </div>
                 <div class="col-3 mb-4">
                 <div class="form-group ">
                     <select id="category_id" name="status" class="form-control" required>
-                        <option value="" disabled selected></option>
+                        <option disabled selected>Select</option>
                         <option value="Active">Active</option>
                         <option value="Inactive">Inactive</option>
                     </select>
-                    <label for="category_id">Status</label>
+                    <label for="category_id">
+                            Status <span style="color:red">*</span>
+                    </label>
                 </div> 
                 </div>
 
@@ -135,6 +151,7 @@ $id = Auth::guard('superadmin')->user()->id;
             'perPage' => 5
         ])
     </div>
+    @include('partials.no-results')
  
     </div>
 
@@ -151,19 +168,25 @@ $id = Auth::guard('superadmin')->user()->id;
                     @csrf
                     <input type="hidden" name="id" id="editReimbursementId">
                     <div class="popup-form-group">
-                        <input type="text" name="category_name" id="editReimbursementName" required>
-                        <label for="editReimbursementName">Reimbursement Name</label>
+                        <input type="text" name="category_name" id="editReimbursementName" required  class="only-alpha" data-max="50">
+                        <label for="editReimbursementName">
+                            Reimbursement Name <span style="color:red">*</span>
+                        </label>
                     </div>
                     <div class="popup-form-group">
-                        <input type="text" name="category_short_name" id="editReimbursementShortName" required>
-                        <label for="editReimbursementShortName">Reimbursement Abbreviation</label>
+                        <input type="text" name="category_short_name" id="editReimbursementShortName" required  class="only-alpha" data-max="10">
+                        <label for="editReimbursementShortName">
+                            Reimbursement Abbreviation <span style="color:red">*</span>
+                        </label>
                     </div>
                     <div class="popup-form-group">
                         <select name="status" id="editReimbursementStatus" required>
                             <option value="Active">Active</option>
                             <option value="Inactive">Inactive</option>
                         </select>
-                        <label for="editReimbursementStatus">Status</label>
+                        <label for="editReimbursementStatus">
+                            Status <span style="color:red">*</span>
+                        </label>
                     </div>
                     <div class="popup-form-group">
                         <button class="create-btn1" type="submit">Save Changes</button>
@@ -248,6 +271,7 @@ $id = Auth::guard('superadmin')->user()->id;
             updateActiveButton(clickedElement);
         }
 
+       
         function showHRPolicyTable(clickedElement) {
             // Show table section and hide form section
             document.getElementById('formSection').style.display = 'none';

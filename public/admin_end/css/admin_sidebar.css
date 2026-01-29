@@ -2,6 +2,14 @@
     width: 5px;
     height: 5px;
 }
+
+/* =========================
+   GLOBAL FONT FIX
+   ========================= */
+
+html, body {
+    font-family:'Fira Sans' !important;
+}
  
 ::-webkit-scrollbar-track {
     -webkit-box-shadow: none;
@@ -74,8 +82,13 @@ nav ul li a.active {
     background: #8A33664D;
     box-shadow: 0px 0px 4px 0px #00000040;
     border-radius: 6px;
+    height: 36px;
 }
  
+nav ul li a:hover {
+    height: 36px;
+}
+
 nav ul li {
     margin-bottom: 20px;
 }

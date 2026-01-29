@@ -61,9 +61,10 @@ $id = Auth::guard('superadmin')->user()->id;
         }
     </style>
 </head>
+<script src="{{ asset('admin_end/js/common-validate-month-start.js') }}"></script>
 <body>
     <div class="container">
-        <h3>Employee Type Policy</h3>
+        <h3>Employee Type Leave Policy</h3>
 
         <div class="d-flex">
             <!-- Toggle Buttons -->
@@ -76,7 +77,15 @@ $id = Auth::guard('superadmin')->user()->id;
             <div class="search-container" id="tableSearchContainer" style="display: none;">
                 <div class="search-box">
                     <img src="{{ asset('user_end/images/search (1).png') }}" alt="Search" class="search-icon" id="searchIcon">
-                    <input type="text" id="tableSearch" placeholder="Search..." class="search-input">
+                    <input
+                    type="text"
+                    id="tableSearch"
+                    class="search-input"
+                    placeholder="Search..."
+                    data-search-input
+                    data-table-section="tableSection"
+                    data-no-results="noResults"
+                    />                    
                 </div>
             </div>
         </div>
@@ -89,35 +98,43 @@ $id = Auth::guard('superadmin')->user()->id;
                     <div class="col-3 mb-4">
                         <div class="form-group">
                             <select id="category_id" name="restriction_id" class="form-control" required>
-                                <option value="" disabled selected></option>
+                                <option disabled selected>Select</option>
                                 @foreach ($dataFromLeaveRestctions as $dataFromLeaveRestction)
                                     <option value="{{ $dataFromLeaveRestction->leave_restriction_id }}">{{ $dataFromLeaveRestction->leave_type }}</option>
                                 @endforeach
                             </select>
-                            <label for="category_name">Leave Type</label>
+                            <label for="category_name">
+                               Leave Type <span style="color:red">*</span>
+                            </label>
                         </div>
                     </div>
                     <div class="col-3 mb-4">
                         <div class="form-group">
                             <select id="category_id" name="emp_id" class="form-control" required>
-                                <option value="" disabled selected></option>
+                                <option disabled selected>Select</option>
                                 @foreach ($empTypes as $empType)
                                     <option value="{{ $empType->id }}">{{ $empType->name }}</option>
                                 @endforeach
                             </select>
-                            <label for="category_name">Employee Type</label>
+                            <label for="category_name">
+                              Employee Type <span style="color:red">*</span>
+                            </label>
                         </div>
                     </div>
                     <div class="col-3 mb-4">
                         <div class="form-group">
-                            <input type="number" id="category_name" name="leave_count" class="form-control" required>
-                            <label for="category_name">Leave Count</label>
+                            <input type="number" id="category_name" name="leave_count" class="form-control" required min="0" max="365" step="1" required oninput="validateLeaveCount(this)">
+                            <label for="category_name">
+                              Leave Count <span style="color:red">*</span>
+                            </label>
                         </div>
                     </div>
                     <div class="col-3 mb-4">
                         <div class="form-group">
-                            <input type="number" id="date" name="month_start" class="form-control" required max="30" oninput="validateInput(this)">
-                            <label for="year">Month Start</label>
+                            <input type="number" id="date" name="month_start" class="form-control"  min="1" max="31" step="1" required  oninput="validateMonthStart(this)">
+                            <label>
+                              Month Start <span style="color:red">*</span>
+                            </label>
                         </div>
                     </div>
                     <div class="col-12">
@@ -143,6 +160,7 @@ $id = Auth::guard('superadmin')->user()->id;
             'perPage' => 5
         ])
     </div>
+    @include('partials.no-results')
 
     </div>
 

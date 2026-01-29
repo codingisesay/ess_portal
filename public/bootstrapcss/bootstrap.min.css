@@ -1,4 +1,6 @@
 @charset "UTF-8";
+/* Fira Sans font import */
+@import url('https://fonts.googleapis.com/css2?family=Fira+Sans:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
 
 /*!
  * Bootstrap v5.0.2 (https://getbootstrap.com/)
@@ -28,7 +30,8 @@
     --bs-danger: #dc3545;
     --bs-light: #f8f9fa;
     --bs-dark: #212529;
-    --bs-font-sans-serif: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+    /* Updated to only use Fira Sans */
+    --bs-font-sans-serif: "Fira Sans", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
     --bs-font-monospace: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
     --bs-gradient: linear-gradient(180deg, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0))
 }
@@ -47,13 +50,18 @@
 
 body {
     margin: 0;
-    font-family: var(--bs-font-sans-serif);
+    font-family: "Fira Sans";
     font-size: 1rem;
     font-weight: 400;
     line-height: 1.5;
     color: #212529;
     -webkit-text-size-adjust: 100%;
     -webkit-tap-highlight-color: transparent
+}
+
+input, textarea, select, button {
+    font-family: "Fira Sans" !important;
+    font-size: inherit;
 }
 
 hr {
@@ -6036,7 +6044,8 @@ fieldset:disabled .btn {
     background-clip: padding-box;
     border: 1px solid rgba(0, 0, 0, .2);
     border-radius: .3rem;
-    outline: 0
+    outline: 0;
+    margin-top: 180px;
 }
 
 .modal-backdrop {
@@ -6060,6 +6069,8 @@ fieldset:disabled .btn {
 .modal-header {
     display: flex;
     flex-shrink: 0;
+    width: 499px;
+    margin-left: 0.45px;
     align-items: center;
     justify-content: space-between;
     padding: 1rem 1rem;

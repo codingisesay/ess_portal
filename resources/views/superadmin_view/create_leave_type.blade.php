@@ -77,7 +77,15 @@ $id = Auth::guard('superadmin')->user()->id;
             <div class="search-container" id="tableSearchContainer" style="display: none;">
                 <div class="search-box">
                     <img src="{{ asset('user_end/images/search (1).png') }}" alt="Search" class="search-icon" id="searchIcon">
-                    <input type="text" id="tableSearch" placeholder="Search..." class="search-input">
+                    <input
+                    type="text"
+                    id="tableSearch"
+                    class="search-input"
+                    placeholder="Search..."
+                    data-search-input
+                    data-table-section="tableSection"
+                    data-no-results="noResults"
+                    />
                 </div>
             </div>
         </div>
@@ -94,44 +102,54 @@ $id = Auth::guard('superadmin')->user()->id;
             </div>
             @endif
 
-            <form action="{{ route('insert_policy_type') }}" method="POST" enctype="multipart/form-data">
+            <form id="leaveTypeForm" action="{{ route('insert_policy_type') }}" method="POST" enctype="multipart/form-data">
                 @csrf
                 <div  class="form-container row">
                     <div class="col-3 mb-4">
                         <div class="form-group">
                             <select id="category_id" name="cycle_slot_id" class="form-control" required>
-                                <option value="" disabled selected></option>
+                                <option disabled selected>Select</option>
                                 @foreach ($leaveCycleDatas as $leaveCycleData)
                                 <option value="{{$leaveCycleData->id}}">{{ $leaveCycleData->name }}</option>
                                 @endforeach
                             </select>
-                            <label for="category_id">Select Cycle</label>
+                            <label for="category_id">
+                                Select Cycle <span style="color:red">*</span>
+                            </label>
                         </div>
                     </div>
                     <div class="col-3 mb-4">
                         <div class="form-group">
-                            <input type="text" id="category_name" name="leave_category" class="form-control" required>
-                            <label for="category_name">Leave Type Name</label>
+                            <input type="text" id="category_name" name="leave_category" class="only-alpha" required  
+                            >
+                            <label for="category_name">
+                                Leave Type Name <span style="color:red">*</span>
+                            </label>
+
                         </div>
                     </div>
                     <div class="col-3 mb-4">
                         <div class="form-group">
                             <select id="category_id" name="half_day_status" class="form-control" required>
-                                <option value="" disabled selected></option>
+                                <option disabled selected>Select</option>
                                 <option value="Yes">Yes</option>
                                 <option value="No">No</option>
                             </select>
-                            <label for="category_name">Half Day Applicable?</label>
+                            <label for="category_id">
+                                Half Day Applicable? <span style="color:red">*</span>
+                            </label>
                         </div>
                     </div>
                     <div class="col-3 mb-4">
                         <div class="form-group">
                             <select id="category_id" name="status" class="form-control" required>
-                                <option value="" disabled selected></option>
+                                <option disabled selected>Select</option>
                                 <option value="Active">Active</option>
                                 <option value="Inactive">Inactive</option>
                             </select>
-                            <label for="category_id">Status</label>
+                            <label for="category_id">
+                                Status <span style="color:red">*</span>
+                            </label>
                         </div>
                     </div>
                     <div class="col-12">
@@ -159,6 +177,7 @@ $id = Auth::guard('superadmin')->user()->id;
                 }
             ])
         </div>
+        @include('partials.no-results')
     
 
         <div id="editLeaveTypeModal" class="w3-modal" style="display: none;">
@@ -178,25 +197,34 @@ $id = Auth::guard('superadmin')->user()->id;
                                     <option value="{{ $leaveCycleData->id }}">{{ $leaveCycleData->name }}</option>
                                 @endforeach
                             </select>
-                            <label for="editLeaveCycle">Select Cycle</label>
+                            <label for="editLeaveCycle">
+                                Select Cycle <span style="color:red">*</span>
+                            </label>
                         </div>
                         <div class="popup-form-group">
-                            <input type="text" name="leave_category" id="editLeaveTypeName" required>
-                            <label for="editLeaveTypeName">Leave Type Name</label>
+                            <input type="text" name="leave_category" id="editLeaveTypeName" required class="only-alpha"
+                            >
+                            <label for="editLeaveTypeName">
+                               Leave Type Name <span style="color:red">*</span>
+                            </label>
                         </div>
                         <div class="popup-form-group">
                             <select name="half_day_status" id="editHalfDayStatus" required>
                                 <option value="Yes">Yes</option>
                                 <option value="No">No</option>
                             </select>
-                            <label for="editHalfDayStatus">Half Day Applicable?</label>
+                             <label for="editHalfDayStatus">
+                               Half Day Applicable? <span style="color:red">*</span>
+                            </label>
                         </div>
                         <div class="popup-form-group">
                             <select name="status" id="editLeaveStatus" required>
                                 <option value="Active">Active</option>
                                 <option value="Inactive">Inactive</option>
                             </select>
-                            <label for="editLeaveStatus">Status</label>
+                            <label for="editLeaveStatus">
+                               Status <span style="color:red">*</span>
+                            </label>
                         </div>
                         <div class="popup-form-group">
                             <button class="create-btn1" type="submit">Save Changes</button>
@@ -311,6 +339,52 @@ $id = Auth::guard('superadmin')->user()->id;
 
                 document.getElementById('editLeaveTypeModal').style.display = 'block'; // Show the modal
             }
+        </script>
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+        <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const form = document.getElementById('leaveTypeForm');
+            
+            if (form) {
+                form.addEventListener('submit', function (e) {
+                    // 1. Get current values from the form
+                    const cycleSelect = document.querySelector('select[name="cycle_slot_id"]');
+                    const selectedCycleText = cycleSelect.options[cycleSelect.selectedIndex].text.trim().toLowerCase();
+                    const enteredLeaveType = document.getElementById('category_name').value.trim().toLowerCase();
+
+                    // 2. Identify all rows in the data table
+                    // Based on your columns: Cycle Name is 2nd column, Leave Type is 3rd column
+                    const tableRows = document.querySelectorAll('#tableSection tbody tr');
+                    let isDuplicate = false;
+
+                    tableRows.forEach(row => {
+                        const cells = row.querySelectorAll('td');
+                        if (cells.length >= 3) {
+                            const existingCycle = cells[1].textContent.trim().toLowerCase();
+                            const existingType = cells[2].textContent.trim().toLowerCase();
+
+                            // 3. Check if the combination matches
+                            if (existingCycle === selectedCycleText && existingType === enteredLeaveType) {
+                                isDuplicate = true;
+                            }
+                        }
+                    });
+
+                    // 4. If duplicate found, stop submission and show SWAL
+                    if (isDuplicate) {
+                        e.preventDefault();
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Duplicate Entry',
+                            text: `The Leave Type "${enteredLeaveType.toUpperCase()}" already exists for the cycle "${selectedCycleText.toUpperCase()}".`,
+                            confirmButtonColor: '#3085d6'
+                        });
+                        return false;
+                    }
+                });
+            }
+        });
         </script>
 @endsection
 </body>
