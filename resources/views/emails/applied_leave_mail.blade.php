@@ -25,6 +25,11 @@
  
 <p>You are requested to check the same and approve/reject.</p>
  
+@if(!empty($manager_manager_name))
+    <!-- Display manager's manager name when available -->
+    <p><small>Also notifying: <strong>{{ $manager_manager_name }}</strong></small></p>
+@endif
+ 
 
 
 <address>
