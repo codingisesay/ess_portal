@@ -505,8 +505,25 @@ $anniversaries = DB::table('emp_details')
     })
     ->values(); // Reset keys for clean array
 
-       // Fetch data from emp_details with respect to manager
-$dataOfteamMambers = DB::table('emp_details')->where('reporting_manager', '=', $user->id)->get();
+    // Fetch data from emp_details with respect to manager
+    // Include both direct reports and second-level reports (i.e. users whose manager reports to the current user)
+    // so that managers' managers can also approve/reject leave requests for their team's members.
+    $directManagers = DB::table('emp_details')
+        ->where('reporting_manager', $user->id)
+        ->pluck('user_id');
+
+    if ($directManagers->isEmpty()) {
+        // No direct managers found; fall back to only direct reports (if any)
+        $dataOfteamMambers = DB::table('emp_details')
+            ->where('reporting_manager', $user->id)
+            ->get();
+    } else {
+        // Get emp_details where reporting_manager is current user OR reporting_manager is one of the direct managers
+        $dataOfteamMambers = DB::table('emp_details')
+            ->where('reporting_manager', $user->id)
+            ->orWhereIn('reporting_manager', $directManagers->toArray())
+            ->get();
+    }
 
 // Initialize the leave lists array
 // $leaveLists = array();

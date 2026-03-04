@@ -1278,12 +1278,15 @@ $remaning_leave = $total_leave - $takenLeave;
 
             if($status){
 
+                // Fetch the direct reporting manager for the applicant
+                // Also select the manager's user id so we can lookup their reporting manager (manager's manager)
                 $fetchManager = DB::table('emp_details')
-                ->join('users','emp_details.reporting_manager','=','users.id')
-                ->select('users.email as manager_mail_id','users.name as manager_name')
-                ->where('emp_details.user_id','=',$loginUserInfo->id)
-                ->first();
-                // dd($fetchManager);
+                    ->join('users','emp_details.reporting_manager','=','users.id')
+                    ->select('users.id as manager_user_id','users.email as manager_mail_id','users.name as manager_name')
+                    ->where('emp_details.user_id','=',$loginUserInfo->id)
+                    ->first();
+
+                // Prepare recipient lists
                 $mail_to = [];
                 $mail_cc = [];
 
@@ -1320,8 +1323,36 @@ if($data['leave_slot'] == 'First Half' || $data['leave_slot'] == 'Second Half'){
                 $org_id = $loginUserInfo->organisation_id;
                 $mail_flag = "applied_leave";
 
-                array_push($mail_to,$fetchManager->manager_mail_id);
-                array_push($mail_cc,$loginUserInfo->email);
+                // Add direct manager to TO
+                if (!empty($fetchManager->manager_mail_id)) {
+                    array_push($mail_to, $fetchManager->manager_mail_id);
+                }
+
+                // Add the applicant to CC
+                array_push($mail_cc, $loginUserInfo->email);
+
+                // --- New: Also notify the reporting manager of the applicant's manager ---
+                // We lookup the manager's emp_details to find who the manager reports to,
+                // then add that user's email to the TO list so they receive the request/email as well.
+                if (!empty($fetchManager->manager_user_id)) {
+                    $managerEmp = DB::table('emp_details')
+                        ->where('user_id', $fetchManager->manager_user_id)
+                        ->first();
+
+                    if ($managerEmp && !empty($managerEmp->reporting_manager)) {
+                        $managerManager = DB::table('users')
+                            ->where('id', $managerEmp->reporting_manager)
+                            ->select('email','name')
+                            ->first();
+
+                        if ($managerManager && !empty($managerManager->email)) {
+                            // Avoid duplicates if manager and manager's manager share same email
+                            if (!in_array($managerManager->email, $mail_to)) {
+                                array_push($mail_to, $managerManager->email);
+                            }
+                        }
+                    }
+                }
 
                 
                 $additional_email = DB::table('org_global_prams')
@@ -1340,10 +1371,17 @@ if($data['leave_slot'] == 'First Half' || $data['leave_slot'] == 'Second Half'){
                 }
              
 
+                // Prepare manager's manager name (if found) to include in the email payload
+                $managerManagerName = null;
+                if (isset($managerManager) && !empty($managerManager->name)) {
+                    $managerManagerName = $managerManager->name;
+                }
+
                 $data = [
                     'username' => $mail_to, //mail to
                     'cc' => $mail_cc, 
                     'managername' => $fetchManager->manager_name,
+                    'manager_manager_name' => $managerManagerName, // Newly added: manager's manager name
                     'employeename' => $loginUserInfo->name,
                     'leave_type' => $leave_type->name,
                     'start_date' => $data['start_date'],

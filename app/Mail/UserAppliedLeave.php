@@ -62,8 +62,8 @@ class UserAppliedLeave extends Mailable implements ShouldQueue
                
 //                }
 
-public function build()
-{
+    public function build()
+    {
     // Assuming the org_id is passed in $this->data, extract it
     $orgId = $this->data['org_id'];
 
@@ -83,9 +83,15 @@ public function build()
         Config::set('mail.from.name', $mailConfig->MAIL_FROM_NAME);
     }
 
+    // Include manager's manager name separately so blades can use it directly
+    $managerManagerName = $this->data['manager_manager_name'] ?? null;
+
     return $this->from(Config::get('mail.from.address'), Config::get('mail.from.name'))
                 ->subject($this->subject)
                 ->view('emails.applied_leave_mail')
-                ->with(['data' => $this->data]);
+                ->with([
+                    'data' => $this->data,
+                    'manager_manager_name' => $managerManagerName,
+                ]);
 }
 }
